@@ -165,7 +165,7 @@ export default class PostListItem extends Component {
             @decorate={{this.decoratePostContent}}
           />
         {{else}}
-          {{htmlSafe @post.excerpt}}
+          {{~htmlSafe @post.excerpt~}}
         {{/if}}
       </div>
 

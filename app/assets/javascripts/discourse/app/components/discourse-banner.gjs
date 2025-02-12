@@ -48,6 +48,15 @@ export default class DiscourseBanner extends Component {
     return !this.hide && bannerKey && dismissedBannerKey !== bannerKey;
   }
 
+  @bind
+  decorateContent(element, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      element,
+      helper
+    );
+  }
+
   @action
   dismiss() {
     if (this.currentUser) {
@@ -59,15 +68,6 @@ export default class DiscourseBanner extends Component {
         value: this.banner.key,
       });
     }
-  }
-
-  @bind
-  decorateContent(element, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
   }
 
   <template>
