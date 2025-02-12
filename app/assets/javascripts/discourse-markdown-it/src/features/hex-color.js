@@ -11,7 +11,16 @@ export function setup(helper) {
 };
 
 export function setup(helper) {
+  helper.registerOptions(() => {
+    return {
+      features: {
+        "hex-color": true
+      }
+    };
+  });
+
   helper.registerPlugin((md) => {
-    md.inline.ruler.at("hex-color", hexColorRule);
+    md.inline.ruler.push("hex_color", hexColorRule);
+    md.renderer.rules["hex_color"] = hexColorRender;
   });
 }
