@@ -30,8 +30,7 @@ function hexColorRule(state, silent) {
 
 function hexColorRender(tokens, idx, options, env, self) {
   const color = tokens[idx].content;
-  return `<span class="hex-color"><span class="hex-color__swatch" style="--swatch-color: ${color};"
-    /span>${color}</span>`;
+  return `<span class="hex-color"><span class="hex-color__swatch" style="--swatch-color: ${color};"></span>${color}</span>`;
 }
 
 export function setup(helper) {
