@@ -31,7 +31,7 @@ function hexColorRule(state, silent) {
 function hexColorRender(tokens, idx, options, env, self) {
   const color = tokens[idx].content;
   return `<span class="hex-color"><span class="hex-color__swatch" style="--swatch-color: ${color};"
-    /span>${color}</span>`
+    /span>${color}</span>`;
 }
 
 export function setup(helper) {
@@ -39,15 +39,14 @@ export function setup(helper) {
 
   helper.allowList({
     custom(tag, name, value) {
-    
-      if (tag === "span" && name === "style") {      
+      if (tag === "span" && name === "style") {
         const pattern = /^--swatch-color:\s?#[a-f0-9]{3,8};$/;
         return pattern.test(value.toLowerCase());
       }
       return false;
-    }
+    },
   });
-  
+
   helper.registerOptions(() => {
     return {
       features: {
