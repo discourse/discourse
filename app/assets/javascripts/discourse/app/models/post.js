@@ -165,6 +165,8 @@ export default class Post extends RestModel {
   @trackedPostProperty user_deleted;
   @trackedPostProperty user_id;
   @trackedPostProperty yours;
+  @trackedPostProperty expandedExcerpt;
+  @trackedPostProperty excerpt;
 
   customShare = null;
 

@@ -8,25 +8,20 @@ import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
-import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
-import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
-import { linkSeenMentions } from "discourse/lib/link-mentions";
-import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
@@ -64,6 +59,8 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
+
+  @tracked preview;
 
   ready = false;
   lastSel = null;
@@ -110,14 +107,7 @@ export default class DEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-
     this._previewMutationObserver = this._disablePreviewTabIndex();
-
-    // disable clicking on links in the preview
-    this.element
-      .querySelector(".d-editor-preview")
-      .addEventListener("click", this._handlePreviewLinkClick);
-    ``;
   }
 
   get keymap() {
@@ -159,8 +149,12 @@ export default class DEditor extends Component {
     return keymap;
   }
 
-  @bind
-  _handlePreviewLinkClick(event) {
+  @action
+  handlePreviewClick(event) {
+    if (!event.target.closest(".d-editor-preview")) {
+      return;
+    }
+
     if (wantsNewWindow(event)) {
       return;
     }
@@ -189,10 +183,6 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    this.element
-      .querySelector(".d-editor-preview")
-      ?.removeEventListener("click", this._handlePreviewLinkClick);
-
     this._previewMutationObserver?.disconnect();
 
     this._cachedCookFunction = null;
@@ -240,63 +230,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    this.set("preview", cooked);
-
-    let unseenMentions, unseenHashtags;
-
-    if (this.siteSettings.enable_diffhtml_preview) {
-      const previewElement = this.element.querySelector(".d-editor-preview");
-      const cookedElement = previewElement.cloneNode(false);
-      cookedElement.innerHTML = cooked;
-
-      unseenMentions = linkSeenMentions(cookedElement, this.siteSettings);
-
-      unseenHashtags = linkSeenHashtagsInContext(
-        this.site.hashtag_configurations["topic-composer"],
-        cookedElement
-      );
-
-      loadOneboxes(
-        cookedElement,
-        ajax,
-        this.topicId,
-        this.categoryId,
-        this.siteSettings.max_oneboxes_per_post,
-        /* refresh */ false,
-        /* offline */ true
-      );
-
-      resolveCachedShortUrls(this.siteSettings, cookedElement);
-
-      // trigger all the "api.decorateCookedElement"
-      this.appEvents.trigger(
-        "decorate-non-stream-cooked-element",
-        cookedElement
-      );
-
-      (await import("morphlex")).morph(
-        previewElement,
-        cookedElement,
-        this.morphingOptions
-      );
-    }
-
-    schedule("afterRender", () => {
-      if (
-        this._state !== "inDOM" ||
-        !this.element ||
-        this.isDestroying ||
-        this.isDestroyed
-      ) {
-        return;
-      }
-
-      const previewElement = this.element.querySelector(".d-editor-preview");
-
-      if (previewElement && this.previewUpdated) {
-        this.previewUpdated(previewElement, unseenMentions, unseenHashtags);
-      }
-    });
+    this.preview = cooked;
   }
 
   @observes("ready", "value", "processPreview")
@@ -760,7 +694,7 @@ export default class DEditor extends Component {
       });
     });
 
-    observer.observe(document.querySelector(".d-editor-preview"), {
+    observer.observe(document.querySelector(".d-editor-preview-wrapper"), {
       childList: true,
       subtree: true,
       attributes: false,

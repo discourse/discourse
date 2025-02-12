@@ -71,14 +71,16 @@
     </div>
   </div>
 
+  {{! template-lint-disable no-invalid-interactive }}
   <div
     class="d-editor-preview-wrapper {{if this.forcePreview 'force-preview'}}"
+    {{on "click" this.handlePreviewClick}}
   >
-    <div class="d-editor-preview">
-      {{#unless this.siteSettings.enable_diffhtml_preview}}
-        {{html-safe this.preview}}
-      {{/unless}}
-    </div>
+    <DecoratedHtml
+      @className="d-editor-preview"
+      @html={{html-safe this.preview}}
+      @decorate={{this.previewUpdated}}
+    />
     <span class="d-editor-plugin">
       <PluginOutlet
         @name="editor-preview"
