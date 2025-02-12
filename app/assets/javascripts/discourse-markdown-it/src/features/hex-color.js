@@ -7,16 +7,18 @@ function hexColorRule(state, silent) {
   if (!match) {
     return false;
   }
-  
-  state.push("hex_color", "", 0);
+
+  const token = state.push("hex_color", "", 0);
+  token.content = match[0];
 
   state.pos += match[0].length;
 
   return true;
 }
 
-function hexColorRender() {
-  return `<span>Hex Color</span>`;
+function hexColorRender(tokens, idx, options, env, self) {  
+  const color = tokens[idx].content;
+  return `<span>${color}</span>`;
 }
 
 
