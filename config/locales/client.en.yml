@@ -2875,7 +2875,6 @@ en:
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
-      liked_consolidated: "<span>%{username}</span> %{description}"
       linked_consolidated_description:
         one: "linked %{count} of your posts"
         other: "linked %{count} of your posts"
