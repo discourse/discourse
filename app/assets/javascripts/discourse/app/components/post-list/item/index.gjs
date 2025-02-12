@@ -2,18 +2,22 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DecoratedHtml from "discourse/components/decorated-html";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service appEvents;
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action
@@ -68,6 +72,15 @@ export default class PostListItem extends Component {
     } else {
       return "reply";
     }
+  }
+
+  @bind
+  decoratePostContent(element, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      element,
+      helper
+    );
   }
 
   <template>
@@ -147,11 +160,11 @@ export default class PostListItem extends Component {
         data-user-id={{@post.user_id}}
         class="excerpt"
       >
-        {{#if @post.expandedExcerpt}}
-          {{~htmlSafe @post.expandedExcerpt~}}
-        {{else}}
-          {{~htmlSafe @post.excerpt~}}
-        {{/if}}
+        <DecoratedHtml
+          @html={{htmlSafe (or @post.expandedExcerpt @post.excerpt)}}
+          @decorate={{this.decoratePostContent}}
+          @className="cooked"
+        />
       </div>
 
       {{yield to="belowPostItem"}}
