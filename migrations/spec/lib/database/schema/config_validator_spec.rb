@@ -45,6 +45,34 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         ),
       ],
     )
+    allow(ActiveRecord::Base.connection).to receive(:columns).with("categories").and_return(
+      [
+        instance_double(
+          ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+          name: "id",
+          type: :integer,
+        ),
+        instance_double(
+          ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+          name: "name",
+          type: :string,
+        ),
+      ],
+    )
+    allow(ActiveRecord::Base.connection).to receive(:columns).with("topics").and_return(
+      [
+        instance_double(
+          ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+          name: "id",
+          type: :integer,
+        ),
+        instance_double(
+          ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+          name: "title",
+          type: :string,
+        ),
+      ],
+    )
     allow(Discourse).to receive(:plugins).and_return([])
   end
 
@@ -81,6 +109,19 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         "value at `/output/models_namespace` is not a string",
       )
     end
+
+    it "detects that `include` and `exclude` of columns can't be used togehter" do
+      config = minimal_config
+      config[:schema][:tables][:users][:columns] = { include: ["id"], exclude: ["username"] }
+
+      expect(validator.validate(config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        I18n.t(
+          "schema.validator.include_exclude_not_allowed",
+          path: "`/schema/tables/users/columns`",
+        ),
+      )
+    end
   end
 
   context "with output config" do
@@ -113,46 +154,287 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
   end
 
   context "with schema config" do
-    it "detects excluded tables that do not exist" do
-      config = minimal_config
-      config[:schema][:global][:tables][:exclude] = %w[users foo bar]
-      config[:schema][:tables] = {}
+    context "with incorrect table config" do
+      it "detects excluded tables that do not exist" do
+        config = minimal_config
+        config[:schema][:global][:tables][:exclude] = %w[users foo bar]
+        config[:schema][:tables] = {}
 
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.excluded_table_missing", table_name: "bar"),
-        I18n.t("schema.validator.excluded_table_missing", table_name: "foo"),
-      )
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.excluded_table_missing", table_name: "bar"),
+          I18n.t("schema.validator.excluded_table_missing", table_name: "foo"),
+        )
+      end
+
+      it "detects excluded tables that are used in `schema/tables` section" do
+        allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w[categories users])
+
+        config = minimal_config
+        config[:schema][:global][:tables][:exclude] = %w[categories users]
+        config[:schema][:tables] = {
+          categories: {
+            columns: {
+              include: %w[id name],
+            },
+          },
+          users: {
+            columns: {
+              include: %w[id username],
+            },
+          },
+        }
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.excluded_table_used", table_name: "categories"),
+          I18n.t("schema.validator.excluded_table_used", table_name: "users"),
+        )
+      end
+
+      it "detects tables that are missing from configuration file" do
+        allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
+          %w[categories topics posts users tags],
+        )
+
+        config = minimal_config
+        config[:schema][:global][:tables][:exclude] = %w[categories]
+        config[:schema][:tables] = {
+          topics: {
+            columns: {
+              include: %w[id title],
+            },
+          },
+          users: {
+            columns: {
+              include: %w[id username],
+            },
+          },
+        }
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.table_not_configured", table_name: "posts"),
+          I18n.t("schema.validator.table_not_configured", table_name: "tags"),
+        )
+      end
     end
 
-    it "detects excluded tables that are used in `schema/tables` section" do
-      allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w[categories users])
+    context "with incorrect column config" do
+      it "detects that a newly added column already exists" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns][:add] = [
+          { name: "name", datatype: "text" },
+          { name: "username", datatype: "text" },
+          { name: "id", datatype: "text" },
+        ]
 
-      config = minimal_config
-      config[:schema][:global][:tables][:exclude] = %w[categories users]
-      config[:schema][:tables] = { categories: {}, users: {} }
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.added_existing_column", table_name: "users", column_name: "id"),
+          I18n.t(
+            "schema.validator.added_existing_column",
+            table_name: "users",
+            column_name: "username",
+          ),
+        )
+      end
 
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.excluded_table_used", table_name: "categories"),
-        I18n.t("schema.validator.excluded_table_used", table_name: "users"),
-      )
-    end
+      it "detects that an included column does not exist" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns][:include] = %w[foo id bar username]
 
-    it "detects tables that are missing from configuration file" do
-      allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
-        %w[categories topics posts users tags],
-      )
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.included_column_missing",
+            table_name: "users",
+            column_name: "foo",
+          ),
+          I18n.t(
+            "schema.validator.included_column_missing",
+            table_name: "users",
+            column_name: "bar",
+          ),
+        )
+      end
 
-      config = minimal_config
-      config[:schema][:global][:tables][:exclude] = %w[categories]
-      config[:schema][:tables] = { topics: {}, users: {} }
+      it "detects that an excluded column does not exist" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns] = { exclude: %w[foo username bar] }
 
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.table_not_configured", table_name: "posts"),
-        I18n.t("schema.validator.table_not_configured", table_name: "tags"),
-      )
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.excluded_column_missing",
+            table_name: "users",
+            column_name: "foo",
+          ),
+          I18n.t(
+            "schema.validator.excluded_column_missing",
+            table_name: "users",
+            column_name: "bar",
+          ),
+        )
+      end
+
+      it "detects that a modified column does not exist" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns] = {
+          include: ["id"],
+          modify: [
+            { name: "username", datatype: "integer" },
+            { name: "foo", datatype: "integer" },
+            { name: "bar", datatype: "text" },
+          ],
+        }
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.modified_column_missing",
+            table_name: "users",
+            column_name: "foo",
+          ),
+          I18n.t(
+            "schema.validator.modified_column_missing",
+            table_name: "users",
+            column_name: "bar",
+          ),
+        )
+      end
+
+      it "detects that a modified column is included" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns] = {
+          include: %w[id username],
+          modify: [{ name: "username", datatype: "integer" }],
+        }
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.modified_column_included",
+            table_name: "users",
+            column_name: "username",
+          ),
+        )
+      end
+
+      it "detects that a modified column is excluded" do
+        config = minimal_config
+        config[:schema][:tables][:users][:columns] = {
+          exclude: %w[username],
+          modify: [{ name: "username", datatype: "integer" }],
+        }
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.modified_column_excluded",
+            table_name: "users",
+            column_name: "username",
+          ),
+        )
+      end
+
+      it "detects that not all existing columns are either included, excluded or modified" do
+        config = minimal_config
+
+        config[:schema][:tables][:users][:columns] = { exclude: %w[username] }
+        expect(validator.validate(config)).to_not have_errors
+
+        config[:schema][:tables][:users][:columns] = { include: [] }
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.columns_not_configured",
+            table_name: "users",
+            column_names: "id, username",
+          ),
+        )
+
+        config[:schema][:tables][:users][:columns] = { include: ["id"] }
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.columns_not_configured",
+            table_name: "users",
+            column_names: "username",
+          ),
+        )
+
+        config[:schema][:tables][:users][:columns] = {
+          include: [],
+          modify: [{ name: "username", datatype: "integer" }],
+        }
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t(
+            "schema.validator.columns_not_configured",
+            table_name: "users",
+            column_names: "id",
+          ),
+        )
+
+        config[:schema][:tables][:users][:columns] = {
+          include: ["id"],
+          modify: [{ name: "username", datatype: "integer" }],
+        }
+        expect(validator.validate(config)).to_not have_errors
+      end
+
+      it "detects that a table has no columns" do
+        allow(ActiveRecord::Base.connection).to receive(:columns).with("users").and_return(
+          [
+            instance_double(
+              ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+              name: "id",
+              type: :integer,
+            ),
+            instance_double(
+              ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+              name: "username",
+              type: :string,
+            ),
+            instance_double(
+              ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+              name: "views",
+              type: :integer,
+            ),
+            instance_double(
+              ActiveRecord::ConnectionAdapters::PostgreSQL::Column,
+              name: "created_at",
+              type: :datetime,
+            ),
+          ],
+        )
+
+        config = minimal_config
+        config[:schema][:global][:columns][:exclude] = ["created_at"]
+
+        config[:schema][:tables][:users][:columns] = { exclude: ["views"] }
+        expect(validator.validate(config)).to_not have_errors
+
+        config[:schema][:tables][:users][:columns] = { exclude: %w[id username views] }
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.no_columns_configured", table_name: "users"),
+        )
+
+        config[:schema][:tables][:users][:columns] = {
+          exclude: %w[id username views],
+          add: [{ name: "foo", datatype: "integer" }],
+        }
+        expect(validator.validate(config)).to_not have_errors
+
+        config[:schema][:tables][:users][:columns] = { include: %w[id username views] }
+        expect(validator.validate(config)).to_not have_errors
+
+        config[:schema][:tables][:users][:columns] = { include: ["created_at"] }
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.no_columns_configured", table_name: "users"),
+        )
+      end
     end
   end
 

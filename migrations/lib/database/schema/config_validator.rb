@@ -35,7 +35,13 @@ module Migrations::Database::Schema
       schemer = JSONSchemer.schema(schema)
       response = schemer.validate(config)
 
-      response.each { |r| @errors << r.fetch("error") }
+      response.each do |r|
+        error_message = r.fetch("error")
+        error_message.gsub!(/value at (`.+?`) matches `not` schema/) do
+          I18n.t("schema.validator.include_exclude_not_allowed", path: $1)
+        end
+        @errors << error_message
+      end
     end
 
     def validate_config(config)
@@ -107,14 +113,75 @@ module Migrations::Database::Schema
     end
 
     def validate_columns(schema_config)
-      schema_config[:tables].each_pair do |table_name, columns|
-        existing_columns = @db.columns(table_name)
+      globally_excluded_column_names = schema_config.dig(:global, :columns, :exclude) || []
 
-        if (added_columns = columns["add"])
+      schema_config[:tables].each_pair do |table_name, table_config|
+        validate_columns_of_table(
+          table_name.to_s,
+          table_config[:columns],
+          globally_excluded_column_names,
+        )
+      end
+    end
+
+    def validate_columns_of_table(table_name, columns, globally_excluded_column_names)
+      existing_column_names = @db.columns(table_name).map { |c| c.name }.sort.to_set
+      added_column_names = columns[:add]&.map { |column| column[:name] } || []
+      modified_column_names = columns[:modify]&.map { |column| column[:name] } || []
+      included_column_names = columns[:include] || []
+      excluded_column_names = columns[:exclude] || []
+
+      added_column_names.each do |column_name|
+        if existing_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.added_existing_column", column_name:, table_name:)
+        end
+      end
+
+      included_column_names.each do |column_name|
+        if !existing_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.included_column_missing", column_name:, table_name:)
+        end
+      end
+
+      excluded_column_names.each do |column_name|
+        if !existing_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.excluded_column_missing", column_name:, table_name:)
+        end
+      end
+
+      modified_column_names.each do |column_name|
+        if !existing_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.modified_column_missing", column_name:, table_name:)
+        elsif included_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.modified_column_included", column_name:, table_name:)
+        elsif excluded_column_names.include?(column_name)
+          @errors << I18n.t("schema.validator.modified_column_excluded", column_name:, table_name:)
+        end
+      end
+
+      if excluded_column_names.empty?
+        unconfigured_column_names =
+          existing_column_names - included_column_names - modified_column_names
+        if unconfigured_column_names.any?
+          @errors << I18n.t(
+            "schema.validator.columns_not_configured",
+            column_names: unconfigured_column_names.sort.join(", "),
+            table_name:,
+          )
+        end
+      end
+
+      configured_column_names =
+        if excluded_column_names.any?
+          existing_column_names - excluded_column_names - globally_excluded_column_names +
+            modified_column_names + added_column_names
+        else
+          included_column_names + modified_column_names - globally_excluded_column_names +
+            added_column_names
         end
 
-        modified_columns = columns["modify"] || []
-        excluded_columns = columns["exclude"] || []
+      if configured_column_names.empty?
+        @errors << I18n.t("schema.validator.no_columns_configured", table_name:)
       end
     end
 
