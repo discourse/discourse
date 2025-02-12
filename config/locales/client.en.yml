@@ -4233,6 +4233,7 @@ en:
 
     flagging:
       title: "Thanks for keeping our community civil!"
+      review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:

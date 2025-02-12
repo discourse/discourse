@@ -11,8 +11,7 @@ export default class PostMenuFlagButton extends Component {
     return (
       reviewable_id ||
       (canFlag && !hidden) ||
-      (helper.siteSettings
-        .allow_tl0_and_anonymous_users_to_flag_illegal_content &&
+      (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
         !helper.currentUser)
     );
   }

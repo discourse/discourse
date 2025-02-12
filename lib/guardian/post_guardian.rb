@@ -93,11 +93,7 @@ module PostGuardian
               @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
-        ) ||
-          (
-            action_key == :illegal &&
-              SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content
-          ) ||
+        ) || (action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content) ||
           # not a flagging action, and haven't done it already
           not(is_flag || already_taken_this_action) &&
             # nothing except flagging on archived topics

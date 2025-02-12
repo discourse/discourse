@@ -1966,7 +1966,7 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  allow_tl0_and_anonymous_users_to_flag_illegal_content:
+  allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
     client: true

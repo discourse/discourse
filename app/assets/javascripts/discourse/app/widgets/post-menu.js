@@ -215,8 +215,7 @@ registerButton(
     if (
       attrs.reviewableId ||
       (attrs.canFlag && !attrs.hidden) ||
-      (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
-        !currentUser)
+      (siteSettings.allow_all_users_to_flag_illegal_content && !currentUser)
     ) {
       const button = {
         action: "showFlags",
