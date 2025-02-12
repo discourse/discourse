@@ -134,8 +134,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0(postcss@8.5.1)(stylelint@16.14.1(typescript@5.6.3))
       terser:
-        specifier: ^5.37.0
-        version: 5.37.0
+        specifier: ^5.38.2
+        version: 5.38.2
       typescript:
         specifier: 5.6.x
         version: 5.6.3
@@ -613,8 +613,8 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4
       terser:
-        specifier: ^5.37.0
-        version: 5.37.0
+        specifier: ^5.38.2
+        version: 5.38.2
       testem:
         specifier: ^3.15.2
         version: 3.15.2(handlebars@4.7.8)(underscore@1.13.6)
@@ -1055,8 +1055,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       terser:
-        specifier: ^5.37.0
-        version: 5.37.0
+        specifier: ^5.38.2
+        version: 5.38.2
 
   app/assets/javascripts/truth-helpers:
     dependencies:
@@ -2268,8 +2268,8 @@ packages:
     resolution: {integrity: sha512-R8gLRTZeyp03ymzP/6Lil/28tGeGEzhx1q2k703KGWRAI1VdvPIXdG70VJc2pAMw3NA6JKL5hhFu1sJX0Mnn/A==}
     engines: {node: '>=6.0.0'}
 
-  '@jridgewell/source-map@0.3.3':
-    resolution: {integrity: sha512-b+fsZXeLYi9fEULmfBrhxn4IrPlINf8fiNarzTof004v3lFdntdwa9PF7vFJqm3mg7s+ScJMxXaE3Acp1irZcg==}
+  '@jridgewell/source-map@0.3.6':
+    resolution: {integrity: sha512-1ZJTZebgqllO79ue2bm3rIGud/bOe0pP5BjSRCRxxYkEZS8STV7zN84UBbiYu7jy+eCKSnVIUgoWWE/tt+shMQ==}
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
@@ -7946,8 +7946,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.37.0:
-    resolution: {integrity: sha512-B8wRRkmre4ERucLM/uXx4MOV5cbnOlVAqUst+1+iLKPI0dOgFO28f84ptoQt9HEI537PMzfYa/d+GEPKTRXmYA==}
+  terser@5.38.2:
+    resolution: {integrity: sha512-w8CXxxbFA5zfNsR/i8HZq5bvn18AK0O9jj7hyo1YqkovLxEFa0uP0LCVGZRqiRaKRFxXhELBp8SteeAjEnfeJg==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -9722,7 +9722,7 @@ snapshots:
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.97.1(@swc/core@1.10.15)(esbuild@0.25.0))
       supports-color: 8.1.1
-      terser: 5.37.0
+      terser: 5.38.2
       thread-loader: 3.0.4(webpack@5.97.1(@swc/core@1.10.15)(esbuild@0.25.0))
       webpack: 5.97.1(@swc/core@1.10.15)(esbuild@0.25.0)
     transitivePeerDependencies:
@@ -10169,7 +10169,7 @@ snapshots:
 
   '@jridgewell/set-array@1.2.1': {}
 
-  '@jridgewell/source-map@0.3.3':
+  '@jridgewell/source-map@0.3.6':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
@@ -11681,7 +11681,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       matcher-collection: 2.0.1
       symlink-or-copy: 1.3.1
-      terser: 5.37.0
+      terser: 5.38.2
       walk-sync: 2.2.0
       workerpool: 6.5.1
     transitivePeerDependencies:
@@ -17154,15 +17154,15 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
-      terser: 5.37.0
+      terser: 5.38.2
       webpack: 5.97.1(@swc/core@1.10.15)(esbuild@0.25.0)
     optionalDependencies:
       '@swc/core': 1.10.15
       esbuild: 0.25.0
 
-  terser@5.37.0:
+  terser@5.38.2:
     dependencies:
-      '@jridgewell/source-map': 0.3.3
+      '@jridgewell/source-map': 0.3.6
       acorn: 8.14.0
       commander: 2.20.3
       source-map-support: 0.5.21
