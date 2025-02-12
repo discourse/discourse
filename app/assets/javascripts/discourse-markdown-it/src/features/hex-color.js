@@ -1,6 +1,11 @@
 function hexColorRule(state, silent) {
   const start = state.pos;
   const src = state.src;
+  const firstChar = src.charCodeAt(start);
+
+  if (firstChar !== 0x23) { // `#` character
+    return false;
+  }
 
   const match = /^#[0-9A-Fa-f]{6}/.exec(src.slice(start));
 
