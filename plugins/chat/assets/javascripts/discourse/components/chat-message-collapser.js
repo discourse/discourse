@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import domFromString from "discourse/lib/dom-from-string";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import lightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
@@ -136,6 +138,11 @@ export default class ChatMessageCollapser extends Component {
       }
       return acc;
     }, []);
+  }
+
+  @action
+  lightbox(element) {
+    lightbox(element.querySelectorAll("img.chat-img-upload"));
   }
 }
 

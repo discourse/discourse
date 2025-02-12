@@ -7,7 +7,7 @@
     />
 
     <Collapser @header={{this.uploadsHeader}} @onToggle={{@onToggleCollapse}}>
-      <div class="chat-uploads">
+      <div class="chat-uploads" {{didInsert this.lightbox}}>
         {{#each @uploads as |upload|}}
           <ChatUpload @upload={{upload}} />
         {{/each}}

@@ -1,13 +1,11 @@
-import $ from "jquery";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
 import { samePrefix } from "discourse/lib/get-url";
 import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import lightbox from "../lib/lightbox";
 
 export default {
   name: "chat-decorators",
@@ -68,7 +66,7 @@ export default {
     });
     api.decorateChatMessage(
       (element) =>
-        this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
+        lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
       {
         id: "lightbox",
       }
@@ -130,29 +128,6 @@ export default {
         link.setAttribute("target", "_blank");
       }
     }
-  },
-
-  lightbox(images) {
-    loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-      $(images).magnificPopup({
-        type: "image",
-        closeOnContentClick: false,
-        mainClass: "mfp-zoom-in",
-        tClose: i18n("lightbox.close"),
-        tLoading: spinnerHTML,
-        image: {
-          verticalFit: true,
-        },
-        gallery: {
-          enabled: true,
-        },
-        callbacks: {
-          elementParse: (item) => {
-            item.src = item.el[0].dataset.largeSrc || item.el[0].src;
-          },
-        },
-      });
-    });
   },
 
   initialize(container) {
