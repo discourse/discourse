@@ -126,6 +126,61 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+
+    it "redirects to a PM after login" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".login-welcome .login-button").click
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+  end
+
+  context "when login is not required" do
+    before do
+      SiteSetting.login_required = false
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+    end
+
+    it "redirects to a PM after authentication" do
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".btn.login-button").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+
+    it "redirects to a public topic when hitting Reply then logging in" do
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic, created_at: 1.day.ago)
+
+      visit "/t/#{topic.id}"
+      find(".topic-footer-main-buttons .btn-primary").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
+    end
   end
 
   context "with two-factor authentication" do
