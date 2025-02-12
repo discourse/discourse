@@ -3514,6 +3514,9 @@ dashboard:
     client: true
 
 experimental:
+  experimental_auto_grid_images:
+    default: false
+    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
