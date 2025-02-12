@@ -134,7 +134,7 @@ export default class UppyImageUploader extends Component {
   }
 
   <template>
-    <div {{this.applyLightbox}} id={{@id}} class="image-uploader">
+    <div {{this.applyLightbox}} id={{@id}} class="image-uploader" ...attributes>
       <div
         class="uploaded-image-preview input-xxlarge"
         style={{this.backgroundStyle}}
