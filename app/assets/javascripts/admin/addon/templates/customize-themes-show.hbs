@@ -1,7 +1,32 @@
 {{#if this.editingThemeSetting}}
   {{outlet}}
 {{else}}
-  <div class="show-current-style">
+  {{#if this.currentUser.use_admin_sidebar}}
+    <div class="back-to-themes-and-components">
+      <LinkTo
+        @route={{if
+          this.model.component
+          "adminConfig.themesAndComponents.components"
+          "adminConfig.themesAndComponents.themes"
+        }}
+      >
+        {{dIcon "angle-left"}}
+        {{i18n
+          (if
+            this.model.component
+            "admin.config_areas.themes_and_components.components.back"
+            "admin.config_areas.themes_and_components.themes.back"
+          )
+        }}
+      </LinkTo>
+    </div>
+  {{/if}}
+  <div
+    class={{concatClass
+      "show-current-style"
+      (if this.currentUser.use_admin_sidebar "show-current-style--with-sidebar")
+    }}
+  >
     <span>
       <PluginOutlet
         @name="admin-customize-themes-show-top"

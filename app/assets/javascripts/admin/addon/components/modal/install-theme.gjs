@@ -111,7 +111,8 @@ export default class InstallThemeModal extends Component {
   }
 
   get themes() {
-    return POPULAR_THEMES.map((popularTheme) => {
+    const list = [];
+    POPULAR_THEMES.forEach((popularTheme) => {
       if (
         this.args.model.installedThemes.some((installedTheme) =>
           this.themeHasSameUrl(installedTheme, popularTheme.value)
@@ -119,8 +120,20 @@ export default class InstallThemeModal extends Component {
       ) {
         popularTheme.installed = true;
       }
-      return popularTheme;
+
+      if (this.args.model.showComponentsOnly) {
+        if (popularTheme.component) {
+          list.push(popularTheme);
+        }
+      } else if (this.args.model.showThemesOnly) {
+        if (!popularTheme.component) {
+          list.push(popularTheme);
+        }
+      } else {
+        list.push(popularTheme);
+      }
     });
+    return list;
   }
 
   get installingMessage() {
