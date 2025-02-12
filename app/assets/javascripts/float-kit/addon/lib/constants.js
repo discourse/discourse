@@ -69,6 +69,7 @@ export const MENU = {
     onShow: null,
     onRegisterApi: null,
     modalForMobile: false,
+    insideComposer: false,
     inline: null,
     groupIdentifier: null,
     parentIdentifier: null,
