@@ -15,7 +15,7 @@ import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
@@ -59,6 +59,8 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
+
+  @tracked preview;
 
   ready = false;
   lastSel = null;
@@ -105,14 +107,7 @@ export default class DEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-
     this._previewMutationObserver = this._disablePreviewTabIndex();
-
-    // disable clicking on links in the preview
-    this.element
-      .querySelector(".d-editor-preview")
-      .addEventListener("click", this._handlePreviewLinkClick);
-    ``;
   }
 
   get keymap() {
@@ -154,8 +149,12 @@ export default class DEditor extends Component {
     return keymap;
   }
 
-  @bind
-  _handlePreviewLinkClick(event) {
+  @action
+  handlePreviewClick(event) {
+    if (!event.target.closest(".d-editor-preview")) {
+      return;
+    }
+
     if (wantsNewWindow(event)) {
       return;
     }
@@ -184,10 +183,6 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    this.element
-      .querySelector(".d-editor-preview")
-      ?.removeEventListener("click", this._handlePreviewLinkClick);
-
     this._previewMutationObserver?.disconnect();
 
     this._cachedCookFunction = null;
@@ -235,24 +230,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    this.set("preview", cooked);
-
-    schedule("afterRender", () => {
-      if (
-        this._state !== "inDOM" ||
-        !this.element ||
-        this.isDestroying ||
-        this.isDestroyed
-      ) {
-        return;
-      }
-
-      const previewElement = this.element.querySelector(".d-editor-preview");
-
-      if (previewElement && this.previewUpdated) {
-        this.previewUpdated(previewElement);
-      }
-    });
+    this.preview = cooked;
   }
 
   @observes("ready", "value", "processPreview")
@@ -716,7 +694,7 @@ export default class DEditor extends Component {
       });
     });
 
-    observer.observe(document.querySelector(".d-editor-preview"), {
+    observer.observe(document.querySelector(".d-editor-preview-wrapper"), {
       childList: true,
       subtree: true,
       attributes: false,
