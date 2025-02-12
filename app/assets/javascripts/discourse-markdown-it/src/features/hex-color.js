@@ -6,7 +6,10 @@ function hexColorRule(state, silent) {
   return match;
 }
 
-export function setup(helper) {
+export function hexColorRender() {
+  return `<span>Hex Color</span>`;
+}
+
 
 
 export function setup(helper) {
