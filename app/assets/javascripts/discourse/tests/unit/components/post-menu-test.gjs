@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { getOwner } from "@ember/owner";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Unit | Component | post-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -39,6 +39,6 @@ module("Unit | Component | post-menu", function (hooks) {
     await render(<template><PostMenu @post={{post}} /></template>);
 
     await click(".post-action-menu__like");
-    assert.ok(behaviorChanged, "behavior transformer was called");
+    assert.true(behaviorChanged, "behavior transformer was called");
   });
 });

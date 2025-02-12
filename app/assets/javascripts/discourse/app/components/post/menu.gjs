@@ -15,7 +15,10 @@ import SmallUserList, {
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyMutableValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -31,7 +34,6 @@ import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
-import { applyBehaviorTransformer } from "../../lib/transformer";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
