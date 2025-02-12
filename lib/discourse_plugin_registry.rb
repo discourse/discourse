@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-require_relative "svg_sprite" if Rails.env.test?
-
+require_relative "deprecated_icon_handler"
 #
 #  A class that handles interaction between a plugin and the Discourse App.
 #
@@ -148,7 +147,7 @@ class DiscoursePluginRegistry
   end
 
   def self.register_svg_icon(icon)
-    ::SvgSprite.process(icon) if Rails.env.test?
+    DeprecatedIconHandler.convert_icon(icon) if Rails.env.test?
     self.svg_icons << icon
   end
 
