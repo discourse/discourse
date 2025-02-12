@@ -61,12 +61,18 @@ module Chat
       SQL
 
       unread_messages = DB.query_array <<~SQL
-        WITH unread_messages AS (
+        WITH watched_threads AS (
+          SELECT thread_id
+          FROM user_chat_thread_memberships
+          WHERE user_id = #{user.id}
+          AND notification_level = #{Chat::NotificationLevels.all[:watching]}
+        ), unread_messages AS (
           SELECT uccm.id membership_id, uccm.chat_channel_id, MIN(chat_messages.id) first_chat_message_id, MAX(chat_messages.id) last_chat_message_id
           FROM user_chat_channel_memberships uccm
           JOIN chat_channels ON chat_channels.id = uccm.chat_channel_id
           JOIN chat_messages ON chat_messages.chat_channel_id = chat_channels.id
           JOIN users ON users.id = chat_messages.user_id
+          LEFT JOIN chat_threads om ON om.original_message_id = chat_messages.id
           WHERE uccm.user_id = #{user.id}
           AND NOT uccm.muted
           AND chat_channels.deleted_at IS NULL
@@ -76,6 +82,7 @@ module Chat
           AND chat_messages.created_at > now() - interval '1 week'
           AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < chat_messages.id)
           AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < chat_messages.id)
+          AND (chat_messages.thread_id IS NULL OR om.id IS NOT NULL OR chat_messages.thread_id IN (SELECT thread_id FROM watched_threads))
           GROUP BY uccm.id
         )
         UPDATE user_chat_channel_memberships uccm
