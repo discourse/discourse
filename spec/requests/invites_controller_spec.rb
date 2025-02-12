@@ -110,6 +110,14 @@ RSpec.describe InvitesController do
         expect(response.location).to eq(invite.topics.first.url)
       end
 
+      it "doesn't automatically redirect to the topic if the user can't access it" do
+        secret_group = Fabricate(:group)
+        invite.update!(topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))])
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+      end
+
       it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
 
