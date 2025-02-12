@@ -1,10 +1,12 @@
 function hexColorRule(state, silent) {
   const start = state.pos;
+  const max = state.posMax;
   const src = state.src;
   const firstChar = src.charCodeAt(start);
 
   // early exit if first char isn't `#`
-  if (firstChar !== 0x23) {
+  // or there's less than 7 characters left
+  if (firstChar !== 0x23 || start + 7 > max) {
     return false;
   }
 
