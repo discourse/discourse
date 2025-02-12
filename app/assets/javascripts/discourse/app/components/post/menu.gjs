@@ -15,7 +15,10 @@ import SmallUserList, {
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyMutableValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -442,26 +445,35 @@ export default class PostMenu extends Component {
 
   @action
   async toggleLike() {
-    if (!this.currentUser) {
-      this.keyValueStore &&
-        this.keyValueStore.set({
-          key: "likedPostId",
-          value: this.args.post.id,
-        });
+    await applyBehaviorTransformer(
+      "post-menu-toggle-like-action",
+      async () => {
+        if (!this.currentUser) {
+          this.keyValueStore &&
+            this.keyValueStore.set({
+              key: "likedPostId",
+              value: this.args.post.id,
+            });
 
-      this.args.showLogin();
-      return;
-    }
+          this.args.showLogin();
+          return;
+        }
 
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(VIBRATE_DURATION);
-    }
+        if (
+          this.capabilities.userHasBeenActive &&
+          this.capabilities.canVibrate
+        ) {
+          navigator.vibrate(VIBRATE_DURATION);
+        }
 
-    await this.args.toggleLike();
+        await this.args.toggleLike();
 
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
+        if (!this.collapsed) {
+          await this.#fetchWhoLiked();
+        }
+      },
+      this.staticMethodsArgs
+    );
   }
 
   @action
