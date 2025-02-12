@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DecoratedHtml from "discourse/components/decorated-html";
 import ExpandPost from "discourse/components/expand-post";
@@ -159,14 +160,10 @@ export default class PostListItem extends Component {
         data-user-id={{@post.user_id}}
         class="excerpt"
       >
-        {{#if @post.expandedExcerpt}}
-          <DecoratedHtml
-            @html={{htmlSafe @post.expandedExcerpt}}
-            @decorate={{this.decoratePostContent}}
-          />
-        {{else}}
-          {{~htmlSafe @post.excerpt~}}
-        {{/if}}
+        <DecoratedHtml
+          @html={{htmlSafe (or @post.expandedExcerpt @post.excerpt)}}
+          @decorate={{this.decoratePostContent}}
+        />
       </div>
 
       {{yield to="belowPostItem"}}
