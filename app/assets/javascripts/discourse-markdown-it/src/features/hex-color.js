@@ -7,6 +7,8 @@ function hexColorRule(state, silent) {
   if (!match) {
     return false;
   }
+  
+  state.push("hex_color", "", 0);
 
   state.pos += match[0].length;
 
