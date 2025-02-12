@@ -18,12 +18,14 @@ function hexColorRule(state, silent) {
 
 function hexColorRender(tokens, idx, options, env, self) {  
   const color = tokens[idx].content;
-  return `<span>${color}</span>`;
+  return `<span style="display: inline-block; width: 1em; height: 1em; background-color: ${color};"></span>${color}`;
 }
 
 
 
 export function setup(helper) {
+  helper.allowList(["span[style]"]);
+
   helper.registerOptions(() => {
     return {
       features: {
