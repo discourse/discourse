@@ -101,8 +101,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(ember-template-lint@6.1.0)
       lint-to-the-future-eslint:
-        specifier: ^2.2.0
-        version: 2.2.0(eslint@9.19.0)
+        specifier: ^3.0.0
+        version: 3.0.0(eslint@9.19.0)
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
@@ -5952,8 +5952,8 @@ packages:
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
-  lint-to-the-future-eslint@2.2.0:
-    resolution: {integrity: sha512-qVAplasyGhUxtehl4Rfmj4qNiHx8axZKu9HtqbjeyRrcIRyXGcHr5UECJSRP0H4sraCk+wB1IuG0k7Mv2ax3Aw==}
+  lint-to-the-future-eslint@3.0.0:
+    resolution: {integrity: sha512-ffB9PyFloMd0S3AvYUeqG24rXPAqGbd8xY3SOAnHI1W/8M6E3s+XO7UgmxjVyxHkd5suMLeZ7ymFn3QWhhVWWQ==}
     engines: {node: 10.* || >= 12.*}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -14897,11 +14897,10 @@ snapshots:
       ember-template-lint: 6.1.0
       walk-sync: 2.2.0
 
-  lint-to-the-future-eslint@2.2.0(eslint@9.19.0):
+  lint-to-the-future-eslint@3.0.0(eslint@9.19.0):
     dependencies:
       eslint: 9.19.0
       import-cwd: 3.0.0
-      semver: 7.7.1
       walk-sync: 3.0.0
 
   lint-to-the-future@2.6.2(encoding@0.1.13):
