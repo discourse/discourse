@@ -106,15 +106,9 @@ export default {
         return;
       }
 
-      if (this.currentUserTimezone) {
-        dateTimeLinkEl.innerText = moment
-          .tz(dateTimeRaw, this.currentUserTimezone)
-          .format(i18n("dates.long_no_year"));
-      } else {
-        dateTimeLinkEl.innerText = moment(dateTimeRaw).format(
-          i18n("dates.long_no_year")
-        );
-      }
+      dateTimeLinkEl.innerText = moment(dateTimeRaw).format(
+        i18n("dates.long_no_year")
+      );
     });
   },
 
