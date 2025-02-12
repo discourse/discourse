@@ -23,7 +23,7 @@ $SQRT2: 1.4142135623730951;
 //     fact(0) // 1
 //     fact(8) // 40320
 @function fact($x) {
-  @if $x < 0 or $x != floor($x) {
+  @if $x < 0 or $x != math.floor($x) {
     @warn "Argument for `fact()` must be a positive integer.";
     @return null;
   }
@@ -72,7 +72,7 @@ $SQRT2: 1.4142135623730951;
     }
 
     $b: $b * $b;
-    $exp: floor($exp * 0.5);
+    $exp: math.floor($exp * 0.5);
   }
   @return $x;
 }
@@ -87,7 +87,7 @@ $SQRT2: 1.4142135623730951;
     @return math.div(0, 0);
   }
 
-  $k: nth(frexp(math.div($x, $SQRT2)), 2);
+  $k: list.nth(frexp(math.div($x, $SQRT2)), 2);
   $x: math.div($x, ldexp(1, $k));
   $x: math.div($x - 1, $x + 1);
   $x2: $x * $x;
@@ -104,7 +104,7 @@ $SQRT2: 1.4142135623730951;
 }
 
 @function ipow($base, $exp) {
-  @if $exp != floor($exp) {
+  @if $exp != math.floor($exp) {
     @return error("Exponent for `ipow()` must be an integer.");
   }
 
@@ -119,7 +119,7 @@ $SQRT2: 1.4142135623730951;
       $r: $r * $base;
     }
 
-    $exp: floor($exp * 0.5);
+    $exp: math.floor($exp * 0.5);
     $base: $base * $base;
   }
   @return if($s != 0, math.div(1, $r), $r);
@@ -147,7 +147,7 @@ $SQRT2: 1.4142135623730951;
 //     pow(4, -2)  // 0.0625
 //     pow(4, 0.2) // 1.31951
 @function pow($base, $exp) {
-  @if $exp == floor($exp) {
+  @if $exp == math.floor($exp) {
     @return ipow($base, $exp);
   } @else {
     @return exp(log($base) * $exp);
