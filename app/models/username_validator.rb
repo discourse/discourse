@@ -8,20 +8,22 @@ class UsernameValidator
   # field_name - name of the field that we're validating
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
-  def self.perform_validation(object, field_name)
-    validator = UsernameValidator.new(object.public_send(field_name))
+  def self.perform_validation(object, field_name, opts = {})
+    validator = UsernameValidator.new(object.public_send(field_name), **opts)
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
     end
   end
 
-  def initialize(username)
+  def initialize(username, automatic: false)
     @username = username&.unicode_normalize
+    @automatic = automatic
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
+  attr_reader :automatic
 
   def user
     @user ||= User.new(user)
@@ -29,8 +31,8 @@ class UsernameValidator
 
   def valid_format?
     username_present?
-    username_length_min?
-    username_length_max?
+    username_length_min? if !automatic
+    username_length_max? if !automatic
     username_char_valid?
     username_char_allowed?
     username_first_char_valid?
