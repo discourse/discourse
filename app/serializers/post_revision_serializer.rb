@@ -18,6 +18,7 @@ class PostRevisionSerializer < ApplicationSerializer
              # from the user
              :username,
              :display_username,
+             :acting_user_name,
              :avatar_template,
              # all the changes
              :edit_reason,
@@ -94,6 +95,10 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def display_username
     user.username
+  end
+
+  def acting_user_name
+    user.name
   end
 
   def avatar_template
