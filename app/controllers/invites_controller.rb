@@ -542,11 +542,18 @@ class InvitesController < ApplicationController
     end
 
     if current_user
-      info[:existing_user_id] = current_user.id
-      info[:existing_user_can_redeem] = invite.can_be_redeemed_by?(current_user)
-      info[:existing_user_can_redeem_error] = existing_user_can_redeem_error(invite)
-      info[:email] = current_user.email
-      info[:username] = current_user.username
+      topic = invite.topics.first
+      if current_user.active? && current_user.guardian.can_access_forum? &&
+           invite.invited_users.exists?(user: current_user) && topic &&
+           current_user.guardian.can_see?(topic)
+        redirect_to topic.relative_url
+      else
+        info[:existing_user_id] = current_user.id
+        info[:existing_user_can_redeem] = invite.can_be_redeemed_by?(current_user)
+        info[:existing_user_can_redeem_error] = existing_user_can_redeem_error(invite)
+        info[:email] = current_user.email
+        info[:username] = current_user.username
+      end
     end
 
     secure_session["invite-key"] = invite.invite_key
