@@ -3536,6 +3536,10 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
+  use_experimental_admin_search:
+    default: false
+    hidden: true
+    client: true
   glimmer_topic_list_mode:
     client: true
     type: enum

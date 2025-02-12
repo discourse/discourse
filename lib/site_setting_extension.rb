@@ -201,6 +201,7 @@ module SiteSettingExtension
     include_hidden: false,
     include_locale_setting: true,
     only_overridden: false,
+    basic_attributes: false,
     filter_categories: nil,
     filter_plugin: nil,
     filter_names: nil,
@@ -271,15 +272,22 @@ module SiteSettingExtension
           setting: s,
           description: description(s),
           keywords: keywords(s),
-          default: default,
-          value: value.to_s,
           category: categories[s],
-          preview: previews[s],
-          secret: secret_settings.include?(s),
-          placeholder: placeholder(s),
-          mandatory_values: mandatory_values[s],
-          requires_confirmation: requires_confirmation_settings[s],
-        }.merge!(type_hash)
+          primary_area: areas[s]&.first,
+        }
+
+        if !basic_attributes
+          opts.merge!(
+            default: default,
+            value: value.to_s,
+            preview: previews[s],
+            secret: secret_settings.include?(s),
+            placeholder: placeholder(s),
+            mandatory_values: mandatory_values[s],
+            requires_confirmation: requires_confirmation_settings[s],
+          )
+          opts.merge!(type_hash)
+        end
 
         opts[:plugin] = plugins[s] if plugins[s]
 

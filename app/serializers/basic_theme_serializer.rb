@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BasicThemeSerializer < ApplicationSerializer
-  attributes :id, :name, :created_at, :updated_at, :default, :component
+  attributes :id, :name, :description, :created_at, :updated_at, :default, :component
 
   def include_default?
     object.id == SiteSetting.default_theme_id
@@ -9,5 +9,9 @@ class BasicThemeSerializer < ApplicationSerializer
 
   def default
     true
+  end
+
+  def description
+    object.internal_translations.find { |t| t.key == "theme_metadata.description" }&.value
   end
 end
