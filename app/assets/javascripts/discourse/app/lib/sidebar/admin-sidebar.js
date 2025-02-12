@@ -184,53 +184,6 @@ function defineAdminSection(
 }
 
 export function useAdminNavConfig(navMap) {
-  const adminNavSections = [
-    {
-      text: "",
-      name: "root",
-      hideSectionHeader: true,
-      links: [
-        {
-          name: "admin_home",
-          route: "admin.dashboard.general",
-          label: "admin.dashboard.title",
-          icon: "house",
-          moderator: true,
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.community.sidebar_link.users",
-          icon: "users",
-          moderator: true,
-        },
-        {
-          name: "admin_groups",
-          route: "groups",
-          label: "admin.community.sidebar_link.groups",
-          icon: "user-group",
-          moderator: true,
-        },
-        {
-          name: "admin_all_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "gear",
-        },
-        {
-          name: "admin_whats_new",
-          route: "admin.whatsNew",
-          label: "admin.account.sidebar_link.whats_new.title",
-          icon: "gift",
-          keywords: "admin.account.sidebar_link.whats_new.keywords",
-          moderator: true,
-        },
-      ],
-    },
-  ];
-
-  navMap = adminNavSections.concat(navMap);
-
   for (const [sectionName, additionalLinks] of Object.entries(
     additionalAdminSidebarSectionLinks
   )) {

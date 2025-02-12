@@ -5160,12 +5160,21 @@ en:
           all: "All reports"
 
       config:
+        about:
+          title: "About your site"
+          header_decription: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
           header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
+        emojis:
+          title: "Emoji"
+          header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time"
+        flags:
+          title: "Moderation"
+          header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes"
