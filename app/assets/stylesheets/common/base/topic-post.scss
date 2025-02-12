@@ -1286,12 +1286,21 @@ span.mention {
   color: var(--primary-high);
 }
 
-.hex-color__swatch::before {
-  display: inline-block;
-  content: "";
-  width: 1em;
-  height: 1em;
-  background-color: var(--swatch-color);
+.hex-color {
+  font-family: var(--d-font-family--monospace);
+  padding-left: 0.125em;
+  padding-right: 0.05em;
+  &__swatch::before {
+    display: inline-block;
+    content: "";
+    margin-right: 0.1em;
+    vertical-align: text-top;
+    width: 0.8em;
+    height: 0.8em;
+    border: 1px solid var(--primary-900);
+    border-radius: 2px;
+    background-color: var(--swatch-color);
+  }
 }
 
 .suggested-topics {
