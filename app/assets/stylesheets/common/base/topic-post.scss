@@ -1286,6 +1286,12 @@ span.mention {
   color: var(--primary-high);
 }
 
+.hex-color {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
 .suggested-topics {
   .topics {
     padding-bottom: 15px;

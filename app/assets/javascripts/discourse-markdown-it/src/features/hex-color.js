@@ -18,13 +18,23 @@ function hexColorRule(state, silent) {
 
 function hexColorRender(tokens, idx, options, env, self) {  
   const color = tokens[idx].content;
-  return `<span style="display: inline-block; width: 1em; height: 1em; background-color: ${color};"></span>${color}`;
+  return `<span class="hex-color" style="background-color: ${color};"></span>${color}`;
 }
 
 
 
 export function setup(helper) {
-  helper.allowList(["span[style]"]);
+  helper.allowList(["span.hex-color"]);
+
+  helper.allowList({
+    custom(tag, name, value) {
+    
+      if (tag === "span" && name === "style") {      
+        return value.startsWith("background-color:");
+      }
+      return false;
+    }
+  });
 
   helper.registerOptions(() => {
     return {
