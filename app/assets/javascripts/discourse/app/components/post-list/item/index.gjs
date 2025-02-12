@@ -163,6 +163,7 @@ export default class PostListItem extends Component {
         <DecoratedHtml
           @html={{htmlSafe (or @post.expandedExcerpt @post.excerpt)}}
           @decorate={{this.decoratePostContent}}
+          @className="cooked"
         />
       </div>
 
