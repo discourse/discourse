@@ -3,7 +3,8 @@ function hexColorRule(state, silent) {
   const src = state.src;
   const firstChar = src.charCodeAt(start);
 
-  if (firstChar !== 0x23) { // `#` character
+  // early exit if first char isn't `#`
+  if (firstChar !== 0x23) {
     return false;
   }
 
@@ -21,31 +22,28 @@ function hexColorRule(state, silent) {
   return true;
 }
 
-function hexColorRender(tokens, idx, options, env, self) {  
+function hexColorRender(tokens, idx, options, env, self) {
   const color = tokens[idx].content;
   return `<span class="hex-color" style="background-color: ${color};"></span>${color}`;
 }
-
-
 
 export function setup(helper) {
   helper.allowList(["span.hex-color"]);
 
   helper.allowList({
     custom(tag, name, value) {
-    
-      if (tag === "span" && name === "style") {      
+      if (tag === "span" && name === "style") {
         return value.startsWith("background-color:");
       }
       return false;
-    }
+    },
   });
 
   helper.registerOptions(() => {
     return {
       features: {
-        "hex-color": true
-      }
+        "hex-color": true,
+      },
     };
   });
 
