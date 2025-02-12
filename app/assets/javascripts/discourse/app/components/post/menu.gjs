@@ -31,6 +31,7 @@ import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
+import { applyBehaviorTransformer } from "../../lib/transformer";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -442,26 +443,35 @@ export default class PostMenu extends Component {
 
   @action
   async toggleLike() {
-    if (!this.currentUser) {
-      this.keyValueStore &&
-        this.keyValueStore.set({
-          key: "likedPostId",
-          value: this.args.post.id,
-        });
+    await applyBehaviorTransformer(
+      "post-menu-toggle-like-action",
+      async () => {
+        if (!this.currentUser) {
+          this.keyValueStore &&
+            this.keyValueStore.set({
+              key: "likedPostId",
+              value: this.args.post.id,
+            });
 
-      this.args.showLogin();
-      return;
-    }
+          this.args.showLogin();
+          return;
+        }
 
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(VIBRATE_DURATION);
-    }
+        if (
+          this.capabilities.userHasBeenActive &&
+          this.capabilities.canVibrate
+        ) {
+          navigator.vibrate(VIBRATE_DURATION);
+        }
 
-    await this.args.toggleLike();
+        await this.args.toggleLike();
 
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
+        if (!this.collapsed) {
+          await this.#fetchWhoLiked();
+        }
+      },
+      this.staticMethodsArgs
+    );
   }
 
   @action
