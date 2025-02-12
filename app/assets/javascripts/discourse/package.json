@@ -51,8 +51,8 @@
     "prosemirror-view": "^1.37.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.7",
-    "@babel/standalone": "^7.26.7",
+    "@babel/core": "^7.26.8",
+    "@babel/standalone": "^7.26.8",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
