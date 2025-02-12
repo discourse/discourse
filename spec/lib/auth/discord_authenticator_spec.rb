@@ -8,6 +8,7 @@ RSpec.describe Auth::DiscordAuthenticator do
         raw_info: {
           id: "100",
           username: "bobbob",
+          global_name: "bobbob",
           guilds: [
             {
               id: "80351110224678912",
