@@ -23,7 +23,7 @@ export default class FKControlImage extends Component {
 
   <template>
     <UppyImageUploader
-      @id={{concat @field.id "-" @field.name}}
+      @id="{{@field.id}}-{{@field.name}}"
       @imageUrl={{this.imageUrl}}
       @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
