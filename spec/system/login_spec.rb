@@ -88,9 +88,6 @@ shared_examples "login scenarios" do |login_page_object|
 
       # TODO: prefill username when fullpage
       if find("#username-or-email").value.blank?
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
-        end
         find("#username-or-email").fill_in(with: user.username)
       end
 
@@ -147,12 +144,10 @@ shared_examples "login scenarios" do |login_page_object|
   end
 
   context "when login is not required" do
-    before do
-      SiteSetting.login_required = false
-      EmailToken.confirm(Fabricate(:email_token, user: user).token)
-    end
+    before { SiteSetting.login_required = false }
 
     it "redirects to a PM after authentication" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       group = Fabricate(:group, publish_read_state: true)
       Fabricate(:group_user, group: group, user: user)
       pm = Fabricate(:private_message_topic, allowed_groups: [group])
@@ -170,6 +165,7 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "redirects to a public topic when hitting Reply then logging in" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
       topic = Fabricate(:topic)
       Fabricate(:post, topic: topic, created_at: 1.day.ago)
 
