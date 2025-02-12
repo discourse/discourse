@@ -30,6 +30,26 @@ RSpec.describe "Keyboard shortcuts", type: :system do
     expect(page).to have_no_css(".keyboard-shortcuts-modal")
   end
 
+  describe "<d>" do
+    fab!(:post) { Fabricate(:post) }
+
+    let(:current_user) { Fabricate(:user) }
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    before { sign_in(current_user) }
+
+    context "when user can't delete the post" do
+      it "doesn’t show the confirmation modal" do
+        topic_page.visit_topic(post.topic)
+
+        send_keys("j d")
+
+        expect(dialog).to be_closed
+      end
+    end
+  end
+
   describe "<a>" do
     let(:current_user) { topic.user }
     let(:topic_page) { PageObjects::Pages::Topic.new }
