@@ -1286,10 +1286,12 @@ span.mention {
   color: var(--primary-high);
 }
 
-.hex-color {
+.hex-color__swatch::before {
   display: inline-block;
+  content: "";
   width: 1em;
   height: 1em;
+  background-color: var(--swatch-color);
 }
 
 .suggested-topics {
