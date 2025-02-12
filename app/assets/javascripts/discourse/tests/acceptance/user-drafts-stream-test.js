@@ -42,7 +42,7 @@ acceptance("User Drafts", function (needs) {
     assert
       .dom(".user-stream-item:nth-child(3) .excerpt")
       .hasHtml(
-        `here goes a reply to a PM <img src="/images/emoji/twitter/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`,
+        `here goes a reply to a PM <img src="/images/emoji/twitter/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20">`,
         "shows the excerpt"
       );
 

@@ -701,7 +701,7 @@ export default class DEditor extends Component {
       });
     });
 
-    observer.observe(document.querySelector(".d-editor-preview"), {
+    observer.observe(document.querySelector(".d-editor-preview-wrapper"), {
       childList: true,
       subtree: true,
       attributes: false,
