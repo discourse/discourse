@@ -112,7 +112,9 @@ RSpec.describe InvitesController do
 
       it "doesn't automatically redirect to the topic if the user can't access it" do
         secret_group = Fabricate(:group)
-        invite.update!(topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))])
+        invite.update!(
+          topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))],
+        )
 
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
