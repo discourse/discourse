@@ -96,6 +96,11 @@
         <div class="controls">
           <UppyImageUploader
             @imageUrl={{this.model.profile_background_upload_url}}
+            @onUploadDone={{fn (mut this.model.profile_background_upload_url)}}
+            @onUploadDeleted={{fn
+              (mut this.model.profile_background_upload_url)
+              null
+            }}
             @type="profile_background"
             @id="profile-background-uploader"
           />
@@ -116,6 +121,11 @@
         <div class="controls">
           <UppyImageUploader
             @imageUrl={{this.model.card_background_upload_url}}
+            @onUploadDone={{fn (mut this.model.card_background_upload_url)}}
+            @onUploadDeleted={{fn
+              (mut this.model.card_background_upload_url)
+              null
+            }}
             @type="card_background"
             @id="profile-card-background-uploader"
           />
