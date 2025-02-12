@@ -86,6 +86,7 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
+  @bind
   debouncedRecalculateHeaderOffset() {
     this.recalculationTimer = discourseDebounce(
       this,
