@@ -71,8 +71,10 @@
     </div>
   </div>
 
+  {{! template-lint-disable no-invalid-interactive }}
   <div
     class="d-editor-preview-wrapper {{if this.forcePreview 'force-preview'}}"
+    {{on "click" this.handlePreviewClick}}
   >
     <DecoratedHtml
       @className="d-editor-preview"

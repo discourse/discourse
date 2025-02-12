@@ -15,7 +15,7 @@ import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
@@ -107,14 +107,7 @@ export default class DEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-
     this._previewMutationObserver = this._disablePreviewTabIndex();
-
-    // disable clicking on links in the preview
-    this.element
-      .querySelector(".d-editor-preview")
-      .addEventListener("click", this._handlePreviewLinkClick);
-    ``;
   }
 
   get keymap() {
@@ -156,8 +149,12 @@ export default class DEditor extends Component {
     return keymap;
   }
 
-  @bind
-  _handlePreviewLinkClick(event) {
+  @action
+  handlePreviewClick(event) {
+    if (!event.target.closest(".d-editor-preview")) {
+      return;
+    }
+
     if (wantsNewWindow(event)) {
       return;
     }
@@ -186,10 +183,6 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    this.element
-      .querySelector(".d-editor-preview")
-      ?.removeEventListener("click", this._handlePreviewLinkClick);
-
     this._previewMutationObserver?.disconnect();
 
     this._cachedCookFunction = null;
