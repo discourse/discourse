@@ -6,6 +6,18 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Discourse Chat | Component | chat-message-text", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("yields", async function (assert) {
+    this.set("cooked", "<p></p>");
+
+    await render(hbs`
+      <ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}}>
+        <div class="yield-me"></div>
+      </ChatMessageText>
+    `);
+
+    assert.dom(".yield-me").exists();
+  });
+
   test("shows collapsed", async function (assert) {
     this.set(
       "cooked",
