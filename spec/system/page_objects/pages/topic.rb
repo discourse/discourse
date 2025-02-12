@@ -324,36 +324,35 @@ module PageObjects
       end
 
       def selector_for_post_action_button(button)
-        # TODO (glimmer-post-menu): Replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
         case button
         when :admin
-          ".post-controls .show-post-admin-menu"
+          ".post-controls .post-action-menu__admin"
         when :bookmark
-          ".post-controls .bookmark"
+          ".post-controls .post-action-menu__bookmark"
         when :copy_link, :copyLink
           ".post-controls .post-action-menu__copy-link"
         when :delete
-          ".post-controls .delete"
+          ".post-controls .post-action-menu__delete"
         when :edit
-          ".post-controls .edit"
+          ".post-controls .post-action-menu__edit"
         when :flag
-          ".post-controls .create-flag"
+          ".post-controls .post-action-menu__flag"
         when :like
-          ".post-controls .toggle-like"
+          ".post-controls .post-action-menu__like"
         when :like_count
-          ".post-controls .like-count"
+          ".post-controls .post-action-menu__like-count"
         when :read
-          ".post-controls .read-indicator"
+          ".post-controls .post-action-menu__read"
         when :recover
-          ".post-controls .recover"
+          ".post-controls .post-action-menu__recover"
         when :replies
-          ".post-controls .show-replies"
+          ".post-controls .post-action-menu__show-replies"
         when :reply
-          ".post-controls .reply"
+          ".post-controls .post-action-menu__reply"
         when :share
-          ".post-controls .share"
+          ".post-controls .post-action-menu__share"
         when :show_more
-          ".post-controls .show-more-actions"
+          ".post-controls .post-action-menu__show-more"
         else
           raise "Unknown post menu button type: #{button}"
         end

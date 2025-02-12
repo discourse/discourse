@@ -136,12 +136,6 @@ import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
-  addButton,
-  apiExtraButtons,
-  removeButton,
-  replaceButton,
-} from "discourse/widgets/post-menu";
-import {
   addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
@@ -161,18 +155,6 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-
-const DEPRECATED_POST_MENU_WIDGETS = [
-  "post-menu",
-  "post-user-tip-shim",
-  "small-user-list",
-];
-
-const POST_MENU_DEPRECATION_OPTIONS = {
-  since: "v3.4.0.beta3-dev",
-  id: "discourse.post-menu-widget-overrides",
-  url: "https://meta.discourse.org/t/341014",
-};
 
 export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta4-dev",
@@ -844,59 +826,13 @@ class PluginApi {
   }
 
   /**
-   * Add a new button below a post with your plugin.
-   *
-   * The `callback` function will be called whenever the post menu is rendered,
-   * and if you return an object with the button details it will be rendered.
-   *
-   * Example:
-   *
-   * ```
-   * api.addPostMenuButton('coffee', () => {
-   *   return {
-   *     action: 'drinkCoffee',
-   *     icon: 'mug-saucer',
-   *     className: 'hot-coffee',
-   *     title: 'coffee.title',
-   *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
-   *   };
-   * });
-   *
-   * ```
-   *
-   * action: may be a string or a function. If it is a string, a widget action
-   * will be triggered. If it is function, the function will be called.
-   *
-   * function will receive a single argument:
-   *  {
-   *    post:
-   *    showFeedback:
-   *  }
-   *
-   *  showFeedback can be called to issue a visual feedback on button press.
-   *  It gets a single argument with a localization key.
-   *
-   *  Example:
-   *
-   *  api.addPostMenuButton('coffee', () => {
-   *    return {
-   *      action: ({ post, showFeedback }) => {
-   *        drinkCoffee(post);
-   *        showFeedback('discourse_plugin.coffee.drink');
-   *      },
-   *      icon: 'mug-saucer',
-   *      className: 'hot-coffee',
-   *    }
-   *  }
+   * Decommissioned API
    **/
-  addPostMenuButton(name, callback) {
-    deprecated(
-      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  addPostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.addPostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    apiExtraButtons[name] = callback;
-    addButton(name, callback);
   }
 
   /**
@@ -948,54 +884,23 @@ class PluginApi {
   }
 
   /**
-   * Remove existing button below a post with your plugin.
-   *
-   * Example:
-   *
-   * ```
-   * api.removePostMenuButton('like');
-   * ```
-   *
-   * ```
-   * api.removePostMenuButton('like', (attrs, state, siteSettings, settings, currentUser) => {
-   *   if (attrs.post_number === 1) {
-   *     return true;
-   *   }
-   * });
-   * ```
+   * Decommissioned API
    **/
-  removePostMenuButton(name, callback) {
-    deprecated(
-      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  removePostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.removePostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    removeButton(name, callback);
   }
 
   /**
-   * Replace an existing button with a widget
-   *
-   * Example:
-   * ```
-   * api.replacePostMenuButton("like", {
-   *   name: "widget-name",
-   *   buildAttrs: (widget) => {
-   *     return { post: widget.findAncestorModel() };
-   *   },
-   *   shouldRender: (widget) => {
-   *     const post = widget.findAncestorModel();
-   *     return post.id === 1
-   *   }
-   * });
+   * Decommissioned API
    **/
-  replacePostMenuButton(name, widget) {
-    deprecated(
-      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      POST_MENU_DEPRECATION_OPTIONS
+  replacePostMenuButton() {
+    // eslint-disable-next-line no-console
+    console.error(
+      "`api.replacePostMenuButton`: This API was decommissioned. Use the value transformer `post-menu-buttons` instead."
     );
-
-    replaceButton(name, widget);
   }
 
   /**
@@ -2123,13 +2028,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
@@ -3388,8 +3296,10 @@ class PluginApi {
     registerRichEditorExtension(extension);
   }
 
+  // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
+    //
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
     //   this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
     //   deprecated(
@@ -3401,13 +3311,6 @@ class PluginApi {
     //     }
     //   );
     // }
-
-    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
-      deprecated(
-        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        POST_MENU_DEPRECATION_OPTIONS
-      );
-    }
   }
 }
 

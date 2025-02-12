@@ -100,7 +100,6 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -218,7 +217,6 @@ export function testCleanup(container, app) {
   resetCardClickListenerSelector();
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
-  resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearDisabledDefaultKeyboardBindings();
