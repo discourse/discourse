@@ -9,6 +9,7 @@ module SvgSprite
         align-left
         anchor
         angle-down
+        angle-left
         angle-right
         angle-up
         angles-down

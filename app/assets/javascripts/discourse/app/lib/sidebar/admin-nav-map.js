@@ -139,20 +139,14 @@ export const ADMIN_NAV_MAP = [
         icon: "diagram-project",
       },
       {
-        name: "admin_themes",
-        route: "adminCustomizeThemes",
-        routeModels: ["themes"],
-        model: "themes",
-        label: "admin.appearance.sidebar_link.themes",
+        name: "admin_themes_and_components",
+        route: "adminConfig.themesAndComponents.themes",
+        currentWhen:
+          "adminConfig.themesAndComponents.themes adminConfig.themesAndComponents.components",
+        label: "admin.appearance.sidebar_link.themes_and_components.title",
         icon: "paintbrush",
-      },
-      {
-        name: "admin_components",
-        route: "adminCustomizeThemes",
-        routeModels: ["components"],
-        label: "admin.appearance.sidebar_link.components.title",
-        icon: "puzzle-piece",
-        keywords: "admin.appearance.sidebar_link.components.keywords",
+        keywords:
+          "admin.appearance.sidebar_link.themes_and_components.keywords",
       },
       {
         name: "admin_customize_site_texts",
