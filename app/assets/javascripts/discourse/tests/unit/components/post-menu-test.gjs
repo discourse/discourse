@@ -14,16 +14,13 @@ module("Unit | Component | post-menu", function (hooks) {
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
-    const post = store.createRecord("post", {
+    this.post = store.createRecord("post", {
       id: 1,
       post_number: 1,
       topic,
       like_count: 3,
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
     });
-
-    this.set("post", post);
-    this.set("args", {});
   });
 
   test("post-menu-toggle-like-action behavior transformer", async function (assert) {
