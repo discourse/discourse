@@ -1,5 +1,6 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
@@ -371,5 +372,16 @@ acceptance("Glimmer Topic Timeline", function (needs) {
       currentURL().includes("/280/2"),
       "The position of the currently viewed post has been updated from it's initial position"
     );
+  });
+
+  test("posts apply model transformations", async function (assert) {
+    withPluginApi("1.3.0", (api) => {
+      api.registerModelTransformer("post", (post) => {
+        post.set("cooked", "hur dur I'm a post");
+      });
+    });
+
+    await visit("/t/deleted-topic-with-whisper-post/129");
+    assert.dom(".topic-body .cooked").hasText("hur dur I'm a post");
   });
 });
