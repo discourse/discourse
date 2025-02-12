@@ -50,6 +50,12 @@ class DiscoursePluginRegistry
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
       public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
     end
+
+    define_singleton_method(register_name.to_s + "_lookup") do
+      public_send(:"_raw_#{register_name}")
+        .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
+        .uniq
+    end
   end
 
   define_register :javascripts, Set

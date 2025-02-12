@@ -42,6 +42,8 @@ class Reviewable < ActiveRecord::Base
 
   validates :reject_reason, length: { maximum: 2000 }
 
+  before_save :set_type_source
+
   after_create { log_history(:created, created_by) }
 
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
@@ -77,6 +79,16 @@ class Reviewable < ActiveRecord::Base
     self.types.map(&:sti_name)
   end
 
+  def self.source_for(type)
+    puts "type: #{type}"
+    return "unknown" if Reviewable.sti_names.exclude?(type)
+
+    DiscoursePluginRegistry
+      .reviewable_types_lookup
+      .find { |r| r[:klass].sti_name == type }
+      &.dig(:plugin) || "core"
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -87,6 +99,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+  end
+
+  def set_type_source
+    self.type_source = Reviewable.source_for(type)
   end
 
   def created_new!
@@ -804,6 +820,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
