@@ -519,8 +519,12 @@ export default class ComposerEditor extends Component {
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
 
-  _decorateCookedElement(preview) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+  _decorateCookedElement(preview, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      preview,
+      helper
+    );
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -896,13 +900,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview) {
+  previewUpdated(preview, helper) {
     this._renderMentions(preview);
     this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    this._decorateCookedElement(preview);
+    this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
   }
