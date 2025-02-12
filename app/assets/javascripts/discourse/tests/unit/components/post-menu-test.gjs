@@ -24,11 +24,9 @@ module("Unit | Component | post-menu", function (hooks) {
   });
 
   test("post-menu-toggle-like-action behavior transformer", async function (assert) {
-    let behaviorChanged = false;
-
     withPluginApi("2.0.0", (api) => {
       api.registerBehaviorTransformer("post-menu-toggle-like-action", () => {
-        behaviorChanged = true;
+        assert.step("transformer called");
       });
     });
 
@@ -36,6 +34,9 @@ module("Unit | Component | post-menu", function (hooks) {
     await render(<template><PostMenu @post={{post}} /></template>);
 
     await click(".post-action-menu__like");
-    assert.true(behaviorChanged, "behavior transformer was called");
+    assert.verifySteps(
+      ["transformer called"],
+      "behavior transformer was called"
+    );
   });
 });
