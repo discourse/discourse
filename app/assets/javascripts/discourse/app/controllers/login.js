@@ -160,6 +160,8 @@ export default class LoginPageController extends Controller {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
+          } else if (this.referrerUrl) {
+            window.location.assign(this.referrerUrl);
           } else {
             window.location.reload();
           }
@@ -337,6 +339,8 @@ export default class LoginPageController extends Controller {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
+        } else if (this.referrerUrl) {
+          applyHiddenFormInputValue(this.referrerUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }
