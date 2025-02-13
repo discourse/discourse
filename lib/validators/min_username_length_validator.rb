@@ -18,7 +18,7 @@ class MinUsernameLengthValidator
   end
 
   def error_message
-    if @min_length_violation
+    if @min_range_violation
       I18n.t(
         "site_settings.errors.invalid_integer_min_max",
         min: MIN_USERNAME_LENGTH_RANGE.begin,
