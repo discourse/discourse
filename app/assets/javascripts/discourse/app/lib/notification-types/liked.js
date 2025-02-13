@@ -47,7 +47,7 @@ export default class extends NotificationTypeBase {
   }
 
   get #full_name2() {
-    return this.notification.data.fullname2;
+    return this.notification.data.acting_user_name_2;
     // this doesn't exist on the returned object yet
   }
 }
