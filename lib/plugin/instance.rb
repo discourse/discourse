@@ -895,7 +895,6 @@ class Plugin::Instance
 
   def extend_list_method(klass, method, new_attributes)
     register_name = [klass, method].join("_").underscore
-    DiscoursePluginRegistry.define_filtered_register(register_name)
     DiscoursePluginRegistry.public_send(
       "register_#{register_name.singularize}",
       new_attributes,

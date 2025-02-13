@@ -135,6 +135,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :custom_filter_mappings
 
+  define_filtered_register :reviewable_types
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

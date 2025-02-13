@@ -80,7 +80,6 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.source_for(type)
-    puts "type: #{type}"
     return "unknown" if Reviewable.sti_names.exclude?(type)
 
     DiscoursePluginRegistry
