@@ -17,11 +17,13 @@
 
   .ace-wrapper[data-disabled="false"] {
     .ace_focus {
-      @include default-input;
-      height: unset;
-      border-color: var(--tertiary);
       outline: 2px solid var(--tertiary);
       outline-offset: -1px;
+
+      @include default-input {
+        height: unset;
+        border-color: var(--tertiary);
+      }
     }
   }
 }

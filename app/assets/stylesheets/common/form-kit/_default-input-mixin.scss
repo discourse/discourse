@@ -9,6 +9,8 @@
   margin: 0 !important;
   appearance: none;
 
+  @content;
+
   @include breakpoint(mobile-large) {
     width: 100% !important;
     height: 2.25em;

@@ -136,6 +136,7 @@
 .staff-action-logs-controls {
   display: flex;
   align-items: center;
+  margin: 0 0 1em 0;
 
   .select-kit {
     margin: 0 0.5em;
@@ -144,7 +145,6 @@
   button {
     margin-left: auto;
   }
-  margin: 0 0 1em 0;
 
   a.filter {
     .label {

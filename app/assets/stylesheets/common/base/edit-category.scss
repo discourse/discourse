@@ -189,6 +189,7 @@ div.edit-category {
     .required-tag-group-row {
       display: flex;
       gap: 0.5em;
+      margin-bottom: 1em;
 
       > * {
         margin: 0;
@@ -197,7 +198,6 @@ div.edit-category {
       input[type="number"] {
         width: 4em;
       }
-      margin-bottom: 1em;
     }
   }
 
