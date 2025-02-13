@@ -50,10 +50,7 @@ export default class DecoratedHtml extends Component {
 
     {{~#each this.renderGlimmerInfos as |info|~}}
       {{~#in-element info.element insertBefore=null~}}
-        <info.component
-          @data={{info.data}}
-          @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
-        />
+        <info.component @data={{info.data}} />
       {{~/in-element~}}
     {{~/each~}}
   </template>
