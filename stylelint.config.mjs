@@ -22,7 +22,6 @@ export default {
     "scss/at-extend-no-missing-placeholder": null,
     "scss/load-no-partial-leading-underscore": null,
     "scss/operator-no-newline-after": null,
-    "scss/no-global-function-names": null,
     "selector-id-pattern": null,
     "no-invalid-position-at-import-rule": null,
     "scss/at-function-pattern": null,

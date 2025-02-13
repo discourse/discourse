@@ -1310,10 +1310,6 @@ posting:
   watched_words_regular_expressions:
     client: true
     default: false
-  enable_diffhtml_preview:
-    hidden: true
-    default: false
-    client: true
   enable_fast_edit:
     default: true
     client: true
@@ -3514,6 +3510,9 @@ dashboard:
     client: true
 
 experimental:
+  experimental_auto_grid_images:
+    default: false
+    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -3552,7 +3551,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
   enable_rich_text_paste:
     client: true
     default: true

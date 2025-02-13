@@ -7,7 +7,7 @@
 id:
   js:
     discourse_automation:
-      create: Buat
+      edit: Ubah
       fields:
         user:
           label: Pengguna

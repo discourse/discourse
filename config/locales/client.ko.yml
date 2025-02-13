@@ -327,8 +327,6 @@ ko:
       abandon:
         yes_value: "버리기"
         no_value: "편집 재개"
-      dropdown:
-        view_all: "모두 보기"
     topic_count_all:
       other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
@@ -3576,6 +3574,10 @@ ko:
       filter: "필터..."
       no_results:
         title: "결과 없음"
+      footer:
+        interface_color_selector:
+          light: "라이트"
+          dark: "다크"
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
@@ -4825,8 +4827,6 @@ ko:
           other: "모든 게시물을 삭제할 수 없습니다. 일부 게시물은 %{count}일 이전에 작성되었습니다. (delete_user_max_post_age 설정)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상의 게시물을 보유하고 있기 때문에 모든 게시물을 삭제할 수 없습니다. (delete_all_posts_max)"
-        delete_and_block: "이 이메일과 IP 주소를 삭제하고 <b>차단</b>"
-        delete_dont_block: "삭제만 하기"
         deleted: "사용자가 삭제되었습니다."
         delete_failed: "이 사용자를 삭제하는 중에 오류가 발생했습니다. 사용자를 삭제하기 전에 모든 게시물을 삭제해야 합니다."
         send_activation_email: "활성화 이메일 전송"

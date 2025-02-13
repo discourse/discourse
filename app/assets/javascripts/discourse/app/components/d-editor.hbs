@@ -75,9 +75,7 @@
     class="d-editor-preview-wrapper {{if this.forcePreview 'force-preview'}}"
   >
     <div class="d-editor-preview">
-      {{#unless this.siteSettings.enable_diffhtml_preview}}
-        {{html-safe this.preview}}
-      {{/unless}}
+      {{html-safe this.preview}}
     </div>
     <span class="d-editor-plugin">
       <PluginOutlet

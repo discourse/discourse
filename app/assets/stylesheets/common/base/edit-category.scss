@@ -1,4 +1,6 @@
-$category-settings-width: unquote("min(500px, 90%)");
+@use "sass:string";
+
+$category-settings-width: string.unquote("min(500px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {
@@ -59,7 +61,7 @@ div.edit-category {
 
   .edit-category-tab-general {
     .category-chooser {
-      width: unquote("min(340px, 90%)");
+      width: min(340px, 90%);
     }
   }
 

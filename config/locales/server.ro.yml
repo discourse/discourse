@@ -412,6 +412,9 @@ ro:
           attributes:
             base:
               invalid_html: "HTML poate fi folosit doar pentru înlocuire"
+        api_key:
+          base:
+            at_least_one_granular_scope: "trebuie selectat cel puțin unul"
       <<: *errors
   uncategorized_category_name: "Necategorisite"
   general_category_name: "General"
@@ -1024,6 +1027,7 @@ ro:
     unicode_usernames: "Permite numelor de utilizator și numelor de grup să conțină litere și numere Unicode"
     allowed_unicode_username_characters: "Expresie regulată pentru a permite numai unele caractere Unicode în numele de utilizator. Literele și numerele ASCII vor fi întotdeauna permise și nu trebuie să fie incluse în lista permisă"
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
+    auth_require_interaction: "Solicită interacțiunea utilizatorului înainte de a redirecționa către un sistem de conectare extern prin `/auth/*`. Aceasta este o apărare în profunzime împotriva atacurilor „Autentificare CSRF”. Dezactivează această setare numai dacă ai încredere deplină că toate metodele de autentificare activate sunt protejate împotriva autentificării CSRF."
     discourse_connect_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
@@ -1215,6 +1219,7 @@ ro:
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
+    interface_color_selector: "Configurează acolo unde este disponibil selectorul modului luminos sau întunecat pentru culoarea interfeței."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."

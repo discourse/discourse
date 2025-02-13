@@ -343,8 +343,6 @@ vi:
       abandon:
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
-      dropdown:
-        view_all: "xem tất cả"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -4904,8 +4902,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết, một số bài viết cũ hơn %{count} ngày. (Thiết lập delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
-        delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
-        delete_dont_block: "Chỉ xóa"
         deleting_user: "Đang xóa người dùng…"
         deleted: "Thành viên này đã bị xóa"
         delete_failed: "Có lỗi trong quá trình xóa thành viên này. Chắc chắn rằng tất cả bài viết đã được xóa trước khi xóa thành viên."

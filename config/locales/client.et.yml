@@ -2662,6 +2662,10 @@ et:
         forum:
           label: Foorum
       filter: "Filter..."
+      footer:
+        interface_color_selector:
+          light: "Hele"
+          dark: "Tume"
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -3486,8 +3490,6 @@ et:
         cant_delete_all_too_many_posts:
           one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitus. (delete_all_posts_max)"
           other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitust. (delete_all_posts_max)"
-        delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja IP-aadress"
-        delete_dont_block: "Kustuta vaid"
         deleted: "See kasutaja kustutati."
         delete_failed: "Viga selle kasutaja kustutamisel. Veendu, et kõik postitused on kustutatud enne kasutaja kustutamist."
         send_activation_email: "Saada aktiveerimismeil"

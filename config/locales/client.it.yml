@@ -463,7 +463,6 @@ it:
       dropdown:
         title: "Apri il menu delle ultime bozze"
         untitled: "Bozza senza titolo"
-        view_all: "visualizza tutto"
         other_drafts:
           one: "+%{count} altra bozza"
           other: "+%{count} altre bozze"
@@ -4673,6 +4672,10 @@ it:
       no_results:
         title: "Nessun risultato"
         description: 'Nessuna corrispondenza trovata per "%{filter}":<br><br> Vuoi <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">cercare tra le impostazioni del sito</a> o nell''<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">elenco degli utenti amministratori</a>?'
+      footer:
+        interface_color_selector:
+          light: "Chiaro"
+          dark: "Scuro"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
@@ -5396,8 +5399,6 @@ it:
           community_title: "Titolo della community"
           community_title_help: "Breve descrizione, mostrata nella scheda del browser, per pagine chiave come categorie ed elenchi di argomenti."
           banner_image: "Immagine banner"
-          banner_image_help: |
-            Verrà mostrato sulla tua pagina Informazioni. Dimensioni consigliate: 1100x300px. Formati supportati: JPG, PNG e SVG fino a 10 MB.
           contact_information: "Informazioni di contatto"
           community_owner: "Proprietario della comunità"
           community_owner_placeholder: "Mario Rossi"
@@ -6627,8 +6628,6 @@ it:
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
         delete_confirm_title: "Vuoi davvero eliminare questo utente? Questa operazione è irreversibile!"
         delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
-        delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
-        delete_dont_block: "Elimina soltanto"
         deleting_user: "Cancellazione utente…"
         deleted: "L'utente è stato cancellato."
         delete_failed: "Si è verificato un errore nella cancellazione dell'utente. Assicurati che tutti i messaggi siano stati cancellati prima di provare a cancellare l'utente."

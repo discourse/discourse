@@ -2338,7 +2338,6 @@ es:
     watched_words_regular_expressions: "Permite utilizar expresiones regulares para filtrar palabras. Si está activada, esta función agrupa las palabras sensibles según su distinción entre mayúsculas y minúsculas. A continuación, compila todas las palabras seleccionadas en una única expresión regular, añadiendo límites de palabra para las palabras regulares vigiladas. En consecuencia, este método de filtrado basado en expresiones regulares añade una capa adicional de control sobre la moderación de contenidos, al admitir patrones de palabras más sofisticados. También permite sustituir fácilmente el texto original por el sustituto elegido."
     enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la vista previa en lugar de volver a renderizar toda de nuevo."
     enable_fast_edit: "Añade un botón al menú de selección de publicaciones para editar una pequeña selección en línea."
-    enable_quote_copy: "Añade un botón al menú de selección de publicaciones para copiar la selección al portapapeles como una cita de markdown."
     old_post_notice_days: "El número de días tras los cuales un aviso se considera antiguo. Esto lo diferencia visualmente de los avisos más recientes del sitio."
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de publicaciones de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."

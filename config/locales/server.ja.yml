@@ -312,7 +312,7 @@ ja:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
       twitter_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
-      tl0_and_anonymous_flag: "匿名ユーザーの場合は、「サイトの連絡先メールアドレス」または「違法コンテンツを報告するためのメールアドレス」のいずれかが指定されている必要があります。"
+      tl0_and_anonymous_flag: "匿名ユーザーの場合は、'site contact email' または 'email address to report illegal content' のいずれかが指定されている必要があります。"
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
     onebox:
       invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
@@ -2259,7 +2259,6 @@ ja:
     watched_words_regular_expressions: "単語をフィルタリングするための正規表現の使用を許可します。有効にすると、この機能は大文字と小文字を区別して、慎重な扱いを要する単語をグループ化します。そして選択されたすべての単語を 1 つの正規表現にコンパイルし、通常のウォッチ中の単語に単語境界を追加します。そのため、この正規表現を使用するフィルタリング手法では、より洗練された単語パターンをサポートすることで、コンテンツモデレーションに対する制御レイヤーがさらに追加されます。この設定は、元もテキストを任意の文字で置換したテキストに簡単に置き換えることも可能です。"
     enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
     enable_fast_edit: "投稿選択メニューにインラインで小さな選択範囲を編集できるボタンを追加します。"
-    enable_quote_copy: "投稿選択メニューに、Markdown 引用として選択範囲をクリップボードにコピーするボタンを追加します。"
     old_post_notice_days: "投稿の通知が古いと見なされるまでの日数。これにより、サイトの新しい通知と視覚的に区別されます。"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"

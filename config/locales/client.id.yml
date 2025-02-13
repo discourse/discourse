@@ -2719,7 +2719,6 @@ id:
             cancel: "Batal"
           confirmation:
             cancel: "Batal"
-        delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
         reset_bounce_score:
           label: "Reset"
         suspend_modal_title: "Tangguhkan Pengguna"

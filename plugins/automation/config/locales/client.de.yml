@@ -13,13 +13,16 @@ de:
             delete_automation: Automatisierung löschen
     discourse_automation:
       title: Automatisierung
-      create: Erstellen
-      update: Aktualisieren
+      table_title: Automatisierungen
+      create: Automatisierung hinzufügen
+      update: Automatisierung aktualisieren
+      back: Zurück
+      edit: Bearbeiten
       select_script: Skript auswählen
       select_trigger: Auslöser auswählen
       confirm_automation_reset: Diese Aktion setzt die Skript- und Auslöseroptionen zurück. Der neue Zustand wird gespeichert. Willst du fortfahren?
       confirm_automation_trigger: Diese Aktion löst die Automatisierung aus. Willst du fortfahren?
-      no_automation_yet: Du hast noch keine Automatisierungen erstellt. Wähle unten eine Option, um loszulegen.
+      no_automation_yet: Derzeit sind keine Automatisierungen konfiguriert.
       filter_placeholder: Nach Namen oder Beschreibung filtern …
       edit_automation:
         trigger_section:

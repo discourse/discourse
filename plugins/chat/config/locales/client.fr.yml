@@ -90,7 +90,7 @@ fr:
       channel_archive:
         title: "Archiver le canal"
         instructions: "<p>L'archivage d'un canal le place en mode lecture seule et déplace tous les messages du canal vers un sujet nouveau ou existant. Aucun nouveau message ne peut être envoyé et aucun message existant ne peut être modifié ou supprimé.</p><p>Voulez-vous vraiment archiver le canal <strong>%{channelTitle}</strong>  ?</p>"
-        process_started: "Le processus d'archivage a commencé. Ce modal sera bientôt fermé et vous recevrez un message personnel lorsque le processus d'archivage sera terminé."
+        process_started: "Le processus d'archivage a commencé. Cette fenêtre modale sera bientôt fermée et vous recevrez un message privé lorsque le processus d'archivage sera terminé."
         retry: "Réessayer"
       channel_open:
         title: "Ouvrir le canal"
@@ -492,7 +492,7 @@ fr:
           title: "Exporter les messages de la discussion"
           description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
-          confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message personnel. Voulez-vous vraiment exporter ?"
+          confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message privé. Voulez-vous vraiment exporter ?"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       my_threads:
         title: Mes fils de discussion
@@ -504,7 +504,7 @@ fr:
         create: "Valider"
         leave: "Quitter cette discussion privée"
         close: "Fermer ce chat personnel"
-        cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
+        cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages directs."
       channel_list:
         title: "Canaux"
         aria_label: "Passer à la liste des chaînes"

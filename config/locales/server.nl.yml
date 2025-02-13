@@ -2338,7 +2338,6 @@ nl:
     watched_words_regular_expressions: "Staat het gebruik van reguliere expressies toe voor het filteren van woorden. Als deze functie is ingeschakeld, groepeert hij gevoelige woorden op basis van hun hoofdlettergevoeligheid. Vervolgens worden alle geselecteerde woorden samengevoegd tot een enkele reguliere expressie, waarbij woordgrenzen worden toegevoegd voor regelmatig geobserveerde woorden. Deze op regex gebaseerde filtermethode voegt dus een extra laag toe aan de controle over contentmoderatie door verfijndere woordpatronen te ondersteunen. De instelling maakt het ook mogelijk om eenvoudig de originele tekst te vervangen door de gewenste vervanging."
     enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
     enable_fast_edit: "Voegt een knop toe aan het berichtselectiemenu om een kleine selectie inline te bewerken."
-    enable_quote_copy: "Voegt een knop toe aan het berichtselectiemenu om de selectie naar het klembord te kopiëren als een markdowncitaat."
     old_post_notice_days: "Het aantal dagen waarna een berichtmelding als oud wordt beschouwd. Dit onderscheidt het visueel van nieuwere berichten op de site."
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."

@@ -463,7 +463,7 @@ de:
       dropdown:
         title: "Menü mit den neuesten Entwürfen öffnen"
         untitled: "Entwurf ohne Titel"
-        view_all: "alle ansehen"
+        view_all: "Alle Entwürfe anzeigen"
         other_drafts:
           one: "+%{count} anderer Entwurf"
           other: "+%{count} andere Entwürfe"
@@ -528,6 +528,15 @@ de:
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
       filtered_flagged_by: "Gemeldet von"
+      unknown:
+        title:
+          one: "Du hast ausstehende Überprüfungen von deaktivierten Plugins:"
+          other: "Du hast ausstehende Überprüfungen von deaktivierten Plugins:"
+        instruction: "Sie können erst dann richtig angezeigt werden, wenn du das entsprechende Plugin aktivierst. Bitte aktiviere das Plugin und aktualisiere die Seite. Alternativ kannst du sie auch ignorieren. <a href='%{url}' target='_blank'>Mehr erfahren...</a>"
+        ignore_all: "Alle ignorieren"
+        enable_plugins: "Plugins aktivieren"
+        delete_confirm: "Bist du sicher, dass du alle Bewertungen löschen willst, die von deaktivierten Plugins erstellt wurden?"
+        ignore_success: "Alle Bewertungen, die von deaktivierten Plugins erstellt wurden, wurden gelöscht."
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
         title: "Überprüfbares Scoring"
@@ -2365,6 +2374,10 @@ de:
       required_at_signup: "Erforderlich"
       optional_at_signup: "Optional"
       hidden_at_signup: "Optional, bei der Anmeldung ausgeblendet"
+    interface_color_selector:
+      disabled: "Nicht anzeigen"
+      sidebar_footer: "In der Fußzeile der Seitenleiste anzeigen"
+      header: "In der Kopfzeile anzeigen"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -4183,6 +4196,7 @@ de:
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
     cannot_render_video: Dieses Video kann nicht gerendert werden, da dein Browser den Codec nicht unterstützt.
+    invalid_video_url: Dieses Video kann nicht abgespielt werden, da die URL ungültig oder nicht verfügbar ist.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4673,6 +4687,11 @@ de:
       no_results:
         title: "Keine Ergebnisse"
         description: 'Wir konnten nichts finden, das zu „%{filter}“ passt.<br><br>Wolltest du die <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Website-Einstellungen</a> oder die <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">Administrator-Benutzerliste</a> durchsuchen?'
+      footer:
+        interface_color_selector:
+          light: "Hell"
+          dark: "Dunkel"
+          auto: "Automatisch"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5106,6 +5125,7 @@ de:
             Wenn du Bereiche verwendest, kannst du einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
             Du kannst auch definieren, welche Parameter erlaubt sind. Verwende Kommas, um mehrere Werte zu trennen.
           title: Bereiche
+          one_or_more: Es muss mindestens ein Bereich ausgewählt werden.
           granular: Granular
           read_only: Nur Lesen
           global: Global
@@ -5401,7 +5421,7 @@ de:
           community_title_help: "Kurze Beschreibung, die in der Browser-Registerkarte angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
           banner_image: "Bannerbild"
           banner_image_help: |
-            Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100 x 300 px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
+            Empfohlen: 1100x300px. Formate: JPG, PNG, SVG (max. 10 MB).
           contact_information: "Kontaktinformationen"
           community_owner: "Eigentümer der Community"
           community_owner_placeholder: "Max Mustermann"
@@ -6631,8 +6651,8 @@ de:
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
         delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
-        delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
-        delete_dont_block: "Nur löschen"
+        delete_and_block: "Benutzer löschen und seine E-Mail- und IP-Adresse blockieren"
+        delete_dont_block: "Benutzer löschen"
         deleting_user: "Benutzer wird gelöscht …"
         deleted: "Der Benutzer wurde gelöscht."
         delete_failed: "Beim Löschen des Benutzers ist ein Fehler aufgetreten. Stelle sicher, dass dieser Benutzer keine Beiträge mehr hat."
@@ -6819,9 +6839,6 @@ de:
         more_site_setting_results:
           one: "Es gibt mehr als %{count} Ergebnis. Bitte verfeinere deine Suche oder wähle eine Kategorie."
           other: "Es gibt mehr als %{count} Ergebnisse. Bitte verfeinere deine Suche oder wähle eine Kategorie."
-        more_site_setting_results_no_category_sidebar:
-          one: "Es gibt mehr als %{count} Ergebnis. Bitte grenze deine Suche weiter ein."
-          other: "Es gibt mehr als %{count} Ergebnisse. Bitte grenze deine Suche weiter ein."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"

@@ -561,7 +561,7 @@ he:
       dropdown:
         title: "פתיחת תפריט הטיוטות האחרונות"
         untitled: "טיוטה ללא שם"
-        view_all: "להציג הכול"
+        view_all: "הצגת כל הטיוטות"
     topic_count_all:
       one: "הצגת נושא חדש"
       two: "הצגת שני נושאים חדשים"
@@ -635,6 +635,17 @@ he:
       date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
       filtered_flagged_by: "סומן על ידי"
+      unknown:
+        title:
+          one: "יש לך פריטים שממתינים לבדיקה מתוסף מושבת:"
+          two: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
+          many: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
+          other: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
+        instruction: "אי אפשר להציג אותם כראוי עד להפעלת התוסף המתאים. נא להפעיל את התוסף ולרענן את העמוד. לחלופין, אפשר להתעלם מהם. <a href='%{url}' target='_blank'>מידע נוסף…</a>"
+        ignore_all: "התעלמות מהכול"
+        enable_plugins: "הפעלת תוספים"
+        delete_confirm: "למחוק את כל הביקורות שנוצרו על ידי תוספים שהושבתו?"
+        ignore_success: "כל הביקורות שנוצרו על ידי תוספים שהושבתו תימחקנה."
       explain:
         why: "נא להסביר למה הפריט הזה הגיע לתור"
         title: "ניקוד שניתן לסקירה"
@@ -2611,6 +2622,10 @@ he:
       required_at_signup: "נדרש"
       optional_at_signup: "רשות"
       hidden_at_signup: "רשות, יוסתר בהרשמה"
+    interface_color_selector:
+      disabled: "לא להציג"
+      sidebar_footer: "להציג בתחתית סרגל הצד"
+      header: "הצגה בכותרת"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4076,6 +4091,9 @@ he:
         delete_topic_confirm_modal_no: "לא, להשאיר את הנושא הזה"
         delete_topic_error: "אירעה שגיאה בעת מחיקת הנושא"
         delete_topic: "מחיקת נושא"
+        add_post_notice: "הוספת הודעה רשמית…"
+        change_post_notice: "עריכת הודעה רשמית…"
+        delete_post_notice: "מחיקת הודעה רשמית"
         remove_timer: "הסרת שעון עצר"
         edit_timer: "עריכת מתזמן"
       actions:
@@ -4636,6 +4654,7 @@ he:
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
+    invalid_video_url: אי אפשר לנגן את הסרטון הזה כי הכתובת שגויה או לא זמינה.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -5170,6 +5189,11 @@ he:
       no_results:
         title: "אין תוצאות"
         description: 'לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">לחפש בהגדרות האתר</a> או ב<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">רשימת משתמשי ההנהלה?</a>'
+      footer:
+        interface_color_selector:
+          light: "בהיר"
+          dark: "כהה"
+          auto: "אוט׳"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -5314,6 +5338,9 @@ he:
         legal:
           title: "משפטי"
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
+        localization:
+          title: "תרגום"
+          header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
         login_and_authentication:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
@@ -5430,6 +5457,22 @@ he:
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           percent_change_tooltip: "%{percent} שינוי."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "היה %{count} לפני יומיים."
+              two: "היה %{count} לפני יומיים."
+              many: "היה %{count} לפני יומיים."
+              other: "היה %{count} לפני יומיים."
+            two_weeks_ago:
+              one: "היה %{count} לפני שבועיים."
+              two: "היה %{count} לפני שבועיים."
+              many: "היה %{count} לפני שבועיים."
+              other: "היה %{count} לפני שבועיים."
+            thirty_days_ago:
+              one: "היה %{count} ב־30 הימים הקודמים."
+              two: "היה %{count} ב־30 הימים הקודמים."
+              many: "היה %{count} ב־30 הימים הקודמים."
+              other: "היה %{count} ב־30 הימים הקודמים."
           today: "היום"
           yesterday: "אתמול"
           last_7_days: "7 הימים האחרונים"
@@ -5606,6 +5649,7 @@ he:
             בעת שימוש בתחומים, ניתן להגביל מפתח API לקבוצה מסוימת של נקודות גישה.
             ניתן גם להגדיר אילו משתנים יורשו. ניתן להשתמש בפסיקים כדי להפריד מגוון ערכים.
           title: תחומים
+          one_or_more: יש לבחור לפחות תחום אחד.
           granular: נקודתי
           read_only: לקריאה בלבד
           global: גלובלי
@@ -5848,6 +5892,9 @@ he:
           group_permissions: "הרשאות קבוצתיות"
           users: "משתמשים"
           groups: "קבוצות"
+          localization:
+            title: "תרגום"
+            keywords: "מקום|שפה|אזור זמן|unicode|rtl"
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
@@ -5903,8 +5950,6 @@ he:
           community_title: "כותרת הקהילה"
           community_title_help: "תיאור קצר שמופיע בלשונית הדפדפן, לעמודי מפתח כגון רשימות קטגוריות ונושאים."
           banner_image: "תמונת כרזה"
-          banner_image_help: |
-            ייעשה בזה שימוש בעמוד העל אודות שלך. הגודל המומלץ: ‎1100×300 פיקסלים. סוגים מורשים: JPG,‏ PNG ו־SVG עד 10 מ״ב
           contact_information: "פרטי קשר"
           community_owner: "בעלות על הקהילה"
           community_owner_placeholder: "יוסי כהן"
@@ -6187,6 +6232,7 @@ he:
           customize_desc: "התאמה אישית:"
           title: "ערכות עיצוב"
           description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
+          components_description: "רכיבים הם פריטי התאמה קטנים יותר שאפשר להוסיף לערכות עיצוב כדי לשנות קטעים מסוימים של סגנון עיצוב הפורום שלך."
           create: "יצירה"
           create_type: "סוג"
           create_name: "שם"
@@ -6290,6 +6336,7 @@ he:
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
           installing_message: "ערכת העיצוב החדשה שלך מוגדרת…"
+          installing_message_long_time: "הגדרת ערכת העיצוב החדשה שלך אורכת מעבר למצופה, נא להמתין בסבלנות…"
           duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
           force_install: "לא ניתן להתקין את ערכת העיצוב כיוון שמאגר ה־Git אינו נגיש. להמשיך בהתקנתה?"
           create_placeholder: "יצירת ממלא מקום"
@@ -6483,6 +6530,7 @@ he:
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "הודעות דוא״ל"
+        description: "אפשר להתאים את התבנית שמשמשת ליצירת הודעות דוא״ל, הודעות תקציר בדוא״ל שתישלחנה ולצפות ביומני דוא״ל."
         settings: "הגדרות"
         templates: "תבניות"
         templates_title: "תבניות דוא״ל"
@@ -6502,6 +6550,7 @@ he:
         bounced: "הוחזר"
         received: "התקבל"
         rejected: "נדחה"
+        sent_at: "נשלח ב־"
         time: "זמן"
         user: "משתמש"
         email_type: "סוג דוא״ל"
@@ -6569,6 +6618,7 @@ he:
           post_approved: "פוסט אושר"
       logs:
         title: "יומנים וסינון"
+        description: "יומנים ובחינה מאפשרים לך לעקוב ולנהל את הקהילה שלך כדי לוודא שהיא נשארת בטוחה ומכבדת. אפשר לצפות ביומני כל הפעולות שננקטו על ידי חברי הסגל, לחפש ביומנים ולבחון התנהגות של משתמשים."
         nav_title: "יומנים"
         action: "פעולה"
         created_at: "נוצר"
@@ -7077,10 +7127,18 @@ he:
         time_read: "זמן קריאה"
         post_edits_count: "עריכות של פוסטים"
         exports:
+          title: היטלי ייצוא של משתמשים
           download:
             description: הורדת הייצוא האחרון
+            expires_in:
+              one: יפוג בעוד שעה
+              two: יפוג בעוד שעתיים
+              many: יפוג בעוד %{count} שעות
+              other: יפוג בעוד %{count} שעות
             not_available: אין ייצוא זמין
             button: בקשת ארכיון
+            confirm: ליצור ארכיון של פעילות והעדפות המשתמש הזה?
+            started: התחלנו לאסוף את הארכיון, הקישור להורדה יתעדכן עם סיום התהליך.
             success: הארכיון מוכן להורדה.
             export_failed: הייצוא נכשל, עמך הסליחה. נא לעיין ביומנים לקבלת מידע נוסף.
         anonymize: "הפיכת משתמשים לאלמוניים"
@@ -7151,8 +7209,8 @@ he:
           other: "לא ניתן להסיר את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
         delete_confirm_title: "למחוק את המשתמש הזה? המחיקה היא לצמיתות!"
         delete_confirm: "עדיף להפוך משתמשים לאלמוניים במקום למחוק אותם כדי להימנע מהסרת תוכן מדיונים קיימים."
-        delete_and_block: "מחיקה ו<b>חסימה</b> של כתובות הדוא״ל וה־IP האלו"
-        delete_dont_block: "מחיקה בלבד"
+        delete_and_block: "מחיקה של המשתמש ומחיקת כתובת הדוא״ל וה־IP הזה"
+        delete_dont_block: "מחיקת משתמש"
         deleting_user: "משתמש נמחק…"
         deleted: "המשתמש נמחק."
         delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל הפוסטים נמחקו לפני ניסיון להסיר את המשתמש."
@@ -7665,6 +7723,7 @@ he:
       homepage_choices:
         custom:
           label: "מותאם"
+          description: "להציג עמוד בית מוכוון %{type} עם נחיתת משתמשים ב%{landingPage}"
         style_type:
           categories: "קטגוריה"
           topics: "נושא"

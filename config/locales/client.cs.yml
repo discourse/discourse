@@ -561,7 +561,7 @@ cs:
       dropdown:
         title: "Otevřít nabídku nejnovějších konceptů"
         untitled: "Koncept bez názvu"
-        view_all: "zobrazit vše"
+        view_all: "zobrazit všechny koncepty"
         other_drafts:
           one: "+%{count} další koncept"
           few: "+%{count} další koncepty"
@@ -640,6 +640,17 @@ cs:
       date_filter: "Publikováno mezi"
       in_reply_to: "v odpovědi na"
       filtered_flagged_by: "Nahlásil"
+      unknown:
+        title:
+          one: "Máte nevyřízené revize ze zakázaného pluginu:"
+          few: "Máte nevyřízené revize ze zakázaných pluginů:"
+          many: "Máte nevyřízené revize ze zakázaných pluginů:"
+          other: "Máte nevyřízené revize ze zakázaných pluginů:"
+        instruction: "Nelze je správně zobrazit, dokud neaktivujete příslušný plugin. Povolte prosím plugin a obnovte stránku. Případně je můžete ignorovat. <a href='%{url}' target='_blank'>Další informace...</a>"
+        ignore_all: "Ignorovat vše"
+        enable_plugins: "Povolit pluginy"
+        delete_confirm: "Opravdu chcete smazat všechny revize vytvořené zakázanými pluginy?"
+        ignore_success: "Všechny revize vytvořené zakázanými pluginy byly smazány."
       explain:
         why: "vysvětlete, proč tato položka skončila ve frontě"
         title: "Přezkoumatelné bodování"
@@ -2621,6 +2632,10 @@ cs:
       required_at_signup: "Povinné"
       optional_at_signup: "Volitelné"
       hidden_at_signup: "Volitelné, skryté při registraci"
+    interface_color_selector:
+      disabled: "Nezobrazovat"
+      sidebar_footer: "Zobrazit v zápatí postranního panelu"
+      header: "Zobrazit v záhlaví"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3811,7 +3826,7 @@ cs:
           few: "Prosím, vyberte téma, do kterého chcete tyto <b>%{count}</b> příspěvky přesunout."
           many: "Prosím, vyberte téma, do kterého chcete těchto <b>%{count}</b> příspěvků přesunout."
           other: "Prosím, vyberte téma, do kterého chcete těchto <b>%{count}</b> příspěvků přesunout."
-        chronological_order: "zachovat chronologické pořadí po sloučení"
+        chronological_order: "po sloučení zachovat chronologické pořadí"
       move_to_new_message:
         title: "Přesunout do nové zprávy"
         action: "přesunout do nové zprávy"
@@ -4663,6 +4678,7 @@ cs:
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
+    invalid_video_url: Toto video nelze přehrát, protože adresa URL je neplatná nebo nedostupná.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -5197,6 +5213,11 @@ cs:
       no_results:
         title: "Žádné výsledky"
         description: 'Nenašli jsme nic odpovídajícího ''%{filter}''.<br><br>Chtěli jste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prohledávat nastavení webu</a> nebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">v seznamu administrace uživatelů?</a>'
+      footer:
+        interface_color_selector:
+          light: "Světlý režim"
+          dark: "Tmavý režim"
+          auto: "Automaticky"
     welcome_topic_banner:
       title: "Vytvořte si uvítací téma"
       description: "Vaše uvítací téma je to první, co si noví členové přečtou. Považujte ho za svůj \"elevator pitch\" nebo \"poslání\". Dejte všem vědět, pro koho je tato komunita určena, co zde mohou očekávat a co byste chtěli, aby udělali jako první."
@@ -5392,7 +5413,7 @@ cs:
         discourse_last_updated: "Discourse aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
-        critical_available: "Je k dispozici důležitá aktualizace."
+        critical_available: "K dispozici je důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_update: "Prosím, aktualizujte!"
         no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."
@@ -5952,8 +5973,6 @@ cs:
           community_title: "Titulek komunity"
           community_title_help: "Krátký popis, zobrazený na kartě prohlížeče, použitý pro klíčové stránky, jako jsou kategorie a seznamy témat."
           banner_image: "Obrázek (banner)"
-          banner_image_help: |
-            Bude použit na stránce O tomto webu. Doporučená velikost: 1100x300px. Podporované typy: JPG, PNG a SVG do 10 MB.
           contact_information: "Kontaktní informace"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Jan Novák"
@@ -7225,8 +7244,8 @@ cs:
           other: "Nelze smazat všechny příspěvky, protože uživatel má více než %{count} příspěvků. (delete_all_posts_max)"
         delete_confirm_title: "Jste si jisti, že chcete odstranit tohoto uživatele? Tato akce je trvalá!"
         delete_confirm: "Obecně je vhodnější uživatele spíše anonymizovat než mazat, aby se předešlo odstranění obsahu existujících diskusí."
-        delete_and_block: "Odstranit a <b>zablokovat</b> tento e-mail a IP adresu."
-        delete_dont_block: "Pouze smazat"
+        delete_and_block: "Smazat uživatele a zablokovat jeho e-mail a IP adresu"
+        delete_dont_block: "Smazat uživatele"
         deleting_user: "Odstranění uživatele…"
         deleted: "Uživatel byl smazán."
         delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."

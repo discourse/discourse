@@ -463,7 +463,6 @@ fr:
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
-        view_all: "tout voir"
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
@@ -1410,7 +1409,7 @@ fr:
         all_tags: "Toutes les étiquettes"
         warnings: "Avertissements officiels"
         read_more_in_group: "Vous voulez en savoir plus ? Parcourez les autres messages dans %{groupLink}."
-        read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
+        read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages privés</a>."
         read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
@@ -1449,20 +1448,20 @@ fr:
               }
               { NEW, plural,
                    =0 {}
-                  one { et <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other { et <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one { et <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other { et <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
             }
             other {}
@@ -1773,7 +1772,7 @@ fr:
         always: "toujours"
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
-      email_messages_level: "Envoyez-moi un e-mail lorsque je reçois un message personnel"
+      email_messages_level: "Envoyez-moi un e-mail lorsque je reçois un message privé"
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par e-mail"
       email_in_reply_to: "En plus du message notifié par e-mail, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
@@ -2877,7 +2876,7 @@ fr:
       sr_menu_tabs: "Onglets du menu utilisateur"
       view_all_notifications: "afficher toutes les notifications"
       view_all_bookmarks: "voir tous les signets"
-      view_all_messages: "voir tous les messages personnels"
+      view_all_messages: "voir tous les messages privés"
       tabs:
         all_notifications: "Toutes les notifications"
         replies: "Réponses"
@@ -3335,7 +3334,7 @@ fr:
         help: "Ouvrir une version de ce sujet adaptée à l'impression"
       flag_topic:
         title: "Signaler"
-        help: "signaler ce sujet en privé pour attirer l'attention ou envoyer un message direct à son propos"
+        help: "signaler ce sujet en privé pour attirer l'attention ou envoyer un message privé à son propos"
         success_message: "Vous avez signalé ce sujet avec succès."
       make_public:
         title: "Convertir en sujet public"
@@ -3617,7 +3616,7 @@ fr:
         edit_action: "Modifier"
         edit_anonymous: "Nous sommes désolés, mais vous devez être connecté(e) pour modifier ce message."
         flag_action: "Signaler"
-        flag: "signaler cette publication en privé pour attirer l'attention ou envoyer un message direct à son propos"
+        flag: "signaler cette publication en privé pour attirer l'attention ou envoyer un message privé à son propos"
         anonymous_flag: "envoyer un e-mail au personnel pour signaler cette publication"
         delete_action: "Supprimer la publication"
         delete: "supprimer ce message"
@@ -4491,7 +4490,7 @@ fr:
       no_replies_title_others: "%{username} n'a encore répondu à aucun sujet"
       no_replies_body: "Lorsque vous <a href='%{searchUrl}'>découvrez</a> une conversation intéressante à laquelle vous souhaitez contribuer, appuyez sur le bouton <kbd>Répondre</kbd> directement sous n'importe quel message pour répondre au message. Ou, si vous préférez répondre au sujet général plutôt qu'à un message individuel ou à une personne, recherchez le bouton <kbd>Répondre</kbd> tout en bas du sujet, ou sous la chronologie du sujet."
       no_drafts_title: "Vous n'avez enregistré aucun brouillon"
-      no_drafts_body: "Vous n'êtes pas tout à fait prêt(e) à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message personnel. Sélectionnez le bouton Annuler pour supprimer ou enregistrez votre brouillon pour continuer plus tard."
+      no_drafts_body: "Vous n'êtes pas tout à fait prêt(e) à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message privé. Sélectionnez le bouton Annuler pour supprimer ou enregistrez votre brouillon pour continuer plus tard."
       no_likes_title: "Vous n'avez encore aimé aucun sujet"
       no_likes_title_others: "%{username} n'a encore aimé aucun sujet"
       no_likes_body: "Pour commencer à intervenir et à contribuer, il est judicieux de lire les conversations qui ont déjà eu lieu et de sélectionner le %{heartIcon} sur les messages que vous aimez !"
@@ -4673,6 +4672,10 @@ fr:
       no_results:
         title: "Aucun résultat"
         description: 'Nous n''avons rien trouvé correspondant à « %{filter} ».<br><br>Vouliez-vous <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">rechercher dans les paramètres du site</a> ou dans la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">liste des utilisateurs administrateurs ?</a>'
+      footer:
+        interface_color_selector:
+          light: "Clair"
+          dark: "Sombre"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
@@ -5394,8 +5397,6 @@ fr:
           community_title: "Titre de la communauté"
           community_title_help: "Brève description, affichée dans l'onglet du navigateur, pour les pages clés telles que les catégories et les listes de sujets."
           banner_image: "Image de bannière"
-          banner_image_help: |
-            Ce fichier sera utilisé sur votre page À propos. Taille recommandée : 1 100 x 300 px. Types acceptés : JPG, PNG et SVG jusqu'à 10 Mo.
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
           community_owner_placeholder: "Johnny Smith"
@@ -6625,8 +6626,6 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer et <b>bloquer</b> cette adresse e-mail et adresse IP."
-        delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Une erreur s'est produite lors de la suppression de cet utilisateur. Assurez-vous que tous les messages sont supprimés avant d'essayer de supprimer l'utilisateur."

@@ -2052,7 +2052,6 @@ sv:
     disable_watched_word_checking_in_user_fields: "inaktivera kontroll av bevakade ord i användarfält"
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
     enable_fast_edit: "Lägger till en knapp i menyn för val av inlägg för att redigera ett litet urval direkt."
-    enable_quote_copy: "Lägger till en knapp i menyn för inläggsurval för att kopiera urvalet till urklipp som ett markdown-citat."
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."

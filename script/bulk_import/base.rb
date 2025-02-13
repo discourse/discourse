@@ -1431,7 +1431,7 @@ class BulkImport::Base
 
     category[:name] = name
     category[:name_lower] = name_lower
-    category[:slug] ||= Slug.ascii_generator(name_lower)
+    category[:slug] ||= Slug.for(name_lower, "") # TODO Ensure that slug doesn't exist yet
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
     category[:read_restricted] = false if category[:read_restricted].nil?
@@ -1476,7 +1476,7 @@ class BulkImport::Base
     topic[:archetype] ||= Archetype.default
     topic[:title] = topic[:title][0...255].scrub.strip
     topic[:fancy_title] ||= pre_fancy(topic[:title])
-    topic[:slug] ||= Slug.ascii_generator(topic[:title])
+    topic[:slug] ||= Slug.for(topic[:title])
     topic[:user_id] ||= Discourse::SYSTEM_USER_ID
     topic[:last_post_user_id] ||= topic[:user_id]
     topic[:category_id] ||= -1 if topic[:archetype] != Archetype.private_message
@@ -1892,7 +1892,7 @@ class BulkImport::Base
         .scrub
         .strip
         .presence
-      chat_channel[:slug] ||= Slug.ascii_generator(chat_channel[:name])
+      chat_channel[:slug] ||= Slug.for(chat_channel[:name], "") # TODO Ensure that slug isn't a duplicate
     end
 
     chat_channel[:description] = chat_channel[:description][0..500].scrub.strip if chat_channel[

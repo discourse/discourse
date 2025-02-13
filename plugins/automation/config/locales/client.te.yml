@@ -7,8 +7,8 @@
 te:
   js:
     discourse_automation:
-      create: సృష్టించండి
-      update: నవీకరించండి
+      back: వెనుకకు
+      edit: సవరించండి
       fields:
         user:
           label: సభ్యుడు

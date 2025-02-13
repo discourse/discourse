@@ -3539,8 +3539,6 @@ lv:
           zero: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā 1 ieraksts. (delete_all_posts_max)"
           one: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā %{count} ieraksts. (delete_all_posts_max)"
           other: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā %{count} ieraksti. (delete_all_posts_max)"
-        delete_and_block: "Dzēst un <b>bloķēt</b> e-pastu un IP adresi"
-        delete_dont_block: "Tikai Dzēst"
         deleted: "Lietotājs tika dzēsts."
         delete_failed: "Radās kļūda dzēšot šo lietotāju. Pārbaudi vai visi ieraksti un tēmas no šī lietotāja ir dzēstas."
         send_activation_email: "Nosūtīt aktivizēšanas e-pastu."

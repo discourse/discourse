@@ -2329,7 +2329,6 @@ hu:
     watched_words_regular_expressions: "Lehetővé teszi a reguláris kifejezések használatát a szavak szűrésére. Ha engedélyezve van, ez a funkció csoportosítja az érzékeny szavakat azok kis- és nagybetű érzékenysége alapján. Ezután az összes kiválasztott szót egyetlen reguláris kifejezésbe fordítja le, hozzáadva szóhatárokat a rendszeresen figyelt szavakhoz. Ennek eredményeként ez a regex-alapú szűrési módszer további kontrollréteget biztosít a tartalom moderálásához, támogatva az összetettebb szómintákat. A beállítás lehetővé teszi az eredeti szöveg egyszerű helyettesítését egy választott alternatívával is."
     enable_diffhtml_preview: "Kísérleti funkció, amely a DiffHTML segítségével szinkronizálja az előnézetet a teljes újrarenderelés helyett"
     enable_fast_edit: "Szerkesztés gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen szerkesztéséhez."
-    enable_quote_copy: "Idézet másolása gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen idézetként való vágólapra másolásához."
     old_post_notice_days: "Azoknak a napoknak a száma, amely után egy bejegyzés értesítése elavultnak minősül. Ez vizuálisan megkülönbözteti az újabb értesítésektől az oldalon."
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."

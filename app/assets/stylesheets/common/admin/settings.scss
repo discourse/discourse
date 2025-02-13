@@ -83,14 +83,15 @@
     }
 
     .input-setting-list {
-      @media (max-width: $mobile-breakpoint) {
-        width: 100%;
-      }
       padding: 1px;
       background-color: var(--secondary);
       border: 1px solid var(--primary-low);
       border-radius: 3px;
       transition: border linear 0.2s, box-shadow linear 0.2s;
+
+      @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+      }
 
       li.sortable-placeholder {
         @include unselectable;

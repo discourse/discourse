@@ -414,7 +414,6 @@ ja:
       dropdown:
         title: "最新の下書きメニューを開く"
         untitled: "無題の下書き"
-        view_all: "すべて表示"
         other_drafts:
           other: "他 %{count} 件の下書き"
     topic_count_all:
@@ -4419,6 +4418,10 @@ ja:
       no_results:
         title: "結果がありません"
         description: '‘%{filter}’ に一致するものは見つかりませんでした。<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">サイト設定</a>または<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理者ユーザーリストを検索</a>しますか？'
+      footer:
+        interface_color_selector:
+          light: "ライト"
+          dark: "ダーク"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
@@ -5126,8 +5129,6 @@ ja:
           community_title: "コミュニティーのタイトル"
           community_title_help: "ブラウザのタブに表示される、カテゴリやトピックリストなどの主要ページの短い説明です。"
           banner_image: "バナー画像"
-          banner_image_help: |
-            これは情報ページで使用されます。推奨サイズ: 1100x300px。許容される形式: 10MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
@@ -5730,7 +5731,7 @@ ja:
         no_result: "要約の結果は見つかりませんでした。"
         reply_key: "返信キー"
         post_link_with_smtp: "投稿と SMTP の詳細"
-        skipped_reason: "スキップの理由"
+        skipped_reason: "理由をスキップ"
         incoming_emails:
           from_address: "送信者"
           to_addresses: "宛先"
@@ -6341,8 +6342,6 @@ ja:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
         delete_confirm_title: "このユーザーを削除してもよろしいですか？永久に削除されます！"
         delete_confirm: "一般に、ユーザーを削除するのではなく、匿名化して既存のディスカッションからコンテンツを削除しないようにするのが推奨されます。"
-        delete_and_block: "このメールと IP アドレスを削除して<b>ブロック</b>する"
-        delete_dont_block: "削除のみ"
         deleting_user: "ユーザーを削除中…"
         deleted: "ユーザーが削除されました。"
         delete_failed: "ユーザーを削除中にエラーが発生しました。このユーザーのすべての投稿を削除したことを確認してから、ユーザーを削除してください。"

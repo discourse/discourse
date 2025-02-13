@@ -7,7 +7,8 @@
 lv:
   js:
     discourse_automation:
-      create: Izveidot
+      back: Atpakaļ
+      edit: Rediģēt
       fields:
         user:
           label: Lietotājs
