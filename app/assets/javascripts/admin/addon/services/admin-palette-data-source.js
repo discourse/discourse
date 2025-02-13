@@ -70,7 +70,9 @@ export default class AdminPaletteDataSource extends Service {
     });
 
     // TODO (martin) Probably hash these with the plugin name as key
-    const visiblePlugins = PreloadStore.get("visiblePlugins") || [];
+    const visiblePlugins = (PreloadStore.get("visiblePlugins") || []).filter(
+      (plugin) => plugin.admin_route && plugin.enabled
+    );
     ajax("/admin/palette/settings.json").then((result) => {
       result.forEach((setting) => {
         // TODO: (martin) Might want to use the sidebar link name for this instead of the
