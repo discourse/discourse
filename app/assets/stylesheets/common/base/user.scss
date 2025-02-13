@@ -402,6 +402,8 @@
 }
 
 .avatar-selector {
+  --label-max-width: 300px;
+
   .avatar-choice {
     display: grid;
     grid-template-columns: 2em 1fr auto;
@@ -428,8 +430,6 @@
       margin: 0;
     }
   }
-
-  --label-max-width: 300px;
 
   label.radio {
     display: flex;

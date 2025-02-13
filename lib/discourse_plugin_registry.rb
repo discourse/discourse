@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require_relative "deprecated_icon_handler"
 #
 #  A class that handles interaction between a plugin and the Discourse App.
 #
@@ -147,6 +147,7 @@ class DiscoursePluginRegistry
   end
 
   def self.register_svg_icon(icon)
+    DeprecatedIconHandler.convert_icon(icon) if Rails.env.test?
     self.svg_icons << icon
   end
 
@@ -235,6 +236,7 @@ class DiscoursePluginRegistry
     "moment.js" => "vendor/assets/javascripts/moment.js",
     "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
   }
+
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
     raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset

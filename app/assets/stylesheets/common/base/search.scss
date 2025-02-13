@@ -18,8 +18,8 @@
   }
 
   .search-header {
-    @include search-page-spacing;
     background: var(--primary-very-low);
+    @include search-page-spacing;
   }
 
   .warning {

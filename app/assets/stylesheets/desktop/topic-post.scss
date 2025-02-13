@@ -103,11 +103,11 @@ nav.post-controls {
     align-items: center;
     margin-left: 0;
     border-radius: var(--d-button-border-radius);
+    white-space: nowrap;
 
     .topic-post & {
       margin-right: 0.5em;
     }
-    white-space: nowrap;
 
     .d-icon {
       margin-inline: var(--control-icon-space);
@@ -155,12 +155,13 @@ pre.codeblock-buttons:hover {
 }
 
 .embedded-posts {
+  border: 1px solid var(--primary-low);
+
   h1,
   h2,
   h3 {
     margin: 10px 0;
   }
-  border: 1px solid var(--primary-low);
 
   .topic-body {
     box-sizing: border-box;
@@ -341,15 +342,15 @@ pre.codeblock-buttons:hover {
   &.top {
     margin-left: 0;
     border: none;
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
+    ); // 2px accounts for left and right borders
 
     .collapse-down {
       transform: translate(17%, 230%);
       z-index: 1;
     }
-    width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
-    ); // 2px accounts for left and right borders
 
     .row {
       .topic-body,

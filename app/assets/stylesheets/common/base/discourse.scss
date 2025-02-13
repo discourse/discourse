@@ -92,8 +92,8 @@ small {
 }
 
 blockquote {
-  @include post-aside;
   clear: both;
+  @include post-aside;
 }
 
 h1,
@@ -304,6 +304,9 @@ textarea {
 // Common Classes
 .sortable {
   white-space: nowrap;
+  cursor: pointer;
+
+  @include user-select(none);
 
   .discourse-no-touch & {
     &:hover,
@@ -315,8 +318,6 @@ textarea {
   .d-icon {
     margin-left: 0.25em;
   }
-  @include unselectable;
-  cursor: pointer;
 
   button {
     background: none;

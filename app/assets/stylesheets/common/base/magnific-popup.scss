@@ -620,10 +620,11 @@ button {
   /* start state */
   .mfp-content {
     opacity: 0;
+    transform: scale(0.8);
+
     @media screen and (prefers-reduced-motion: no-preference) {
       transition: all 0.2s;
     }
-    transform: scale(0.8);
   }
 
   &.mfp-bg {

@@ -11,7 +11,7 @@ import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
 import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
-import QUnit, { module, skip, test } from "qunit";
+import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -568,8 +568,6 @@ export async function selectText(selector, endOffset = null) {
 export function conditionalTest(name, condition, testCase) {
   if (condition) {
     test(name, testCase);
-  } else {
-    skip(name, testCase);
   }
 }
 

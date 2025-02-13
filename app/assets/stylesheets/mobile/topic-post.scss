@@ -246,10 +246,6 @@ nav.post-controls button.reply .d-icon {
   }
 }
 
-.post-actions {
-  /* overriding display: here was causing hidden element to take up space */
-}
-
 .post-action {
   float: right;
   margin-right: 10px;
@@ -432,7 +428,7 @@ span.highlighted {
 
 .posts-filtered-notice {
   padding-right: 8.5em;
-  padding-bottom: unquote("max(1em, env(safe-area-inset-bottom))");
+  padding-bottom: max(1em, env(safe-area-inset-bottom));
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 1em -9px;

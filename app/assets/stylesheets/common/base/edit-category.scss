@@ -1,4 +1,6 @@
-$category-settings-width: unquote("min(500px, 90%)");
+@use "sass:string";
+
+$category-settings-width: string.unquote("min(500px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {
@@ -13,15 +15,25 @@ div.edit-category {
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
+    gap: 1em;
     justify-content: space-between;
     align-self: start;
     background-color: var(--primary-very-low);
     padding: 20px;
 
+    h2 {
+      @include ellipsis;
+    }
+
     .category-back {
       height: 2em;
       align-self: flex-end;
+      flex: 0 0 auto;
     }
+  }
+
+  .edit-category-title {
+    min-width: 0;
   }
 
   .edit-category-nav {
@@ -59,7 +71,7 @@ div.edit-category {
 
   .edit-category-tab-general {
     .category-chooser {
-      width: unquote("min(340px, 90%)");
+      width: min(340px, 90%);
     }
   }
 
@@ -177,6 +189,7 @@ div.edit-category {
     .required-tag-group-row {
       display: flex;
       gap: 0.5em;
+      margin-bottom: 1em;
 
       > * {
         margin: 0;
@@ -185,7 +198,6 @@ div.edit-category {
       input[type="number"] {
         width: 4em;
       }
-      margin-bottom: 1em;
     }
   }
 

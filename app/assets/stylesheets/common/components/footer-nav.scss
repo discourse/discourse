@@ -65,7 +65,7 @@ html.footer-nav-visible {
 
 @supports (padding: max(0px)) {
   .footer-nav.visible {
-    padding-bottom: unquote("max(5px, env(safe-area-inset-bottom))");
+    padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 }
 

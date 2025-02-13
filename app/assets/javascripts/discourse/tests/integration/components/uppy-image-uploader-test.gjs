@@ -1,67 +1,70 @@
 import { click, render, triggerEvent } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | uppy-image-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image", async function (assert) {
-    await render(hbs`
-      <UppyImageUploader @type="avatar" @id="uploader" @imageUrl="/images/avatar.png" @placeholderUrl="/not/used.png" />
-    `);
+    await render(<template>
+      <UppyImageUploader
+        @type="avatar"
+        @id="uploader"
+        @imageUrl="/images/avatar.png"
+        @placeholderUrl="/not/used.png"
+      />
+    </template>);
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").exists("displays the trash icon");
 
     assert
       .dom(".placeholder-overlay")
-      .doesNotExist("it does not display the placeholder image");
+      .doesNotExist("does not display the placeholder image");
 
     await click(".image-uploader-lightbox-btn");
 
-    assert.strictEqual(
-      document.querySelectorAll(".mfp-container").length,
-      1,
-      "it displays the image lightbox"
-    );
+    assert.dom(".mfp-container").exists("displays the image lightbox");
   });
 
   test("without image", async function (assert) {
-    await render(
-      hbs`<UppyImageUploader @type="site_setting" @id="uploader" />`
-    );
+    await render(<template>
+      <UppyImageUploader @type="site_setting" @id="uploader" />
+    </template>);
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
       .dom(".image-uploader-lightbox-btn")
-      .doesNotExist("it does not display the button to open image lightbox");
+      .doesNotExist("does not display the button to open image lightbox");
   });
 
   test("with placeholder", async function (assert) {
-    await render(
-      hbs`<UppyImageUploader @type="composer" @id="uploader" @placeholderUrl="/images/avatar.png" />`
-    );
+    await render(<template>
+      <UppyImageUploader
+        @type="composer"
+        @id="uploader"
+        @placeholderUrl="/images/avatar.png"
+      />
+    </template>);
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
       .dom(".image-uploader-lightbox-btn")
-      .doesNotExist("it does not display the button to open image lightbox");
+      .doesNotExist("does not display the button to open image lightbox");
 
     assert.dom(".placeholder-overlay").exists("displays the placeholder image");
   });
 
   test("when dragging image", async function (assert) {
-    await render(
-      hbs`
+    await render(<template>
       <UppyImageUploader @type="composer" @id="uploader1" />
       <UppyImageUploader @type="composer" @id="uploader2" />
-      `
-    );
+    </template>);
 
     const dropImage = async (target) => {
       const dataTransfer = new DataTransfer();

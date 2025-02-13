@@ -456,8 +456,8 @@ export default class ComposerEditor extends Component {
     $preview.scrollTop(desired + 50);
   }
 
-  _renderMentions(preview, unseen) {
-    unseen ||= linkSeenMentions(preview, this.siteSettings);
+  _renderMentions(preview) {
+    const unseen = linkSeenMentions(preview, this.siteSettings);
     if (unseen.length > 0) {
       this._renderUnseenMentions(preview, unseen);
     } else {
@@ -480,9 +480,9 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  _renderHashtags(preview, unseen) {
+  _renderHashtags(preview) {
     const context = this.site.hashtag_configurations["topic-composer"];
-    unseen ||= linkSeenHashtagsInContext(context, preview);
+    const unseen = linkSeenHashtagsInContext(context, preview);
     if (unseen.length > 0) {
       this._renderUnseenHashtags(preview, unseen, context);
     }
@@ -896,15 +896,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, unseenMentions, unseenHashtags) {
-    this._renderMentions(preview, unseenMentions);
-    this._renderHashtags(preview, unseenHashtags);
+  previewUpdated(preview) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      this._decorateCookedElement(preview);
-    }
+    this._decorateCookedElement(preview);
 
     this.composer.afterRefresh(preview);
   }

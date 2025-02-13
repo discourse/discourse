@@ -3,7 +3,7 @@ name: Pnpm dedupe on Dependabot PRs
 on:
   push:
     branches:
-      - "dependabot/npm_and_yarn/*"
+      - "dependabot/npm_and_yarn/**/*"
     paths:
       - "pnpm-lock.yaml"
 

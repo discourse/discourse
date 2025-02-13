@@ -2,6 +2,8 @@
 // any variables defined here can be added in theme color schemes
 // all variables should have the !default flag
 
+@use "sass:string";
+
 // primary
 $primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%) !default;
 $primary-low: dark-light-diff($primary, $secondary, 90%, -78%) !default;
@@ -141,9 +143,15 @@ $tertiary-med-or-tertiary: dark-light-choose(
   $tertiary
 ) !default;
 $secondary-or-primary: dark-light-choose($secondary, $primary) !default;
-$tertiary-or-white: dark-light-choose($tertiary, unquote("#fff")) !default;
-$facebook-or-white: dark-light-choose($facebook, unquote("#fff")) !default;
-$twitter-or-white: dark-light-choose($twitter, unquote("#fff")) !default;
+$tertiary-or-white: dark-light-choose(
+  $tertiary,
+  string.unquote("#fff")
+) !default;
+$facebook-or-white: dark-light-choose(
+  $facebook,
+  string.unquote("#fff")
+) !default;
+$twitter-or-white: dark-light-choose($twitter, string.unquote("#fff")) !default;
 
 // code highlighting
 // stack overflow light & dark color pallets
