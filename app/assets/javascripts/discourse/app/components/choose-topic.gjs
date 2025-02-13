@@ -36,8 +36,6 @@ export default class ChooseTopic extends Component {
 
   @action
   async loadTopics(title) {
-    console.log({ title });
-
     // topicTitle is null => initial load
     if (this.topicTitle === null) {
       if (this.args.loadOnInit && isPresent(this.args.additionalFilters)) {
