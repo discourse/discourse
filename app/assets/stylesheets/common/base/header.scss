@@ -196,22 +196,6 @@
       > .d-icon {
         color: var(--primary-medium);
       }
-
-      &::after {
-        display: block;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: z("header") + 1; // Higher than .menu-panel
-        width: 100%;
-        height: 0;
-        content: "";
-        border-top: 1px solid var(--secondary);
-      }
-
-      &:hover {
-        border-bottom: none;
-      }
     }
   }
 
