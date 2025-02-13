@@ -23,12 +23,14 @@ RSpec.describe BasicPostSerializer do
       end
 
       it "returns the modified cooked when register modified" do
-        DiscoursePluginRegistry.register_modifier(
-          Plugin::Instance.new,
-          :basic_post_serializer_cooked,
-        ) { "X" }
+        plugin = Plugin::Instance.new
+        modifier = :basic_post_serializer_cooked
+        proc = Proc.new { "X" }
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
 
         expect(json[:cooked]).to eq("X")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
       end
     end
   end

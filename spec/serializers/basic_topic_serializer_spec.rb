@@ -11,13 +11,15 @@ describe BasicTopicSerializer do
     end
 
     it "returns the fancy title with a modifier" do
-      DiscoursePluginRegistry.register_modifier(
-        Plugin::Instance.new,
-        :topic_serializer_fancy_title,
-      ) { "X" }
+      plugin = Plugin::Instance.new
+      modifier = :topic_serializer_fancy_title
+      proc = Proc.new { "X" }
+      DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
       json = BasicTopicSerializer.new(topic).as_json
 
       expect(json[:basic_topic][:fancy_title]).to eq("X")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
   end
 end
