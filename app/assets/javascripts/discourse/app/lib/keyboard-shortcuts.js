@@ -12,7 +12,6 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
-import AdminPaletteModal from "admin/components/modal/admin-palette";
 
 let disabledBindings = [];
 export function disableDefaultKeyboardShortcuts(bindings) {
@@ -498,17 +497,10 @@ export default {
     if (filterInput) {
       this._scrollTo(0);
 
-      if (this.siteSettings.use_experimental_admin_search) {
-        this.showAdminSearchModal();
-      } else {
+      if (!this.siteSettings.use_experimental_admin_search) {
         filterInput.focus();
       }
     }
-  },
-
-  showAdminSearchModal() {
-    const modal = getOwner(this).lookup("service:modal");
-    modal.show(AdminPaletteModal);
   },
 
   fullscreenComposer() {
