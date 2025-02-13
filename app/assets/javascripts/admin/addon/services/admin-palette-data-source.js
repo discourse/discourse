@@ -17,6 +17,7 @@ export default class AdminPaletteDataSource extends Service {
   settingMapItems = [];
   themeMapItems = [];
   componentMapItems = [];
+  reportMapItems = [];
   settingPageMap = {
     categories: {},
     areas: {},
@@ -29,47 +30,10 @@ export default class AdminPaletteDataSource extends Service {
     }
     ADMIN_NAV_MAP.forEach((mapItem) => {
       mapItem.links.forEach((link) => {
-        let url;
-        if (link.routeModels) {
-          url = this.router.urlFor(link.route, ...link.routeModels);
-        } else {
-          url = this.router.urlFor(link.route);
-        }
+        let parentLabel = this.addPageLink(mapItem, link);
 
-        const mapItemLabel =
-          mapItem.text || (mapItem.label ? i18n(mapItem.label) : "");
-        const label =
-          mapItemLabel +
-          (mapItemLabel ? " > " : "") +
-          (link.text || (link.label ? i18n(link.label) : ""));
-
-        if (link.settings_area) {
-          this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
-            ? `${url}/settings`
-            : url;
-        }
-
-        if (link.settings_category) {
-          this.settingPageMap.categories[link.settings_category] =
-            link.multi_tabbed ? `${url}/settings` : url;
-        }
-
-        this.pageMapItems.push({
-          label,
-          url,
-          keywords:
-            (link.keywords ? i18n(link.keywords).toLowerCase() : "") +
-            " " +
-            url +
-            " " +
-            label.toLowerCase(),
-          type: "page",
-          icon: link.icon,
-          description: link.description
-            ? link.description.includes(" ")
-              ? link.description
-              : i18n(link.description)
-            : "",
+        link.links?.forEach((subLink) => {
+          this.addPageLink(mapItem, subLink, parentLabel);
         });
       });
     });
@@ -196,6 +160,24 @@ export default class AdminPaletteDataSource extends Service {
         }
       });
     });
+    ajax("/admin/reports.json").then((result) => {
+      result.reports.forEach((report) => {
+        this.reportMapItems.push({
+          label: report.title,
+          description: report.description,
+          url: getURL(`/admin/reports/${report.type}`),
+          icon: "chart-bar",
+          keywords: (
+            report.title +
+            " " +
+            report.description +
+            " " +
+            report.type
+          ).toLowerCase(),
+          type: "report",
+        });
+      });
+    });
     this._mapCached = true;
   }
 
@@ -216,5 +198,62 @@ export default class AdminPaletteDataSource extends Service {
     });
 
     return filteredResults;
+  }
+
+  addPageLink(mapItem, link, parentLabel = "") {
+    let url;
+    if (link.routeModels) {
+      url = this.router.urlFor(link.route, ...link.routeModels);
+    } else {
+      url = this.router.urlFor(link.route);
+    }
+
+    const mapItemLabel =
+      mapItem.text || (mapItem.label ? i18n(mapItem.label) : "");
+    const linkLabel = link.text || (link.label ? i18n(link.label) : "");
+
+    let label;
+    if (parentLabel) {
+      label =
+        mapItemLabel +
+        (mapItemLabel ? " > " : "") +
+        parentLabel +
+        " > " +
+        linkLabel;
+    } else {
+      label = mapItemLabel + (mapItemLabel ? " > " : "") + linkLabel;
+    }
+
+    if (link.settings_area) {
+      this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
+        ? `${url}/settings`
+        : url;
+    }
+
+    if (link.settings_category) {
+      this.settingPageMap.categories[link.settings_category] = link.multi_tabbed
+        ? `${url}/settings`
+        : url;
+    }
+
+    this.pageMapItems.push({
+      label,
+      url,
+      keywords:
+        (link.keywords ? i18n(link.keywords).toLowerCase() : "") +
+        " " +
+        url +
+        " " +
+        label.toLowerCase(),
+      type: "page",
+      icon: link.icon,
+      description: link.description
+        ? link.description.includes(" ")
+          ? link.description
+          : i18n(link.description)
+        : "",
+    });
+
+    return linkLabel;
   }
 }

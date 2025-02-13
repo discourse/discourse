@@ -52,6 +52,13 @@ export const ADMIN_NAV_MAP = [
         icon: "box-archive",
         settings_category: "backups",
         multi_tabbed: true,
+        links: [
+          {
+            name: "admin_backups_logs",
+            route: "admin.backups.logs",
+            label: "admin.backups.menu.logs",
+          },
+        ],
       },
     ],
   },
@@ -240,6 +247,48 @@ export const ADMIN_NAV_MAP = [
         label: "admin.email_settings.sidebar_link.server_setup.title",
         icon: "gear",
         keywords: "admin.email_settings.sidebar_link.server_setup.keywords",
+        links: [
+          {
+            name: "admin_email_preview_summary",
+            route: "adminEmail.previewDigest",
+            label: "admin.email.preview_digest",
+          },
+          {
+            name: "admin_email_advanced_test",
+            route: "adminEmail.advancedTest",
+            label: "admin.email.advanced_test.title",
+          },
+          {
+            name: "admin_email_templates",
+            route: "adminEmailTemplates",
+            label: "admin.email.templates",
+          },
+          {
+            name: "admin_email_sent",
+            route: "adminEmail.sent",
+            label: "admin.email.sent",
+          },
+          {
+            name: "admin_email_skipped",
+            route: "adminEmail.advancedTest",
+            label: "admin.email.advanced_test",
+          },
+          {
+            name: "admin_email_bounced",
+            route: "adminEmail.bounced",
+            label: "admin.email.bounced",
+          },
+          {
+            name: "admin_email_received",
+            route: "adminEmail.received",
+            label: "admin.email.received",
+          },
+          {
+            name: "admin_email_rejected",
+            route: "adminEmail.rejected",
+            label: "admin.email.rejected",
+          },
+        ],
       },
       {
         name: "admin_appearance",
@@ -276,6 +325,28 @@ export const ADMIN_NAV_MAP = [
         keywords: "admin.security.sidebar_link.staff_action_logs.keywords",
         icon: "user-shield",
         moderator: true,
+        links: [
+          {
+            name: "admin_logs_screened_emails",
+            route: "adminLogs.screenedEmails",
+            label: "admin.logs.screened_emails.title",
+          },
+          {
+            name: "admin_logs_screened_ip_addresses",
+            route: "adminLogs.screenedIpAddresses",
+            label: "admin.logs.screened_ips.title",
+          },
+          {
+            name: "admin_logs_screened_urls",
+            route: "adminLogs.screenedUrls",
+            label: "admin.logs.screened_urls.title",
+          },
+          {
+            name: "admin_logs_search_logs",
+            route: "adminSearchLogs",
+            label: "admin.logs.search_logs.title",
+          },
+        ],
       },
     ],
   },

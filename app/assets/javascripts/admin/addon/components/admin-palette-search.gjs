@@ -20,6 +20,7 @@ export default class AdminPaletteSearch extends Component {
   @tracked showSettingType = true;
   @tracked showThemeType = true;
   @tracked showComponentType = true;
+  @tracked showReportType = true;
 
   constructor() {
     super(...arguments);
@@ -39,6 +40,9 @@ export default class AdminPaletteSearch extends Component {
     }
     if (this.showComponentType) {
       types.push("component");
+    }
+    if (this.showReportType) {
+      types.push("report");
     }
     return types;
   }
@@ -107,6 +111,13 @@ export default class AdminPaletteSearch extends Component {
             {{on "click" (fn this.toggleTypeFilter "showComponentType")}}
           />
         </span>
+        <span class="admin-palette-type-filter__report">
+          Reports
+          <DToggleSwitch
+            @state={{this.showReportType}}
+            {{on "click" (fn this.toggleTypeFilter "showReportType")}}
+          />
+        </span>
       </div>
     {{/if}}
 
@@ -115,7 +126,9 @@ export default class AdminPaletteSearch extends Component {
         <div class="admin-palette__search-result">
           <a href={{result.url}}>
             <div class="admin-palette__name">
-              {{icon result.icon}}
+              {{#if result.icon}}
+                {{icon result.icon}}
+              {{/if}}
               <span class="admin-palette__name-label">{{result.label}}</span>
               <span class="admin-palette__type-pill">{{result.type}}</span>
             </div>
