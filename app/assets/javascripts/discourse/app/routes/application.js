@@ -298,6 +298,8 @@ export default class ApplicationRoute extends DiscourseRoute {
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
             canSignUp: this.controller.canSignUp,
+            hasRedirectParam: this.controller.hasRedirectParam,
+            close: () => this.send("closeModal"),
           },
         });
       }

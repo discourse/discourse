@@ -370,4 +370,12 @@ export default class Login extends Component {
       });
     }
   }
+
+  @action
+  closeModal() {
+    if (this.args.model.hasRedirectParam) {
+      removeCookie("destination_url");
+    }
+    this.args.closeModal();
+  }
 }

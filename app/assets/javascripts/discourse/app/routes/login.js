@@ -1,5 +1,7 @@
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage } from "discourse/lib/utilities";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -9,7 +11,27 @@ export default class LoginRoute extends DiscourseRoute {
   @service router;
   @service login;
 
-  beforeModel() {
+  queryParams = {
+    redirect: { refreshModel: true },
+  };
+
+  beforeModel(transition) {
+    const redirect = transition.to.queryParams.redirect;
+
+    if (redirect) {
+      const normalizedRedirect = redirect.startsWith("/")
+        ? redirect
+        : `/${redirect}`;
+      const rootUrl = this.router.rootURL;
+      const destinationUrl =
+        rootUrl === "/"
+          ? normalizedRedirect
+          : `${rootUrl.replace(/\/$/, "")}${normalizedRedirect}`;
+
+      cookie("destination_url", destinationUrl);
+      this.controllerFor("application").set("hasRedirectParam", true);
+    }
+
     if (this.siteSettings.login_required) {
       if (
         this.login.isOnlyOneExternalLoginMethod &&
@@ -32,6 +54,16 @@ export default class LoginRoute extends DiscourseRoute {
         .replaceWith(`/${defaultHomepage()}`)
         .followRedirects()
         .then((e) => next(() => e.send("showLogin")));
+    }
+  }
+
+  @action
+  willTransition() {
+    const { hasRedirectParam } = this.controllerFor("application");
+
+    if (hasRedirectParam) {
+      removeCookie("destination_url");
+      this.controller.set("redirect", null);
     }
   }
 
