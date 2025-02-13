@@ -4,12 +4,11 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty, isPresent } from "@ember/utils";
-import { eq, not, or } from "truth-helpers";
+import { eq, or } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import TopicStatus from "discourse/components/topic-status";
 import boundCategoryLink from "discourse/helpers/bound-category-link";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import { searchForTerm } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
 
@@ -22,8 +21,7 @@ import { i18n } from "discourse-i18n";
 // label
 // loadOnInit
 export default class ChooseTopic extends Component {
-  @tracked topicTitle;
-  #loadInit = this.args.loadOnInit;
+  @tracked topicTitle = null;
 
   async initialSearch() {
     const results = await searchForTerm(this.args.additionalFilters);
@@ -38,9 +36,15 @@ export default class ChooseTopic extends Component {
 
   @action
   async loadTopics(title) {
-    if (this.#loadInit && isPresent(this.args.additionalFilters)) {
-      this.#loadInit = false;
-      return await this.initialSearch();
+    console.log({ title });
+
+    // topicTitle is null => initial load
+    if (this.topicTitle === null) {
+      if (this.args.loadOnInit && isPresent(this.args.additionalFilters)) {
+        return await this.initialSearch();
+      } else {
+        return;
+      }
     }
 
     if (this.isDestroying || this.isDestroyed) {
@@ -107,7 +111,7 @@ export default class ChooseTopic extends Component {
   }
 
   <template>
-    <div>
+    <div class="choose-topic">
       <label for="choose-topic-title">
         <span>{{i18n (or @label "choose_topic.title.search")}}</span>
       </label>
@@ -120,19 +124,26 @@ export default class ChooseTopic extends Component {
         id="choose-topic-title"
       />
 
-      <AsyncContent
-        @asyncData={{this.loadTopics}}
-        @context={{this.topicTitle}}
-        @debounce={{INPUT_DELAY}}
-        @loadOnInit={{@loadOnInit}}
-      >
-        <:loading>
-          <p>{{i18n "loading"}}</p>
-        </:loading>
-        <:content as |topics|>
-          {{#unless topics.length}}
-            <p>{{i18n "choose_topic.none_found"}}</p>
-          {{else}}
+      <div class="choose-topic__search-results">
+        <AsyncContent
+          @asyncData={{this.loadTopics}}
+          @context={{this.topicTitle}}
+          @debounce={{true}}
+        >
+          <:loading>
+            {{i18n "loading"}}
+          </:loading>
+
+          <:empty>
+            {{#if this.topicTitle}}
+              {{i18n "choose_topic.none_found"}}
+            {{else}}
+              {{! ensure the paragraph has the same height as the loading message to prevent layout shift }}
+              &nbsp;
+            {{/if}}
+          </:empty>
+
+          <:content as |topics|>
             <div class="choose-topic-list" role="radiogroup">
               {{#each topics as |t|}}
                 <div class="controls existing-topic">
@@ -160,9 +171,9 @@ export default class ChooseTopic extends Component {
                 </div>
               {{/each}}
             </div>
-          {{/unless}}
-        </:content>
-      </AsyncContent>
+          </:content>
+        </AsyncContent>
+      </div>
     </div>
   </template>
 }
