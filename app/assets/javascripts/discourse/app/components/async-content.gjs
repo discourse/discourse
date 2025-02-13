@@ -4,32 +4,36 @@ import { TrackedAsyncData } from "ember-async-data";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class AsyncContent extends Component {
-  #skipResolvingData = !this.args.loadOnInit;
+  #debounce = false;
 
   @cached
   get data() {
     const asyncData = this.args.asyncData;
     const context = this.args.context;
 
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     let value;
 
     if (typeof asyncData === "function") {
-      value =
-        this.args.debounce && !this.#skipResolvingData
-          ? new Promise((resolve, reject) => {
-              discourseDebounce(
-                this,
-                this.#resolveAsyncData,
-                asyncData,
-                context,
-                resolve,
-                reject,
-                this.args.debounce
-              );
-            })
-          : this.#resolveAsyncData(asyncData, context);
+      value = this.args.debounce
+        ? new Promise((resolve, reject) => {
+            discourseDebounce(
+              this,
+              this.#resolveAsyncData,
+              asyncData,
+              context,
+              resolve,
+              reject,
+              this.#debounce
+            );
+          })
+        : this.#resolveAsyncData(asyncData, context);
 
       // value is null if we skipped loading the data on init
       // in this case, we don't want to return a TrackedAsyncData instance
@@ -51,10 +55,8 @@ export default class AsyncContent extends Component {
 
   // a stable reference to a function to use the `debounce` method
   #resolveAsyncData(asyncData, context, resolve, reject) {
-    if (this.#skipResolvingData) {
-      this.#skipResolvingData = false;
-      return;
-    }
+    this.#debounce =
+      this.args.debounce === true ? INPUT_DELAY : this.args.debounce;
 
     // when a resolve function is provided, we need to resolve the promise, once asyncData is done
     // otherwise, we just call asyncData
@@ -71,15 +73,19 @@ export default class AsyncContent extends Component {
         <ConditionalLoadingSpinner @condition={{this.data.isPending}} />
       {{/if}}
     {{else if this.data.isResolved}}
-      {{yield this.data.value to="content"}}
+      {{#if this.data.value}}
+        {{yield this.data.value to="content"}}
+      {{else if (has-block "empty")}}
+        {{yield to="empty"}}
+      {{else}}
+        {{yield this.data.value to="content"}}
+      {{/if}}
     {{else if this.data.isRejected}}
       {{#if (has-block "error")}}
         {{yield this.data.error to="error"}}
       {{else}}
         {{popupAjaxError this.data.error}}
       {{/if}}
-    {{else}}
-      {{yield to="without-content"}}
     {{/if}}
   </template>
 }

@@ -127,6 +127,13 @@
     width: 100%;
   }
 
+  .choose-message,
+  .choose-topic {
+    &__search-results {
+      margin: 0 0 1em 0;
+    }
+  }
+
   .category-chooser {
     margin-bottom: 9px;
   }

@@ -5,12 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import AsyncContent from "discourse/components/async-content";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import { searchForTerm } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {
-  @tracked searchedTitle;
+  @tracked messageTitle = null;
 
   @action
   async search(title) {
@@ -33,11 +32,11 @@ export default class ChooseMessage extends Component {
 
   @action
   setSearchTerm(evt) {
-    this.searchedTitle = evt.target.value;
+    this.messageTitle = evt.target.value;
   }
 
   <template>
-    <div>
+    <div class="choose-message">
       <label for="choose-message-title">
         {{i18n "choose_message.title.search"}}
       </label>
@@ -49,34 +48,43 @@ export default class ChooseMessage extends Component {
         id="choose-message-title"
       />
 
-      <AsyncContent
-        @asyncData={{this.search}}
-        @context={{this.searchedTitle}}
-        @debounce={{INPUT_DELAY}}
-        @loadOnInit={{false}}
-      >
-        <:loading>
-          <p>{{i18n "loading"}}</p>
-        </:loading>
-        <:content as |messages|>
-          {{#each messages as |message|}}
-            <div class="controls existing-message">
-              <label class="radio">
-                <input
-                  {{on "click" (fn @setSelectedTopicId message)}}
-                  type="radio"
-                  name="choose_message_id"
-                />
-                <span class="message-title">
-                  {{message.title}}
-                </span>
-              </label>
-            </div>
-          {{else}}
-            <p>{{i18n "choose_message.none_found"}}</p>
-          {{/each}}
-        </:content>
-      </AsyncContent>
+      <div class="choose-message__search-results">
+        <AsyncContent
+          @asyncData={{this.search}}
+          @context={{this.messageTitle}}
+          @debounce={{true}}
+        >
+          <:loading>
+            {{i18n "loading"}}
+          </:loading>
+
+          <:empty>
+            {{#if this.messageTitle}}
+              {{i18n "choose_message.none_found"}}
+            {{else}}
+              {{! ensure the paragraph has the same height as the loading message to prevent layout shift }}
+              &nbsp;
+            {{/if}}
+          </:empty>
+
+          <:content as |messages|>
+            {{#each messages as |message|}}
+              <div class="controls existing-message">
+                <label class="radio">
+                  <input
+                    {{on "click" (fn @setSelectedTopicId message)}}
+                    type="radio"
+                    name="choose_message_id"
+                  />
+                  <span class="message-title">
+                    {{message.title}}
+                  </span>
+                </label>
+              </div>
+            {{/each}}
+          </:content>
+        </AsyncContent>
+      </div>
     </div>
   </template>
 }
