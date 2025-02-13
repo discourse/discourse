@@ -1288,13 +1288,14 @@ span.mention {
 
 .hex-color {
   font-family: var(--d-font-family--monospace);
+  font-size: 0.9375em;
   padding-left: 0.125em;
   padding-right: 0.05em;
   &__swatch::before {
     display: inline-block;
     content: "";
     margin-right: 0.1em;
-    vertical-align: text-top;
+    vertical-align: -1px;
     width: 0.8em;
     height: 0.8em;
     border: 1px solid var(--primary-900);
