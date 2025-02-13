@@ -25,6 +25,7 @@ module Notifications
     protected
 
     def consolidated_data(notification)
+      #binding.pry
       return notification.data_hash if @set_data_blk.nil?
       @set_data_blk.call(notification)
     end
