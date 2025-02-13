@@ -121,7 +121,7 @@ GEM
     csv (3.3.2)
     date (3.4.1)
     debug_inspector (1.2.0)
-    diff-lcs (1.5.1)
+    diff-lcs (1.6.0)
     diffy (3.4.3)
     digest (3.2.0)
     digest-xxhash (0.2.9)
