@@ -15,6 +15,7 @@ RSpec.describe DiscoursePluginRegistry do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
+        attr_accessor :name
         def enabled?
           @enabled
         end
@@ -48,9 +49,11 @@ RSpec.describe DiscoursePluginRegistry do
 
         plugin.enabled = true
         expect(fresh_registry.test_things).to contain_exactly("mything")
+        expect(fresh_registry.test_things_lookup).to eq([{ klass: "mything", plugin: plugin.name }])
 
         plugin.enabled = false
         expect(fresh_registry.test_things.length).to eq(0)
+        expect(fresh_registry.test_things_lookup.length).to eq(0)
       end
     end
   end
