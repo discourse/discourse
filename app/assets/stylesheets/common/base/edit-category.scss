@@ -13,15 +13,25 @@ div.edit-category {
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
+    gap: 1em;
     justify-content: space-between;
     align-self: start;
     background-color: var(--primary-very-low);
     padding: 20px;
 
+    h2 {
+      @include ellipsis;
+    }
+
     .category-back {
       height: 2em;
       align-self: flex-end;
+      flex: 0 0 auto;
     }
+  }
+
+  .edit-category-title {
+    min-width: 0;
   }
 
   .edit-category-nav {
