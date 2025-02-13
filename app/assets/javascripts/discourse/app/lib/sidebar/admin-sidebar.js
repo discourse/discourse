@@ -84,9 +84,8 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     // for the plugin ID has its own nested routes defined in the plugin.
     if (this.router.currentRoute.name === "adminPlugins.show.settings") {
       if (
-        this.adminSidebarNavLink.route?.includes(
-          this.router.currentRoute.parent.params.plugin_id
-        )
+        this.adminSidebarNavLink.route?.split(".").last ===
+        this.router.currentRoute.parent.params.plugin_id
       ) {
         return this.router.currentRoute.name;
       }
@@ -273,6 +272,7 @@ function pluginAdminRouteLinks(router) {
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
         icon: "gear",
+        description: plugin.description,
       };
     });
 }

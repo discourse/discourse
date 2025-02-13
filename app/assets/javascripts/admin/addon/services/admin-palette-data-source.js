@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
@@ -64,15 +65,25 @@ export default class AdminPaletteDataSource extends Service {
             label.toLowerCase(),
           type: "page",
           icon: link.icon,
-          description: link.description ? i18n(link.description) : "",
+          description: link.description
+            ? link.description.includes(" ")
+              ? link.description
+              : i18n(link.description)
+            : "",
         });
       });
     });
 
-    // TODO (martin) Probably hash these with the plugin name as key
-    const visiblePlugins = (PreloadStore.get("visiblePlugins") || []).filter(
-      (plugin) => plugin.admin_route && plugin.enabled
-    );
+    const plugins = {};
+    (PreloadStore.get("visiblePlugins") || {}).forEach((plugin) => {
+      if (
+        plugin.admin_route &&
+        plugin.enabled &&
+        adminRouteValid(this.router, plugin.admin_route)
+      ) {
+        plugins[plugin.name] = plugin;
+      }
+    });
     ajax("/admin/palette/settings.json").then((result) => {
       result.forEach((setting) => {
         // TODO: (martin) Might want to use the sidebar link name for this instead of the
@@ -100,10 +111,8 @@ export default class AdminPaletteDataSource extends Service {
 
         let url;
         if (setting.plugin) {
-          const plugin = visiblePlugins.find(
-            (visiblePlugin) => visiblePlugin.name === setting.plugin
-          );
-          if (plugin && plugin.admin_route) {
+          const plugin = plugins[setting.plugin];
+          if (plugin) {
             url = plugin.admin_route.use_new_show_route
               ? this.router.urlFor(
                   `adminPlugins.show.settings`,
