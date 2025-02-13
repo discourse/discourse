@@ -7,7 +7,6 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { applyModelTransformations } from "discourse/lib/model-transformers";
 import { deepMerge } from "discourse/lib/object";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
 import DiscourseURL from "discourse/lib/url";
@@ -34,10 +33,6 @@ export function resetLastEditNotificationClick() {
 }
 
 export default class PostStream extends RestModel {
-  static async applyTransformations(post) {
-    await applyModelTransformations("post", post);
-  }
-
   @service currentUser;
   @service store;
 
@@ -1070,7 +1065,6 @@ export default class PostStream extends RestModel {
       return;
     }
 
-    PostStream.applyTransformations(post);
     const postId = get(post, "id");
     if (postId) {
       const existing = this._identityMap[post.get("id")];

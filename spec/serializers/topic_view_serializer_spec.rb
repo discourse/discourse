@@ -645,4 +645,22 @@ RSpec.describe TopicViewSerializer do
       expect(json[:topic_timer][:id]).to eq(topic_timer.id)
     end
   end
+
+  describe "#fancy_title" do
+    it "returns the fancy title" do
+      topic.update!(title: "Hur dur this is a title")
+      json = serialize_topic(topic, user)
+
+      expect(json[:fancy_title]).to eq("Hur dur this is a title")
+    end
+
+    it "returns the fancy title with a modifier" do
+      plugin = Plugin::Instance.new
+      DiscoursePluginRegistry.register_modifier(plugin, :topic_view_serializer_fancy_title) { "X" }
+      topic.update!(title: "Hur dur this is a title")
+      json = serialize_topic(topic, user)
+
+      expect(json[:fancy_title]).to eq("X")
+    end
+  end
 end
