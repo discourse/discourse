@@ -71,6 +71,7 @@
           <ChooseMessage
             @currentTopicId={{@model.topic.id}}
             @setSelectedTopicId={{fn (mut this.selectedTopic)}}
+            @selectedTopicId={{this.selectedTopic.id}}
           />
 
           <label>{{i18n "topic.move_to_new_message.participants"}}</label>
@@ -145,6 +146,7 @@
           <ChooseTopic
             @topicChangedCallback={{this.newTopicSelected}}
             @currentTopicId={{@model.topic.id}}
+            @selectedTopicId={{this.selectedTopic.id}}
           />
 
           {{#if this.selectedTopic}}
