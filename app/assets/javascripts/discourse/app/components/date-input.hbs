@@ -5,6 +5,7 @@
   @value={{readonly this.value}}
   id={{this.inputId}}
   {{on "input" (action "onChangeDate")}}
+  ...attributes
 />
 
 {{#unless this.useGlobalPickerContainer}}
