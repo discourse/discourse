@@ -319,10 +319,9 @@ RSpec.describe UserDestroyer do
 
     context "when user has posts with links" do
       context "with external links" do
-        before do
-          @post = Fabricate(:post_with_external_links, user: user)
-          TopicLink.extract_from(@post)
-        end
+        let(:post) { Fabricate(:post_with_external_links, user: user) }
+
+        before { TopicLink.extract_from(post) }
 
         it "doesn't add ScreenedUrl records by default" do
           ScreenedUrl.expects(:watch).never
@@ -336,9 +335,10 @@ RSpec.describe UserDestroyer do
       end
 
       context "with internal links" do
+        let(:post) { Fabricate(:post_with_external_links, user: user) }
+
         before do
-          @post = Fabricate(:post_with_external_links, user: user)
-          TopicLink.extract_from(@post)
+          TopicLink.extract_from(post)
           TopicLink.where(user: user).update_all(internal: true)
         end
 
@@ -349,10 +349,9 @@ RSpec.describe UserDestroyer do
       end
 
       context "with oneboxed links" do
-        before do
-          @post = Fabricate(:post_with_youtube, user: user)
-          TopicLink.extract_from(@post)
-        end
+        let(:post) { Fabricate(:post_with_youtube, user: user) }
+
+        before { TopicLink.extract_from(post) }
 
         it "doesn't add ScreenedUrl records" do
           ScreenedUrl.expects(:watch).never
@@ -415,17 +414,16 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user liked things" do
-      before do
-        @topic = Fabricate(:topic, user: Fabricate(:user))
-        @post = Fabricate(:post, user: @topic.user, topic: @topic)
-        PostActionCreator.like(user, @post)
-      end
+      let!(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
+      let!(:post) { Fabricate(:post, user: topic.user, topic: topic) }
+
+      before { PostActionCreator.like(user, post) }
 
       it "should destroy the like" do
         expect { UserDestroyer.new(admin).destroy(user, delete_posts: true) }.to change {
           PostAction.count
         }.by(-1)
-        expect(@post.reload.like_count).to eq(0)
+        expect(post.reload.like_count).to eq(0)
       end
     end
 

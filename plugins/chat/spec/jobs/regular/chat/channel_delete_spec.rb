@@ -1,26 +1,24 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::ChannelDelete do
+RSpec.describe Jobs::Chat::ChannelDelete do
   fab!(:chat_channel)
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
-  let(:users) { [user1, user2, user3] }
+  fab!(:users) { [user1, user2, user3] }
+  fab!(:messages) { Array.new(20) { Fabricate(:chat_message, chat_channel:, user: users.sample) } }
+  fab!(:incoming_chat_webhook) { Fabricate(:incoming_chat_webhook, chat_channel:) }
+
+  let(:message_ids) { messages.map(&:id) }
 
   before do
-    messages = []
-    20.times do
-      messages << Fabricate(:chat_message, chat_channel: chat_channel, user: users.sample)
-    end
-    @message_ids = messages.map(&:id)
-
     10.times { Chat::MessageReaction.create(chat_message: messages.sample, user: users.sample) }
 
     10.times do
       upload = Fabricate(:upload, user: users.sample)
       message = messages.sample
 
-      UploadReference.create(target: message, upload: upload)
+      UploadReference.create(target: message, upload:)
     end
 
     Chat::UserMention.create(
@@ -29,11 +27,7 @@ describe Jobs::Chat::ChannelDelete do
       notifications: [Fabricate(:notification)],
     )
 
-    @incoming_chat_webhook_id = Fabricate(:incoming_chat_webhook, chat_channel: chat_channel)
-    Chat::WebhookEvent.create(
-      incoming_chat_webhook: @incoming_chat_webhook_id,
-      chat_message: messages.sample,
-    )
+    Chat::WebhookEvent.create(incoming_chat_webhook:, chat_message: messages.sample)
 
     revision_message = messages.sample
     Fabricate(
@@ -43,31 +37,30 @@ describe Jobs::Chat::ChannelDelete do
       new_message: revision_message.message,
     )
 
-    Chat::Draft.create(chat_channel: chat_channel, user: users.sample, data: "wow some draft")
+    Chat::Draft.create(chat_channel:, user: users.sample, data: "wow some draft")
 
-    Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user1)
-    Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user2)
-    Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user3)
+    Fabricate(:user_chat_channel_membership, chat_channel:, user: user1)
+    Fabricate(:user_chat_channel_membership, chat_channel:, user: user2)
+    Fabricate(:user_chat_channel_membership, chat_channel:, user: user3)
 
     chat_channel.trash!
   end
 
   def counts
     {
-      incoming_webhooks: Chat::IncomingWebhook.where(chat_channel_id: chat_channel.id).count,
-      webhook_events:
-        Chat::WebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count,
-      drafts: Chat::Draft.where(chat_channel: chat_channel).count,
+      incoming_webhooks: Chat::IncomingWebhook.where(chat_channel:).count,
+      webhook_events: Chat::WebhookEvent.where(incoming_chat_webhook:).count,
+      drafts: Chat::Draft.where(chat_channel:).count,
       channel_memberships: Chat::UserChatChannelMembership.where(chat_channel: chat_channel).count,
-      revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
-      mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
+      revisions: Chat::MessageRevision.where(chat_message_id: message_ids).count,
+      mentions: Chat::Mention.where(chat_message_id: message_ids).count,
       upload_references:
         UploadReference.where(
-          target_id: @message_ids,
+          target_id: message_ids,
           target_type: Chat::Message.polymorphic_name,
         ).count,
-      messages: Chat::Message.where(id: @message_ids).count,
-      reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
+      messages: Chat::Message.where(id: message_ids).count,
+      reactions: Chat::MessageReaction.where(chat_message_id: message_ids).count,
     }
   end
 
