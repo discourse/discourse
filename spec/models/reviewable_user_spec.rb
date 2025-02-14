@@ -202,21 +202,22 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "when must_approve_users is true" do
-    before do
+    let!(:reviewable) do
       SiteSetting.must_approve_users = true
       Jobs.run_immediately!
-      @reviewable = ReviewableUser.find_by(target: user)
-      Jobs.run_later!
+      ReviewableUser.find_by(target: user)
     end
 
+    before { Jobs.run_later! }
+
     it "creates the ReviewableUser for a user, with moderator access" do
-      expect(@reviewable.reviewable_by_moderator).to eq(true)
+      expect(reviewable.reviewable_by_moderator).to eq(true)
     end
 
     context "with email jobs" do
       it "enqueues a 'signup after approval' email if must_approve_users is true" do
         expect_enqueued_with(job: :critical_user_email, args: { type: :signup_after_approval }) do
-          @reviewable.perform(admin, :approve_user)
+          reviewable.perform(admin, :approve_user)
         end
       end
 
@@ -228,7 +229,7 @@ RSpec.describe ReviewableUser, type: :model do
           args: {
             type: :signup_after_approval,
           },
-        ) { @reviewable.perform(admin, :approve_user) }
+        ) { reviewable.perform(admin, :approve_user) }
       end
     end
 
