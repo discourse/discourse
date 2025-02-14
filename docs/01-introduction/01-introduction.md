@@ -8,7 +8,7 @@ Discourse is a modern and highly-customizable platform for building communities.
 
 ## Architecture
 
-**Discourse Core** is has a Ruby on Rails backend and an Ember JS frontend. This is the shared platform upon which Discourse communities are built.
+**Discourse Core** has a Ruby on Rails backend and an Ember JS frontend. This is the shared platform upon which Discourse communities are built.
 
 **Discourse Themes** can be used to customize the frontend user experience using CSS and Javascript. Each theme has its own git repository, and community admins can generally install and manage them via the Discourse admin panel, even on shared hosting platforms.
 
