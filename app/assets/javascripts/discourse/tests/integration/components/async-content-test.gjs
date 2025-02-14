@@ -298,7 +298,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
   });
 
   module("<:error>", function () {
-    test("it displayes a popup error dialog when the block is not provided", async function (assert) {
+    test("it displays a popup error dialog when the block is not provided", async function (assert) {
       const promise = Promise.reject("error");
 
       await render(<template>
