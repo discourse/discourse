@@ -7,7 +7,6 @@ import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
 import AsyncContent from "discourse/components/async-content";
-import DialogHolder from "discourse/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AsyncContent", function (hooks) {
@@ -223,7 +222,6 @@ module("Integration | Component | AsyncContent", function (hooks) {
             </div>
           </:content>
         </AsyncContent>
-        <DialogHolder />
       </template>);
 
       assert.dom(".content").doesNotExist();
@@ -290,7 +288,6 @@ module("Integration | Component | AsyncContent", function (hooks) {
             </div>
           </:empty>
         </AsyncContent>
-        <DialogHolder />
       </template>);
 
       assert.dom(".empty").doesNotExist();
@@ -303,11 +300,10 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       await render(<template>
         <AsyncContent @asyncData={{promise}} />
-        <DialogHolder />
       </template>);
 
-      assert.dom(".dialog-body").exists();
-      assert.dom(".dialog-body").hasText("Sorry, an error has occurred.");
+      assert.dom(".alert-error").exists();
+      assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
     });
 
     test("it displays the block when the promise is rejected", async function (assert) {

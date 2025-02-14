@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import FlashMessage from "discourse/components/flash-message";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { extractErrorInfo } from "../lib/ajax-error";
 
 export default class AsyncContent extends Component {
   #debounce = false;
@@ -52,6 +54,11 @@ export default class AsyncContent extends Component {
     return new TrackedAsyncData(value);
   }
 
+  get errorMessage() {
+    const errorInfo = extractErrorInfo(this.data.error);
+    return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
+  }
+
   #isPromise(value) {
     return value instanceof Promise || value instanceof RsvpPromise;
   }
@@ -87,7 +94,7 @@ export default class AsyncContent extends Component {
       {{#if (has-block "error")}}
         {{yield this.data.error to="error"}}
       {{else}}
-        {{popupAjaxError this.data.error}}
+        <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
       {{/if}}
     {{/if}}
   </template>
