@@ -4,7 +4,7 @@ import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
