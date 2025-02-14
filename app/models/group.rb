@@ -503,7 +503,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.can_use_name?(name, group)
-    UsernameValidator.new(name).valid_format? &&
+    UsernameValidator.new(name, automatic: group.automatic).valid_format? &&
       (group.name == name || !User.username_exists?(name))
   end
 
@@ -1123,7 +1123,7 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, "name") ||
+    UsernameValidator.perform_validation(self, "name", automatic: automatic) ||
       begin
         normalized_name = User.normalize_username(self.name)
 
