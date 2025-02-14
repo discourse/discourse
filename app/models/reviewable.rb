@@ -782,8 +782,9 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
-  def self.unknown_types
-    Reviewable.pending.distinct.pluck(:type) - Reviewable.sti_names
+  def self.unknown_types_and_sources
+    Reviewable.pending.distinct.pluck(:type, :type_source) -
+      Reviewable.sti_names.map { |n| [n, Reviewable.source_for(n)] }
   end
 
   def self.destroy_unknown_types!

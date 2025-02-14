@@ -39,7 +39,21 @@ export default class ReviewIndex extends DiscourseRoute {
       filterCategoryId: meta.category_id,
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
-      unknownReviewableTypes: meta.unknown_reviewable_types,
+      unknownReviewableTypes: meta.unknown_reviewable_types_and_sources.sort(
+        (a, b) => {
+          // Sort by source, then by type, but put "unknown" sources at the end.
+          if (a.source === b.source) {
+            return a.type.localeCompare(b.type);
+          }
+          if (a.source === "unknown") {
+            return 1;
+          }
+          if (b.source === "unknown") {
+            return -1;
+          }
+          return a.source.localeCompare(b.source);
+        }
+      ),
       scoreTypes: meta.score_types,
       filterUsername: meta.username,
       filterReviewedBy: meta.reviewed_by,
