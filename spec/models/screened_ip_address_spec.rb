@@ -408,11 +408,12 @@ RSpec.describe ScreenedIpAddress do
     end
 
     context "when allow_admin record exists" do
+      let(:permitted_ip_address) { "111.234.23.11" }
+
       before do
-        @permitted_ip_address = "111.234.23.11"
         Fabricate(
           :screened_ip_address,
-          ip_address: @permitted_ip_address,
+          ip_address: permitted_ip_address,
           action_type: described_class.actions[:allow_admin],
         )
       end
@@ -427,12 +428,12 @@ RSpec.describe ScreenedIpAddress do
         before { SiteSetting.use_admin_ip_allowlist = true }
 
         it "returns false when user is nil" do
-          expect(described_class.block_admin_login?(nil, @permitted_ip_address)).to eq(false)
+          expect(described_class.block_admin_login?(nil, permitted_ip_address)).to eq(false)
         end
 
         it "returns false for an admin user at the allowed ip address" do
           expect(
-            described_class.block_admin_login?(Fabricate.build(:admin), @permitted_ip_address),
+            described_class.block_admin_login?(Fabricate.build(:admin), permitted_ip_address),
           ).to eq(false)
         end
 
@@ -444,7 +445,7 @@ RSpec.describe ScreenedIpAddress do
 
         it "returns false for regular user at allowed ip address" do
           expect(
-            described_class.block_admin_login?(Fabricate.build(:user), @permitted_ip_address),
+            described_class.block_admin_login?(Fabricate.build(:user), permitted_ip_address),
           ).to eq(false)
         end
 

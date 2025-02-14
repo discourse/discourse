@@ -126,48 +126,47 @@ RSpec.describe PostTiming do
   end
 
   describe "recording" do
-    before do
-      @topic = post.topic
-      @coding_horror = Fabricate(:coding_horror)
-      @timing_attrs = {
+    let(:topic) { post.topic }
+    let(:coding_horror) { Fabricate(:coding_horror) }
+    let(:timing_attrs) do
+      {
         msecs: 1234,
         topic_id: post.topic_id,
-        user_id: @coding_horror.id,
+        user_id: coding_horror.id,
         post_number: post.post_number,
       }
     end
 
     it "adds a view to the post" do
       expect {
-        PostTiming.record_timing(@timing_attrs)
+        PostTiming.record_timing(timing_attrs)
         post.reload
       }.to change(post, :reads).by(1)
     end
 
     it "doesn't update the posts read count if the topic is a PM" do
       pm = Fabricate(:private_message_post).topic
-      @timing_attrs = @timing_attrs.merge(topic_id: pm.id)
 
-      PostTiming.record_timing(@timing_attrs)
+      PostTiming.record_timing(timing_attrs.merge(topic_id: pm.id))
 
-      expect(@coding_horror.user_stat.posts_read_count).to eq(0)
+      expect(coding_horror.user_stat.posts_read_count).to eq(0)
     end
 
     describe "multiple calls" do
       it "correctly works" do
-        PostTiming.record_timing(@timing_attrs)
-        PostTiming.record_timing(@timing_attrs)
+        PostTiming.record_timing(timing_attrs)
+        PostTiming.record_timing(timing_attrs)
         timing =
           PostTiming.find_by(
             topic_id: post.topic_id,
-            user_id: @coding_horror.id,
+            user_id: coding_horror.id,
             post_number: post.post_number,
           )
 
         expect(timing).to be_present
         expect(timing.msecs).to eq(2468)
 
-        expect(@coding_horror.user_stat.posts_read_count).to eq(1)
+        expect(coding_horror.user_stat.posts_read_count).to eq(1)
       end
     end
   end

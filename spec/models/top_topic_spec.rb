@@ -3,14 +3,12 @@
 RSpec.describe TopTopic do
   describe "#sorted_periods" do
     context "when verifying enum sequence" do
-      before { @sorted_periods = TopTopic.sorted_periods }
-
       it "'daily' should be at 1st position" do
-        expect(@sorted_periods[:daily]).to eq(1)
+        expect(described_class.sorted_periods[:daily]).to eq(1)
       end
 
       it "'all' should be at 6th position" do
-        expect(@sorted_periods[:all]).to eq(6)
+        expect(described_class.sorted_periods[:all]).to eq(6)
       end
     end
   end

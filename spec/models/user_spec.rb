@@ -793,32 +793,32 @@ RSpec.describe User do
   end
 
   describe "email_hash" do
-    before_all { @user = Fabricate(:user) }
+    fab!(:user)
+    fab!(:user2) { Fabricate(:user) }
 
     it "should have a sane email hash" do
-      expect(@user.email_hash).to match(/^[0-9a-f]{32}$/)
+      expect(user.email_hash).to match(/^[0-9a-f]{32}$/)
     end
 
     it "should use downcase email" do
-      @user.email = "example@example.com"
-      @user2 = Fabricate(:user)
-      @user2.email = "ExAmPlE@eXaMpLe.com"
+      user.email = "example@example.com"
+      user2.email = "ExAmPlE@eXaMpLe.com"
 
-      expect(@user.email_hash).to eq(@user2.email_hash)
+      expect(user.email_hash).to eq(user2.email_hash)
     end
 
     it "should trim whitespace before hashing" do
-      @user.email = "example@example.com"
-      @user2 = Fabricate(:user)
-      @user2.email = " example@example.com "
+      user.email = "example@example.com"
+      user2.email = " example@example.com "
 
-      expect(@user.email_hash).to eq(@user2.email_hash)
+      expect(user.email_hash).to eq(user2.email_hash)
     end
   end
 
   describe "associated_accounts" do
+    fab!(:user)
+
     it "should correctly find social associations" do
-      user = Fabricate(:user)
       expect(user.associated_accounts).to eq([])
 
       UserAssociatedAccount.create(
@@ -981,20 +981,18 @@ RSpec.describe User do
   end
 
   describe "username uniqueness" do
-    before_all do
-      @user = Fabricate.build(:user)
-      @user.save!
-      @codinghorror = Fabricate.build(:coding_horror)
-    end
+    fab!(:user)
+
+    let!(:codinghorror) { Fabricate.build(:coding_horror) }
 
     it "should not allow saving if username is reused" do
-      @codinghorror.username = @user.username
-      expect(@codinghorror.save).to eq(false)
+      codinghorror.username = user.username
+      expect(codinghorror.save).to eq(false)
     end
 
     it "should not allow saving if username is reused in different casing" do
-      @codinghorror.username = @user.username.upcase
-      expect(@codinghorror.save).to eq(false)
+      codinghorror.username = user.username.upcase
+      expect(codinghorror.save).to eq(false)
     end
   end
 
@@ -1200,23 +1198,24 @@ RSpec.describe User do
   end
 
   describe "passwords" do
+    let(:user) { Fabricate.build(:user, active: false) }
+
     it "should not have an active account with a good password" do
-      @user = Fabricate.build(:user, active: false)
-      @user.password = "ilovepasta"
-      @user.save!
+      user.password = "ilovepasta"
+      user.save!
 
-      expect(@user.active).to eq(false)
-      expect(@user.confirm_password?("ilovepasta")).to eq(true)
+      expect(user.active).to eq(false)
+      expect(user.confirm_password?("ilovepasta")).to eq(true)
 
-      email_token = Fabricate(:email_token, user: @user, email: "pasta@delicious.com")
+      email_token = Fabricate(:email_token, user:, email: "pasta@delicious.com")
 
-      UserAuthToken.generate!(user_id: @user.id)
+      UserAuthToken.generate!(user_id: user.id)
 
-      @user.password = "passwordT0"
-      @user.save!
+      user.password = "passwordT0"
+      user.save!
 
       # must expire old token on password change
-      expect(@user.user_auth_tokens.count).to eq(0)
+      expect(user.user_auth_tokens.count).to eq(0)
 
       email_token.reload
       expect(email_token.expired).to eq(true)

@@ -25,28 +25,34 @@ RSpec.describe ScreenedUrl do
   end
 
   describe "normalize" do
-    subject(:normalized) do
-      record.normalize
-      record
-    end
+    subject(:normalized) { record.tap(&:normalize) }
 
-    let(:record) { described_class.new(@params) }
+    let(:record) { described_class.new(params) }
 
     %w[http:// HTTP:// https:// HTTPS://].each do |prefix|
-      it "strips #{prefix}" do
-        @params = valid_params.merge(url: url.gsub("http://", prefix))
-        expect(normalized.url).to eq(url.gsub("http://", ""))
+      context "with #{prefix} prefix" do
+        let(:params) { valid_params.merge(url: url.gsub("http://", prefix)) }
+
+        it "strips it" do
+          expect(normalized.url).to eq(url.gsub("http://", ""))
+        end
       end
     end
 
-    it "strips trailing slash" do
-      @params = valid_params.merge(url: "silverbullet.in/")
-      expect(normalized.url).to eq("silverbullet.in")
+    context "with a trailing slash" do
+      let(:params) { valid_params.merge(url: "silverbullet.in/") }
+
+      it "strips it" do
+        expect(normalized.url).to eq("silverbullet.in")
+      end
     end
 
-    it "strips trailing slashes" do
-      @params = valid_params.merge(url: "silverbullet.in/buy///")
-      expect(normalized.url).to eq("silverbullet.in/buy")
+    context "with trailing slashes" do
+      let(:params) { valid_params.merge(url: "silverbullet.in/buy///") }
+
+      it "strips them" do
+        expect(normalized.url).to eq("silverbullet.in/buy")
+      end
     end
 
     it "downcases domains" do

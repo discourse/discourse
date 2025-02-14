@@ -13,41 +13,41 @@ RSpec.describe Notification do
   it { is_expected.to belong_to :topic }
 
   describe "#types" do
-    context "when verifying enum sequence" do
-      before { @types = Notification.types }
+    subject(:types) { Notification.types }
 
+    context "when verifying enum sequence" do
       it "has a correct position for each type" do
-        expect(@types[:mentioned]).to eq(1)
-        expect(@types[:replied]).to eq(2)
-        expect(@types[:quoted]).to eq(3)
-        expect(@types[:edited]).to eq(4)
-        expect(@types[:liked]).to eq(5)
-        expect(@types[:private_message]).to eq(6)
-        expect(@types[:invited_to_private_message]).to eq(7)
-        expect(@types[:invitee_accepted]).to eq(8)
-        expect(@types[:posted]).to eq(9)
-        expect(@types[:moved_post]).to eq(10)
-        expect(@types[:linked]).to eq(11)
-        expect(@types[:granted_badge]).to eq(12)
-        expect(@types[:invited_to_topic]).to eq(13)
-        expect(@types[:custom]).to eq(14)
-        expect(@types[:group_mentioned]).to eq(15)
-        expect(@types[:group_message_summary]).to eq(16)
-        expect(@types[:watching_first_post]).to eq(17)
-        expect(@types[:topic_reminder]).to eq(18)
-        expect(@types[:liked_consolidated]).to eq(19)
-        expect(@types[:post_approved]).to eq(20)
-        expect(@types[:code_review_commit_approved]).to eq(21)
-        expect(@types[:membership_request_accepted]).to eq(22)
-        expect(@types[:membership_request_consolidated]).to eq(23)
-        expect(@types[:bookmark_reminder]).to eq(24)
-        expect(@types[:reaction]).to eq(25)
-        expect(@types[:votes_released]).to eq(26)
-        expect(@types[:event_reminder]).to eq(27)
-        expect(@types[:event_invitation]).to eq(28)
-        expect(@types[:chat_mention]).to eq(29)
-        expect(@types[:chat_message]).to eq(30)
-        expect(@types[:assigned]).to eq(34)
+        expect(types[:mentioned]).to eq(1)
+        expect(types[:replied]).to eq(2)
+        expect(types[:quoted]).to eq(3)
+        expect(types[:edited]).to eq(4)
+        expect(types[:liked]).to eq(5)
+        expect(types[:private_message]).to eq(6)
+        expect(types[:invited_to_private_message]).to eq(7)
+        expect(types[:invitee_accepted]).to eq(8)
+        expect(types[:posted]).to eq(9)
+        expect(types[:moved_post]).to eq(10)
+        expect(types[:linked]).to eq(11)
+        expect(types[:granted_badge]).to eq(12)
+        expect(types[:invited_to_topic]).to eq(13)
+        expect(types[:custom]).to eq(14)
+        expect(types[:group_mentioned]).to eq(15)
+        expect(types[:group_message_summary]).to eq(16)
+        expect(types[:watching_first_post]).to eq(17)
+        expect(types[:topic_reminder]).to eq(18)
+        expect(types[:liked_consolidated]).to eq(19)
+        expect(types[:post_approved]).to eq(20)
+        expect(types[:code_review_commit_approved]).to eq(21)
+        expect(types[:membership_request_accepted]).to eq(22)
+        expect(types[:membership_request_consolidated]).to eq(23)
+        expect(types[:bookmark_reminder]).to eq(24)
+        expect(types[:reaction]).to eq(25)
+        expect(types[:votes_released]).to eq(26)
+        expect(types[:event_reminder]).to eq(27)
+        expect(types[:event_invitation]).to eq(28)
+        expect(types[:chat_mention]).to eq(29)
+        expect(types[:chat_message]).to eq(30)
+        expect(types[:assigned]).to eq(34)
       end
     end
   end
@@ -256,31 +256,31 @@ RSpec.describe Notification do
   end
 
   describe "private message" do
-    before do
-      @topic = Fabricate(:private_message_topic)
-      @post = Fabricate(:post, topic: @topic, user: @topic.user)
-      @target = @post.topic.topic_allowed_users.reject { |a| a.user_id == @post.user_id }[0].user
+    let(:topic) { Fabricate(:private_message_topic) }
+    let(:post) { Fabricate(:post, topic:, user: topic.user) }
+    let(:target) { post.topic.topic_allowed_users.reject { |a| a.user_id == post.user_id }[0].user }
 
+    before do
       TopicUser.change(
-        @target.id,
-        @topic.id,
+        target.id,
+        topic.id,
         notification_level: TopicUser.notification_levels[:watching],
       )
 
-      PostAlerter.post_created(@post)
+      PostAlerter.post_created(post)
     end
 
     it "should create and roll up private message notifications" do
-      expect(@target.notifications.first.notification_type).to eq(
+      expect(target.notifications.first.notification_type).to eq(
         Notification.types[:private_message],
       )
-      expect(@post.user.unread_notifications).to eq(0)
-      expect(@post.user.total_unread_notifications).to eq(0)
-      expect(@target.unread_high_priority_notifications).to eq(1)
+      expect(post.user.unread_notifications).to eq(0)
+      expect(post.user.total_unread_notifications).to eq(0)
+      expect(target.unread_high_priority_notifications).to eq(1)
 
-      Fabricate(:post, topic: @topic, user: @topic.user)
-      @target.reload
-      expect(@target.unread_high_priority_notifications).to eq(1)
+      Fabricate(:post, topic:, user: topic.user)
+      target.reload
+      expect(target.unread_high_priority_notifications).to eq(1)
     end
   end
 
@@ -623,10 +623,10 @@ RSpec.describe Notification do
 
   describe "#recent_report" do
     let(:post) { Fabricate(:post) }
+    let(:vars) { { i: 0 } }
 
     def fab(type, read)
-      @i ||= 0
-      @i += 1
+      vars[:i] += 1
       Notification.create!(
         read: read,
         user_id: user.id,
@@ -634,7 +634,7 @@ RSpec.describe Notification do
         post_number: post.post_number,
         data: "[]",
         notification_type: type,
-        created_at: @i.days.from_now,
+        created_at: vars[:i].days.from_now,
       )
     end
 

@@ -13,42 +13,36 @@ RSpec.describe Post do
 
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do
-      before { @hidden_reasons = Post.hidden_reasons }
-
       it "'flag_threshold_reached' should be at 1st position" do
-        expect(@hidden_reasons[:flag_threshold_reached]).to eq(1)
+        expect(described_class.hidden_reasons[:flag_threshold_reached]).to eq(1)
       end
 
       it "'flagged_by_tl3_user' should be at 4th position" do
-        expect(@hidden_reasons[:flagged_by_tl3_user]).to eq(4)
+        expect(described_class.hidden_reasons[:flagged_by_tl3_user]).to eq(4)
       end
     end
   end
 
   describe "#types" do
     context "when verifying enum sequence" do
-      before { @types = Post.types }
-
       it "'regular' should be at 1st position" do
-        expect(@types[:regular]).to eq(1)
+        expect(described_class.types[:regular]).to eq(1)
       end
 
       it "'whisper' should be at 4th position" do
-        expect(@types[:whisper]).to eq(4)
+        expect(described_class.types[:whisper]).to eq(4)
       end
     end
   end
 
   describe "#cook_methods" do
     context "when verifying enum sequence" do
-      before { @cook_methods = Post.cook_methods }
-
       it "'regular' should be at 1st position" do
-        expect(@cook_methods[:regular]).to eq(1)
+        expect(described_class.cook_methods[:regular]).to eq(1)
       end
 
       it "'email' should be at 3rd position" do
-        expect(@cook_methods[:email]).to eq(3)
+        expect(described_class.cook_methods[:email]).to eq(3)
       end
     end
   end
