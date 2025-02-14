@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { click, render } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
@@ -140,44 +140,56 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
   module("<:loading>", function () {
     test("it displays the spinner when the block is not provided", async function (assert) {
-      const promise = new Promise((resolve) => {
-        setTimeout(() => {
-          assert.dom(".spinner").exists();
-          resolve();
-        }, 250);
-      });
+      let resolvePromise;
+      const promise = new Promise((resolve) => (resolvePromise = resolve));
 
-      await render(<template>
-        <AsyncContent @asyncData={{promise}}>
-          <:content>
-            <div class="content"></div>
-          </:content>
-        </AsyncContent>
+      const renderPromise = render(<template>
+        <div data-async-content-test>
+          <AsyncContent @asyncData={{promise}}>
+            <:content>
+              <div class="content"></div>
+            </:content>
+          </AsyncContent>
+        </div>
       </template>);
 
+      // TrackedAsyncData is tangled with Ember's run loop, so we need to wait for the result of the rendering
+      // instead to check the loading state.
+      // Otherwise, the test will timeout waiting for the promise to resolve.
+      await waitFor("[data-async-content-test]");
+      assert.dom(".spinner").exists();
+
+      resolvePromise();
+      await renderPromise;
       assert.dom(".content").exists();
     });
 
     test("it displays the block when provided", async function (assert) {
-      const promise = new Promise((resolve) => {
-        setTimeout(() => {
-          assert.dom(".loading-provided").exists();
-          resolve();
-        }, 250);
-      });
+      let resolvePromise;
+      const promise = new Promise((resolve) => (resolvePromise = resolve));
 
-      await render(<template>
-        <AsyncContent @asyncData={{promise}}>
-          <:loading>
-            <div class="loading-provided"></div>
-          </:loading>
+      const renderPromise = render(<template>
+        <div data-async-content-test>
+          <AsyncContent @asyncData={{promise}}>
+            <:loading>
+              <div class="loading-provided"></div>
+            </:loading>
 
-          <:content>
-            <div class="content"></div>
-          </:content>
-        </AsyncContent>
+            <:content>
+              <div class="content"></div>
+            </:content>
+          </AsyncContent>
+        </div>
       </template>);
 
+      // TrackedAsyncData is tangled with Ember's run loop, so we need to wait for the result of the rendering
+      // instead to check the loading state.
+      // Otherwise, the test will timeout waiting for the promise to resolve.
+      await waitFor("[data-async-content-test]");
+      assert.dom(".loading-provided").exists();
+
+      resolvePromise();
+      await renderPromise;
       assert.dom(".content").exists();
     });
   });
