@@ -51,14 +51,14 @@ describe "Admin New Features Page", type: :system do
 
     new_features_page.visit
 
-    within find(".admin-config-area-card:first-child") do
+    within find(".admin-config-area-card[data-new-features-group='November 2023']") do
       expect(new_features_page).to have_screenshot
       expect(new_features_page).to have_learn_more_link
       expect(new_features_page).to have_no_emoji
       expect(new_features_page).to have_date("November 2023")
     end
 
-    within find(".admin-config-area-card:last-child") do
+    within find(".admin-config-area-card[data-new-features-group='August 2023']") do
       expect(new_features_page).to have_screenshot
       expect(new_features_page).to have_learn_more_link
       expect(new_features_page).to have_no_emoji
