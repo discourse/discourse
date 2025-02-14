@@ -789,3 +789,13 @@
     color: var(--primary-low-mid);
   }
 }
+
+.admin-new-features__experiments-filter {
+  display: flex;
+  margin-bottom: 1em;
+  align-items: center;
+
+  .d-toggle-switch {
+    margin-right: 0.5em;
+  }
+}
