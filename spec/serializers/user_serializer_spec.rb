@@ -385,7 +385,7 @@ RSpec.describe UserSerializer do
         plugin.allow_public_user_custom_field :public_field
       end
 
-      after { DiscoursePluginRegistry.reset! }
+      after { DiscoursePluginRegistry.reset_register!(:public_user_custom_fields) }
 
       it "serializes the fields listed in public_user_custom_fields" do
         expect(json[:custom_fields]["public_field"]).to eq(user.custom_fields["public_field"])
