@@ -35,3 +35,5 @@ en:
       modified_column_excluded: "Modified column must not be mentioned in `exclude` section: %{table_name}.%{column_name}"
       columns_not_configured: "The following columns have not been configured for table '%{table_name}': %{column_names}"
       no_columns_configured: "The table '%{table_name}' doesn't have any columns configured."
+
+      invalid_name_regex: "Invalid `name_regex`: %{message}"

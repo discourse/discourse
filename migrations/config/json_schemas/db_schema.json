@@ -162,7 +162,7 @@
                       "name": {
                         "type": "string"
                       },
-                      "regex": {
+                      "name_regex": {
                         "type": "string",
                         "format": "regex"
                       },
@@ -182,7 +182,7 @@
                       },
                       {
                         "required": [
-                          "regex"
+                          "name_regex"
                         ]
                       }
                     ]

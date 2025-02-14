@@ -21,9 +21,9 @@ schema:
   global:
     columns:
       modify:
-        - regex: ".*upload.*_id$"
+        - name_regex: ".*upload.*_id$"
           datatype: text
-        - regex: "^(id|.*_id)$"
+        - name_regex: "^(id|.*_id)$"
           datatype: numeric
       exclude:
         - "updated_at"

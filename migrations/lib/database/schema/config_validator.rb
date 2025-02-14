@@ -29,9 +29,7 @@ module Migrations::Database::Schema
     private
 
     def validate_with_json_schema(config)
-      schema_path = File.join(::Migrations.root_path, "config", "json_schemas", "db_schema.json")
-      schema = JSON.load_file(schema_path)
-
+      schema = load_json_schema
       schemer = JSONSchemer.schema(schema)
       response = schemer.validate(config)
 
@@ -42,6 +40,11 @@ module Migrations::Database::Schema
         end
         @errors << error_message
       end
+    end
+
+    def load_json_schema
+      schema_path = File.join(::Migrations.root_path, "config", "json_schemas", "db_schema.json")
+      JSON.load_file(schema_path)
     end
 
     def validate_config(config)
