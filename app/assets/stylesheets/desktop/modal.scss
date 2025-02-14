@@ -32,11 +32,11 @@ html.modal-open {
 .close {
   font-size: var(--font-up-3);
   text-decoration: none;
+  cursor: pointer;
 
   &:visited {
     color: var(--primary-high);
   }
-  cursor: pointer;
 
   &:hover {
     color: var(--primary);

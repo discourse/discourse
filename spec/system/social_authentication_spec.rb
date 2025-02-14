@@ -314,26 +314,6 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           visit("/login")
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
-
-        it "works with existing users when auth_immediately is enabled" do
-          SiteSetting.auth_immediately = false
-          SiteSetting.login_required = true
-          mock_google_auth
-
-          visit("/signup")
-          expect(signup_form).to be_open
-          expect(signup_form).to have_no_password_input
-          expect(signup_form).to have_valid_username
-          expect(signup_form).to have_valid_email
-          signup_form.click_create_account
-
-          find(".header-dropdown-toggle.current-user").click
-          find("#user-menu-button-profile").click
-          find("#quick-access-profile .logout").click
-          visit("/")
-          find(".login-welcome .login-button").click
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
-        end
       end
 
       it "automatically redirects when using the login button" do

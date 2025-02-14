@@ -96,6 +96,7 @@
     border-bottom: 1px solid var(--primary-low);
     padding-bottom: 0.25em;
     display: flex;
+    margin-bottom: 0.5em;
 
     .name {
       width: 8em;
@@ -109,7 +110,6 @@
       ); // subtracting width of name and margin-right
       word-wrap: break-word;
     }
-    margin-bottom: 0.5em;
   }
 }
 
@@ -236,6 +236,7 @@
   background: var(--primary-very-low);
   padding: 1.5rem;
   margin-block: 3rem;
+  padding-bottom: 1em;
 
   .show-raw-email {
     color: var(--primary-medium);
@@ -472,7 +473,6 @@
       margin-right: 0.5em;
     }
   }
-  padding-bottom: 1em;
 }
 
 .reviewable-stale {
@@ -607,17 +607,20 @@
 }
 
 .editable-fields {
+  width: 100%;
+
   .editable-created-by {
     display: flex;
+    margin-bottom: 0.5em;
 
     .avatar {
       margin-right: 0.25em;
     }
-    margin-bottom: 0.5em;
   }
-  width: 100%;
 
   .editable-field {
+    margin-bottom: 0.5em;
+
     .mini-tag-chooser {
       margin: 0;
     }
@@ -631,7 +634,6 @@
       width: 100%;
       height: 10em;
     }
-    margin-bottom: 0.5em;
   }
 }
 

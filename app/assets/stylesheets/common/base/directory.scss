@@ -4,12 +4,13 @@
 }
 
 .directory {
+  margin-bottom: 100px;
+  background: var(--d-content-background);
+
   .directory-value-list-item:not(:empty)
     ~ .directory-value-list-item:not(:empty)::before {
     content: "| ";
   }
-  margin-bottom: 100px;
-  background: var(--d-content-background);
 
   &.users-directory {
     .directory-group-selector {
@@ -284,14 +285,15 @@
     }
 
     &__row {
-      &:first-child {
-        border-top: 1px solid var(--primary-low);
-      }
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
       border-bottom: 1px solid var(--primary-low);
       padding: 0.85em 0.5em 1em;
       gap: 0 10%;
+
+      &:first-child {
+        border-top: 1px solid var(--primary-low);
+      }
     }
 
     &__header {

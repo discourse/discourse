@@ -24,6 +24,6 @@
 .d-modal.grant-badge-modal,
 .d-modal.bookmark-reminder-modal {
   .d-modal__container {
-    min-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    min-height: calc(var(--composer-vh, 1dvh) * 85);
   }
 }

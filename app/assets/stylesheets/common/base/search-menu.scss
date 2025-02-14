@@ -431,9 +431,6 @@ $search-pad-horizontal: 0.5em;
     .topic-title {
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      @supports not (overflow-wrap: anywhere) {
-        word-break: break-word;
-      }
       margin-right: 0.25em;
     }
   }

@@ -99,6 +99,7 @@
   text-align: left;
   display: block;
   margin: 20px 0;
+  width: 800px;
 
   .badge-info {
     display: none;
@@ -116,7 +117,6 @@
     margin: 0;
     padding: 0;
   }
-  width: 800px;
 
   &::after {
     content: "";

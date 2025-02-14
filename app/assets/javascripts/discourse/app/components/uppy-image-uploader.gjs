@@ -19,7 +19,7 @@ import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
-// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted,
+// Args: id, type, imageUrl, placeholderUrl, additionalParams, onUploadDone, onUploadDeleted, disabled
 export default class UppyImageUploader extends Component {
   @service currentUser;
   @service siteSettings;
@@ -58,6 +58,7 @@ export default class UppyImageUploader extends Component {
 
   get disabled() {
     return (
+      this.args.disabled ||
       this.notAllowed ||
       this.uppyUpload?.uploading ||
       this.uppyUpload?.processing
@@ -167,6 +168,7 @@ export default class UppyImageUploader extends Component {
             <DButton
               @action={{@onUploadDeleted}}
               @icon="trash-can"
+              @disabled={{this.disabled}}
               class="btn-danger pad-left no-text"
             />
             <DButton

@@ -15,10 +15,11 @@ a.loading-onebox {
 }
 
 .onebox-result {
-  @include post-aside;
   margin-top: 15px;
   padding: 12px;
   font-size: var(--font-0);
+
+  @include post-aside;
 
   .onebox-result-body {
     padding-top: 5px;
@@ -73,13 +74,14 @@ a.loading-onebox {
     height: 20px;
 
     .info {
+      position: absolute;
+      font-size: var(--font-0);
+
       a {
         color: black;
         text-decoration: none;
         padding-right: 10px;
       }
-      position: absolute;
-      font-size: var(--font-0);
 
       img.favicon {
         margin-right: 3px;
@@ -151,12 +153,13 @@ aside.onebox {
     img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
-      @media all and (max-width: 600px) {
-        max-width: 35%;
-      }
       height: auto;
       float: left;
       margin-right: 1em;
+
+      @media all and (max-width: 600px) {
+        max-width: 35%;
+      }
 
       &.onebox-full-image {
         max-height: none;
@@ -296,6 +299,10 @@ aside.onebox {
     }
 
     .video-icon {
+      bottom: 15px;
+      right: 10px;
+      position: absolute;
+
       &::before {
         opacity: 0.8;
 
@@ -304,9 +311,6 @@ aside.onebox {
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
         );
       }
-      bottom: 15px;
-      right: 10px;
-      position: absolute;
     }
   }
 }
@@ -967,6 +971,7 @@ aside.onebox.mixcloud-preview {
     .mixcloud-text {
       padding-left: 170px;
       font-family: sans-serif;
+      color: gray;
 
       h3 {
         font-size: 13px;
@@ -980,7 +985,6 @@ aside.onebox.mixcloud-preview {
         font-size: 12px;
         font-weight: 200;
       }
-      color: gray;
     }
   }
 }
