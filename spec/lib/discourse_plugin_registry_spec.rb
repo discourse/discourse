@@ -49,11 +49,12 @@ RSpec.describe DiscoursePluginRegistry do
 
         plugin.enabled = true
         expect(fresh_registry.test_things).to contain_exactly("mything")
-        expect(fresh_registry.test_things_lookup).to eq([{ klass: "mything", plugin: plugin.name }])
+
+        # Only reviewable_types gets a _lookup method.
+        expect(fresh_registry.methods.include?(:test_thing_lookup)).to eq(false)
 
         plugin.enabled = false
         expect(fresh_registry.test_things.length).to eq(0)
-        expect(fresh_registry.test_things_lookup.length).to eq(0)
       end
     end
   end

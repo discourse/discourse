@@ -51,10 +51,14 @@ class DiscoursePluginRegistry
       public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
     end
 
-    define_singleton_method(register_name.to_s + "_lookup") do
-      public_send(:"_raw_#{register_name}")
-        .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
-        .uniq
+    # Special case for reviewable_types, as we need to be able to lookup the plugins
+    # that register each type.
+    if register_name.to_s == "reviewable_types"
+      define_singleton_method("#{register_name}_lookup") do
+        public_send(:"_raw_#{register_name}")
+          .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
+          .uniq
+      end
     end
   end
 
