@@ -19,17 +19,18 @@ export default class AdminReports extends Component {
   @bind
   async loadReports() {
     const response = await ajax("/admin/reports");
-    this.reports = response.reports;
+    return response.reports;
   }
 
-  get filteredReports() {
-    if (!this.reports) {
+  @bind
+  filterReports(reports, filter) {
+    if (!reports) {
       return [];
     }
 
-    let filteredReports = this.reports;
-    if (this.filter) {
-      const lowerCaseFilter = this.filter.toLowerCase();
+    let filteredReports = reports;
+    if (filter) {
+      const lowerCaseFilter = filter.toLowerCase();
       filteredReports = filteredReports.filter((report) => {
         return (
           (report.title || "").toLowerCase().includes(lowerCaseFilter) ||
@@ -50,7 +51,7 @@ export default class AdminReports extends Component {
 
   <template>
     <AsyncContent @asyncData={{this.loadReports}}>
-      <:content>
+      <:content as |reports|>
         <div class="d-admin-filter admin-reports-header">
           <div class="admin-filter__input-container">
             <input
@@ -63,7 +64,7 @@ export default class AdminReports extends Component {
           </div>
         </div>
         <AdminSectionLandingWrapper class="admin-reports-list">
-          {{#each this.filteredReports as |report|}}
+          {{#each (this.filterReports reports this.filter) as |report|}}
             <AdminSectionLandingItem
               @titleLabelTranslated={{report.title}}
               @descriptionLabelTranslated={{report.description}}
