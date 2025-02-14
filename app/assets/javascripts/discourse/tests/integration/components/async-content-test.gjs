@@ -7,6 +7,7 @@ import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
 import AsyncContent from "discourse/components/async-content";
+import DialogHolder from "discourse/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AsyncContent", function (hooks) {
@@ -295,7 +296,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
   });
 
   module("<:error>", function () {
-    test("it displays a popup error dialog when the block is not provided", async function (assert) {
+    test("it displays an inline error dialog when the block is not provided", async function (assert) {
       const promise = Promise.reject("error");
 
       await render(<template>
@@ -304,6 +305,18 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       assert.dom(".alert-error").exists();
       assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
+    });
+
+    test("it displays a popup error dialog when the block is not provided", async function (assert) {
+      const promise = Promise.reject("error");
+
+      await render(<template>
+        <AsyncContent @asyncData={{promise}} @errorMode="popup" />
+        <DialogHolder />
+      </template>);
+
+      assert.dom(".dialog-body").exists();
+      assert.dom(".dialog-body").hasText("Sorry, an error has occurred.");
     });
 
     test("it displays the block when the promise is rejected", async function (assert) {

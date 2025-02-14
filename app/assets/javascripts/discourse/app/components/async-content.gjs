@@ -1,15 +1,23 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
+import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import FlashMessage from "discourse/components/flash-message";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { extractErrorInfo } from "../lib/ajax-error";
 
+const ERROR_MODES = ["flash", "popup"];
+const DEFAULT_ERROR_MODE = "flash";
+
 export default class AsyncContent extends Component {
+  errorMode = this.args.errorMode ?? DEFAULT_ERROR_MODE;
   #debounce = false;
 
   @cached
@@ -59,6 +67,17 @@ export default class AsyncContent extends Component {
     return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
   }
 
+  @bind
+  verifyParameters({ hasErrorBlock }) {
+    if (hasErrorBlock && this.args.errorMode) {
+      throw `@errorMode cannot be used when a block named "error" is provided`;
+    }
+
+    if (this.errorMode && !ERROR_MODES.includes(this.errorMode)) {
+      throw `@errorMode must be one of \`${ERROR_MODES.join("`, `")}\``;
+    }
+  }
+
   #isPromise(value) {
     return value instanceof Promise || value instanceof RsvpPromise;
   }
@@ -68,7 +87,7 @@ export default class AsyncContent extends Component {
     this.#debounce =
       this.args.debounce === true ? INPUT_DELAY : this.args.debounce;
 
-    // when a resolve function is provided, we need to resolve the promise, once asyncData is done
+    // when a resolve function is provided, we need to resolve the promise once asyncData is done
     // otherwise, we just call asyncData
     return resolve
       ? asyncData(context).then(resolve).catch(reject)
@@ -76,6 +95,7 @@ export default class AsyncContent extends Component {
   }
 
   <template>
+    {{this.verifyParameters (hash hasErrorBlock=(has-block "error"))}}
     {{#if this.data.isPending}}
       {{#if (has-block "loading")}}
         {{yield to="loading"}}
@@ -93,8 +113,10 @@ export default class AsyncContent extends Component {
     {{else if this.data.isRejected}}
       {{#if (has-block "error")}}
         {{yield this.data.error to="error"}}
-      {{else}}
+      {{else if (eq this.errorMode "flash")}}
         <FlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+      {{else if (eq this.errorMode "popup")}}
+        {{popupAjaxError this.data.error}}
       {{/if}}
     {{/if}}
   </template>
