@@ -496,7 +496,10 @@ export default {
 
     if (filterInput) {
       this._scrollTo(0);
-      filterInput.focus();
+
+      if (!this.siteSettings.use_experimental_admin_search) {
+        filterInput.focus();
+      }
     }
   },
 

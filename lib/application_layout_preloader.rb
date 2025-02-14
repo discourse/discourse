@@ -101,6 +101,7 @@ class ApplicationLayoutPreloader
               humanized_name: plugin.humanized_name,
               admin_route: plugin.full_admin_route,
               enabled: plugin.enabled?,
+              description: plugin.metadata.about,
             }
           end,
       )
