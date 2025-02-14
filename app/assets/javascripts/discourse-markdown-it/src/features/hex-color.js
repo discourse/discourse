@@ -4,9 +4,12 @@ function hexColorRule(state, silent) {
   const src = state.src;
   const firstChar = src.charCodeAt(start);
 
+  console.log("First char:", String.fromCharCode(firstChar));
+  console.log("Last char:", src.charAt(max - 1));
+
   // early exit if first char isn't `#`
   // or there's less than 7 characters left
-  if (firstChar !== 0x23 || start + 7 > max) {
+  if (firstChar !== 0x23 || start + 4 > max) {
     return false;
   }
 
@@ -15,7 +18,10 @@ function hexColorRule(state, silent) {
     return false;
   }
 
-  const match = /^#[0-9A-Fa-f]{6}(?!\w)/.exec(src.slice(start));
+  const match = src
+    .slice(start)
+    .match(/^#(?:[0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})(?=\b|_|$)/i);
+
   if (!match) {
     return false;
   }
