@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import AsyncContent from "discourse/components/async-content";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
@@ -13,22 +13,13 @@ import AdminSectionLandingWrapper from "admin/components/admin-section-landing-w
 
 export default class AdminReports extends Component {
   @service siteSettings;
-  @tracked reports = null;
+  @tracked reports;
   @tracked filter = "";
-  @tracked isLoading = true;
-
-  constructor() {
-    super(...arguments);
-    this.loadReports();
-  }
 
   @bind
-  loadReports() {
-    ajax("/admin/reports")
-      .then((json) => {
-        this.reports = json.reports;
-      })
-      .finally(() => (this.isLoading = false));
+  async loadReports() {
+    const response = await ajax("/admin/reports");
+    this.reports = response.reports;
   }
 
   get filteredReports() {
@@ -58,28 +49,30 @@ export default class AdminReports extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-      <div class="d-admin-filter admin-reports-header">
-        <div class="admin-filter__input-container">
-          <input
-            type="text"
-            class="admin-filter__input admin-reports-header__filter"
-            placeholder={{i18n "admin.filter_reports"}}
-            value={{this.filter}}
-            {{on "input" (withEventValue (fn (mut this.filter)))}}
-          />
+    <AsyncContent @asyncData={{this.loadReports}}>
+      <:content>
+        <div class="d-admin-filter admin-reports-header">
+          <div class="admin-filter__input-container">
+            <input
+              type="text"
+              class="admin-filter__input admin-reports-header__filter"
+              placeholder={{i18n "admin.filter_reports"}}
+              value={{this.filter}}
+              {{on "input" (withEventValue (fn (mut this.filter)))}}
+            />
+          </div>
         </div>
-      </div>
-      <AdminSectionLandingWrapper class="admin-reports-list">
-        {{#each this.filteredReports as |report|}}
-          <AdminSectionLandingItem
-            @titleLabelTranslated={{report.title}}
-            @descriptionLabelTranslated={{report.description}}
-            @titleRoute="adminReports.show"
-            @titleRouteModel={{report.type}}
-          />
-        {{/each}}
-      </AdminSectionLandingWrapper>
-    </ConditionalLoadingSpinner>
+        <AdminSectionLandingWrapper class="admin-reports-list">
+          {{#each this.filteredReports as |report|}}
+            <AdminSectionLandingItem
+              @titleLabelTranslated={{report.title}}
+              @descriptionLabelTranslated={{report.description}}
+              @titleRoute="adminReports.show"
+              @titleRouteModel={{report.type}}
+            />
+          {{/each}}
+        </AdminSectionLandingWrapper>
+      </:content>
+    </AsyncContent>
   </template>
 }
