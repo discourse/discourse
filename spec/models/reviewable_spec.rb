@@ -339,6 +339,16 @@ RSpec.describe Reviewable, type: :model do
     expect(Reviewable.valid_type?("User")).to eq(false)
   end
 
+  describe ".source_for" do
+    it "returns the correct source" do
+      expect(Reviewable.source_for(ReviewablePost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableFlaggedPost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableQueuedPost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableUser)).to eq("core")
+      expect(Reviewable.source_for("NonExistentType")).to eq("unknown")
+    end
+  end
+
   describe "events" do
     let!(:moderator) { Fabricate(:moderator) }
     let(:reviewable) { Fabricate(:reviewable) }

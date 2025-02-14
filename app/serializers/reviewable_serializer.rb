@@ -6,6 +6,7 @@ class ReviewableSerializer < ApplicationSerializer
   attributes(
     :id,
     :type,
+    :type_source,
     :topic_id,
     :topic_url,
     :target_url,

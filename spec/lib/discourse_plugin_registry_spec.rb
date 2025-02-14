@@ -15,6 +15,7 @@ RSpec.describe DiscoursePluginRegistry do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
+        attr_accessor :name
         def enabled?
           @enabled
         end
@@ -48,6 +49,9 @@ RSpec.describe DiscoursePluginRegistry do
 
         plugin.enabled = true
         expect(fresh_registry.test_things).to contain_exactly("mything")
+
+        # Only reviewable_types gets a _lookup method.
+        expect(fresh_registry.methods.include?(:test_thing_lookup)).to eq(false)
 
         plugin.enabled = false
         expect(fresh_registry.test_things.length).to eq(0)

@@ -625,11 +625,20 @@ TEXT
     subject(:register_reviewable_type) { plugin_instance.register_reviewable_type(new_type) }
 
     context "when the provided class inherits from `Reviewable`" do
-      let(:new_type) { Class.new(Reviewable) }
+      let(:new_type) do
+        class MyReviewable < Reviewable
+        end
+        MyReviewable
+      end
 
       it "adds the provided class to the existing types" do
         expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
         expect(Reviewable.types).to include(new_type)
+      end
+
+      it "shows the correct source for the new type" do
+        register_reviewable_type
+        expect(Reviewable.source_for(new_type)).to eq("discourse-sample-plugin")
       end
 
       context "when the plugin is disabled" do
