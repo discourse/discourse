@@ -110,7 +110,7 @@ export default class ComposerService extends Service {
   @tracked
   showPreview = this.site.mobileView
     ? false
-    : this.keyValueStore.get("composer.showPreview") === "true";
+    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
 
   @tracked allowPreview = true;
   checkedMessages = false;
