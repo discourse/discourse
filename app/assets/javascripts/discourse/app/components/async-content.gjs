@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { TrackedAsyncData } from "ember-async-data";
+import { Promise as RsvpPromise } from "rsvp";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -18,10 +19,16 @@ export default class AsyncContent extends Component {
       return;
     }
 
+    if (asyncData instanceof TrackedAsyncData) {
+      return asyncData;
+    }
+
     let value;
 
-    if (typeof asyncData === "function") {
-      value = this.args.debounce
+    if (this.#isPromise(asyncData)) {
+      value = asyncData;
+    } else if (typeof asyncData === "function") {
+      value = this.#debounce
         ? new Promise((resolve, reject) => {
             discourseDebounce(
               this,
@@ -34,23 +41,19 @@ export default class AsyncContent extends Component {
             );
           })
         : this.#resolveAsyncData(asyncData, context);
-
-      // value is null if we skipped loading the data on init
-      // in this case, we don't want to return a TrackedAsyncData instance
-      if (!value) {
-        return;
-      }
-    } else if (asyncData instanceof Promise) {
-      value = asyncData;
     }
 
-    if (!(value instanceof Promise)) {
+    if (!this.#isPromise(value)) {
       throw new Error(
         `\`<AsyncContent />\` expects @asyncData to be an async function or a promise`
       );
     }
 
     return new TrackedAsyncData(value);
+  }
+
+  #isPromise(value) {
+    return value instanceof Promise || value instanceof RsvpPromise;
   }
 
   // a stable reference to a function to use the `debounce` method
