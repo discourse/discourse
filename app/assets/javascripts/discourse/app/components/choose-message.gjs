@@ -3,7 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import { searchForTerm } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
@@ -13,7 +15,7 @@ export default class ChooseMessage extends Component {
 
   @action
   async search(title) {
-    this.args.setSelectedTopicId(null);
+    next(() => this.args.setSelectedTopicId(null)); // clear existing selection
 
     if (isEmpty(title)) {
       return;
@@ -25,9 +27,15 @@ export default class ChooseMessage extends Component {
       restrictToArchetype: "private_message",
     });
 
-    return results?.posts
+    const messages = results?.posts
       ?.mapBy("topic")
       .filter((topic) => topic.id !== this.args.currentTopicId);
+
+    if (messages.length === 1) {
+      next(() => this.args.setSelectedTopicId(messages[0]));
+    }
+
+    return messages;
   }
 
   @action
@@ -75,6 +83,7 @@ export default class ChooseMessage extends Component {
                     {{on "click" (fn @setSelectedTopicId message)}}
                     type="radio"
                     name="choose_message_id"
+                    checked={{eq message.id @selectedTopicId}}
                   />
                   <span class="message-title">
                     {{message.title}}

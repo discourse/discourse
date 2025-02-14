@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { isEmpty, isPresent } from "@ember/utils";
 import { eq, or } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
@@ -36,6 +37,8 @@ export default class ChooseTopic extends Component {
 
   @action
   async loadTopics(title) {
+    next(() => this.chooseTopic(null)); // clear existing selection
+
     // topicTitle is null => initial load
     if (this.topicTitle === null) {
       if (this.args.loadOnInit && isPresent(this.args.additionalFilters)) {
@@ -84,7 +87,7 @@ export default class ChooseTopic extends Component {
       .filter((t) => t.id !== this.args.currentTopicId);
 
     if (topics.length === 1) {
-      this.chooseTopic(topics[0]);
+      next(() => this.chooseTopic(topics[0]));
     }
 
     return topics;
@@ -148,7 +151,7 @@ export default class ChooseTopic extends Component {
                   <label class="radio">
                     <input
                       {{on "click" (fn this.chooseTopic t)}}
-                      checked={{eq t.id this.selectedTopicId}}
+                      checked={{eq t.id @selectedTopicId}}
                       type="radio"
                       name="choose_topic_id"
                       id={{concat "choose-topic-" t.id}}
