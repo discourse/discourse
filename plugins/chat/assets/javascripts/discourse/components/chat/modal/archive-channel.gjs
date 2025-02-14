@@ -115,7 +115,7 @@ export default class ChatModalArchiveChannel extends Component {
 
   @action
   newTopicSelected(topic) {
-    this.selectedTopicId = topic.id;
+    this.selectedTopicId = topic?.id;
   }
 
   <template>
@@ -137,6 +137,7 @@ export default class ChatModalArchiveChannel extends Component {
           @categoryId={{this.categoryId}}
           @tags={{this.tags}}
           @topicChangedCallback={{this.newTopicSelected}}
+          @selectedTopicId={{this.selectedTopicId}}
           @instructionLabels={{this.instructionLabels}}
           @allowNewMessage={{false}}
         />
