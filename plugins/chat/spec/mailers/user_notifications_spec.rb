@@ -579,4 +579,35 @@ describe UserNotifications do
       end
     end
   end
+
+  describe "in a direct message channel with threads" do
+    fab!(:message) do
+      Fabricate(:chat_message, chat_channel: direct_message, user: other, created_at: 2.weeks.ago)
+    end
+    fab!(:thread) { Fabricate(:chat_thread, channel: direct_message, original_message: message) }
+    fab!(:reply) { Fabricate(:chat_message, chat_channel: direct_message, thread:, user: other) }
+    let(:watching) { Chat::NotificationLevels.all[:watching] }
+
+    it "does not send a chat summary email for thread replies" do
+      no_chat_summary_email
+    end
+
+    describe "when the user is watching the thread" do
+      before do
+        Fabricate(:user_chat_thread_membership, user: user, thread:, notification_level: watching)
+      end
+
+      it "sends a chat summary email" do
+        chat_summary_email
+      end
+    end
+
+    describe "when another user is watching a thread" do
+      before { thread.membership_for(other).update!(notification_level: watching) }
+
+      it "does not send current user a chat summary email" do
+        no_chat_summary_email
+      end
+    end
+  end
 end
