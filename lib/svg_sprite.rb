@@ -163,6 +163,7 @@ module SvgSprite
         grip-lines
         hand-point-right
         handshake-angle
+        hashtag
         heart
         hourglass-start
         house
