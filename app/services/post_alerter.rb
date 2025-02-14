@@ -639,6 +639,10 @@ class PostAlerter
       display_username: opts[:display_username] || post.user.username,
     }
 
+    if display_name = opts[:display_name] || post.user.name
+      notification_data[:display_name] = display_name
+    end
+
     opts[:custom_data].each { |k, v| notification_data[k] = v } if opts[:custom_data].is_a?(Hash)
 
     if group = opts[:group]
