@@ -50,9 +50,6 @@ export default class CreateAccount extends Component.extend(
   @setting("require_invite_code") requireInviteCode;
   // For NameValidation mixin
   @alias("model.accountName") accountName;
-  // For UsernameValidation mixin
-  @alias("model.authOptions") authOptions;
-  @alias("model.accountEmail") accountEmail;
 
   init() {
     super.init(...arguments);
@@ -73,6 +70,16 @@ export default class CreateAccount extends Component.extend(
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
+  }
+
+  @dependentKeyCompat
+  get accountEmail() {
+    return this.model?.accountEmail;
+  }
+
+  @dependentKeyCompat
+  get authOptions() {
+    return this.model?.authOptions;
   }
 
   @dependentKeyCompat
@@ -197,11 +204,10 @@ export default class CreateAccount extends Component.extend(
     );
   }
 
-  @discourseComputed("usernameValidation.reason")
-  showUsernameInstructions(usernameValidationReason) {
+  get showUsernameInstructions() {
     return (
       this.siteSettings.show_signup_form_username_instructions &&
-      !usernameValidationReason
+      !this.usernameValidation.reason
     );
   }
 
