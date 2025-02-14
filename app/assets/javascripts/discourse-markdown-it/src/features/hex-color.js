@@ -20,8 +20,10 @@ function hexColorRule(state, silent) {
     return false;
   }
 
-  const token = state.push("hex_color", "", 0);
-  token.content = match[0];
+  if (!silent) {
+    const token = state.push("hex_color", "", 0);
+    token.content = match[0];
+  }
 
   state.pos += match[0].length;
 
