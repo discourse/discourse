@@ -107,7 +107,11 @@ export default class ComposerService extends Service {
   @service siteSettings;
   @service store;
 
-  @tracked showPreview = true;
+  @tracked
+  showPreview = this.site.mobileView
+    ? false
+    : this.keyValueStore.get("composer.showPreview") === "true";
+
   @tracked allowPreview = true;
   checkedMessages = false;
   messageCount = null;
@@ -152,14 +156,6 @@ export default class ComposerService extends Service {
 
   get privateMessageDraftKey() {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
-  }
-
-  @on("init")
-  _setupPreview() {
-    const val = this.site.mobileView
-      ? false
-      : this.keyValueStore.get("composer.showPreview") || "true";
-    this.set("showPreview", val === "true");
   }
 
   @computed(
