@@ -44,7 +44,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
       assert.dom(".content").hasText("data");
     });
 
-    test("it accepts an RsvePromise", async function (assert) {
+    test("it accepts an RsvpPromise", async function (assert) {
       const promise = RsvpPromise.resolve("data");
 
       await render(<template>
