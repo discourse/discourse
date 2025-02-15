@@ -102,7 +102,7 @@
       }
 
       &.bulk-select-visible {
-        @include sticky;
+        position: sticky;
         top: 60px;
         z-index: 10;
       }

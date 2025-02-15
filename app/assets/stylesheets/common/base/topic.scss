@@ -34,7 +34,7 @@
     .topic-navigation {
       grid-area: timeline;
       align-self: start;
-      @include sticky;
+      position: sticky;
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");

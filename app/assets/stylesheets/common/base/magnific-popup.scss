@@ -599,7 +599,7 @@ button {
 // Scale navigation arrows and reduce padding from sides
 @media all and (max-width: 900px) {
   .mfp-arrow {
-    @include transform(scale(0.75));
+    transform: scale(0.75);
   }
 
   .mfp-arrow-left {
@@ -636,7 +636,7 @@ button {
   &.mfp-ready {
     .mfp-content {
       opacity: 1;
-      @include transform(scale(1));
+      transform: scale(1);
     }
 
     &.mfp-bg {
@@ -647,7 +647,7 @@ button {
   /* animate out */
   &.mfp-removing {
     .mfp-content {
-      @include transform(scale(0.8));
+      transform: scale(0.8);
       opacity: 0;
     }
 
