@@ -20,6 +20,7 @@ import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 import ForgotPassword from "./forgot-password";
+import NotActivatedModal from "./not-activated";
 
 export default class Login extends Component {
   @service capabilities;
@@ -187,13 +188,18 @@ export default class Login extends Component {
   }
 
   @action
+  showNotActivated(props) {
+    this.modal.show(NotActivatedModal, { model: props });
+  }
+
+  @action
   async triggerLogin() {
     if (this.loginDisabled) {
       return;
     }
 
-    if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = i18n("login.blank_username_or_password");
+    if (isEmpty(this.loginName)) {
+      this.flash = i18n("login.blank_username");
       this.flashType = "error";
       return;
     }
@@ -244,7 +250,7 @@ export default class Login extends Component {
 
           return;
         } else if (result.reason === "not_activated") {
-          this.args.model.showNotActivated({
+          this.showNotActivated({
             username: this.loginName,
             sentTo: escape(result.sent_to_email),
             currentEmail: escape(result.current_email),

@@ -69,6 +69,18 @@ RSpec.describe UserOption do
       user = Fabricate(:user)
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
     end
+
+    it "should correctly set password_disabled when `default_password_disabled` site setting is enabled" do
+      SiteSetting.default_password_disabled = true
+      user = Fabricate(:user)
+      expect(user.user_option.password_disabled).to eq(true)
+    end
+
+    it "should correctly set password_disabled when `default_password_disabled` site setting is disabled" do
+      SiteSetting.default_password_disabled = false
+      user = Fabricate(:user)
+      expect(user.user_option.password_disabled).to eq(false)
+    end
   end
 
   describe "site settings" do

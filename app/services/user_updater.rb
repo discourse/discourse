@@ -55,6 +55,7 @@ class UserUpdater
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
     topics_unread_when_closed
+    password_disabled
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -193,6 +194,9 @@ class UserUpdater
 
     # automatically disable digests when mailing_list_mode is enabled
     user.user_option.email_digests = false if user.user_option.mailing_list_mode
+
+    # enforce that password can only be disabled if a 2fa method is enabled
+    user.user_option.password_disabled = false if !user.has_any_second_factor_methods_enabled?
 
     fields = attributes[:custom_fields]
     user.custom_fields = user.custom_fields.merge(fields) if fields.present?

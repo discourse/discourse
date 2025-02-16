@@ -252,8 +252,8 @@ export default class LoginPageController extends Controller {
       return;
     }
 
-    if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = i18n("login.blank_username_or_password");
+    if (isEmpty(this.loginName)) {
+      this.flash = i18n("login.blank_username");
       this.flashType = "error";
       return;
     }

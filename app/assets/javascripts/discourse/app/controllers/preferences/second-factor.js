@@ -21,6 +21,8 @@ export default class SecondFactorController extends Controller {
   @service modal;
   @service siteSettings;
 
+  saveAttrNames = ["password_disabled"];
+
   loading = false;
   dirty = false;
   errorMessage = null;
@@ -373,5 +375,15 @@ export default class SecondFactorController extends Controller {
         setCodesRemaining: (e) => this.setCodesRemaining(e),
       },
     });
+  }
+
+  @action
+  save() {
+    this.set("saved", false);
+
+    return this.model
+      .save(this.saveAttrNames)
+      .then(() => this.set("saved", true))
+      .catch(popupAjaxError);
   }
 }

@@ -6162,7 +6162,8 @@ RSpec.describe UsersController do
           Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys (but not passkeys)" do
+        it "should disable all totp and security keys (but not passkeys) and re-enable password if disabled" do
+          user1.user_option.password_disabled = true
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -6181,6 +6182,7 @@ RSpec.describe UsersController do
               UserSecurityKey.factor_types[:first_factor],
             )
             expect(user1.passkey_credential_ids.length).to eq(1)
+            expect(user1.user_option.password_disabled).to eq false
           end
         end
       end
