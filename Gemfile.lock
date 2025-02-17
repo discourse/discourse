@@ -140,7 +140,7 @@ GEM
     excon (1.2.3)
     execjs (2.10.0)
     exifr (1.4.1)
-    extralite-bundle (2.8.2)
+    extralite-bundle (2.10)
     fabrication (2.31.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
