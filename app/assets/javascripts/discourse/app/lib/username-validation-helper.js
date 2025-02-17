@@ -27,7 +27,7 @@ export default class UsernameValidationHelper {
   }
 
   async fetchExistingUsername() {
-    const result = await User.checkUsername(null, this.owner.accountEmail);
+    const result = await User.checkUsername(null, this.owner?.accountEmail);
 
     if (
       result.suggestion &&

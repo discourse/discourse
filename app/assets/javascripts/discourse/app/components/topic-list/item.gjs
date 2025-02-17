@@ -335,7 +335,10 @@ export default class Item extends Component {
                 {{~/if~}}
                 <PluginOutlet
                   @name="topic-list-main-link-bottom"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{hash
+                    topic=@topic
+                    expandPinned=this.expandPinned
+                  }}
                 />
               </div>
               {{~! no whitespace ~}}

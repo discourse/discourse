@@ -149,14 +149,17 @@ class Report
     available_filters.delete(name)
   end
 
-  def add_category_filter
+  def add_category_filter(options = {})
     category_id = filters[:category].to_i if filters[:category].present?
-    add_filter("category", type: "category", default: category_id)
+    add_filter("category", { type: "category", default: category_id }.merge(options))
     return if category_id.blank?
 
     include_subcategories = filters[:include_subcategories]
     include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
-    add_filter("include_subcategories", type: "bool", default: include_subcategories)
+    add_filter(
+      "include_subcategories",
+      { type: "bool", default: include_subcategories }.merge(options),
+    )
 
     [category_id, include_subcategories]
   end

@@ -4,7 +4,7 @@ import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
@@ -107,7 +107,11 @@ export default class ComposerService extends Service {
   @service siteSettings;
   @service store;
 
-  @tracked showPreview = true;
+  @tracked
+  showPreview = this.site.mobileView
+    ? false
+    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
+
   @tracked allowPreview = true;
   checkedMessages = false;
   messageCount = null;
@@ -152,14 +156,6 @@ export default class ComposerService extends Service {
 
   get privateMessageDraftKey() {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
-  }
-
-  @on("init")
-  _setupPreview() {
-    const val = this.site.mobileView
-      ? false
-      : this.keyValueStore.get("composer.showPreview") || "true";
-    this.set("showPreview", val === "true");
   }
 
   @computed(
