@@ -59,12 +59,12 @@ module Migrations::Database::Schema
       schema_file_path = File.dirname(output_config[:schema_file])
       schema_file_path = File.expand_path(schema_file_path, ::Migrations.root_path)
       if !Dir.exist?(schema_file_path)
-        @errors << I18n.t("schema.validator.schema_file_directory_not_found")
+        @errors << I18n.t("schema.validator.output.schema_file_directory_not_found")
       end
 
       models_directory = File.expand_path(output_config[:models_directory], ::Migrations.root_path)
       if !Dir.exist?(models_directory)
-        @errors << I18n.t("schema.validator.models_directory_not_found")
+        @errors << I18n.t("schema.validator.output.models_directory_not_found")
       end
 
       existing_namespace =
@@ -73,38 +73,63 @@ module Migrations::Database::Schema
         rescue NameError
           false
         end
-      @errors << I18n.t("schema.validator.models_namespace_undefined") if !existing_namespace
+      @errors << I18n.t("schema.validator.output.models_namespace_undefined") if !existing_namespace
     end
 
     def validate_schema_config(config)
       schema_config = config[:schema]
-      validate_excluded_tables(schema_config)
+      validate_globally_excluded_tables(schema_config)
       validate_tables(schema_config)
       validate_columns(schema_config)
     end
 
-    def validate_excluded_tables(schema_config)
+    def validate_globally_excluded_tables(schema_config)
       excluded_table_names = schema_config.dig(:global, :tables, :exclude)
       return if excluded_table_names.blank?
 
-      existing_table_names = @db.tables.to_set
+      existing_table_names = @db.tables
+      missing_table_names = excluded_table_names - existing_table_names
 
-      excluded_table_names.sort.each do |table_name|
-        if !existing_table_names.delete?(table_name)
-          @errors << I18n.t("schema.validator.excluded_table_missing", table_name:)
-        end
+      if missing_table_names.any?
+        @errors << I18n.t(
+          "schema.validator.global.excluded_tables_missing",
+          table_names: sort_and_join(missing_table_names),
+        )
       end
+    end
+
+    def validate_globally_configured_columns(schema_config)
+      globally_excluded_column_names = schema_config.dig(:global, :columns, :exclude)
+      globally_modified_columns = schema_config.dig(:global, :columns, :modify)
+
+      globally_excluded_table_names = schema_config.dig(:global, :tables, :exclude) || []
+      existing_table_names = @db.tables
+      configured_table_names = schema_config[:tables].keys.map(&:to_s)
+      excluded_table_names = schema_config.dig(:global, :tables, :exclude) || []
+
+      all_table_names =
+        (existing_table_names - globally_excluded_table_names - excluded_table_names) &
+          configured_table_names
+      all_column_names =
+        all_table_names.flat_map { |table_name| @db.columns(table_name).map(&:name) }.uniq.to_set
+
+      excluded_missing_column_names =
+        globally_excluded_column_names.reject do |column_name|
+          all_column_names.include?(column_name)
+        end
+      @errors << I18n.t() if excluded_missing_column_names.any?
     end
 
     def validate_tables(schema_config)
       existing_table_names = @db.tables
-      configured_table_names = schema_config[:tables].keys.map(&:to_s).to_set
+      configured_table_names = schema_config[:tables].keys.map(&:to_s)
       excluded_table_names = schema_config.dig(:global, :tables, :exclude) || []
 
-      excluded_table_names.sort.each do |table_name|
-        if configured_table_names.include?(table_name)
-          @errors << I18n.t("schema.validator.excluded_table_used", table_name:)
-        end
+      if (table_names = configured_table_names & excluded_table_names).any?
+        @errors << I18n.t(
+          "schema.validator.global.excluded_tables_used",
+          table_names: sort_and_join(table_names),
+        )
       end
 
       existing_table_names.sort.each do |table_name|
@@ -194,17 +219,21 @@ module Migrations::Database::Schema
 
       if (additional_plugins = all_plugin_names.difference(plugin_names)).any?
         @errors << I18n.t(
-          "schema.validator.additional_plugins_installed",
+          "schema.validator.plugins.additional_installed",
           plugin_names: additional_plugins.sort.join(", "),
         )
       end
 
       if (missing_plugins = plugin_names.difference(all_plugin_names)).any?
         @errors << I18n.t(
-          "schema.validator.plugins_not_installed",
+          "schema.validator.plugins.not_installed",
           plugin_names: missing_plugins.sort.join(", "),
         )
       end
+    end
+
+    def sort_and_join(values)
+      values.sort.join(", ")
     end
   end
 end

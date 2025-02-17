@@ -25,17 +25,13 @@ module Migrations::Database::Schema
     private
 
     def load_globally_excluded_table_names
-      excluded_table_names = @schema_config.dig(:global, :tables, :exclude)
-      return if excluded_table_names.blank?
-
-      @globally_excluded_table_names = Set.new(excluded_table_names)
+      table_names = @schema_config.dig(:global, :tables, :exclude)
+      @globally_excluded_table_names = table_names.to_set if table_names.present?
     end
 
     def load_globally_excluded_column_names
-      excluded_column_names = @schema_config.dig(:global, :columns, :exclude)
-      return if excluded_column_names.blank?
-
-      @globally_excluded_column_names = Set.new(excluded_column_names)
+      column_names = @schema_config.dig(:global, :columns, :exclude)
+      @globally_excluded_column_names = column_names.to_set if column_names.present?
     end
 
     def load_globally_modified_columns
@@ -57,10 +53,16 @@ module Migrations::Database::Schema
           .to_h
     end
 
+    def load_filtered_tables
+      @schema_config[:tables].sort.each do |table_name, table_config|
+        next if @globally_excluded_table_names.include?(table_name)
+      end
+    end
+
     def load_tables
       existing_table_names = (@db.tables.to_set - @globally_excluded_table_names).sort
 
-      @schema_config[:tables].sort.each do |table_name|
+      @schema_config[:tables].sort.each do |table_name, config|
         table_name = table_name.to_s
         config ||= {}
         schema << table(table_name, config) if existing_table_names.include?(table_name)
