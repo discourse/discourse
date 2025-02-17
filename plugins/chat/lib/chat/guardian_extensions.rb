@@ -254,5 +254,9 @@ module Chat
     def can_delete_category?(category)
       super && category.deletable_for_chat?
     end
+
+    def can_remove_members?(chatable)
+      is_admin? && !(chatable.is_a?(Chat::DirectMessage) && !chatable.group?)
+    end
   end
 end
