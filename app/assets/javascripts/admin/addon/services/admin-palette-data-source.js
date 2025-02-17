@@ -94,11 +94,11 @@ export default class AdminPaletteDataSource extends Service {
         } else if (this.settingPageMap.areas[setting.primary_area]) {
           url =
             this.settingPageMap.areas[setting.primary_area] +
-            `?filter=${setting.setting}`;
+            `#setting-${setting.setting}`;
         } else if (this.settingPageMap.categories[setting.category]) {
           url =
             this.settingPageMap.categories[setting.category] +
-            `?filter=${setting.setting}`;
+            `#setting-${setting.setting}`;
         } else {
           url = getURL(
             `/admin/site_settings/category/all_results?filter=${setting.setting}`

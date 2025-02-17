@@ -160,7 +160,7 @@ export default Mixin.create({
   router: service(),
   site: service(),
   dialog: service(),
-  attributeBindings: ["setting.setting:data-setting"],
+  attributeBindings: ["setting.setting:data-setting", "settingIdentifier:id"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
   setting: null,
@@ -212,6 +212,10 @@ export default Mixin.create({
   typeClass: computed("componentType", function () {
     const componentType = this.componentType;
     return componentType.replace(/\_/g, "-");
+  }),
+
+  settingIdentifier: computed("setting.setting", function () {
+    return `setting-${this.setting.setting}`;
   }),
 
   settingName: computed("setting.setting", "setting.label", function () {
