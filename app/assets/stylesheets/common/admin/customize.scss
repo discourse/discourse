@@ -815,6 +815,8 @@
     margin-left: 0;
 
     li {
+      display: table-row;
+
       &.disabled-child {
         .child-link {
           color: var(--primary-medium);
@@ -828,7 +830,6 @@
       .btn {
         margin-left: 5px;
       }
-      display: table-row;
 
       .col.child-link {
         padding-right: 10px;

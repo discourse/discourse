@@ -1,5 +1,5 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
-  {{#if this.model.allLinks.length}}
+  {{#if this.hasPermalinks}}
     <div class="d-admin-filter">
       <div class="admin-filter__input-container permalink-search">
         <TextField
@@ -14,14 +14,14 @@
   {{/if}}
 
   <div class="permalink-results">
-    {{#if this.model.filteredLinks.length}}
+    {{#if this.model.length}}
       <table class="d-admin-table permalinks">
         <thead>
           <th>{{i18n "admin.permalink.url"}}</th>
           <th>{{i18n "admin.permalink.destination"}}</th>
         </thead>
         <tbody>
-          {{#each this.model.filteredLinks as |pl|}}
+          {{#each this.model as |pl|}}
             <tr
               class={{concat-class
                 "admin-permalink-item d-admin-row__content"

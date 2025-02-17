@@ -13,6 +13,7 @@
   display: flex;
   align-items: center;
   padding: 10px 5px;
+  border-top: 1px solid var(--primary-low);
 
   &:nth-of-type(1) {
     border-top: 0;
@@ -21,7 +22,6 @@
   &.highlight-danger {
     background-color: var(--danger-low);
   }
-  border-top: 1px solid var(--primary-low);
 
   &::before,
   &::after {

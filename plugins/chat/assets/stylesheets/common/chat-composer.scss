@@ -73,11 +73,6 @@
     align-self: stretch;
   }
 
-  --100dvh: 100vh;
-  @supports (height: 100dvh) {
-    --100dvh: 100dvh;
-  }
-
   &__input {
     overflow-x: hidden;
     width: 100%;
@@ -85,7 +80,7 @@
     outline: none;
     border: 0;
     resize: none;
-    max-height: calc(var(--100dvh) / 4);
+    max-height: 25dvh;
     background: none;
     padding: 0;
     margin: 5px 0;

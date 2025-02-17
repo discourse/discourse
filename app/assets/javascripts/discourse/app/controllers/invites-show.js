@@ -10,22 +10,22 @@ import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import DiscourseURL from "discourse/lib/url";
+import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
 
 export default class InvitesShowController extends Controller.extend(
   PasswordValidation,
-  UsernameValidation,
   UserFieldsValidation
 ) {
   @tracked accountUsername;
   @tracked isDeveloper;
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper(this);
   successMessage = null;
   @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;
@@ -48,6 +48,11 @@ export default class InvitesShowController extends Controller.extend(
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
+  }
+
+  @dependentKeyCompat
+  get usernameValidation() {
+    return this.usernameValidationHelper.usernameValidation;
   }
 
   get nameTitle() {

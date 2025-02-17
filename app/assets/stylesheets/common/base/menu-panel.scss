@@ -6,13 +6,8 @@
 
   // ensure there's always space to click outside on tiny devices
   max-width: 90vw;
-
-  --100dvh: 100%;
-  @supports (height: 100dvh) {
-    --100dvh: 100dvh;
-  }
   box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
-  height: var(--100dvh);
+  height: 100dvh;
 
   .panel-body {
     width: 100%;
@@ -369,13 +364,14 @@
     }
 
     .profile-tab-btn {
+      justify-content: unset;
+      line-height: var(--line-height-large);
+      width: 100%;
+
       .relative-date {
         font-size: var(--font-down-3);
         color: var(--primary-medium);
       }
-      justify-content: unset;
-      line-height: var(--line-height-large);
-      width: 100%;
 
       .d-icon {
         padding: 0;
@@ -419,6 +415,9 @@
   border-top: 1px solid var(--primary-low);
   padding-top: 0.75em;
   margin-top: -1px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
 
   &:focus {
     outline: none;
@@ -548,9 +547,6 @@
       > div {
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: anywhere;
-        @supports not (overflow-wrap: anywhere) {
-          word-break: break-word;
-        }
 
         // Truncate items with more than 2 lines.
         @include line-clamp(2);
@@ -613,9 +609,6 @@
       background: var(--primary-low);
     }
   }
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
 }
 
 // Styles to have user avatar positioned and sized correctly

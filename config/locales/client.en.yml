@@ -4233,6 +4233,7 @@ en:
 
     flagging:
       title: "Thanks for keeping our community civil!"
+      review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:
@@ -5252,6 +5253,7 @@ en:
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
           experimental: "Experimental"
+          only_experiments: "Only show experimental features"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
           experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."

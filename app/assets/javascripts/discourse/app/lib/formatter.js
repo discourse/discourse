@@ -296,7 +296,7 @@ export function relativeAgeMediumSpan(distance, leaveAgo) {
       break;
     case distanceInMinutes >= 2520 && distanceInMinutes <= 129599:
       formatted = t("x_days", {
-        count: Math.round((distanceInMinutes - 720.0) / 1440.0),
+        count: Math.round(distanceInMinutes / 1440.0),
       });
       break;
     case distanceInMinutes >= 129600 && distanceInMinutes <= 525599:

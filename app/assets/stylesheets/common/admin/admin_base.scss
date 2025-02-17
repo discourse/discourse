@@ -1057,8 +1057,8 @@ table#user-badges {
     }
 
     .remove-value-btn {
-      @include value-btn;
       margin-right: 0.25em;
+      @include value-btn;
     }
 
     .shift-up-value-btn,
@@ -1117,9 +1117,9 @@ table#user-badges {
 .value .add-value-btn,
 .shift-up-value-btn,
 .shift-down-value-btn {
-  @include value-btn;
   margin-right: 0 !important;
   margin-left: 0.25em;
+  @include value-btn;
 }
 
 .secret-value-list {
@@ -1148,9 +1148,9 @@ table#user-badges {
     }
 
     .add-value-btn {
-      @include value-btn;
       margin-left: 0.25em;
       margin-top: 0.125em;
+      @include value-btn;
     }
   }
 }

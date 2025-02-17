@@ -1,13 +1,4 @@
 .powered-by-discourse {
-  .admin-area &,
-  .has-full-page-chat &,
-  .static-login &,
-  .invite-page &,
-  .account-created-page &,
-  .admin-invite-page &,
-  .activate-account-page & {
-    display: none !important;
-  }
   grid-area: below-content;
   justify-self: start;
   font-size: var(--font-down-1);
@@ -18,6 +9,16 @@
   transition: all 0.25s ease-in-out;
   margin-bottom: 0.45em;
   color: var(--primary-medium);
+
+  .admin-area &,
+  .has-full-page-chat &,
+  .static-login &,
+  .invite-page &,
+  .account-created-page &,
+  .admin-invite-page &,
+  .activate-account-page & {
+    display: none !important;
+  }
 
   &:visited {
     color: var(--primary-medium);
