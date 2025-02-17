@@ -70,7 +70,10 @@
   {{#if this.existingTopic}}
     <p>{{this.existingTopicInstruction}}</p>
     <form>
-      <ChooseTopic @topicChangedCallback={{@topicChangedCallback}} />
+      <ChooseTopic
+        @topicChangedCallback={{@topicChangedCallback}}
+        @selectedTopicId={{@selectedTopicId}}
+      />
     </form>
   {{/if}}
 
