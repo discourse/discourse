@@ -2,6 +2,12 @@
 -- the "config/intermediate_db.yml" configuration file and then run `cli schema generate` to
 -- regenerate this file.
 
+CREATE TABLE private_messages
+(
+    id    NUMERIC NOT NULL PRIMARY KEY,
+    title TEXT    NOT NULL
+);
+
 CREATE TABLE users
 (
     id                        NUMERIC  NOT NULL PRIMARY KEY,

@@ -17,6 +17,12 @@ schema:
           - "secure_identifier"
           - "seen_notification_id"
           - "username_lower"
+    private_messages:
+      copy_of: "topics"
+      columns:
+        include:
+          - "id"
+          - "title"
 
   global:
     columns:
