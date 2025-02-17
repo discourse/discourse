@@ -8,18 +8,15 @@
     <ul>
       {{#each this.unknownReviewableTypes as |reviewable|}}
         {{#if (eq reviewable.source "unknown")}}
-          <li>{{html-safe
-              (i18n
-                "review.unknown.reviewable_unknown_source" type=reviewable.type
-              )
+          <li>{{i18n
+              "review.unknown.reviewable_unknown_source"
+              reviewableType=reviewable.type
             }}</li>
         {{else}}
-          <li>{{html-safe
-              (i18n
-                "review.unknown.reviewable_known_source"
-                type=reviewable.type
-                source=reviewable.source
-              )
+          <li>{{i18n
+              "review.unknown.reviewable_known_source"
+              reviewableType=reviewable.type
+              pluginName=reviewable.source
             }}</li>
         {{/if}}
       {{/each}}
