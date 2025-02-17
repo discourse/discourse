@@ -1,16 +1,31 @@
+import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
+import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
+
+export let havePostStreamWidgetExtensions = null;
+
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === "discourse.post-stream-widget-overrides") {
+    if (!havePostStreamWidgetExtensions) {
+      havePostStreamWidgetExtensions = new Set();
+    }
+
+    havePostStreamWidgetExtensions.add(consolePrefix().slice(1, -1));
+  }
+});
 
 let transformCallbacks = null;
 
@@ -194,6 +209,8 @@ export default createWidget("post-stream", {
   tagName: "div.post-stream",
 
   html(attrs) {
+    getOwner(this).lookup("service:site").useGlimmerPostStream;
+
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
     const postArrayLength = postArray.length;
