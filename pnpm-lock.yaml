@@ -506,7 +506,7 @@ importers:
         version: link:../discourse-plugins
       ember-async-data:
         specifier: ^1.0.3
-        version: 1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.8))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0)))
+        version: 1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0)))
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0))
@@ -12368,11 +12368,11 @@ snapshots:
 
   electron-to-chromium@1.5.99: {}
 
-  ember-async-data@1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.8))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0))):
+  ember-async-data@1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0))):
     dependencies:
       '@ember/test-waiters': 3.1.0
       '@embroider/addon-shim': 1.9.0
-      ember-source: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.8))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0))
+      ember-source: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.10.16)(esbuild@0.25.0))
     transitivePeerDependencies:
       - supports-color
 
