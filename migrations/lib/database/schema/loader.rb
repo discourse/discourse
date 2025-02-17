@@ -2,14 +2,10 @@
 
 module Migrations::Database::Schema
   class Loader
-    attr_reader :errors
-
     def initialize(schema_config)
       @schema_config = schema_config
       @global = GlobalConfig.new(@schema_config)
       @db = ActiveRecord::Base.connection
-
-      @errors = []
     end
 
     def load_schema
@@ -47,7 +43,7 @@ module Migrations::Database::Schema
             max_length: column.type == :text ? column.limit : nil,
             is_primary_key: primary_key_column_names.include?(column.name),
           )
-        end
+        end + added_columns(config)
 
       Table.new(table_alias || table_name, columns, indexes(config), primary_key_column_names)
     end
@@ -63,6 +59,20 @@ module Migrations::Database::Schema
       end
 
       columns_by_name.values
+    end
+
+    def added_columns(config)
+      columns = config.dig(:columns, :add) || []
+      columns.map do |column|
+        datatype = column[:type].to_sym
+        Column.new(
+          name: column[:name],
+          datatype:,
+          nullable: column.fetch(:nullable, true),
+          max_length: datatype == :text ? column[:max_length] : nil,
+          is_primary_key: primary_key_column_names.include?(column[:name]),
+        )
+      end
     end
 
     def datatype_for(column)

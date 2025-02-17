@@ -154,7 +154,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
   end
 
   context "with schema config" do
-    context "with incorrect table config" do
+    context "with incorrect global config" do
       it "detects globally excluded tables that do not exist" do
         config = minimal_config
         config[:schema][:global][:tables][:exclude] = %w[users foo bar]
@@ -190,16 +190,33 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         )
       end
 
-      it "detects globally excluded columns that do not exist" do
+      it "detects globally excluded columns that do not match existing columns" do
         config = minimal_config
-        config[:schema][:global][:columns][:exclude] = "foo username bar"
+        config[:schema][:global][:columns][:exclude] = %w[foo username bar]
 
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.global.excluded_columns_missing", table_names: "bar, foo"),
+          I18n.t("schema.validator.global.excluded_columns_missing", column_names: "bar, foo"),
         )
       end
 
+      xit "detects globally modified columns that do not match existing columns" do
+        config = minimal_config
+        config[:schema][:global][:columns][:exclude] = [
+          { name: "foo", datatype: "text" },
+          { name: "id", datatype: "text" },
+          { name_regex: "bar.*", datatype: "text" },
+          { name_regex: "user.*", datatype: "integer" },
+        ]
+
+        expect(validator.validate(config)).to have_errors
+        expect(validator.errors).to contain_exactly(
+          I18n.t("schema.validator.global.modified_tables_missing", table_names: "/bar.*/, foo"),
+        )
+      end
+    end
+
+    context "with incorrect table config" do
       it "detects tables that are missing from configuration file" do
         allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
           %w[categories topics posts users tags],
@@ -231,19 +248,20 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     context "with incorrect column config" do
       it "detects that a newly added column already exists" do
         config = minimal_config
-        config[:schema][:tables][:users][:columns][:add] = [
-          { name: "name", datatype: "text" },
-          { name: "username", datatype: "text" },
-          { name: "id", datatype: "text" },
-        ]
+        config[:schema][:tables][:users][:columns] = {
+          add: [
+            { name: "name", datatype: "text" },
+            { name: "username", datatype: "text" },
+            { name: "id", datatype: "text" },
+          ],
+        }
 
         expect(validator.validate(config)).to have_errors
-        expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.added_existing_column", table_name: "users", column_name: "id"),
+        expect(validator.errors).to include(
           I18n.t(
-            "schema.validator.added_existing_column",
+            "schema.validator.tables.added_columns_exist",
             table_name: "users",
-            column_name: "username",
+            column_names: "id, username",
           ),
         )
       end
@@ -255,14 +273,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.included_column_missing",
+            "schema.validator.tables.included_columns_missing",
             table_name: "users",
-            column_name: "foo",
-          ),
-          I18n.t(
-            "schema.validator.included_column_missing",
-            table_name: "users",
-            column_name: "bar",
+            column_names: "bar, foo",
           ),
         )
       end
@@ -274,14 +287,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.excluded_column_missing",
+            "schema.validator.tables.excluded_columns_missing",
             table_name: "users",
-            column_name: "foo",
-          ),
-          I18n.t(
-            "schema.validator.excluded_column_missing",
-            table_name: "users",
-            column_name: "bar",
+            column_names: "bar, foo",
           ),
         )
       end
@@ -300,14 +308,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.modified_column_missing",
+            "schema.validator.tables.modified_columns_missing",
             table_name: "users",
-            column_name: "foo",
-          ),
-          I18n.t(
-            "schema.validator.modified_column_missing",
-            table_name: "users",
-            column_name: "bar",
+            column_names: "bar, foo",
           ),
         )
       end
@@ -322,9 +325,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.modified_column_included",
+            "schema.validator.tables.modified_columns_included",
             table_name: "users",
-            column_name: "username",
+            column_names: "username",
           ),
         )
       end
@@ -339,9 +342,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.modified_column_excluded",
+            "schema.validator.tables.modified_columns_excluded",
             table_name: "users",
-            column_name: "username",
+            column_names: "username",
           ),
         )
       end
@@ -356,7 +359,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.columns_not_configured",
+            "schema.validator.tables.not_all_columns_configured",
             table_name: "users",
             column_names: "id, username",
           ),
@@ -366,7 +369,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.columns_not_configured",
+            "schema.validator.tables.not_all_columns_configured",
             table_name: "users",
             column_names: "username",
           ),
@@ -379,7 +382,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
           I18n.t(
-            "schema.validator.columns_not_configured",
+            "schema.validator.tables.not_all_columns_configured",
             table_name: "users",
             column_names: "id",
           ),
@@ -425,8 +428,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to_not have_errors
 
         config[:schema][:tables][:users][:columns] = { exclude: %w[id username views] }
+        expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.no_columns_configured", table_name: "users"),
+          I18n.t("schema.validator.tables.no_columns_configured", table_name: "users"),
         )
 
         config[:schema][:tables][:users][:columns] = {
@@ -439,8 +443,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         expect(validator.validate(config)).to_not have_errors
 
         config[:schema][:tables][:users][:columns] = { include: ["created_at"] }
+        expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.no_columns_configured", table_name: "users"),
+          I18n.t("schema.validator.tables.no_columns_configured", table_name: "users"),
         )
       end
     end

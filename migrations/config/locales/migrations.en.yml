@@ -26,21 +26,27 @@ en:
       global:
         excluded_tables_missing: "The following globally excluded tables does not exist in database: %{table_names}"
         excluded_tables_used: "The following globally excluded tables can't be configured in `schema/tables` section: %{table_names}"
-        excluded_columns_missing: "The following globally excluded columns do not exist in configured tables: %{column_names}"
+        excluded_columns_missing: "The following globally excluded columns do not match an existing column: %{column_names}"
+
+      tables:
+        added_columns_exist: "Added columns of table '%{table_name}' already exist: %{column_names}"
+        included_columns_missing: "Included columns of table '%{table_name}' do not exist: %{column_names}"
+        excluded_columns_missing: "Excluded columns of table '%{table_name}' do not exist: %{column_names}"
+        modified_columns_missing: "Modified columns of table '%{table_name}' do not exist: %{column_names}"
+        modified_columns_included: "Modified columns of table '%{table_name}' must not be mentioned in `include`: %{column_names}"
+        modified_columns_excluded: "Modified columns of table '%{table_name}' must not be mentioned in `exclude`: %{column_names}"
+        not_all_columns_configured: "The following columns have not been configured for table '%{table_name}': %{column_names}"
+        no_columns_configured: "The table '%{table_name}' doesn't have any columns configured."
 
       plugins:
         not_installed: "Configured plugins not installed: %{plugin_names}"
         additional_installed: "Additional plugins installed. Uninstall them or add to configuration: %{plugin_names}"
 
       table_not_configured: "Table needs to be configured in `schema/tables` section or excluded in `global/tables`: %{table_name}"
-      added_existing_column: "Column '%{column_name}' can't be added to table '%{table_name}'. The table already contains a column with that name."
-      included_column_missing: "Included column does not exist: %{table_name}.%{column_name}"
-      excluded_column_missing: "Excluded column does not exist: %{table_name}.%{column_name}"
-      modified_column_missing: "Modified column does not exist: %{table_name}.%{column_name}"
+
       include_exclude_not_allowed: "%{path} must not use `include` and `exclude` at the same time"
       modified_column_included: "Modified column must not be mentioned in `include` section: %{table_name}.%{column_name}"
       modified_column_excluded: "Modified column must not be mentioned in `exclude` section: %{table_name}.%{column_name}"
-      columns_not_configured: "The following columns have not been configured for table '%{table_name}': %{column_names}"
-      no_columns_configured: "The table '%{table_name}' doesn't have any columns configured."
+
 
       invalid_name_regex: "Invalid `name_regex`: %{message}"

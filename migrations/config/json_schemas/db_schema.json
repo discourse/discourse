@@ -98,6 +98,12 @@
                         },
                         "datatype": {
                           "$ref": "#/$defs/datatypes"
+                        },
+                        "nullable": {
+                          "type": "boolean"
+                        },
+                        "max_length": {
+                          "type": "integer"
                         }
                       },
                       "additionalProperties": false,
