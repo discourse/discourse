@@ -17,7 +17,6 @@ const ERROR_MODES = ["flash", "popup"];
 const DEFAULT_ERROR_MODE = "flash";
 
 export default class AsyncContent extends Component {
-  errorMode = this.args.errorMode ?? DEFAULT_ERROR_MODE;
   #debounce = false;
 
   @cached
@@ -65,6 +64,10 @@ export default class AsyncContent extends Component {
   get errorMessage() {
     const errorInfo = extractErrorInfo(this.data.error);
     return errorInfo.html ? htmlSafe(errorInfo.message) : errorInfo.message;
+  }
+
+  get errorMode() {
+    return this.args.errorMode ?? DEFAULT_ERROR_MODE;
   }
 
   @bind
