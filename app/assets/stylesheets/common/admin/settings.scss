@@ -3,19 +3,6 @@
   .setting {
     padding-bottom: 20px;
 
-    &:target {
-      animation: fadeHighlight 3s ease-out forwards;
-    }
-
-    @keyframes fadeHighlight {
-      0% {
-        background-color: var(--primary);
-      }
-      100% {
-        background-color: transparent;
-      }
-    }
-
     .setting-label {
       float: left;
       width: 17.6576%;

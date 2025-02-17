@@ -73,7 +73,6 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         as |field|
       >
         <field.Input
-          id="setting-title"
           placeholder={{i18n
             "admin.config_areas.about.community_name_placeholder"
           }}
