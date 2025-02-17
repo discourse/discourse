@@ -1,9 +1,12 @@
 .topic-query-filter {
   display: flex;
-  flex-direction: row;
   margin-right: auto;
   margin-bottom: var(--nav-space);
   width: 100%;
+  flex-direction: column;
+  padding: 1em;
+  background-color: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
 
   &__label {
     background-color: var(--primary-low);
@@ -19,6 +22,19 @@
     flex: 1 1;
   }
 
+  &__header {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__filter-term {
+    width: 100%;
+    margin-bottom: 0 !important;
+  }
+
   &__icon {
     position: absolute;
     left: 0.5em;
@@ -30,18 +46,38 @@
     margin-right: 0.5em;
   }
 
-  input.topic-query-filter__filter-term {
-    margin: 0 0.5em 0 0;
-    border-color: var(--primary-low-mid);
-    padding-left: 1.75em;
-    color: var(--primary);
+  &__submit {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
     width: 100%;
+  }
 
-    &:focus {
-      border-color: var(--tertiary);
-      outline: none;
-      outline-offset: 0;
-      box-shadow: inset 0 0 0 1px var(--tertiary);
-    }
+  &__submit .form-kit__button {
+    height: 2em;
+    margin-right: 0.5em;
+  }
+
+  &__submit .btn-icon {
+    height: 2em;
+    width: 2em;
+  }
+
+  .form-kit {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 1em;
+  }
+
+  .form-kit__control-custom .select-kit-header,
+  .form-kit__control-custom .date-picker {
+    padding-inline: 0.65em !important;
+    height: 2em;
+    max-width: unset;
+  }
+
+  .form-kit__container-optional {
+    display: none;
   }
 }
