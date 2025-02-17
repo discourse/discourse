@@ -64,6 +64,11 @@ export default class AdminAreaSettings extends Component {
   }
 
   @action
+  updateFilter() {
+    this.filter = this.args.filter;
+  }
+
+  @action
   adminSettingsFilterChangedCallback(filterData) {
     this.args.adminSettingsFilterChangedCallback(filterData.filter);
   }
@@ -76,6 +81,7 @@ export default class AdminAreaSettings extends Component {
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"
       {{didUpdate this.reloadSettings @plugin}}
+      {{didUpdate this.updateFilter @filter}}
     >
       {{#if this.showSettings}}
         <AdminFilteredSiteSettings
