@@ -7,10 +7,6 @@ export default class extends NotificationTypeBase {
       ? this.notification.data.display_name
       : this.notification.data.display_username;
 
-    const nameOrUsername2 = this.siteSettings.prioritize_full_name_in_ux
-      ? this.notification.data.name2
-      : this.notification.data.username2;
-
     if (this.count === 2) {
       const nameOrUsername2 = this.siteSettings.prioritize_full_name_in_ux
         ? this.notification.data.name2
