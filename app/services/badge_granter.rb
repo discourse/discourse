@@ -504,8 +504,6 @@ class BadgeGranter
   end
 
   def self.revoke_ungranted_titles!(user_ids = nil)
-    user_ids = user_ids.join(", ") if user_ids
-
     DB.exec <<~SQL, user_ids: user_ids
       UPDATE users u
       SET title = ''
