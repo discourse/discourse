@@ -35,6 +35,8 @@ export default class SignupPageController extends Controller.extend(
   @tracked accountEmail;
   @tracked accountUsername;
   @tracked isDeveloper = false;
+  @tracked authOptions;
+  @tracked skipConfirmation;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -250,15 +252,12 @@ export default class SignupPageController extends Controller.extend(
       );
     }
 
-    if (
-      this.get("authOptions.email") === email &&
-      this.get("authOptions.email_valid")
-    ) {
+    if (this.authOptions?.email === email && this.authOptions?.email_valid) {
       return EmberObject.create({
         ok: true,
         reason: i18n("user.email.authenticated", {
           provider: this.authProviderDisplayName(
-            this.get("authOptions.auth_provider")
+            this.authOptions?.auth_provider
           ),
         }),
       });
@@ -332,15 +331,10 @@ export default class SignupPageController extends Controller.extend(
       });
   }
 
-  @discourseComputed(
-    "accountEmail",
-    "authOptions.email",
-    "authOptions.email_valid"
-  )
-  emailDisabled() {
+  get emailDisabled() {
     return (
-      this.get("authOptions.email") === this.accountEmail &&
-      this.get("authOptions.email_valid")
+      this.authOptions?.email === this.accountEmail &&
+      this.authOptions?.email_valid
     );
   }
 
@@ -363,7 +357,7 @@ export default class SignupPageController extends Controller.extend(
     }
     if (
       this.get("emailValidation.ok") &&
-      (isEmpty(this.accountUsername) || this.get("authOptions.email"))
+      (isEmpty(this.accountUsername) || this.authOptions?.email)
     ) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
@@ -414,8 +408,8 @@ export default class SignupPageController extends Controller.extend(
 
   handleSkipConfirmation() {
     if (this.skipConfirmation) {
-      this.performAccountCreation().finally(() =>
-        this.set("skipConfirmation", false)
+      this.performAccountCreation().finally(
+        () => (this.skipConfirmation = false)
       );
     }
   }
@@ -440,7 +434,7 @@ export default class SignupPageController extends Controller.extend(
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const destinationUrl = this.get("authOptions.destination_url");
+    const destinationUrl = this.authOptions?.destination_url;
 
     if (!isEmpty(destinationUrl)) {
       cookie("destination_url", destinationUrl, { path: "/" });
