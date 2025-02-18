@@ -104,7 +104,7 @@ RSpec.describe TopicListItemSerializer do
 
     before { topic.update!(first_post: first_post) }
 
-    it "serializes op_can_like" do
+    it "serializes op_can_like when theme modifies the serialize_topic_op_likes_data to true" do
       allow_any_instance_of(ThemeModifierHelper).to receive(
         :serialize_topic_op_likes_data,
       ).and_return(true)
@@ -122,7 +122,18 @@ RSpec.describe TopicListItemSerializer do
       expect(json.key?(:op_can_like)).to eq(false)
     end
 
-    it "serializes op_liked" do
+    it "serializes op_can_like when plugin modifies the serialize_topic_op_likes_data to true" do
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_return(false)
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier)
+        .with(:serialize_topic_op_likes_data, false)
+        .and_return(true)
+
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json.key?(:op_can_like)).to eq(true)
+    end
+
+    it "serializes op_liked when theme modifies the serialize_topic_op_likes_data to true" do
       allow_any_instance_of(ThemeModifierHelper).to receive(
         :serialize_topic_op_likes_data,
       ).and_return(true)
@@ -150,7 +161,22 @@ RSpec.describe TopicListItemSerializer do
       expect(json.key?(:op_liked)).to eq(false)
     end
 
-    it "serializes first_post_id" do
+    it "serializes op_liked when plugin modifies the serialize_topic_op_likes_data to true" do
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_return(false)
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier)
+        .with(:serialize_topic_op_likes_data, false)
+        .and_return(true)
+      PostAction.create!(
+        user: user,
+        post: first_post,
+        post_action_type_id: PostActionType.types[:like],
+      )
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:op_liked]).to eq(true)
+    end
+
+    it "serializes first_post_id when theme modifies the serialize_topic_op_likes_data to true" do
       allow_any_instance_of(ThemeModifierHelper).to receive(
         :serialize_topic_op_likes_data,
       ).and_return(true)
@@ -159,13 +185,23 @@ RSpec.describe TopicListItemSerializer do
       expect(json[:first_post_id]).to eq(first_post.id)
     end
 
-    it "does not include op_can_like when theme modifier disallows" do
+    it "does not include first_post_id when theme modifier disallows" do
       allow_any_instance_of(ThemeModifierHelper).to receive(
         :serialize_topic_op_likes_data,
       ).and_return(false)
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
 
       expect(json.key?(:first_post_id)).to eq(false)
+    end
+
+    it "serializes first_post_id when plugin modifies the serialize_topic_op_likes_data to true" do
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_return(false)
+      allow(DiscoursePluginRegistry).to receive(:apply_modifier)
+        .with(:serialize_topic_op_likes_data, false)
+        .and_return(true)
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json[:first_post_id]).to eq(first_post.id)
     end
   end
 end
