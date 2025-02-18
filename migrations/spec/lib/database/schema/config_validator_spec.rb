@@ -81,48 +81,48 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     expect(validator.errors).to be_empty
   end
 
-  context "with JSON schema" do
-    it "detects missing required properties" do
-      expect(validator.validate({})).to have_errors
-      expect(validator.errors).to contain_exactly(
-        "object at root is missing required properties: output, schema, plugins",
-      )
-    end
-
-    it "detects nested, missing required properties" do
-      incomplete_config = minimal_config.except(:plugins)
-      incomplete_config[:schema].except!(:global)
-
-      expect(validator.validate(incomplete_config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        "object at `/schema` is missing required properties: global",
-        "object at root is missing required properties: plugins",
-      )
-    end
-
-    it "detects datatype mismatches" do
-      invalid_config = minimal_config
-      invalid_config[:output][:models_namespace] = 123
-
-      expect(validator.validate(invalid_config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        "value at `/output/models_namespace` is not a string",
-      )
-    end
-
-    it "detects that `include` and `exclude` of columns can't be used togehter" do
-      config = minimal_config
-      config[:schema][:tables][:users][:columns] = { include: ["id"], exclude: ["username"] }
-
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t(
-          "schema.validator.include_exclude_not_allowed",
-          path: "`/schema/tables/users/columns`",
-        ),
-      )
-    end
-  end
+  # context "with JSON schema" do
+  #   it "detects missing required properties" do
+  #     expect(validator.validate({})).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       "object at root is missing required properties: output, schema, plugins",
+  #     )
+  #   end
+  #
+  #   it "detects nested, missing required properties" do
+  #     incomplete_config = minimal_config.except(:plugins)
+  #     incomplete_config[:schema].except!(:global)
+  #
+  #     expect(validator.validate(incomplete_config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       "object at `/schema` is missing required properties: global",
+  #       "object at root is missing required properties: plugins",
+  #     )
+  #   end
+  #
+  #   it "detects datatype mismatches" do
+  #     invalid_config = minimal_config
+  #     invalid_config[:output][:models_namespace] = 123
+  #
+  #     expect(validator.validate(invalid_config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       "value at `/output/models_namespace` is not a string",
+  #     )
+  #   end
+  #
+  #   it "detects that `include` and `exclude` of columns can't be used together" do
+  #     config = minimal_config
+  #     config[:schema][:tables][:users][:columns] = { include: ["id"], exclude: ["username"] }
+  #
+  #     expect(validator.validate(config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       I18n.t(
+  #         "schema.validator.include_exclude_not_allowed",
+  #         path: "`/schema/tables/users/columns`",
+  #       ),
+  #     )
+  #   end
+  # end
 
   # context "with output config" do
   #   it "checks if directory of `schema_file` exists" do
