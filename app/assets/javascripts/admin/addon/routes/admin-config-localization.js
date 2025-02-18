@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigLocalizationRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.community.sidebar_link.localization.title");
+    return i18n("admin.config.localization.title");
   }
 }

@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigOneboxRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.advanced.sidebar_link.onebox");
+    return i18n("admin.config.onebox.title");
   }
 }

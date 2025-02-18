@@ -10,7 +10,7 @@ import I18n, { i18n } from "discourse-i18n";
 // TODO (martin) Move this to javascript.rake constants, use on server too
 const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
 
-export default class AdminSearchDataSource extends Service {
+export default class AminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
 
@@ -141,11 +141,13 @@ export default class AdminSearchDataSource extends Service {
       label,
       url,
       keywords:
-        (link.keywords ? i18n(link.keywords).toLowerCase() : "") +
+        (link.keywords
+          ? i18n(link.keywords).toLowerCase().replaceAll("|", " ")
+          : "") +
         " " +
         url +
         " " +
-        label.toLowerCase(),
+        label.replace(">", "").toLowerCase().replace(/  +/g, " "),
       type: "page",
       icon: link.icon,
       description: link.description

@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigSearchRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.advanced.sidebar_link.search");
+    return i18n("admin.config.search.title");
   }
 }

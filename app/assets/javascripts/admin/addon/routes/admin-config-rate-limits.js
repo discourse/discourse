@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigRateLimitsRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.advanced.sidebar_link.rate_limits");
+    return i18n("admin.config.rate_limits.title");
   }
 }

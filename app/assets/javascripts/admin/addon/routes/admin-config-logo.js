@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigLogoRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.appearance.sidebar_link.site_logo");
+    return i18n("admin.config.logo.title");
   }
 }

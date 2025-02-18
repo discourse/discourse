@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigNotificationsRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.community.sidebar_link.notifications");
+    return i18n("admin.config.notifications.title");
   }
 }

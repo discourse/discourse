@@ -5157,13 +5157,29 @@ en:
         meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
-        sidebar_link:
-          all: "All reports"
+
+      config_sections:
+        account:
+          title: "Account"
+        reports:
+          title: "Reports"
+        community:
+          title: "Community"
+        appearance:
+          title: "Appearance"
+        email:
+          title: "Email"
+        security:
+          title: "Security"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Advanced"
 
       config:
         about:
           title: "About your site"
-          header_decription: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
+          header_description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
           header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
@@ -5176,6 +5192,7 @@ en:
         flags:
           title: "Moderation"
           header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
+          keywords: "flag|review|spam|illegal"
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes"
@@ -5188,6 +5205,7 @@ en:
         localization:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
+          keywords: "locale|language|timezone|unicode|ltr"
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -5227,6 +5245,123 @@ en:
         group_permissions:
           title: "Group permissions"
           header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
+        dashboard:
+          title: "Dashboard"
+          header_description: "The dashboard provides a snapshot of your community’s health, including traffic, user activity, and other key metrics"
+        users:
+          title: "Users"
+          header_description: "View and manage users, send invites, and export user data"
+        groups:
+          title: "Groups"
+          header_description: "Create and manage groups, set group permissions, and view group activity and inboxes"
+        site_settings:
+          title: "All site settings"
+          header_description: "Configure all settings for your Discourse site to customize its appearance, functionality, and user experience"
+        whats_new:
+          title: "What's new?"
+          header_description: "Stay up-to-date with the latest features and improvements in Discourse"
+          keywords: "changelog|feature|release"
+        backups:
+          title: "Backups"
+          header_description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
+          sub_pages:
+            logs:
+              title: "Logs"
+              header_description: "View and manage logs for backups, restores, and uploads"
+        reports:
+          title: "Reports"
+          header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
+        badges:
+          title: "Badges"
+          header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
+        permalinks:
+          title: "Permalinks"
+          header_description: "Redirections to apply for URLs not known by the forum"
+        user_fields:
+          title: "User fields"
+          header_description: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
+        watched_words:
+          title: "Watched words"
+          header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
+        color_palettes:
+          title: "Color palettes"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+        emoji:
+          title: "Emoji"
+          header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
+        themes:
+          title: "Themes"
+          header_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features"
+        components:
+          title: "Components"
+          header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
+          keywords: "theme|component|extension"
+        site_texts:
+          title: "Site texts"
+          header_description: "Customize any text used in Discourse to match your community’s voice and tone"
+        email:
+          title: "Server setup & logs"
+          header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
+          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          sub_pages:
+            preview_summary:
+              title: "Preview summary"
+              header_description: "Preview the content of the summary emails sent to inactive users"
+            advanced_test:
+              title: "Advanced test"
+              header_description: "See how Discourse processes received emails"
+            templates:
+              title: "Templates"
+              header_description: "Customize the templates used to create emails"
+            sent:
+              title: "Sent"
+              header_description: "View a log of emails that have been sent"
+            skipped:
+              title: "Skipped"
+              header_description: "View a log of emails that have been skipped"
+            bounced:
+              title: "Bounced"
+              header_description: "View a log of emails that have bounced"
+            received:
+              title: "Received"
+              header_description: "View a log of emails that have been received"
+            rejected:
+              title: "Rejected"
+              header_description: "View a log of emails that have been rejected"
+        email_appearance:
+          title: "Appearance"
+          header_description: "Customize the template in which all html emails are rendered, and style using CSS"
+        staff_action_logs:
+          title: "Logs & screening"
+          header_description: "Logs and screening allow you to monitor and manage your community, ensuring that it remains safe and respectful. You can view logs of all actions taken by staff members, search logs, and user screening configuration"
+          keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+          sub_pages:
+            screened_emails:
+              title: "Screened emails"
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Screened IPs"
+              header_description: "IP addresses that are being watched. Individual IP addresses can be allowlisted."
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+            search_logs:
+              title: "Search logs"
+              header_description: "View a log of searches that have been performed"
+        plugins:
+          title: "Installed plugins"
+          header_description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list"
+        api_keys:
+          title: "API keys"
+          header_description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
+          keywords: "token|scope"
+        webhooks:
+          title: "Webhooks"
+          header_description: "Webhooks allows Discourse to notify external services when certain events happen in your site. When the webhook is triggered, a POST request will send to URLs provided."
+          keywords: "event|payload|url"
+        embedding:
+          title: "Embedding"
+          header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
 
       search:
         modal_title: "Search anything in admin"
@@ -5711,81 +5846,9 @@ en:
             failed: "Failed"
       home:
         title: "Home"
-      account:
-        title: "Account"
-        sidebar_link:
-          backups: "Backups"
-          whats_new:
-            title: "What's new?"
-            keywords: "changelog|feature|release"
-
-      community:
-        title: "Community"
-        sidebar_link:
-          about_your_site: "About your site"
-          badges: "Badges"
-          login_and_authentication: "Login & authentication"
-          notifications: "Notifications"
-          permalinks: "Permalinks"
-          trust_levels: "Trust levels"
-          group_permissions: "Group permissions"
-          users: "Users"
-          groups: "Groups"
-          localization:
-            title: "Localization"
-            keywords: "locale|language|timezone|unicode|ltr"
-          user_fields: "User fields"
-          watched_words: "Watched words"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderation"
-            keywords: "flag|review"
-
-      appearance:
-        title: "Appearance"
-        sidebar_link:
-          font_style: "Font style"
-          site_logo: "Site logo"
-          color_schemes: "Color palettes"
-          emoji: "Emoji"
-          navigation: "Navigation"
-          themes: "Themes"
-          components:
-            title: "Components"
-            keywords: "theme|extension"
-          site_texts: "Site texts"
-
-      email_settings:
-        title: "Email Settings"
-        sidebar_link:
-          appearance: "Appearance"
-          server_setup:
-            title: "Server setup & logs"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
-
-      security:
-        title: "Security"
-        sidebar_link:
-          security: "Security settings"
-          spam: "Spam settings"
-          staff_action_logs:
-            title: "Logs & screening"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
-
-      section_landing_pages:
-        account:
-          title: "Account"
-          backups:
-            title: "Backups"
-            description: "Take a backup of your site's data"
-          whats_new:
-            title: "What's new?"
-            description: "Discover new releases and improvements to Discourse"
 
       config_areas:
         about:
-          header: "About your site"
-          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5837,9 +5900,7 @@ en:
             your_organization_saved: "Your organization saved"
           saved: "saved!"
         flags:
-          header: "Moderation"
           edit_header: "Edit Flag"
-          subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
           add: "Add flag"
@@ -5882,8 +5943,6 @@ en:
           more_options:
             title: "More options"
         look_and_feel:
-          title: "Look and feel"
-          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -5905,8 +5964,6 @@ en:
           save_successful: "User field saved."
       plugins:
         title: "Plugins"
-        installed: "Installed plugins"
-        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"
@@ -5921,26 +5978,6 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
-        sidebar_link:
-          installed: "Installed"
-
-      advanced:
-        title: "Advanced"
-        sidebar_link:
-          api_keys:
-            title: "API keys"
-            keywords: "token"
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          rate_limits: "Rate limits"
-          user_api: "User API"
-          onebox: "Onebox"
-          files: "Files"
-          other_options: "Other"
-          search: "Search"
-          experimental: "Experimental"
-          all_site_settings: "All site settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5950,7 +5987,6 @@ en:
       backups:
         title: "Backups"
         files_title: "Backup files"
-        description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
         learn_more_url: ""
         menu:
           backups: "Backups"

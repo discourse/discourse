@@ -31,6 +31,8 @@ RSpec.describe ApplicationController do
             "auto_generated" => false,
           },
           "enabled" => true,
+          "description" =>
+            "Adds chat functionality to your site so it can natively support both long-form and short-form communication needs of your online community",
         },
       )
     end

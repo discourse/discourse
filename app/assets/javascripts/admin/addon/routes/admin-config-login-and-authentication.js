@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigLoginAndAuthenticationRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.community.sidebar_link.login_and_authentication");
+    return i18n("admin.config.login_and_authentication.title");
   }
 }

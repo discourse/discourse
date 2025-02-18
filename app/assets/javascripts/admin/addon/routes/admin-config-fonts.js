@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigFontsRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.appearance.sidebar_link.font_style");
+    return i18n("admin.config.font_style.title");
   }
 }

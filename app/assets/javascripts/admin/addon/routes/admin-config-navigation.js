@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigNavigationRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.appearance.sidebar_link.navigation");
+    return i18n("admin.config.navigation.title");
   }
 }

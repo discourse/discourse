@@ -3,6 +3,6 @@ import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
 export default class AdminConfigLegalRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.community.sidebar_link.legal");
+    return i18n("admin.config.legal.title");
   }
 }
