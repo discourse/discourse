@@ -400,6 +400,8 @@ RSpec.describe Reviewable, type: :model do
         type
       end
 
+      before { Reviewable.instance_variable_set(:@unknown_types_and_sources, nil) }
+
       it "returns an array of unknown types, sorted by source (with 'unknown' always last), then by type" do
         expect(Reviewable.unknown_types_and_sources).to eq(
           [
@@ -414,8 +416,6 @@ RSpec.describe Reviewable, type: :model do
         )
       end
     end
-
-    after { Reviewable.instance_variable_set(:@unknown_types_and_sources, nil) }
   end
 
   describe "events" do

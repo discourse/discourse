@@ -216,12 +216,22 @@ describe "Reviewables", type: :system do
 
   describe "when there is an unknown plugin reviewable" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable2) { Fabricate(:reviewable) }
 
-    before { reviewable.update_column(:type, "UnknownPlugin") }
+    before do
+      reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
+      reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
+      Reviewable.instance_variable_set(:@unknown_types_and_sources, nil)
+    end
 
     it "informs admin and allows to delete them" do
       visit("/review")
       expect(review_page).to have_information_about_unknown_reviewables_visible
+      expect(review_page).to have_listing_for_unknown_reviewables_plugin(
+        reviewable.type,
+        reviewable.type_source,
+      )
+      expect(review_page).to have_listing_for_unknown_reviewables_unknown_source(reviewable2.type)
       review_page.click_ignore_all_unknown_reviewables
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
