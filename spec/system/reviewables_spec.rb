@@ -221,7 +221,6 @@ describe "Reviewables", type: :system do
     before do
       reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
       reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
-      Reviewable.instance_variable_set(:@unknown_types_and_sources, nil)
     end
 
     it "informs admin and allows to delete them" do

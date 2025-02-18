@@ -363,6 +363,12 @@ RSpec.describe Reviewable, type: :model do
         type
       end
 
+      fab!(:known_core_type) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "ReviewableFlaggedPost", type_source: "core")
+        type
+      end
+
       fab!(:unknown_type) do
         type = Fabricate(:reviewable)
         type.update_columns(type: "UnknownType", type_source: "unknown")
@@ -401,8 +407,6 @@ RSpec.describe Reviewable, type: :model do
         type.update_columns(type: "AnotherUnknownType", type_source: "unknown")
         type
       end
-
-      before { Reviewable.instance_variable_set(:@unknown_types_and_sources, nil) }
 
       it "returns an array of unknown types, sorted by source (with 'unknown' always last), then by type" do
         expect(Reviewable.unknown_types_and_sources).to eq(
