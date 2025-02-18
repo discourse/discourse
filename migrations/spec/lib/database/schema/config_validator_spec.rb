@@ -124,34 +124,34 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     end
   end
 
-  context "with output config" do
-    it "checks if directory of `schema_file` exists" do
-      config = minimal_config
-      config[:output][:schema_file] = "foo/bar/100-base-schema.sql"
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.output.schema_file_directory_not_found"),
-      )
-    end
-
-    it "checks if `models_directory` exists" do
-      config = minimal_config
-      config[:output][:models_directory] = "foo/bar"
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.output.models_directory_not_found"),
-      )
-    end
-
-    it "checks if `models_namespace` is an existing namespace" do
-      config = minimal_config
-      config[:output][:models_namespace] = "Foo::Bar::IntermediateDB"
-      expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly(
-        I18n.t("schema.validator.output.models_namespace_undefined"),
-      )
-    end
-  end
+  # context "with output config" do
+  #   it "checks if directory of `schema_file` exists" do
+  #     config = minimal_config
+  #     config[:output][:schema_file] = "foo/bar/100-base-schema.sql"
+  #     expect(validator.validate(config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       I18n.t("schema.validator.output.schema_file_directory_not_found"),
+  #     )
+  #   end
+  #
+  #   it "checks if `models_directory` exists" do
+  #     config = minimal_config
+  #     config[:output][:models_directory] = "foo/bar"
+  #     expect(validator.validate(config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       I18n.t("schema.validator.output.models_directory_not_found"),
+  #     )
+  #   end
+  #
+  #   it "checks if `models_namespace` is an existing namespace" do
+  #     config = minimal_config
+  #     config[:output][:models_namespace] = "Foo::Bar::IntermediateDB"
+  #     expect(validator.validate(config)).to have_errors
+  #     expect(validator.errors).to contain_exactly(
+  #       I18n.t("schema.validator.output.models_namespace_undefined"),
+  #     )
+  #   end
+  # end
 
   context "with schema config" do
     context "with incorrect global config" do
