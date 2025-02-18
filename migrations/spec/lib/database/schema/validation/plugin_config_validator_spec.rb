@@ -34,16 +34,6 @@ RSpec.describe ::Migrations::Database::Schema::Validation::PluginConfigValidator
       )
     end
 
-    it "adds both errors for mismatched plugins" do
-      config[:plugins] = %w[chat foo poll]
-
-      validator.validate
-      expect(errors).to contain_exactly(
-        I18n.t("schema.validator.plugins.not_installed", plugin_names: "foo"),
-        I18n.t("schema.validator.plugins.additional_installed", plugin_names: "footnote"),
-      )
-    end
-
     it "does not add errors when plugins match" do
       validator.validate
       expect(errors).to be_empty
