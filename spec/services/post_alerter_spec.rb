@@ -1164,6 +1164,20 @@ RSpec.describe PostAlerter do
       )
     end
 
+    it "adds display name to notification_data" do
+      Plugin::Instance
+        .new
+        .register_modifier(:notification_data) do |notification_data|
+          notification_data[:display_name] = "Benji McCool"
+          notification_data
+        end
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+      expect(notification.data_hash[:display_name]).to eq("Benji McCool")
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+
     it "applies modifiers to notification_data" do
       Plugin::Instance
         .new
