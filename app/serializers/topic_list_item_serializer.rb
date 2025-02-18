@@ -146,11 +146,7 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def serialize_topic_op_likes_data_enabled?
     theme_enabled = theme_modifier_helper.serialize_topic_op_likes_data
-    plugin_enabled =
-      DiscoursePluginRegistry.apply_modifier(
-        :serialize_topic_op_likes_data,
-        false
-      )
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_op_likes_data, false)
 
     theme_enabled || plugin_enabled
   end
