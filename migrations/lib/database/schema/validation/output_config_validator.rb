@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module Migrations::Database::Schema::Validation
-  class OutputConfigValidator
-    def initialize(output_config, errors)
-      @output_config = output_config
-      @errors = errors
+  class OutputConfigValidator < BaseValidator
+    def initialize(config, errors)
+      super(config, errors, nil)
+      @output_config = config[:output]
     end
 
     def validate

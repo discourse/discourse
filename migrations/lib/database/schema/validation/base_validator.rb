@@ -2,10 +2,11 @@
 
 module Migrations::Database::Schema::Validation
   class BaseValidator
-    def initialize(schema_config, db, errors)
-      @schema_config = schema_config
-      @db = db
+    def initialize(config, errors, db)
+      @config = config
+      @schema_config ||= @config[:schema]
       @errors = errors
+      @db = db
     end
 
     private

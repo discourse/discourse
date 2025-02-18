@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Migrations::Database::Schema::Validation::OutputConfigValidator do
-  subject(:validator) { described_class.new(output_config, errors) }
+  subject(:validator) { described_class.new({ output: output_config }, errors) }
 
   let(:errors) { [] }
   let(:output_config) do

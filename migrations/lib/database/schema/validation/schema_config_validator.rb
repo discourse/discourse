@@ -2,17 +2,17 @@
 
 module Migrations::Database::Schema::Validation
   class SchemaConfigValidator
-    def initialize(schema_config, errors)
-      @schema_config = schema_config
+    def initialize(config, errors)
+      @config = config
       @errors = errors
     end
 
     def validate
       ActiveRecord::Base.with_connection do |db|
-        GloballyExcludedTablesValidator.new(@schema_config, db, @errors).validate
-        GloballyConfiguredColumnsValidator.new(@schema_config, db, @errors).validate
-        TablesValidator.new(@schema_config, db, @errors).validate
-        ColumnsValidator.new(@schema_config, db, @errors).validate
+        GloballyExcludedTablesValidator.new(@config, @errors, db).validate
+        GloballyConfiguredColumnsValidator.new(@config, @errors, db).validate
+        TablesValidator.new(@config, @errors, db).validate
+        ColumnsValidator.new(@config, @errors, db).validate
       end
     end
   end
