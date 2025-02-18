@@ -19,7 +19,7 @@ class MinUsernameLengthValidator
     end
 
     @username = User.where("length(username) < ?", value).pick(:username)
-    @group_name = Group.where(automatic: false).where("length(name) > ?", value).pick(:name)
+    @group_name = Group.where(automatic: false).where("length(name) < ?", value).pick(:name)
 
     @username.blank? && @group_name.blank?
   end
