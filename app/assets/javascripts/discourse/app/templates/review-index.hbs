@@ -7,7 +7,7 @@
 
     <ul>
       {{#each this.unknownReviewableTypes as |reviewable|}}
-        {{#if (eq reviewable.source "unknown")}}
+        {{#if (eq reviewable.source this.unknownTypeSource)}}
           <li>{{i18n
               "review.unknown.reviewable_unknown_source"
               reviewableType=reviewable.type

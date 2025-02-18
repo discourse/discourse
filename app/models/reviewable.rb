@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  UNKNOWN_TYPE_SOURCE = "unknown"
+
   self.ignored_columns = [:reviewable_by_group_id]
 
   class UpdateConflict < StandardError
@@ -81,7 +83,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.source_for(type)
     type = type.sti_name if type.is_a?(Class)
-    return "unknown" if Reviewable.sti_names.exclude?(type)
+    return UNKNOWN_TYPE_SOURCE if Reviewable.sti_names.exclude?(type)
 
     DiscoursePluginRegistry
       .reviewable_types_lookup
@@ -791,7 +793,7 @@ class Reviewable < ActiveRecord::Base
 
         known_unknowns
           .map { |type, source| { type: type, source: source } }
-          .sort_by { |e| [e[:source] == "unknown" ? 1 : 0, e[:source], e[:type]] }
+          .sort_by { |e| [e[:source] == UNKNOWN_TYPE_SOURCE ? 1 : 0, e[:source], e[:type]] }
       end
   end
 
