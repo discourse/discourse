@@ -15,15 +15,15 @@ class UsernameValidator
     end
   end
 
-  def initialize(username, automatic: false)
+  def initialize(username, skip_length_validation: false)
     @username = username&.unicode_normalize
-    @automatic = automatic
+    @skip_length_validation = skip_length_validation
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
-  attr_reader :automatic
+  attr_reader :skip_length_validation
 
   def user
     @user ||= User.new(user)
@@ -31,8 +31,8 @@ class UsernameValidator
 
   def valid_format?
     username_present?
-    username_length_min? if !automatic
-    username_length_max? if !automatic
+    username_length_min? if !skip_length_validation
+    username_length_max? if !skip_length_validation
     username_char_valid?
     username_char_allowed?
     username_first_char_valid?
