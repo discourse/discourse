@@ -3944,6 +3944,7 @@ de:
       description: "Um illegale Inhalte zu melden, wende dich bitte an <a href='mailto:%{email}?subject=Illegaler Inhalt: %{topic_title}&body=Dieser Beitrag %{url} enthält illegalen Inhalt.'>%{email}</a>"
     flagging:
       title: "Danke für deine Mithilfe!"
+      review_process_description: "Alle Meldungen werden von den Moderatoren empfangen und so schnell wie möglich überprüft."
       action: "Beitrag melden"
       take_action: "Reagieren …"
       take_action_options:
@@ -4895,6 +4896,7 @@ de:
           previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
           experimental: "Experimentell"
+          only_experiments: "Nur experimentelle Funktionen anzeigen"
           experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
           experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
           experiment_toggled_too_fast: "Du hast die experimentelle Funktion zu schnell umgeschaltet. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
