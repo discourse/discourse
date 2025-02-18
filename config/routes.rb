@@ -387,8 +387,7 @@ Discourse::Application.routes.draw do
         end
       end
 
-      get "palette/settings" => "palette#settings"
-      get "palette/themes-and-components" => "palette#themes_and_components"
+      get "palette/all" => "palette#index"
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]

@@ -7,12 +7,14 @@ import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import I18n, { i18n } from "discourse-i18n";
 
-const RESULT_TYPES = ["page", "setting", "theme", "component"];
+// TODO (martin) Move this to javascript.rake constants, use on server too
+const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
 
 export default class AdminPaletteDataSource extends Service {
   @service router;
   @service siteSettings;
 
+  plugins = {};
   pageMapItems = [];
   settingMapItems = [];
   themeMapItems = [];
@@ -28,6 +30,7 @@ export default class AdminPaletteDataSource extends Service {
     if (this._mapCached) {
       return;
     }
+
     ADMIN_NAV_MAP.forEach((mapItem) => {
       mapItem.links.forEach((link) => {
         let parentLabel = this.addPageLink(mapItem, link);
@@ -38,128 +41,25 @@ export default class AdminPaletteDataSource extends Service {
       });
     });
 
-    const plugins = {};
+    // TODO (martin) Handle plugin enabling/disabling via MessageBus for this
+    // and the setting list?
     (PreloadStore.get("visiblePlugins") || {}).forEach((plugin) => {
       if (
         plugin.admin_route &&
         plugin.enabled &&
         adminRouteValid(this.router, plugin.admin_route)
       ) {
-        plugins[plugin.name] = plugin;
+        this.plugins[plugin.name] = plugin;
       }
     });
-    ajax("/admin/palette/settings.json").then((result) => {
-      result.forEach((setting) => {
-        // TODO: (martin) Might want to use the sidebar link name for this instead of the
-        // plugin category?
 
-        let rootLabel;
-        if (setting.plugin) {
-          rootLabel =
-            I18n.lookup(
-              `admin.site_settings.categories.${setting.plugin.replaceAll(
-                "-",
-                "_"
-              )}`
-            ) || i18n("admin.plugins.title");
-        } else if (setting.primary_area) {
-          rootLabel =
-            I18n.lookup(`admin.config.${setting.primary_area}.title`) ||
-            i18n(`admin.site_settings.categories.${setting.category}`);
-        } else {
-          rootLabel = i18n(
-            `admin.site_settings.categories.${setting.category}`
-          );
-        }
-        const label = rootLabel + " > " + setting.setting;
-
-        let url;
-        if (setting.plugin) {
-          const plugin = plugins[setting.plugin];
-          if (plugin) {
-            url = plugin.admin_route.use_new_show_route
-              ? this.router.urlFor(
-                  `adminPlugins.show.settings`,
-                  plugin.admin_route.location,
-                  { queryParams: { filter: setting.setting } }
-                )
-              : this.router.urlFor(
-                  `adminPlugins.${plugin.admin_route.location}`
-                );
-          } else {
-            url = getURL(
-              `/admin/site_settings/category/all_results?filter=${setting.setting}`
-            );
-          }
-        } else if (this.settingPageMap.areas[setting.primary_area]) {
-          url =
-            this.settingPageMap.areas[setting.primary_area] +
-            `?filter=${setting.setting}`;
-        } else if (this.settingPageMap.categories[setting.category]) {
-          url =
-            this.settingPageMap.categories[setting.category] +
-            `?filter=${setting.setting}`;
-        } else {
-          url = getURL(
-            `/admin/site_settings/category/all_results?filter=${setting.setting}`
-          );
-        }
-
-        this.settingMapItems.push({
-          label,
-          description: setting.description,
-          url,
-          keywords: (
-            setting.setting +
-            " " +
-            setting.setting.split("_").join(" ") +
-            " " +
-            setting.description +
-            " " +
-            setting.keywords.join(" ") +
-            " " +
-            rootLabel
-          ).toLowerCase(),
-          type: "setting",
-          icon: "gear",
-        });
-      });
+    ajax("/admin/palette/all.json").then((result) => {
+      this.processSettings(result.settings);
+      this.processThemesAndComponents(result.themes_and_components);
     });
-    ajax("/admin/palette/themes-and-components.json").then((result) => {
-      result.forEach((themeOrComponent) => {
-        if (themeOrComponent.component) {
-          this.componentMapItems.push({
-            label: themeOrComponent.name,
-            description: themeOrComponent.description,
-            url: getURL(`/admin/customize/components/${themeOrComponent.id}`),
-            keywords: (
-              "component" +
-              " " +
-              themeOrComponent.description +
-              " " +
-              themeOrComponent.name
-            ).toLowerCase(),
-            type: "component",
-            icon: "puzzle-piece",
-          });
-        } else {
-          this.themeMapItems.push({
-            label: themeOrComponent.name,
-            description: themeOrComponent.description,
-            url: getURL(`/admin/customize/themes/${themeOrComponent.id}`),
-            keywords: (
-              "theme" +
-              " " +
-              themeOrComponent.description +
-              " " +
-              themeOrComponent.name
-            ).toLowerCase(),
-            type: "theme",
-            icon: "paintbrush",
-          });
-        }
-      });
-    });
+
+    // TODO (martin) Move this to all.json after refactoring reports controller
+    // into a service.
     ajax("/admin/reports.json").then((result) => {
       result.reports.forEach((report) => {
         this.reportMapItems.push({
@@ -178,6 +78,7 @@ export default class AdminPaletteDataSource extends Service {
         });
       });
     });
+
     this._mapCached = true;
   }
 
@@ -255,5 +156,115 @@ export default class AdminPaletteDataSource extends Service {
     });
 
     return linkLabel;
+  }
+
+  processSettings(settings) {
+    settings.forEach((setting) => {
+      // TODO: (martin) Might want to use the sidebar link name for this instead of the
+      // plugin category?
+
+      let rootLabel;
+      if (setting.plugin) {
+        rootLabel =
+          I18n.lookup(
+            `admin.site_settings.categories.${setting.plugin.replaceAll(
+              "-",
+              "_"
+            )}`
+          ) || i18n("admin.plugins.title");
+      } else if (setting.primary_area) {
+        rootLabel =
+          I18n.lookup(`admin.config.${setting.primary_area}.title`) ||
+          i18n(`admin.site_settings.categories.${setting.category}`);
+      } else {
+        rootLabel = i18n(`admin.site_settings.categories.${setting.category}`);
+      }
+      const label = rootLabel + " > " + setting.setting;
+
+      let url;
+      if (setting.plugin) {
+        const plugin = this.plugins[setting.plugin];
+        if (plugin) {
+          url = plugin.admin_route.use_new_show_route
+            ? this.router.urlFor(
+                `adminPlugins.show.settings`,
+                plugin.admin_route.location,
+                { queryParams: { filter: setting.setting } }
+              )
+            : this.router.urlFor(`adminPlugins.${plugin.admin_route.location}`);
+        } else {
+          url = getURL(
+            `/admin/site_settings/category/all_results?filter=${setting.setting}`
+          );
+        }
+      } else if (this.settingPageMap.areas[setting.primary_area]) {
+        url =
+          this.settingPageMap.areas[setting.primary_area] +
+          `?filter=${setting.setting}`;
+      } else if (this.settingPageMap.categories[setting.category]) {
+        url =
+          this.settingPageMap.categories[setting.category] +
+          `?filter=${setting.setting}`;
+      } else {
+        url = getURL(
+          `/admin/site_settings/category/all_results?filter=${setting.setting}`
+        );
+      }
+
+      this.settingMapItems.push({
+        label,
+        description: setting.description,
+        url,
+        keywords: (
+          setting.setting +
+          " " +
+          setting.setting.split("_").join(" ") +
+          " " +
+          setting.description +
+          " " +
+          setting.keywords.join(" ") +
+          " " +
+          rootLabel
+        ).toLowerCase(),
+        type: "setting",
+        icon: "gear",
+      });
+    });
+  }
+
+  processThemesAndComponents(themesAndComponents) {
+    themesAndComponents.forEach((themeOrComponent) => {
+      if (themeOrComponent.component) {
+        this.componentMapItems.push({
+          label: themeOrComponent.name,
+          description: themeOrComponent.description,
+          url: getURL(`/admin/customize/components/${themeOrComponent.id}`),
+          keywords: (
+            "component" +
+            " " +
+            themeOrComponent.description +
+            " " +
+            themeOrComponent.name
+          ).toLowerCase(),
+          type: "component",
+          icon: "puzzle-piece",
+        });
+      } else {
+        this.themeMapItems.push({
+          label: themeOrComponent.name,
+          description: themeOrComponent.description,
+          url: getURL(`/admin/customize/themes/${themeOrComponent.id}`),
+          keywords: (
+            "theme" +
+            " " +
+            themeOrComponent.description +
+            " " +
+            themeOrComponent.name
+          ).toLowerCase(),
+          type: "theme",
+          icon: "paintbrush",
+        });
+      }
+    });
   }
 }
