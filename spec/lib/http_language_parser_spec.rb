@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#write a test for HttpLanguageParser
-
 describe HttpLanguageParser do
   it "returns the default locale when no language is matched" do
     expect(HttpLanguageParser.parse("")).to eq(SiteSetting.default_locale)
