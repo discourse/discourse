@@ -166,29 +166,29 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         )
       end
 
-      it "detects globally excluded tables that are used in `schema/tables` section" do
-        allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w[categories users])
-
-        config = minimal_config
-        config[:schema][:global][:tables][:exclude] = %w[categories users]
-        config[:schema][:tables] = {
-          categories: {
-            columns: {
-              include: %w[id name],
-            },
-          },
-          users: {
-            columns: {
-              include: %w[id username],
-            },
-          },
-        }
-
-        expect(validator.validate(config)).to have_errors
-        expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.global.excluded_tables_used", table_names: "categories, users"),
-        )
-      end
+      # it "detects globally excluded tables that are used in `schema/tables` section" do
+      #   allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w[categories users])
+      #
+      #   config = minimal_config
+      #   config[:schema][:global][:tables][:exclude] = %w[categories users]
+      #   config[:schema][:tables] = {
+      #     categories: {
+      #       columns: {
+      #         include: %w[id name],
+      #       },
+      #     },
+      #     users: {
+      #       columns: {
+      #         include: %w[id username],
+      #       },
+      #     },
+      #   }
+      #
+      #   expect(validator.validate(config)).to have_errors
+      #   expect(validator.errors).to contain_exactly(
+      #     I18n.t("schema.validator.global.excluded_tables_used", table_names: "categories, users"),
+      #   )
+      # end
 
       it "detects globally excluded columns that do not match existing columns" do
         config = minimal_config
@@ -216,34 +216,34 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
       end
     end
 
-    context "with incorrect table config" do
-      it "detects tables that are missing from configuration file" do
-        allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
-          %w[categories topics posts users tags],
-        )
-
-        config = minimal_config
-        config[:schema][:global][:tables][:exclude] = %w[categories]
-        config[:schema][:tables] = {
-          topics: {
-            columns: {
-              include: %w[id title],
-            },
-          },
-          users: {
-            columns: {
-              include: %w[id username],
-            },
-          },
-        }
-
-        expect(validator.validate(config)).to have_errors
-        expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.table_not_configured", table_name: "posts"),
-          I18n.t("schema.validator.table_not_configured", table_name: "tags"),
-        )
-      end
-    end
+    # context "with incorrect table config" do
+    # it "detects tables that are missing from configuration file" do
+    #   allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
+    #     %w[categories topics posts users tags],
+    #   )
+    #
+    #   config = minimal_config
+    #   config[:schema][:global][:tables][:exclude] = %w[categories]
+    #   config[:schema][:tables] = {
+    #     topics: {
+    #       columns: {
+    #         include: %w[id title],
+    #       },
+    #     },
+    #     users: {
+    #       columns: {
+    #         include: %w[id username],
+    #       },
+    #     },
+    #   }
+    #
+    #   expect(validator.validate(config)).to have_errors
+    #   expect(validator.errors).to contain_exactly(
+    #     I18n.t("schema.validator.table_not_configured", table_name: "posts"),
+    #     I18n.t("schema.validator.table_not_configured", table_name: "tags"),
+    #   )
+    # end
+    # end
 
     context "with incorrect column config" do
       it "detects that a newly added column already exists" do

@@ -9,16 +9,16 @@ module Migrations::Database::Schema::Validation
 
       if (table_names = configured_table_names & excluded_table_names).any?
         @errors << I18n.t(
-          "schema.validator.global.excluded_tables_used",
+          "schema.validator.tables.excluded_tables_configured",
           table_names: sort_and_join(table_names),
         )
       end
 
-      existing_table_names.sort.each do |table_name|
-        if !configured_table_names.include?(table_name) &&
-             !excluded_table_names.include?(table_name)
-          @errors << I18n.t("schema.validator.table_not_configured", table_name:)
-        end
+      if (table_names = existing_table_names - configured_table_names - excluded_table_names).any?
+        @errors << I18n.t(
+          "schema.validator.tables.not_configured",
+          table_names: sort_and_join(table_names),
+        )
       end
     end
   end

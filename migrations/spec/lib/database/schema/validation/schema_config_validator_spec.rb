@@ -8,18 +8,12 @@ RSpec.describe ::Migrations::Database::Schema::Validation::SchemaConfigValidator
 
   describe "#validate" do
     it "calls all validators" do
-      expect_any_instance_of(
+      [
         ::Migrations::Database::Schema::Validation::GloballyExcludedTablesValidator,
-      ).to receive(:validate)
-      expect_any_instance_of(
         ::Migrations::Database::Schema::Validation::GloballyConfiguredColumnsValidator,
-      ).to receive(:validate)
-      expect_any_instance_of(
         ::Migrations::Database::Schema::Validation::TablesValidator,
-      ).to receive(:validate)
-      expect_any_instance_of(
         ::Migrations::Database::Schema::Validation::ColumnsValidator,
-      ).to receive(:validate)
+      ].each { |klass| expect_any_instance_of(klass).to receive(:validate) }
 
       validator.validate
     end

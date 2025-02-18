@@ -19,34 +19,34 @@ en:
   schema:
     validator:
       output:
-        schema_file_directory_not_found: "Directory of `schema_file` does not exist"
-        models_directory_not_found: "`models_directory` does not exist"
-        models_namespace_undefined: "`models_namespace` is not defined"
+        schema_file_directory_not_found: "Schema file directory not found"
+        models_directory_not_found: "Models directory not found"
+        models_namespace_undefined: "Models namespace not defined"
 
       global:
-        excluded_tables_missing: "The following globally excluded tables does not exist in database: %{table_names}"
-        excluded_tables_used: "The following globally excluded tables can't be configured in `schema/tables` section: %{table_names}"
-        excluded_columns_missing: "The following globally excluded columns do not match an existing column: %{column_names}"
+        excluded_tables_missing: "Missing excluded tables: %{table_names}"
+        excluded_columns_missing: "Missing excluded columns: %{column_names}"
 
       tables:
-        added_columns_exist: "Added columns of table '%{table_name}' already exist: %{column_names}"
-        included_columns_missing: "Included columns of table '%{table_name}' do not exist: %{column_names}"
-        excluded_columns_missing: "Excluded columns of table '%{table_name}' do not exist: %{column_names}"
-        modified_columns_missing: "Modified columns of table '%{table_name}' do not exist: %{column_names}"
-        modified_columns_included: "Modified columns of table '%{table_name}' must not be mentioned in `include`: %{column_names}"
-        modified_columns_excluded: "Modified columns of table '%{table_name}' must not be mentioned in `exclude`: %{column_names}"
-        not_all_columns_configured: "The following columns have not been configured for table '%{table_name}': %{column_names}"
-        no_columns_configured: "The table '%{table_name}' doesn't have any columns configured."
+        excluded_tables_configured: "Excluded tables configured: %{table_names}"
+        not_configured: "Tables not configured or excluded: %{table_names}"
+
+
+        added_columns_exist: "Existing columns added in '%{table_name}': %{column_names}"
+        included_columns_missing: "Missing included columns in '%{table_name}': %{column_names}"
+        excluded_columns_missing: "Missing excluded columns in '%{table_name}': %{column_names}"
+        modified_columns_missing: "Missing modified columns in '%{table_name}': %{column_names}"
+        modified_columns_included: "Modified columns included in '%{table_name}': %{column_names}"
+        modified_columns_excluded: "Modified columns excluded in '%{table_name}': %{column_names}"
+        not_all_columns_configured: "Unconfigured columns in '%{table_name}': %{column_names}"
+        no_columns_configured: "No columns configured in '%{table_name}'"
 
       plugins:
-        not_installed: "Configured plugins not installed: %{plugin_names}"
-        additional_installed: "Additional plugins installed. Uninstall them or add to configuration: %{plugin_names}"
+        not_installed: "Plugins not installed: %{plugin_names}"
+        additional_installed: "Unconfigured plugins installed: %{plugin_names}"
 
-      table_not_configured: "Table needs to be configured in `schema/tables` section or excluded in `global/tables`: %{table_name}"
-
-      include_exclude_not_allowed: "%{path} must not use `include` and `exclude` at the same time"
-      modified_column_included: "Modified column must not be mentioned in `include` section: %{table_name}.%{column_name}"
-      modified_column_excluded: "Modified column must not be mentioned in `exclude` section: %{table_name}.%{column_name}"
-
+      include_exclude_not_allowed: "Cannot use `include` and `exclude` together at %{path}"
+      modified_column_included: "Modified column included: %{table_name}.%{column_name}"
+      modified_column_excluded: "Modified column excluded: %{table_name}.%{column_name}"
 
       invalid_name_regex: "Invalid `name_regex`: %{message}"

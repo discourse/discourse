@@ -5,10 +5,11 @@ module Migrations::Database::Schema
     def initialize(schema_config)
       @schema_config = schema_config
       @global = GlobalConfig.new(@schema_config)
-      @db = ActiveRecord::Base.connection
     end
 
     def load_schema
+      @db = ActiveRecord::Base.lease_connection
+
       schema = []
       existing_table_names = @db.tables.to_set
 
@@ -26,6 +27,9 @@ module Migrations::Database::Schema
           schema << table(table_name, config, table_alias)
         end
       end
+
+      @db = nil
+      ActiveRecord::Base.release_connection
 
       schema
     end
