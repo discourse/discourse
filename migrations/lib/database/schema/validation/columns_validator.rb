@@ -60,7 +60,7 @@ module Migrations::Database::Schema::Validation
       if (column_names = @modified_column_names - @existing_column_names).any?
         @errors << I18n.t(
           "schema.validator.tables.modified_columns_missing",
-          table_name: table_name,
+          table_name:,
           column_names: sort_and_join(column_names),
         )
       end

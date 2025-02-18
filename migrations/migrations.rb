@@ -64,7 +64,7 @@ module Migrations
 
       Dir[File.join(converter_path, "**", "*")].each do |subdirectory|
         next unless File.directory?(subdirectory)
-        loader.push_dir(subdirectory, namespace: namespace)
+        loader.push_dir(subdirectory, namespace:)
       end
     end
 
