@@ -48,7 +48,9 @@ ro:
   disable_remote_images_download_reason: "Descărcarea de imagini la distanță a fost dezactivată deoarece nu mai era spațiu suficient pe disc."
   anonymous: "Anonime"
   remove_posts_deleted_by_author: "Șters de către autor"
+  topic_category_changed: "De la %{from} la %{to}"
   topic_tag_changed:
+    added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
     added: "Adăugată în %{added}"
     removed: "Eliminată %{removed}"
   inline_oneboxer:
@@ -1149,6 +1151,7 @@ ro:
     num_flaggers_to_close_topic: "Numărul minim de marcaje de avertizare unice care este necesar pentru a suspenda un subiect în vederea intervenției."
     auto_respond_to_flag_actions: "Activează răspunsul automat la gestionarea unui marcaj de avertizare."
     min_first_post_typing_time: "Durata de timp minimă în milisecunde cât este nevoie ca un utilizator să tasteze la prima postare, dacă acest prag nu este atins postarea va intra automat în coada mesajelor care necesită aprobare. Valoarea 0 dezactivează (nerecomandat)"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Utilizatorii anonimi vor vedea informațiile pe care trebuie să le trimită prin e-mail administratorilor pentru a raporta conținut ilegal."
     reply_by_email_address: "șablon pentru răspuns prin email de intrare, de exemplu: %%{reply_key}@reply.example.com sau răspunsuri+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Listă de șabloane alternative pentru adresele de email primite cu răspunsuri prin email. Exemplu: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Scoate imaginile din emailurile care au mai puțin de 2800 de Bytes"
@@ -1234,6 +1237,8 @@ ro:
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
+    enable_diffhtml_preview: "Funcționalitate experimentală care utilizează diffHTML pentru a sincroniza previzualizarea în loc de redarea completă"
+    enable_quote_copy: "Adaugă un buton în meniul de selecție a postării pentru a copia selecția în clipboard ca un citat Markdown."
     default_email_digest_frequency: "Frecvența implicită cu care utilizatorii primesc emailuri-rezumat."
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."

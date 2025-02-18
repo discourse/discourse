@@ -7,8 +7,16 @@
 ko:
   js:
     discourse_automation:
-      create: 글
+      create: 생성
       update: 업데이트
+      select_script: 스크립트 선택
+      select_trigger: 트리거 선택
+      no_automation_yet: 아직 생성된 자동화가 없습니다. 시작하려면 아래 옵션을 선택하세요.
+      edit_automation:
+        fields_section:
+          title: 스크립트 옵션
+      destroy_automation:
+        confirm: "정말 `%{name}`을(를) 삭제하시겠습니까?"
       fields:
         user:
           label: 사용자
@@ -16,7 +24,7 @@ ko:
           title:
             label: 제목
           raw:
-            label: 바디
+            label: 본문
         pms:
           title:
             label: 제목
@@ -38,7 +46,10 @@ ko:
             P6M: "6개월"
             P1Y: "1년"
         recurring:
+          every: 매
           frequencies:
+            minute: 정말 `%{name}`을(를) 삭제하시겠습니까?
+            hour: 시간
             day: 일
             week: 주
             month: 월
