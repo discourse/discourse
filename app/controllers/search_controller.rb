@@ -12,6 +12,7 @@ class SearchController < ApplicationController
   end
 
   def show
+    raise Discourse::InvalidParameters.new("string contains null byte") if request.format.json?
     permitted_params = params.permit(:q, :page)
     @search_term = permitted_params[:q]
 
@@ -83,6 +84,7 @@ class SearchController < ApplicationController
   end
 
   def query
+    raise Discourse::InvalidParameters.new("string contains null byte") if request.format.json?
     params.require(:term)
 
     if params[:term].include?("\u0000")

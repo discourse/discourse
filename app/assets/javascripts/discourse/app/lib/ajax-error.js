@@ -91,6 +91,7 @@ export function flashAjaxError(modal, defaultMessage) {
 }
 
 export function popupAjaxError(error) {
+  debugger
   const dialog = getOwnerWithFallback(this).lookup("service:dialog");
   const errorInfo = extractErrorInfo(error);
 

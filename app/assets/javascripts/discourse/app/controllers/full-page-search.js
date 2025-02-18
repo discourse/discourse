@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
@@ -76,7 +77,7 @@ export default class FullPageSearchController extends Controller {
   resultCount = null;
   searchTypes = null;
   additionalSearchResults = [];
-  error = null;
+  @tracked error = null;
   @gt("bulkSelectHelper.selected.length", 0) hasSelection;
   @or("searching", "loading") searchButtonDisabled;
   _searchOnSortChange = true;
@@ -450,10 +451,10 @@ export default class FullPageSearchController extends Controller {
               model.grouped_search_result = results.grouped_search_result;
               this.set("model", model);
             }
-            this.set("error", null);
+            this.error = null;
           })
           .catch((e) => {
-            this.set("error", e.jqXHR.responseJSON?.message);
+            this.error = e.jqXHR.responseJSON?.errors?.[0] || e.jqXHR.responseText;
           })
           .finally(() => {
             this.setProperties({

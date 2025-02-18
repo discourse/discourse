@@ -57,7 +57,9 @@ export default class FullPageSearch extends DiscourseRoute {
       const model = (results && (await translateResults(results))) || {};
       setTransient("lastSearch", { searchKey, model }, 5);
       return model;
-    });
+      }).catch((e) => {
+        return { grouped_search_result: {} };
+      });
   }
 
   @action
