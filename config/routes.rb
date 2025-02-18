@@ -387,7 +387,7 @@ Discourse::Application.routes.draw do
         end
       end
 
-      get "palette/all" => "palette#index"
+      get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]

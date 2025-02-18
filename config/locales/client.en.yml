@@ -5228,6 +5228,9 @@ en:
           title: "Group permissions"
           header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
 
+      search:
+        modal_title: "Search anything in admin"
+
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"

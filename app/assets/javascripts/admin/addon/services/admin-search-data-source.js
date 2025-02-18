@@ -10,7 +10,7 @@ import I18n, { i18n } from "discourse-i18n";
 // TODO (martin) Move this to javascript.rake constants, use on server too
 const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
 
-export default class AdminPaletteDataSource extends Service {
+export default class AdminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
 
@@ -53,7 +53,7 @@ export default class AdminPaletteDataSource extends Service {
       }
     });
 
-    ajax("/admin/palette/all.json").then((result) => {
+    ajax("/admin/search/all.json").then((result) => {
       this.processSettings(result.settings);
       this.processThemesAndComponents(result.themes_and_components);
     });

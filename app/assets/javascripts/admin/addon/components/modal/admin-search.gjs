@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
-import AdminPaletteSearch from "admin/components/admin-palette-search";
+import AdminSearch from "admin/components/admin-search";
 
-export default class AdminPaletteModal extends Component {
+export default class AdminSearchModal extends Component {
   @service currentUser;
 
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      class="admin-palette-modal"
-      @title="admin.palette.search"
+      class="admin-search-modal"
+      @title="admin.search.modal_title"
       @inline={{@inline}}
       @hideHeader={{true}}
     >
-      <AdminPaletteSearch />
+      <AdminSearch />
     </DModal>
   </template>
 }

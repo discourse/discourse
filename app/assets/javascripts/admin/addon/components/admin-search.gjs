@@ -10,8 +10,8 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import icon from "discourse/helpers/d-icon";
 import autoFocus from "discourse/modifiers/auto-focus";
 
-export default class AdminPaletteSearch extends Component {
-  @service adminPaletteDataSource;
+export default class AdminSearch extends Component {
+  @service adminSearchDataSource;
 
   @tracked filter = "";
   @tracked searchResults = [];
@@ -24,7 +24,7 @@ export default class AdminPaletteSearch extends Component {
 
   constructor() {
     super(...arguments);
-    this.adminPaletteDataSource.buildMap();
+    this.adminSearchDataSource.buildMap();
   }
 
   get visibleTypes() {
@@ -67,7 +67,7 @@ export default class AdminPaletteSearch extends Component {
 
   @action
   search() {
-    this.searchResults = this.adminPaletteDataSource.search(this.filter, {
+    this.searchResults = this.adminSearchDataSource.search(this.filter, {
       types: this.visibleTypes,
     });
   }
@@ -75,43 +75,43 @@ export default class AdminPaletteSearch extends Component {
   <template>
     <input
       type="text"
-      class="admin-palette__search-input"
+      class="admin-search__input"
       {{autoFocus}}
       {{on "input" this.changeSearchTerm}}
     />
     <DButton @icon="filter" @action={{this.toggleTypeFilters}} />
 
     {{#if this.showTypeFilters}}
-      <div class="admin-palette-type-filter">
-        <span class="admin-palette-type-filter__page">
+      <div class="admin-search-type-filter">
+        <span class="admin-search-type-filter__page">
           Pages
           <DToggleSwitch
             @state={{this.showPageType}}
             {{on "click" (fn this.toggleTypeFilter "showPageType")}}
           />
         </span>
-        <span class="admin-palette-type-filter__setting">
+        <span class="admin-search-type-filter__setting">
           Settings
           <DToggleSwitch
             @state={{this.showSettingType}}
             {{on "click" (fn this.toggleTypeFilter "showSettingType")}}
           />
         </span>
-        <span class="admin-palette-type-filter__theme">
+        <span class="admin-search-type-filter__theme">
           Themes
           <DToggleSwitch
             @state={{this.showThemeType}}
             {{on "click" (fn this.toggleTypeFilter "showThemeType")}}
           />
         </span>
-        <span class="admin-palette-type-filter__component">
+        <span class="admin-search-type-filter__component">
           Components
           <DToggleSwitch
             @state={{this.showComponentType}}
             {{on "click" (fn this.toggleTypeFilter "showComponentType")}}
           />
         </span>
-        <span class="admin-palette-type-filter__report">
+        <span class="admin-search-type-filter__report">
           Reports
           <DToggleSwitch
             @state={{this.showReportType}}
@@ -121,19 +121,19 @@ export default class AdminPaletteSearch extends Component {
       </div>
     {{/if}}
 
-    <div class="admin-palette__search-results">
+    <div class="admin-search__search-results">
       {{#each this.searchResults as |result|}}
-        <div class="admin-palette__search-result">
+        <div class="admin-search__search-result">
           <a href={{result.url}}>
-            <div class="admin-palette__name">
+            <div class="admin-search__name">
               {{#if result.icon}}
                 {{icon result.icon}}
               {{/if}}
-              <span class="admin-palette__name-label">{{result.label}}</span>
-              <span class="admin-palette__type-pill">{{result.type}}</span>
+              <span class="admin-search__name-label">{{result.label}}</span>
+              <span class="admin-search__type-pill">{{result.type}}</span>
             </div>
             {{#if result.description}}
-              <p class="admin-palette__description">{{htmlSafe
+              <p class="admin-search__description">{{htmlSafe
                   result.description
                 }}</p>
             {{/if}}

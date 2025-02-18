@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::PaletteController < Admin::AdminController
+class Admin::SearchController < Admin::AdminController
   def index
     # TODO (martin) Include reports here too, need to refact
     # the reports controller into a reusable lookup service first.

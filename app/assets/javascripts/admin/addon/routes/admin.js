@@ -5,7 +5,7 @@ import KeyboardShortcuts, {
 } from "discourse/lib/keyboard-shortcuts";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import AdminPaletteModal from "admin/components/modal/admin-palette";
+import AdminSearchModal from "admin/components/modal/admin-search";
 
 export default class AdminRoute extends DiscourseRoute {
   @service sidebarState;
@@ -49,6 +49,6 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   showAdminSearchModal() {
-    this.modal.show(AdminPaletteModal);
+    this.modal.show(AdminSearchModal);
   }
 }
