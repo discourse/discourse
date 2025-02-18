@@ -265,6 +265,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
           transients[:with_replies],
           :chat_message,
           thread: thread,
+          chat_channel_id: thread.channel_id,
           use_service: transients[:use_service],
         )
         .each { |message| thread.add(message.user) }
