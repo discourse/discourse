@@ -14,23 +14,25 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import { userPath } from "discourse/lib/url";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SignupPageController extends Controller.extend(
-  PasswordValidation,
   UserFieldsValidation
 ) {
   @service site;
   @service siteSettings;
   @service login;
 
+  @tracked accountName;
+  @tracked accountPassword;
+  @tracked accountEmail;
   @tracked accountUsername;
   @tracked isDeveloper = false;
   accountChallenge = 0;
@@ -44,6 +46,7 @@ export default class SignupPageController extends Controller.extend(
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
+  passwordValidationHelper = new PasswordValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -53,7 +56,7 @@ export default class SignupPageController extends Controller.extend(
     super.init(...arguments);
 
     if (cookie("email")) {
-      this.set("accountEmail", cookie("email"));
+      this.accountEmail = cookie("email");
     }
 
     this.fetchConfirmationValue();
@@ -62,6 +65,11 @@ export default class SignupPageController extends Controller.extend(
   @dependentKeyCompat
   get usernameValidation() {
     return this.usernameValidationHelper.usernameValidation;
+  }
+
+  @dependentKeyCompat
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
   }
 
   get nameTitle() {
@@ -185,9 +193,8 @@ export default class SignupPageController extends Controller.extend(
     );
   }
 
-  @discourseComputed("authOptions.auth_provider")
-  passwordRequired(authProvider) {
-    return isEmpty(authProvider);
+  get passwordRequired() {
+    return isEmpty(this.authOptions?.auth_provider);
   }
 
   @discourseComputed
@@ -485,7 +492,9 @@ export default class SignupPageController extends Controller.extend(
             this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
-            this.rejectedPasswords.pushObject(attrs.accountPassword);
+            this.passwordValidationHelper.rejectedPasswords.push(
+              attrs.accountPassword
+            );
           }
           this.set("formSubmitted", false);
           removeCookie("destination_url");
