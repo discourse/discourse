@@ -6,14 +6,12 @@ RSpec.describe PostMover do
 
   describe "#move_types" do
     context "when verifying enum sequence" do
-      before { @move_types = PostMover.move_types }
-
       it "'new_topic' should be at 1st position" do
-        expect(@move_types[:new_topic]).to eq(1)
+        expect(described_class.move_types[:new_topic]).to eq(1)
       end
 
       it "'existing_topic' should be at 2nd position" do
-        expect(@move_types[:existing_topic]).to eq(2)
+        expect(described_class.move_types[:existing_topic]).to eq(2)
       end
     end
   end

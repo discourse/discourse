@@ -224,16 +224,18 @@ RSpec.describe Reviewable, type: :model do
         end
 
         describe "Including pending queued posts even if they don't pass the minimum priority threshold" do
+          let(:queued_post) do
+            Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
+          end
+          let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+
           before do
             SiteSetting.reviewable_default_visibility = :high
             Reviewable.set_priorities(high: 10)
-            @queued_post =
-              Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
-            @queued_user = Fabricate(:reviewable_user, score: 0, force_review: true)
           end
 
           it "includes queued posts when searching for pending reviewables" do
-            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post, @queued_user)
+            expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
           end
 
           it "excludes pending queued posts when applying a different status filter" do
