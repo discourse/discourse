@@ -1,4 +1,6 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import emoji from "./emoji";
+import heading from "./heading";
 
 /**
  * List of default extensions
@@ -6,6 +8,6 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions = [];
+const defaultExtensions = [emoji, heading];
 
 defaultExtensions.forEach(registerRichEditorExtension);
