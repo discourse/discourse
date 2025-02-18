@@ -445,7 +445,11 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         config[:schema][:tables][:users][:columns] = { include: ["created_at"] }
         expect(validator.validate(config)).to have_errors
         expect(validator.errors).to contain_exactly(
-          I18n.t("schema.validator.tables.no_columns_configured", table_name: "users"),
+          I18n.t(
+            "schema.validator.tables.not_all_columns_configured",
+            table_name: "users",
+            column_names: "id, username, views",
+          ),
         )
       end
     end
