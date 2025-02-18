@@ -130,6 +130,7 @@ class SiteSettingUpdateExistingUsers
       default_hide_presence: "hide_presence",
       default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
       default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
+      default_password_disabled: "password_disabled",
     }
   end
 

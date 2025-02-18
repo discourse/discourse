@@ -3302,6 +3302,8 @@ user_preferences:
   default_sidebar_show_count_of_new_items:
     default: false
     area: "navigation"
+  default_password_disabled:
+    default: false
 
 api:
   retain_web_hook_events_period_days:

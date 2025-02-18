@@ -663,5 +663,26 @@ RSpec.describe UserUpdater do
       UserUpdater.new(user, user).update(homepage_id: "-1")
       expect(user.user_option.homepage_id).to eq(nil)
     end
+
+    describe "disabling password" do
+      it "does not allow disable password without a 2FA method set" do
+        user = Fabricate(:user)
+        expect(user.user_option.password_disabled).to eq false
+
+        updater = UserUpdater.new(user, user)
+        updater.update(password_disabled: true)
+        expect(user.reload.user_option.password_disabled).to eq false
+      end
+
+      it "does allow disable password with a 2FA method set" do
+        User.any_instance.stubs(:has_any_second_factor_methods_enabled?).returns(true)
+        user = Fabricate(:user)
+        expect(user.user_option.password_disabled).to eq false
+
+        updater = UserUpdater.new(user, user)
+        updater.update(password_disabled: true)
+        expect(user.reload.user_option.password_disabled).to eq true
+      end
+    end
   end
 end

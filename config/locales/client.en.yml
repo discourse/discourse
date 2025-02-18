@@ -1645,6 +1645,7 @@ en:
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
         delete: "Delete"
         delete_confirm_header: "These Token-Based Authenticators and Physical Security Keys will be deleted:"
+        delete_confirm_password_notice: "If your password is disabled, it will be re-enabled."
         delete_confirm_instruction: "To confirm, type <strong>%{confirm}</strong> in the box below."
         delete_single_confirm_title: "Deleting an authenticator"
         delete_single_confirm_message: "You are deleting %{name}. You can't undo this action. If you change your mind, you have to register this authenticator again."
@@ -1656,6 +1657,9 @@ en:
         edit_description: "Authenticator Name"
         enable_security_key_description: |
           When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> or compatible mobile device prepared, press the Register button below.
+        disable_password_title: "Disable Password"
+        disable_password_label: "Do not require a password during login"
+
         totp:
           title: "Token-Based Authenticators"
           add: "Add Authenticator"

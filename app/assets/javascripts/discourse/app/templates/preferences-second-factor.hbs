@@ -162,7 +162,27 @@
             </div>
           </div>
         {{/unless}}
+
+        <div class="control-group pref-second-factor-disable-password">
+          <div class="controls">
+            <h2>{{i18n "user.second_factor.disable_password_title"}}</h2>
+            <div class="second-factor-item row">
+              <PreferenceCheckbox
+                id="password_disabled_checkbox"
+                data-setting-name="user-password-disabled"
+                @labelKey="user.second_factor.disable_password_label"
+                @checked={{this.model.user_option.password_disabled}}
+              />
+            </div>
+          </div>
+        </div>
+        <SaveControls
+          @model={{this.model}}
+          @action={{action "save"}}
+          @saved={{this.saved}}
+        />
       {{/if}}
+
     </form>
   </ConditionalLoadingSpinner>
 </section>
