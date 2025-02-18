@@ -19,7 +19,7 @@
   "devDependencies": {
     "clean-base-url": "^1.0.0",
     "express": "^4.21.2",
-    "glob": "^10.4.3",
+    "glob": "^11.0.1",
     "html-entities": "^2.5.2",
     "html-rewriter-wasm": "^0.4.1",
     "node-fetch": "^3.3.2"
