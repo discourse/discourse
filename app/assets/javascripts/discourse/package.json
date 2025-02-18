@@ -51,8 +51,8 @@
     "prosemirror-view": "^1.38.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.8",
-    "@babel/standalone": "^7.26.8",
+    "@babel/core": "^7.26.9",
+    "@babel/standalone": "^7.26.9",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -94,6 +94,7 @@
     "discourse-i18n": "workspace:1.0.0",
     "discourse-markdown-it": "workspace:1.0.0",
     "discourse-plugins": "workspace:1.0.0",
+    "ember-async-data": "^1.0.3",
     "ember-auto-import": "^2.10.0",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",

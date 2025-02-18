@@ -175,7 +175,7 @@
 }
 
 .sticky-header .topic-list-header {
-  @include sticky;
+  position: sticky;
   top: var(--header-offset, 60px);
   background: var(--secondary);
   z-index: 2;
@@ -432,7 +432,7 @@
 }
 
 .d-icon-thumbtack.unpinned {
-  @include fa-rotate(180deg, 1);
+  transform: rotate(180deg);
 }
 
 .top-title-buttons {
