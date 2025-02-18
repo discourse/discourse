@@ -639,42 +639,87 @@ sr:
       filtered_topic: "Prikazujete samo sadržaje unutar jedne teme koji zahtevaju pregled."
       filtered_user: "Korisnik"
       filtered_reviewed_by: "Pregledano od strane"
+      show_all_topics: "prikaži sve teme"
+      deleted_post: "(post izbrisan)"
+      deleted_user: "(korisnik izbrisan)"
       user:
+        bio: "Bio"
+        website: "Website"
         username: "Korisničko ime"
         email: "E-mail"
         name: "Ime foruma"
+        fields: "Polja"
         reject_reason: "Razlog"
+      user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (od zadnjeg markiranja)"
+          few: "%{agreed}, %{disagreed}, %{ignored} (of zadnjih %{count} markiranja)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (of zadnjih %{count} markiranja)"
+        agreed:
+          one: "%{count}% prihvata"
+          few: "%{count}% prihvata"
+          other: "%{count}% prihvata"
+        disagreed:
+          one: "%{count}% ne prihvata"
+          few: "%{count}% ne prihvata"
+          other: "%{count}% ne prihvata"
+        ignored:
+          one: "%{count}% ignoriše"
+          few: "%{count}% ignorišu"
+          other: "%{count}% ignoriše"
       topics:
         topic: "Tema"
         reviewable_count: "Broj"
+        reported_by: "Prijavio je"
+        deleted: "[Tema izbrisana]"
+        original: "(originalna tema)"
         details: "detalji"
         unique_users:
           one: "{count} korisnik"
           few: "%{count} korisnika"
           other: "%{count} korisnika"
+      replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
       edit: "Izmeni"
       save: "Sačuvaj"
       cancel: "Odustani"
+      new_topic: "Odobravanjem će se napraviti nova tema"
       filters:
         all_categories: "(sve kategorije)"
         type:
           title: "Tip"
+          all: "(svi tipovi)"
         minimum_score: "Minimalno bodova:"
         refresh: "Osveži"
+        status: "Status"
         category: "Kategorija"
         score_type:
           title: "Razlog"
+          all: "(svi razlozi)"
         orders:
           score: "Rezultat"
+          score_asc: "Rezultat (obrnuto)"
+          created_at: "Napravljeno"
+          created_at_asc: "Napravljeno (obrnuto)"
         priority:
           title: "Minimalni prioritet"
+          any: "(bilo koji)"
+          low: "Manji"
           medium: "Srednje"
           high: "Visoko"
       conversation:
         view_full: "pogledaj ceo razgovor"
       scores:
+        about: "Ovaj rezultat je baziran na nivou poverenja izveštavača, preciznosti njihovih prethodnih markiranja, i prioriteta prijavljene stavke."
+        score: "Rezultat"
+        date: "Datum prijave"
         type: "Razlog"
         status: "Status"
+        submitted_by: "Prijavljeno od"
+        reviewed_by: "Pregledano od"
+        reviewed_timestamp: "Datum pregleda"
       statuses:
         pending:
           title: "U toku"
@@ -682,10 +727,33 @@ sr:
           title: "Potvrđenji"
         approved_flag:
           title: "Naznaka odobrena"
+        approved_user:
+          title: "Korisnik odobrio"
+        approved_post:
+          title: "Post odobren"
+        rejected:
+          title: "Odbačen"
+        rejected_flag:
+          title: "Markiranje odbijeno"
+        rejected_user:
+          title: "Korisnik odbio"
+        rejected_post:
+          title: "Post odbijen"
+        ignored:
+          title: "Markiranje ignorisano"
+        deleted:
+          title: "Tema ili post obrisani"
+        reviewed:
+          title: "Sve pregledano"
+        all:
+          title: "Sve"
       context_question:
+        is_this_post: "Da li je %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "ili"
+        something_else_wrong: "Da li je nešto pogrešno sa ovim %{reviewable_type}?"
       types:
         reviewable_flagged_post:
+          title: "Naznačen Post"
           noun: "post"
         reviewable_queued_topic:
           noun: "tema"
@@ -1183,8 +1251,23 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
+      staff_counters:
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> suspenzija'
+          few: '<span class="%{className}">%{count}</span> suspenzije'
+          other: '<span class="%{className}">%{count}</span> suspenzija'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> upozorenje'
+          few: '<span class="%{className}">%{count}</span> upozorenja'
+          other: '<span class="%{className}">%{count}</span> upozorenja'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> odbijeni post'
+          few: '<span class="%{className}">%{count}</span> odbijena posta'
+          other: '<span class="%{className}">%{count}</span> odbijenih postova'
       messages:
+        all: "svi folderi"
         inbox: "Primljeno"
+        personal: "Privatni"
         latest: "Poslednje"
         sent: "Poslato"
         unread: "Nepročitano"
@@ -1198,7 +1281,47 @@ sr:
           few: "Nove (%{count})"
           other: "Nove (%{count})"
         archive: "Arhiviraj"
+        groups: "Moje Grupe"
+        move_to_inbox: "Premesti u Folder"
         move_to_archive: "Arhiviraj"
+        failed_to_move: "Neuspešno premeštanje selektovanih poruka (možda niste na mreži)"
+        tags: "Tagovi"
+        all_tags: "Svi Tagovi"
+        warnings: "Oficijalna Upozorenja"
+        read_more_in_group: "Želite da pročitate više? Pregledajte i ostale poruke u %{groupLink}."
+        read_more: "Želite da pročitate više? Pregledajte i ostale poruke u <a href='%{basePath}/u/%{username}/messages'>privatnim porukama</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Imate <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitanu</a>}
+                   few {Imate <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitane</a>}
+                other {Imate  <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitanih</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { i <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novu</a> poruku, ili pregledajte ostale poruke u  {groupLink}}
+                   few { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nove</a> poruke, ili pregledajte ostale poruke u {groupLink}}
+                other { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novih</a> poruka, ili pregledajte ostale poruke u {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Imate <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitanu</a> poruku, ili pregledajte ostale poruke u {groupLink}}
+                   few {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitane</a> poruke, ili pregledajte ostale poruke u {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepročitanih</a> poruka, ili pregledajte ostale poruke u {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Imate <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novu</a> poruku, ili pregledajte ostale poruke u {groupLink}}
+                   few {Imate <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novu</a> poruke, ili pregledajte ostale poruke u {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novih</a> poruka, ili pregledajte ostale poruke u {groupLink}}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         security: "Sigurnost"
         profile: "Profil"

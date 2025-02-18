@@ -562,6 +562,11 @@ he:
         title: "פתיחת תפריט הטיוטות האחרונות"
         untitled: "טיוטה ללא שם"
         view_all: "להציג הכול"
+        other_drafts:
+          one: "+טיוטה נוספת"
+          two: "+שתי טיוטות נוספות"
+          many: "+%{count} טיוטות נוספות"
+          other: "+%{count} טיוטות נוספות"
     topic_count_all:
       one: "הצגת נושא חדש"
       two: "הצגת שני נושאים חדשים"
@@ -6800,6 +6805,7 @@ he:
         case_sensitive: "(תלוי רישיות)"
         html: "(html)"
         download: הורדה
+        clear_all: לפנות הכול
         clear_all_confirm: "לפנות את כל המילים שבמעקב לפעולה %{action}?"
         invalid_regex: 'המילה „%{word}” שבמעקב היא ביטוי רגולרי שגוי.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">מילים במעקב הן ביטויים רגולריים</a> ואין כוללות גבולות מילים. כדי שהביטוי הרגולרי ילכוד מילים מלאות, יש לכלול ‎<code>\b</code>‎ בתחילת ובסוף הביטוי הרגולרי שלך.'
@@ -7480,6 +7486,7 @@ he:
         description: תיאור
         long_description: תיאור ארוך
         badge_type: סוג עיטור
+        group_settings: הגדרות קבוצתיות
         badge_grouping: קבוצה
         badge_groupings:
           modal_title: קבוצות עיטורים
@@ -7553,6 +7560,7 @@ he:
           title: "נא לבחור עיטור או ליצור חדש"
           description: "אפשר להתחיל על ידי בחירת עיטור לשינוי או ליצור עיטור חדש לגמרי."
         mass_award:
+          title: חלוקת עיטורים
           description: להעניק את אותו העיטור למגוון משתמשים בו זמנית.
           no_badge_selected: נא לבחור עיטור כדי להתחיל.
           perform: "להעניק עיטור למשתמשים"
