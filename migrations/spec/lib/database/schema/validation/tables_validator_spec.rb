@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Migrations::Database::Schema::Validation::TablesValidator do
-  subject(:validator) { described_class.new({ schema: schema_config }, errors, db) }
+  subject(:validator) { described_class.new(config, errors, db) }
 
   let(:errors) { [] }
+  let(:config) { { schema: schema_config } }
   let(:schema_config) do
     {
       tables: {

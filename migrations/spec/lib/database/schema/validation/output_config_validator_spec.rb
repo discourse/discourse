@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Migrations::Database::Schema::Validation::OutputConfigValidator do
-  subject(:validator) { described_class.new({ output: output_config }, errors) }
+  subject(:validator) { described_class.new(config, errors) }
 
   let(:errors) { [] }
+  let(:config) { { output: output_config } }
   let(:output_config) do
     {
       schema_file: "db/intermediate_db_schema/100-base-schema.sql",
