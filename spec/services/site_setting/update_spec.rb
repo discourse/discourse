@@ -2,14 +2,15 @@
 
 RSpec.describe SiteSetting::Update do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of :setting_name }
+    it { is_expected.to validate_presence_of :settings }
   end
 
   describe ".call" do
     subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:admin)
-    let(:params) { { setting_name:, new_value: } }
+    let(:params) { { settings: } }
+    let(:settings) { { setting_name => new_value } }
     let(:options) { { allow_changing_hidden: } }
     let(:dependencies) { { guardian: } }
     let(:setting_name) { :title }
@@ -17,8 +18,8 @@ RSpec.describe SiteSetting::Update do
     let(:guardian) { admin.guardian }
     let(:allow_changing_hidden) { false }
 
-    context "when setting_name is blank" do
-      let(:setting_name) { nil }
+    context "when settings is blank" do
+      let(:settings) { nil }
 
       it { is_expected.to fail_a_contract }
     end
@@ -34,7 +35,7 @@ RSpec.describe SiteSetting::Update do
       let(:new_value) { 3 }
 
       context "when allow_changing_hidden is false" do
-        it { is_expected.to fail_a_policy(:setting_is_visible) }
+        it { is_expected.to fail_a_policy(:settings_are_visible) }
       end
 
       context "when allow_changing_hidden is true" do
@@ -54,7 +55,7 @@ RSpec.describe SiteSetting::Update do
 
       before { SiteSetting.stubs(:shadowed_settings).returns(Set.new([:max_category_nesting])) }
 
-      it { is_expected.to fail_a_policy(:setting_is_shadowed_globally) }
+      it { is_expected.to fail_a_policy(:settings_are_unshadowed_globally) }
     end
 
     context "when the user changes a visible setting" do
