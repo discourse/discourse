@@ -8,7 +8,7 @@ Message-ID: <37@foo.bar.mail>
 In-Reply-To: <36@foo.bar.mail>
 References: <34@foo.bar.mail>
   <35@foo.bar.mail>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 

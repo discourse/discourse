@@ -1768,7 +1768,7 @@ RSpec.describe PostAlerter do
                           Subject: Hello world
                           Date: Fri, 15 Jan 2016 00:12:43 +0100
                           Message-ID: <12345@example.com>
-                          Mime-Version: 1.0
+                          MIME-Version: 1.0
                           Content-Type: text/plain; charset=UTF-8
                           Content-Transfer-Encoding: quoted-printable
 
@@ -2451,7 +2451,7 @@ RSpec.describe PostAlerter do
       Subject: Full email group username flow
       Date: Fri, 15 Jan 2021 00:12:43 +0100
       Message-ID: <u4w8c9r4y984yh98r3h69873@example.com.mail>
-      Mime-Version: 1.0
+      MIME-Version: 1.0
       Content-Type: text/plain
       Content-Transfer-Encoding: 7bit
 
@@ -2632,7 +2632,7 @@ RSpec.describe PostAlerter do
       Date: Fri, 16 Jan 2021 00:12:43 +0100
       Message-ID: <sdugj3o4iyu4832x3487@discourse.org.mail>
       In-Reply-To: #{email.message_id}
-      Mime-Version: 1.0
+      MIME-Version: 1.0
       Content-Type: text/plain
       Content-Transfer-Encoding: 7bit
 
@@ -2683,7 +2683,7 @@ RSpec.describe PostAlerter do
       Date: Fri, 16 Jan 2021 00:12:43 +0100
       Message-ID: <sgk094238uc0348c334483@discourse.org.mail>
       In-Reply-To: #{email.message_id}
-      Mime-Version: 1.0
+      MIME-Version: 1.0
       Content-Type: text/plain
       Content-Transfer-Encoding: 7bit
 
@@ -2725,7 +2725,7 @@ RSpec.describe PostAlerter do
       Subject: Full email group username flow
       Date: Fri, 14 Jan 2021 00:12:43 +0100
       Message-ID: <f4832ujfc3498u398i3@example.com.mail>
-      Mime-Version: 1.0
+      MIME-Version: 1.0
       Content-Type: text/plain
       Content-Transfer-Encoding: 7bit
 
@@ -2749,7 +2749,7 @@ RSpec.describe PostAlerter do
       Date: Fri, 16 Jan 2021 00:12:43 +0100
       Message-ID: <3849cu9843yncr9834yr9348x934@discourse.org.mail>
       In-Reply-To: #{email.message_id}
-      Mime-Version: 1.0
+      MIME-Version: 1.0
       Content-Type: text/plain
       Content-Transfer-Encoding: 7bit
 

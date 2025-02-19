@@ -52,7 +52,7 @@ module DiscourseDev
         Return-Path: #{user.email}
         From: #{user.email}
         Date: #{Date.today}
-        Mime-Version: "1.0"
+        MIME-Version: "1.0"
         Content-Type: "text/plain"
         Content-Transfer-Encoding: "7bit"
 

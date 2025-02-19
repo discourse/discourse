@@ -4,7 +4,7 @@ Reply-To: Example users <list@ml.example.com>
 To: list@example.com
 Message-ID: <4460a72d7764ad03b5cecd65fe4c2fbd@foo.com>
 Subject: library 1.2.3 released!
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-MailFrom: some@one.com

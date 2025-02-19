@@ -3,7 +3,7 @@ From: Foo Bar <discourse@bar.com>
 To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
 Date: Fri, 15 Jan 2016 00:12:43 +0100
 Message-ID: <28@foo.bar.mail>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/related; boundary="0000000000006d045f05c0e384eb"
 
 --0000000000006d045f05c0e384eb
