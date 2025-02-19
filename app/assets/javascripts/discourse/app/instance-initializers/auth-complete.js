@@ -143,9 +143,7 @@ export default {
                 router.transitionTo("signup").then((signup) => {
                   const signupController =
                     signup.controller || owner.lookup("controller:signup");
-                  Object.keys(createAccountProps || {}).forEach((key) => {
-                    signupController.set(key, createAccountProps[key]);
-                  });
+                  Object.assign(signupController, createAccountProps);
                   signupController.handleSkipConfirmation();
                 });
               } else {

@@ -128,7 +128,6 @@
             <div class="input-group create-account__password">
               {{#if this.passwordRequired}}
                 <PasswordField
-                  {{on "focusout" this.togglePasswordValidation}}
                   {{on "focusin" this.scrollInputIntoView}}
                   @value={{this.accountPassword}}
                   @capsLockOn={{this.capsLockOn}}
@@ -160,7 +159,7 @@
                         class="more-info"
                         id="password-validation-more-info"
                       >
-                        {{this.passwordInstructions}}
+                        {{this.passwordValidationHelper.passwordInstructions}}
                       </span>
                     {{/if}}
                     <div
