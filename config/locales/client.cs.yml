@@ -709,7 +709,7 @@ cs:
         other: "Toto téma čeká na schválení <b>%{count}</b> příspěvků"
       title: "Revize"
       topic: "Téma:"
-      filtered_topic: "V jednom tématu jste filtrovali revidovatelný obsah."
+      filtered_topic: "Vyfiltrovali jste obsah k revizi v jednom tématu."
       filtered_user: "Uživatel"
       filtered_reviewed_by: "Zkontroloval"
       show_all_topics: "zobrazit všechna témata"
@@ -1933,7 +1933,7 @@ cs:
         browser_active: '%{browser} | <span class="active">nyní aktivní</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "Poslední příspěvek"
-      last_seen: "Naposledy viděn"
+      last_seen: "Naposledy viděn/a"
       created: "Účet vytvořen"
       log_out: "Odhlásit se"
       location: "Poloha"
@@ -2461,7 +2461,7 @@ cs:
       remove_user: "Odebrat uživatele"
     email: "Email"
     username: "Uživatelské jméno"
-    last_seen: "Naposledy viděn"
+    last_seen: "Naposledy viděn/a"
     created: "Vytvořeno"
     created_lowercase: "vytvořeno"
     trust_level: "Úroveň důvěry"
@@ -2940,7 +2940,7 @@ cs:
       post_approved: "Váš příspěvek byl schválen"
       reviewable_items: "položky vyžadující revizi"
       watching_first_post_label: "Nové téma"
-      user_moved_post: "%{username} přesunut"
+      user_moved_post: "%{username} přesunul/a"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -4384,6 +4384,7 @@ cs:
       description: "Chcete-li nahlásit protizákonný obsah, kontaktujte prosím <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=Tento příspěvek %{url} obsahuje protizákonný obsah.'>%{email}</a>"
     flagging:
       title: "Děkujeme, že udržujete naši komunitu civilní!"
+      review_process_description: "Všechna nahlášení obdrží moderátoř. Zkontrolovány budou co nejdříve."
       action: "Nahlásit příspěvek"
       take_action: "Podniknout kroky..."
       take_action_options:
@@ -5429,6 +5430,7 @@ cs:
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
           experimental: "Experimentální"
+          only_experiments: "Zobrazit pouze experimentální funkce"
           experiment_enabled: "Povolili jste experimentální funkci."
           experiment_disabled: "Vypnuli jste experimentální funkci."
           experiment_toggled_too_fast: "Přepnuli jste experimentální funkci příliš rychle. Před dalším pokusem prosím počkejte několik vteřin."
@@ -5673,6 +5675,7 @@ cs:
             Použitím oborů (scopes) můžete klíč API omezit na konkrétní sadu koncových bodů (endpoints).
             Můžete také definovat, které parametry budou povoleny. K oddělení více hodnot použijte čárky.
           title: Rozsah
+          one_or_more: Musí být vybrán alespoň jeden rozsah.
           granular: Podrobný
           read_only: Pouze pro čtení
           global: Globální
@@ -5973,6 +5976,8 @@ cs:
           community_title: "Titulek komunity"
           community_title_help: "Krátký popis, zobrazený na kartě prohlížeče, použitý pro klíčové stránky, jako jsou kategorie a seznamy témat."
           banner_image: "Obrázek (banner)"
+          banner_image_help: |
+            Doporučeno: 1100x300px. Formáty: JPG, PNG, SVG (max 10 MB).
           contact_information: "Kontaktní informace"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Jan Novák"
