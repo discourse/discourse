@@ -65,13 +65,17 @@ class DiscourseJsProcessor
     end
 
     def self.build_theme_transpiler
-      FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
-      Discourse::Utils.execute_command(
-        "pnpm",
-        "-C=app/assets/javascripts/theme-transpiler",
-        "node",
-        "build.js",
-      )
+      # FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
+      result =
+        Discourse::Utils.execute_command(
+          "pnpm",
+          "-C=app/assets/javascripts/theme-transpiler",
+          "node",
+          "build.js",
+        )
+      File.write(TRANSPILER_PATH, result)
+      File.read(TRANSPILER_PATH)
+      # result
     end
 
     def self.build_production_theme_transpiler
@@ -84,9 +88,9 @@ class DiscourseJsProcessor
       ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
 
       # General shims
-      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
-      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(p err.to_s) })
+      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(p err.to_s) })
+      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(p err.to_s) })
 
       source =
         if Rails.env.production?
@@ -184,6 +188,16 @@ class DiscourseJsProcessor
 
     def terser(tree, opts)
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    end
+
+    def post_css(css:, map:, source_map_file:)
+      self.class.v8_call(
+        "postCss",
+        css,
+        map,
+        source_map_file,
+        fetch_result_call: "getPostCssResult",
+      )
     end
   end
 end

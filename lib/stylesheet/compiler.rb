@@ -60,13 +60,21 @@ module Stylesheet
 
       result = engine.render
 
+      source_map = engine.source_map
+      source_map.force_encoding("UTF-8")
+
+      puts "Start map is #{source_map}"
+      result, source_map =
+        p DiscourseJsProcessor::Transpiler.new.post_css(
+            css: result,
+            map: source_map,
+            source_map_file: source_map_file,
+          )
+
       if options[:rtl]
         require "rtlcss"
         [Rtlcss.flip_css(result), nil]
       else
-        source_map = engine.source_map
-        source_map.force_encoding("UTF-8")
-
         [result, source_map]
       end
     end
