@@ -71,8 +71,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       chrome-remote-interface:
-        specifier: ^0.33.2
-        version: 0.33.2
+        specifier: ^0.33.3
+        version: 0.33.3
       concurrently:
         specifier: ^9.1.2
         version: 9.1.2
@@ -3578,8 +3578,8 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
 
-  chrome-remote-interface@0.33.2:
-    resolution: {integrity: sha512-wvm9cOeBTrb218EC+6DteGt92iXr2iY0+XJP30f15JVDhqvWvJEVACh9GvUm8b9Yd8bxQivaLSb8k7mgrbyomQ==}
+  chrome-remote-interface@0.33.3:
+    resolution: {integrity: sha512-zNnn0prUL86Teru6UCAZ1yU1XeXljHl3gj7OrfPcarEfU62OUU4IujDPdTDW3dAWwRqN3ZMG/Chhkh2gPL/wiw==}
     hasBin: true
 
   chrome-trace-event@1.0.4:
@@ -12069,7 +12069,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  chrome-remote-interface@0.33.2:
+  chrome-remote-interface@0.33.3:
     dependencies:
       commander: 2.11.0
       ws: 7.5.10
