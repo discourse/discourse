@@ -31,6 +31,7 @@ import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 globalThis.crypto = { getRandomValues };
+import "./postcss";
 import { browsers } from "../discourse/config/targets";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
@@ -185,50 +186,6 @@ globalThis.getMinifyResult = function () {
   const result = lastMinifyResult;
 
   lastMinifyError = lastMinifyResult = null;
-
-  if (error) {
-    throw error;
-  }
-  return result;
-};
-
-import postcssLightDark from "@csstools/postcss-light-dark-function";
-import autoprefixer from "autoprefixer";
-import postcss from "postcss";
-import postcssVariablePrefixer from "./postcss-variable-prefixer";
-
-const postCssProcessor = postcss([
-  autoprefixer({
-    overrideBrowserslist: browsers,
-  }),
-  postcssLightDark,
-  postcssVariablePrefixer(),
-]);
-let lastPostcssError, lastPostcssResult;
-
-globalThis.postCss = async function (css, map, sourcemapFile) {
-  try {
-    const rawResult = await postCssProcessor.process(css, {
-      from: "input.css",
-      to: "output.css",
-      map: {
-        prev: map,
-        inline: false,
-        absolute: false,
-        annotation: sourcemapFile,
-      },
-    });
-    lastPostcssResult = [rawResult.css, rawResult.map?.toString()];
-  } catch (e) {
-    lastPostcssError = e;
-  }
-};
-
-globalThis.getPostCssResult = function () {
-  const error = lastPostcssError;
-  const result = lastPostcssResult;
-
-  lastPostcssError = lastPostcssResult = null;
 
   if (error) {
     throw error;
