@@ -92,6 +92,26 @@ module PageObjects
         page.has_no_css?(".unknown-reviewables")
       end
 
+      def has_listing_for_unknown_reviewables_plugin?(reviewable_type, plugin_name)
+        page.has_css?(
+          ".unknown-reviewables ul li",
+          text:
+            I18n.t(
+              "js.review.unknown.reviewable_known_source",
+              reviewableType: reviewable_type,
+              pluginName: plugin_name,
+            ),
+        )
+      end
+
+      def has_listing_for_unknown_reviewables_unknown_source?(reviewable_type)
+        page.has_css?(
+          ".unknown-reviewables ul li",
+          text:
+            I18n.t("js.review.unknown.reviewable_unknown_source", reviewableType: reviewable_type),
+        )
+      end
+
       private
 
       def reviewable_action_dropdown

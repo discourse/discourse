@@ -10,6 +10,7 @@ RSpec.describe ReviewableSerializer do
     expect(json[:id]).to eq(reviewable.id)
     expect(json[:status]).to eq(reviewable.status_for_database)
     expect(json[:type]).to eq(reviewable.type)
+    expect(json[:type_source]).to eq(reviewable.type_source)
     expect(json[:created_at]).to eq(reviewable.created_at)
     expect(json[:category_id]).to eq(reviewable.category_id)
     expect(json[:can_edit]).to eq(true)

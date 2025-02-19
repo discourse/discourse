@@ -42,6 +42,7 @@ export const NOTIFICATION_TYPES = {
   new_features: 37,
   admin_problems: 38,
   linked_consolidated: 39,
+  chat_watched_thread: 40,
   following: 800,
   following_created_topic: 801,
   following_replied: 802,
