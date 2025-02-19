@@ -90,7 +90,7 @@ module TopicGuardian
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
-    return false unless can_see?(topic)
+    return false if cannot_see?(topic)
 
     first_post = topic.first_post
 
@@ -107,7 +107,7 @@ module TopicGuardian
          SiteSetting.allow_uncategorized_topics ||
            topic.category_id != SiteSetting.uncategorized_category_id
        )
-      return false if !can_create_topic_on_category?(topic.category)
+      return false if cannot_create_topic_on_category?(topic.category)
     end
 
     # Editing a shared draft.
@@ -186,7 +186,7 @@ module TopicGuardian
         .count
     return false if all_posts_count > 1
 
-    return false if !is_admin? || !can_see_topic?(topic)
+    return false if !is_admin? || cannot_see_topic?(topic)
     return false if !topic.deleted_at
     if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       return false
@@ -247,7 +247,7 @@ module TopicGuardian
     end
 
     # Filter out topics with shared drafts if user cannot see shared drafts
-    if !can_see_shared_draft?
+    if cannot_see_shared_draft?
       default_scope =
         default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
     end
@@ -269,13 +269,13 @@ module TopicGuardian
   def can_see_topic?(topic, hide_deleted = true)
     return false unless topic
     return true if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
-    return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?(topic.category)
+    return false if hide_deleted && topic.deleted_at && cannot_see_deleted_topics?(topic.category)
 
     if topic.private_message?
       return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?
     end
 
-    return false if topic.shared_draft && !can_see_shared_draft?
+    return false if topic.shared_draft && cannot_see_shared_draft?
 
     category = topic.category
     can_see_category?(category) &&
@@ -327,8 +327,8 @@ module TopicGuardian
   end
 
   def can_edit_tags?(topic)
-    return false unless can_tag_topics?
-    return false if topic.private_message? && !can_tag_pms?
+    return false if cannot_tag_topics?
+    return false if topic.private_message? && cannot_tag_pms?
     return true if can_edit_topic?(topic)
 
     if topic&.first_post&.wiki &&
@@ -355,7 +355,7 @@ module TopicGuardian
 
   def can_move_posts?(topic)
     return false if is_silenced?
-    return false unless can_perform_action_available_to_group_moderators?(topic)
+    return false if cannot_perform_action_available_to_group_moderators?(topic)
     return false if topic.archetype == "private_message" && !is_staff?
     true
   end
