@@ -5365,6 +5365,22 @@ en:
 
       search:
         modal_title: "Search anything in admin"
+        result_types:
+          page:
+            one: "Page"
+            other: "Pages"
+          report:
+            one: "Report"
+            other: "Reports"
+          setting:
+            one: "Setting"
+            other: "Settings"
+          theme:
+            one: "Theme"
+            other: "Themes"
+          component:
+            one: "Component"
+            other: "Components"
 
       new_features:
         title: "What's new?"

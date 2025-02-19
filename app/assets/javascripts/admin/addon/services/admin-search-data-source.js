@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { ajax } from "discourse/lib/ajax";
@@ -8,7 +9,11 @@ import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import I18n, { i18n } from "discourse-i18n";
 
 // TODO (martin) Move this to javascript.rake constants, use on server too
-const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
+export const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
+const SEPARATOR = ">";
+const MIN_FILTER_LENGTH = 2;
+const MAX_TYPE_RESULT_COUNT_LOW = 15;
+const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
 export default class AminSearchDataSource extends Service {
   @service router;
@@ -24,19 +29,23 @@ export default class AminSearchDataSource extends Service {
     categories: {},
     areas: {},
   };
-  _mapCached = false;
+  @tracked _mapCached = false;
 
-  buildMap() {
+  get isLoaded() {
+    return this._mapCached;
+  }
+
+  async buildMap() {
     if (this._mapCached) {
       return;
     }
 
     ADMIN_NAV_MAP.forEach((mapItem) => {
       mapItem.links.forEach((link) => {
-        let parentLabel = this.addPageLink(mapItem, link);
+        let parentLabel = this.#addPageLink(mapItem, link);
 
         link.links?.forEach((subLink) => {
-          this.addPageLink(mapItem, subLink, parentLabel);
+          this.#addPageLink(mapItem, subLink, parentLabel);
         });
       });
     });
@@ -53,47 +62,45 @@ export default class AminSearchDataSource extends Service {
       }
     });
 
-    ajax("/admin/search/all.json").then((result) => {
-      this.processSettings(result.settings);
-      this.processThemesAndComponents(result.themes_and_components);
-    });
+    const allItems = await ajax("/admin/search/all.json");
+    this.#processSettings(allItems.settings);
+    this.#processThemesAndComponents(allItems.themes_and_components);
 
     // TODO (martin) Move this to all.json after refactoring reports controller
     // into a service.
-    ajax("/admin/reports.json").then((result) => {
-      result.reports.forEach((report) => {
-        this.reportMapItems.push({
-          label: report.title,
-          description: report.description,
-          url: getURL(`/admin/reports/${report.type}`),
-          icon: "chart-bar",
-          keywords: (
-            report.title +
-            " " +
-            report.description +
-            " " +
-            report.type
-          ).toLowerCase(),
-          type: "report",
-        });
-      });
-    });
+    const reportItems = await ajax("/admin/reports.json");
+    this.#processReports(reportItems.reports);
 
     this._mapCached = true;
   }
 
   search(filter, opts = {}) {
-    if (filter.length < 2) {
+    if (filter.length < MIN_FILTER_LENGTH) {
       return [];
     }
+
     opts.types = opts.types || RESULT_TYPES;
+
     const filteredResults = [];
     const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
 
+    // Pointless to render heaps of settings if the filter is quite low.
+    const perTypeLimit =
+      filter.length < MIN_FILTER_LENGTH + 1
+        ? MAX_TYPE_RESULT_COUNT_LOW
+        : MAX_TYPE_RESULT_COUNT_HIGH;
+
     opts.types.forEach((type) => {
+      let typeItemCount = 0;
       this[`${type}MapItems`].forEach((mapItem) => {
-        if (mapItem.keywords.match(escapedFilterRegExp)) {
+        // TODO (martin) There is likely a much better way of doing this matching
+        // that will support fuzzy searches, for now let's go with the most basic thing.
+        if (
+          mapItem.keywords.match(escapedFilterRegExp) &&
+          typeItemCount <= perTypeLimit
+        ) {
           filteredResults.push(mapItem);
+          typeItemCount++;
         }
       });
     });
@@ -101,7 +108,7 @@ export default class AminSearchDataSource extends Service {
     return filteredResults;
   }
 
-  addPageLink(mapItem, link, parentLabel = "") {
+  #addPageLink(mapItem, link, parentLabel = "") {
     let url;
     if (link.routeModels) {
       url = this.router.urlFor(link.route, ...link.routeModels);
@@ -109,20 +116,18 @@ export default class AminSearchDataSource extends Service {
       url = this.router.urlFor(link.route);
     }
 
-    const mapItemLabel =
-      mapItem.text || (mapItem.label ? i18n(mapItem.label) : "");
-    const linkLabel = link.text || (link.label ? i18n(link.label) : "");
+    const mapItemLabel = this.#labelOrText(mapItem);
+    const linkLabel = this.#labelOrText(link);
 
     let label;
     if (parentLabel) {
-      label =
-        mapItemLabel +
-        (mapItemLabel ? " > " : "") +
-        parentLabel +
-        " > " +
-        linkLabel;
+      label = mapItemLabel;
+      if (mapItemLabel) {
+        label += ` ${SEPARATOR} `;
+      }
+      label += `${parentLabel} ${SEPARATOR} ${linkLabel}`;
     } else {
-      label = mapItemLabel + (mapItemLabel ? " > " : "") + linkLabel;
+      label = mapItemLabel + (mapItemLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
     }
 
     if (link.settings_area) {
@@ -137,17 +142,17 @@ export default class AminSearchDataSource extends Service {
         : url;
     }
 
+    const linkKeywords = link.keywords
+      ? i18n(link.keywords).toLowerCase().replaceAll("|", " ")
+      : "";
     this.pageMapItems.push({
       label,
       url,
-      keywords:
-        (link.keywords
-          ? i18n(link.keywords).toLowerCase().replaceAll("|", " ")
-          : "") +
-        " " +
-        url +
-        " " +
-        label.replace(">", "").toLowerCase().replace(/  +/g, " "),
+      keywords: this.#buildKeywords(
+        linkKeywords,
+        url,
+        label.replace(SEPARATOR, "").toLowerCase().replace(/  +/g, " ")
+      ),
       type: "page",
       icon: link.icon,
       description: link.description
@@ -160,20 +165,30 @@ export default class AminSearchDataSource extends Service {
     return linkLabel;
   }
 
-  processSettings(settings) {
+  #processSettings(settings) {
+    const settingPluginNames = {};
+
     settings.forEach((setting) => {
-      // TODO: (martin) Might want to use the sidebar link name for this instead of the
-      // plugin category?
+      let plugin;
 
       let rootLabel;
       if (setting.plugin) {
-        rootLabel =
-          I18n.lookup(
-            `admin.site_settings.categories.${setting.plugin.replaceAll(
-              "-",
-              "_"
-            )}`
-          ) || i18n("admin.plugins.title");
+        if (!settingPluginNames[setting.plugin]) {
+          settingPluginNames[setting.plugin] = setting.plugin.replaceAll(
+            "_",
+            "-"
+          );
+        }
+
+        plugin = this.plugins[settingPluginNames[setting.plugin]];
+
+        if (plugin) {
+          rootLabel = plugin.admin_route?.label
+            ? i18n(plugin.admin_route?.label)
+            : i18n("admin.plugins.title");
+        } else {
+          rootLabel = i18n("admin.plugins.title");
+        }
       } else if (setting.primary_area) {
         rootLabel =
           I18n.lookup(`admin.config.${setting.primary_area}.title`) ||
@@ -181,11 +196,13 @@ export default class AminSearchDataSource extends Service {
       } else {
         rootLabel = i18n(`admin.site_settings.categories.${setting.category}`);
       }
-      const label = rootLabel + " > " + setting.setting;
 
+      const label = `${rootLabel} ${SEPARATOR} ${setting.setting}`;
+
+      // TODO (martin) These URLs will need to change eventually to anchors
+      // to focus on a specific element on the page, for now though the filter is fine.
       let url;
       if (setting.plugin) {
-        const plugin = this.plugins[setting.plugin];
         if (plugin) {
           url = plugin.admin_route.use_new_show_route
             ? this.router.urlFor(
@@ -217,37 +234,31 @@ export default class AminSearchDataSource extends Service {
         label,
         description: setting.description,
         url,
-        keywords: (
-          setting.setting +
-          " " +
-          setting.setting.split("_").join(" ") +
-          " " +
-          setting.description +
-          " " +
-          setting.keywords.join(" ") +
-          " " +
+        keywords: this.#buildKeywords(
+          setting.setting,
+          setting.setting.split("_").join(" "),
+          setting.description,
+          setting.keywords,
           rootLabel
-        ).toLowerCase(),
+        ),
         type: "setting",
         icon: "gear",
       });
     });
   }
 
-  processThemesAndComponents(themesAndComponents) {
+  #processThemesAndComponents(themesAndComponents) {
     themesAndComponents.forEach((themeOrComponent) => {
       if (themeOrComponent.component) {
         this.componentMapItems.push({
           label: themeOrComponent.name,
           description: themeOrComponent.description,
           url: getURL(`/admin/customize/components/${themeOrComponent.id}`),
-          keywords: (
-            "component" +
-            " " +
-            themeOrComponent.description +
-            " " +
+          keywords: this.#buildKeywords(
+            "component",
+            themeOrComponent.description,
             themeOrComponent.name
-          ).toLowerCase(),
+          ),
           type: "component",
           icon: "puzzle-piece",
         });
@@ -256,17 +267,48 @@ export default class AminSearchDataSource extends Service {
           label: themeOrComponent.name,
           description: themeOrComponent.description,
           url: getURL(`/admin/customize/themes/${themeOrComponent.id}`),
-          keywords: (
-            "theme" +
-            " " +
-            themeOrComponent.description +
-            " " +
+          keywords: this.#buildKeywords(
+            "theme",
+            themeOrComponent.description,
             themeOrComponent.name
-          ).toLowerCase(),
+          ),
           type: "theme",
           icon: "paintbrush",
         });
       }
     });
+  }
+
+  #processReports(reports) {
+    reports.forEach((report) => {
+      this.reportMapItems.push({
+        label: report.title,
+        description: report.description,
+        url: getURL(`/admin/reports/${report.type}`),
+        icon: "chart-bar",
+        keywords: this.#buildKeywords(
+          report.title,
+          report.description,
+          report.type
+        ),
+        type: "report",
+      });
+    });
+  }
+
+  #labelOrText(obj, fallback = "") {
+    return obj.text || (obj.label ? i18n(obj.label) : fallback);
+  }
+
+  #buildKeywords(...keywords) {
+    return keywords
+      .map((kw) => {
+        if (Array.isArray(kw)) {
+          return kw.join(" ");
+        }
+        return kw;
+      })
+      .join(" ")
+      .toLowerCase();
   }
 }
