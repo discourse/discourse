@@ -145,21 +145,24 @@ export default class AminSearchDataSource extends Service {
     const linkKeywords = link.keywords
       ? i18n(link.keywords).toLowerCase().replaceAll("|", " ")
       : "";
+    const linkDescription = link.description
+      ? link.description.includes(" ")
+        ? link.description
+        : i18n(link.description)
+      : "";
+
     this.pageMapItems.push({
       label,
       url,
       keywords: this.#buildKeywords(
         linkKeywords,
         url,
-        label.replace(SEPARATOR, "").toLowerCase().replace(/  +/g, " ")
+        label.replace(SEPARATOR, "").toLowerCase().replace(/  +/g, " "),
+        linkDescription
       ),
       type: "page",
       icon: link.icon,
-      description: link.description
-        ? link.description.includes(" ")
-          ? link.description
-          : i18n(link.description)
-        : "",
+      description: linkDescription,
     });
 
     return linkLabel;
