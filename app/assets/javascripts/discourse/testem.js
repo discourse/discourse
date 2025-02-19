@@ -1,5 +1,4 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
@@ -204,7 +203,7 @@ if (themeTestPages) {
       });
     },
   ];
-} else if (shouldLoadPlugins()) {
+} else {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
     "/assets/plugins/*_extra.js": {
