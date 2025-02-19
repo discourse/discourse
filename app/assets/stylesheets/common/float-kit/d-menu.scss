@@ -17,6 +17,14 @@
   padding: 0;
   z-index: z("dropdown");
 
+  &.-inside-composer {
+    z-index: z("modal", "dialog");
+
+    .mobile-view & {
+      z-index: z("mobile-composer");
+    }
+  }
+
   &__trigger {
     .touch & {
       @include unselectable;
