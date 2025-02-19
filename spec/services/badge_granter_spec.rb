@@ -11,9 +11,23 @@ RSpec.describe BadgeGranter do
     BadgeGranter.clear_queue!
   end
 
-  describe "revoke_titles" do
+  describe ".revoke_ungranted_titles!" do
     let(:user) { Fabricate(:user) }
+    let(:other_user) { Fabricate(:user) }
     let(:badge) { Fabricate(:badge, allow_title: true) }
+
+    it "can revoke title of a single user" do
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.name)
+      BadgeGranter.grant(badge, other_user)
+      other_user.update!(title: badge.name)
+
+      badge.update_column(:enabled, false)
+      BadgeGranter.revoke_ungranted_titles!([user.id])
+
+      expect(user.reload.title).to be_blank
+      expect(other_user.reload.title).to eq(badge.name)
+    end
 
     it "revokes title when badge is not allowed as title" do
       BadgeGranter.grant(badge, user)

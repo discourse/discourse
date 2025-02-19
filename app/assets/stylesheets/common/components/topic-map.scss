@@ -24,10 +24,7 @@ body:not(.archetype-private_message) {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-
-    &:has(.topic-map__additional-contents *) {
-      column-gap: 0.75em;
-    }
+    column-gap: 0.75em;
   }
 }
 

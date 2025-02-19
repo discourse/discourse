@@ -158,7 +158,7 @@ nav.post-controls button.reply .d-icon {
     }
 
     .topic-avatar {
-      @include sticky;
+      position: sticky;
       top: calc(var(--header-offset) + 0.5em);
       margin-right: 15px;
     }

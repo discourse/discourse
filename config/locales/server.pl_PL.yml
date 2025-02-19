@@ -2361,7 +2361,6 @@ pl_PL:
     max_allowed_message_recipients: "Maksymalna dozwolona liczba odbiorców dla wiadomości."
     disable_watched_word_checking_in_user_fields: "wyłącz sprawdzanie obserwowanych słów w polach użytkownika"
     watched_words_regular_expressions: "Włącza możliwość filtrowania słów za pomocą wyrażeń regularnych. Po włączeniu ta funkcja grupuje wrażliwe słowa według ich wielkości liter. Następnie kompiluje wszystkie wybrane słowa w jedno wyrażenie regularne, dodając granice słów dla regularnie obserwowanych słów. W rezultacie, ta metoda filtrowania oparta na wyrażeniach regularnych dodaje dodatkową warstwę kontroli nad moderowaniem treści, umożliwiając obsługę bardziej złożonych wzorców słów. Ustawienie pozwala również na łatwą zamianę oryginalnego tekstu na wybrany zamiennik."
-    enable_diffhtml_preview: "Funkcja eksperymentalna, która używa dyfHTML do synchronizacji podglądu zamiast pełnego renderowania"
     enable_fast_edit: "Dodaje przycisk do menu wyboru wpisu, umożliwiający bezpośrednią edycję zaznaczonego tekstu."
     old_post_notice_days: "Liczba dni, po której ogłoszenie jest uważane za stare. Pozwala to na wizualne odróżnienie go od nowszych ogłoszeń na stronie."
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."

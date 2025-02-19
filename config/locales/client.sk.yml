@@ -4378,6 +4378,7 @@ sk:
       description: "Ak chcete nahlásiť nezákonný obsah, kontaktujte <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
+      review_process_description: "Moderátori dostanú všetky príznaky a čo najskôr ich preskúmajú."
       action: "Označ príspevok"
       take_action: "Akcia…"
       take_action_options:
@@ -5419,6 +5420,7 @@ sk:
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
           experimental: "Experimentálne"
+          only_experiments: "Zobraziť len experimentálne funkcie"
           experiment_enabled: "Povolili ste experimentálnu funkciu."
           experiment_disabled: "Experimentálnu funkciu ste zakázali."
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
@@ -5663,6 +5665,7 @@ sk:
             Pri používaní rozsahov môžete obmedziť kľúč API na konkrétnu sadu koncových bodov.
             Môžete tiež definovať, ktoré parametre budú povolené. Na oddelenie viacerých hodnôt použite čiarky.
           title: Rozsahy
+          one_or_more: Musí byť vybraný aspoň jeden rozsah.
           granular: Granulovaný
           read_only: Len na čítanie
           global: Globálne
@@ -5963,6 +5966,8 @@ sk:
           community_title: "Názov spoločenstva"
           community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
+          banner_image_help: |
+            Odporúčame: 1100x300px. Formáty: JPG, PNG, SVG (max. 10MB).
           contact_information: "Kontaktné informácie"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Johnny Smith"

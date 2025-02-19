@@ -28,6 +28,7 @@ class DiscourseScss extends Plugin {
     let result = sass.renderSync({
       file,
       includePaths: this.inputPaths,
+      silenceDeprecations: ["color-functions", "import", "global-builtin"],
       verbose: true, // call warn() for all deprecations
       logger: {
         warn(message, options) {

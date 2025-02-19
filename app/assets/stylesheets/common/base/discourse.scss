@@ -208,8 +208,8 @@ input {
   &[type="search"],
   &[type="tel"],
   &[type="color"] {
-    @include appearance-none;
     @include form-item-sizing;
+    appearance: none;
     display: inline-block;
     margin-bottom: 9px;
     color: var(--d-input-text-color);

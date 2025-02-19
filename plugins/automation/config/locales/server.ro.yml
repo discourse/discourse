@@ -20,7 +20,7 @@ ro:
       close_topic:
         title: Închide subiect
       append_last_checked_by:
-        button_text: Terminat
+        button_text: Gata
       add_user_to_group_through_custom_field:
         description: "Adaugă automat utilizatori la grupuri atunci când se autentifică sau cu o verificare recurentă"
       random_assign:

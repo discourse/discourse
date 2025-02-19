@@ -19,7 +19,7 @@ ko:
           insert: 삽입
           advanced_mode: 고급 모드
           simple_mode: 단순 모드
-          format_description: "사용자에게 날짜를 표시하는 데 사용되는 형식. \"\\T\\Z\"를 사용하여 사용자 시간대를 단어 (유럽/파리)로 표시하십시오"
+          format_description: "사용자에게 날짜를 표시할 때 사용하는 형식입니다. 오프셋을 표시하려면 Z를, 표준 시간대 이름을 표시하려면 zz를 사용합니다."
           timezones_title: 표시 할 시간대
           timezones_description: 시간대는 미리보기 및 폴백으로 날짜를 표시하는 데 사용됩니다.
           recurring_title: 반복

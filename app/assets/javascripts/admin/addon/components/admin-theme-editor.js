@@ -11,12 +11,9 @@ export default class AdminThemeEditor extends Component {
 
   @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
 
-  @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
-  visibleTargets(targets, onlyOverridden, showAdvanced) {
+  @discourseComputed("theme.targets", "onlyOverridden")
+  visibleTargets(targets, onlyOverridden) {
     return targets.filter((target) => {
-      if (target.advanced && !showAdvanced) {
-        return false;
-      }
       if (!onlyOverridden) {
         return true;
       }
@@ -35,12 +32,6 @@ export default class AdminThemeEditor extends Component {
 
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
-    if (["settings", "translations"].includes(targetName)) {
-      return "yaml";
-    }
-    if (["extra_scss"].includes(targetName)) {
-      return "scss";
-    }
     if (["color_definitions"].includes(fieldName)) {
       return "scss";
     }
@@ -76,11 +67,6 @@ export default class AdminThemeEditor extends Component {
     return maximized ? "discourse-compress" : "discourse-expand";
   }
 
-  @discourseComputed("currentTargetName", "theme.targets")
-  showAddField(currentTargetName, targets) {
-    return targets.find((t) => t.name === currentTargetName).customNames;
-  }
-
   @discourseComputed(
     "currentTargetName",
     "fieldName",
@@ -91,38 +77,10 @@ export default class AdminThemeEditor extends Component {
   }
 
   @action
-  toggleShowAdvanced(event) {
-    event?.preventDefault();
-    this.toggleProperty("showAdvanced");
-  }
-
-  @action
-  toggleAddField(event) {
-    event?.preventDefault();
-    this.toggleProperty("addingField");
-  }
-
-  @action
   toggleMaximize(event) {
     event?.preventDefault();
     this.toggleProperty("maximized");
     next(() => this.appEvents.trigger("ace:resize"));
-  }
-
-  @action
-  cancelAddField() {
-    this.set("addingField", false);
-  }
-
-  @action
-  addField(name) {
-    if (!name) {
-      return;
-    }
-    name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
-    this.theme.setField(this.currentTargetName, name, "");
-    this.setProperties({ newFieldName: "", addingField: false });
-    this.fieldAdded(this.currentTargetName, name);
   }
 
   @action

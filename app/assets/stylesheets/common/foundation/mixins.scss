@@ -120,17 +120,12 @@ $hpad: 0.65em;
   padding: $vpad $hpad;
 }
 
-@mixin sticky {
-  position: sticky;
-}
-
-// Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
-
 @mixin user-select($mode) {
   -webkit-user-select: $mode;
   user-select: $mode;
 }
 
+// Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 @mixin unselectable {
   cursor: default;
   @include user-select(none);
@@ -142,24 +137,10 @@ $hpad: 0.65em;
   background-color: var(--blend-primary-secondary-5);
 }
 
-// We still need -webkit for latest iPhone and Safari
-@mixin transform($transforms) {
-  transform: $transforms;
-}
-
-@mixin appearance-none() {
-  // resets default browser styles
-  appearance: none;
-}
-
 @mixin default-focus() {
   border-color: var(--tertiary);
   outline: 2px solid var(--tertiary);
   outline-offset: -2px;
-}
-
-@mixin fa-rotate($degrees, $rotation) {
-  transform: rotate($degrees);
 }
 
 /// Helper function to easily use an SVG inline in CSS

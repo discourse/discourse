@@ -1,5 +1,5 @@
 .d-header-wrap {
-  @include sticky;
+  position: sticky;
   top: 0;
   z-index: z("header");
 }

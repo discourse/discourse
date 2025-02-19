@@ -5,6 +5,8 @@
   scrollbar-color: transparent var(--scrollbarBg);
   transition: scrollbar-color 0.25s ease-in-out;
 
+  @content;
+
   // chrome, safari
   &::-webkit-scrollbar-thumb {
     background-color: var(--scrollbarThumbBg);

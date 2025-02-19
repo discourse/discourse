@@ -5432,6 +5432,8 @@ ug:
           community_title: "جامائەت ئىسمى"
           community_title_help: "توركۆرگۈ بەتكۈچىدە كۆرسىتىدىغان سەھىپە ۋە تېما تىزىمىغا ئوخشاش ئاچقۇچلۇق بەتنىڭ قىسقىچە چۈشەندۈرۈشى."
           banner_image: "لوزۇنكا سۈرەت"
+          banner_image_help: |
+            تەۋسىيە: 1100x300px. پىچىمى: JPG، PNG، SVG (ئەڭ چوڭ سىغىمى 10MB).
           contact_information: "ئالاقە ئۇچۇرى"
           community_owner: "جامائەت ئىگىدارلىقى"
           community_owner_placeholder: "جوننى سىمىت"
