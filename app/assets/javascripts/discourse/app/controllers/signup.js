@@ -37,6 +37,7 @@ export default class SignupPageController extends Controller.extend(
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+  @tracked passwordValidationVisible = false;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -44,7 +45,6 @@ export default class SignupPageController extends Controller.extend(
   prefilledUsername = null;
   userFields = null;
   maskPassword = true;
-  passwordValidationVisible = false;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
@@ -171,19 +171,10 @@ export default class SignupPageController extends Controller.extend(
     );
   }
 
-  @discourseComputed(
-    "passwordValidation.ok",
-    "passwordValidation.reason",
-    "passwordValidationVisible"
-  )
-  showPasswordValidation(
-    passwordValidationOk,
-    passwordValidationReason,
-    passwordValidationVisible
-  ) {
+  get showPasswordValidation() {
     return (
-      passwordValidationOk ||
-      (passwordValidationReason && passwordValidationVisible)
+      this.passwordValidation.ok ||
+      (this.passwordValidation.reason && this.passwordValidationVisible)
     );
   }
 
@@ -277,9 +268,9 @@ export default class SignupPageController extends Controller.extend(
   @action
   togglePasswordValidation() {
     if (this.passwordValidation.reason) {
-      this.set("passwordValidationVisible", true);
+      this.passwordValidationVisible = true;
     } else {
-      this.set("passwordValidationVisible", false);
+      this.passwordValidationVisible = false;
     }
   }
 
@@ -537,7 +528,7 @@ export default class SignupPageController extends Controller.extend(
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
     this.set("emailValidationVisible", true);
-    this.set("passwordValidationVisible", true);
+    this.passwordValidationVisible = true;
 
     const validation = [
       this.emailValidation,
