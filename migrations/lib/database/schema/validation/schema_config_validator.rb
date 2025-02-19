@@ -12,7 +12,6 @@ module Migrations::Database::Schema::Validation
         GloballyExcludedTablesValidator.new(@config, @errors, db).validate
         GloballyConfiguredColumnsValidator.new(@config, @errors, db).validate
         TablesValidator.new(@config, @errors, db).validate
-        ColumnsValidator.new(@config, @errors, db).validate
       end
     end
   end

@@ -21,11 +21,21 @@ RSpec.describe ::Migrations::Database::Schema::Validation::TablesValidator do
     }
   end
   let(:db) { instance_double(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter) }
+  let(:columns_validator) do
+    instance_double(::Migrations::Database::Schema::Validation::ColumnsValidator)
+  end
 
   before do
     allow(db).to receive(:tables).and_return(
       %w[users topics posts schema_migrations user_auth_tokens],
     )
+
+    allow(::Migrations::Database::Schema::Validation::ColumnsValidator).to receive(:new).with(
+      config,
+      errors,
+      db,
+    ).and_return(columns_validator)
+    allow(columns_validator).to receive(:validate)
   end
 
   describe "#validate" do
@@ -46,6 +56,14 @@ RSpec.describe ::Migrations::Database::Schema::Validation::TablesValidator do
       expect(errors).to contain_exactly(
         I18n.t("schema.validator.tables.not_configured", table_names: "topics"),
       )
+    end
+
+    it "validates the columns of all configured tables" do
+      validator.validate
+
+      expect(columns_validator).to have_received(:validate).exactly(2).times
+      expect(columns_validator).to have_received(:validate).with("users")
+      expect(columns_validator).to have_received(:validate).with("posts")
     end
 
     it "does not add errors if all existing tables are configured or excluded" do
