@@ -45,10 +45,18 @@ function handleRedirect(xhr) {
   }
 }
 
+let csrfPromise;
+
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then((result) => {
-    Session.currentProp("csrfToken", result.csrf);
-  });
+  if (csrfPromise) {
+    return csrfPromise;
+  }
+
+  csrfPromise = ajax("/session/csrf")
+    .then((result) => Session.currentProp("csrfToken", result.csrf))
+    .finally(() => (csrfPromise = null));
+
+  return csrfPromise;
 }
 
 /**
