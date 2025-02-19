@@ -2624,6 +2624,8 @@ en:
     default_hide_profile: "Hide user public profile by default."
     default_hide_presence: "Disable presence features by default."
 
+    default_password_disabled: "Disable user password requirement by default."
+
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
