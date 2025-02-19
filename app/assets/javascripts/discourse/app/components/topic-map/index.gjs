@@ -17,13 +17,11 @@ const TopicMap = <template>
         />
       </section>
 
-      <section class="topic-map__additional-contents toggle-summary">
-        <PluginOutlet
-          @name="topic-map-expanded-after"
-          @defaultGlimmer={{true}}
-          @outletArgs={{hash topic=@model postStream=@postStream}}
-        />
-      </section>
+      <PluginOutlet
+        @name="topic-map-expanded-after"
+        @defaultGlimmer={{true}}
+        @outletArgs={{hash topic=@model postStream=@postStream}}
+      />
 
       {{#if @showPMMap}}
         <section class="topic-map__private-message-map">

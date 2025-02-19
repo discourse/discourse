@@ -17,23 +17,6 @@
         </li>
       {{/each}}
 
-      {{#if this.allowAdvanced}}
-        <li>
-          <a
-            {{on "click" this.toggleShowAdvanced}}
-            href
-            title={{i18n
-              (concat
-                "admin.customize.theme."
-                (if this.showAdvanced "hide_advanced" "show_advanced")
-              )
-            }}
-            class="no-text"
-          >
-            {{d-icon (if this.showAdvanced "angles-left" "angles-right")}}
-          </a>
-        </li>
-      {{/if}}
       <li class="spacer"></li>
       <li>
         <label>
@@ -70,33 +53,6 @@
           </LinkTo>
         </li>
       {{/each}}
-
-      {{#if this.showAddField}}
-        <li>
-          {{#if this.addingField}}
-            <Input
-              @type={{this.text}}
-              @value={{this.newFieldName}}
-              @enter={{this.addField}}
-              @escape-press={{this.cancelAddField}}
-            />
-            <DButton
-              @action={{fn this.addField this.newFieldName}}
-              @icon="check"
-              class="ok"
-            />
-            <DButton
-              @action={{this.cancelAddField}}
-              @icon="xmark"
-              class="cancel"
-            />
-          {{else}}
-            <a href {{on "click" this.toggleAddField}} class="no-text">
-              {{d-icon "plus"}}
-            </a>
-          {{/if}}
-        </li>
-      {{/if}}
 
       <li class="spacer"></li>
       <li>
