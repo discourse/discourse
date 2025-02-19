@@ -78,6 +78,27 @@ acceptance(
 );
 
 acceptance(
+  "Sidebar - Logged on user - Mobile view - Sidebar enabled",
+  function (needs) {
+    needs.user();
+    needs.mobileView();
+
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    test("sections are collapsable", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-section-header.sidebar-section-header-collapsable")
+        .exists("sections are collapsable");
+    });
+  }
+);
+
+acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
     needs.user({});
