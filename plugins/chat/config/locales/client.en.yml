@@ -348,6 +348,7 @@ en:
         tabs:
           members: Members
           settings: Settings
+        remove_member: "Remove"
 
       new_message_modal:
         title: Send message

@@ -28,12 +28,13 @@ module Chat
       self.slug.blank?
     end
 
-    def leave(user)
+    def remove(user)
       return super unless direct_message_group?
       transaction do
         membership_for(user)&.destroy!
         direct_message.users.delete(user)
       end
     end
+    alias leave remove
   end
 end

@@ -6,9 +6,11 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
 import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DiscourseURL, { userPath } from "discourse/lib/url";
@@ -21,11 +23,13 @@ import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-
 export default class ChatRouteChannelInfoMembers extends Component {
   @service appEvents;
   @service chatApi;
+  @service currentUser;
   @service modal;
   @service loadingSlider;
   @service site;
 
   @tracked filter = "";
+  @tracked updatedAt = Date.now();
   @tracked showAddMembers = false;
 
   addMemberLabel = i18n("chat.members_view.add_member");
@@ -82,6 +86,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
     if (this.filter?.length) {
       params.username = this.filter;
     }
+    this.updatedAt;
 
     return this.chatApi.listChannelMemberships(this.args.channel.id, params);
   }
@@ -111,6 +116,20 @@ export default class ChatRouteChannelInfoMembers extends Component {
   openMemberCard(user, event) {
     event.preventDefault();
     DiscourseURL.routeTo(userPath(user.username_lower));
+  }
+
+  @action
+  async removeMember(user) {
+    await this.chatApi.removeMemberFromChannel(this.args.channel.id, user.id);
+    this.updatedAt = Date.now();
+    this.load();
+  }
+
+  @bind
+  canRemoveMember(user) {
+    return (
+      this.args.channel.canRemoveMembers && user.id !== this.currentUser.id
+    );
   }
 
   async debouncedLoad() {
@@ -166,19 +185,28 @@ export default class ChatRouteChannelInfoMembers extends Component {
               </li>
             {{/if}}
             {{#each this.members as |membership|}}
-              <li
-                class="c-channel-members__list-item -member"
-                {{on "click" (fn this.openMemberCard membership.user)}}
-                {{this.onEnter (fn this.openMemberCard membership.user)}}
-                tabindex="0"
-              >
-                <ChatUserInfo
-                  @user={{membership.user}}
-                  @avatarSize="tiny"
-                  @interactive={{false}}
-                  @showStatus={{true}}
-                  @showStatusDescription={{true}}
-                />
+              <li class="c-channel-members__list-item -member" tabindex="0">
+                <div
+                  class="c-channel-members__list-item -user-info"
+                  role="button"
+                  {{on "click" (fn this.openMemberCard membership.user)}}
+                  {{this.onEnter (fn this.openMemberCard membership.user)}}
+                >
+                  <ChatUserInfo
+                    @user={{membership.user}}
+                    @avatarSize="tiny"
+                    @interactive={{false}}
+                    @showStatus={{true}}
+                    @showStatusDescription={{true}}
+                  />
+                </div>
+                {{#if (this.canRemoveMember membership.user)}}
+                  <DButton
+                    @action={{fn this.removeMember membership.user}}
+                    @label="chat.channel_info.remove_member"
+                    class="btn-flat -remove-member"
+                  />
+                {{/if}}
               </li>
             {{else}}
               {{#if this.noResults}}
