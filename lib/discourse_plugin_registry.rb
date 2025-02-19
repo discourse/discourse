@@ -50,6 +50,8 @@ class DiscoursePluginRegistry
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
       public_send(:"_raw_#{register_name}") << { plugin: plugin, value: value }
     end
+
+    yield(self) if block_given?
   end
 
   define_register :javascripts, Set
@@ -128,6 +130,14 @@ class DiscoursePluginRegistry
   define_filtered_register :flag_applies_to_types
 
   define_filtered_register :custom_filter_mappings
+
+  define_filtered_register :reviewable_types do |singleton|
+    singleton.define_singleton_method("reviewable_types_lookup") do
+      public_send(:"_raw_reviewable_types")
+        .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
+        .uniq
+    end
+  end
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
