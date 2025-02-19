@@ -231,5 +231,19 @@ RSpec.describe Stylesheet::Compiler do
       css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
       expect(css).to eq("a{left:1px}")
     end
+
+    it "runs through postcss" do
+      css, map = Stylesheet::Compiler.compile(<<~SCSS, "test.scss")
+        @media (min-resolution: 2dppx) {
+          body {
+            background-color: light-dark(white, black);
+          }
+        }
+      SCSS
+
+      expect(css).to include("-webkit-min-device-pixel-ratio")
+      expect(css).to include("csstools-light-dark-toggle")
+      expect(map.size).to be > 10
+    end
   end
 end
