@@ -37,7 +37,6 @@ export default class SignupPageController extends Controller.extend(
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
-  @tracked passwordValidationVisible = false;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -172,10 +171,7 @@ export default class SignupPageController extends Controller.extend(
   }
 
   get showPasswordValidation() {
-    return (
-      this.passwordValidation.ok ||
-      (this.passwordValidation.reason && this.passwordValidationVisible)
-    );
+    return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
   @discourseComputed("usernameValidation.reason")
@@ -263,15 +259,6 @@ export default class SignupPageController extends Controller.extend(
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
-  }
-
-  @action
-  togglePasswordValidation() {
-    if (this.passwordValidation.reason) {
-      this.passwordValidationVisible = true;
-    } else {
-      this.passwordValidationVisible = false;
-    }
   }
 
   @action
@@ -528,7 +515,6 @@ export default class SignupPageController extends Controller.extend(
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
     this.set("emailValidationVisible", true);
-    this.passwordValidationVisible = true;
 
     const validation = [
       this.emailValidation,
