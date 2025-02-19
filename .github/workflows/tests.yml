@@ -52,7 +52,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
-        browser: "Chrome"
+        browser: [Chrome]
         exclude:
           - build_type: annotations
             target: plugins
