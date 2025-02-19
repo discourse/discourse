@@ -137,6 +137,10 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
   end
 
+  def use_experimental_admin_search
+    object.staff? && object.in_any_groups?(SiteSetting.experimental_admin_search_enabled_groups_map)
+  end
+
   def include_use_admin_sidebar?
     object.staff?
   end

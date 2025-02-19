@@ -386,9 +386,11 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
+
+      get "search/all" => "search#index"
+
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
-
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"

@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Poll"
   js:
     poll:
       voters:

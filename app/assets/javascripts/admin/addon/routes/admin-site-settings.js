@@ -25,4 +25,10 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
       this.controllerFor("adminSiteSettings").set("model", settings);
     });
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set("filter", "");
+    }
+  }
 }

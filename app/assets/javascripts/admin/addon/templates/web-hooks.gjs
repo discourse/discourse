@@ -7,15 +7,15 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(<template>
   <div class="admin-webhooks admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.web_hooks.title"}}
-      @descriptionLabel={{i18n "admin.web_hooks.instruction"}}
+      @titleLabel={{i18n "admin.config.webhooks.title"}}
+      @descriptionLabel={{i18n "admin.config.webhooks.header_description"}}
       @hideTabs={{true}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
           @path="/admin/api/web_hooks"
-          @label={{i18n "admin.web_hooks.title"}}
+          @label={{i18n "admin.config.webhooks.title"}}
         />
       </:breadcrumbs>
       <:actions as |actions|>

@@ -10,7 +10,6 @@ class ThemeSerializer < BasicThemeSerializer
              :settings,
              :errors,
              :supported?,
-             :description,
              :enabled?,
              :disabled_at,
              :theme_fields,
@@ -82,10 +81,6 @@ class ThemeSerializer < BasicThemeSerializer
 
   def include_errors?
     @errors.present?
-  end
-
-  def description
-    object.internal_translations.find { |t| t.key == "theme_metadata.description" }&.value
   end
 
   def include_disabled_at?

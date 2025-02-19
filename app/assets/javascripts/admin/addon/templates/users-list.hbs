@@ -1,14 +1,14 @@
 <div class="admin-users admin-config-page">
   <DPageHeader
-    @titleLabel={{i18n "admin.users.title"}}
-    @descriptionLabel={{i18n "admin.users.description"}}
+    @titleLabel={{i18n "admin.config.users.title"}}
+    @descriptionLabel={{i18n "admin.config.users.header_description"}}
     @learnMoreUrl="https://meta.discourse.org/t/accessing-a-user-s-admin-page/311859"
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/users/list"
-        @label={{i18n "admin.users.title"}}
+        @label={{i18n "admin.config.users.title"}}
       />
     </:breadcrumbs>
     <:actions as |actions|>

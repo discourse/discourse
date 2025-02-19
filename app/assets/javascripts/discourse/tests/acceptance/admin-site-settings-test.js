@@ -112,9 +112,10 @@ acceptance("Admin - Site Settings", function (needs) {
     await click(".nav.nav-pills li:nth-child(1) a");
     assert.dom(".row.setting").exists({ count: 0 });
 
-    // navigate back to the "Settings" page
+    // navigate back to the "Settings" page, the title filter
+    // has been removed from navigation
     await click(".nav.nav-pills li:nth-child(2) a");
-    assert.dom(".row.setting").exists({ count: 1 });
+    assert.dom(".row.setting").exists({ count: 4 });
   });
 
   test("filtering overridden settings", async function (assert) {
