@@ -89,7 +89,7 @@ class UserApiKeysController < ApplicationController
 
     public_key_str = @client.public_key.present? ? @client.public_key : params[:public_key]
     public_key = OpenSSL::PKey::RSA.new(public_key_str)
-    @payload = Base64.encode64(public_key.public_encrypt(@payload))
+    @payload = Base64.encode64(public_key.public_encrypt(@payload, OpenSSL::PKey::RSA.const_get(SiteSetting.user_api_key_encryption_padding)))
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
