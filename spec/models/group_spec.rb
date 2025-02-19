@@ -416,6 +416,19 @@ RSpec.describe Group do
       expect(group.name).to_not eq("staff")
       expect(group.name).to eq(I18n.t("groups.default_names.staff", locale: "de"))
     end
+
+    it "can save groups" do
+      # Update all short usernames to ensure that the future minimum username
+      # length is met for all existing usernames
+      User.find_each { |u| u.update!(username: u.username * 2) }
+
+      # This a corner case when a group has a short name that is technically no
+      # longer allowed by `min_username_length`
+      Group.find(Group::AUTO_GROUPS[:everyone]).update!(name: "all")
+      SiteSetting.min_username_length = 10
+
+      expect { Group.refresh_automatic_groups! }.not_to raise_error
+    end
   end
 
   it "Correctly handles removal of primary group" do
