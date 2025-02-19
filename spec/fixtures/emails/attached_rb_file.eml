@@ -4,7 +4,7 @@ To: team@bar.com
 Date: Mon, 29 Feb 2016 21:54:01 +0100
 Message-ID: <56d4afe991ed0_3ab83fdf94441a20677f0@HAL.lan.mail>
 Subject: Email with .rb file attached
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: multipart/mixed;
  boundary="--==_mimepart_56d4afe991d17_3ab83fdf94441a206765";
  charset=UTF-8
