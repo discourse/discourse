@@ -23,9 +23,3 @@
 @import "common/table-builder/_index";
 @import "common/post-action-feedback";
 @import "common/form-kit/_index";
-
-@media (min-resolution: 2dppx) {
-  body {
-    background-color: light-dark(red, green);
-  }
-}
