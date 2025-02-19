@@ -36,23 +36,20 @@ class Admin::Config::AboutController < Admin::AdminController
       settings_map[:city_for_disputes] = your_organization[:city_for_disputes]
     end
 
-    settings_map.each do |name, value|
-      SiteSetting::Update.call(
-        guardian:,
-        params: {
-          setting_name: name,
-          new_value: value,
-        },
-        options: {
-          allow_changing_hidden: %i[
-            extended_site_description
-            extended_site_description_cooked
-            about_banner_image
-            community_owner
-          ].include?(name),
-        },
-      )
-    end
+    SiteSetting::Update.call(
+      guardian:,
+      params: {
+        settings: settings_map,
+      },
+      options: {
+        allow_changing_hidden: %i[
+          extended_site_description
+          extended_site_description_cooked
+          about_banner_image
+          community_owner
+        ].include?(name),
+      },
+    )
     render json: success_json
   end
 end
