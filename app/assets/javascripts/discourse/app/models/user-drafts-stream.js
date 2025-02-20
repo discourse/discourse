@@ -85,7 +85,6 @@ export default class UserDraftsStream extends RestModel {
               draft.category = Category.findById(draft.data.categoryId) || null;
             }
 
-            draft.truncated = false;
             this.content.push(UserDraft.create(draft));
           });
         });
