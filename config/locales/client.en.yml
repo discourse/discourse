@@ -6249,7 +6249,7 @@ en:
             title: "Define theme settings in YAML format"
           js:
             text: "JS"
-            title: "Define a javascript initializer"
+            title: "Define a JavaScript initializer"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
           all_filter: "All"
