@@ -228,17 +228,22 @@ jobs:
       - name: Fetch PR description
         if: github.event_name == 'pull_request'
         run: |
-          echo "PR_BODY<<EOF" >> $GITHUB_ENV
-          echo "${{ github.event.pull_request.body }}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            TEXT="${{ github.event.pull_request.body }}"
+          else
+            TEXT="${{ github.event.comment.body }}"
+          fi
+
+          echo "Extracting PR Body..."
+          echo "$TEXT" > pr_body.txt
+          cat pr_body.txt
 
       - name: Extract Device Screenshot Commands
         id: parse_device_screenshot_commands
         run: |
-          SCREENSHOTS=$(echo "$PR_BODY" | grep -oP '^screenshot: \K[\w/.\-:]+$' | paste -sd "," -)
-          if [[ -n "$SCREENSHOTS" ]]; then
-            echo "screenshot_list=$SCREENSHOTS" >> $GITHUB_ENV
-          fi
+          SCREENSHOTS=$(grep -oP '^screenshot: \K[\w/.\-:]+' pr_body.txt | paste -sd "," -)
+          echo "Extracted: $SCREENSHOTS"
+          echo "screenshot_list=${SCREENSHOTS}" >> $GITHUB_ENV
 
       # - name: Core RSpec
       #   if: matrix.build_type == 'backend' && matrix.target == 'core'
