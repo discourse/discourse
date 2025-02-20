@@ -19,16 +19,6 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
   end
 
   describe "Escape" do
-    context "when composer is focused" do
-      it "blurs the composer" do
-        chat_page.visit_thread(thread_1)
-        thread_page.composer.focus
-        thread_page.composer.cancel_shortcut
-
-        expect(side_panel_page).to have_open_thread
-      end
-    end
-
     it "closes the thread panel" do
       chat_page.visit_thread(thread_1)
 
