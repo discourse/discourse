@@ -73,13 +73,8 @@ export default class ChatComposerThread extends ChatComposer {
       return;
     }
 
-    if (this.isFocused) {
-      event.stopPropagation();
-      this.composer.blur();
-    } else {
-      this.pane.close().then(() => {
-        this.channelComposer.focus();
-      });
-    }
+    this.pane.close().then(() => {
+      this.channelComposer.focus();
+    });
   }
 }
