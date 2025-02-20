@@ -6,6 +6,13 @@ import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
 
+const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  // Your code here
+});
+`;
+
 export default class AdminThemeEditor extends Component {
   warning = null;
 
@@ -35,6 +42,9 @@ export default class AdminThemeEditor extends Component {
     if (["color_definitions"].includes(fieldName)) {
       return "scss";
     }
+    if (["js"].includes(fieldName)) {
+      return "javascript";
+    }
     return fieldName && fieldName.includes("scss") ? "scss" : "html";
   }
 
@@ -55,10 +65,20 @@ export default class AdminThemeEditor extends Component {
 
   @computed("fieldName", "currentTargetName", "theme")
   get activeSection() {
-    return this.theme.getField(this.currentTargetName, this.fieldName);
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
   }
 
   set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
