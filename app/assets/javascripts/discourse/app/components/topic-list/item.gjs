@@ -228,7 +228,7 @@ export default class Item extends Component {
         (if @topic.category (concat "category-" @topic.category.fullSlug))
         (if (eq @topic @lastVisitedTopic) "last-visit")
         (if @topic.visited "visited")
-        (if @topic.hasExcerpt "has-excerpt")
+        (if this.expandPinned "has-excerpt")
         (if @topic.unseen "unseen-topic")
         (if @topic.unread_posts "unread-posts")
         (if @topic.liked "liked")
