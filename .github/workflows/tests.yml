@@ -232,12 +232,12 @@ jobs:
           echo "${{ github.event.pull_request.body }}" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Parse device screenshot commands
-        id: parse
+      - name: Extract Device Screenshot Commands
+        id: parse_device_screenshot_commands
         run: |
-          SCREENSHOT_COMMAND=$(echo "$PR_BODY" | grep -oP 'screenshot: \K[\w/.\-:]+')
-          if [ -n "$SCREENSHOT_COMMAND" ]; then
-            echo "screenshot=$SCREENSHOT_COMMAND" >> $GITHUB_ENV
+          SCREENSHOTS=$(echo "$PR_BODY" | grep -oP '^screenshot: \K[\w/.\-:]+$' | paste -sd "," -)
+          if [[ -n "$SCREENSHOTS" ]]; then
+            echo "screenshot_list=$SCREENSHOTS" >> $GITHUB_ENV
           fi
 
       # - name: Core RSpec
@@ -279,12 +279,19 @@ jobs:
 #         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Run System Spec Device Screenshot Capture
-        if: env.screenshot && matrix.build_type == 'system' && matrix.target == 'core'
+        if: env.screenshot_list && matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
-          LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
+          mkdir -p tmp/capybara
+          IFS=',' read -ra SCREENSHOTS <<< "$screenshot_list"
 
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec $FILE_PATH:$LINE_NUM
+          for screenshot in "${SCREENSHOTS[@]}"; do
+            FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
+            LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
+
+            echo "Running test for $FILE_PATH:$LINE_NUM..."
+
+            RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec "$FILE_PATH:$LINE_NUM"
+          done
 
       # - name: Plugin System Tests
       #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
