@@ -98,6 +98,16 @@ RSpec.describe ReviewableScoreSerializer do
         I18n.t("reviewables.contexts.watched_word", words: "bad, words", count: 2),
       )
     end
+
+    it "returns nil if the post has no watched words" do
+      reviewable.target = Fabricate(:post, raw: "This post contains no bad words.")
+
+      score = serialized_score("watched_word")
+
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "superbad")
+
+      expect(score.context).to be_nil
+    end
   end
 
   def serialized_score(reason)
