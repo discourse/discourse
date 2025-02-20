@@ -228,6 +228,7 @@ export default RouteTemplate(
         />
       </div>
 
+    {{if this.model.include_ip}}
       <div class="display-row last-ip">
         <div class="field">{{i18n "user.ip_address.title"}}</div>
         <div class="value">{{@controller.model.ip_address}}</div>
@@ -257,6 +258,8 @@ export default RouteTemplate(
           {{/if}}
         </div>
       </div>
+    {{/if}}
+
 
       {{#if @controller.showBadges}}
         <div class="display-row">
