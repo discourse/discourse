@@ -281,7 +281,6 @@ jobs:
       - name: Run System Spec Device Screenshot Capture
         if: env.screenshot_list && matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          mkdir -p tmp/capybara
           IFS=',' read -ra SCREENSHOTS <<< "$screenshot_list"
 
           for screenshot in "${SCREENSHOTS[@]}"; do
@@ -338,7 +337,7 @@ jobs:
       #     path: tmp/capybara/failures_*.png
 
       - name: Upload Device Screenshots to GitHub
-        id: upload_images
+        id: upload_device_screenshots
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
@@ -363,7 +362,8 @@ jobs:
           echo "$COMMENT_BODY" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Post Screenshot Comment
+      - name: Post Device Screenshot Comment
+        id: post_device_screenshot_comment
         if: env.COMMENT_BODY && matrix.build_type == 'system' && matrix.target == 'core'
         uses: mshick/add-pr-comment@v2
         with:
