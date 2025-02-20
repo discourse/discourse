@@ -4,7 +4,8 @@
 
   td,
   th {
-    @extend .list-cell;
+    padding: 12px 5px;
+    color: var(--primary-med-or-secondary-high);
   }
 
   td {

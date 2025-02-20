@@ -37,10 +37,25 @@
   }
 
   .main-link {
-    @extend .topic-list-main-link;
     flex: 0 1 auto;
     max-width: 65%;
     font-size: var(--font-0);
+
+    a.title {
+      padding: 15px 0;
+      word-break: break-word;
+      color: var(--primary);
+    }
+
+    .anon & {
+      a.title:visited:not(.badge-notification) {
+        color: var(--primary-medium);
+      }
+    }
+
+    a.title.visited:not(.badge-notification) {
+      color: var(--primary-medium);
+    }
 
     .top-row {
       margin-bottom: 0.1em;

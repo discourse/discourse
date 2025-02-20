@@ -914,7 +914,7 @@ RSpec.describe Stylesheet::Manager do
 
   describe ".precompile_css" do
     let(:core_targets) do
-      %w[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+      %w[common desktop mobile admin wizard common_rtl desktop_rtl mobile_rtl admin_rtl wizard_rtl]
     end
 
     let(:theme_targets) { %i[desktop_theme mobile_theme] }
@@ -971,7 +971,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(46) # 8 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(48) # 10 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
 
       theme_targets.each do |tar|
         expect(
@@ -987,7 +987,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(46) # 8 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(48) # 10 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(
