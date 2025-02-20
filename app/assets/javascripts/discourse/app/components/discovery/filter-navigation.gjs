@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import DButton from "discourse/components/d-button";
-import DateInput from "discourse/components/date-input";
+import Tags from "discourse/components/discovery/filter-navigation/tags";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
@@ -18,6 +16,7 @@ import CategorySelector from "select-kit/components/category-selector";
 import TagChooser from "select-kit/components/tag-chooser";
 import UserChooser from "select-kit/components/user-chooser";
 import DMenu from "float-kit/components/d-menu";
+import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 
 export default class DiscoveryFilterNavigation extends Component {
@@ -41,12 +40,8 @@ export default class DiscoveryFilterNavigation extends Component {
   @cached
   get formData() {
     return {
-      categories: [],
-      tags: [],
-      created_by: [],
-      created_before: null,
-      order: null,
-      created_after: null,
+      query: "",
+      tags: [{ name: "rest-api" }],
     };
   }
 
@@ -70,28 +65,37 @@ export default class DiscoveryFilterNavigation extends Component {
         .join(",");
       queryParts.push(`categories:${categoryNames}`);
     }
+    // if (data.categories?.length) {
+    //   const categoryNames = data.categories
+    //     .map((category) => {
+    //       // need to account for category names with spaces
+    //       return category.name.replace(/ /g, "-");
+    //     })
+    //     .join(",");
+    //   queryParts.push(`categories:${categoryNames}`);
+    // }
 
     if (data.tags?.length) {
-      const tagNames = data.tags.join(",");
+      const tagNames = data.tags.map((tag) => tag.name).join(",");
       queryParts.push(`tags:${tagNames}`);
     }
 
-    if (data.created_by?.length) {
-      const createdByUsernames = data.created_by.join(",");
-      queryParts.push(`created-by:${createdByUsernames}`);
-    }
+    // if (data.created_by?.length) {
+    //   const createdByUsernames = data.created_by.join(",");
+    //   queryParts.push(`created-by:${createdByUsernames}`);
+    // }
 
-    if (data.created_before?.length) {
-      queryParts.push(`created-before:${data.created_before}`);
-    }
+    // if (data.created_before?.length) {
+    //   queryParts.push(`created-before:${data.created_before}`);
+    // }
 
-    if (data.created_after?.length) {
-      queryParts.push(`created-after:${data.created_after}`);
-    }
+    // if (data.created_after?.length) {
+    //   queryParts.push(`created-after:${data.created_after}`);
+    // }
 
-    if (data.order?.length) {
-      queryParts.push(`order:${data.order}`);
-    }
+    // if (data.order?.length) {
+    //   queryParts.push(`order:${data.order}`);
+    // }
 
     const queryString = queryParts.join(" ");
     this.args.updateTopicsListQueryParams(queryString);
@@ -248,6 +252,19 @@ export default class DiscoveryFilterNavigation extends Component {
             </DMenu>
 
             <form.Submit />
+              @name="query"
+              @title="Query"
+              @showTitle={{true}}
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+
+            <Tags @form={{form}} @data={{data}} />
+
+            <form.Actions>
+              <form.Submit @label="form_templates.filter" />
+            </form.Actions>
           </Form>
 
           {{!-- {{icon "filter" class="topic-query-filter__icon"}} --}}
