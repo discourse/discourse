@@ -225,22 +225,6 @@ jobs:
             exit 1
           fi
 
-      - name: Fetch PR description
-        if: github.event_name == 'pull_request'
-        run: |
-          cat <<EOF > pr_body.txt
-          ${{ github.event.pull_request.body }}
-          EOF
-          echo "Extracting PR Body..."
-          cat pr_body.txt
-
-      - name: Extract Device Screenshot Commands
-        id: parse_device_screenshot_commands
-        run: |
-          SCREENSHOTS=$(grep -oP '^screenshot: \K[\w/.\-:]+' pr_body.txt | paste -sd "," -)
-          echo "Extracted: $SCREENSHOTS"
-          echo "screenshot_list=${SCREENSHOTS}" >> $GITHUB_ENV
-
       # - name: Core RSpec
       #   if: matrix.build_type == 'backend' && matrix.target == 'core'
       #   run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
@@ -280,18 +264,28 @@ jobs:
 #         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Run System Spec Device Screenshot Capture
-        if: env.screenshot_list && matrix.build_type == 'system' && matrix.target == 'core'
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          IFS=',' read -ra SCREENSHOTS <<< "$screenshot_list"
+          echo "Extracting screenshot commands from PR body..."
 
-          for screenshot in "${SCREENSHOTS[@]}"; do
-            FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
-            LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
+          SCREENSHOTS=$(echo "${{ github.event.pull_request.body }}" | grep -oP '^screenshot: \K[\w/.\-:]+' || true)
 
-            echo "Running test for $FILE_PATH:$LINE_NUM..."
+          if [[ -z "$SCREENSHOTS" ]]; then
+          echo "No screenshot commands found."
+          exit 0
+          fi
 
-            RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec "$FILE_PATH:$LINE_NUM"
-          done
+          echo "Found screenshots:"
+          echo "$SCREENSHOTS"
+
+          while IFS= read -r screenshot; do
+          FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
+          LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
+
+          echo "Running test for $FILE_PATH:$LINE_NUM..."
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec "$FILE_PATH:$LINE_NUM"
+          done <<< "$SCREENSHOTS"
+
 
       # - name: Plugin System Tests
       #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
