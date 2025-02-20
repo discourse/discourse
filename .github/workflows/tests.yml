@@ -228,9 +228,10 @@ jobs:
       - name: Fetch PR description
         if: github.event_name == 'pull_request'
         run: |
-          TEXT="${{ github.event.pull_request.body }}"
+          cat <<EOF > pr_body.txt
+          ${{ github.event.pull_request.body }}
+          EOF
           echo "Extracting PR Body..."
-          echo "$TEXT" > pr_body.txt
           cat pr_body.txt
 
       - name: Extract Device Screenshot Commands
