@@ -33,10 +33,12 @@ class AdminUserSerializer < AdminUserListSerializer
   end
 
   def ip_address
+    return nil if !SiteSetting.moderators_view_ips && scope.is_moderator?
     object.ip_address.try(:to_s)
   end
 
   def registration_ip_address
+    return nil if !SiteSetting.moderators_view_ips && scope.is_moderator?
     object.registration_ip_address.try(:to_s)
   end
 
