@@ -59,7 +59,7 @@ begin
     # things like SiteSetting work correctly for future rake tasks.
     top_level_tasks = Rake.application.top_level_tasks
     db_create_index = top_level_tasks.index("db:create")
-    if db_create_index < top_level_tasks.length - 1
+    if db_create_index && db_create_index < top_level_tasks.length - 1
       exec "#{Rails.root}/bin/rake", *top_level_tasks[db_create_index + 1..-1]
     end
   end
