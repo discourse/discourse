@@ -1,3 +1,4 @@
+import "core-js/actual/url";
 import postcssLightDark from "@csstools/postcss-light-dark-function";
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
