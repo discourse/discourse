@@ -73,69 +73,94 @@ export default class AdminSearch extends Component {
   }
 
   <template>
-    <input
-      type="text"
-      class="admin-search__input"
-      {{autoFocus}}
-      {{on "input" this.changeSearchTerm}}
-    />
-    <DButton @icon="filter" @action={{this.toggleTypeFilters}} />
+    <div class="admin-search__input-container">
+      <div class="admin-search__input-group">
+        {{icon
+          "magnifying-glass"
+          class="admin-search__input-icon"
+        }}
+        <input
+          type="text"
+          class="admin-search__input-field"
+          {{autoFocus}}
+          {{on "input" this.changeSearchTerm}}
+        />
+      </div>
+      <DButton
+        class="btn-flat"
+        @icon="filter"
+        @action={{this.toggleTypeFilters}}
+      />
+    </div>
 
     {{#if this.showTypeFilters}}
-      <div class="admin-search-type-filter">
-        <span class="admin-search-type-filter__page">
+      <div class="admin-search__type-filter">
+        <button
+          class="admin-search__type-filter-item {{if this.showPageType 'is-active'}}"
+          {{on "click" (fn this.toggleTypeFilter "showPageType")}}
+        >
+          <span class="admin-search__filter-select">
+            {{icon (if this.showPageType "check" "far-circle")}}
+          </span>
           Pages
-          <DToggleSwitch
-            @state={{this.showPageType}}
-            {{on "click" (fn this.toggleTypeFilter "showPageType")}}
-          />
-        </span>
-        <span class="admin-search-type-filter__setting">
+        </button>
+
+        <button
+          class="admin-search__type-filter-item {{if this.showSettingType 'is-active'}}"
+          {{on "click" (fn this.toggleTypeFilter "showSettingType")}}
+        >
+          <span class="admin-search__filter-select">
+            {{icon (if this.showSettingType "check" "far-circle")}}
+          </span>
           Settings
-          <DToggleSwitch
-            @state={{this.showSettingType}}
-            {{on "click" (fn this.toggleTypeFilter "showSettingType")}}
-          />
-        </span>
-        <span class="admin-search-type-filter__theme">
+        </button>
+
+        <button
+          class="admin-search__type-filter-item {{if this.showThemeType 'is-active'}}"
+          {{on "click" (fn this.toggleTypeFilter "showThemeType")}}
+        >
+          <span class="admin-search__filter-select">
+            {{icon (if this.showThemeType "check" "far-circle")}}
+          </span>
           Themes
-          <DToggleSwitch
-            @state={{this.showThemeType}}
-            {{on "click" (fn this.toggleTypeFilter "showThemeType")}}
-          />
-        </span>
-        <span class="admin-search-type-filter__component">
+        </button>
+
+        <button
+          class="admin-search__type-filter-item {{if this.showComponentType 'is-active'}}"
+          {{on "click" (fn this.toggleTypeFilter "showComponentType")}}
+        >
+          <span class="admin-search__filter-select">
+            {{icon (if this.showComponentType "check" "far-circle")}}
+          </span>
           Components
-          <DToggleSwitch
-            @state={{this.showComponentType}}
-            {{on "click" (fn this.toggleTypeFilter "showComponentType")}}
-          />
-        </span>
-        <span class="admin-search-type-filter__report">
+        </button>
+
+        <button
+          class="admin-search__type-filter-item {{if this.showReportType 'is-active'}}"
+          {{on "click" (fn this.toggleTypeFilter "showReportType")}}
+        >
+          <span class="admin-search__filter-select">
+            {{icon (if this.showReportType "check" "far-circle")}}
+          </span>
           Reports
-          <DToggleSwitch
-            @state={{this.showReportType}}
-            {{on "click" (fn this.toggleTypeFilter "showReportType")}}
-          />
-        </span>
+        </button>
       </div>
     {{/if}}
 
-    <div class="admin-search__search-results">
+    <div class="admin-search__results">
       {{#each this.searchResults as |result|}}
-        <div class="admin-search__search-result">
+        <div class="admin-search__result">
           <a href={{result.url}}>
-            <div class="admin-search__name">
+            <div class="admin-search__result-name">
               {{#if result.icon}}
                 {{icon result.icon}}
               {{/if}}
-              <span class="admin-search__name-label">{{result.label}}</span>
-              <span class="admin-search__type-pill">{{result.type}}</span>
+              <span class="admin-search__result-name-label">{{result.label}}</span>
             </div>
             {{#if result.description}}
-              <p class="admin-search__description">{{htmlSafe
+              <div class="admin-search__result-description">{{htmlSafe
                   result.description
-                }}</p>
+                }}</div>
             {{/if}}
           </a>
         </div>
