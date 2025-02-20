@@ -373,7 +373,7 @@ jobs:
 
             You can download the screenshots from the Actions tab:
             [Artifacts - PR_Screenshots](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          repo-token: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Post Device Screenshot Comment
       #   id: post_device_screenshot_comment
@@ -381,7 +381,7 @@ jobs:
       #   uses: mshick/add-pr-comment@v2
       #   with:
       #     message: ${{ env.COMMENT_BODY }}
-      #     repo-token: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
