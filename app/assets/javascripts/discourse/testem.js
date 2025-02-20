@@ -176,6 +176,16 @@ if (process.env.TESTEM_FIREFOX_PATH) {
 }
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+
+fetch(`${target}/about.json`).catch(() => {
+  // eslint-disable-next-line no-console
+  console.error(
+    colors.red(
+      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/rake qunit:test' or 'plugin:qunit' to start automatically.`
+    )
+  );
+});
+
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {
