@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { bind } from "discourse/lib/decorators";
 
 const COOKIE_NAME = "forced_color_mode";
 const DARK = "dark";
@@ -10,6 +11,56 @@ export default class InterfaceColor extends Service {
   @service siteSettings;
   @service session;
   @tracked forcedColorMode;
+  @tracked browserPrefersDark = this.#browserPreferenceMatcher.matches;
+
+  #browserPreferenceMatcher = window.matchMedia("(prefers-color-scheme: dark)");
+
+  constructor() {
+    super(...arguments);
+    this.#browserPreferenceMatcher.addEventListener(
+      "change",
+      this._handleBrowserPreferenceChange
+    );
+  }
+
+  willDestroy() {
+    this.#browserPreferenceMatcher.removeEventListener(
+      "change",
+      this._handleBrowserPreferenceChange
+    );
+  }
+
+  get darkMediaQuery() {
+    if (!this.session.darkModeAvailable) {
+      return "none";
+    } else if (this.session.defaultColorSchemeIsDark) {
+      return "all";
+    } else if (this.darkModeForced) {
+      return "all";
+    } else if (this.lightModeForced) {
+      return "none";
+    } else {
+      return "(prefers-color-scheme: dark)";
+    }
+  }
+
+  get darkMode() {
+    if (!this.session.darkModeAvailable) {
+      return false;
+    } else if (this.session.defaultColorSchemeIsDark) {
+      return true;
+    } else if (this.darkModeForced) {
+      return true;
+    } else if (this.lightModeForced) {
+      return false;
+    } else {
+      return this.browserPrefersDark;
+    }
+  }
+
+  get lightMode() {
+    return !this.darkMode;
+  }
 
   get lightModeForced() {
     return this.selectorAvailable && this.forcedColorMode === LIGHT;
@@ -100,6 +151,11 @@ export default class InterfaceColor extends Service {
     if (darkStylesheet) {
       darkStylesheet.media = "(prefers-color-scheme: dark)";
     }
+  }
+
+  @bind
+  _handleBrowserPreferenceChange(event) {
+    this.browserPrefersDark = event.matches;
   }
 
   #lightColorsStylesheet() {
