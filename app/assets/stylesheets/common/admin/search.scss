@@ -44,12 +44,14 @@
 }
 
 // Fitler
-.admin-search__type-filter {
+.admin-search__filters {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   flex-wrap: wrap;
+}
 
+.admin-search__filter {
   &-item {
     position: relative;
     display: inline-flex;
@@ -63,25 +65,23 @@
     transition: background-color 0.2s;
 
     &:hover {
-      color: var(--primary-high);
+      color: var(--primary-low-mid);
     }
 
     &.is-active {
       background-color: var(--tertiary);
       color: var(--secondary);
+
+      .d-icon {
+        color: var(--tertiary-low);
+      }
     }
-  }
-}
 
-.admin-search__filter-select {
-  width: 1rem;
-  height: 1rem;
-  margin-right: var(--space-1);
-  color: var(--tertiary-low);
-  font-size: var(--font-down-1);
-
-  &:not(.is-active &) {
-    color: var(--primary-low-mid);
+    &:not(.is-active) {
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
   }
 }
 
@@ -93,6 +93,10 @@
 
   &:first-child {
     border-top: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
   }
 
   &:hover {

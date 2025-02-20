@@ -79,13 +79,21 @@ export default class AdminSearch extends Component {
   }
 
   <template>
-    <input
-      type="text"
-      class="admin-search__input"
-      {{autoFocus}}
-      {{on "input" this.changeSearchTerm}}
-    />
-    <DButton @icon="filter" @action={{this.toggleFilters}} />
+    <div class="admin-search__input-container">
+      <div class="admin-search__input-group">
+          {{icon
+            "magnifying-glass"
+            class="admin-search__input-icon"
+          }}
+        <input
+          type="text"
+          class="admin-search__input-field"
+          {{autoFocus}}
+          {{on "input" this.changeSearchTerm}}
+        />
+      </div>
+      <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
+    </div>
 
     {{#if this.showFilters}}
       <AdminSearchFilters
@@ -95,25 +103,21 @@ export default class AdminSearch extends Component {
       />
     {{/if}}
 
-    <div class="admin-search__search-results">
+    <div class="admin-search__results">
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
-          <div class="admin-search__search-result">
+          <div class="admin-search__result">
             <a href={{result.url}}>
-              <div class="admin-search__name">
+              <div class="admin-search__result-name">
                 {{#if result.icon}}
                   {{icon result.icon}}
                 {{/if}}
-                <span class="admin-search__name-label">{{result.label}}</span>
-                <span class="admin-search__type-pill">{{i18n
-                    (concat "admin.search.result_types." result.type)
-                    count=1
-                  }}</span>
+                <span class="admin-search__result-name-label">{{result.label}}</span>
               </div>
               {{#if result.description}}
-                <p class="admin-search__description">{{htmlSafe
+                <div class="admin-search__result-description">{{htmlSafe
                     result.description
-                  }}</p>
+                  }}</div>
               {{/if}}
             </a>
           </div>
