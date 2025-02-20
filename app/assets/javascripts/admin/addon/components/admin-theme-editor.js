@@ -39,10 +39,10 @@ export default class AdminThemeEditor extends Component {
 
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
-    if (["color_definitions"].includes(fieldName)) {
+    if (fieldName === "color_definitions") {
       return "scss";
     }
-    if (["js"].includes(fieldName)) {
+    if (fieldName === "js") {
       return "javascript";
     }
     return fieldName && fieldName.includes("scss") ? "scss" : "html";
