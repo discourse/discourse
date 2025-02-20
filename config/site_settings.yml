@@ -3345,6 +3345,12 @@ user_api:
     allow_any: false
     refresh: true
     area: "group_permissions"
+  user_api_key_encryption_padding:
+    type: enum
+    default: "PKCS1_PADDING"
+    choices:
+      - PKCS1_PADDING
+      - PKCS1_OAEP_PADDING
   allowed_user_api_push_urls:
     default: ""
     type: list
