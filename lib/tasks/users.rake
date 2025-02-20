@@ -227,6 +227,44 @@ task "users:exists", [:email] => [:environment] do |_, args|
   exit 1
 end
 
+desc "Recalculate topic counts in user stats"
+task "users:recalculate_topic_counts" => :environment do
+  puts "", "Updating topic counts in user stats..."
+
+  filter_public_posts_and_topics = <<~SQL
+    p.deleted_at IS NULL
+    AND NOT COALESCE(p.hidden, 't')
+    AND p.post_type = 1
+    AND t.deleted_at IS NULL
+    AND t.category_id != 12
+    AND COALESCE(t.visible, 't')
+    AND t.archetype <> 'private_message'
+    AND p.user_id > 0
+  SQL
+
+  puts "topic counts..."
+
+  # public topics
+  DB.exec <<~SQL
+    WITH X AS (
+      SELECT p.user_id, COUNT(p.id) topic_count
+    FROM posts p
+    JOIN topics t ON t.id = p.topic_id
+   WHERE #{filter_public_posts_and_topics}
+     AND p.post_number = 1
+     AND t.category_id != 12
+GROUP BY p.user_id
+    )
+    UPDATE user_stats
+       SET topic_count = X.topic_count
+      FROM X
+     WHERE user_stats.user_id = X.user_id
+       AND user_stats.topic_count <> X.topic_count
+  SQL
+
+  puts "Done!", ""
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 
