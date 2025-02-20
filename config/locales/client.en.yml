@@ -5077,6 +5077,8 @@ en:
           other: "The input must be more than %{count}."
         pattern_mismatch: "Please match the requested format."
         bad_input: "Please enter a valid input."
+      filter: "Filter"
+      filter_placeholder: "Filter topics..."
 
     table_builder:
       title: "Table Builder"
