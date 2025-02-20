@@ -265,6 +265,7 @@ jobs:
 
       - name: Run System Spec Device Screenshot Capture
         if: matrix.build_type == 'system' && matrix.target == 'core'
+        shell: bash
         run: |
           echo "Extracting screenshot commands from PR body..."
 
