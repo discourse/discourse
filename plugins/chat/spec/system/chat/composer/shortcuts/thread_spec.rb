@@ -31,7 +31,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
 
     it "closes the thread panel" do
       chat_page.visit_thread(thread_1)
-      thread_page.composer.cancel_shortcut # ensures we are not focused in the composer
+
       page.send_keys(:escape)
 
       expect(side_panel_page).to have_no_open_thread
