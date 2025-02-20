@@ -38,21 +38,6 @@ class Theme extends RestModel {
       { id: 0, name: "common" },
       { id: 1, name: "desktop", icon: "desktop" },
       { id: 2, name: "mobile", icon: "mobile-screen-button" },
-      { id: 3, name: "settings", icon: "gear", advanced: true },
-      {
-        id: 4,
-        name: "translations",
-        icon: "globe",
-        advanced: true,
-        customNames: true,
-      },
-      {
-        id: 5,
-        name: "extra_scss",
-        icon: "paintbrush",
-        advanced: true,
-        customNames: true,
-      },
     ].map((target) => {
       target["edited"] = this.hasEdited(target.name);
       target["error"] = this.hasError(target.name);
@@ -71,14 +56,6 @@ class Theme extends RestModel {
       "footer",
     ];
 
-    const scss_fields = (this.theme_fields || [])
-      .filter((f) => f.target === "extra_scss" && f.name !== "")
-      .map((f) => f.name);
-
-    if (scss_fields.length < 1) {
-      scss_fields.push("importable_scss");
-    }
-
     return {
       common: [
         ...common,
@@ -88,14 +65,6 @@ class Theme extends RestModel {
       ],
       desktop: common,
       mobile: common,
-      settings: ["yaml"],
-      translations: [
-        "en",
-        ...(this.theme_fields || [])
-          .filter((f) => f.target === "translations" && f.name !== "en")
-          .map((f) => f.name),
-      ],
-      extra_scss: scss_fields,
     };
   }
 
@@ -114,14 +83,8 @@ class Theme extends RestModel {
           error: this.hasError(target, fieldName),
         };
 
-        if (target === "translations" || target === "extra_scss") {
-          field.translatedName = fieldName;
-        } else {
-          field.translatedName = i18n(
-            `admin.customize.theme.${fieldName}.text`
-          );
-          field.title = i18n(`admin.customize.theme.${fieldName}.title`);
-        }
+        field.translatedName = i18n(`admin.customize.theme.${fieldName}.text`);
+        field.title = i18n(`admin.customize.theme.${fieldName}.title`);
 
         if (fieldName.indexOf("_tag") > 0) {
           field.icon = "far-file-lines";

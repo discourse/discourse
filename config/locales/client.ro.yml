@@ -209,7 +209,7 @@ ro:
         enabled: "Listat %{when}"
         disabled: "Nelistat %{when}"
       banner:
-        enabled: "A făcut din acesta un banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
+        enabled: "A făcut din acesta un banner %{when}. Va apărea la începutul fiecărei pagini până când va fi respins de utilizator."
         disabled: "A eliminat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
       forwarded: "A redirecționat e-mailul de mai sus"
     topic_admin_menu: "acțiuni subiect"
@@ -229,6 +229,8 @@ ro:
       only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
     broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
     broken_page_change_alert: "Un gestionar onPageChange a ridicat o eroare. Verifică instrumentele de dezvoltare ale navigatorului pentru mai multe informații."
+    broken_plugin_alert: "Cauzat de modulul „%{name}”"
+    broken_transformer_alert: "A apărut o eroare. Este posibil ca site-ul tău să nu funcționeze corect."
     critical_deprecation:
       notice: "<b>[Notificare de administrare]</b> Una dintre temele sau modulele tale necesită actualizare pentru compatibilitate cu modificările viitoare de nucleu ale Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -320,9 +322,12 @@ ro:
     period_chooser:
       aria_label: "Filtrează după perioadă"
     related_messages:
-      title: "Mesaje conexe"
-      pill: "Mesaje legate de"
+      title: "Mesaje similare"
+      pill: "Mesaje similare"
+      see_all: 'Vezi <a href="%{path}">toate mesajele</a> de la @%{username}…'
     suggested_topics:
+      title: "Subiecte noi și necitite"
+      pill: "Sugerate"
       pm_title: "Mesaje sugerate"
     about:
       edit: "Editează această pagină"
@@ -333,13 +338,41 @@ ro:
       our_moderators: "Moderatorii noștri"
       moderators: "Moderatori"
       stat:
+        all_time: "Tot timpul"
         last_day: "24 de ore"
+        last_7_days: "7 zile"
+        last_30_days: "30 de zile"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Articole"
+      user_count: "Înregistrări"
+      active_user_count: "Utilizatori activi"
+      visitor_count: "Vizitatori"
+      eu_visitor_count: "Vizitatori din Uniunea Europeană"
+      traffic_info_footer_MF: |
+        În ultimele 6 luni, acest site a furnizat conținut unui număr estimat de { total_visitors, plural,
+            one {o persoană}
+            few {# persoane}
+          other {# de persoane}
+        } în fiecare lună, cu un număr estimat de { eu_visitors, plural,
+            one {o persoană}
+            few {# persoane}
+          other {# de persoane}
+        } din Uniunea Europeană.
+      contact: "Contactează-ne"
+      contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, te rugăm să ne contactezi la %{contact_info}."
+      site_activity: "Activitate site"
       view_more: "Vezi mai multe"
       view_less: "Vezi mai puține"
       activities:
+        topics:
+          one: "un subiect"
+          few: "%{formatted_number} subiecte"
+          other: "%{formatted_number} de subiecte"
+        posts:
+          one: "o postare"
+          few: "%{formatted_number} postări"
+          other: "%{formatted_number} de postări"
         periods:
           last_7_days: "în ultimele 7 zile"
           today: "astăzi"
@@ -974,19 +1007,19 @@ ro:
         everyone: "Toată lumea"
       notifications:
         watching:
-          title: "Urmărind activ"
+          title: "Urmărire"
           description: "Veți fi notificat pentru fiecare nouă postare în fiecare mesaj, și va fi afișat un contor al noilor răspunsuri."
         watching_first_post:
           title: "Urmărind activ prima postare"
           description: "Vei primi notificări despre mesajele noi din acest grup, dar nu și despre răspunsurile la mesaje."
         tracking:
-          title: "Urmărind"
+          title: "Monitorizare"
           description: "Vei fi notificat dacă cineva menționează @numele tău sau îți răspunde și va fi afișat un contor al noilor răspunsuri."
         regular:
           title: "Normal"
-          description: "Vei fi notificat dacă cineva îți menționează @numele sau îți va răspunde."
+          description: "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
         muted:
-          title: "Setat pe silențios"
+          title: "Silențios"
           description: "Nu veți fi informat despre nimic referitor la mesajele din acest grup."
       flair_url: "Imagine avatar cu element distinct"
       flair_upload_description: "Folosește imagini pătrate de cel puțin 20px cu 20px."
@@ -1093,7 +1126,7 @@ ro:
         ignore_duration_time_frame_required: "Te rog selectează un interval de timp"
         ignore_no_users: "Nu aveți utilizatori ignorați."
         ignore_option: "Ignorat"
-        mute_option: "Setate pe silențios"
+        mute_option: "Silențios"
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
@@ -1203,7 +1236,7 @@ ro:
       watched_tags_instructions: "Vei vedea automat toate subiectele cu aceste etichete. Vei fi notificat pentru fiecare nouă postare și subiect. De asemenea, un contor al noilor postări va apărea lângă subiect."
       tracked_tags: "Urmărite"
       tracked_tags_instructions: "Vei urmări automat toate subiectele cu aceste etichete. De asemenea, un contor al noilor postări va apărea lângă subiect."
-      muted_tags: "Setate pe silențios"
+      muted_tags: "Silențios"
       muted_tags_instructions: "Nu vei fi notificat despre nimic legat de noile subiecte cu aceste etichete, și subiectele respective nu vor apărea în lista cu ultimele subiecte."
       watched_categories: "Urmărite activ"
       watched_categories_instructions: "Vei vizualiza automat toate subiectele din aceste categorii. Vei fi notificat cu privire la toate noile postări și subiecte. De asemenea, un contor al noilor postări va apărea lângă subiect."
@@ -1213,7 +1246,7 @@ ro:
       watched_first_post_categories_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect din aceste categorii. "
       watched_first_post_tags: "Urmărire activă prima postare"
       watched_first_post_tags_instructions: "Vei fi notificat cu privire la prima postare din fiecare nou subiect cu aceste etichete."
-      muted_categories: "Setat pe silențios"
+      muted_categories: "Silențios"
       muted_categories_instructions: "Nu vei fi niciodată notificat cu privire la nimic legat de noile subiecte din aceste categorii și ele nu vor apărea în listă."
       muted_categories_instructions_dont_hide: "Nu vei fi anunțat cu privire la subiecte noi din aceste categorii."
       regular_categories: "Normal"
@@ -1277,7 +1310,7 @@ ro:
         profile: "Profil"
         emails: "Adrese de email"
         notifications: "Notificări"
-        tracking: "Urmărire"
+        tracking: "Monitorizare"
         categories: "Categorii"
         users: "Utilizatori"
         tags: "Etichete"
@@ -1673,6 +1706,7 @@ ro:
       profile_link: "%{username}, vizitează profil"
     user_status:
       save: "Salvează"
+      set_custom_status: "Setează stare personalizată"
     presence_toggle:
       online: "Conectat"
       offline: "Deconectat"
@@ -2340,11 +2374,11 @@ ro:
           30_minutes: "30 De minute"
           45_minutes: "45 De minute"
           1_hour: "1 Oră"
-          2_hours: "2 Ore"
-          4_hours: "4 Ore"
-          8_hours: "8 Ore"
-          12_hours: "12 Ore"
-          24_hours: "24 Ore"
+          2_hours: "2 ore"
+          4_hours: "4 ore"
+          8_hours: "8 ore"
+          12_hours: "12 ore"
+          24_hours: "24 de ore"
           custom: "Durată personalizată"
       topic_status_update:
         title: "Temporizator subiect"
@@ -2405,35 +2439,35 @@ ro:
           "2_4": "Vei vedea numărul răspunsurilor noi deoarece ai adăugat un comentariu în acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
           "2": 'Vei vedea numărul răspunsurilor noi deoarece <a href="%{basePath}/u/%{username}/preferences/notifications">citești acest subiect</a>.'
-          "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
-          "1": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
+          "1_2": "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
+          "1": "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
           "0_7": "Ignori toate notificările din această categorie."
           "0_2": "În acest moment ignori toate notificările de la acest subiect."
           "0": "În acest moment ignori toate notificările de la acest subiect."
         watching_pm:
-          title: "Urmărind activ"
+          title: "Urmărire"
           description: "Numărul postărilor noi va fi arătat pentru acest mesaj și vei fi notificat pentru orice răspuns scris."
         watching:
-          title: "Urmărind activ"
-          description: "Vei fi notificat la fiecare nou răspuns pe acest subiect și numărul de mesaje noi va fi afișat."
+          title: "Urmărire"
+          description: "Te vom notifica la fiecare răspuns nou pe acest subiect și va fi afișat numărul de mesaje noi."
         tracking_pm:
-          title: "Urmărit"
+          title: "Monitorizare"
           description: "Numărul postărilor noi va fi arătat pentru acest mesaj. Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
         tracking:
-          title: "Urmărit"
-          description: "Numărul postărilor noi va fi arătat pentru acest topic. Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
+          title: "Monitorizare"
+          description: "Va fi afișat numărul răspunsurilor noi pentru acest subiect. Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
         regular:
           title: "Normal"
-          description: "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
+          description: "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
         regular_pm:
           title: "Normal"
-          description: "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
+          description: "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
         muted_pm:
           title: "Silențios"
           description: "Nu vei fi niciodată notificat despre acest mesaj."
         muted:
           title: "Silențios"
-          description: "Nu vei fi notificat niciodată despre nimic legat de acest subiect și acesta nu va fi afișat la subiecte recente."
+          description: "Nu te vom notifica niciodată despre nimic legat de acest subiect și acesta nu va fi afișat în subiectele recente."
       actions:
         title: "Acțiuni"
         recover: "Restaurează subiect"
@@ -2819,16 +2853,16 @@ ro:
       navigate_to_first_post_after_read: "Navighează la prima postare după ce le citești pe celelalte"
       notifications:
         watching:
-          title: "Urmărind activ"
+          title: "Urmărire"
         watching_first_post:
           title: "Urmărind activ prima postare"
         tracking:
-          title: "Urmărire"
+          title: "Monitorizare"
         regular:
           title: "Normal"
-          description: "Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde."
+          description: "Te vom notifica dacă cineva îți menționează @numele sau îți răspunde."
         muted:
-          title: "Setat pe silențios"
+          title: "Silențios"
       search_priority:
         options:
           normal: "Normal"
@@ -3195,12 +3229,12 @@ ro:
         untagged_with_category: "%{filter} subiecte fără etichetă în %{category}"
       notifications:
         watching:
-          title: "Urmărind activ"
+          title: "Urmărire"
           description: "Vei urmări activ în mod automat toate discuțiile cu această etichetă. Vei primi notificări cu privire la toate noile postări și discuții, și în plus, un contor al postărilor noi și al celor necitite va apărea în dreptul discuției."
         watching_first_post:
           title: "Urmărind activ prima postare"
         tracking:
-          title: "Urmărind"
+          title: "Monitorizare"
           description: "Vei urmări automat toate discuțiile cu această etichetă. Un contor cu postările necitite și cu cele noi va apărea lângă discuție."
         regular:
           title: "Normal"
@@ -3336,6 +3370,13 @@ ro:
               content: "Utilizatori"
             my_posts:
               content: "Articolele mele"
+              content_drafts: "Ciornele mele"
+              title: "Activitatea mea recentă legată de subiect"
+              title_drafts: "Ciornele mele nepublicate"
+              draft_count:
+                one: "o ciornă"
+                few: "%{count} ciorne"
+                other: "%{count} de ciorne"
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
@@ -3511,6 +3552,7 @@ ro:
           previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
           experimental: "Experimental"
+          only_experiments: "Afișează doar caracteristici experimentale"
           experiment_enabled: "Ai activat funcționalitatea experimentală."
           experiment_disabled: "Ai dezactivat funcționalitatea experimentală."
           experiment_toggled_too_fast: "Ai comutat prea repede funcționalitatea experimentală. Te rugăm să aștepți câteva secunde înainte de a încerca din nou."
@@ -3792,6 +3834,7 @@ ro:
             Atunci când este prezentă, înlocuiește adresa de email de contact din /despre și este vizibilă pentru utilizatorii anonimi de pe site-urile publice.
           site_contact_name_help: |
             Un nume de utilizator al personalului de la care se trimit toate mesajele automate. Dacă este lăsat gol, va fi utilizat contul de sistem implicit.
+          your_organization: "Organizația ta"
           your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
           company_name_placeholder: "Organizația Acme"

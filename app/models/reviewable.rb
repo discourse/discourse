@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  UNKNOWN_TYPE_SOURCE = "unknown"
+
   self.ignored_columns = [:reviewable_by_group_id]
 
   class UpdateConflict < StandardError
@@ -41,6 +43,8 @@ class Reviewable < ActiveRecord::Base
   enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
 
   validates :reject_reason, length: { maximum: 2000 }
+
+  before_save :set_type_source
 
   after_create { log_history(:created, created_by) }
 
@@ -77,6 +81,16 @@ class Reviewable < ActiveRecord::Base
     self.types.map(&:sti_name)
   end
 
+  def self.source_for(type)
+    type = type.sti_name if type.is_a?(Class)
+    return UNKNOWN_TYPE_SOURCE if Reviewable.sti_names.exclude?(type)
+
+    DiscoursePluginRegistry
+      .reviewable_types_lookup
+      .find { |r| r[:klass].sti_name == type }
+      &.dig(:plugin) || "core"
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -87,6 +101,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+  end
+
+  def set_type_source
+    self.type_source = Reviewable.source_for(type)
   end
 
   def created_new!
@@ -766,8 +784,14 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
-  def self.unknown_types
-    Reviewable.pending.distinct.pluck(:type) - Reviewable.sti_names
+  def self.unknown_types_and_sources
+    @known_sources ||= Reviewable.sti_names.map { |n| [n, Reviewable.source_for(n)] }
+
+    known_unknowns = Reviewable.pending.distinct.pluck(:type, :type_source) - @known_sources
+
+    known_unknowns
+      .map { |type, source| { type: type, source: source } }
+      .sort_by { |e| [e[:source] == UNKNOWN_TYPE_SOURCE ? 1 : 0, e[:source], e[:type]] }
   end
 
   def self.destroy_unknown_types!
@@ -804,6 +828,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null

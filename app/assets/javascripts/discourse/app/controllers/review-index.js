@@ -6,6 +6,7 @@ import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -44,6 +45,7 @@ export default class ReviewIndexController extends Controller {
   sort_order = null;
   additional_filters = null;
   filterScoreType = null;
+  unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
   @discourseComputed("reviewableTypes")
   allTypes() {

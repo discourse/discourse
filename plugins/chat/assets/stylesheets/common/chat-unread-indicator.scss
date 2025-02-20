@@ -11,6 +11,8 @@
   text-align: center;
   transition: border-color linear 0.15s;
 
+  @content;
+
   &.-urgent {
     background: var(--success);
     color: var(--secondary);

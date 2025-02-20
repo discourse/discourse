@@ -589,6 +589,8 @@ en:
           one: "You have pending reviewables from disabled plugin:"
           other: "You have pending reviewables from disabled plugins:"
         instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
+        reviewable_unknown_source: "%{reviewableType} (unknown plugin)"
+        reviewable_known_source: "%{reviewableType} (from the '%{pluginName}' plugin)"
         ignore_all: "Ignore all"
         enable_plugins: "Enable plugins"
         delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
@@ -5365,6 +5367,22 @@ en:
 
       search:
         modal_title: "Search anything in admin"
+        result_types:
+          page:
+            one: "Page"
+            other: "Pages"
+          report:
+            one: "Report"
+            other: "Reports"
+          setting:
+            one: "Setting"
+            other: "Settings"
+          theme:
+            one: "Theme"
+            other: "Themes"
+          component:
+            one: "Component"
+            other: "Components"
 
       new_features:
         title: "What's new?"
@@ -6134,16 +6152,11 @@ en:
           common: "Common"
           desktop: "Desktop"
           mobile: "Mobile"
-          settings: "Settings"
-          translations: "Translations"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra files"
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           settings_editor: "Settings Editor"
-          show_advanced: "Show advanced fields"
-          hide_advanced: "Hide advanced fields"
           hide_unused_fields: "Hide unused fields"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"

@@ -55,6 +55,7 @@ module Stylesheet
           source_map_file: source_map_file,
           source_map_contents: true,
           load_paths: load_paths,
+          silence_deprecations: %w[color-functions import global-builtin],
         )
 
       result = engine.render
