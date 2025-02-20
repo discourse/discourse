@@ -279,7 +279,7 @@ jobs:
 #         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Run System Spec Device Screenshot Capture
-        if: env.screenshot
+        if: env.screenshot && matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
           LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
@@ -332,8 +332,9 @@ jobs:
 
       - name: Upload Device Screenshots to GitHub
         id: upload_images
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
         run: |
           COMMENT_BODY="📸 **Screenshots Captured:**"
           for file in tmp/capybara/device_*.png; do
@@ -356,11 +357,11 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Post Screenshot Comment
-        if: env.COMMENT_BODY
+        if: env.COMMENT_BODY && matrix.build_type == 'system' && matrix.target == 'core'
         uses: mshick/add-pr-comment@v2
         with:
           message: ${{ env.COMMENT_BODY }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
