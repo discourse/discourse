@@ -338,7 +338,7 @@ jobs:
 
       - name: Upload device system test screenshots
         uses: actions/upload-artifact@v4
-        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
+        if: always()
         with:
           name: device-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/capybara/device_*.png
