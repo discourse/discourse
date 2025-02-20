@@ -67,6 +67,17 @@ class ReviewableScoreSerializer < ApplicationSerializer
     setting_name
   end
 
+  def context
+    return object.context unless object.context.nil?
+    return unless object.reason == "watched_word" && object.reviewable.post.present?
+
+    words =
+      WordWatcher.new(object.reviewable.post.raw).word_matches_for_action?(:flag, all_matches: true)
+    return if words.nil?
+
+    I18n.t("reviewables.contexts.watched_word", words: words.join(", "), count: words.length)
+  end
+
   private
 
   def url_for(reason, text)

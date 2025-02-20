@@ -84,6 +84,22 @@ RSpec.describe ReviewableScoreSerializer do
     end
   end
 
+  describe "#context" do
+    it "tries to guess the watched words if they weren't recorded at the time of flagging" do
+      reviewable.target =
+        Fabricate(:post, raw: "I'm a post with some bad words like 'bad' and 'words'.")
+
+      score = serialized_score("watched_word")
+
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "bad")
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "words")
+
+      expect(score.context).to eq(
+        I18n.t("reviewables.contexts.watched_word", words: "bad, words", count: 2),
+      )
+    end
+  end
+
   def serialized_score(reason)
     score = ReviewableScore.new(reviewable: reviewable, reason: reason)
 
