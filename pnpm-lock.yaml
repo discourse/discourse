@@ -1030,6 +1030,9 @@ importers:
       content-tag:
         specifier: ^3.1.1
         version: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      core-js:
+        specifier: ^3.40.0
+        version: 3.40.0
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.9)

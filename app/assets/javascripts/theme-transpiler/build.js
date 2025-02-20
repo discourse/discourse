@@ -51,6 +51,7 @@ esbuild
     alias: {
       util: "./node_modules/@zxing/text-encoding",
       path: "path-browserify",
+      url: "./url-polyfill",
       "source-map-js": "source-map-js",
     },
     banner: {

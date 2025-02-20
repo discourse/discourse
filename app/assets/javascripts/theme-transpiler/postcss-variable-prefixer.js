@@ -23,8 +23,8 @@ export default function postcssVariablePrefixer() {
   return {
     postcssPlugin: "postcss-var-prefixer",
 
-    prepare(result) {
-      hash = hashString(result.root.source.input.css);
+    Once(root) {
+      hash = hashString(root.source.input.css);
     },
 
     Declaration(declaration) {
