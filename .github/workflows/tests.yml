@@ -228,12 +228,7 @@ jobs:
       - name: Fetch PR description
         if: github.event_name == 'pull_request'
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            TEXT="${{ github.event.pull_request.body }}"
-          else
-            TEXT="${{ github.event.comment.body }}"
-          fi
-
+          TEXT="${{ github.event.pull_request.body }}"
           echo "Extracting PR Body..."
           echo "$TEXT" > pr_body.txt
           cat pr_body.txt
