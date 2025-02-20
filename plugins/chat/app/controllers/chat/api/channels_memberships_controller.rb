@@ -50,6 +50,7 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:channel) { raise Discourse::NotFound }
+      on_model_not_found(:target_user) { raise Discourse::NotFound }
       on_failed_policy(:can_remove_users_from_channel) do
         render_json_error(I18n.t("chat.errors.user_cant_be_removed_from_channel"), status: 403)
       end

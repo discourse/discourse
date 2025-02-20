@@ -74,10 +74,18 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
           expect(response.status).to eq(404)
         end
       end
+
+      context "when target user is not found" do
+        it "returns a 404" do
+          delete "/chat/api/channels/#{channel_1.id}/memberships/31337"
+
+          expect(response.status).to eq(404)
+        end
+      end
     end
 
     context "when acting user is not an admin" do
-      it "returns a 422" do
+      it "returns a 403" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/#{other_user.id}"
 
         expect(response.status).to eq(403)

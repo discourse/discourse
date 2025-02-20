@@ -2,8 +2,6 @@
 
 RSpec.describe Chat::RemoveUserFromChannel do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(user_id: nil, channel_id: nil) }
-
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :user_id }
   end
@@ -45,7 +43,7 @@ RSpec.describe Chat::RemoveUserFromChannel do
           it { is_expected.to run_successfully }
 
           it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership }
+            expect { result }.to_not change { Chat::UserChatChannelMembership.count }
           end
         end
       end
@@ -80,12 +78,12 @@ RSpec.describe Chat::RemoveUserFromChannel do
           it { is_expected.to run_successfully }
 
           it "does nothing" do
-            expect { result }.to_not change { Chat::UserChatChannelMembership }
+            expect { result }.to_not change { Chat::UserChatChannelMembership.count }
           end
         end
       end
 
-      context "when direct channel" do
+      context "when channel is a one-on-one DM" do
         context "with existing membership" do
           fab!(:channel) { Fabricate(:direct_message_channel, users: [acting_user, user]) }
 

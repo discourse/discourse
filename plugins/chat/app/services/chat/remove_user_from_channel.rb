@@ -21,11 +21,11 @@ module Chat
     #   @param [Guardian] guardian
     #   @param [Hash] params
     #   @option params [Integer] :channel_id ID of the channel
-    #   @option params [String] :user_id
+    #   @option params [Integer] :user_id
     #   @return [Service::Base::Context]
 
     params do
-      attribute :user_id, :string
+      attribute :user_id, :integer
       attribute :channel_id, :integer
 
       validates :user_id, presence: true
@@ -53,7 +53,7 @@ module Chat
     end
 
     def can_remove_users_from_channel(guardian:, channel:)
-      guardian.can_remove_members?(channel.chatable)
+      guardian.can_remove_members?(channel)
     end
 
     def remove(channel:, target_user:)
