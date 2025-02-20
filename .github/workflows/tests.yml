@@ -336,39 +336,56 @@ jobs:
       #     name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
       #     path: tmp/capybara/failures_*.png
 
-      - name: Upload Device Screenshots to GitHub
-        id: upload_device_screenshots
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
-        run: |
-          COMMENT_BODY="📸 **Screenshots Captured:**"
-          for file in tmp/capybara/device_*.png; do
-            if [ -f "$file" ]; then
-              FILENAME=$(basename "$file")
-              UPLOAD_URL=$(curl -s -H "Authorization: token $GH_TOKEN" \
-                -H "Accept: application/vnd.github.v3+json" \
-                -H "Content-Type: image/png" \
-                --data-binary @"$file" \
-                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" | jq -r '.url')
+      - name: Upload device system test screenshots
+        uses: actions/upload-artifact@v4
+        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
+        with:
+          name: device-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
+          path: tmp/capybara/device_*.png
 
-              if [ "$UPLOAD_URL" != "null" ]; then
-                COMMENT_BODY+="\n- ![$FILENAME]($UPLOAD_URL)"
-              fi
-            fi
-          done
+      # - name: Upload Device Screenshots to GitHub
+      #   id: upload_device_screenshots
+      #   if: matrix.build_type == 'system' && matrix.target == 'core'
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
+      #   run: |
+      #     COMMENT_BODY="📸 **Screenshots Captured:**"
+      #     for file in tmp/capybara/device_*.png; do
+      #       if [ -f "$file" ]; then
+      #         FILENAME=$(basename "$file")
+      #         UPLOAD_URL=$(curl -s -H "Authorization: token $GH_TOKEN" \
+      #           -H "Accept: application/vnd.github.v3+json" \
+      #           -H "Content-Type: image/png" \
+      #           --data-binary @"$file" \
+      #           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" | jq -r '.url')
 
-          echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
-          echo "$COMMENT_BODY" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+      #         if [ "$UPLOAD_URL" != "null" ]; then
+      #           COMMENT_BODY+="\n- ![$FILENAME]($UPLOAD_URL)"
+      #         fi
+      #       fi
+      #     done
 
-      - name: Post Device Screenshot Comment
-        id: post_device_screenshot_comment
-        if: env.COMMENT_BODY && matrix.build_type == 'system' && matrix.target == 'core'
+      #     echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
+      #     echo "$COMMENT_BODY" >> $GITHUB_ENV
+      #     echo "EOF" >> $GITHUB_ENV
+
+      - name: Post Comment with Download Link
         uses: mshick/add-pr-comment@v2
         with:
-          message: ${{ env.COMMENT_BODY }}
+          message: |
+            📸 **Screenshots Captured!**
+
+            You can download the screenshots from the Actions tab:
+            [Artifacts - PR_Screenshots](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
           repo-token: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
+
+      # - name: Post Device Screenshot Comment
+      #   id: post_device_screenshot_comment
+      #   if: env.COMMENT_BODY && matrix.build_type == 'system' && matrix.target == 'core'
+      #   uses: mshick/add-pr-comment@v2
+      #   with:
+      #     message: ${{ env.COMMENT_BODY }}
+      #     repo-token: ${{ secrets.GITHUB_DEVICE_SCREENSHOT_TOKEN }}
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
