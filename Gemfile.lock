@@ -518,7 +518,7 @@ GEM
     sassc-embedded (1.80.2)
       sass-embedded (~> 1.80)
     securerandom (0.4.1)
-    selenium-devtools (0.132.0)
+    selenium-devtools (0.133.0)
       selenium-webdriver (~> 4.2)
     selenium-webdriver (4.29.0)
       base64 (~> 0.2)
