@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -12,7 +11,6 @@ import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
-import { i18n } from "discourse-i18n";
 import AdminSearchFilters from "admin/components/admin-search-filters";
 import { RESULT_TYPES } from "admin/services/admin-search-data-source";
 
@@ -62,12 +60,13 @@ export default class AdminSearch extends Component {
   changeSearchTerm(event) {
     this.searchResults = [];
     this.filter = event.target.value;
+    this.loading = true;
     this.search();
+    this.loading = false;
   }
 
   @action
   search() {
-    this.loading = true;
     discourseDebounce(this, this.#search, INPUT_DELAY);
   }
 
@@ -75,16 +74,12 @@ export default class AdminSearch extends Component {
     this.searchResults = this.adminSearchDataSource.search(this.filter, {
       types: this.visibleTypes,
     });
-    this.loading = false;
   }
 
   <template>
     <div class="admin-search__input-container">
       <div class="admin-search__input-group">
-          {{icon
-            "magnifying-glass"
-            class="admin-search__input-icon"
-          }}
+        {{icon "magnifying-glass" class="admin-search__input-icon"}}
         <input
           type="text"
           class="admin-search__input-field"
@@ -112,7 +107,9 @@ export default class AdminSearch extends Component {
                 {{#if result.icon}}
                   {{icon result.icon}}
                 {{/if}}
-                <span class="admin-search__result-name-label">{{result.label}}</span>
+                <span
+                  class="admin-search__result-name-label"
+                >{{result.label}}</span>
               </div>
               {{#if result.description}}
                 <div class="admin-search__result-description">{{htmlSafe
