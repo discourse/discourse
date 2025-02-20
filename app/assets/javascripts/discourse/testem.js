@@ -215,10 +215,13 @@ if (themeTestPages) {
     "/plugins/": {
       target,
     },
-    "/bootstrap/plugin-css-for-tests.css": {
+    "/bootstrap/": {
       target,
     },
     "/stylesheets/": {
+      target,
+    },
+    "/extra-locales/": {
       target,
     },
   };
