@@ -37,7 +37,6 @@ $mobile-breakpoint: 700px;
       white-space: nowrap;
       flex-wrap: nowrap;
       overflow-x: scroll;
-      -webkit-overflow-scrolling: touch;
       margin: 0 0 0 -10px;
       padding: 0 10px 10px 10px;
     }
@@ -702,7 +701,6 @@ $mobile-breakpoint: 700px;
     @include breakpoint(tablet) {
       margin-left: -10px;
       overflow-x: scroll;
-      -webkit-overflow-scrolling: touch;
     }
 
     &::before {
