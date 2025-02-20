@@ -50,11 +50,18 @@ module Jobs
           s = post.raw
           s << " #{post.topic.title}" if post.post_number == 1
           if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
+            words = WordWatcher.new(s).word_matches_for_action?(:flag, all_matches: true)
             PostActionCreator.create(
               Discourse.system_user,
               post,
               :inappropriate,
               reason: :watched_word,
+              context:
+                I18n.t(
+                  "reviewables.contexts.watched_word",
+                  words: words.join(", "),
+                  count: words.length,
+                ),
             )
           end
         end

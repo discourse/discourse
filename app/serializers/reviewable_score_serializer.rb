@@ -17,7 +17,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     contains_media: "skip_media_review_groups",
   }
 
-  attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at
+  attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at, :context
 
   attribute :status_for_database, key: :status
 
