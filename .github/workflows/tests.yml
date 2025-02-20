@@ -225,6 +225,21 @@ jobs:
             exit 1
           fi
 
+      - name: Fetch PR description
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.pull_request.body }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Parse device screenshot commands
+        id: parse
+        run: |
+          SCREENSHOT_COMMAND=$(echo "$PR_BODY" | grep -oP 'screenshot: \K[\w/.\-:]+')
+          if [ -n "$SCREENSHOT_COMMAND" ]; then
+            echo "screenshot=$SCREENSHOT_COMMAND" >> $GITHUB_ENV
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
@@ -262,6 +277,14 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+
+      - name: Run System Spec Device Screenshot Capture
+        if: env.screenshot
+        run: |
+          FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
+          LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
+
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec $FILE_PATH:$LINE_NUM
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
@@ -305,7 +328,39 @@ jobs:
         if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
           name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/capybara/*.png
+          path: tmp/capybara/failures_*.png
+
+      - name: Upload Device Screenshots to GitHub
+        id: upload_images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_BODY="📸 **Screenshots Captured:**"
+          for file in tmp/capybara/device_*.png; do
+            if [ -f "$file" ]; then
+              FILENAME=$(basename "$file")
+              UPLOAD_URL=$(curl -s -H "Authorization: token $GH_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Content-Type: image/png" \
+                --data-binary @"$file" \
+                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" | jq -r '.url')
+
+              if [ "$UPLOAD_URL" != "null" ]; then
+                COMMENT_BODY+="\n- ![$FILENAME]($UPLOAD_URL)"
+              fi
+            fi
+          done
+
+          echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
+          echo "$COMMENT_BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Post Screenshot Comment
+        if: env.COMMENT_BODY
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: ${{ env.COMMENT_BODY }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report

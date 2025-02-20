@@ -113,6 +113,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       ],
     )
     expect(page).to have_no_css(".sidebar-no-results")
+    screenshot_on_ci
 
     filter.filter("ieeee")
     expect(page).to have_no_css(".sidebar-section-link-content-text")
