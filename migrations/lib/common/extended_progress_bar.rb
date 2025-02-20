@@ -9,7 +9,7 @@ module Migrations
 
       @warning_count = 0
       @error_count = 0
-      @extra_information = ""
+      @extra_information = +""
 
       @base_format = nil
       @progressbar = nil
@@ -18,40 +18,30 @@ module Migrations
     def run
       raise "ProgressBar already started" if @progressbar
 
-      format = setup_progressbar
+      format = calculate_format
+      setup_progressbar
+
       yield self
+
       finalize_progressbar(format)
 
       nil
     end
 
     def update(progress, warning_count, error_count)
-      extra_information_changed = false
+      updated = false
 
       if warning_count > 0
         @warning_count += warning_count
-        extra_information_changed = true
+        updated = true
       end
 
       if error_count > 0
         @error_count += error_count
-        extra_information_changed = true
+        updated = true
       end
 
-      if extra_information_changed
-        @extra_information = +""
-
-        if @warning_count > 0
-          @extra_information << " | " <<
-            I18n.t("progressbar.warnings", count: @warning_count).yellow
-        end
-
-        if @error_count > 0
-          @extra_information << " | " << I18n.t("progressbar.errors", count: @error_count).red
-        end
-
-        @progressbar.format = "#{@base_format}#{@extra_information}"
-      end
+      update_format if updated
 
       if progress == 1
         @progressbar.increment
@@ -62,16 +52,19 @@ module Migrations
 
     private
 
+    def calculate_format
+      if @max_progress
+        format = I18n.t("progressbar.processed.progress_with_max", current: "%c", max: "%C")
+        @base_format = "    %a | %E | #{format}"
+      else
+        format = I18n.t("progressbar.processed.progress", current: "%c")
+        @base_format = "    %a | #{format}"
+      end
+
+      format
+    end
+
     def setup_progressbar
-      format =
-        if @max_progress
-          I18n.t("progressbar.processed.progress_with_max", current: "%c", max: "%C")
-        else
-          I18n.t("progressbar.processed.progress", current: "%c")
-        end
-
-      @base_format = @max_progress ? "    %a |%E | #{format}" : "    %a | #{format}"
-
       @progressbar =
         ::ProgressBar.create(
           total: @max_progress,
@@ -83,8 +76,17 @@ module Migrations
           format: @base_format,
           throttle_rate: 0.5,
         )
+    end
 
-      format
+    def update_format
+      @extra_information.clear
+
+      messages = []
+      messages << I18n.t("progressbar.warnings", count: @warning_count).yellow if @warning_count > 0
+      messages << I18n.t("progressbar.errors", count: @error_count).red if @error_count > 0
+
+      @extra_information << " | #{messages.join(" | ")}" unless messages.empty?
+      @progressbar.format = "#{@base_format}#{@extra_information}"
     end
 
     def finalize_progressbar(format)
