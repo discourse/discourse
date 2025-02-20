@@ -333,7 +333,7 @@ jobs:
         id: fetch-job-id
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
