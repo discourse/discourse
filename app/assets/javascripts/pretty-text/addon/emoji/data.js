@@ -8018,7 +8018,7 @@ export const replacements = {
   "🖌": "paintbrush",
   "🔍": "mag",
   "🔎": "mag_right",
-  "❤": "heart",
+  "❤️": "heart",
   "💛": "yellow_heart",
   "💚": "green_heart",
   "💙": "blue_heart",
