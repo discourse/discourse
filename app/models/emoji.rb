@@ -2,7 +2,7 @@
 
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "12"
+  EMOJI_VERSION = "13"
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
@@ -37,11 +37,11 @@ class Emoji
   end
 
   def self.aliases
-    db["aliases"]
+    aliases_db
   end
 
   def self.search_aliases
-    db["searchAliases"]
+    search_aliases_db
   end
 
   def self.translations
@@ -53,7 +53,7 @@ class Emoji
   end
 
   def self.tonable_emojis
-    db["tonableEmojis"]
+    tonable_emojis_db
   end
 
   def self.custom?(name)
@@ -130,7 +130,7 @@ class Emoji
   end
 
   def self.groups_file
-    @groups_file ||= "#{Rails.root}/lib/emoji/groups.json"
+    @groups_file ||= DiscourseEmojis.paths[:groups]
   end
 
   def self.groups
@@ -146,16 +146,48 @@ class Emoji
       end
   end
 
-  def self.db_file
-    @db_file ||= "#{Rails.root}/lib/emoji/db.json"
+  def self.emojis_db_file
+    @emojis_db_file ||= DiscourseEmojis.paths[:emojis]
   end
 
-  def self.db
-    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+  def self.emojis_db
+    @emojis_db ||= Emoji.parse_emoji_file(emojis_db_file)
+  end
+
+  def self.translations_db_file
+    @translations_db_file ||= DiscourseEmojis.paths[:translations]
+  end
+
+  def self.translations_db
+    @translations_db ||= Emoji.parse_emoji_file(translations_db_file)
+  end
+
+  def self.tonable_emojis_db_file
+    @tonable_emojis_db_file ||= DiscourseEmojis.paths[:tonable_emojis]
+  end
+
+  def self.tonable_emojis_db
+    @tonable_emojis_db ||= Emoji.parse_emoji_file(tonable_emojis_db_file)
+  end
+
+  def self.aliases_db_file
+    @aliases_db_file ||= DiscourseEmojis.paths[:aliases]
+  end
+
+  def self.aliases_db
+    @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
+  end
+
+  def self.search_aliases_db_file
+    @search_aliases_db_file ||= DiscourseEmojis.paths[:search_aliases]
+  end
+
+  def self.search_aliases_db
+    @search_aliases_db ||= Emoji.parse_emoji_file(search_aliases_db_file)
   end
 
   def self.load_standard
-    db["emojis"].map { |e| Emoji.create_from_db_item(e) }.compact
+    emojis_db.map { |e| Emoji.create_from_db_item(e) }.compact
   end
 
   def self.load_allowed
@@ -210,7 +242,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"]
+    translations_db
   end
 
   def self.base_directory
@@ -233,7 +265,7 @@ class Emoji
         is_tonable_emojis = Emoji.tonable_emojis
         fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
-        db["emojis"].each do |e|
+        emojis_db.each do |e|
           name = e["name"]
 
           # special cased as we prefer to keep these as symbols
@@ -279,7 +311,7 @@ class Emoji
         map = {}
         is_tonable_emojis = Emoji.tonable_emojis
 
-        db["emojis"].each do |e|
+        emojis_db.each do |e|
           next if e["name"] == "tm"
 
           code = replacement_code(e["code"])
@@ -328,5 +360,9 @@ class Emoji
 
   def self.sanitize_emoji_name(name)
     name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
+  end
+
+  def self.parse_emoji_file(file)
+    File.open(file, "r:UTF-8") { |f| JSON.parse(f.read) }
   end
 end

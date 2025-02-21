@@ -2548,12 +2548,16 @@ en:
       continue: "Continue to %{site_name}"
 
     emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
+      apple_international: "Apple/International (deprecated to Standard)"
+      google: "Google (deprecated to Noto)"
+      twitter: "Twemoji"
+      win10: "Win10 (deprecated to Fluent UI)"
+      google_classic: "Google Classic (deprecated to Noto)"
+      facebook_messenger: "Facebook Messenger (deprecated to Standard)"
+      openmoji: OpenMoji
+      standard: Standard
+      fluentui: Fluent UI
+      noto: Noto
 
     category_page_style:
       categories_only: "Categories Only"

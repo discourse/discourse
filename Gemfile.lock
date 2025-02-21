@@ -126,6 +126,7 @@ GEM
     diffy (3.4.3)
     digest (3.2.0)
     digest-xxhash (0.2.9)
+    discourse-emojis (1.0.4)
     discourse-fonts (0.0.18)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -642,6 +643,7 @@ DEPENDENCIES
   diffy
   digest
   digest-xxhash
+  discourse-emojis
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets

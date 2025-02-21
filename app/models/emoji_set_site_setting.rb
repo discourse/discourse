@@ -9,6 +9,10 @@ class EmojiSetSiteSetting < EnumSiteSetting
 
   def self.values
     @values ||= [
+      { name: "emoji_set.openmoji", value: "openmoji" },
+      { name: "emoji_set.standard", value: "unicode" },
+      { name: "emoji_set.fluentui", value: "fluentui" },
+      { name: "emoji_set.noto", value: "noto" },
       { name: "emoji_set.apple_international", value: "apple" },
       { name: "emoji_set.google", value: "google" },
       { name: "emoji_set.twitter", value: "twitter" },
