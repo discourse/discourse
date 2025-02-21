@@ -1,8 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 
-let searchAliases;
+let searchAliasesPromise;
 
 export default async function loadEmojiSearchAliases() {
-  searchAliases ??= await ajax("/emojis/search-aliases");
-  return searchAliases;
+  searchAliasesPromise ??= ajax("/emojis/search-aliases");
+  return await searchAliases;
 }
