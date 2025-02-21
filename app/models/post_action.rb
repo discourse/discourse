@@ -269,7 +269,6 @@ end
 #  deferred_at         :datetime
 #  disagreed_at        :datetime
 #  disagreed_by_id     :integer
-#  context             :string
 #
 # Indexes
 #
