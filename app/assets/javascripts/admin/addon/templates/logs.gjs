@@ -31,10 +31,12 @@ export default RouteTemplate(
             @label="admin.config.staff_action_logs.sub_pages.screened_emails.title"
           />
         {{/if}}
-        <NavItem
-          @route="adminLogs.screenedIpAddresses"
-          @label="admin.config.staff_action_logs.sub_pages.screened_ips.title"
-        />
+        {{#if this.currentUser.can_see_ip}}
+          <NavItem
+            @route="adminLogs.screenedIpAddresses"
+            @label="admin.config.staff_action_logs.sub_pages.screened_ips.title"
+          />
+        {{/if}}
         <NavItem
           @route="adminLogs.screenedUrls"
           @label="admin.config.staff_action_logs.sub_pages.screened_urls.title"
