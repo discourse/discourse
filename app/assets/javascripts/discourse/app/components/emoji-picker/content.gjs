@@ -25,6 +25,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
@@ -118,16 +119,6 @@ export default class EmojiPicker extends Component {
     };
   }
 
-  get flatEmojis() {
-    if (!this.emojiStore.list) {
-      return [];
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    let { favorites, ...rest } = this.emojiStore.list;
-    return Object.values(rest).flat();
-  }
-
   @action
   registerFilterInput(element) {
     this.filterInput = element;
@@ -179,19 +170,26 @@ export default class EmojiPicker extends Component {
   debouncedDidInputFilter(filter = "") {
     filter = filter.toLowerCase();
 
-    const results = emojiSearch(filter, {
-      exclude: this.site.denied_emojis,
-    }).slice(0, 50);
+    loadEmojiSearchAliases().then((searchAliases) => {
+      const results = emojiSearch(filter, {
+        exclude: this.site.denied_emojis,
+        searchAliases,
+      }).slice(0, 50);
 
-    this.filteredEmojis =
-      this.flatEmojis.filter((emoji) => results.includes(emoji.name)) ?? [];
+      this.filteredEmojis = results.map((emoji) => {
+        return {
+          name: emoji,
+          url: emojiUrlFor(emoji),
+        };
+      });
 
-    this.isFiltering = false;
+      this.isFiltering = false;
 
-    schedule("afterRender", () => {
-      if (this.scrollableNode) {
-        this.scrollableNode.scrollTop = 0;
-      }
+      schedule("afterRender", () => {
+        if (this.scrollableNode) {
+          this.scrollableNode.scrollTop = 0;
+        }
+      });
     });
   }
 

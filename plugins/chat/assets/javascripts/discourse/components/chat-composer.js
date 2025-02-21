@@ -17,6 +17,7 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
@@ -622,13 +623,16 @@ export default class ChatComposer extends Component {
             }
           }
 
-          const options = emojiSearch(term, {
-            maxResults: 5,
-            diversity: this.emojiStore.diversity,
-            exclude: emojiDenied,
-          });
+          loadEmojiSearchAliases().then((searchAliases) => {
+            const options = emojiSearch(term, {
+              maxResults: 5,
+              diversity: this.emojiStore.diversity,
+              exclude: emojiDenied,
+              searchAliases,
+            });
 
-          return resolve(options);
+            resolve(options);
+          });
         })
           .then((list) => {
             if (list === SKIP) {

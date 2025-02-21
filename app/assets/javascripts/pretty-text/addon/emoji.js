@@ -2,7 +2,6 @@ import {
   aliases,
   emojis,
   replacements,
-  searchAliases,
   tonableEmojis,
   translations,
 } from "pretty-text/emoji/data";
@@ -15,8 +14,6 @@ export function registerEmoji(code, url, group) {
   extendedEmojiMap.set(code, { url, group });
 }
 
-const emojiMap = new Map();
-
 // Regex from https://github.com/mathiasbynens/emoji-test-regex-pattern/blob/main/dist/latest/javascript.txt
 // plus some glyphs that are not in the emoji range: ☻|♡|
 export const emojiReplacementRegex =
@@ -26,10 +23,6 @@ function textEmojiRegex(inlineEmoji) {
   return inlineEmoji ? /:[^\s:]+(?::t\d)?:?/g : /\B:[^\s:]+(?::t\d)?:?\B/g;
 }
 
-// add all default emojis
-emojis.forEach((code) => emojiMap.set(code, true));
-
-// and their aliases
 const aliasMap = new Map();
 Object.entries(aliases).forEach(([name, list]) => {
   list.forEach((alias) => aliasMap.set(alias, name));
@@ -165,7 +158,7 @@ export function buildEmojiUrl(code, opts) {
     opts.emojiSet &&
     noToneMatch &&
     !url &&
-    (emojiMap.has(noToneMatch[1]) || aliasMap.has(noToneMatch[1]))
+    (emojis.has(noToneMatch[1]) || aliasMap.has(noToneMatch[1]))
   ) {
     url = opts.getURL(
       `${emojiBasePath}/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
@@ -181,12 +174,12 @@ export function buildEmojiUrl(code, opts) {
 
 export function emojiExists(code) {
   code = code.toLowerCase();
-  return extendedEmojiMap.has(code) || emojiMap.has(code) || aliasMap.has(code);
+  return extendedEmojiMap.has(code) || emojis.has(code) || aliasMap.has(code);
 }
 
 export function normalizeEmoji(code) {
   code = code.toLowerCase();
-  if (extendedEmojiMap.get(code) || emojiMap.get(code)) {
+  if (extendedEmojiMap.get(code) || emojis.get(code)) {
     return code;
   }
   return aliasMap.get(code);
@@ -202,11 +195,7 @@ export function emojiSearch(term, options) {
   }
 
   if (!toSearch) {
-    toSearch = [
-      ...emojiMap.keys(),
-      ...extendedEmojiMap.keys(),
-      ...aliasMap.keys(),
-    ].sort();
+    toSearch = [...emojis.keys(), ...extendedEmojiMap.keys()].sort();
   }
 
   const results = [];
@@ -230,10 +219,12 @@ export function emojiSearch(term, options) {
     }
   }
 
-  for (const [key, value] of Object.entries(searchAliases)) {
-    if (key.startsWith(term)) {
-      for (const emoji of value) {
-        addResult(emoji);
+  if (options.searchAliases) {
+    for (const [key, value] of Object.entries(options.searchAliases)) {
+      for (const item of value) {
+        if (item.startsWith(term)) {
+          addResult(key);
+        }
       }
     }
   }
