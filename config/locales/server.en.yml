@@ -1766,6 +1766,7 @@ en:
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Accent marks in search queries are disregarded if this setting is enabled, allowing users to find results even if they don't input the correct accents."
     search_default_sort_order: "Default sort order for full-page search"
+    search_experience: "The default position and appearance of search on desktop devices."
     category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
