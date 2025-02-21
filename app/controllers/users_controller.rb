@@ -1734,6 +1734,7 @@ class UsersController < ApplicationController
     current_user.user_second_factors.destroy_all
     current_user.second_factor_security_keys.destroy_all
 
+    current_user.user_option.update!(password_disabled: false)
     Jobs.enqueue(
       :critical_user_email,
       type: "account_second_factor_disabled",

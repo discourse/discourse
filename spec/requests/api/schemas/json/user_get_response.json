@@ -815,6 +815,9 @@
             },
             "topics_unread_when_closed": {
               "type": "boolean"
+            },
+            "password_disabled": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -853,7 +856,8 @@
             "title_count_mode",
             "timezone",
             "skip_new_user_tips",
-            "topics_unread_when_closed"
+            "topics_unread_when_closed",
+            "password_disabled"
           ]
         }
       },

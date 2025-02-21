@@ -100,6 +100,8 @@ class UserOption < ActiveRecord::Base
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
 
+    self.password_disabled = SiteSetting.default_password_disabled
+
     true
   end
 
@@ -300,6 +302,7 @@ end
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
 #  show_thread_title_prompts            :boolean          default(TRUE), not null
 #  enable_smart_lists                   :boolean          default(TRUE), not null
+#  password_disabled                    :boolean          default(FALSE), not null
 #
 # Indexes
 #

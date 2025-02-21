@@ -323,9 +323,6 @@ class SessionController < ApplicationController
 
   def create
     params.require(:login)
-    params.require(:password)
-
-    return invalid_credentials if params[:password].length > User.max_password_length
 
     user = User.find_by_username_or_email(normalized_login_param)
 
@@ -334,12 +331,28 @@ class SessionController < ApplicationController
     rate_limit_second_factor!(user)
 
     if user.present?
-      password = params[:password]
+      if user.user_option.password_disabled &&
+           (!params.key?(:password) || !params[:password].blank?)
+        return invalid_credentials
+      end
 
-      # If their password is incorrect
-      if !user.confirm_password?(password)
-        invalid_credentials
-        return
+      unless user.user_option.password_disabled
+        return invalid_credentials if params[:password].blank?
+        return invalid_credentials if params[:password].length > User.max_password_length
+
+        password = params[:password]
+
+        # If their password is incorrect
+        if !user.confirm_password?(password)
+          invalid_credentials
+          return
+        end
+
+        # User's password has expired so they need to reset it
+        if user.password_expired?(password)
+          render json: { error: "expired", reason: "expired" }
+          return
+        end
       end
 
       # If the site requires user approval and the user is not approved yet
@@ -351,12 +364,6 @@ class SessionController < ApplicationController
       # User signed on with username and password, so let's prevent the invite link
       # from being used to log in (if one exists).
       Invite.invalidate_for_email(user.email)
-
-      # User's password has expired so they need to reset it
-      if user.password_expired?(password)
-        render json: { error: "expired", reason: "expired" }
-        return
-      end
     else
       invalid_credentials
       return

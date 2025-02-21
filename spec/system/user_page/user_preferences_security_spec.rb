@@ -49,6 +49,41 @@ describe "User preferences | Security", type: :system do
       # clear authenticator (otherwise it will interfere with other tests)
       authenticator&.remove!
     end
+
+    it "adds a 2FA security key and disables password then logs in" do
+      options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+      authenticator = page.driver.browser.add_virtual_authenticator(options)
+
+      user_preferences_security_page.visit(user)
+      user_preferences_security_page.visit_second_factor(password)
+
+      find(".security-key .new-security-key").click
+      expect(user_preferences_security_page).to have_css("input#security-key-name")
+
+      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
+      find(".add-security-key").click
+
+      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
+
+      find(".controls #password_disabled_checkbox").click
+      find(".save-button .btn-primary").click
+      expect(find(".controls #password_disabled_checkbox input")).to be_checked
+
+      user_menu.sign_out
+
+      # login flow
+      find(".d-header .login-button").click
+      find("input#login-account-name").fill_in(with: user.username)
+      #find("input#login-account-password").fill_in(with: password)
+
+      find(".d-modal__footer .btn-primary").click
+      find("#security-key .btn-primary").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    ensure
+      # clear authenticator (otherwise it will interfere with other tests)
+      authenticator&.remove!
+    end
   end
 
   shared_examples "passkeys" do
