@@ -1,6 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -261,11 +262,32 @@ function pluginAdminRouteLinks(router) {
       }
     })
     .map((plugin) => {
+      const pluginAdminRoute = plugin.admin_route.use_new_show_route
+        ? `adminPlugins.show`
+        : `adminPlugins.${plugin.admin_route.location}`;
+      const pluginConfigNav = configNavForPlugin(plugin.name);
+
+      let pluginNavLinks = [];
+      if (pluginConfigNav) {
+        pluginNavLinks = [...pluginConfigNav.links];
+
+        if (pluginNavLinks.length) {
+          pluginNavLinks = pluginNavLinks
+            .map((link) => {
+              if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
+                link.routeModels = [plugin.name];
+                return link;
+              } else {
+                return;
+              }
+            })
+            .compact();
+        }
+      }
+
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
-        route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show`
-          : `adminPlugins.${plugin.admin_route.location}`,
+        route: pluginAdminRoute,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
           : [],
@@ -273,6 +295,7 @@ function pluginAdminRouteLinks(router) {
         text: plugin.humanized_name,
         icon: "gear",
         description: plugin.description,
+        links: pluginNavLinks,
       };
     });
 }
