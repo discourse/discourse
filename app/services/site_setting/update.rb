@@ -55,8 +55,10 @@ class SiteSetting::Update
   end
 
   def save(params:, guardian:)
-    params.settings.each do |setting_name, value|
-      SiteSetting.set_and_log(setting_name, value, guardian.user)
+    ActiveRecord::Base.transaction do
+      params.settings.each do |setting_name, value|
+        SiteSetting.set_and_log(setting_name, value, guardian.user)
+      end
     end
   end
 end
