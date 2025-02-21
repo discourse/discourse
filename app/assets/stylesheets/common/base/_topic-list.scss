@@ -210,7 +210,7 @@
   }
 
   > .topic-list-body > .topic-list-item {
-    &.has-excerpt .star {
+    &.excerpt-expanded .star {
       vertical-align: top;
       margin-top: 2px;
     }

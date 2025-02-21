@@ -54,6 +54,7 @@ en:
     deleted_chat_username: deleted
     errors:
       users_cant_be_added_to_channel: "Users can't be added to this channel."
+      user_cant_be_removed_from_channel: "User can't be removed from this channel"
       channel_exists_for_category: "A channel already exists for this category and name"
       channel_new_message_disallowed:
         archived: "The channel is archived, no new messages can be sent"
