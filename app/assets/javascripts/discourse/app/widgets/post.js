@@ -794,6 +794,7 @@ createWidget("post-contents", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-notice", {
   tagName: "div.post-notice",
 
