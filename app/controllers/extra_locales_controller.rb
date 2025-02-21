@@ -36,7 +36,7 @@ class ExtraLocalesController < ApplicationController
       elsif bundle.in?(SHARED_BUNDLES)
         js_digests[:shared][bundle_key] ||= Digest::MD5.hexdigest(bundle_js(bundle))
       else
-        throw "Unknown bundle: #{bundle}"
+        raise "Unknown bundle: #{bundle}"
       end
     end
 
