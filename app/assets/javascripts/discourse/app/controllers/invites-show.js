@@ -9,23 +9,24 @@ import { extractError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import DiscourseURL from "discourse/lib/url";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
 
 export default class InvitesShowController extends Controller.extend(
-  PasswordValidation,
   UserFieldsValidation
 ) {
+  @tracked accountPassword;
   @tracked accountUsername;
   @tracked isDeveloper;
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
+  passwordValidationHelper = new PasswordValidationHelper(this);
   successMessage = null;
   @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;
@@ -62,6 +63,11 @@ export default class InvitesShowController extends Controller.extend(
   @dependentKeyCompat
   get nameValidation() {
     return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
   }
 
   authenticationComplete(options) {
@@ -357,8 +363,10 @@ export default class InvitesShowController extends Controller.extend(
             this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
-            this.rejectedPasswords.pushObject(this.accountPassword);
-            this.rejectedPasswordsMessages.set(
+            this.passwordValidationHelper.rejectedPasswords.push(
+              this.accountPassword
+            );
+            this.passwordValidationHelper.rejectedPasswordsMessages.set(
               this.accountPassword,
               result.errors["user_password.password"][0]
             );
