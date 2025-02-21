@@ -15,6 +15,7 @@ import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
+import Badge from "discourse/models/badge";
 import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -180,6 +181,16 @@ export default class Post extends RestModel {
   @trackedPostProperty wiki;
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
+  @trackedPostProperty last_wiki_edit;
+  @trackedPostProperty group_moderator;
+  @trackedPostProperty staff;
+  @trackedPostProperty admin;
+  @trackedPostProperty moderator;
+  @trackedPostProperty trust_level;
+  @trackedPostProperty primary_group_name;
+  @trackedPostProperty user_title;
+  @trackedPostProperty title_is_group;
+  @trackedPostProperty badges_granted;
 
   customShare = null;
 
@@ -686,5 +697,9 @@ export default class Post extends RestModel {
     if (badgeIds) {
       return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
     }
+  }
+
+  get badgesGranted() {
+    return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
   }
 }

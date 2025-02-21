@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { and, not, or } from "truth-helpers";
+import PostMetaDataDate from "./meta-data/date";
 import PostEditsIndicator from "./meta-data/edits-indicator";
 import PostEmailMetaDataIndicator from "./meta-data/email-indicator";
 import PostLockedIndicator from "./meta-data/locked-indicator";
+import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
 import PostWhisperMetaDataIndicator from "./meta-data/whisper-indicator";

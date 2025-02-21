@@ -325,6 +325,7 @@ function showReplyTab(attrs, siteSettings) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 

@@ -190,6 +190,7 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "post-stream",
   "post",
   "poster-name",
+  "poster-name-title",
   "posts-filtered-notice",
   "reply-to-tab",
   "select-post",
@@ -1181,6 +1182,10 @@ class PluginApi {
    **/
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
+    this.registerValueTransformer(
+      "post-meta-data-poster-name-suppress-name",
+      () => true
+    );
   }
 
   /**

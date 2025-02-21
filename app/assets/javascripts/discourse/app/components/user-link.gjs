@@ -1,10 +1,20 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default class UserLink extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   get username() {
     return this.args.username || this.args.user?.username;
+  }
+
+  get hideFromAnonUser() {
+    return (
+      this.siteSettings.hide_user_profiles_from_public && !this.currentUser
+    );
   }
 
   get href() {
@@ -30,6 +40,7 @@ export default class UserLink extends Component {
 
   <template>
     <a
+      class={{if this.hideFromAnonUser "non-clickable"}}
       ...attributes
       href={{this.href}}
       data-user-card={{this.username}}

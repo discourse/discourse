@@ -76,12 +76,11 @@ export default class Post extends Component {
         (if @post.selected "selected")
         (if @post.topicOwner "topic-owner")
         (if (eq this.currentUser.id @post.user_id) "current-user-post")
-        (if @post.groupModerator "category-moderator")
+        (if @post.group_moderator "category-moderator")
         (if @post.hidden "post-hidden")
         (if @post.deleted "deleted")
         (if @post.primary_group_name (concat "group-" @post.primary_group_name))
         (if @post.wiki "wiki")
-        (if @post.isWhisper "whisper")
         (if @post.isWhisper "whisper")
         (if
           (or @post.isModeratorAction (and @post.isWarning @post.firstPost))
