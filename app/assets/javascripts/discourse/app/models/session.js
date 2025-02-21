@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import singleton from "discourse/lib/singleton";
 import RestModel from "discourse/models/rest";
 
@@ -5,6 +6,9 @@ import RestModel from "discourse/models/rest";
 // data here you might want later. It is not stored or serialized anywhere.
 @singleton
 export default class Session extends RestModel {
+  @tracked darkModeAvailable;
+  @tracked defaultColorSchemeIsDark;
+
   hasFocus = null;
 
   init() {
