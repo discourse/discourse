@@ -6,8 +6,13 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import $ from "jquery";
-import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { emojis, replacements, translations } from "pretty-text/emoji/data";
+import {
+  emojiExists,
+  emojiSearch,
+  isSkinTonableEmoji,
+  normalizeEmoji,
+} from "pretty-text/emoji";
+import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
@@ -268,8 +273,8 @@ export default class ChatComposer extends Component {
       } else {
         // Then check if the message is +:{emoji_code}:
         const emojiCode = reaction.substring(1, reaction.length - 1);
-        if (emojis.includes(emojiCode)) {
-          reactionCode = emojiCode;
+        if (emojiExists(emojiCode)) {
+          reactionCode = normalizeEmoji(emojiCode);
         }
       }
     }

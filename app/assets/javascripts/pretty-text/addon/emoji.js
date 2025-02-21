@@ -184,6 +184,11 @@ export function emojiExists(code) {
   return extendedEmojiMap.has(code) || emojiMap.has(code) || aliasMap.has(code);
 }
 
+export function normalizeEmoji(code) {
+  code = code.toLowerCase();
+  return extendedEmojiMap.get(code) || emojiMap.get(code) || aliasMap.get(code);
+}
+
 let toSearch;
 export function emojiSearch(term, options) {
   const maxResults = options?.maxResults;
