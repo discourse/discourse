@@ -61,7 +61,6 @@ export default class AdminSearch extends Component {
     this.filter = event.target.value;
     this.loading = true;
     this.search();
-    this.loading = false;
   }
 
   @action
@@ -73,6 +72,7 @@ export default class AdminSearch extends Component {
     this.searchResults = this.adminSearchDataSource.search(this.filter, {
       types: this.visibleTypes,
     });
+    this.loading = false;
   }
 
   <template>

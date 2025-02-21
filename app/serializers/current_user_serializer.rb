@@ -73,6 +73,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_sections,
              :new_new_view_enabled?,
              :use_admin_sidebar,
+             :use_experimental_admin_search,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
