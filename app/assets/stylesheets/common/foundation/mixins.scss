@@ -120,8 +120,9 @@ $hpad: 0.65em;
   padding: $vpad $hpad;
 }
 
+// Used to handle -webkit prefix, but now we have autoprefixer
+// Keeping for backward-compat with plugins/themes only
 @mixin user-select($mode) {
-  -webkit-user-select: $mode;
   user-select: $mode;
 }
 
