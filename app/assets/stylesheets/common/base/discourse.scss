@@ -305,7 +305,6 @@ textarea {
 .sortable {
   white-space: nowrap;
   cursor: pointer;
-
   user-select: none;
 
   .discourse-no-touch & {
