@@ -3557,6 +3557,21 @@ experimental:
       - auto
       - enabled
     default: enabled
+  glimmer_post_stream_mode_auto_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_stream_mode:
+    client: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
   enable_rich_text_paste:
     client: true
     default: true

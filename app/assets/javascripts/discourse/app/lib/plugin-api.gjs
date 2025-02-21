@@ -162,11 +162,49 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
+const DEPRECATED_POST_STREAM_WIDGETS = [
+  "actions-summary",
+  "avatar-flair",
+  "embedded-post",
+  "expand-hidden",
+  "expand-post-button",
+  "filter-jump-to-post",
+  "filter-show-all",
+  "post-article",
+  "post-article",
+  "post-avatar-user-info",
+  "post-avatar",
+  "post-body",
+  "post-contents",
+  "post-date",
+  "post-edits-indicator",
+  "post-email-indicator",
+  "post-gap",
+  "post-group-request",
+  "post-links",
+  "post-locked-indicator",
+  "post-meta-data",
+  "post-notice",
+  "post-placeholder",
+  "post-stream",
+  "post",
+  "poster-name",
+  "posts-filtered-notice",
+  "reply-to-tab",
+  "select-post",
+];
+
 const DEPRECATED_POST_MENU_WIDGETS = [
   "post-menu",
   "post-user-tip-shim",
   "small-user-list",
 ];
+
+const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
+};
 
 const POST_MENU_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta3-dev",
@@ -1526,6 +1564,12 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostClassesCallback(callback);
   }
 
@@ -1583,6 +1627,12 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPostTransformCallback` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostTransformCallback(callback);
   }
 
@@ -3401,6 +3451,14 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+      return;
+    }
 
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(
