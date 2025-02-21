@@ -72,7 +72,8 @@ export function renderAvatar(user, options) {
     return avatarImg({
       size: options.imageSize,
       extraClasses: get(user, "extras") || options.extraClasses,
-      title: title || displayName,
+      loading: options.loading,
+      title: options.hideTitle ? null : title || displayName,
       avatarTemplate,
     });
   } else {

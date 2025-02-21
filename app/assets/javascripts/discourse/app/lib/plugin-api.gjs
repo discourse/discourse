@@ -1572,6 +1572,12 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostClassesCallback(callback);
   }
 
@@ -1630,6 +1636,12 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPostTransformCallback` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostTransformCallback(callback);
   }
 

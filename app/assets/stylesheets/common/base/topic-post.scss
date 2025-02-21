@@ -1500,8 +1500,14 @@ span.mention {
     }
   }
 
-  .post-notice-message p {
-    display: inline;
+  .post-notice-message {
+    p {
+      display: inline;
+    }
+
+    .custom_created_by {
+      display: inline-block;
+    }
   }
 
   p {
