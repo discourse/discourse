@@ -1,3 +1,21 @@
-const PostBody = <template><div class="topic-body clearfix"></div></template>;
+import { hash } from "@ember/helper";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import PostActionsSummary from "./actions-summary";
+import PostContents from "./contents";
+import PostLinks from "./links";
+import PostMetaData from "./meta-data";
+
+const PostBody = <template>
+  <div class="topic-body clearfix">
+    <PluginOutlet @name="post-metadata" @outletArgs={{hash post=@post}}>
+      <PostMetaData @post={{@post}} />
+    </PluginOutlet>
+    <PostContents @post={{@post}} />
+    <section class="post-actions">
+      <PostActionsSummary @post={{@post}} />
+    </section>
+    <PostLinks @post={{@post}} />
+  </div>
+</template>;
 
 export default PostBody;
