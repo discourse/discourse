@@ -582,7 +582,7 @@ describe UserNotifications do
 
   describe "in a direct message channel with threads" do
     fab!(:message) do
-      Fabricate(:chat_message, chat_channel: direct_message, user: other, created_at: 2.weeks.ago)
+      Fabricate(:chat_message, chat_channel: direct_message, user: other, created_at: 2.days.ago)
     end
     fab!(:thread) { Fabricate(:chat_thread, channel: direct_message, original_message: message) }
     fab!(:reply) { Fabricate(:chat_message, chat_channel: direct_message, thread:, user: other) }
@@ -599,6 +599,37 @@ describe UserNotifications do
 
       it "sends a chat summary email" do
         chat_summary_email
+      end
+    end
+
+    describe "when the user has 2 watched threads" do
+      fab!(:message_2) do
+        Fabricate(
+          :chat_message,
+          chat_channel: direct_message_2,
+          user: another,
+          created_at: 2.days.ago,
+        )
+      end
+      fab!(:thread_2) do
+        Fabricate(:chat_thread, channel: direct_message_2, original_message: message_2)
+      end
+      fab!(:thread_2_reply) do
+        Fabricate(:chat_message, chat_channel: direct_message_2, thread: thread_2, user: another)
+      end
+
+      before do
+        Fabricate(:user_chat_thread_membership, user: user, thread:, notification_level: watching)
+        Fabricate(
+          :user_chat_thread_membership,
+          user: user,
+          thread: thread_2,
+          notification_level: watching,
+        )
+      end
+
+      it "sends a chat summary email" do
+        chat_summary_with_subject(:watched_threads, channel: direct_message.title(user), count: 1)
       end
     end
 

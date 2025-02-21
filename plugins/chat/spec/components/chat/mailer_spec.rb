@@ -325,6 +325,11 @@ describe Chat::Mailer do
       user.user_option.update!(allow_private_messages: false)
       expect_not_enqueued
     end
+
+    it "queues a chat summary email when message is the original thread message" do
+      Fabricate(:chat_thread, channel: direct_message, original_message: Chat::Message.last)
+      expect_enqueued
+    end
   end
 
   describe "in direct message channel with threads" do
