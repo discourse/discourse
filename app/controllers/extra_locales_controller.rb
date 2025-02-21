@@ -12,30 +12,36 @@ class ExtraLocalesController < ApplicationController
   OVERRIDES_BUNDLE = "overrides"
   MD5_HASH_LENGTH = 32
   MF_BUNDLE = "mf"
-  BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
+  ADMIN_BUNDLE = "admin"
+  WIZARD_BUNDLE = "wizard"
+
+  SITE_SPECIFIC_BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
+  SHARED_BUNDLES = [ADMIN_BUNDLE, WIZARD_BUNDLE]
 
   class << self
     def js_digests
-      @js_digests ||= {}
+      @js_digests ||= { site_specific: {}, shared: {} }
     end
 
     def bundle_js_hash(bundle)
       bundle_key = "#{bundle}_#{I18n.locale}"
-      if bundle.in?(BUNDLES)
+      if bundle.in?(SITE_SPECIFIC_BUNDLES)
         site = RailsMultisite::ConnectionManagement.current_db
 
-        js_digests[site] ||= {}
-        js_digests[site][bundle_key] ||= begin
+        js_digests[:site_specific][site] ||= {}
+        js_digests[:site_specific][site][bundle_key] ||= begin
           js = bundle_js(bundle)
           js.present? ? Digest::MD5.hexdigest(js) : nil
         end
+      elsif bundle.in?(SHARED_BUNDLES)
+        js_digests[:shared][bundle_key] ||= Digest::MD5.hexdigest(bundle_js(bundle))
       else
-        js_digests[bundle_key] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+        raise "Unknown bundle: #{bundle}"
       end
     end
 
     def url(bundle)
-      "#{Discourse.base_path}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+      "#{GlobalSetting.cdn_url}#{Discourse.base_path}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
     end
 
     def client_overrides_exist?
@@ -63,7 +69,7 @@ class ExtraLocalesController < ApplicationController
 
     def clear_cache!
       site = RailsMultisite::ConnectionManagement.current_db
-      js_digests.delete(site)
+      js_digests[:site_specific].delete(site)
     end
   end
 
@@ -85,6 +91,6 @@ class ExtraLocalesController < ApplicationController
   private
 
   def valid_bundle?(bundle)
-    bundle.in?(BUNDLES) || (bundle =~ /\A(admin|wizard)\z/ && current_user&.staff?)
+    bundle.in?(SITE_SPECIFIC_BUNDLES) || bundle.in?(SHARED_BUNDLES)
   end
 end

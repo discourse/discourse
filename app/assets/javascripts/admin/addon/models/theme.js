@@ -8,11 +8,13 @@ import { i18n } from "discourse-i18n";
 import ThemeSettings from "admin/models/theme-settings";
 
 const THEME_UPLOAD_VAR = 2;
-const FIELDS_IDS = [0, 1, 5];
+const FIELDS_IDS = [0, 1, 5, 6];
 
 export const THEMES = "themes";
 export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
+
+const JS_FILENAME = "discourse/api-initializers/theme-initializer.gjs";
 
 class Theme extends RestModel {
   static munge(json) {
@@ -59,6 +61,7 @@ class Theme extends RestModel {
     return {
       common: [
         ...common,
+        "js",
         "color_definitions",
         "embedded_scss",
         "embedded_header",
@@ -172,6 +175,10 @@ class Theme extends RestModel {
   }
 
   getField(target, name) {
+    if (target === "common" && name === "js") {
+      target = "extra_js";
+      name = JS_FILENAME;
+    }
     let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
@@ -191,6 +198,10 @@ class Theme extends RestModel {
     this.set("changed", true);
     let themeFields = this.themeFields;
     let field = { name, target, value, upload_id, type_id };
+    if (field.name === "js" && target === "common") {
+      field.target = "extra_js";
+      field.name = JS_FILENAME;
+    }
 
     // slow path for uploads and so on
     if (type_id && type_id > 1) {
