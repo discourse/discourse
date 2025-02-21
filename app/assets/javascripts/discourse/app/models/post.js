@@ -172,6 +172,12 @@ export default class Post extends RestModel {
   @trackedPostProperty notice;
   @trackedPostProperty name;
   @trackedPostProperty username;
+  @trackedPostProperty is_auto_generated;
+  @trackedPostProperty via_email;
+  @trackedPostProperty locked;
+  @trackedPostProperty updated_at;
+  @trackedPostProperty version;
+  @trackedPostProperty wiki;
 
   customShare = null;
 

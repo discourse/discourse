@@ -282,12 +282,14 @@ createWidget("post-avatar", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
   template: widgetHbs`{{d-icon "lock"}}`,
   title: () => i18n("post.locked"),
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-email-indicator", {
   tagName: "div.post-info.via-email",
 
@@ -861,6 +863,7 @@ createWidget("post-notice", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
