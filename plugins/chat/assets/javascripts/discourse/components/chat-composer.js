@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import $ from "jquery";
 import {
-  emojiExists,
   emojiSearch,
   isSkinTonableEmoji,
   normalizeEmoji,
@@ -273,9 +272,7 @@ export default class ChatComposer extends Component {
       } else {
         // Then check if the message is +:{emoji_code}:
         const emojiCode = reaction.substring(1, reaction.length - 1);
-        if (emojiExists(emojiCode)) {
-          reactionCode = normalizeEmoji(emojiCode);
-        }
+        reactionCode = normalizeEmoji(emojiCode);
       }
     }
 
