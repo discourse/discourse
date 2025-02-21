@@ -249,9 +249,9 @@ RSpec.describe ExtraLocalesController do
     end
 
     it "includes CDN" do
-      set_cdn_url "https://cdn.example.com/"
+      set_cdn_url "https://cdn.example.com"
       expect(ExtraLocalesController.url("admin")).to start_with(
-        "https://cdn.example.com/forum/extra-locales/admin?v=",
+        "https://cdn.example.com/extra-locales/admin?v=",
       )
     end
   end

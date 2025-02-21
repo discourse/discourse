@@ -69,7 +69,7 @@ class ExtraLocalesController < ApplicationController
 
     def clear_cache!
       site = RailsMultisite::ConnectionManagement.current_db
-      js_digests.delete(site)
+      js_digests[:site_specific].delete(site)
     end
   end
 
