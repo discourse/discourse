@@ -248,6 +248,15 @@ export default class ChatComposer extends Component {
       return;
     }
 
+    if (await this.reactingToLastMessage()) {
+      return;
+    }
+
+    await this.args.onSendMessage(this.draft);
+    this.composer.textarea.refreshHeight();
+  }
+
+  async reactingToLastMessage() {
     // Check if the message is a reaction to the latest message in the channel.
     const message = this.draft.message.trim();
     let reactionCode = "";
@@ -265,23 +274,19 @@ export default class ChatComposer extends Component {
       }
     }
 
-    if (reactionCode) {
-      if (this.lastMessage?.id) {
-        const interactor = new ChatMessageInteractor(
-          getOwner(this),
-          this.lastMessage,
-          this.context
-        );
+    if (reactionCode && this.lastMessage?.id) {
+      const interactor = new ChatMessageInteractor(
+        getOwner(this),
+        this.lastMessage,
+        this.context
+      );
 
-        await interactor.react(reactionCode, "add");
-      }
-
+      await interactor.react(reactionCode, "add");
       this.resetDraft();
-      return;
+      return true;
     }
 
-    await this.args.onSendMessage(this.draft);
-    this.composer.textarea.refreshHeight();
+    return false;
   }
 
   reportReplyingPresence() {
