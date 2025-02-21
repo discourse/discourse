@@ -28,7 +28,7 @@ RSpec.describe Jobs::PollMailbox do
         Subject: Testing email
         Date: #{1.day.ago.strftime("%a, %d %b %Y")} 03:12:43 +0100
         Message-ID: <34@foo.bar.mail>
-        Mime-Version: 1.0
+        MIME-Version: 1.0
         Content-Type: text/plain
         Content-Transfer-Encoding: 7bit
 

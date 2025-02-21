@@ -417,12 +417,12 @@ RSpec.describe Email::Receiver do
       expect { process(:gmail_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq <<~MD.strip
         This is a **GMAIL** reply ;)
-        
+
         <details class='elided'>
         <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
-        
+
         This is the *elided* part!
-        
+
         </details>
       MD
     end
@@ -891,7 +891,7 @@ RSpec.describe Email::Receiver do
                   Subject: Hello world
                   Date: Fri, 15 Jan 2016 00:12:43 +0100
                   Message-ID: <10@foo.bar.mail>
-                  Mime-Version: 1.0
+                  MIME-Version: 1.0
                   Content-Type: text/plain; charset=UTF-8
                   Content-Transfer-Encoding: quoted-printable
 
@@ -1128,7 +1128,7 @@ RSpec.describe Email::Receiver do
           Date: Fri, 15 Jan 2016 00:12:43 +0100
           Message-ID: <44@foo.bar.mail>
           In-Reply-To: <#{message_id}>
-          Mime-Version: 1.0
+          MIME-Version: 1.0
           Content-Type: text/plain
           Content-Transfer-Encoding: 7bit
 

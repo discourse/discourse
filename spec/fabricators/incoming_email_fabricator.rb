@@ -15,7 +15,7 @@ Fabricator(:incoming_email) do
     Subject: Hello world
     Date: Fri, 15 Jan 2016 00:12:43 +0100
     Message-ID: <12345@example.com>
-    Mime-Version: 1.0
+    MIME-Version: 1.0
     Content-Type: text/plain; charset=UTF-8
     Content-Transfer-Encoding: quoted-printable
 

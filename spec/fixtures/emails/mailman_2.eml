@@ -4,7 +4,7 @@ Reply-To: some@one.com
 To: list@example.com
 Message-ID: <23e86ebe4d9f211967e48d284449c856@foo.com>
 Subject: library 1.2.3 released!
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-MailFrom: some@one.com
