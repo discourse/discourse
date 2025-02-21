@@ -35,8 +35,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.9)
       '@discourse/lint-configs':
-        specifier: ^2.5.0
-        version: 2.5.0(ember-template-lint@6.1.0)(eslint@9.20.1)(postcss@8.5.3)(prettier@2.8.8)(stylelint@16.14.1(typescript@5.6.3))
+        specifier: ^2.6.0
+        version: 2.6.0(ember-template-lint@6.1.0)(eslint@9.20.1)(postcss@8.5.3)(prettier@2.8.8)(stylelint@16.14.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1742,8 +1742,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.5.0':
-    resolution: {integrity: sha512-EmmrG+RhKUbNpJVuIdKO/J2EVWtlkRZr1UwMSOfck7sowkkVeNFK8ytM38XYpuoWijRvKHD5MDJpyy511eN8bQ==}
+  '@discourse/lint-configs@2.6.0':
+    resolution: {integrity: sha512-+wNTZ0Pso7PzePd9AqB4LiYdj273+cOB+wUbJkdZoiUG9frbBP6nCNVW2MSxCYOeOreAWSHUDaHxAwpuge1bJg==}
     peerDependencies:
       ember-template-lint: 6.1.0
       eslint: 9.20.1
@@ -7005,6 +7005,10 @@ packages:
     resolution: {integrity: sha512-9RbEr1Y7FFfptd/1eEdntyjMwLeghW1bHX9GWjXo19vx4ytPQhANltvVxDggzJl7mnWM+dX28kb6cyS/4iQjlQ==}
     engines: {node: '>=4'}
 
+  postcss-selector-parser@7.1.0:
+    resolution: {integrity: sha512-8sLjZwK0R+JlxlYcTuVnyT2v+htpdrjDOKuMcOVdYjt52Lh8hWRYpxBPoKx/Zg+bcjc3wx6fmQevMmUztS/ccA==}
+    engines: {node: '>=4'}
+
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
@@ -7923,8 +7927,8 @@ packages:
     peerDependencies:
       stylelint: ^16.13.0
 
-  stylelint-scss@6.10.1:
-    resolution: {integrity: sha512-CBqs0jecftIyhic6xba+4OvZUp4B0wNbX19w6Rq1fPo+lBDmTevk+olo8H7u/WQpTSDCDbBN4f3oocQurvXLTQ==}
+  stylelint-scss@6.11.0:
+    resolution: {integrity: sha512-AvJ6LVzz2iXHxPlPTR9WVy73FC/vmohH54VySNlCKX1NIXNAeuzy/VbIkMJLMyw/xKYqkgY4kAgB+qy5BfCaCg==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       stylelint: ^16.0.2
@@ -9519,7 +9523,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.5.0(ember-template-lint@6.1.0)(eslint@9.20.1)(postcss@8.5.3)(prettier@2.8.8)(stylelint@16.14.1(typescript@5.6.3))':
+  '@discourse/lint-configs@2.6.0(ember-template-lint@6.1.0)(eslint@9.20.1)(postcss@8.5.3)(prettier@2.8.8)(stylelint@16.14.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.26.9(supports-color@8.1.1)
       '@babel/eslint-parser': 7.26.8(@babel/core@7.26.9)(eslint@9.20.1)
@@ -16113,6 +16117,11 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
+  postcss-selector-parser@7.1.0:
+    dependencies:
+      cssesc: 3.0.0
+      util-deprecate: 1.0.2
+
   postcss-value-parser@4.2.0: {}
 
   postcss@8.5.3:
@@ -17149,7 +17158,7 @@ snapshots:
       postcss-scss: 4.0.9(postcss@8.5.3)
       stylelint: 16.14.1(typescript@5.6.3)
       stylelint-config-recommended: 14.0.1(stylelint@16.14.1(typescript@5.6.3))
-      stylelint-scss: 6.10.1(stylelint@16.14.1(typescript@5.6.3))
+      stylelint-scss: 6.11.0(stylelint@16.14.1(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.3
 
@@ -17179,7 +17188,7 @@ snapshots:
       stylelint: 16.14.1(typescript@5.6.3)
       stylelint-config-recommended: 15.0.0(stylelint@16.14.1(typescript@5.6.3))
 
-  stylelint-scss@6.10.1(stylelint@16.14.1(typescript@5.6.3)):
+  stylelint-scss@6.11.0(stylelint@16.14.1(typescript@5.6.3)):
     dependencies:
       css-tree: 3.1.0
       is-plain-object: 5.0.0
@@ -17187,7 +17196,7 @@ snapshots:
       mdn-data: 2.15.0
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.6
-      postcss-selector-parser: 7.0.0
+      postcss-selector-parser: 7.1.0
       postcss-value-parser: 4.2.0
       stylelint: 16.14.1(typescript@5.6.3)
 
