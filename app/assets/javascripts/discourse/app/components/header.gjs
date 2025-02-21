@@ -281,6 +281,7 @@ export default class GlimmerHeader extends Component {
               @toggleSearchMenu={{this.toggleSearchMenu}}
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @toggleUserMenu={{this.toggleUserMenu}}
+              @topicInfoVisible={{@topicInfoVisible}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/if}}

@@ -3016,6 +3016,10 @@ en:
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
 
+      experience:
+        search_field: "Search field in site header"
+        search_icon: "Search icon by profile avatar"
+
       type:
         default: "Topics/posts"
         users: "Users"
