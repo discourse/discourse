@@ -27,7 +27,7 @@ module Chat
     end
 
     def user_can_access?(user)
-      users.include?(user)
+      users.include?(user) || group? && user.admin?
     end
 
     def chat_channel_title_for_user(chat_channel, acting_user)
