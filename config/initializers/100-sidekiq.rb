@@ -5,17 +5,9 @@ require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
 require "mini_scheduler_long_running_job_logger"
 
-Sidekiq.configure_client do |config|
-  puts "=============== CLIENT CONFIG ======================================="
-  puts Discourse.sidekiq_redis_config(client: true)
-  puts "====================================================================="
-  config.redis = Discourse.sidekiq_redis_config(client: true)
-end
+Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_config(client: true) }
 
 Sidekiq.configure_server do |config|
-  puts "=============== SERVER CONFIG ======================================="
-  puts Discourse.sidekiq_redis_config
-  puts "====================================================================="
   config.redis = Discourse.sidekiq_redis_config
 
   config.server_middleware { |chain| chain.add Sidekiq::Pausable }

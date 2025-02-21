@@ -91,7 +91,6 @@ before_fork do |server, worker|
       Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
       Demon::Sidekiq.start(sidekiqs, logger: server.logger)
       Demon::Sidekiq.start(sidekiqs, logger: server.logger, old: true)
-      Demon::Sidekiq.start(sidekiqs, logger: server.logger)
 
       if Discourse.enable_sidekiq_logging?
         # Trap USR1, so we can re-issue to sidekiq workers
