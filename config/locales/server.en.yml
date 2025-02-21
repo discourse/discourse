@@ -5596,6 +5596,10 @@ en:
       links:
         watched_word: list of watched words
         category: category settings
+    contexts:
+      watched_word:
+        one: "The word included is: %{words}"
+        other: "The words included are: %{words}"
 
     actions:
       agree:
