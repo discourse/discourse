@@ -242,6 +242,12 @@ en:
         private_email:
           one: "[%{site_name}] New message"
           other: "[%{site_name}] New messages"
+        watched_thread:
+          one: "[%{site_name}] New thread message in %{channel}"
+          other: "[%{site_name}] New thread messages in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] New thread messages in %{channel} and %{count} other"
+          other: "[%{site_name}] New thread messages in %{channel} and %{count} others"
         chat_dm_1:
           one: "[%{site_name}] New message from %{name}"
           other: "[%{site_name}] New messages from %{name}"
