@@ -329,7 +329,7 @@ nav.post-controls {
   justify-content: space-between;
   color: var(--d-post-control-text-color);
 
-  @include user-select(none);
+  user-select: none;
 
   .actions {
     display: inline-flex;
@@ -1272,7 +1272,7 @@ a.mention-group {
   @include mention;
 
   .user-status-message {
-    @include user-select(none);
+    user-select: none;
   }
 }
 

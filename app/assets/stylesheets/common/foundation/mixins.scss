@@ -121,7 +121,6 @@ $hpad: 0.65em;
 }
 
 @mixin user-select($mode) {
-  -webkit-user-select: $mode;
   user-select: $mode;
 }
 

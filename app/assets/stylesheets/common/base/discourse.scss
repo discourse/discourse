@@ -306,7 +306,7 @@ textarea {
   white-space: nowrap;
   cursor: pointer;
 
-  @include user-select(none);
+  user-select: none;
 
   .discourse-no-touch & {
     &:hover,
