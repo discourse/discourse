@@ -18,7 +18,7 @@
     <div
       class={{concat-class
         (if this.site.desktopView "login-left-side")
-        this.model.authOptions.auth_provider
+        this.authOptions?.auth_provider
       }}
     >
       <SignupProgressBar @step="signup" />
@@ -43,14 +43,14 @@
               {{on "focusout" this.checkEmailAvailability}}
               {{on "focusin" this.scrollInputIntoView}}
               @type="email"
-              @value={{this.model.accountEmail}}
+              @value={{this.accountEmail}}
               disabled={{this.emailDisabled}}
               autofocus="autofocus"
               aria-describedby="account-email-validation account-email-validation-more-info"
               aria-invalid={{this.emailValidation.failed}}
               name="email"
               id="new-account-email"
-              class={{value-entered this.model.accountEmail}}
+              class={{value-entered this.accountEmail}}
             />
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
@@ -115,18 +115,17 @@
           <PluginOutlet
             @name="create-account-before-password"
             @outletArgs={{hash
-              accountName=this.model.accountName
+              accountName=this.accountName
               accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
-              authOptions=this.model.authOptions
+              authOptions=this.authOptions
             }}
           />
 
           <div class="input-group create-account__password">
             {{#if this.passwordRequired}}
               <PasswordField
-                {{on "focusout" this.togglePasswordValidation}}
                 {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
@@ -155,7 +154,7 @@
                     this.siteSettings.show_signup_form_password_instructions
                   }}
                     <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordInstructions}}
+                      {{this.passwordValidationHelper.passwordInstructions}}
                     </span>
                   {{/if}}
                   <div
@@ -207,7 +206,7 @@
           <PluginOutlet
             @name="create-account-after-password"
             @outletArgs={{hash
-              accountName=this.model.accountName
+              accountName=this.accountName
               accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
@@ -244,7 +243,7 @@
           <PluginOutlet
             @name="create-account-after-user-fields"
             @outletArgs={{hash
-              accountName=this.model.accountName
+              accountName=this.accountName
               accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
@@ -270,7 +269,7 @@
         {{/if}}
       {{/if}}
 
-      {{#if this.model.skipConfirmation}}
+      {{#if this.skipConfirmation}}
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
