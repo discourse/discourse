@@ -126,6 +126,7 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("select-post", {
   tagName: "div.select-posts",
 
@@ -169,6 +170,7 @@ createWidget("select-post", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,

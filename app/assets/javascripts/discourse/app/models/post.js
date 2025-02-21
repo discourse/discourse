@@ -178,6 +178,8 @@ export default class Post extends RestModel {
   @trackedPostProperty updated_at;
   @trackedPostProperty version;
   @trackedPostProperty wiki;
+  @trackedPostProperty reply_count;
+  @trackedPostProperty reply_to_user;
 
   customShare = null;
 
