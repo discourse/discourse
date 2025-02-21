@@ -88,6 +88,8 @@ describe "Admin | Sidebar Navigation", type: :system do
       visit("/latest")
       sidebar.click_link_in_section("community", "admin")
       expect(page).to have_current_path("/admin")
+
+      screenshot_on_ci
       expect(sidebar).to have_no_section("admin-root")
     end
   end
@@ -113,6 +115,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       ],
     )
     expect(page).to have_no_css(".sidebar-no-results")
+    screenshot_on_ci
 
     filter.filter("ieeee")
     expect(page).to have_no_css(".sidebar-section-link-content-text")

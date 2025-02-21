@@ -201,4 +201,14 @@ module SystemHelpers
   def click_logo
     PageObjects::Components::Logo.click
   end
+
+  def screenshot_on_ci
+    if ENV["CI"] && ENV["SYSTEM_SPEC_DRIVER"]
+      # rubocop:disable Lint/Debugger
+      save_screenshot(
+        "device_" + ENV["SYSTEM_SPEC_DRIVER"] + "_" +
+          RSpec.current_example.description.gsub(" ", "_") + ".png",
+      )
+    end
+  end
 end

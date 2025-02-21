@@ -682,7 +682,14 @@ RSpec.configure do |config|
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
     driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
-    driven_by driver.join("_").to_sym
+
+    if ENV["SYSTEM_SPEC_DRIVER"]
+      driver = ENV["SYSTEM_SPEC_DRIVER"]
+      driver += "_headless" unless ENV["SELENIUM_HEADLESS"] == "0"
+      driven_by driver.to_sym
+    else
+      driven_by driver.join("_").to_sym
+    end
 
     setup_system_test
 
