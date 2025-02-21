@@ -23,6 +23,8 @@ export default class AdminSiteSettingsController extends Controller {
       return;
     }
 
+    this.set("filter", filterData.filter);
+
     if (isEmpty(filterData.filter) && !filterData.onlyOverridden) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
@@ -30,8 +32,6 @@ export default class AdminSiteSettingsController extends Controller {
       }
       return;
     }
-
-    this.set("filter", filterData.filter);
 
     const matchesGroupedByCategory = this.siteSettingFilter.filterSettings(
       filterData.filter,

@@ -21,7 +21,6 @@ export default class AdminSearch extends Component {
   @tracked searchResults = [];
   @tracked showFilters = false;
   @tracked loading = false;
-  @tracked
   typeFilters = new TrackedObject({
     page: true,
     setting: true,

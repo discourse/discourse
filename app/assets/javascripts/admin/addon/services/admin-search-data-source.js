@@ -6,6 +6,7 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import I18n, { i18n } from "discourse-i18n";
 
 // TODO (martin) Move this to javascript.rake constants, use on server too
@@ -15,7 +16,7 @@ const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
-export default class AminSearchDataSource extends Service {
+export default class AdminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
 
@@ -200,7 +201,9 @@ export default class AminSearchDataSource extends Service {
         rootLabel = i18n(`admin.site_settings.categories.${setting.category}`);
       }
 
-      const label = `${rootLabel} ${SEPARATOR} ${setting.setting}`;
+      const label = `${rootLabel} ${SEPARATOR} ${humanizedSettingName(
+        setting.setting
+      )}`;
 
       // TODO (martin) These URLs will need to change eventually to anchors
       // to focus on a specific element on the page, for now though the filter is fine.
@@ -239,7 +242,7 @@ export default class AminSearchDataSource extends Service {
         url,
         keywords: this.#buildKeywords(
           setting.setting,
-          setting.setting.split("_").join(" "),
+          humanizedSettingName(setting.setting),
           setting.description,
           setting.keywords,
           rootLabel

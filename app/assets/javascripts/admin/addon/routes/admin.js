@@ -41,6 +41,10 @@ export default class AdminRoute extends DiscourseRoute {
   deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
 
+    KeyboardShortcuts.unbind({
+      [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
+    });
+
     if (this.adminSidebarStateManager.currentUserUsingAdminSidebar) {
       if (!transition?.to.name.startsWith("admin")) {
         this.adminSidebarStateManager.stopForcingAdminSidebar();
