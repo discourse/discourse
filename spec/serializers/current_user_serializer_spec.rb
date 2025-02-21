@@ -331,6 +331,39 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_see_ip" do
+    let(:guardian) { Guardian.new(user) }
+    let(:payload) { serializer.as_json }
+
+    context "when user is an admin" do
+      let(:user) { Fabricate(:admin) }
+
+      it "returns true" do
+        expect(payload[:can_see_ip]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_view_ips is enabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_view_ips = true }
+
+      it "returns true" do
+        expect(payload[:can_see_ip]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_view_ips is disabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_view_ips = false }
+
+      it "returns false" do
+        expect(payload[:can_see_ip]).to eq(false)
+      end
+    end
+  end
+
   describe "#featured_topic" do
     fab!(:featured_topic, :topic)
 
