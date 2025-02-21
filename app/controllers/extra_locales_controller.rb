@@ -85,6 +85,7 @@ class ExtraLocalesController < ApplicationController
   private
 
   def valid_bundle?(bundle)
-    bundle.in?(BUNDLES) || (bundle =~ /\A(admin|wizard)\z/ && current_user&.staff?)
+    return true if bundle.in?(BUNDLES)
+    bundle =~ /\A(admin|wizard)\z/ && (current_user&.staff? || Rails.env.local?)
   end
 end

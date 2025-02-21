@@ -14,7 +14,8 @@ RSpec.describe ExtraLocalesController do
       expect(response.status).to eq(403)
     end
 
-    it "requires staff access" do
+    it "requires staff access in production" do
+      Rails.env.stubs(:local?).returns(false)
       get "/extra-locales/admin"
       expect(response.status).to eq(403)
 

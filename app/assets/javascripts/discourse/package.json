@@ -127,7 +127,6 @@
     "pretender": "^3.4.7",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
-    "sass": "^1.85.0",
     "select-kit": "workspace:1.0.0",
     "sinon": "^19.0.2",
     "source-map": "^0.7.4",
