@@ -36,7 +36,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_op_can_like?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def op_can_like
@@ -58,7 +58,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_op_liked?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def op_liked
@@ -72,7 +72,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_first_post_id?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def first_post_id
@@ -143,6 +143,13 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   private
+
+  def serialize_topic_op_likes_data_enabled?
+    theme_enabled = theme_modifier_helper.serialize_topic_op_likes_data
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_op_likes_data, false)
+
+    theme_enabled || plugin_enabled
+  end
 
   def theme_modifier_helper
     @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
