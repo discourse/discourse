@@ -85,5 +85,11 @@ RSpec.describe SiteSetting::Update do
         end
       end
     end
+
+    context "when one setting is having invalid value" do
+      let(:settings) { { title: "hello this is title", default_categories_watching: "999999" } }
+
+      it { is_expected.to fail_a_policy(:settings_are_valid) }
+    end
   end
 end

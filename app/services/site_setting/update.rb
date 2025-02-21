@@ -45,6 +45,7 @@ class SiteSetting::Update
          class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
   policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
   policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
+  policy :settings_are_valid, class_name: SiteSetting::Policy::SettingsAreValid
   step :save
 
   private
