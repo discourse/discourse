@@ -186,7 +186,10 @@ export function emojiExists(code) {
 
 export function normalizeEmoji(code) {
   code = code.toLowerCase();
-  return extendedEmojiMap.get(code) || emojiMap.get(code) || aliasMap.get(code);
+  if (extendedEmojiMap.get(code) || emojiMap.get(code)) {
+    return code;
+  }
+  return aliasMap.get(code);
 }
 
 let toSearch;
