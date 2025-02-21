@@ -1,8 +1,8 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
-export default class AdminConfigSpamRoute extends DiscourseRoute {
+export default class AdminConfigSpamRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
-    return i18n("admin.security.sidebar_link.spam");
+    return i18n("admin.config.spam.title");
   }
 }
