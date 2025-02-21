@@ -57,6 +57,9 @@ class Admin::SiteSettingsController < Admin::AdminController
       on_failed_policy(:settings_are_configurable) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end
+      on_failed_policy(:settings_are_valid) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
     end
   end
 

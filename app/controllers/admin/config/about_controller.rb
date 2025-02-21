@@ -47,9 +47,22 @@ class Admin::Config::AboutController < Admin::AdminController
           extended_site_description_cooked
           about_banner_image
           community_owner
-        ].include?(name),
+        ],
       },
-    )
-    render json: success_json
+    ) do
+      on_success { render json: success_json }
+      on_failed_policy(:settings_are_visible) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
+      on_failed_policy(:settings_are_unshadowed_globally) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
+      on_failed_policy(:settings_are_configurable) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
+      on_failed_policy(:settings_are_valid) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
+    end
   end
 end

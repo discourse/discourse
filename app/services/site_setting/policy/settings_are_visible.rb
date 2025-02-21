@@ -5,9 +5,9 @@ class SiteSetting::Policy::SettingsAreVisible < Service::PolicyBase
   delegate :params, to: :context
 
   def call
-    return true if options.allow_changing_hidden
     @hidden_settings =
       params.settings.keys.select do |setting_name|
+        next false if options.allow_changing_hidden.include?(setting_name)
         SiteSetting.hidden_settings.include?(setting_name)
       end
     @hidden_settings.empty?

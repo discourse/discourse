@@ -16,7 +16,7 @@ RSpec.describe SiteSetting::Update do
     let(:setting_name) { :title }
     let(:new_value) { "blah whatever" }
     let(:guardian) { admin.guardian }
-    let(:allow_changing_hidden) { false }
+    let(:allow_changing_hidden) { [] }
 
     context "when settings is blank" do
       let(:settings) { nil }
@@ -34,12 +34,12 @@ RSpec.describe SiteSetting::Update do
       let(:setting_name) { :max_category_nesting }
       let(:new_value) { 3 }
 
-      context "when allow_changing_hidden is false" do
+      context "when allow_changing_hidden is empty array" do
         it { is_expected.to fail_a_policy(:settings_are_visible) }
       end
 
-      context "when allow_changing_hidden is true" do
-        let(:allow_changing_hidden) { true }
+      context "when allow_changing_hidden is including setting" do
+        let(:allow_changing_hidden) { [:max_category_nesting] }
 
         it { is_expected.to run_successfully }
 
@@ -84,6 +84,12 @@ RSpec.describe SiteSetting::Update do
           expect { result }.to change { SiteSetting.max_image_size_kb }.to(8843)
         end
       end
+    end
+
+    context "when one setting is having invalid value" do
+      let(:settings) { { title: "hello this is title", default_categories_watching: "999999" } }
+
+      it { is_expected.to fail_a_policy(:settings_are_valid) }
     end
   end
 end
