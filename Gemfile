@@ -172,12 +172,16 @@ group :development do
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
-  gem "discourse_dev_assets"
-  gem "faker", "~> 2.16"
+  gem "discourse_dev_assets",
+      git: "https://github.com/discourse/discourse_dev_assets",
+      branch: "updates"
+  gem "faker", "~> 3.5.1"
 else
   group :development, :test do
-    gem "discourse_dev_assets"
-    gem "faker", "~> 2.16"
+    gem "discourse_dev_assets",
+        git: "https://github.com/discourse/discourse_dev_assets",
+        branch: "updates"
+    gem "faker", "~> 3.5.1"
   end
 end
 
