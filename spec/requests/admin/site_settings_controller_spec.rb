@@ -632,7 +632,10 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.max_category_nesting).to eq(3)
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("errors.site_settings.site_setting_is_hidden"),
+          I18n.t(
+            "errors.site_settings.site_settings_are_hidden",
+            setting_names: "max_category_nesting",
+          ),
         )
       end
 
@@ -645,7 +648,10 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.max_category_nesting).to eq(3)
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("errors.site_settings.site_setting_is_shadowed_globally"),
+          I18n.t(
+            "errors.site_settings.site_settings_are_shadowed_globally",
+            setting_names: "max_category_nesting",
+          ),
         )
       end
 

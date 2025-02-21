@@ -341,9 +341,9 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
-      site_setting_is_hidden: "You are not allowed to change hidden settings"
-      site_setting_is_shadowed_globally: "You cannot change this setting because it is globally configured"
-      site_setting_is_unconfigurable: "You are not allowed to change unconfigurable settings"
+      site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
+      site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
+      site_settings_are_unconfigurable: "You are not allowed to change unconfigurable settings: %{setting_names}"
       invalid_choice:
         one: "'%{name}' is an invalid choice."
         other: "'%{name}' are invalid choices."

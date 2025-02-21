@@ -221,36 +221,6 @@ class SiteSettings::TypeSupervisor
     @list_type[name.to_sym]
   end
 
-  private
-
-  def normalize_input(name, val)
-    name = name.to_sym
-    type = @types[name] || self.class.parse_value_type(val)
-
-    if type == self.class.types[:bool]
-      val = (val == true || val == "t" || val == "true") ? "t" : "f"
-    elsif type == self.class.types[:integer] && !val.is_a?(Integer)
-      val = val.to_i
-    elsif type == self.class.types[:null] && val != ""
-      type = get_data_type(name, val)
-    elsif type == self.class.types[:enum]
-      val =
-        (
-          if @defaults_provider[name].is_a?(Integer) && Integer(val, exception: false)
-            val.to_i
-          else
-            val.to_s
-          end
-        )
-    elsif type == self.class.types[:uploaded_image_list] && val.present?
-      val = val.is_a?(String) ? val : val.map(&:id).join("|")
-    elsif type == self.class.types[:upload] && val.present?
-      val = val.is_a?(Integer) ? val : val.id
-    end
-
-    [val, type]
-  end
-
   def validate_value(name, type, val)
     if type == self.class.types[:enum]
       if get_enum_class(name)
@@ -295,6 +265,36 @@ class SiteSettings::TypeSupervisor
 
     validate_method = "validate_#{name}"
     public_send(validate_method, val) if self.respond_to? validate_method
+  end
+
+  private
+
+  def normalize_input(name, val)
+    name = name.to_sym
+    type = @types[name] || self.class.parse_value_type(val)
+
+    if type == self.class.types[:bool]
+      val = (val == true || val == "t" || val == "true") ? "t" : "f"
+    elsif type == self.class.types[:integer] && !val.is_a?(Integer)
+      val = val.to_i
+    elsif type == self.class.types[:null] && val != ""
+      type = get_data_type(name, val)
+    elsif type == self.class.types[:enum]
+      val =
+        (
+          if @defaults_provider[name].is_a?(Integer) && Integer(val, exception: false)
+            val.to_i
+          else
+            val.to_s
+          end
+        )
+    elsif type == self.class.types[:uploaded_image_list] && val.present?
+      val = val.is_a?(String) ? val : val.map(&:id).join("|")
+    elsif type == self.class.types[:upload] && val.present?
+      val = val.is_a?(Integer) ? val : val.id
+    end
+
+    [val, type]
   end
 
   def get_data_type(name, val)
