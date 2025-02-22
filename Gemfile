@@ -157,7 +157,6 @@ group :test, :development do
   gem "annotate"
 
   gem "syntax_tree"
-  gem "syntax_tree-disable_ternary"
 
   gem "rspec-multi-mock"
 end

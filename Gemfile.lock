@@ -561,7 +561,6 @@ GEM
     stringio (3.1.5)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
-    syntax_tree-disable_ternary (1.0.0)
     test-prof (1.4.4)
     thor (1.3.2)
     timeout (0.4.3)
@@ -748,7 +747,6 @@ DEPENDENCIES
   sshkey
   stackprof
   syntax_tree
-  syntax_tree-disable_ternary
   test-prof
   thor
   trilogy
