@@ -525,6 +525,7 @@ module SiteSettingExtension
       set(name, value)
       # Logging via the rails console is already handled in add_override!
       log(name, value, prev_value, user, detailed_message) unless defined?(Rails::Console)
+      OpenStruct.new(previous_value: prev_value, new_value: public_send(name))
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
