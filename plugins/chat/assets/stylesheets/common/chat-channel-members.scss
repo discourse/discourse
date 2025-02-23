@@ -20,6 +20,12 @@
       padding: 0.5rem;
       cursor: pointer;
 
+      .-user-info {
+        border: 0 none;
+        display: flex;
+        flex-grow: 1;
+      }
+
       .avatar {
         cursor: pointer;
       }
@@ -56,6 +62,10 @@
             height: var(--font-0);
             width: var(--font-0);
           }
+        }
+
+        .btn {
+          margin-left: auto;
         }
       }
 

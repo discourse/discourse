@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
     <link rel="stylesheet" href="{{rootURL}}assets/discourse.css">
     <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/qunit.css" data-embroider-ignore />
+    <link rel="stylesheet" href="{{rootURL}}bootstrap/core-css-for-tests.css" data-embroider-ignore />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
 
@@ -53,7 +53,10 @@
 
     <script src="{{rootURL}}assets/discourse.js"></script>
 
-    <script src="{{rootURL}}assets/test-i18n.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}assets/locales/en.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/mf" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/admin" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/wizard" data-embroider-ignore></script>
     <script src="{{rootURL}}assets/test-site-settings.js" data-embroider-ignore></script>
     <script src="{{rootURL}}assets/admin.js" data-embroider-ignore></script>
 
@@ -72,6 +75,6 @@
     <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
     <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script>
 
-    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" data-embroider-ignore />
+    <link rel="stylesheet" href="{{rootURL}}stylesheets/qunit-custom.css" data-embroider-ignore />
   </body>
 </html>

@@ -14,14 +14,6 @@ RSpec.describe ExtraLocalesController do
       expect(response.status).to eq(403)
     end
 
-    it "requires staff access" do
-      get "/extra-locales/admin"
-      expect(response.status).to eq(403)
-
-      get "/extra-locales/wizard"
-      expect(response.status).to eq(403)
-    end
-
     it "requires a valid version" do
       get "/extra-locales/overrides", params: { v: "a" }
       expect(response.status).to eq(400)
@@ -30,54 +22,49 @@ RSpec.describe ExtraLocalesController do
       expect(response.status).to eq(400)
     end
 
-    context "when logged in as a moderator" do
-      let(:moderator) { Fabricate(:moderator) }
-      before { sign_in(moderator) }
+    it "caches for 1 year if version is provided and it matches current hash" do
+      get "/extra-locales/admin", params: { v: ExtraLocalesController.bundle_js_hash("admin") }
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("max-age=31556952, public, immutable")
+    end
 
-      it "caches for 1 year if version is provided and it matches current hash" do
-        get "/extra-locales/admin", params: { v: ExtraLocalesController.bundle_js_hash("admin") }
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to eq("max-age=31556952, public, immutable")
-      end
+    it "does not cache at all if version is invalid" do
+      get "/extra-locales/admin", params: { v: "a" * 32 }
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).not_to include("max-age", "public", "immutable")
+    end
 
-      it "does not cache at all if version is invalid" do
-        get "/extra-locales/admin", params: { v: "a" * 32 }
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).not_to include("max-age", "public", "immutable")
-      end
+    it "doesn’t generate the bundle twice" do
+      described_class.expects(:bundle_js).returns("JS").once
+      get "/extra-locales/admin", params: { v: "a" * 32 }
+    end
 
-      it "doesn’t generate the bundle twice" do
-        described_class.expects(:bundle_js).returns("JS").once
-        get "/extra-locales/admin", params: { v: "a" * 32 }
-      end
-
-      context "with plugin" do
-        before do
-          JsLocaleHelper.clear_cache!
-          JsLocaleHelper
-            .expects(:plugin_translations)
-            .with(any_of("en", "en_GB"))
-            .returns(
-              "admin_js" => {
-                "admin" => {
-                  "site_settings" => {
-                    "categories" => {
-                      "github_badges" => "GitHub Badges",
-                    },
+    context "with plugin" do
+      before do
+        JsLocaleHelper.clear_cache!
+        JsLocaleHelper
+          .expects(:plugin_translations)
+          .with(any_of("en", "en_GB"))
+          .returns(
+            "admin_js" => {
+              "admin" => {
+                "site_settings" => {
+                  "categories" => {
+                    "github_badges" => "GitHub Badges",
                   },
                 },
               },
-            )
-            .at_least_once
-        end
+            },
+          )
+          .at_least_once
+      end
 
-        after { JsLocaleHelper.clear_cache! }
+      after { JsLocaleHelper.clear_cache! }
 
-        it "includes plugin translations" do
-          get "/extra-locales/admin"
-          expect(response.status).to eq(200)
-          expect(response.body.include?("github_badges")).to eq(true)
-        end
+      it "includes plugin translations" do
+        get "/extra-locales/admin"
+        expect(response.status).to eq(200)
+        expect(response.body.include?("github_badges")).to eq(true)
       end
     end
 
@@ -247,6 +234,24 @@ RSpec.describe ExtraLocalesController do
     it "returns both JS and its hash for a given bundle" do
       expect(described_class.bundle_js_with_hash("admin")).to eq(
         ["JS", Digest::MD5.hexdigest("JS")],
+      )
+    end
+  end
+
+  describe ".url" do
+    it "works" do
+      expect(ExtraLocalesController.url("admin")).to start_with("/extra-locales/admin?v=")
+    end
+
+    it "includes subfolder path" do
+      set_subfolder "/forum"
+      expect(ExtraLocalesController.url("admin")).to start_with("/forum/extra-locales/admin?v=")
+    end
+
+    it "includes CDN" do
+      set_cdn_url "https://cdn.example.com"
+      expect(ExtraLocalesController.url("admin")).to start_with(
+        "https://cdn.example.com/extra-locales/admin?v=",
       )
     end
   end

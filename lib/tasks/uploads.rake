@@ -538,19 +538,35 @@ def sync_s3_acls(async: true, concurrency: 10)
     Upload.select(:id).find_in_batches(batch_size: 100) { |uploads| adjust_acls(uploads.map(&:id)) }
     puts "", "Upload ACL sync complete!"
   else
-    executor =
-      Concurrent::ThreadPoolExecutor.new(min_threads: 1, max_threads: concurrency, max_queue: 0)
+    executor = Concurrent::ThreadPoolExecutor.new(min_threads: 1, max_threads: concurrency)
+    errors = []
+    current_db = RailsMultisite::ConnectionManagement.current_db
 
     Upload.find_in_batches(batch_size: 100) do |uploads|
       uploads
         .map do |upload|
-          Concurrent::Future.execute(executor:) { Discourse.store.update_upload_ACL(upload) }
+          Concurrent::Future.execute(executor:) do
+            RailsMultisite::ConnectionManagement.with_connection(current_db) do
+              begin
+                Discourse.store.update_upload_ACL(upload)
+              rescue => error
+                errors << "Error updating ACL for upload #{upload.url}: #{error.message}"
+              end
+            end
+          end
         end
         .each(&:wait)
     end
 
     executor.shutdown
     executor.wait_for_termination
+
+    if errors.present?
+      errors.each { |error| puts error }
+      exit 1
+    end
+
+    true
   end
 end
 
@@ -561,16 +577,13 @@ task "uploads:sync_s3_acls", %i[synchronous parallel] => :environment do |_, arg
   end
 
   method = :sync_s3_acls
-
-  method_args = {
-    async: !args.key?(:synchronous) || !(args[:synchronous] == "true"),
-    concurrency: args[:parallel].to_i,
-  }
+  method_args = { async: !args.key?(:synchronous) || !(args[:synchronous] == "true") }
+  method_args[:concurrency] = args[:parallel].to_i if args.key?(:parallel)
 
   if ENV["RAILS_DB"]
-    send(method, method_args)
+    send(method, **method_args)
   else
-    RailsMultisite::ConnectionManagement.each_connection { send(method, method_args) }
+    RailsMultisite::ConnectionManagement.each_connection { send(method, **method_args) }
   end
 end
 

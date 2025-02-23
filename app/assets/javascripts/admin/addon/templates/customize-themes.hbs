@@ -1,7 +1,7 @@
 {{#if (eq this.currentTab "themes")}}
   <DPageHeader
-    @titleLabel={{i18n "admin.customize.theme.title"}}
-    @descriptionLabel={{i18n "admin.customize.theme.description"}}
+    @titleLabel={{i18n "admin.config.themes.title"}}
+    @descriptionLabel={{i18n "admin.config.themes.header_description"}}
     @learnMoreUrl="https://meta.discourse.org/t/91966"
     @hideTabs={{true}}
   >
@@ -9,21 +9,21 @@
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/customize/themes"
-        @label={{i18n "admin.customize.theme.title"}}
+        @label={{i18n "admin.config.themes.title"}}
       />
     </:breadcrumbs>
   </DPageHeader>
 {{else}}
   <DPageHeader
-    @titleLabel={{i18n "admin.customize.theme.components"}}
-    @descriptionLabel={{i18n "admin.customize.theme.components_description"}}
+    @titleLabel={{i18n "admin.config.components.title"}}
+    @descriptionLabel={{i18n "admin.config.components.header_description"}}
     @hideTabs={{true}}
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/customize/components"
-        @label={{i18n "admin.customize.theme.components"}}
+        @label={{i18n "admin.config.components.title"}}
       />
     </:breadcrumbs>
   </DPageHeader>

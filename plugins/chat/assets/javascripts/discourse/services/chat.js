@@ -236,7 +236,8 @@ export default class Chat extends Service {
             )
           ),
           storedDraft.channel_id,
-          storedDraft.thread_id
+          storedDraft.thread_id,
+          false
         );
       });
 

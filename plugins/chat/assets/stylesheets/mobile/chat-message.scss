@@ -9,7 +9,7 @@
   }
 
   #skip-link {
-    @include user-select(none);
+    user-select: none;
   }
 
   #skip-link,
@@ -18,7 +18,7 @@
   .chat-channel,
   .chat-thread {
     > * {
-      @include user-select(none);
+      user-select: none;
     }
   }
 

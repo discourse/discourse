@@ -123,7 +123,7 @@
   }
 
   &__backdrop {
-    @include user-select(none);
+    user-select: none;
     position: fixed;
     top: 0;
     right: 0;
@@ -150,7 +150,7 @@
 }
 
 .modal-backdrop {
-  @include user-select(none);
+  user-select: none;
   position: fixed;
   top: 0;
   right: 0;

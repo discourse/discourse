@@ -139,6 +139,7 @@ module Chat
       data[:can_moderate] = scope.can_moderate_chat?(object.chatable)
       data[:can_delete_self] = scope.can_delete_own_chats?(object.chatable)
       data[:can_delete_others] = scope.can_delete_other_chats?(object.chatable)
+      data[:can_remove_members] = scope.can_remove_members?(object)
 
       data
     end

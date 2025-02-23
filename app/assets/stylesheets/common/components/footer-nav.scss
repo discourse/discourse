@@ -69,12 +69,9 @@ html.footer-nav-visible {
   }
 }
 
-@supports (-webkit-backdrop-filter: blur(10px)) {
+@supports (backdrop-filter: blur(10px)) {
   html:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba(var(--header_background-rgb), 0.7);
-
-    /* prefix needed for iOS < 18 */
-    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
   }
 }

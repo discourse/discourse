@@ -1451,7 +1451,12 @@ class Plugin::Instance
 
   def setting_category_name
     return if setting_category.blank? || setting_category == "plugins"
-    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+    I18n.t("admin_js.#{setting_category_label}")
+  end
+
+  def setting_category_label
+    return if setting_category.blank? || setting_category == "plugins"
+    "admin.site_settings.categories.#{setting_category}"
   end
 
   def validate_directory_column_name(column_name)
@@ -1500,7 +1505,7 @@ class Plugin::Instance
 
   def default_admin_route
     {
-      label: "#{name.underscore}.title",
+      label: setting_category_label || "#{name.underscore}.title",
       location: name,
       use_new_show_route: true,
       auto_generated: true,

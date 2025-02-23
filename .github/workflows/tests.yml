@@ -28,7 +28,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 20
@@ -42,8 +42,9 @@ jobs:
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
-      TESTEM_DEFAULT_BROWSER: Chrome
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     strategy:
       fail-fast: false
@@ -51,6 +52,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
+        browser: [Chrome]
         exclude:
           - build_type: annotations
             target: plugins
@@ -58,11 +60,15 @@ jobs:
             target: themes
           - build_type: backend
             target: themes
-          - build_type: frontend
-            target: core # Handled by core_frontend_tests job (below)
         include:
           - build_type: system
             target: chat
+          - build_type: frontend
+            target: core
+            browser: Firefox Evergreen
+          - build_type: frontend
+            target: core
+            browser: Firefox ESR
 
     steps:
       - name: Set working directory owner
@@ -233,6 +239,11 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
+      - name: Core QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        timeout-minutes: 30
+
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
@@ -244,9 +255,9 @@ jobs:
         timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
-        if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        if: always() && matrix.build_type == 'frontend'
         with:
-          name: ember-exam-execution-plugins-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
+          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
@@ -322,7 +333,7 @@ jobs:
         id: fetch-job-id
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
@@ -353,56 +364,6 @@ jobs:
           fi
         timeout-minutes: 30
 
-  core_frontend_tests:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
-    container:
-      image: discourse/discourse_test:release
-      options: --user discourse
-
-    timeout-minutes: 35
-
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
-
-    env:
-      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
-      CHEAP_SOURCE_MAPS: "1"
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Setup Git
-        run: |
-          git config --global user.email "ci@ci.invalid"
-          git config --global user.name "Discourse CI"
-
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: Ember Build
-        working-directory: ./app/assets/javascripts/discourse
-        run: |
-          mkdir /tmp/emberbuild
-          pnpm ember build --environment=test -o /tmp/emberbuild
-
-      - name: Core QUnit
-        working-directory: ./app/assets/javascripts/discourse
-        run: |
-          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
-        timeout-minutes: 15
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
-          path: ./app/assets/javascripts/discourse/test-execution-*.json
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
