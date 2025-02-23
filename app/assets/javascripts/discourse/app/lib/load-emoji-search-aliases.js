@@ -4,5 +4,5 @@ let searchAliasesPromise;
 
 export default async function loadEmojiSearchAliases() {
   searchAliasesPromise ??= ajax("/emojis/search-aliases");
-  return await searchAliases;
+  return await searchAliasesPromise;
 }
