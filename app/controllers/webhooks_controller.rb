@@ -26,10 +26,16 @@ class WebhooksController < ActionController::Base
       to_address = event["email"]
       error_code = event["status"]
       if event["event"] == "bounce"
-        if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
-          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
-        else
-          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        # Sendgrid does not provide status field for emails that can't be delivered due to the recipient's server not existing
+        if error_code == nil && event["type"] == "blocked"
+          error_code = "5.5.0"
+        end
+        if error_code != nil
+            if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
+              process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+            else
+              process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+            end
         end
       elsif event["event"] == "dropped"
         process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
