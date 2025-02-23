@@ -1,6 +1,6 @@
 import Helper from "@ember/component/helper";
 import { registerDestructor } from "@ember/destroyable";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 /**
  * Build an Ember helper with cleanup logic. The passed function will be called with the named argument,

@@ -107,6 +107,27 @@ RSpec.describe UserGuardian do
     context "when viewing the profile of a user with 0 posts" do
       before { user.user_stat.update!(post_count: 0) }
 
+      context "when hide_new_user_profiles is disabled" do
+        it "allows anonymous to see any profile" do
+          SiteSetting.hide_new_user_profiles = false
+          expect(Guardian.new.can_see_profile?(user)).to eq(true)
+        end
+      end
+
+      context "when site is invite only" do
+        it "allows anonymous to see any profile" do
+          SiteSetting.invite_only = true
+          expect(Guardian.new.can_see_profile?(user)).to eq(true)
+        end
+      end
+
+      context "when site requires user approval" do
+        it "allows anonymous to see any profile" do
+          SiteSetting.must_approve_users = true
+          expect(Guardian.new.can_see_profile?(user)).to eq(true)
+        end
+      end
+
       it "they can view their own profile" do
         expect(Guardian.new(user).can_see_profile?(user)).to eq(true)
       end

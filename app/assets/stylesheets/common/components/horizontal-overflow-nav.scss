@@ -2,9 +2,12 @@
   position: relative;
   min-width: 0;
   width: 100%;
+
   .nav-pills {
     overflow: auto;
     min-width: 0;
+    margin: 0;
+    height: 100%;
     position: relative;
 
     // avoids auto-scroll on initial load if active nav item is overflowed
@@ -12,10 +15,12 @@
 
     // hides scrollbars, but allows mouse scrolling
     scrollbar-width: none;
+
     &::-webkit-scrollbar {
       height: 0;
     }
   }
+
   &.has-scroll {
     .nav-pills {
       scroll-behavior: smooth; // smooth scrolling on user interaction
@@ -36,11 +41,13 @@
   display: flex;
   align-items: center;
   transition: opacity 0.25s;
+
   .d-icon {
     pointer-events: none;
     margin-bottom: 0.2em;
     color: var(--d-nav-color--active);
   }
+
   &.disabled {
     // hiding with opacity so we can transition visibility
     opacity: 0;
@@ -50,7 +57,8 @@
 
 .horizontal-overflow-nav__scroll-right {
   right: 0;
-  &:before {
+
+  &::before {
     content: "";
     margin-left: calc(var(--fade-width) * -1);
     height: 100%;
@@ -65,7 +73,8 @@
 
 .horizontal-overflow-nav__scroll-left {
   left: 0;
-  &:after {
+
+  &::after {
     content: "";
     margin-right: calc(var(--fade-width) * -1);
     height: 100%;

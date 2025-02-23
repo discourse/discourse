@@ -5,7 +5,7 @@ module Reports::SiteTraffic
 
   class_methods do
     def report_site_traffic(report)
-      report.modes = [:stacked_chart]
+      report.modes = [Report::MODES[:stacked_chart]]
 
       first_browser_pageview_date =
         DB.query_single(

@@ -117,6 +117,8 @@ RSpec.describe Invite do
     end
 
     it "escapes the email_address when raising an existing user error" do
+      SiteSetting.hide_email_address_taken = false
+
       user.email = xss_email
       user.save(validate: false)
 

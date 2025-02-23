@@ -163,6 +163,16 @@ RSpec.describe Guardian do
       Flag.reset_flag_settings!
     end
 
+    it "return true for illegal if tl0 and allow_all_users_to_flag_illegal_content" do
+      SiteSetting.flag_post_allowed_groups = ""
+      user.trust_level = TrustLevel[0]
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+    end
+
     it "works as expected for silenced users" do
       UserSilencer.silence(user, admin)
 
@@ -915,6 +925,20 @@ RSpec.describe Guardian do
       group.add(admin)
       group.save!
 
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+
+    it "disallows private messages with no access" do
+      post = Fabricate(:private_message_post, user: moderator)
+
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_falsey
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_falsey
+
+      post.topic.allowed_users << admin
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
     end
   end
@@ -3521,6 +3545,12 @@ RSpec.describe Guardian do
 
     it "does not allow anonymous to export" do
       expect(anonymous_guardian.can_export_entity?("user_archive")).to be_falsey
+    end
+
+    it "only allows admins to export user_archive of other users" do
+      expect(user_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(moderator_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(admin_guardian.can_export_entity?("user_archive", another_user.id)).to be_truthy
     end
   end
 

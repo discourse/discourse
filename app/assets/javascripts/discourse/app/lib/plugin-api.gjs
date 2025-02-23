@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.0";
+export const PLUGIN_API_VERSION = "2.1.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -41,7 +41,6 @@ import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -56,23 +55,29 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import {
-  PLUGIN_NAV_MODE_SIDEBAR,
-  PLUGIN_NAV_MODE_TOP,
-  registerAdminPluginConfigNav,
-} from "discourse/lib/admin-plugin-config-nav";
+import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
+import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
+import {
+  iconNode,
+  registerIconRenderer,
+  replaceIcon,
+} from "discourse/lib/icon-library";
 import KeyboardShortcuts, {
   disableDefaultKeyboardShortcuts,
 } from "discourse/lib/keyboard-shortcuts";
@@ -153,14 +158,6 @@ import {
   queryRegistry,
   reopenWidget,
 } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -170,6 +167,18 @@ const DEPRECATED_POST_MENU_WIDGETS = [
   "post-user-tip-shim",
   "small-user-list",
 ];
+
+const POST_MENU_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta3-dev",
+  id: "discourse.post-menu-widget-overrides",
+  url: "https://meta.discourse.org/t/341014",
+};
+
+export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta4-dev",
+  id: "discourse.hbr-topic-list-overrides",
+  url: "https://meta.discourse.org/t/343404",
+};
 
 const appliedModificationIds = new WeakMap();
 
@@ -296,14 +305,12 @@ class PluginApi {
   modifyClass(resolverName, changes, opts) {
     if (
       resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item"
+      resolverName === "component:topic-list-item" ||
+      resolverName === "raw-view:topic-status"
     ) {
       deprecated(
-        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -346,14 +353,12 @@ class PluginApi {
   modifyClassStatic(resolverName, changes, opts) {
     if (
       resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item"
+      resolverName === "component:topic-list-item" ||
+      resolverName === "raw-view:topic-status"
     ) {
       deprecated(
-        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -821,14 +826,21 @@ class PluginApi {
   }
 
   /**
-   * Adds a tracked property to the post model.
+   * Adds tracked properties to the post model.
    *
-   * This method is used to mark a property as tracked for post updates.
+   * This method is used to mark properties as tracked for post updates.
    *
-   * @param {string} name - The name of the property to track.
+   * It will also add the properties to the list of Post's attributes passed to
+   * widgets.
+   *
+   * You'll need to do this if you've added properties to a Post and want to use
+   * them when you're rendering.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
    */
-  addTrackedPostProperty(name) {
-    _addTrackedPostProperty(name);
+  addTrackedPostProperties(...names) {
+    names.forEach((name) => _addTrackedPostProperty(name));
+    includeAttributes(...names); // compatibility with widget's attributes
   }
 
   /**
@@ -880,10 +892,7 @@ class PluginApi {
   addPostMenuButton(name, callback) {
     deprecated(
       "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     apiExtraButtons[name] = callback;
@@ -958,10 +967,7 @@ class PluginApi {
   removePostMenuButton(name, callback) {
     deprecated(
       "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     removeButton(name, callback);
@@ -986,10 +992,7 @@ class PluginApi {
   replacePostMenuButton(name, widget) {
     deprecated(
       "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     replaceButton(name, widget);
@@ -2058,33 +2061,6 @@ class PluginApi {
    **/
   setDesktopTopicTimelineScrollAreaHeight(height) {
     setDesktopScrollAreaHeight(height);
-  }
-
-  /**
-   * Allows altering the topic title in the topic list, and in the topic view
-   *
-   * topicTitleType can be `topic-title` or `topic-list-item-title`
-   *
-   * For example, to replace the topic title:
-   *
-   * ```
-   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
-   *   node.innerText = "my new topic title";
-   * });
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
-   **/
-  decorateTopicTitle(callback) {
-    deprecated(
-      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
-      {
-        id: "discourse.decorate-topic-title",
-        since: "3.2",
-        dropFrom: "3.3",
-      }
-    );
-    addTopicTitleDecorator(callback);
   }
 
   /**
@@ -3276,28 +3252,15 @@ class PluginApi {
    *
    * * route
    * * label OR text
-   *
-   * And the mode must be one of "sidebar" or "top", which controls
-   * where in the admin plugin show UI the links will be displayed.
    */
-  addAdminPluginConfigurationNav(pluginId, mode, links) {
+  addAdminPluginConfigurationNav(pluginId, links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
-    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
-    if (!validModes.includes(mode)) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        consolePrefix(),
-        `${mode} is an invalid mode for admin plugin config pages, only ${validModes} are usable.`
-      );
-      return;
-    }
-
-    registerAdminPluginConfigNav(pluginId, mode, links);
+    registerAdminPluginConfigNav(pluginId, links);
   }
 
   /**
@@ -3340,7 +3303,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a component class that will be rendered within the AdminPageHeader component
+   * Registers a component class that will be rendered within the DPageHeader component
    * only on plugins using the AdminPluginConfigPage and the new plugin "show" route.
    *
    * This component will be passed an `@actions` argument, with Primary, Default, Danger,
@@ -3401,6 +3364,30 @@ class PluginApi {
     registeredTabs.push(tab);
   }
 
+  /**
+   * Registers a report mode and an associated component, which will be rendered
+   * by the AdminReport component. A mode is a different way of displaying the
+   * report data, core modes are things like "table" and "chart". For all core modes
+   * see Admin::Report::MODES.
+   *
+   * @param {String} mode - The identifier of the mode to register
+   * @param {Class} componentClass - The class of the component to render
+   */
+  registerReportModeComponent(mode, componentClass) {
+    registerReportModeComponent(mode, componentClass);
+  }
+
+  /**
+   * Registers an extension for the rich editor
+   *
+   * EXPERIMENTAL: This API will change without warning
+   *
+   * @param {RichEditorExtension} extension
+   */
+  registerRichEditorExtension(extension) {
+    registerRichEditorExtension(extension);
+  }
+
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3418,10 +3405,7 @@ class PluginApi {
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(
         `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.post-menu-widget-overrides",
-        }
+        POST_MENU_DEPRECATION_OPTIONS
       );
     }
   }
@@ -3481,7 +3465,14 @@ function getPluginApi(version) {
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {*} The result of the `callback` function, if executed
  */
-export function withPluginApi(version, apiCodeCallback, opts) {
+export function withPluginApi(...args) {
+  let version, apiCodeCallback, opts;
+  if (typeof args[0] === "function") {
+    [version, apiCodeCallback, opts] = ["0", ...args];
+  } else {
+    [version, apiCodeCallback, opts] = args;
+  }
+
   opts = opts || {};
 
   const api = getPluginApi(version);

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { notEq } from "truth-helpers";
 import bodyClass from "discourse/helpers/body-class";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 // Can add a body class from within a component
 export default class DSection extends Component {

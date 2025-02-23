@@ -74,6 +74,10 @@ fr:
           title: "Notifications de sujet"
         post:
           title: "Message"
+        post_list:
+          title: "Liste des publications"
+          empty_example: "<PostList /> état vide"
+          populated_example: "<PostList /> état rempli"
         topic_map:
           title: "Carte des sujets"
         site_header:

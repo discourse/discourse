@@ -13,13 +13,16 @@ zh_CN:
             delete_automation: 删除自动化
     discourse_automation:
       title: 自动化
-      create: 创建
-      update: 更新
+      table_title: 自动化
+      create: 添加自动化
+      update: 更新自动化
+      back: 返回
+      edit: 编辑
       select_script: 选择脚本
       select_trigger: 选择触发器
       confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
       confirm_automation_trigger: 此操作将触发自动化，要继续吗？
-      no_automation_yet: 您尚未创建任何自动化。请选择以下选项以开始。
+      no_automation_yet: 目前尚未配置自动化。
       filter_placeholder: 按名称或描述筛选…
       edit_automation:
         trigger_section:
@@ -166,10 +169,10 @@ zh_CN:
               description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_group:
               label: 群组
-              description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
+              description: 可选，仅在帖子的话题是此群组收件箱中的个人消息时触发
             restricted_groups:
               label: 群组
-              description: 可选，仅在帖子的话题是某个群组收件箱中的私信时触发
+              description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器
@@ -227,6 +230,10 @@ zh_CN:
               label: 有效信任级别
               description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: 标签已添加或移除
+            tags_added: 标签已添加
+            tags_removed: 标签已移除
           fields:
             watching_categories:
               label: 关注类别
@@ -234,6 +241,8 @@ zh_CN:
             watching_tags:
               label: 关注标签
               description: 仅当话题包含以下任意标签时触发
+            trigger_on:
+              label: 触发条件
             trigger_with_pms:
               label: 通过私信触发
               description: 即使在私信中更改了标签也会触发
@@ -412,6 +421,8 @@ zh_CN:
             label: 脚本
           version:
             label: 版本
+          status:
+            label: 状态
           enabled:
             label: 已启用
           disabled:

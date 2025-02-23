@@ -2,7 +2,7 @@
 
 module PageObjects
   module Pages
-    class AdminUsers < PageObjects::Pages::Base
+    class AdminUsers < AdminBase
       class UserRow
         attr_reader :element
 
@@ -75,16 +75,6 @@ module PageObjects
 
       def has_none_users?
         has_content?(I18n.t("js.search.no_results"))
-      end
-
-      def click_tab(tab)
-        has_css?(".admin-users-tabs__#{tab}")
-        find(".admin-users-tabs__#{tab}").click
-      end
-
-      def has_active_tab?(tab)
-        has_css?(".admin-users-tabs__#{tab} .active")
-        has_no_css?(".loading-container .visible")
       end
 
       def has_no_emails?

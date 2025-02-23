@@ -16,6 +16,17 @@ class Report
     include_subcategories
   ]
 
+  MODES = {
+    table: :table,
+    chart: :chart,
+    stacked_chart: :stacked_chart,
+    stacked_line_chart: :stacked_line_chart,
+    radar: :radar,
+    counters: :counters,
+    inline_table: :inline_table,
+    storage_stats: :storage_stats,
+  }
+
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
@@ -106,7 +117,7 @@ class Report
     @average = false
     @percent = false
     @higher_is_better = true
-    @modes = %i[table chart]
+    @modes = [MODES[:chart], MODES[:table]]
     @prev_data = nil
     @dates_filtering = true
     @available_filters = {}
@@ -138,14 +149,17 @@ class Report
     available_filters.delete(name)
   end
 
-  def add_category_filter
+  def add_category_filter(options = {})
     category_id = filters[:category].to_i if filters[:category].present?
-    add_filter("category", type: "category", default: category_id)
+    add_filter("category", { type: "category", default: category_id }.merge(options))
     return if category_id.blank?
 
     include_subcategories = filters[:include_subcategories]
     include_subcategories = !!ActiveRecord::Type::Boolean.new.cast(include_subcategories)
-    add_filter("include_subcategories", type: "bool", default: include_subcategories)
+    add_filter(
+      "include_subcategories",
+      { type: "bool", default: include_subcategories }.merge(options),
+    )
 
     [category_id, include_subcategories]
   end
@@ -374,7 +388,7 @@ class Report
   end
 
   def self.add_prev_data(report, subject_class, report_method, *args)
-    if report.modes.include?(:chart) && report.facets.include?(:prev_period)
+    if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
       prev_data = subject_class.public_send(report_method, *args)
       report.prev_data = prev_data.map { |k, v| { x: k, y: v } }
     end

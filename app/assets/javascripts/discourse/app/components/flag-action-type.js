@@ -1,15 +1,14 @@
 import Component from "@ember/component";
-import { and, equal, not } from "@ember/object/computed";
+import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class FlagActionType extends Component {
   @and("flag.require_message", "selected") showMessageInput;
   @and("flag.isIllegal", "selected") showConfirmation;
-  @not("showMessageInput") showDescription;
   @equal("flag.name_key", "notify_user") isNotifyUser;
 
   @discourseComputed("flag.name_key")

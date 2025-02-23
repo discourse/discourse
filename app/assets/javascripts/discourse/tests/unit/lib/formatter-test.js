@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import domFromString from "discourse/lib/dom-from-string";
 import {
   autoUpdatingRelativeAge,
   duration,
@@ -12,7 +13,6 @@ import {
   updateRelativeAge,
 } from "discourse/lib/formatter";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);
@@ -92,7 +92,7 @@ module("Unit | Utility | formatter", function (hooks) {
     );
     assert.strictEqual(
       strip(formatDays(4.85, { format: "medium", leaveAgo: true })),
-      "4 days ago"
+      "5 days ago"
     );
 
     assert.strictEqual(strip(formatMins(0, { format: "medium" })), "just now");
@@ -110,7 +110,7 @@ module("Unit | Utility | formatter", function (hooks) {
       "23 hours"
     );
     assert.strictEqual(strip(formatHours(23.5, { format: "medium" })), "1 day");
-    assert.strictEqual(strip(formatDays(4.85, { format: "medium" })), "4 days");
+    assert.strictEqual(strip(formatDays(4.85, { format: "medium" })), "5 days");
 
     assert.strictEqual(
       strip(formatDays(6, { format: "medium" })),

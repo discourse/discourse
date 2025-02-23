@@ -147,7 +147,7 @@ export default class AdminFlagItem extends Component {
         <div class="d-admin-row__controls-options">
 
           <DButton
-            class="btn-small admin-flag-item__edit"
+            class="btn-default btn-small admin-flag-item__edit"
             @action={{this.edit}}
             @label="admin.config_areas.flags.edit"
             @disabled={{not this.canEdit}}
@@ -160,6 +160,7 @@ export default class AdminFlagItem extends Component {
               @title={{i18n "admin.config_areas.flags.more_options.title"}}
               @icon="ellipsis-vertical"
               @onRegisterApi={{this.onRegisterApi}}
+              @class="btn-default"
             >
               <:content>
                 <DropdownMenu as |dropdown|>
@@ -188,7 +189,7 @@ export default class AdminFlagItem extends Component {
                     <DButton
                       @label="admin.config_areas.flags.delete"
                       @icon="trash-can"
-                      class="btn-transparent admin-flag-item__delete"
+                      class="btn-transparent btn-danger admin-flag-item__delete"
                       @action={{this.delete}}
                       @disabled={{not this.canEdit}}
                       @title={{this.deleteTitle}}

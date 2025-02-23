@@ -7,6 +7,9 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
@@ -14,11 +17,7 @@ import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import { findAll } from "discourse/models/login-method";
 import DiscourseRoute from "discourse/routes/discourse";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 function isStrictlyReadonly(site) {
@@ -43,17 +42,6 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
-
-  get isOnlyOneExternalLoginMethod() {
-    return (
-      !this.siteSettings.enable_local_logins &&
-      this.externalLoginMethods.length === 1
-    );
-  }
-
-  get externalLoginMethods() {
-    return findAll();
-  }
 
   @action
   loading(transition) {
@@ -137,7 +125,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       archetypeId: "private_message",
-      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      draftKey: this.composer.privateMessageDraftKey,
       draftSequence: 0,
       reply,
       title,
@@ -295,8 +283,8 @@ export default class ApplicationRoute extends DiscourseRoute {
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
-        this.login.externalLogin(this.externalLoginMethods[0]);
+      if (this.login.isOnlyOneExternalLoginMethod) {
+        this.login.singleExternalLogin();
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
@@ -310,6 +298,9 @@ export default class ApplicationRoute extends DiscourseRoute {
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
             canSignUp: this.controller.canSignUp,
+            referrerUrl: DiscourseURL.isInternal(document.referrer)
+              ? document.referrer
+              : null,
           },
         });
       }
@@ -321,11 +312,9 @@ export default class ApplicationRoute extends DiscourseRoute {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (this.login.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
-        this.login.externalLogin(this.externalLoginMethods[0], {
-          signup: true,
-        });
+        this.login.singleExternalLogin({ signup: true });
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {

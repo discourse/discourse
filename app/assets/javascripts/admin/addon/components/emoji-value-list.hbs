@@ -6,7 +6,7 @@
           @action={{fn this.removeValue data}}
           @icon="xmark"
           @disabled={{not data.isEditable}}
-          class="remove-value-btn btn-small"
+          class="btn-default remove-value-btn btn-small"
         />
 
         <div
@@ -29,12 +29,12 @@
           <DButton
             @action={{fn this.shift -1 index}}
             @icon="arrow-up"
-            class="shift-up-value-btn btn-small"
+            class="btn-default shift-up-value-btn btn-small"
           />
           <DButton
             @action={{fn this.shift 1 index}}
             @icon="arrow-down"
-            class="shift-down-value-btn btn-small"
+            class="btn-default shift-down-value-btn btn-small"
           />
         {{/if}}
       </li>
@@ -43,17 +43,8 @@
 {{/if}}
 
 <div class="value">
-  <DButton
-    @action={{fn this.editValue this.data}}
-    @icon="discourse-emojis"
-    @label="admin.site_settings.emoji_list.add_emoji_button.label"
-    class="add-emoji-button d-editor-textarea-wrapper"
+  <EmojiPicker
+    @label={{i18n "admin.site_settings.emoji_list.add_emoji_button.label"}}
+    @didSelectEmoji={{this.emojiSelected}}
   />
 </div>
-
-<EmojiPicker
-  @isActive={{this.emojiPickerIsActive}}
-  @isEditorFocused={{this.isEditorFocused}}
-  @emojiSelected={{this.emojiSelected}}
-  @onEmojiPickerClose={{this.closeEmojiPicker}}
-/>

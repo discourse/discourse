@@ -13,13 +13,16 @@ sk:
             delete_automation: vymazať automatizáciu
     discourse_automation:
       title: Automatizácia
-      create: Vytvoriť
-      update: Aktualizovať
+      table_title: Automatizácie
+      create: Pridanie automatizácie
+      update: Aktualizácia automatizácie
+      back: Späť
+      edit: Upraviť
       select_script: Vyberte skript
       select_trigger: Vyberte spúšťač
       confirm_automation_reset: Táto akcia resetuje možnosti skriptu a spúšťača, nový stav sa uloží, chcete pokračovať?
       confirm_automation_trigger: Táto akcia spustí automatizáciu, chcete pokračovať?
-      no_automation_yet: Zatiaľ ste nevytvorili žiadne automatizácie. Vyberte si niektorú z možností nižšie a začnite.
+      no_automation_yet: V súčasnosti nie sú nakonfigurované žiadne automatizácie.
       filter_placeholder: Filtrovanie podľa názvu alebo popisu...
       edit_automation:
         trigger_section:
@@ -169,10 +172,10 @@ sk:
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
             restricted_group:
               label: Skupina
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku súkromnou správou v doručenej pošte tejto skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku osobnou správou v doručenej pošte tejto skupiny
             restricted_groups:
               label: Skupiny
-              description: Nepovinné, aktivuje sa len vtedy, ak je témou príspevku súkromná správa v jednej zo schránok doručených do skupiny.
+              description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
             ignore_group_members:
               label: Ignorovať členov skupiny
               description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
@@ -230,6 +233,10 @@ sk:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Pridané alebo odstránené značky
+            tags_added: Pridané značky
+            tags_removed: Odstránené značky
           fields:
             watching_categories:
               label: Sledovanie kategórií
@@ -237,6 +244,8 @@ sk:
             watching_tags:
               label: Sledovanie značiek
               description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_on:
+              label: Spúšťač na
             trigger_with_pms:
               label: Spúšťanie pomocou PM
               description: Spustí sa, aj keď boli značky zmenené v PM
@@ -415,6 +424,8 @@ sk:
             label: Skript
           version:
             label: Verzia
+          status:
+            label: Stav
           enabled:
             label: Povolené
           disabled:

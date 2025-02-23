@@ -7,7 +7,7 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import MultiSelect from "select-kit/components/multi-select";
@@ -147,6 +147,7 @@ export default class AdminFlagsForm extends Component {
                 @name="description"
                 @title={{i18n "admin.config_areas.flags.form.description"}}
                 @validation="required|length:3,1000"
+                @format="large"
                 as |field|
               >
                 <field.Textarea @height={{60}} />
@@ -157,6 +158,7 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.config_areas.flags.form.applies_to"}}
                 @validation="required"
                 @validate={{this.validateAppliesTo}}
+                @format="large"
                 as |field|
               >
                 <field.Custom>
@@ -177,6 +179,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n
                     "admin.config_areas.flags.form.require_message"
                   }}
+                  @format="full"
                   as |field|
                 >
                   <field.Checkbox>
@@ -189,6 +192,7 @@ export default class AdminFlagsForm extends Component {
                 <checkboxGroup.Field
                   @name="enabled"
                   @title={{i18n "admin.config_areas.flags.form.enabled"}}
+                  @format="full"
                   as |field|
                 >
                   <field.Checkbox />
@@ -199,6 +203,7 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n
                     "admin.config_areas.flags.form.auto_action_type"
                   }}
+                  @format="full"
                   as |field|
                 >
                   <field.Checkbox />

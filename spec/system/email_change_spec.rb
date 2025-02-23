@@ -51,6 +51,8 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has totp 2fa" do
+    SiteSetting.hide_email_address_taken = false
+
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 

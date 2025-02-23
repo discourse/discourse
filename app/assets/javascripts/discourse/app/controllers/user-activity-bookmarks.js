@@ -6,9 +6,9 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import discourseComputed from "discourse/lib/decorators";
+import { iconHTML } from "discourse/lib/icon-library";
 import Bookmark from "discourse/models/bookmark";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityBookmarksController extends Controller {

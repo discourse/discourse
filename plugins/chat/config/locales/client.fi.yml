@@ -138,6 +138,13 @@ fi:
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
+      send_shortcut:
+        enter:
+          label: "Lähetä painamalla Enter-näppäintä"
+          description: "Uusi rivi painamalla Vaihto + Enter"
+        meta_enter:
+          label: "Lähetä painamalla %{meta_key} + Enter"
+          description: "Uusi rivi painamalla Enter-näppäintä"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -432,7 +439,7 @@ fi:
           title: "Vie chat-viestit"
           description: "Tämä vie kaikki viestit kaikilta kanavilta."
           create_export: "Luo vienti"
-          confirm_export: "Tämä vie kaikki viestit kaikilta kanavilta ja lähettää tuloksen sinulle yksityisviestinä. Haluatko varmasti viedä?"
+          confirm_export: "Tämä vie kaikki viestit kaikilta kanavilta ja lähettää tuloksen sinulle henkilökohtaisena viestinä. Haluatko varmasti viedä?"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
       my_threads:
         title: Omat ketjut
@@ -602,6 +609,11 @@ fi:
           other_html: "<span>%{username}</span> <span>mainitsi kohteen %{identifier} henkilökohtaisessa chatissa</span>"
         chat_message: "Uusi chat-viesti"
         chat_quoted: "%{username} lainasi chat-viestiäsi"
+      titles:
+        chat_mention: "Mainittu chatissa"
+        chat_invitation: "Kutsuttu chat-kanavalle"
+        chat_quoted: "Chat-viestiä lainattu"
+        chat_watched_thread: "Tarkkailtu chat-ketju"
     action_codes:
       chat:
         enabled: '%{who} otti <button class="btn-link open-chat">chatin</button> käyttöön %{when}'
@@ -645,11 +657,11 @@ fi:
       chat:
         help: "Chat on käytössä tässä ketjussa"
     user:
-      allow_private_messages: "Salli muiden käyttäjien lähettää minulle yksityisviestejä ja chat-yksityisviestejä"
-      muted_users_instructions: "Estä kaikki ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
-      allowed_pm_users_instructions: "Salli vain näiden käyttäjien yksityisviestit tai chat-yksityisviestit."
-      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle yksityisviestejä tai chat-yksityisviestejä"
-      ignored_users_instructions: "Estä kaikki viestit, ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
+      allow_private_messages: "Salli muiden käyttäjien lähettää minulle henkilökohtaisia viestejä ja chat-yksityisviestejä"
+      muted_users_instructions: "Estä kaikki ilmoitukset, henkilökohtaiset viestit ja chat-yksityisviestit näiltä käyttäjiltä."
+      allowed_pm_users_instructions: "Salli vain näiden käyttäjien henkilökohtaiset viestit tai chat-yksityisviestit."
+      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle henkilökohtaisia viestejä tai chat-yksityisviestejä"
+      ignored_users_instructions: "Estä kaikki viestit, ilmoitukset, henkilökohtaiset viestit ja chat-yksityisviestit näiltä käyttäjiltä."
     user_menu:
       no_chat_notifications_title: "Sinulla ei ole vielä chat-ilmoituksia"
       no_chat_notifications_body: >

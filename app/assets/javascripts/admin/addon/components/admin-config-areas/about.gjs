@@ -53,6 +53,7 @@ export default class AdminConfigAreasAbout extends Component {
       <div class="admin-config-area__primary-content">
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.general_settings"
+          @collapsable={{true}}
           class="admin-config-area-about__general-settings-section"
         >
           <:content>
@@ -65,6 +66,7 @@ export default class AdminConfigAreasAbout extends Component {
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.contact_information"
+          @collapsable={{true}}
           class="admin-config-area-about__contact-information-section"
         >
           <:content>
@@ -78,6 +80,7 @@ export default class AdminConfigAreasAbout extends Component {
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.your_organization"
           @description="admin.config_areas.about.your_organization_description"
+          @collapsable={{true}}
           class="admin-config-area-about__your-organization-section"
         >
           <:content>

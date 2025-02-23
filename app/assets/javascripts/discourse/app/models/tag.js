@@ -1,6 +1,6 @@
 import { readOnly } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Tag extends RestModel {
   @readOnly("pm_only") pmOnly;

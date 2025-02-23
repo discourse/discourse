@@ -7,8 +7,8 @@
 hr:
   js:
     discourse_automation:
-      create: Kreiraj
-      update: Ažuriraj
+      back: Natrag
+      edit: Uredi
       fields:
         user:
           label: Korisnik
@@ -140,6 +140,8 @@ hr:
             label: Okidač
           version:
             label: Inačica
+          status:
+            label: Statust
           enabled:
             label: Omogućeno
           disabled:

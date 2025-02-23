@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { next } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -595,7 +594,7 @@ module("Unit | Controller | topic", function (hooks) {
     );
   });
 
-  test("deletePost - no modal is shown if post does not have replies", function (assert) {
+  test("deletePost - no modal is shown if post does not have replies", async function (assert) {
     pretender.get("/posts/2/reply-ids.json", () => response([]));
 
     let destroyed;
@@ -616,12 +615,9 @@ module("Unit | Controller | topic", function (hooks) {
     const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
-    const done = assert.async();
     controller.send("deletePost", post);
+    await settled();
 
-    next(() => {
-      assert.true(destroyed, "post was destroyed");
-      done();
-    });
+    assert.true(destroyed, "post was destroyed");
   });
 });

@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,

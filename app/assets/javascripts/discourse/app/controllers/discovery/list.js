@@ -170,7 +170,6 @@ export default class DiscoveryListController extends Controller {
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))
         .join(","),
-      preferDraft: true,
     });
   }
 

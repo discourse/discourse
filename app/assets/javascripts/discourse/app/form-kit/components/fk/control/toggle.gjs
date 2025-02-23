@@ -8,7 +8,7 @@ export default class FKControlToggle extends Component {
 
   @action
   handleInput() {
-    this.args.field.set(!this.args.value);
+    this.args.field.set(!this.args.field.value);
   }
 
   <template>

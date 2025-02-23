@@ -91,9 +91,40 @@ RSpec.describe Wizard::StepUpdater do
         )
       updater.update
       expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
       expect(wizard.completed_steps?("styling")).to eq(true)
       expect(SiteSetting.base_font).to eq("open_sans")
       expect(SiteSetting.heading_font).to eq("oswald")
+    end
+
+    it "updates both fonts if site_font is used" do
+      updater = wizard.create_updater("styling", site_font: "open_sans", homepage_style: "latest")
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
+      expect(wizard.completed_steps?("styling")).to eq(true)
+      expect(SiteSetting.base_font).to eq("open_sans")
+      expect(SiteSetting.heading_font).to eq("open_sans")
+    end
+
+    it "does not require refresh if the font, color scheme, or theme are unchanged" do
+      SiteSetting.base_font = "open_sans"
+      SiteSetting.heading_font = "open_sans"
+      SiteSetting.top_menu = "latest|categories|unread|top"
+      dark_scheme = ColorScheme.find_by(name: "Dark")
+      Theme.find_default.update!(color_scheme: dark_scheme)
+      SiteSetting.default_dark_mode_color_scheme_id = -1
+      updater =
+        wizard.create_updater(
+          "styling",
+          color_scheme: "Dark",
+          site_font: "open_sans",
+          heading_font: "open_sans",
+          homepage_style: "latest",
+        )
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(false)
     end
 
     context "with colors" do
@@ -297,6 +328,43 @@ RSpec.describe Wizard::StepUpdater do
         updater.update
         expect(updater).to be_success
         expect(SiteSetting.desktop_category_page_style).to eq("subcategories_with_featured_topics")
+      end
+
+      it "updates top_menu if it doesn't match the new homepage_style and does nothing if it matches" do
+        SiteSetting.top_menu = "categories|new|latest"
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "latest",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("latest|hot|categories|new")
       end
 
       it "does not overwrite top_menu site setting" do

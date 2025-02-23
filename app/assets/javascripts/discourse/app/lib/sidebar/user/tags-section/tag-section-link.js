@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse/lib/decorators";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class TagSectionLink extends BaseTagSectionLink {
@@ -48,7 +48,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get currentWhen() {
-    return "tag.show tag.showNew tag.showUnread tag.showTop";
+    return "tag.show tag.showNew tag.showUnread tag.showTop tag.showHot tag.showLatest";
   }
 
   get badgeText() {

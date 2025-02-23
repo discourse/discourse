@@ -7,7 +7,7 @@ import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse-common/lib/later";
+import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
 import {
   EXISTING_TOPIC_SELECTION,
@@ -115,7 +115,7 @@ export default class ChatModalArchiveChannel extends Component {
 
   @action
   newTopicSelected(topic) {
-    this.selectedTopicId = topic.id;
+    this.selectedTopicId = topic?.id;
   }
 
   <template>
@@ -137,6 +137,7 @@ export default class ChatModalArchiveChannel extends Component {
           @categoryId={{this.categoryId}}
           @tags={{this.tags}}
           @topicChangedCallback={{this.newTopicSelected}}
+          @selectedTopicId={{this.selectedTopicId}}
           @instructionLabels={{this.instructionLabels}}
           @allowNewMessage={{false}}
         />

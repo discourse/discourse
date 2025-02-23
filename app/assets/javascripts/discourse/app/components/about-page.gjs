@@ -5,9 +5,9 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
+import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
-import dIcon from "discourse-common/helpers/d-icon";
-import escape from "discourse-common/lib/escape";
 import I18n, { i18n } from "discourse-i18n";
 
 const pluginActivitiesFuncs = [];
@@ -37,6 +37,7 @@ export default class AboutPage extends Component {
       {
         class: "members",
         icon: "users",
+        display: true,
         text: i18n("about.member_count", {
           count: this.args.model.stats.users_count,
           formatted_number: I18n.toNumber(this.args.model.stats.users_count, {
@@ -47,6 +48,7 @@ export default class AboutPage extends Component {
       {
         class: "admins",
         icon: "shield-halved",
+        display: this.adminsCount > 0,
         text: i18n("about.admin_count", {
           count: this.adminsCount,
           formatted_number: I18n.toNumber(this.adminsCount, { precision: 0 }),
@@ -55,6 +57,7 @@ export default class AboutPage extends Component {
       {
         class: "moderators",
         icon: "shield-halved",
+        display: this.moderatorsCount > 0,
         text: i18n("about.moderator_count", {
           count: this.moderatorsCount,
           formatted_number: I18n.toNumber(this.moderatorsCount, {
@@ -65,6 +68,7 @@ export default class AboutPage extends Component {
       {
         class: "site-creation-date",
         icon: "calendar-days",
+        display: true,
         text: this.siteAgeString,
       },
     ];
@@ -149,8 +153,9 @@ export default class AboutPage extends Component {
     const email = escape(this.args.model.contact_email || "");
 
     if (url) {
+      const href = this.contactURLHref;
       return i18n("about.contact_info", {
-        contact_info: `<a href='${url}' target='_blank'>${url}</a>`,
+        contact_info: `<a href='${href}' target='_blank'>${url}</a>`,
       });
     } else if (email) {
       return i18n("about.contact_info", {
@@ -159,6 +164,20 @@ export default class AboutPage extends Component {
     } else {
       return null;
     }
+  }
+
+  get contactURLHref() {
+    const url = escape(this.args.model.contact_url || "");
+
+    if (!url) {
+      return;
+    }
+
+    if (url.startsWith("/") || url.match(/^\w+:/)) {
+      return url;
+    }
+
+    return `//${url}`;
   }
 
   get siteAgeString() {
@@ -215,7 +234,7 @@ export default class AboutPage extends Component {
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{dIcon "pencil"}}
+          {{icon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>
@@ -238,10 +257,12 @@ export default class AboutPage extends Component {
       <div class="about__left-side">
         <div class="about__stats">
           {{#each this.stats as |stat|}}
-            <span class="about__stats-item {{stat.class}}">
-              {{dIcon stat.icon}}
-              <span>{{stat.text}}</span>
-            </span>
+            {{#if stat.display}}
+              <span class="about__stats-item {{stat.class}}">
+                {{icon stat.icon}}
+                <span>{{stat.text}}</span>
+              </span>
+            {{/if}}
           {{/each}}
         </div>
 
@@ -278,14 +299,14 @@ export default class AboutPage extends Component {
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
-          <p>{{htmlSafe this.contactInfo}}</p>
+          <p class="about__contact-info">{{htmlSafe this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
         <h3>{{i18n "about.site_activity"}}</h3>
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}
             <div class="about__activities-item {{activity.class}}">
-              <span class="about__activities-item-icon">{{dIcon
+              <span class="about__activities-item-icon">{{icon
                   activity.icon
                 }}</span>
               <span class="about__activities-item-type">

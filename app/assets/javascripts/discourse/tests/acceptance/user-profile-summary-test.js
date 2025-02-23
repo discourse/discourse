@@ -1,8 +1,8 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 let deleteAndBlock;
@@ -23,6 +23,21 @@ acceptance("User Profile - Summary", function (needs) {
     assert
       .dom(".top-categories-section .category-link")
       .exists("top categories");
+  });
+
+  test("Viewing Summary - Expanding / collapsing info", async function (assert) {
+    await visit("/u/eviltrout/summary");
+
+    const collapsed = `button[aria-controls="collapsed-info-panel"][aria-expanded="false"]`;
+    const expanded = `button[aria-controls="collapsed-info-panel"][aria-expanded="true"]`;
+
+    assert.dom(collapsed).exists("info panel is collapsed");
+
+    await click(collapsed);
+    assert.dom(expanded).exists("info panel is expanded");
+
+    await click(expanded);
+    assert.dom(collapsed).exists("info panel is collapsed");
   });
 
   test("Top Categories Search", async function (assert) {
@@ -155,7 +170,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
   test("Delete only action", async function (assert) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .delete-dont-block");
 
     assert.false(deleteAndBlock, "first button does not block user");
   });
@@ -168,7 +183,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .btn-danger");
+    await click(".dialog-footer .delete-and-block");
     assert.true(deleteAndBlock, "second button also block user");
   });
 });

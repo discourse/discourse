@@ -110,6 +110,9 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def self.find_authenticator(name)
+    if SiteSetting.enable_discourse_connect
+      raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
+    end
     Discourse.enabled_authenticators.each do |authenticator|
       return authenticator if authenticator.name == name
     end

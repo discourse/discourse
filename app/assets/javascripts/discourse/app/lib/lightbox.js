@@ -1,14 +1,16 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { helperContext } from "discourse/lib/helpers";
+import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import loadScript from "discourse/lib/load-script";
-import { postRNWebviewMessage } from "discourse/lib/utilities";
+import {
+  escapeExpression,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { helperContext } from "discourse-common/lib/helpers";
-import { renderIcon } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {
@@ -22,22 +24,6 @@ export function cleanupLightboxes() {
 }
 
 export default function lightbox(elem, siteSettings) {
-  if (siteSettings.enable_experimental_lightbox) {
-    deprecated(
-      "Accessing the default `lightbox` export is deprecated. Import setupLightboxes and cleanupLightboxes from `discourse/lib/lightbox` instead.",
-      {
-        since: "3.0.0.beta16",
-        dropFrom: "3.2.0",
-        id: "discourse.lightbox.default-export",
-      }
-    );
-
-    return setupLightboxes({
-      container: elem,
-      selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-    });
-  }
-
   if (!elem) {
     return;
   }
@@ -116,7 +102,7 @@ export default function lightbox(elem, siteSettings) {
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
           let src = [
-            item.el.attr("title"),
+            escapeExpression(item.el.attr("title")),
             $("span.informations", item.el).text(),
           ];
           if (

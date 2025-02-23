@@ -167,6 +167,20 @@ RSpec.describe Service::Runner do
     end
   end
 
+  class LockService
+    include Service::Base
+
+    params do
+      attribute :post_id, :integer
+      attribute :user_id, :integer
+    end
+
+    lock(:post_id, :user_id) { step :locked_step }
+
+    def locked_step
+    end
+  end
+
   describe ".call" do
     subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
@@ -469,6 +483,31 @@ RSpec.describe Service::Runner do
 
         it "does not run the provided block" do
           expect(runner).not_to eq true
+        end
+      end
+    end
+
+    context "when using the on_lock_not_acquired action" do
+      let(:service) { LockService }
+      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { :success }
+            on_lock_not_acquired(:post_id, :user_id) { :lock_not_acquired }
+          end
+      BLOCK
+
+      context "when the service fails" do
+        before { allow(DistributedMutex).to receive(:synchronize) }
+
+        it "runs the provided block" do
+          expect(runner).to eq :lock_not_acquired
+        end
+      end
+
+      context "when the service does not fail" do
+        it "does not run the provided block" do
+          expect(runner).to eq :success
         end
       end
     end

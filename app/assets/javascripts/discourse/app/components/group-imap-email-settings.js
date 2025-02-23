@@ -5,8 +5,8 @@ import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("")
 export default class GroupImapEmailSettings extends Component {

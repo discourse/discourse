@@ -7,13 +7,16 @@ en:
             delete_automation: delete automation
     discourse_automation:
       title: Automation
-      create: Create
-      update: Update
+      table_title: Automations
+      create: Add automation
+      update: Update automation
+      back: Back
+      edit: Edit
       select_script: Select a script
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
-      no_automation_yet: You haven’t created any automations yet. Choose an option below to get started.
+      no_automation_yet: There are currently no automations configured.
       filter_placeholder: Filter by name or description...
       edit_automation:
         trigger_section:
@@ -222,6 +225,10 @@ en:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags added or removed
+            tags_added: Tags added
+            tags_removed: Tags removed
           fields:
             watching_categories:
               label: Watching categories
@@ -229,6 +236,8 @@ en:
             watching_tags:
               label: Watching tags
               description: Will trigger only if the topic has any of these tags
+            trigger_on:
+              label: Trigger on
             trigger_with_pms:
               label: Trigger with PMs
               description: Will trigger even if the tags were changed in a PM
@@ -408,6 +417,8 @@ en:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Enabled
           disabled:

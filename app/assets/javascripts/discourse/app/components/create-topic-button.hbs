@@ -3,7 +3,7 @@
     <:button>
       <DButton
         @action={{this.action}}
-        @icon="plus"
+        @icon="far-pen-to-square"
         @disabled={{this.disabled}}
         @label={{this.label}}
         id="create-topic"
@@ -12,11 +12,12 @@
     </:button>
     <:tooltip>
       {{#if @disabled}}
-        <DTooltip
-          @icon="circle-info"
-          @content={{i18n "topic.create_disabled_category"}}
-        />
+        <DTooltip @icon="circle-info" @content={{i18n this.disallowedReason}} />
       {{/if}}
     </:tooltip>
   </DButtonTooltip>
+
+  {{#if @showDrafts}}
+    <TopicDraftsDropdown @disabled={{this.disabled}} />
+  {{/if}}
 {{/if}}

@@ -4,9 +4,9 @@ import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @classNameBindings(":user-info", "size")
 @attributeBindings("dataUsername:data-username")

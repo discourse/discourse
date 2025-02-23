@@ -1,8 +1,12 @@
+// @ts-check
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -14,10 +18,13 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
+ * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ */
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
@@ -33,9 +40,13 @@ const OP = {
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
-export function getHead(head, prev) {
+/**
+ * Our head can be a static string or a function that returns a string
+ * based on input (like for numbered lists).
+ *
+ * @returns {[string, number]}
+ */
+function getHead(head, prev) {
   if (typeof head === "string") {
     return [head, head.length];
   } else {
@@ -43,11 +54,14 @@ export function getHead(head, prev) {
   }
 }
 
+/** @implements {TextManipulation} */
 export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
   @service currentUser;
+
+  allowPreview = true;
 
   eventPrefix;
   textarea;
@@ -79,11 +93,11 @@ export default class TextareaTextManipulation {
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
-    this.textarea?.focus();
+    this.textarea?.focus({ preventScroll: true });
   }
 
   focus() {
-    this.textarea.focus();
+    this.textarea.focus({ preventScroll: true });
   }
 
   insertBlock(text) {
@@ -127,20 +141,16 @@ export default class TextareaTextManipulation {
   }
 
   selectText(from, length, opts = { scroll: true }) {
-    next(() => {
-      this.textarea.selectionStart = from;
-      this.textarea.selectionEnd = from + length;
-      if (opts.scroll === true || typeof opts.scroll === "number") {
-        const oldScrollPos =
-          typeof opts.scroll === "number"
-            ? opts.scroll
-            : this.textarea.scrollTop;
-        if (!this.capabilities.isIOS) {
-          this.textarea.focus();
-        }
-        this.textarea.scrollTop = oldScrollPos;
+    this.textarea.selectionStart = from;
+    this.textarea.selectionEnd = from + length;
+    if (opts.scroll === true || typeof opts.scroll === "number") {
+      const oldScrollPos =
+        typeof opts.scroll === "number" ? opts.scroll : this.textarea.scrollTop;
+      if (!this.capabilities.isIOS) {
+        this.textarea.focus();
       }
-    });
+      this.textarea.scrollTop = oldScrollPos;
+    }
   }
 
   replaceText(oldVal, newVal, opts = {}) {
@@ -741,10 +751,7 @@ export default class TextareaTextManipulation {
   }
 
   async inCodeBlock() {
-    return inCodeBlock(
-      this.$textarea.value ?? this.$textarea.val(),
-      caretPosition(this.$textarea)
-    );
+    return await this.autocompleteHandler.inCodeBlock();
   }
 
   @bind
@@ -823,11 +830,18 @@ export default class TextareaTextManipulation {
   }
 
   putCursorAtEnd() {
-    putCursorAtEnd(this.textarea);
+    if (this.capabilities.isIOS) {
+      putCursorAtEnd(this.textarea);
+    } else {
+      // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
+      // isEditorFoused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      next(() => putCursorAtEnd(this.textarea));
+    }
   }
 
   autocomplete(options) {
-    return this.$textarea.autocomplete(
+    // @ts-ignore
+    this.$textarea.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
@@ -845,6 +859,7 @@ function insertAtTextarea(textarea, start, end, text) {
   }
 }
 
+/** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
   $textarea;
@@ -854,12 +869,13 @@ export class TextareaAutocompleteHandler {
     this.$textarea = $(textarea);
   }
 
-  get value() {
+  getValue() {
     return this.textarea.value;
   }
 
-  replaceTerm({ start, end, term }) {
-    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+  replaceTerm(start, end, term) {
+    const space =
+      this.getValue().substring(end + 1, end + 2) === " " ? "" : " ";
     insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
@@ -869,20 +885,23 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
+    // @ts-ignore
     return this.$textarea.caretPosition({ pos: start + 1 });
   }
 
   async inCodeBlock() {
-    return inCodeBlock(
-      this.$textarea.value ?? this.$textarea.val(),
-      caretPosition(this.$textarea)
+    return await inCodeBlock(
+      this.textarea.value ?? this.$textarea.val(),
+      caretPosition(this.textarea)
     );
   }
 }
 
+/** @implements {PlaceholderHandler} */
 class TextareaPlaceholderHandler {
   @service composer;
 
+  /** @type {TextareaTextManipulation} */
   textManipulation;
 
   #placeholders = {};

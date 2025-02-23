@@ -2,6 +2,7 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   resetHighestReadCache,
@@ -13,7 +14,6 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 import selectKit from "../helpers/select-kit-helper";
 
@@ -592,7 +592,7 @@ acceptance(
         .exists({ count: 2 }, "displays the right topic list");
 
       assert
-        .dom(".group-notifications-button")
+        .dom(".group-notifications-tracking")
         .exists("displays the group notifications button");
     });
 

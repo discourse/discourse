@@ -3,6 +3,7 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import AddPmParticipants from "discourse/components/modal/add-pm-participants";
+import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
 import ChangeOwnerModal from "discourse/components/modal/change-owner";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
@@ -16,17 +17,18 @@ import PublishPageModal from "discourse/components/modal/publish-page";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import discourseLater from "discourse/lib/later";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseRoute from "discourse/routes/discourse";
-import discourseLater from "discourse-common/lib/later";
 
 const SCROLL_DELAY = 500;
 
 export default class TopicRoute extends DiscourseRoute {
   @service composer;
   @service screenTrack;
+  @service currentUser;
   @service modal;
   @service router;
 
@@ -104,7 +106,7 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
-    this.modal.show(FlagModal, {
+    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
         flagTarget: new PostFlag(),
         flagModel: model,

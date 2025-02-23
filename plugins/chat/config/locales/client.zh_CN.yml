@@ -134,6 +134,13 @@ zh_CN:
         never: "永不"
       separate_sidebar_mode:
         title: "为论坛和聊天显示单独的边栏模式"
+      send_shortcut:
+        enter:
+          label: "按 Enter 发送"
+          description: "按 Shift + Enter 换行"
+        meta_enter:
+          label: "按 %{meta_key} + Enter 发送"
+          description: "按 Enter 换行"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -620,7 +627,7 @@ zh_CN:
         chat_mention: "聊天中提到"
         chat_invitation: "受邀加入聊天频道"
         chat_quoted: "引用聊天信息"
-        chat_watched_thread: "已查看聊天话题"
+        chat_watched_thread: "关注聊天消息串"
     action_codes:
       chat:
         enabled: '%{who} 于 %{when} 启用了<button class="btn-link open-chat">聊天</button>'

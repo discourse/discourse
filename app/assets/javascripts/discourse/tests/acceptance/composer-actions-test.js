@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
@@ -10,7 +11,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Composer Actions", function (needs) {
@@ -385,12 +385,15 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("shared draft", async function (assert) {
-    updateCurrentUser({ has_topic_draft: true });
+    updateCurrentUser({ draft_count: 1 });
     stubDraftResponse();
     toggleCheckDraftPopup(true);
 
     await visit("/");
-    await click("button.open-draft");
+    await click("button.topic-drafts-menu-trigger");
+    await click(
+      ".topic-drafts-menu-content .topic-drafts-item:first-child button"
+    );
 
     await fillIn(
       "#reply-title",

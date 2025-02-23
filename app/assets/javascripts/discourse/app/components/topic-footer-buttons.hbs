@@ -16,6 +16,7 @@
       @resetBumpDate={{this.resetBumpDate}}
       @convertToPublicTopic={{this.convertToPublicTopic}}
       @convertToPrivateMessage={{this.convertToPrivateMessage}}
+      @buttonClasses="topic-footer-button"
     />
 
     {{#each this.inlineActionables as |actionable|}}
@@ -24,7 +25,7 @@
           <BookmarkMenu
             @showLabel={{this.showBookmarkLabel}}
             @bookmarkManager={{this.topicBookmarkManager}}
-            @buttonClasses="btn-default"
+            @buttonClasses="btn-default topic-footer-button"
           />
         {{else}}
           <DButton
@@ -59,10 +60,26 @@
     {{/each}}
 
     {{#if this.site.mobileView}}
-      {{#if this.dropdownButtons}}
+      {{#if this.loneDropdownButton}}
+        <DButton
+          @action={{this.loneDropdownButton.action}}
+          @icon={{this.loneDropdownButton.icon}}
+          @translatedLabel={{this.loneDropdownButton.label}}
+          @translatedTitle={{this.loneDropdownButton.title}}
+          @translatedAriaLabel={{this.loneDropdownButton.ariaLabel}}
+          @disabled={{this.loneDropdownButton.disabled}}
+          id={{concat "topic-footer-button-" this.loneDropdownButton.id}}
+          class={{concat-class
+            "btn-default"
+            "topic-footer-button"
+            this.loneDropdownButton.classNames
+          }}
+        />
+      {{else if (gt this.dropdownButtons.length 1)}}
         <DMenu
           @modalForMobile={{true}}
           @identifier="topic-footer-mobile-dropdown"
+          class="topic-footer-button btn-default"
         >
           <:trigger>
             {{d-icon "ellipsis-vertical"}}
@@ -119,7 +136,7 @@
       @action={{this.replyToPost}}
       @label="topic.reply.title"
       @title="topic.reply.help"
-      class="btn-primary create"
+      class="btn-primary create topic-footer-button"
     />
   {{/if}}
 

@@ -1,10 +1,10 @@
 import { equal, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import UserActionGroup from "discourse/models/user-action-group";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "./category";
 
 const UserActionTypes = {

@@ -39,11 +39,19 @@ module Chat
         @chat_separate_sidebar_mode ||= { default: 0, never: 1, always: 2, fullscreen: 3 }
       end
 
+      def base.chat_send_shortcut
+        @chat_send_shortcut ||= { enter: 0, meta_enter: 1 }
+      end
+
       # Avoid attempting to override when autoloading
       if !base.method_defined?(:chat_separate_sidebar_mode_default?)
         base.enum :chat_separate_sidebar_mode,
                   base.chat_separate_sidebar_mode,
                   prefix: "chat_separate_sidebar_mode"
+      end
+
+      if !base.method_defined?(:chat_send_shortcut_default?)
+        base.enum :chat_send_shortcut, base.chat_send_shortcut, prefix: "chat_send_shortcut"
       end
 
       if !base.method_defined?(:show_thread_title_prompts?)

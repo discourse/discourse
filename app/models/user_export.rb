@@ -13,11 +13,11 @@ class UserExport < ActiveRecord::Base
     end
   end
 
-  DESTROY_CREATED_BEFORE = 2.days.ago
+  DESTROY_CREATED_BEFORE = 2.days
 
   def self.remove_old_exports
     UserExport
-      .where("created_at < ?", DESTROY_CREATED_BEFORE)
+      .where("created_at < ?", DESTROY_CREATED_BEFORE.ago)
       .find_each do |user_export|
         UserExport.transaction do
           begin
@@ -30,6 +30,10 @@ class UserExport < ActiveRecord::Base
           end
         end
       end
+  end
+
+  def retain_hours
+    (created_at + DESTROY_CREATED_BEFORE - Time.zone.now).to_i / 1.hour
   end
 
   def self.base_directory

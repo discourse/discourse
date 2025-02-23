@@ -1,5 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 
 let _queue = [];
 let _processing = 0;

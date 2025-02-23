@@ -10,8 +10,9 @@ import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
+import { deepEqual } from "discourse/lib/object";
+import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
-import { deepEqual } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
@@ -38,6 +39,7 @@ const CUSTOM_TYPES = [
   "named_list",
   "file_size_restriction",
   "file_types_list",
+  "font_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -141,9 +143,7 @@ export default Mixin.create({
   }),
 
   settingName: computed("setting.setting", "setting.label", function () {
-    const setting = this.setting?.setting;
-    const label = this.setting?.label;
-    return label || setting.replace(/\_/g, " ");
+    return humanizedSettingName(this.setting.setting, this.setting.label);
   }),
 
   componentType: computed("type", function () {

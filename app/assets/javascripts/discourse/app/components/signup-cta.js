@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { on } from "@ember-decorators/object";
-import discourseLater from "discourse-common/lib/later";
+import discourseLater from "discourse/lib/later";
 
 export default class SignupCta extends Component {
   action = "showCreateAccount";

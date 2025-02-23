@@ -68,12 +68,32 @@ acceptance(
       assert
         .dom("[data-link-name='admin']")
         .exists("the admin link is not within the 'more' dropdown");
-
       assert
-        .dom(".sidebar-more-section-links-details-summary")
+        .dom(".sidebar-more-section-trigger")
         .doesNotExist(
           "the 'more' dropdown should not be present in header dropdown mode"
         );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Logged on user - Mobile view - Sidebar enabled",
+  function (needs) {
+    needs.user();
+    needs.mobileView();
+
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    test("sections are collapsable", async function (assert) {
+      await visit("/");
+      await click("#toggle-hamburger-menu");
+
+      assert
+        .dom(".sidebar-section-header.sidebar-section-header-collapsable")
+        .exists("sections are collapsable");
     });
   }
 );

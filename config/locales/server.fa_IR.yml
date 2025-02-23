@@ -1171,7 +1171,6 @@ fa_IR:
     disable_system_edit_notifications: "ویرایش اعلان‌ها را از طریق کاربر سیستم کار بینداز وقتی 'download_remote_images_to_local' فعال است "
     automatically_unpin_topics: "وقتی کاربر به پایین صفحه می‌رسد سنجاق موضوع‌ها به‌صورت خودکار برداشته شود."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."
-    full_name_required: "نام و نام خانوادگی برای کامل کردن نمایه کاربر مورد نیاز است."
     enable_names: "نام و نام‌خانوادگی کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     display_name_on_posts: "نام و نام‌خانوادگی کاربران را در نوشته نشان بده به‌علاوه‌ی @نام‌کاربری."
     show_time_gap_days: "اگر دو نوشته با این فاصله زمانی از هم نوشته شوند، فاصله زمانی را نشان بده."
@@ -2246,17 +2245,9 @@ fa_IR:
           homepage_style:
             choices:
               latest:
-                label: "آخرین‌ ارسال‌ها"
-              categories_only:
-                label: "فقط دسته‌بندی‌ها"
-              categories_with_featured_topics:
-                label: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
-              categories_and_latest_topics:
-                label: "دسته‌بندی‌ها و آخرین موضوعات"
-              categories_and_latest_topics_created_date:
-                label: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
-              categories_and_top_topics:
-                label: "دسته بندی ها و مباحث داغ"
+                label: "آخرین"
+              hot:
+                label: "داغ"
       branding:
         title: "لوگوی سایت"
         fields:
@@ -2291,6 +2282,7 @@ fa_IR:
       quoted: '%{username} از شما در "%{topic}" - %{site_title} نقل قول کرد '
       replied: '%{username} در "%{topic}" - %{site_title} به شما پاسخ داد'
       posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
+      private_message: '%{username} برای شما یک پیام خصوصی در "%{topic}" - %{site_title} ارسال کرد'
       linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
       watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
       confirm_title: "آگاه‌سازی فعال شد - %{site_title}"

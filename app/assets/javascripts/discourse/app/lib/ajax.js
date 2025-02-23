@@ -1,12 +1,12 @@
 import { run } from "@ember/runloop";
 import $ from "jquery";
 import { Promise } from "rsvp";
+import { isTesting } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
 import userPresent from "discourse/lib/user-presence";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
-import getURL from "discourse-common/lib/get-url";
 
 let _trackView = false;
 let _topicId = null;
@@ -45,10 +45,16 @@ function handleRedirect(xhr) {
   }
 }
 
+let activeCsrfRequest;
+
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then((result) => {
-    Session.currentProp("csrfToken", result.csrf);
-  });
+  if (!activeCsrfRequest) {
+    activeCsrfRequest = ajax("/session/csrf")
+      .then((result) => Session.currentProp("csrfToken", result.csrf))
+      .finally(() => (activeCsrfRequest = null));
+  }
+
+  return activeCsrfRequest;
 }
 
 /**

@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { getURLWithCDN } from "discourse/lib/get-url";
 
 export default class DStyles extends Component {
   @service session;
   @service site;
+  @service interfaceColor;
 
   get categoryColors() {
     return [
@@ -17,7 +18,7 @@ export default class DStyles extends Component {
   }
 
   get categoryBackgrounds() {
-    const css = [];
+    let css = [];
     const darkCss = [];
 
     this.site.categories.forEach((category) => {
@@ -45,7 +46,11 @@ export default class DStyles extends Component {
     });
 
     if (darkCss.length > 0) {
-      css.push("@media (prefers-color-scheme: dark) {", ...darkCss, "}");
+      if (this.interfaceColor.darkModeForced) {
+        css = darkCss;
+      } else if (!this.interfaceColor.lightModeForced) {
+        css.push("@media (prefers-color-scheme: dark) {", ...darkCss, "}");
+      }
     }
 
     return css.join("\n");

@@ -14,12 +14,12 @@ ro:
     deleted_chat_username: șters
     errors:
       users_cant_be_added_to_channel: "Utilizatorii nu pot fi adăugați la acest canal."
-      not_accepting_dms: "%{username} nu acceptă mesaje în acest moment."
+      not_accepting_dms: "Regret, %{username} nu acceptă mesaje în acest moment."
       invalid_direct_message: "Nu ai voie să creezi acest mesaj direct."
     reviewables:
       actions:
         agree_and_suspend:
-          title: "Suspendă Utilizator"
+          title: "Suspendă utilizator"
         agree_and_silence:
           title: "Suspendă utilizatorul"
         disagree:
@@ -32,7 +32,7 @@ ro:
       dm_title:
         single_user: "%{username}"
     mention_warning:
-      dismiss: "renunță"
+      dismiss: "respinge"
       cannot_see: "%{first_identifier} nu poate accesa acest canal și nu a fost notificat."
       without_membership: "%{first_identifier} nu s-a alăturat acestui canal."
       without_membership_multiple:
@@ -45,6 +45,9 @@ ro:
         few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
         other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
       too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
+    onebox:
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Fir în #%{chat_channel}"
     transcript:
       default_thread_title: "Fir"
       split_thread_range: "mesaje de la %{start} la %{end} din %{total}"

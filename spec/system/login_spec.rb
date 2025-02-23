@@ -10,7 +10,10 @@ shared_examples "login scenarios" do |login_page_object|
   fab!(:admin) { Fabricate(:admin, username: "admin", password: "supersecurepassword") }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  before { Jobs.run_immediately! }
+  before do
+    SiteSetting.hide_email_address_taken = false
+    Jobs.run_immediately!
+  end
 
   def wait_for_email_link(user, type)
     wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
@@ -64,7 +67,7 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".not-activated-modal")
 
-      visit "/u/activate-account/invalid"
+      visit "/u/activate-account/123abc"
 
       activate_account.click_activate_account
       expect(activate_account).to have_error
@@ -85,9 +88,6 @@ shared_examples "login scenarios" do |login_page_object|
 
       # TODO: prefill username when fullpage
       if find("#username-or-email").value.blank?
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
-        end
         find("#username-or-email").fill_in(with: user.username)
       end
 
@@ -122,6 +122,60 @@ shared_examples "login scenarios" do |login_page_object|
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "redirects to a PM after login" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".login-welcome .login-button").click
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+  end
+
+  context "when login is not required" do
+    before { SiteSetting.login_required = false }
+
+    it "redirects to a PM after authentication" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".btn.login-button").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+
+    it "redirects to a public topic when hitting Reply then logging in" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic, created_at: 1.day.ago)
+
+      visit "/t/#{topic.id}"
+      find(".topic-footer-main-buttons .btn-primary").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
     end
   end
 

@@ -1,28 +1,34 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import DiscourseURL from "discourse/lib/url";
+import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import NameValidation from "discourse/mixins/name-validation";
-import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class InvitesShowController extends Controller.extend(
-  PasswordValidation,
-  UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
+  @tracked accountPassword;
+  @tracked accountUsername;
+  @tracked isDeveloper;
   queryParams = ["t"];
-
+  nameValidationHelper = new NameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper(this);
+  passwordValidationHelper = new PasswordValidationHelper(this);
+  successMessage = null;
+  @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;
   @alias("model.email") email;
   @alias("email") accountEmail;
@@ -33,16 +39,36 @@ export default class InvitesShowController extends Controller.extend(
   @alias("model.hidden_email") hiddenEmail;
   @alias("model.email_verified_by_link") emailVerifiedByLink;
   @alias("model.different_external_email") differentExternalEmail;
-  @alias("model.username") accountUsername;
   @not("externalAuthsOnly") passwordRequired;
-  @readOnly("model.is_invite_link") isInviteLink;
-
-  successMessage = null;
   errorMessage = null;
   userFields = null;
   authOptions = null;
   rejectedEmails = [];
   maskPassword = true;
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  @dependentKeyCompat
+  get usernameValidation() {
+    return this.usernameValidationHelper.usernameValidation;
+  }
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  @dependentKeyCompat
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
+  }
 
   authenticationComplete(options) {
     const props = {
@@ -157,12 +183,12 @@ export default class InvitesShowController extends Controller.extend(
 
   @discourseComputed
   showFullname() {
-    return this.siteSettings.enable_names;
+    return this.site.full_name_visible_in_signup;
   }
 
   @discourseComputed
   fullnameRequired() {
-    return this.siteSettings.full_name_required;
+    return this.site.full_name_required_for_signup;
   }
 
   @discourseComputed(
@@ -336,15 +362,13 @@ export default class InvitesShowController extends Controller.extend(
           ) {
             this.rejectedEmails.pushObject(result.values.email);
           }
-          if (
-            result.errors &&
-            result.errors.password &&
-            result.errors.password.length > 0
-          ) {
-            this.rejectedPasswords.pushObject(this.accountPassword);
-            this.rejectedPasswordsMessages.set(
+          if (result.errors?.["user_password.password"]?.length > 0) {
+            this.passwordValidationHelper.rejectedPasswords.push(
+              this.accountPassword
+            );
+            this.passwordValidationHelper.rejectedPasswordsMessages.set(
               this.accountPassword,
-              result.errors.password[0]
+              result.errors["user_password.password"][0]
             );
           }
           if (result.message) {

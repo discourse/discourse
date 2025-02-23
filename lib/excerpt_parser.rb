@@ -27,10 +27,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def self.get_excerpt(html, length, options)
-    html ||= ""
+    return "" if html.blank?
+
     length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
     me = self.new(length, options)
-    parser = Nokogiri::HTML::SAX::Parser.new(me)
+    parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
     catch(:done) { parser.parse(html) }
     excerpt = me.excerpt.strip
     excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source] ||

@@ -263,11 +263,8 @@ id:
     max_redemptions_limit: "harus antara 2 dan %{max_limit}."
   topic_invite:
     failed_to_invite: "Pengguna tidak dapat diundang ke topik ini tanpa keanggotaan grup di salah satu grup berikut: %{group_names}."
-    not_pm: "Anda hanya dapat mengundang ke pesan pribadi."
     user_exists: "Maaf, pengguna tersebut telah diundang. Anda hanya dapat mengundang pengguna ke suatu topik satu kali."
     muted_topic: "Maaf, pengguna tersebut membisukan topik ini."
-    receiver_does_not_allow_pm: "Maaf, pengguna itu tidak mengizinkan Anda mengirimi mereka pesan pribadi."
-    sender_does_not_allow_pm: "Maaf, Anda tidak mengizinkan pengguna itu mengirimi Anda pesan pribadi."
     user_cannot_see_topic: "%{username} tidak dapat melihat topik."
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
@@ -1240,8 +1237,6 @@ id:
     max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
     default_subcategory_on_read_only_category: "Mengaktifkan tombol 'Topik Baru' dan memilih subkategori bawaan untuk membuat post pada kategori di mana pengguna tidak diizinkan untuk membuat topik baru."
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
-    summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"
-    custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
     num_users_to_silence_new_user: "Jika post pengguna baru melebihi pengaturan hide_post_sensitive, dan memiliki tanda spam dari banyak pengguna yang berbeda, sembunyikan semua posting mereka dan cegah post lagi di masa mendatang. 0 untuk menonaktifkan."
     gtm_container_id: "ID penampung Google Pengelola Tag. misalnya: GTM-ABCD12E. <br/>Catatan: Untuk menggunakan GTM saat Kebijakan Keamanan Konten (CSP) diaktifkan, lihat dokumentasi tentang meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Gunakan nonce dalam skrip Google Pengelola Tag</a>."
     content_security_policy_script_src: "Sumber skrip tambahan yang diizinkan. Host dan CDN saat ini disertakan secara bawaan. Lihat <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mengurangi Serangan XSS dengan Kebijakan Keamanan Konten.</a> (CSP). Sumber host lain diabaikan karena strict-dynamic diaktifkan."
@@ -1290,7 +1285,6 @@ id:
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
-    automatically_clean_unused_tags: "Secara otomatis menghapus tag yang tidak digunakan pada topik atau pesan pribadi apa pun setiap hari."
     watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
@@ -1830,14 +1824,8 @@ id:
         fields:
           homepage_style:
             choices:
-              categories_only:
-                label: "Hanya Kategori"
-              categories_with_featured_topics:
-                label: "Kategori dengan Topik Unggulan"
-              categories_and_latest_topics:
-                label: "Kategori dan Topik Terbaru"
-              categories_and_top_topics:
-                label: "Kategori dan Topik Teratas"
+              latest:
+                label: "Terbaru"
       corporate:
         fields:
           contact_url:

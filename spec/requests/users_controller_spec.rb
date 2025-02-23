@@ -19,6 +19,8 @@ RSpec.describe UsersController do
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
       get "/session/hp.json"
@@ -58,10 +60,17 @@ RSpec.describe UsersController do
 
     before { UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false) }
 
-    context "with invalid token" do
-      it "return success" do
-        put "/u/activate-account/invalid-token"
+    context "with inexistent token" do
+      it "return 404" do
+        put "/u/activate-account/123abc"
         expect(response.status).to eq(422)
+      end
+    end
+
+    context "with invalid token" do
+      it "return 404" do
+        put "/u/activate-account/123%2f%252e"
+        expect(response.status).to eq(404)
       end
     end
 
@@ -154,6 +163,16 @@ RSpec.describe UsersController do
           }
 
           expect(response.status).to eq(200)
+        end
+      end
+
+      context "when user is already logged in" do
+        it "returns 404" do
+          sign_in(user1)
+
+          get "/u/activate-account/some-token"
+
+          expect(response.status).to eq(404)
         end
       end
     end
@@ -779,6 +798,23 @@ RSpec.describe UsersController do
           expect(response.status).to eq(200)
           expect(User.find_by(username: @user.username).user_option.timezone).to eq(
             "Australia/Brisbane",
+          )
+        end
+      end
+
+      context "with discourse connect enabled" do
+        before do
+          SiteSetting.discourse_connect_url = "http://example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+        end
+
+        it "blocks registration for local logins" do
+          SiteSetting.enable_local_logins = true
+          post_user
+
+          response_body = response.parsed_body
+          expect(response_body["message"]).to eq(
+            "New account registrations are only allowed through Discourse Connect.",
           )
         end
       end
@@ -1827,7 +1863,7 @@ RSpec.describe UsersController do
 
       it "raises an error without a new_username param" do
         put "/u/#{user.username}/preferences/username.json", params: { username: user.username }
-        expect(response.status).to eq(400)
+        expect(response).to be_bad_request
         expect(user.reload.username).to eq(old_username)
       end
 
@@ -1843,7 +1879,7 @@ RSpec.describe UsersController do
       it "raises an error when change_username fails" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "@" }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
 
         body = response.parsed_body
 
@@ -1857,7 +1893,7 @@ RSpec.describe UsersController do
       it "should succeed in normal circumstances" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(user.reload.username).to eq(new_username)
       end
 
@@ -1876,9 +1912,30 @@ RSpec.describe UsersController do
         SiteSetting.reserved_usernames = "reserved"
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
-        body = response.parsed_body
+        expect(response).to be_unprocessable
 
-        expect(body["errors"].first).to include(I18n.t("login.reserved_username"))
+        expect(response.parsed_body["errors"].first).to include(I18n.t("login.reserved_username"))
+      end
+
+      it "allows admins to change a username to one in the reserved list" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_successful
+
+        expect(response.parsed_body["username"]).to eq("reserved")
+      end
+
+      it "does not allow admins to change a username to one in the reserved list if that user already exists" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+        Fabricate(:user, username: "reserved")
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_unprocessable
+
+        expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
 
       it "should fail if the user is old" do
@@ -1902,7 +1959,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(
           UserHistory.where(
             action: UserHistory.actions[:change_username],
@@ -1928,7 +1985,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
         expect(response.parsed_body["errors"].first).to include(
           I18n.t("errors.messages.auth_overrides_username"),
         )
@@ -1970,6 +2027,30 @@ RSpec.describe UsersController do
     context "when username is unavailable" do
       before { get "/u/check_username.json", params: { username: user1.username } }
       include_examples "when username is unavailable"
+    end
+
+    describe "reserved usernames" do
+      before { SiteSetting.reserved_usernames = SiteSetting.reserved_usernames + "|reserved" }
+
+      context "when checking a reserved username" do
+        before { get "/u/check_username.json", params: { username: "reserved" } }
+        include_examples "when username is unavailable"
+      end
+
+      context "when checking a reserved username as an admin" do
+        before { sign_in(admin) }
+
+        context "when user already exists" do
+          fab!(:user) { Fabricate(:user, username: "reserved") }
+          before { get "/u/check_username.json", params: { username: "reserved" } }
+          include_examples "when username is unavailable"
+        end
+
+        context "when user does not exist" do
+          before { get "/u/check_username.json", params: { username: "reserved" } }
+          include_examples "when username is available"
+        end
+      end
     end
 
     shared_examples "checking an invalid username" do

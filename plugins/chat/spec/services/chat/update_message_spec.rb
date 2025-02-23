@@ -40,7 +40,6 @@ RSpec.describe Chat::UpdateMessage do
     before do
       SiteSetting.chat_enabled = true
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-      SiteSetting.chat_duplicate_message_sensitivity = 0
       Jobs.run_immediately!
 
       [admin1, admin2, user1, user2, user3, user4].each { |user| public_chat_channel.add(user) }
@@ -580,23 +579,14 @@ RSpec.describe Chat::UpdateMessage do
       fab!(:upload1) { Fabricate(:upload, user: user1) }
       fab!(:upload2) { Fabricate(:upload, user: user1) }
 
-      before do
-        SiteSetting.chat_duplicate_message_sensitivity = 1.0
-        public_chat_channel.update!(user_count: 50)
-      end
-
       it "errors when editing the message to be the same as one that was posted recently" do
         chat_message_1 =
           create_chat_message(user1, "this is some chat message", public_chat_channel)
         chat_message_2 =
-          create_chat_message(
-            Fabricate(:user),
-            "another different chat message here",
-            public_chat_channel,
-          )
+          create_chat_message(user1, "another different chat message here", public_chat_channel)
 
-        chat_message_1.update!(created_at: 30.seconds.ago)
-        chat_message_2.update!(created_at: 20.seconds.ago)
+        chat_message_1.update!(created_at: 15.seconds.ago)
+        chat_message_2.update!(created_at: 5.seconds.ago)
 
         expect do
           described_class.call(
@@ -619,7 +609,7 @@ RSpec.describe Chat::UpdateMessage do
             public_chat_channel,
             upload_ids: [upload1.id, upload2.id],
           )
-        chat_message.update!(created_at: 30.seconds.ago)
+        chat_message.update!(created_at: 5.seconds.ago)
 
         updater =
           described_class.call(

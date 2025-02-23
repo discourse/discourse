@@ -2,11 +2,11 @@ import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import { bind } from "discourse/lib/decorators";
+import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
-import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
-import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // Deprecations matching patterns on this list will trigger warnings for admins.
@@ -20,6 +20,19 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.plugin-outlet-tag-name",
   "discourse.plugin-outlet-parent-view",
   "discourse.d-button-action-string",
+  "discourse.post-menu-widget-overrides",
+  "discourse.fontawesome-6-upgrade",
+  "discourse.add-flag-property",
+  "discourse.breadcrumbs.childCategories",
+  "discourse.breadcrumbs.firstCategory",
+  "discourse.breadcrumbs.parentCategories",
+  "discourse.breadcrumbs.parentCategoriesSorted",
+  "discourse.breadcrumbs.parentCategory",
+  "discourse.breadcrumbs.secondCategory",
+  "discourse.qunit.acceptance-function",
+  "discourse.qunit.global-exists",
+  "discourse.post-stream.trigger-new-post",
+  "discourse.hbr-topic-list-overrides",
 ];
 
 if (DEBUG) {

@@ -2,21 +2,25 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { fmt } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
+
+const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  // Your code here
+});
+`;
 
 export default class AdminThemeEditor extends Component {
   warning = null;
 
   @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
 
-  @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
-  visibleTargets(targets, onlyOverridden, showAdvanced) {
+  @discourseComputed("theme.targets", "onlyOverridden")
+  visibleTargets(targets, onlyOverridden) {
     return targets.filter((target) => {
-      if (target.advanced && !showAdvanced) {
-        return false;
-      }
       if (!onlyOverridden) {
         return true;
       }
@@ -35,14 +39,11 @@ export default class AdminThemeEditor extends Component {
 
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
-    if (["settings", "translations"].includes(targetName)) {
-      return "yaml";
-    }
-    if (["extra_scss"].includes(targetName)) {
+    if (fieldName === "color_definitions") {
       return "scss";
     }
-    if (["color_definitions"].includes(fieldName)) {
-      return "scss";
+    if (fieldName === "js") {
+      return "javascript";
     }
     return fieldName && fieldName.includes("scss") ? "scss" : "html";
   }
@@ -64,21 +65,26 @@ export default class AdminThemeEditor extends Component {
 
   @computed("fieldName", "currentTargetName", "theme")
   get activeSection() {
-    return this.theme.getField(this.currentTargetName, this.fieldName);
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
   }
 
   set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
   @discourseComputed("maximized")
   maximizeIcon(maximized) {
     return maximized ? "discourse-compress" : "discourse-expand";
-  }
-
-  @discourseComputed("currentTargetName", "theme.targets")
-  showAddField(currentTargetName, targets) {
-    return targets.find((t) => t.name === currentTargetName).customNames;
   }
 
   @discourseComputed(
@@ -91,38 +97,10 @@ export default class AdminThemeEditor extends Component {
   }
 
   @action
-  toggleShowAdvanced(event) {
-    event?.preventDefault();
-    this.toggleProperty("showAdvanced");
-  }
-
-  @action
-  toggleAddField(event) {
-    event?.preventDefault();
-    this.toggleProperty("addingField");
-  }
-
-  @action
   toggleMaximize(event) {
     event?.preventDefault();
     this.toggleProperty("maximized");
     next(() => this.appEvents.trigger("ace:resize"));
-  }
-
-  @action
-  cancelAddField() {
-    this.set("addingField", false);
-  }
-
-  @action
-  addField(name) {
-    if (!name) {
-      return;
-    }
-    name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
-    this.theme.setField(this.currentTargetName, name, "");
-    this.setProperties({ newFieldName: "", addingField: false });
-    this.fieldAdded(this.currentTargetName, name);
   }
 
   @action

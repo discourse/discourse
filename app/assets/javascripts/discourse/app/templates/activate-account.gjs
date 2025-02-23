@@ -11,17 +11,21 @@ import hideApplicationHeaderButtons from "discourse/helpers/hide-application-hea
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   class extends Component {
     @service siteSettings;
+    @service currentUser;
 
     @tracked accountActivated = false;
     @tracked isLoading = false;
     @tracked needsApproval = false;
-    @tracked errorMessage = null;
+    @tracked
+    errorMessage = this.currentUser
+      ? i18n("user.activate_account.already_done")
+      : null;
 
     get signupStep() {
       if (this.needsApproval) {
@@ -103,7 +107,10 @@ export default RouteTemplate(
           {{#if this.accountActivated}}
             <div class="account-activated">
               <div class="tada-image">
-                <img src="/images/wizard/tada.svg" alt="tada emoji" />
+                <img
+                  src={{getURL "/images/wizard/tada.svg"}}
+                  alt="tada emoji"
+                />
               </div>
               {{#if this.needsApproval}}
                 <p>{{i18n "user.activate_account.approval_required"}}</p>

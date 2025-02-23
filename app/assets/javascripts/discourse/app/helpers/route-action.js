@@ -5,7 +5,7 @@ import { assert, runInDebug } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { join } from "@ember/runloop";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;

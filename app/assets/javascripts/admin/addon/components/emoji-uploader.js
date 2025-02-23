@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 const DEFAULT_GROUP = "default";
 
@@ -12,7 +12,7 @@ export default class EmojiUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "emoji-uploader",
     type: "emoji",
-    uploadUrl: "/admin/customize/emojis",
+    uploadUrl: "/admin/config/emoji",
     preventDirectS3Uploads: true,
     validateUploadedFilesOptions: {
       imagesOnly: true,

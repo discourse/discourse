@@ -40,8 +40,6 @@ def upload(path, remote_path, content_type, content_encoding = nil, logger:)
 
     File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
-
-  File.delete(path) if (File.exist?(path) && ENV["DELETE_ASSETS_AFTER_S3_UPLOAD"])
 end
 
 def use_db_s3_config
@@ -195,16 +193,8 @@ task "s3:ensure_cors_rules" => :environment do
 end
 
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
-  pool =
-    Concurrent::FixedThreadPool.new(
-      ENV["DISCOURSE_S3_UPLOAD_ASSETS_RAKE_THREAD_POOL_SIZE"] || Concurrent.processor_count,
-    )
-
   logger = Logger.new(STDOUT)
-  assets.each { |asset| pool.post { upload(*asset, logger:) } }
-
-  pool.shutdown
-  pool.wait_for_termination
+  assets.each { |asset| upload(*asset, logger:) }
 end
 
 task "s3:expire_missing_assets" => :environment do

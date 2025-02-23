@@ -7,7 +7,8 @@
 be:
   js:
     discourse_automation:
-      create: стварыць
+      back: Назад
+      edit: рэдагаваць
       fields:
         user:
           label: карыстальнік
@@ -122,5 +123,7 @@ be:
             label: Трыггер старту
           version:
             label: версія
+          status:
+            label: Статус
           disabled:
             label: Адключана

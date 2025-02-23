@@ -566,7 +566,7 @@ HTML
 
     Theme.clear_default!
 
-    expect(ColorScheme.hex_for_name("header_primary")).to eq("333333")
+    expect(ColorScheme.hex_for_name("header_primary")).to eq("333")
   end
 
   it "correctly notifies about theme changes" do
@@ -1583,6 +1583,17 @@ HTML
 
     it "returns how many users are currently using the theme" do
       expect(count).to eq 3
+    end
+  end
+
+  describe "#owned_color_scheme" do
+    it "is destroyed when the theme is destroyed" do
+      scheme = Fabricate(:color_scheme, owning_theme: theme)
+
+      theme.destroy!
+
+      expect(ThemeColorScheme.exists?(color_scheme_id: scheme.id)).to eq(false)
+      expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
     end
   end
 end

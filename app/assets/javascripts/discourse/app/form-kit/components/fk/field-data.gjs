@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
@@ -8,6 +9,12 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
+  /**
+   * Type of the field.
+   * @type {string}
+   */
+  @tracked type;
+
   /**
    * Unique identifier for the field.
    * @type {string}
@@ -21,12 +28,6 @@ export default class FKFieldData extends Component {
   errorId = uniqueId();
 
   /**
-   * Type of the field.
-   * @type {string}
-   */
-  type;
-
-  /**
    * Initializes the FKFieldData component.
    * Validates the presence of required arguments and registers the field.
    * @throws {Error} If `@title` is not provided.
@@ -37,8 +38,6 @@ export default class FKFieldData extends Component {
     if (!this.args.title?.length) {
       throw new Error("@title is required on `<form.Field />`.");
     }
-
-    this.args.registerField(this.name, this);
   }
 
   /**
@@ -97,6 +96,30 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Format of the title.
+   * @type {string}
+   */
+  get titleFormat() {
+    return this.args.titleFormat;
+  }
+
+  /**
+   * Format of the description.
+   * @type {string}
+   */
+  get descriptionFormat() {
+    return this.args.descriptionFormat;
+  }
+
+  /**
+   * Tooltip component of the field.
+   * @type {string|Component}
+   */
+  get tooltip() {
+    return this.args.tooltip;
+  }
+
+  /**
    * Indicates whether the field is disabled.
    * Defaults to `false`.
    * @type {boolean}
@@ -111,6 +134,14 @@ export default class FKFieldData extends Component {
    */
   get description() {
     return this.args.description;
+  }
+
+  /**
+   * Help text of the field.
+   * @type {string}
+   */
+  get helpText() {
+    return this.args.helpText;
   }
 
   /**
@@ -146,13 +177,11 @@ export default class FKFieldData extends Component {
       throw new Error("@name can't include `.` or `-`.");
     }
 
-    return (
-      (this.args.collectionName ? `${this.args.collectionName}.` : "") +
-      (this.args.collectionIndex !== undefined
-        ? `${this.args.collectionIndex}.`
-        : "") +
-      this.args.name
-    );
+    if (this.args.parentName) {
+      return `${this.args.parentName}.${this.args.name}`;
+    }
+
+    return this.args.name;
   }
 
   /**

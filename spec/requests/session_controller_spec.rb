@@ -16,6 +16,8 @@ RSpec.describe SessionController do
     end
   end
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#email_login_info" do
     let(:email_token) do
       Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
@@ -3226,6 +3228,22 @@ RSpec.describe SessionController do
           json = response.parsed_body
           expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
           expect(session[:current_user_id]).to eq(nil)
+        end
+
+        it "fails when discourse connect is enabled" do
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(403)
         end
 
         it "logs the user in" do

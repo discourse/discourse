@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 

@@ -2,20 +2,21 @@ import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { h } from "virtual-dom";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { iconNode } from "discourse/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { avatarFor } from "discourse/widgets/post";
 import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
-  const dt = new Date(createdAt);
-  const when = autoUpdatingRelativeAge(dt, {
-    format: "medium-with-ago-and-on",
-  });
+  const when = createdAt
+    ? autoUpdatingRelativeAge(new Date(createdAt), {
+        format: "medium-with-ago-and-on",
+      })
+    : "";
 
   let who = "";
   if (username) {
@@ -73,6 +74,7 @@ const icons = {
   removed_user: "circle-minus",
   removed_group: "circle-minus",
   public_topic: "comment",
+  open_topic: "comment",
   private_topic: "envelope",
   autobumped: "hand-point-right",
 };

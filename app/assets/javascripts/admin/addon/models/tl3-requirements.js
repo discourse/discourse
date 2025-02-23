@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class Tl3Requirements extends EmberObject {
   @discourseComputed("days_visited", "time_period")

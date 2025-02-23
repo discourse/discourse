@@ -236,7 +236,6 @@ hr:
   invite_link:
     email_taken: "Ovaj email se već koristi. Ako već imate korisnički račun, prijavite se ili poništite zaporku."
   topic_invite:
-    sender_does_not_allow_pm: "Nažalost, ne dopuštate tom korisniku da vam šalje privatne poruke."
     user_cannot_see_topic: "%{username} ne može vidjeti temu."
   backup:
     operation_already_running: "Operacija je trenutno u toku. Trenutno ne možemo započeti novi posao."
@@ -969,12 +968,10 @@ hr:
       title: "Obavijesti moderatore"
       xaxis: "Dan"
       yaxis: "Broj poruka"
-      description: "Koliko su puta moderatori privatno obaviješteni oznakom."
     notify_user_private_messages:
       title: "Obavijesti korisnika"
       xaxis: "Dan"
       yaxis: "Broj poruka"
-      description: "Koliko su puta korisnici privatno obaviješteni oznakom."
     top_referrers:
       title: "Najaktivniji preporučitelji"
       xaxis: "Korisnik"
@@ -1126,8 +1123,7 @@ hr:
   site_settings:
     disabled: "onemogućen"
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
-    set_locale_from_accept_language_header: "postaviti jezik sučelja za anonimne korisnike iz jezičnih zaglavlja njihovih web preglednika"
-    support_mixed_text_direction: "Podržava mješoviti smjer teksta slijeva nadesno i zdesna nalijevo."
+    support_mixed_text_direction: "Podržava mješoviti smjer teksta slijeva nadesno i zdesna nalijevo"
     max_post_length: "Najveća dopuštena duljina posta u znakovima"
     show_topic_featured_link_in_digest: "Pokažite istaknutu vezu na temu u sažetku e-pošte."
     min_topic_views_for_delete_confirm: "Minimalni broj prikaza koje tema mora imati da bi se pojavio skočni prozor za potvrdu kada se izbriše"
@@ -1217,8 +1213,8 @@ hr:
     version_checks: "Pingaj Discourse Hub za dostupna ažuriranja i prikaži obavijesti o novim verzijama na <a href='%{base_path}/admin' target='_blank'>/admin</a> nadzornoj ploči"
     min_username_length: "Minimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako bilo koji postojeći korisnik ili grupa ima imena kraća od ovoga, vaša stranica će se pokvariti!"
     max_username_length: "Maksimalna duljina korisničkog imena u znakovima. UPOZORENJE: ako postojeći korisnici ili grupe imaju imena duža od ovog, vaša će stranica pokvariti!"
-    unicode_usernames: "Dopustite da korisnička imena i nazivi grupa sadrže Unicode slova i brojke."
-    allowed_unicode_username_characters: "Regularni izraz koji dopušta samo neke Unicode znakove unutar korisničkih imena. ASCII slova i brojevi uvijek će biti dopušteni i ne moraju biti uključeni u popis dopuštenih."
+    unicode_usernames: "Dopustite da korisnička imena i nazivi grupa sadrže Unicode slova i brojke"
+    allowed_unicode_username_characters: "Regularni izraz koji dopušta samo neke Unicode znakove unutar korisničkih imena. ASCII slova i brojevi uvijek će biti dopušteni i ne moraju biti uključeni u popis dopuštenih"
     reserved_usernames: "Korisnička imena za koja nije dopuštena prijava. Simbol zamjenskog znaka * može se koristiti za podudaranje bilo kojeg znaka nula ili više puta."
     password_unique_characters: "Minimalni broj jedinstvenih znakova koje lozinka mora sadržavati."
     block_common_passwords: "Nemojte dopustiti lozinke koje se nalaze među 10.000 najčešćih lozinki."
@@ -1307,7 +1303,6 @@ hr:
     tl3_requires_topics_replied_to: "Minimalni broj tema na koje korisnik mora odgovoriti u zadnjih (tl3 vremensko razdoblje) dana da bi se kvalificirao za promaknuće u razinu povjerenja 3. (0 ili više)"
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
     max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
@@ -1344,7 +1339,6 @@ hr:
     num_hours_to_close_topic: "Broj sati za pauziranje teme za intervenciju."
     auto_respond_to_flag_actions: "Omogući automatski odgovor pri uklanjanju oznake."
     min_first_post_typing_time: "Minimalno vrijeme u milisekundama koje korisnik mora upisati tijekom prve objave, ako prag nije dostignut, objava će automatski ući u red čekanja za odobrenje. Postavite na 0 za onemogućavanje (ne preporučuje se)"
-    auto_silence_fast_typers_on_first_post: "Automatski utišaj korisnike koji ne ispunjavaju min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maksimalna razina povjerenja za automatsko utišavanje brzih tipkača"
     auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"
@@ -1405,7 +1399,6 @@ hr:
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
-    secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
     secure_uploads_max_email_embed_image_size_kb: "Ograničenje veličine za sigurne slike koje će biti ugrađene u e-poštu ako je omogućena postavka \"sigurni prijenosi dopuštaju ugradnju u e-poštu\". Bez uključene te postavke, ova postavka nema učinka."
     slug_generation_method: "Odaberite metodu stvaranja puževa. 'encoded' će generirati niz postotnog kodiranja. 'none' će uopće onemogućiti puž."
@@ -1419,7 +1412,6 @@ hr:
     auto_close_topics_create_linked_topic: "Stvorite novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     code_formatting_style: "Gumb koda u sastavljaču zadano će koristiti ovaj stil oblikovanja koda"
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
-    enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
     returning_users_days: "Koliko dana treba proći prije nego što se smatra da se korisnik vraća."
@@ -1451,7 +1443,6 @@ hr:
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
     create_revision_on_bulk_topic_moves: "Napravite reviziju za prve postove kada se teme skupno premještaju u novu kategoriju."
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
-    use_email_for_username_and_name_suggestions: "Koristite prvi dio adresa e-pošte za korisničko ime i prijedloge imena. Imajte na umu da ovo javnosti olakšava pogađanje pune adrese e-pošte korisnika (jer velik dio ljudi dijeli zajedničke usluge poput `gmail.com`)."
     use_name_for_username_suggestions: "Koristite puno ime korisnika kada predlažete korisnička imena."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
@@ -2357,18 +2348,8 @@ hr:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i najnovije teme"
-              categories_and_latest_topics_created_date:
-                label: "Kategorije i najnovije teme (poredaj po datumu kreiranja teme)"
-              categories_and_top_topics:
-                label: "Kategorije i glavne teme"
-              subcategories_with_featured_topics:
-                label: "Potkategorije s istaknutim temama"
+              latest:
+                label: "Posljednje"
       corporate:
         fields:
           contact_url:
@@ -2383,7 +2364,7 @@ hr:
       quoted: '%{username} citirao vas je u "%{topic}" - %{site_title}'
       replied: '%{username} odgovorio u "%{topic}" - %{site_title}'
       posted: '%{username} objavio u "%{topic}" - %{site_title}'
-      private_message: '%{username} vam je poslao privatnu poruku u "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao privatnu poruku u temi "%{topic}" - %{site_title}'
       linked: '%{username} se povezao s tvojom objavom "%{topic}" - %{site_title}'
       watching_first_post: '%{username} stvorio je novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti omogućene - %{site_title}"

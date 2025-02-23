@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 /**

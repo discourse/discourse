@@ -31,15 +31,7 @@
       {{/if}}
 
       <div class="group-info-names">
-        <span class="group-info-name">
-          {{or this.model.full_name this.model.name}}
-        </span>
-
-        {{#if this.model.full_name}}
-          <div class="group-info-full-name">
-            {{this.model.name}}
-          </div>
-        {{/if}}
+        <GroupInfo @group={{this.model}} />
 
         {{#if (and this.canManageGroup this.model.automatic)}}
           <DTooltip class="group-automatic-tooltip">
@@ -91,20 +83,16 @@
         {{/if}}
       </div>
 
-      <span>
-        <PluginOutlet
-          @name="group-details-after"
-          @connectorTagName="div"
-          @outletArgs={{hash model=this.model}}
-        />
-      </span>
+      <PluginOutlet
+        @name="group-details-after"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model}}
+      />
     </div>
 
     {{#if this.model.bio_cooked}}
-      <hr />
-
       <div class="group-bio">
-        <p>{{html-safe this.model.bio_cooked}}</p>
+        {{html-safe this.model.bio_cooked}}
       </div>
     {{/if}}
 
@@ -112,15 +100,12 @@
 
   <div class="user-content-wrapper">
     <section class="user-primary-navigation">
-      <div class="container">
-        <GroupNavigation
-          @group={{this.model}}
-          @currentPath={{this.currentPath}}
-          @tabs={{this.tabs}}
-        />
-      </div>
+      <GroupNavigation
+        @group={{this.model}}
+        @currentPath={{this.currentPath}}
+        @tabs={{this.tabs}}
+      />
     </section>
-
     {{outlet}}
   </div>
 </div>

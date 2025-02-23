@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -40,12 +40,37 @@ acceptance("Video Placeholder Test", function () {
 
     const video = document.querySelector("video");
     video.play = function () {}; // We don't actually want the video to play in our test
-    const canPlayEvent = new Event("canplay");
-    video.dispatchEvent(canPlayEvent);
+    await triggerEvent(video, "canplay");
 
     assert
       .dom(video)
       .hasStyle({ display: "block" }, "The video is no longer hidden");
     assert.dom(".video-placeholder-wrapper").doesNotExist();
+  });
+
+  test("displays an error for invalid video URL and allows retry", async function (assert) {
+    await visit("/t/54081");
+
+    const placeholder = document.querySelector(".video-placeholder-container");
+    placeholder.setAttribute(
+      "data-video-src",
+      'http://example.com/video.mp4"><script>alert(1)</script>'
+    );
+
+    await click(".video-placeholder-overlay");
+
+    assert
+      .dom(".video-placeholder-wrapper .notice.error")
+      .exists("An error message is displayed for an invalid URL");
+    assert
+      .dom(".video-placeholder-wrapper .notice.error")
+      .hasText(
+        "This video cannot be played because the URL is invalid or unavailable.",
+        "Error message is correct"
+      );
+
+    assert
+      .dom("video")
+      .doesNotExist("No video element is created for invalid URL");
   });
 });

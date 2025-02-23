@@ -5,6 +5,20 @@
 {{/if}}
 
 {{#unless this.showEnforcedRequiredFieldsNotice}}
+  {{#if this.siteSettings.allow_users_to_hide_profile}}
+    <div
+      class="control-group user-hide-profile"
+      data-setting-name="user-hide-profile"
+    >
+      <PreferenceCheckbox
+        @labelKey="user.hide_profile"
+        @checked={{this.model.user_option.hide_profile}}
+        data-setting-name="user-hide-profile"
+        class="pref-hide-profile"
+      />
+    </div>
+  {{/if}}
+
   {{#if this.canChangeBio}}
     <div class="control-group pref-bio" data-setting-name="user-bio">
       <label class="control-label">{{i18n "user.bio"}}</label>
@@ -82,6 +96,11 @@
         <div class="controls">
           <UppyImageUploader
             @imageUrl={{this.model.profile_background_upload_url}}
+            @onUploadDone={{this.profileBackgroundUploadDone}}
+            @onUploadDeleted={{fn
+              (mut this.model.profile_background_upload_url)
+              null
+            }}
             @type="profile_background"
             @id="profile-background-uploader"
           />
@@ -102,6 +121,11 @@
         <div class="controls">
           <UppyImageUploader
             @imageUrl={{this.model.card_background_upload_url}}
+            @onUploadDone={{this.cardBackgroundUploadDone}}
+            @onUploadDeleted={{fn
+              (mut this.model.card_background_upload_url)
+              null
+            }}
             @type="card_background"
             @id="profile-card-background-uploader"
           />

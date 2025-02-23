@@ -7,8 +7,8 @@
 lt:
   js:
     discourse_automation:
-      create: Sukurti
-      update: Atnaujinti
+      back: Atgal
+      edit: Redaguoti
       fields:
         user:
           label: Narys
@@ -143,6 +143,8 @@ lt:
             label: Pritaikyti
           version:
             label: Versija
+          status:
+            label: Statusas
           enabled:
             label: Galimas
           disabled:

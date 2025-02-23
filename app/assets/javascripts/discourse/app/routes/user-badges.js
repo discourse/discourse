@@ -1,11 +1,8 @@
-import ViewingActionType from "discourse/mixins/viewing-action-type";
 import UserBadge from "discourse/models/user-badge";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-export default class UserBadges extends DiscourseRoute.extend(
-  ViewingActionType
-) {
+export default class UserBadges extends DiscourseRoute {
   templateName = "user/badges";
 
   model() {
@@ -17,7 +14,7 @@ export default class UserBadges extends DiscourseRoute.extend(
 
   setupController() {
     super.setupController(...arguments);
-    this.viewingActionType(-1);
+    this.controllerFor("user-activity").userActionType = -1;
   }
 
   titleToken() {

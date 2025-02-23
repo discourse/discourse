@@ -45,6 +45,7 @@ ar:
     default_poll_with_multiple_choices_has_invalid_parameters: "توجد معلمات غير صالحة في الاستطلاع متعدد الخيارات."
     named_poll_with_multiple_choices_has_invalid_parameters: "توجد معلمات غير صالحة في الاستطلاع متعدد الخيارات المسمى <strong>%{name}</strong>."
     requires_at_least_1_valid_option: "يجب عليك تحديد خيار واحد صالح على الأقل."
+    requires_that_at_least_one_option_is_ranked: "في استطلاعات الاختيار حسب الترتيب، يجب عليك ترتيب خيار واحد على الأقل."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "لا يمكنك تغيير استطلاع بعد أول %{minutes} دقيقة."
       cannot_edit_named_poll_with_votes: "لا يمكنك تغيير اسم الاستطلاع <strong>${name}</strong> بعد أول %{minutes} دقيقة."

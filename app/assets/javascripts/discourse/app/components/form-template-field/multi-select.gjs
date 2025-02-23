@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class FormTemplateFieldMultiSelect extends Component {
   @action
@@ -29,8 +29,6 @@ export default class FormTemplateFieldMultiSelect extends Component {
         </span>
       {{/if}}
 
-      {{! TODO(@keegan): Update implementation to use <MultiSelect/> instead }}
-      {{! Current using <select multiple> as it integrates easily with FormData (will update in v2) }}
       <select
         name={{@id}}
         required={{if @validations.required "required" ""}}

@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  UNKNOWN_TYPE_SOURCE = "unknown"
+
   self.ignored_columns = [:reviewable_by_group_id]
 
   class UpdateConflict < StandardError
@@ -42,6 +44,8 @@ class Reviewable < ActiveRecord::Base
 
   validates :reject_reason, length: { maximum: 2000 }
 
+  before_save :set_type_source
+
   after_create { log_history(:created, created_by) }
 
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
@@ -73,6 +77,20 @@ class Reviewable < ActiveRecord::Base
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
 
+  def self.sti_names
+    self.types.map(&:sti_name)
+  end
+
+  def self.source_for(type)
+    type = type.sti_name if type.is_a?(Class)
+    return UNKNOWN_TYPE_SOURCE if Reviewable.sti_names.exclude?(type)
+
+    DiscoursePluginRegistry
+      .reviewable_types_lookup
+      .find { |r| r[:klass].sti_name == type }
+      &.dig(:plugin) || "core"
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -83,6 +101,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+  end
+
+  def set_type_source
+    self.type_source = Reviewable.source_for(type)
   end
 
   def created_new!
@@ -449,7 +471,8 @@ class Reviewable < ActiveRecord::Base
     additional_filters: {},
     preload: true,
     include_claimed_by_others: true,
-    flagged_by: nil
+    flagged_by: nil,
+    score_type: nil
   )
     order =
       case sort_order
@@ -486,6 +509,16 @@ class Reviewable < ActiveRecord::Base
           SELECT 1 FROM reviewable_scores
           WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.user_id = :flagged_by_id
         )
+      SQL
+    end
+
+    if score_type
+      score_type = score_type.to_i
+      result = result.where(<<~SQL, score_type: score_type)
+      EXISTS(
+        SELECT 1 FROM reviewable_scores
+        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+      )
       SQL
     end
 
@@ -539,6 +572,7 @@ class Reviewable < ActiveRecord::Base
           "LEFT JOIN reviewable_claimed_topics rct ON reviewables.topic_id = rct.topic_id",
         ).where("rct.user_id IS NULL OR rct.user_id = ?", user.id)
     end
+    result = result.where(type: Reviewable.sti_names)
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result
@@ -750,6 +784,20 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.unknown_types_and_sources
+    @known_sources ||= Reviewable.sti_names.map { |n| [n, Reviewable.source_for(n)] }
+
+    known_unknowns = Reviewable.pending.distinct.pluck(:type, :type_source) - @known_sources
+
+    known_unknowns
+      .map { |type, source| { type: type, source: source } }
+      .sort_by { |e| [e[:source] == UNKNOWN_TYPE_SOURCE ? 1 : 0, e[:source], e[:type]] }
+  end
+
+  def self.destroy_unknown_types!
+    Reviewable.pending.where.not(type: Reviewable.sti_names).delete_all
+  end
+
   private
 
   def update_flag_stats(status:, user_ids:)
@@ -780,6 +828,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null

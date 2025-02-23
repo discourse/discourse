@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 class Tab extends EmberObject {
@@ -50,7 +50,10 @@ export default class GroupController extends Controller {
       count: userCount,
     });
 
-    const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
+    const defaultTabs = [
+      membersTab,
+      Tab.create({ name: "activity", icon: "bars-staggered" }),
+    ];
 
     if (canManageGroup && allowMembershipRequests) {
       defaultTabs.push(
@@ -68,6 +71,7 @@ export default class GroupController extends Controller {
         Tab.create({
           name: "messages",
           i18nKey: "messages",
+          icon: "envelope",
         })
       );
     }
@@ -86,6 +90,7 @@ export default class GroupController extends Controller {
       Tab.create({
         name: "permissions",
         i18nKey: "permissions.title",
+        icon: "id-card",
       })
     );
 

@@ -6,10 +6,10 @@
   span {
     background-color: var(--danger);
     color: var(--secondary);
-    border-radius: 10px;
-    padding: 0.25em 0.5em;
+    padding: 0.15em 0.3em 0.2em;
     display: inline-block;
-    font-size: 0.8em;
+    font-size: var(--font-down-2);
+    border-radius: var(--d-button-border-radius);
   }
 }
 
@@ -21,10 +21,7 @@
   position: relative;
   overflow: hidden;
 
-  &:before {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: placeHolderShimmer 4s linear infinite forwards;
-    }
+  &::before {
     position: absolute;
     left: 0;
     content: "";
@@ -36,6 +33,10 @@
     );
     height: 45px;
     width: 700px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
   }
 }
 
@@ -81,7 +82,7 @@
 
   .svg-icon-title {
     margin-left: 3px;
-    margin-right: 0px;
+    margin-right: 0;
   }
 
   .new_user a,
@@ -96,6 +97,29 @@
 .d-editor-preview {
   word-wrap: break-word;
   line-height: 1.5;
+
+  video {
+    max-width: 100%;
+  }
+
+  sup sup {
+    top: 0;
+  }
+
+  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+    max-width: 100%;
+    height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
+  }
+
+  svg {
+    max-height: 2000px;
+  }
 
   > *:first-child {
     margin-top: 0;
@@ -114,7 +138,12 @@
       opacity: 0;
       transition: opacity 0.25s;
 
-      &:before {
+      &:focus-visible {
+        outline: 0;
+        opacity: 1;
+      }
+
+      &::before {
         content: svg-uri(
           '<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 512 512" fill="#{$primary-medium}"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>'
         );
@@ -124,6 +153,13 @@
         position: absolute;
         z-index: 2;
       }
+    }
+
+    // the anchor icon is a CSS pseudo element set above
+    // so we can't change the color of the icon itself
+    // but we can change the color of the anchor text
+    &:has(a.anchor:focus-visible) {
+      color: var(--tertiary);
     }
 
     // show when hovering where icon should be
@@ -164,6 +200,7 @@
 
   mark {
     text-decoration: none;
+    background-color: var(--highlight);
   }
 
   ins {
@@ -174,10 +211,6 @@
   del {
     background-color: var(--danger-low);
     text-decoration: line-through;
-  }
-
-  mark {
-    background-color: var(--highlight);
   }
 
   // Prevents users from breaking posts with tag nesting
@@ -206,30 +239,13 @@
   }
 }
 
-.cooked,
-.d-editor-preview {
-  video {
-    max-width: 100%;
-  }
-
-  sup sup {
-    top: 0;
-  }
-
-  img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
-    max-width: 100%;
-    height: auto;
-    display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
-  }
-
-  svg {
-    max-height: 2000px;
-  }
+.cooked-selection-barrier {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
 }
 
 // add staff color
@@ -294,13 +310,25 @@
   }
 }
 
+:root {
+  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-post-control-text-color: var(--primary-low-mid);
+  --d-post-control-text-color--hover: var(--primary);
+  --d-post-control-icon-color: var(--primary-low-mid);
+  --d-post-control-icon-color--hover: var(--primary);
+  --d-post-control-background--hover: var(--primary-low);
+  --d-post-control-create-text-color: var(--primary-high);
+  --d-post-control-create-icon-color: var(--primary-high);
+  --d-post-control-sibling-text-color--hover: var(--primary-medium);
+}
+
 nav.post-controls {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  color: var(--primary-low-mid);
+  color: var(--d-post-control-text-color);
+  user-select: none;
 
   .actions {
     display: inline-flex;
@@ -311,22 +339,44 @@ nav.post-controls {
     .double-button {
       display: inline-flex;
       flex: 0 1 auto;
-      align-items: center;
+      align-items: stretch; // should always be the same height
       white-space: nowrap;
 
+      .discourse-no-touch & {
+        &:hover {
+          button {
+            background: var(--d-post-control-background--hover);
+            color: var(--d-post-control-sibling-text-color--hover);
+          }
+        }
+      }
+
       button {
-        // It looks really confusing when one half a double button has an inner shadow on click.
-        &:active {
-          box-shadow: none;
+        margin-inline: 0;
+
+        &:first-child {
+          border-radius: var(--d-post-control-border-radius) 0 0
+            var(--d-post-control-border-radius);
         }
 
-        &.my-likes,
-        &.read-indicator,
-        &.regular-likes {
-          // Like count on posts
-          .d-icon {
-            color: var(--primary-low-mid);
-            padding-left: 0.45em;
+        &:last-child {
+          border-radius: 0 var(--d-post-control-border-radius)
+            var(--d-post-control-border-radius) 0;
+        }
+
+        &:first-child:last-child {
+          border-radius: var(--d-post-control-border-radius);
+        }
+
+        &.like {
+          // Like button with 0 likes
+          &.d-hover,
+          &:hover {
+            background: var(--love-low);
+
+            .d-icon {
+              color: var(--love);
+            }
           }
         }
 
@@ -335,16 +385,21 @@ nav.post-controls {
           .d-icon {
             color: var(--love);
           }
-        }
 
-        &[disabled] {
-          // Disabled like button
-          cursor: not-allowed;
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              background: var(--primary-low);
+
+              .d-icon {
+                color: var(--primary-medium);
+              }
+            }
+          }
         }
 
         &.button-count {
           // Like count button
-          height: 100%; // sometimes the font might be shorter than the icon
           &:not(.my-likes) {
             padding-right: 0;
           }
@@ -352,20 +407,47 @@ nav.post-controls {
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
+
+            // Like button when like count is present
+            .discourse-no-touch & {
+              &.d-hover,
+              &:hover {
+                background: var(--primary-low);
+              }
+            }
           }
+
+          // Like count button
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              color: var(--primary);
+            }
+          }
+        }
+
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: var(--d-post-control-icon-color);
+            padding-left: 0.45em;
+          }
+        }
+
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+          opacity: 1;
         }
       }
     }
 
     a,
     button {
-      color: var(--primary-low-mid-or-secondary-high);
-
-      .d-icon {
-        opacity: 1;
-      }
-
       display: inline-flex;
+      color: var(--d-post-control-text-color);
     }
 
     button {
@@ -375,6 +457,7 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      border-radius: var(--d-post-control-border-radius);
 
       .d-icon {
         // this avoids an issue where hovering off the icon
@@ -382,13 +465,28 @@ nav.post-controls {
         pointer-events: none;
       }
 
-      &.d-hover,
-      &:hover,
-      &:focus,
-      &:active {
-        outline: none;
-        background: var(--primary-low);
-        color: var(--primary);
+      .discourse-no-touch & {
+        &.d-hover,
+        &:hover,
+        &:focus-visible,
+        &:active {
+          outline: none;
+          background: var(--d-post-control-background--hover);
+          color: var(--d-post-control-text-color--hover);
+        }
+
+        // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
+        &.delete.d-hover,
+        &.delete:hover,
+        &.delete:active,
+        &.delete:focus {
+          background: var(--danger);
+          color: var(--secondary);
+
+          .d-icon {
+            color: var(--secondary);
+          }
+        }
       }
 
       &.hidden {
@@ -399,45 +497,33 @@ nav.post-controls {
         position: relative;
       }
 
-      // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
-      &.delete.d-hover,
-      &.delete:hover,
-      &.delete:active,
-      &.delete:focus {
-        background: var(--danger);
-        color: var(--secondary);
-
-        .d-icon {
-          color: var(--secondary);
-        }
-      }
-
       &.bookmarked .d-icon {
         color: var(--tertiary);
       }
 
       &.create {
         margin-right: 0;
-        color: var(--primary-high-or-secondary-low);
+        color: var(--d-post-control-create-text-color);
 
         .d-icon {
-          color: var(--primary-high-or-secondary-low);
+          color: var(--d-post-control-create-icon-color);
         }
       }
     }
   }
 
-  .show-replies {
-    font-size: var(--font-up-1);
+  .btn.show-replies {
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
 
-    &:hover,
-    &:focus {
-      outline: none;
-      color: var(--primary);
-      background: var(--primary-low);
+    .discourse-no-touch & {
+      &:hover,
+      &:focus-visible {
+        outline: none;
+        color: var(--d-post-control-text-color--hover);
+        background: var(--d-post-control-background--hover);
+      }
     }
 
     .d-icon {
@@ -461,11 +547,11 @@ nav.post-controls {
 
     .post-info a,
     a {
-      color: currentColor;
+      color: currentcolor;
     }
 
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
   }
 
@@ -483,11 +569,11 @@ nav.post-controls {
 
     .widget-button {
       &:hover {
-        color: currentColor;
+        color: currentcolor;
         background: var(--danger-low);
 
         .d-icon {
-          color: currentColor;
+          color: currentcolor;
         }
       }
 
@@ -515,9 +601,11 @@ nav.post-controls {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.5);
   }
+
   100% {
     transform: scale(1);
   }
@@ -547,10 +635,12 @@ aside.quote {
   margin-bottom: 1em;
 
   .title {
-    @include post-aside;
-
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
+
+    @include post-aside;
+    @include unselectable;
+
     // blockquote is underneath this and has top margin
     .avatar {
       margin-right: 0.5em;
@@ -559,8 +649,6 @@ aside.quote {
     img {
       margin-top: -0.26em;
     }
-
-    @include unselectable;
   }
 
   // blockquote is docked within aside for content
@@ -590,6 +678,14 @@ aside.quote {
 }
 
 .quote-controls {
+  float: right;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: 0.3em;
+  }
+
   .quote-toggle {
     padding: 0;
   }
@@ -644,16 +740,6 @@ aside.quote {
 
 .topic-post.staged {
   opacity: 0.4;
-}
-
-.quote-controls {
-  float: right;
-  display: flex;
-  align-items: center;
-
-  a {
-    margin-left: 0.3em;
-  }
 }
 
 .quote-button {
@@ -751,7 +837,7 @@ aside.quote {
       // this pseudo element creates a transition buffer zone
       // without it, the width change on hover can cause transition jitter
       // the width is roughly wide enough to cover long translations of "share"
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         display: block;
@@ -951,8 +1037,6 @@ pre {
   .fullscreen-cmd {
     @include unselectable;
     top: 0;
-    min-height: 0;
-    font-size: var(--font-down-2);
     min-height: 0;
     font-size: var(--font-down-2);
     opacity: 0.7;
@@ -1251,15 +1335,15 @@ span.mention {
 
 .broken-image,
 .blocked-hotlinked-placeholder {
-  &:not(a) {
-    color: var(--primary-low-mid-or-secondary-high);
-  }
-
   display: inline-flex;
   flex-direction: column;
   border: 1px solid var(--primary-low);
   align-items: center;
   justify-content: center;
+
+  &:not(a) {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
 
   .d-icon {
     margin: 16px;
@@ -1272,7 +1356,6 @@ span.mention {
 }
 
 /* below standard tablet portrait ----------- */
-
 .reply-to-tab {
   display: flex;
   align-items: center;
@@ -1286,7 +1369,6 @@ span.mention {
 }
 
 // Select posts
-
 .topic-post {
   &.selected {
     article.boxed {
@@ -1299,7 +1381,7 @@ span.mention {
       }
 
       .topic-body {
-        .contents:after {
+        .contents::after {
           display: none;
         }
       }
@@ -1332,6 +1414,7 @@ span.mention {
       display: none;
     }
   }
+
   .user-title {
     float: left;
     clear: left;
@@ -1413,6 +1496,10 @@ span.mention {
     }
   }
 
+  .post-notice-message p {
+    display: inline;
+  }
+
   p {
     margin: 0;
   }
@@ -1443,7 +1530,6 @@ iframe {
 }
 
 .posts-filtered-notice {
-  position: -webkit-sticky;
   position: sticky;
   background-color: var(--tertiary-low);
   bottom: 0;
@@ -1499,7 +1585,6 @@ iframe {
     align-items: flex-end;
 
     > .d-icon {
-      cursor: pointer;
       padding: 0.5em;
       margin: 0.5em;
       background-color: rgba(var(--always-black-rgb), 0.25);
@@ -1548,9 +1633,12 @@ iframe {
 }
 
 .fullscreen-table-wrapper {
-  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
   position: relative;
+
+  html.discourse-no-touch & {
+    transition: box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
 }
 
 .fullscreen-code-modal {
@@ -1582,16 +1670,21 @@ iframe {
 
 html.discourse-no-touch .fullscreen-table-wrapper:hover {
   border-radius: 5px;
-  box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
-    0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
 
   .open-popup-link {
     opacity: 100%;
+  }
+
+  &.--has-overflow,
+  &.--editable {
+    box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
+      0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
   }
 }
 
 .read-state {
   position: absolute;
+
   // We use absolute positioning here because we want it to display in the padding
   align-self: center;
   color: var(--tertiary-medium);

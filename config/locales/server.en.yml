@@ -70,6 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
+    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
+    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
@@ -364,6 +366,8 @@ en:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
+
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
@@ -843,6 +847,9 @@ en:
           attributes:
             linkable_type:
               invalid: "is not valid"
+        api_key:
+          base:
+            at_least_one_granular_scope: "at least one must be selected"
 
   uncategorized_category_name: "Uncategorized"
 
@@ -1722,6 +1729,7 @@ en:
       google_analytics_version: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
+      admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1732,10 +1740,13 @@ en:
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
-    set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
-    support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
+    set_locale_from_accept_language_header: "Set interface language for anonymous users from their web browser's language headers"
+    set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
+    set_locale_from_param: "Allows setting an anonymous user's locale via the 'lang' URL param, e.g. ?lang=es"
+    support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions"
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    prevent_uploads_only_posts: "Don't count upload markdown code when checking for min post length"
     min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Allows users to associate a feature link with their topics. When turned on, topics can have a highlighted link attached, which is publicly visible and can be edited if the user has sufficient permissions. The feature link can enhance a topic's comprehensibility by providing related additional content."
@@ -1803,6 +1814,7 @@ en:
     block_onebox_on_redirect: "Prevent oneboxing for URLs that lead to a redirecting page. This configuration stops the creation of a visual card (onebox) for any URL that redirects to a different destination, ensuring that direct, non-redirecting URLs are prioritized for oneboxing."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
     enable_inline_onebox_on_all_domains: "Ignore allowed_inline_onebox_domains site setting and allow inline onebox on all domains."
+    onebox_locale: "The locale sent to onebox providers. If left blank, the default locale will be used"
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
@@ -1837,8 +1849,6 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
     summary_timeline_button: "Show a 'Summarize' button in the timeline"
-    summarization_strategy: "Additional ways to summarize content registered by plugins"
-    custom_summarization_allowed_groups: "Groups allowed to summarize contents using the `summarization_strategy`."
 
     enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     personal_message_enabled_groups: "Allow users in these groups to CREATE personal messages. IMPORTANT: 1) all users can REPLY to messages. 2) Admins and mods can CREATE messages to any user. 3) Trust level groups include higher levels; choose trust_level_1 to allow TL1, TL2, TL3, TL4 but not allow TL0. 4) Group interaction settings override this setting for messaging specific groups."
@@ -1916,6 +1926,7 @@ en:
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order."
@@ -1969,8 +1980,8 @@ en:
 
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
-    unicode_usernames: "Allow usernames and group names to contain Unicode letters and numbers."
-    allowed_unicode_username_characters: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the allowlist."
+    unicode_usernames: "Allow usernames and group names to contain Unicode letters and numbers"
+    allowed_unicode_username_characters: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the allowlist"
 
     reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
@@ -1981,6 +1992,7 @@ en:
 
     auth_skip_create_confirm: When signing up via external auth, skip the create account popup. Best used alongside auth_overrides_email, auth_overrides_username and auth_overrides_name.
     auth_immediately: "Automatically redirect to the external login system without user interaction. This only takes effect when login_required is true, and there is only one external authentication method"
+    auth_require_interaction: "Require user interaction before redirecting to an external login system via `/auth/*`. This is defense-in-depth against 'Login CSRF' attacks. Only disable this setting if you fully trust all enabled auth methods are protected against login CSRF."
 
     enable_discourse_connect: "Enable sign on via DiscourseConnect (formerly 'Discourse SSO') (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_discourse_connect_logging: "Log verbose DiscourseConnect related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2238,8 +2250,9 @@ en:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
 
     desktop_category_page_style: "This setting determines the visual layout of the /categories page on desktop. It includes options such as displaying subcategories with featured topics, showing the latest topics, or presenting top topics. The chosen style will influence how users interact and navigate through categories on the site."
+    mobile_category_page_style: "This setting determines the visual layout of the /categories page on mobile."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
+    default_dark_mode_color_scheme_id: "The color palette used when in dark mode."
     dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
@@ -2297,7 +2310,8 @@ en:
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
+    fast_typing_threshold: "Minimum amount of time in milliseconds a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
+    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
@@ -2305,6 +2319,8 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
+    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over 'flag post allowed groups'."
+    email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 
@@ -2426,13 +2442,14 @@ en:
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow_anonymous_likes`."
+    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
     allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+    hide_new_user_profiles: "Hide trust level 1 or lower user profiles from the public and trust level 1 users until they post for the first time. This feature is disabled unconditionally on must_approve_users and invite_only sites."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
 
@@ -2518,7 +2535,8 @@ en:
     svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
-    full_name_required: "Full name is a required field of a user's profile."
+    full_name_requirement: "Make the full name field a required, optional, or optional but hidden field in the signup form."
+    interface_color_selector: "Configure where the light/dark mode selector for the interface color is available."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
@@ -2578,10 +2596,7 @@ en:
     disable_watched_word_checking_in_user_fields: "disable watched word checking in user fields"
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
-    enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    enable_quote_copy: "Adds a button to post selection menu to copy the selection to clipboard as a markdown quote."
-
     old_post_notice_days: "The number of days after which a post notice is considered old. This visually differentiates it from newer notices on the site."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
@@ -2601,6 +2616,8 @@ en:
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode (prevents any mailing list emails from being sent.)"
     default_email_previous_replies: "Include previous replies in emails by default."
+
+    default_emoji_reactions: "Default favorites emoji reactions. Add up to 5 emojis for quick reaction."
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
 
@@ -2720,7 +2737,7 @@ en:
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
-    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
+    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
@@ -2731,17 +2748,17 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    enable_experimental_lightbox: "Replace the default image lightbox with the revamped design."
-    experimental_glimmer_topic_list_groups: "Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_topic_list_mode: "Control whether the new 'glimmer' topic-list implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. See <a href='https://meta.discourse.org/t/343404'>the Meta topic</a> for more information."
     glimmer_post_menu_mode: "Control whether the new 'glimmer' post menu implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     glimmer_post_menu_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
-    experimental_form_templates: "Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
-
+    experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
+    adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2785,8 +2802,10 @@ en:
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set the minimum username length above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set the maximum username length below the longest group name (%{group_name})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
@@ -2812,8 +2831,8 @@ en:
 
     keywords:
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
-      purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
       navigation_menu: "sidebar|header dropdown"
+      purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2975,6 +2994,7 @@ en:
     omniauth_confirm_button: "Continue"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
+    new_registrations_disabled_discourse_connect: "New account registrations are only allowed through Discourse Connect."
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     wrong_invite_code: "The invite code you entered was incorrect."
@@ -5412,9 +5432,11 @@ en:
         title: "Look and feel"
         fields:
           color_scheme:
-            label: "Color scheme"
+            label: "Color palette"
           body_font:
             label: "Body font"
+          site_font:
+            label: "Font"
           heading_font:
             label: "Heading font"
           styling_preview:
@@ -5423,23 +5445,17 @@ en:
             label: "Homepage style"
             choices:
               latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
+                label: "Latest"
+                description: "Displays the most recently active topics in all categories, helping members stay up-to-date with discussions they care about"
+              hot:
+                label: "Hot"
+                description: "Surfaces trending topics by blending recent and overall popularity, showcases what members are talking about in your community right now"
               categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_latest_topics_created_date:
-                label: "Categories and Latest Topics (sort by topic created date)"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
+                label: "Categories with latest topics"
+                description: "Combines the recently active topics across all categories with a list of categories, their description, and total topics"
               categories_boxes:
-                label: "Categories Boxes"
-              categories_boxes_with_topics:
-                label: "Categories Boxes with Topics"
-              subcategories_with_featured_topics:
-                label: "Subcategories with Featured Topics"
+                label: "Category boxes"
+                description: "Displays the categories and their description in a grid, ideal for members to see an overview of the sub-communities of your site"
 
       branding:
         title: "Site logo"

@@ -70,9 +70,11 @@
           </div>
 
           <div class="input-group create-account__username">
-            <Input
+            <input
               {{on "focusin" this.scrollInputIntoView}}
-              @value={{this.model.accountUsername}}
+              {{on "input" this.setAccountUsername}}
+              type="text"
+              value={{this.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
               aria-describedby="username-validation username-validation-more-info"
@@ -80,7 +82,7 @@
               autocomplete="off"
               name="username"
               id="new-account-username"
-              class={{value-entered this.model.accountUsername}}
+              class={{value-entered this.accountUsername}}
             />
             <label class="alt-placeholder" for="new-account-username">
               {{i18n "user.username.title"}}
@@ -99,7 +101,7 @@
             {{/if}}
           </div>
 
-          {{#if this.fullnameRequired}}
+          {{#if (and this.showFullname this.fullnameRequired)}}
             <FullnameInput
               @nameValidation={{this.nameValidation}}
               @nameTitle={{this.nameTitle}}
@@ -114,7 +116,7 @@
             @name="create-account-before-password"
             @outletArgs={{hash
               accountName=this.model.accountName
-              accountUsername=this.model.accountUsername
+              accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
               authOptions=this.model.authOptions
@@ -138,7 +140,10 @@
               <label class="alt-placeholder" for="new-account-password">
                 {{i18n "user.password.title"}}
               </label>
-
+              <TogglePasswordMask
+                @maskPassword={{this.maskPassword}}
+                @togglePasswordMask={{this.togglePasswordMask}}
+              />
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
                   {{#if this.showPasswordValidation}}
@@ -163,10 +168,6 @@
                     {{i18n "login.caps_lock_warning"}}
                   </div>
                 </div>
-                <TogglePasswordMask
-                  @maskPassword={{this.maskPassword}}
-                  @togglePasswordMask={{this.togglePasswordMask}}
-                />
               </div>
             {{/if}}
 
@@ -207,7 +208,7 @@
             @name="create-account-after-password"
             @outletArgs={{hash
               accountName=this.model.accountName
-              accountUsername=this.model.accountUsername
+              accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
             }}
@@ -244,7 +245,7 @@
             @name="create-account-after-user-fields"
             @outletArgs={{hash
               accountName=this.model.accountName
-              accountUsername=this.model.accountUsername
+              accountUsername=this.accountUsername
               accountPassword=this.accountPassword
               userFields=this.userFields
             }}

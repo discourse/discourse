@@ -1,20 +1,5 @@
 .topic-notifications-button {
-  &.is-loading {
-    @include unselectable;
-    pointer-events: none;
-
-    .d-icon-spinner {
-      margin: 0;
-    }
-
-    .selected-name .d-icon {
-      display: none;
-    }
-
-    .topic-notifications-options {
-      opacity: 0.5;
-    }
-  }
+  display: contents;
 }
 
 // This is a weird fix for a weird issue in iOS/iPadOS, the browser freezes

@@ -71,28 +71,28 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
+    assert.dom(".d-page-subheader__title").hasText(activeTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(activeUser);
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
+    assert.dom(".d-page-subheader__title").hasText(suspectTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(suspectUser);
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
+    assert.dom(".d-page-subheader__title").hasText(suspectTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(suspectUser);
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
+    assert.dom(".d-page-subheader__title").hasText(activeTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(activeUser);

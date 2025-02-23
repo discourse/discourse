@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import dIcon from "discourse-common/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
+import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class ChatMentionWarnings extends Component {
@@ -151,7 +151,7 @@ export default class ChatMentionWarnings extends Component {
     {{#if this.show}}
       <div class="chat-mention-warnings">
         <div class="chat-mention-warning__icon">
-          {{dIcon "triangle-exclamation"}}
+          {{icon "triangle-exclamation"}}
         </div>
         <div class="chat-mention-warning__text">
           <div class="chat-mention-warning__header">

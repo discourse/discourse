@@ -13,15 +13,13 @@ html.footer-nav-visible {
     padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
 
-  #reply-control.draft {
-    bottom: var(--footer-nav-height);
-    margin-bottom: env(safe-area-inset-bottom);
-    padding-bottom: 0px;
+  .with-topic-progress {
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) +
+        var(--composer-height, 0px)
+    );
   }
 
-  #topic-progress-wrapper:not(.docked) {
-    margin-bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
-  }
   .posts-filtered-notice {
     transition: all linear 0.1s;
     bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
@@ -44,18 +42,20 @@ html.footer-nav-visible {
   }
 
   &.visible {
-    bottom: 0px;
+    bottom: 0;
   }
 
   .footer-nav-widget {
     display: flex;
     justify-content: "space-evenly";
     @include unselectable;
+
     button {
       flex: 1;
       margin: 4px;
       border-radius: 2px;
       padding: 14px 18px;
+
       &:disabled {
         opacity: 0.6;
       }
@@ -65,30 +65,26 @@ html.footer-nav-visible {
 
 @supports (padding: max(0px)) {
   .footer-nav.visible {
-    padding-bottom: unquote("max(5px, env(safe-area-inset-bottom))");
+    padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 }
 
-@supports (-webkit-backdrop-filter: blur(10px)) {
+@supports (backdrop-filter: blur(10px)) {
   html:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba(var(--header_background-rgb), 0.7);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
   }
 }
 
 html.footer-nav-ipad {
   padding-top: var(--footer-nav-height);
+
   .footer-nav {
     bottom: auto;
-    top: 0px;
+    top: 0;
     background-color: var(--header_background);
     z-index: z("ipad-header-nav");
     padding-bottom: 0; // resets safe-area-inset-bottom
-  }
-
-  #reply-control,
-  #reply-control.fullscreen {
-    z-index: z("ipad-header-nav") + 1;
   }
 
   .d-header-wrap {

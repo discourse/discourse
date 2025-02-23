@@ -98,7 +98,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text", "password", "input-date"
+        when "input-text", "password", "input-date", "input-number"
           component.find("input").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
@@ -125,7 +125,7 @@ module PageObjects
             selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
           JS
         when "menu"
-          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu")
+          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
           menu = find("[aria-labelledby='#{trigger["id"]}']")
           item = menu.find(".form-kit__control-menu-item[data-value='#{value}'] .btn")

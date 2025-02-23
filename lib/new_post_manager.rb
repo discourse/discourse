@@ -8,6 +8,8 @@
 class NewPostManager
   attr_reader :user, :args
 
+  FAST_TYPING_THRESHOLD_MAP = { disabled: 0, low: 1000, standard: 3000, high: 5000 }
+
   def self.sorted_handlers
     @sorted_handlers ||= clear_handlers!
   end
@@ -44,7 +46,8 @@ class NewPostManager
     args = manager.args
 
     is_first_post?(manager) &&
-      args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
+      args[:typing_duration_msecs].to_i <
+        FAST_TYPING_THRESHOLD_MAP[SiteSetting.fast_typing_threshold.to_sym] &&
       SiteSetting.auto_silence_fast_typers_on_first_post &&
       manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
   end
@@ -253,7 +256,7 @@ class NewPostManager
   end
 
   # Enqueue this post
-  def enqueue(reason = nil)
+  def enqueue(reason = nil, creator_opts: {})
     result = NewPostResult.new(:enqueued)
     payload = { raw: @args[:raw], tags: @args[:tags] }
     %w[typing_duration_msecs composer_open_duration_msecs reply_to_post_number].each do |a|
@@ -277,7 +280,7 @@ class NewPostManager
     reviewable.category_id = args[:category] if args[:category].present?
     reviewable.created_new!
 
-    create_options = reviewable.create_options
+    create_options = reviewable.create_options.merge(creator_opts)
 
     creator =
       (

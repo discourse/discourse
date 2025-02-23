@@ -7,7 +7,8 @@
 bs_BA:
   js:
     discourse_automation:
-      create: napravi
+      back: Prethodno
+      edit: Edit
       fields:
         user:
           label: User
@@ -125,6 +126,8 @@ bs_BA:
             label: Trigger
           version:
             label: Verzija
+          status:
+            label: Status
           enabled:
             label: Omogućen
           disabled:

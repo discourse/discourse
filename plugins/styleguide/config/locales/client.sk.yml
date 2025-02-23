@@ -74,6 +74,10 @@ sk:
           title: "Oznámenia o témach"
         post:
           title: "Príspevok"
+        post_list:
+          title: "Zoznam príspevkov"
+          empty_example: "<PostList /> prázdny stav"
+          populated_example: "<PostList /> zverejnený stav"
         topic_map:
           title: "Mapa tém"
         site_header:

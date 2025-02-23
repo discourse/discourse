@@ -3,14 +3,14 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
@@ -25,8 +25,8 @@ export default class DMenu extends Component {
     listeners: true,
   });
 
-  registerTrigger = modifier((element) => {
-    this.menuInstance.trigger = element;
+  registerTrigger = modifier((domElement) => {
+    this.menuInstance.trigger = domElement;
     this.options.onRegisterApi?.(this.menuInstance);
 
     return () => {
@@ -34,9 +34,17 @@ export default class DMenu extends Component {
     };
   });
 
+  registerFloatBody = modifier((domElement) => {
+    this.body = domElement;
+
+    return () => {
+      this.body = null;
+    };
+  });
+
   @action
-  registerFloatBody(element) {
-    this.body = element;
+  teardownFloatBody() {
+    this.body = null;
   }
 
   @action
@@ -71,6 +79,35 @@ export default class DMenu extends Component {
     };
   }
 
+  get triggerComponent() {
+    const instance = this;
+    const baseArguments = {
+      get icon() {
+        return instance.args.icon;
+      },
+      get translatedLabel() {
+        return instance.args.label;
+      },
+      get translatedAriaLabel() {
+        return instance.args.ariaLabel;
+      },
+      get translatedTitle() {
+        return instance.args.title;
+      },
+      get disabled() {
+        return instance.args.disabled;
+      },
+      get isLoading() {
+        return instance.args.isLoading;
+      },
+    };
+
+    return (
+      this.args.triggerComponent ||
+      curryComponent(DButton, baseArguments, getOwner(this))
+    );
+  }
+
   get allowedProperties() {
     const properties = {};
     for (const [key, value] of Object.entries(MENU.options)) {
@@ -80,7 +117,7 @@ export default class DMenu extends Component {
   }
 
   <template>
-    <DButton
+    <this.triggerComponent
       {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
@@ -92,11 +129,6 @@ export default class DMenu extends Component {
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      @icon={{@icon}}
-      @translatedAriaLabel={{@ariaLabel}}
-      @translatedLabel={{@label}}
-      @translatedTitle={{@title}}
-      @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
       ...attributes
@@ -104,13 +136,14 @@ export default class DMenu extends Component {
       {{#if (has-block "trigger")}}
         {{yield this.componentArgs to="trigger"}}
       {{/if}}
-    </DButton>
+    </this.triggerComponent>
 
     {{#if this.menuInstance.expanded}}
       {{#if (and this.site.mobileView this.options.modalForMobile)}}
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
+          @autofocus={{this.options.autofocus}}
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
@@ -118,7 +151,7 @@ export default class DMenu extends Component {
             @class
           }}
           @inline={{(isTesting)}}
-          data-identifier={{@instance.options.identifier}}
+          data-identifier={{this.options.identifier}}
           data-content
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
@@ -148,7 +181,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          {{didInsert this.registerFloatBody}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

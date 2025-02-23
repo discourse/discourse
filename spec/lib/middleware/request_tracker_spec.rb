@@ -684,8 +684,9 @@ RSpec.describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, "warn+block"
 
-      status, _ = middleware.call(env)
-      status, headers = middleware.call(env)
+      env1 = env("REMOTE_ADDR" => "192.0.2.42")
+      status, _ = middleware.call(env1)
+      status, headers = middleware.call(env1)
 
       expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
@@ -696,8 +697,9 @@ RSpec.describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, "warn"
 
-      status, _ = middleware.call(env)
-      status, _ = middleware.call(env)
+      env1 = env("REMOTE_ADDR" => "192.0.2.42")
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
 
       expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
@@ -766,8 +768,12 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
-        expect(response.first).to include("too many requests from this IP address")
-        expect(response.first).to include("Error code: ip_10_secs_limit.")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 10 seconds.
+        Error code: ip_10_secs_limit.
+        MSG
       end
 
       it "is included when the requests-per-minute limit is reached" do
@@ -790,8 +796,12 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
-        expect(response.first).to include("too many requests from this IP address")
-        expect(response.first).to include("Error code: ip_60_secs_limit.")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 60 seconds.
+        Error code: ip_60_secs_limit.
+        MSG
       end
 
       it "is included when the assets-requests-per-10-seconds limit is reached" do
@@ -815,8 +825,12 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
-        expect(response.first).to include("too many requests from this IP address")
-        expect(response.first).to include("Error code: ip_assets_10_secs_limit.")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 10 seconds.
+        Error code: ip_assets_10_secs_limit.
+        MSG
       end
     end
 
@@ -855,10 +869,15 @@ RSpec.describe Middleware::RequestTracker do
         middleware = Middleware::RequestTracker.new(app)
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
-        expect(response.first).to include("too many requests from this user")
-        expect(response.first).to include("Error code: id_60_secs_limit.")
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("user_60_secs_limit")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 60 seconds.
+        Error code: user_60_secs_limit.
+        MSG
       end
+
       expect(called).to eq(3)
     end
 
@@ -878,11 +897,13 @@ RSpec.describe Middleware::RequestTracker do
       env = env("HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "1.1.1.1")
 
       called = 0
+
       app =
         lambda do |_|
           called += 1
           [200, {}, ["OK"]]
         end
+
       freeze_time(12.minutes.from_now) do
         middleware = Middleware::RequestTracker.new(app)
         status, = middleware.call(env)
@@ -892,8 +913,12 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
-        expect(response.first).to include("too many requests from this IP address")
-        expect(response.first).to include("Error code: ip_60_secs_limit.")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 60 seconds.
+        Error code: ip_60_secs_limit.
+        MSG
       end
     end
 
@@ -928,8 +953,53 @@ RSpec.describe Middleware::RequestTracker do
       status, headers, response = middleware.call(env)
       expect(status).to eq(429)
       expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
-      expect(response.first).to include("too many requests from this IP address")
-      expect(response.first).to include("Error code: ip_60_secs_limit.")
+
+      expect(response.first).to eq(<<~MSG)
+      Slow down, you're making too many requests.
+      Please retry again in 60 seconds.
+      Error code: ip_60_secs_limit.
+      MSG
+    end
+
+    context "for `add_request_rate_limiter` plugin API" do
+      after { described_class.reset_rate_limiters_stack }
+
+      it "can be used to add a custom rate limiter" do
+        global_setting :max_reqs_per_ip_per_minute, 1
+
+        plugin = Plugin::Instance.new
+
+        plugin.add_request_rate_limiter(
+          identifier: :crawlers,
+          key: ->(_request) { "crawlers" },
+          activate_when: ->(request) { request.user_agent =~ /crawler/ },
+        )
+
+        env1 = env("HTTP_USER_AGENT" => "some crawler")
+
+        called = 0
+
+        app =
+          lambda do |_|
+            called += 1
+            [200, {}, ["OK"]]
+          end
+
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env1)
+        expect(status).to eq(200)
+
+        middleware = Middleware::RequestTracker.new(app)
+        status, headers, response = middleware.call(env1)
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("crawlers_60_secs_limit")
+
+        expect(response.first).to eq(<<~MSG)
+        Slow down, you're making too many requests.
+        Please retry again in 60 seconds.
+        Error code: crawlers_60_secs_limit.
+        MSG
+      end
     end
   end
 

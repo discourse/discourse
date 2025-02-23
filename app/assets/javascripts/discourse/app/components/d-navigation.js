@@ -6,10 +6,10 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("")
 export default class DNavigation extends Component {
@@ -19,6 +19,10 @@ export default class DNavigation extends Component {
   @tracked filterMode;
 
   @setting("fixed_category_positions") fixedCategoryPositions;
+
+  get createTopicLabel() {
+    return this.site.desktopView ? "topic.create" : "";
+  }
 
   @dependentKeyCompat
   get filterType() {
@@ -80,40 +84,31 @@ export default class DNavigation extends Component {
 
   @discourseComputed(
     "createTopicDisabled",
-    "hasDraft",
     "categoryReadOnlyBanner",
     "canCreateTopicOnTag",
     "tag.id"
   )
   createTopicButtonDisabled(
     createTopicDisabled,
-    hasDraft,
     categoryReadOnlyBanner,
     canCreateTopicOnTag,
     tagId
   ) {
     if (tagId && !canCreateTopicOnTag) {
       return true;
-    } else if (categoryReadOnlyBanner && !hasDraft) {
+    } else if (categoryReadOnlyBanner) {
       return false;
     }
     return createTopicDisabled;
   }
 
-  @discourseComputed("categoryReadOnlyBanner", "hasDraft")
-  createTopicClass(categoryReadOnlyBanner, hasDraft) {
+  @discourseComputed("categoryReadOnlyBanner")
+  createTopicClass(categoryReadOnlyBanner) {
     let classNames = ["btn-default"];
-    if (hasDraft) {
-      classNames.push("open-draft");
-    } else if (categoryReadOnlyBanner) {
+    if (categoryReadOnlyBanner) {
       classNames.push("disabled");
     }
     return classNames.join(" ");
-  }
-
-  @discourseComputed("hasDraft")
-  createTopicLabel(hasDraft) {
-    return hasDraft ? "topic.open_draft" : "topic.create";
   }
 
   @discourseComputed("category.can_edit")
@@ -195,7 +190,7 @@ export default class DNavigation extends Component {
 
   @action
   clickCreateTopicButton() {
-    if (this.categoryReadOnlyBanner && !this.hasDraft) {
+    if (this.categoryReadOnlyBanner) {
       this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
     } else {
       this.createTopic();

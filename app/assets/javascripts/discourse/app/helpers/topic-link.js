@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("topic-link", topicLink);
 export default function topicLink(topic, args = {}) {
@@ -17,8 +17,6 @@ export default function topicLink(topic, args = {}) {
 
   return htmlSafe(
     `<a href='${url}'
-        role='heading'
-        aria-level='2'
         class='${classes.join(" ")}'
         data-topic-id='${topic.id}'>${title}</a>`
   );

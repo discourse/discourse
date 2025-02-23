@@ -24,10 +24,6 @@
     padding: 0 0.5rem;
   }
 
-  .d-icon {
-    color: var(--primary-low-mid);
-  }
-
   &.is-direct-reply {
     display: flex;
     cursor: pointer;
@@ -43,6 +39,7 @@
     margin-top: 0;
     display: inline-block;
   }
+
   > p {
     margin-top: 0.35em;
   }

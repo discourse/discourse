@@ -25,6 +25,8 @@
 # * +on_exceptions(*exceptions)+: will execute the provided block if any
 #   exceptions were caught by the `try` block. One or more exception classes
 #   can be provided to specifically handle those exceptions.
+# * +on_lock_not_acquired(*keys)+: will execute the provided block if the lock
+#   using `keys` wasn’t acquired successfully.
 #
 # All the specialized steps receive the failing step result object as an
 # argument to their block. `on_model_errors` receives the actual model so it’s
@@ -97,13 +99,17 @@ class Service::Runner
     },
     on_exceptions: {
       condition: ->(*exceptions) do
-        next unless failure_for?("result.try.default")
+        next unless result["result.try.default"]&.exception
         next true if exceptions.empty?
         exceptions.any? { result["result.try.default"].exception.is_a?(_1) }
       end,
       key: %w[result try],
       name: "default",
       property: :exception,
+    },
+    on_lock_not_acquired: {
+      condition: ->(*keys) { failure_for?("result.lock.#{keys.join(":")}") },
+      key: [],
     },
   }.with_indifferent_access.freeze
 

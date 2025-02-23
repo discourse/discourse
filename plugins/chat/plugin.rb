@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: chat
-# about: Adds chat functionality to your site so it can natively support both long-form and short-form communication needs of your online community.
+# about: Adds chat functionality to your site so it can natively support both long-form and short-form communication needs of your online community
 # meta_topic_id: 230881
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
@@ -37,6 +37,7 @@ module ::Chat
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
   }
+  PRESENCE_REGEXP = %r{^/chat-reply/(\d+)(?:/thread/(\d+))?$}
 end
 
 require_relative "lib/chat/engine"
@@ -60,6 +61,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
+  UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -88,34 +90,7 @@ after_initialize do
 
   if InlineOneboxer.respond_to?(:register_local_handler)
     InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      if route[:message_id].present?
-        message = Chat::Message.find_by(id: route[:message_id])
-        next if !message
-
-        chat_channel = message.chat_channel
-        user = message.user
-        next if !chat_channel || !user
-
-        title =
-          I18n.t(
-            "chat.onebox.inline_to_message",
-            message_id: message.id,
-            chat_channel: chat_channel.name,
-            username: user.username,
-          )
-      else
-        chat_channel = Chat::Channel.find_by(id: route[:channel_id])
-        next if !chat_channel
-
-        title =
-          if chat_channel.name.present?
-            I18n.t("chat.onebox.inline_to_channel", chat_channel: chat_channel.name)
-          end
-      end
-
-      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
-
-      { url: url, title: title }
+      Chat::InlineOneboxHandler.handle(url, route)
     end
   end
 
@@ -272,6 +247,10 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
+  add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+
+  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin
@@ -303,32 +282,29 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat") do |channel_name|
-    next nil unless channel_name == "/chat/online"
-    config = PresenceChannel::Config.new
-    config.allowed_group_ids = Chat.allowed_group_ids
-    config
+    next if channel_name != "/chat/online"
+    PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if (
-         channel_id, thread_id =
-           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
-       )
-      chat_channel = nil
-      if thread_id
-        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+    channel_id, thread_id = Chat::PRESENCE_REGEXP.match(channel_name)&.captures
+
+    next if channel_id.blank?
+
+    chat_channel =
+      if thread_id.present?
+        Chat::Thread.find_by(id: thread_id, channel_id:)&.channel
       else
-        chat_channel = Chat::Channel.find(channel_id)
+        Chat::Channel.find_by(id: channel_id)
       end
 
-      PresenceChannel::Config.new.tap do |config|
-        config.allowed_group_ids = chat_channel.allowed_group_ids
-        config.allowed_user_ids = chat_channel.allowed_user_ids
-        config.public = !chat_channel.read_restricted?
-      end
+    next if chat_channel.nil?
+
+    PresenceChannel::Config.new.tap do |config|
+      config.allowed_group_ids = chat_channel.allowed_group_ids
+      config.allowed_user_ids = chat_channel.allowed_user_ids
+      config.public = !chat_channel.read_restricted?
     end
-  rescue ActiveRecord::RecordNotFound
-    nil
   end
 
   register_push_notification_filter do |user, payload|
@@ -450,7 +426,7 @@ after_initialize do
         )
 
       if creator.failure?
-        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps.inspect}\n#{creator.inspect_steps.error}"
+        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps}"
       end
     end
   end
@@ -514,6 +490,10 @@ after_initialize do
   # When we eventually allow secure_uploads in chat, this will need to be
   # removed. Depending on the channel, uploads may end up being secure.
   UploadSecurity.register_custom_public_type("chat-composer")
+
+  if Rails.env.local?
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
 end
 
 if Rails.env == "test"

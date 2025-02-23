@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNames("top-title-buttons")
 export default class TopPeriodButtons extends Component {

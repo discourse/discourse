@@ -7,7 +7,7 @@ module Reports::ConsolidatedApiRequests
     def report_consolidated_api_requests(report)
       filters = %w[api user_api]
 
-      report.modes = [:stacked_chart]
+      report.modes = [Report::MODES[:stacked_chart]]
 
       requests =
         filters.map do |filter|

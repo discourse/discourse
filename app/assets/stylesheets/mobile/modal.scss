@@ -7,14 +7,14 @@ html:has(.d-modal) {
 
 html.keyboard-visible.mobile-view {
   .d-modal {
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
-    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
     bottom: 0;
   }
 
   .d-modal__container {
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
-    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
   }
 }
 
@@ -32,7 +32,7 @@ html:not(.keyboard-visible.mobile-view) {
     position: fixed;
     width: 100%;
     max-width: 100%;
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    max-height: calc(var(--composer-vh, 1dvh) * 85);
   }
 
   &__footer {
@@ -43,6 +43,7 @@ html:not(.keyboard-visible.mobile-view) {
       align-items: stretch;
     }
   }
+
   .ios-device & {
     &__footer {
       margin-top: auto;
@@ -65,13 +66,13 @@ html:not(.keyboard-visible.mobile-view) {
   }
 }
 
-//legacy
-
+// legacy
 .modal {
   &.fade {
     transition: opacity 0.3s linear, top 0.3s ease-out;
     top: -25%;
   }
+
   &.fade.in {
     top: 50%;
   }

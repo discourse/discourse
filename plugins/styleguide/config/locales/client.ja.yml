@@ -74,6 +74,10 @@ ja:
           title: "トピック通知"
         post:
           title: "投稿"
+        post_list:
+          title: "投稿リスト"
+          empty_example: "<PostList /> 空の状態"
+          populated_example: "<PostList /> 入力状態"
         topic_map:
           title: "トピックマップ"
         site_header:

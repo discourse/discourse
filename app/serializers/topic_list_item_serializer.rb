@@ -10,6 +10,9 @@ class TopicListItemSerializer < ListableTopicSerializer
              :last_poster_username,
              :category_id,
              :op_like_count,
+             :op_can_like,
+             :op_liked,
+             :first_post_id,
              :pinned_globally,
              :liked_post_numbers,
              :featured_link,
@@ -30,6 +33,51 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def op_like_count
     object.first_post && object.first_post.like_count
+  end
+
+  def include_op_can_like?
+    serialize_topic_op_likes_data_enabled?
+  end
+
+  def op_can_like
+    return false if !scope.user || !object.first_post
+
+    first_post = object.first_post
+    return false if first_post.user_id == scope.user.id
+    return false unless scope.post_can_act?(first_post, :like)
+
+    first_post_liked =
+      PostAction.where(
+        user_id: scope.user.id,
+        post_id: first_post.id,
+        post_action_type_id: PostActionType.types[:like],
+      ).first
+    return scope.can_delete?(first_post_liked) if first_post_liked
+
+    true
+  end
+
+  def include_op_liked?
+    serialize_topic_op_likes_data_enabled?
+  end
+
+  def op_liked
+    return false if !scope.user || !object.first_post
+
+    PostAction.where(
+      user_id: scope.user.id,
+      post_id: object.first_post.id,
+      post_action_type_id: PostActionType.types[:like],
+    ).exists?
+  end
+
+  def include_first_post_id?
+    serialize_topic_op_likes_data_enabled?
+  end
+
+  def first_post_id
+    return false if !object.first_post
+    object.first_post.id
   end
 
   def last_poster_username
@@ -92,5 +140,18 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_allowed_user_count?
     object.private_message?
+  end
+
+  private
+
+  def serialize_topic_op_likes_data_enabled?
+    theme_enabled = theme_modifier_helper.serialize_topic_op_likes_data
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_op_likes_data, false)
+
+    theme_enabled || plugin_enabled
+  end
+
+  def theme_modifier_helper
+    @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
   end
 end

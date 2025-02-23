@@ -138,6 +138,13 @@ es:
         never: "Nunca"
       separate_sidebar_mode:
         title: "Mostrar modos separados en la barra lateral para el foro y el chat"
+      send_shortcut:
+        enter:
+          label: "Enviar mediante Intro"
+          description: "Nueva línea con Mayús + Intro"
+        meta_enter:
+          label: "Enviar por %{meta_key} + Intro"
+          description: "Nueva línea mediante Intro"
       enable: "Activar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"
@@ -655,6 +662,11 @@ es:
           other_html: "<span>%{username}</span> <span>mencionó a %{identifier} en el chat personal</span>"
         chat_message: "Nuevo mensaje de chat"
         chat_quoted: "%{username} citó tu mensaje de chat"
+      titles:
+        chat_mention: "Mencionado en el chat"
+        chat_invitation: "Invitado al canal de chat"
+        chat_quoted: "Mensaje de chat citado"
+        chat_watched_thread: "Hilo de chat visto"
     action_codes:
       chat:
         enabled: '%{who} habilitó el <button class="btn-link open-chat">chat</button> %{when}'

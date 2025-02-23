@@ -1,12 +1,14 @@
 @keyframes slidein {
   0% {
-    transform: translateX(0px);
+    transform: translateX(0);
   }
+
   50% {
     transform: translateX(5px);
   }
+
   100% {
-    transform: translateX(0px);
+    transform: translateX(0);
   }
 }
 
@@ -25,14 +27,17 @@
     color: white;
     box-shadow: var(--shadow-dropdown);
   }
+
   &.hide,
   &.good {
     display: none;
   }
+
   .d-icon {
     color: var(--primary);
     opacity: 0.5;
     font-size: var(--font-0);
+
     &:hover {
       opacity: 1;
     }

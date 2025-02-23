@@ -2,12 +2,13 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { not } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
+import { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _messagesCache = {};
@@ -70,8 +71,10 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    this.reset();
-    this.popup(EmberObject.create(info));
+    schedule("actions", () => {
+      this.reset();
+      this.popup(EmberObject.create(info));
+    });
   }
 
   // Resets all active messages.

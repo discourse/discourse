@@ -84,7 +84,7 @@
     }
 
     // unlinked, invalid mention
-    span.mention:not(--wide) {
+    span.mention:not(.--wide) {
       color: var(--primary-high);
     }
 
@@ -113,9 +113,9 @@
     display: flex;
     flex-wrap: wrap;
 
-    .chat-message-react-btn {
+    .react-btn {
       vertical-align: top;
-      padding: 0em 0.25em;
+      padding: 0 0.25em;
       background: none;
       border: none;
       will-change: scale;
@@ -159,25 +159,23 @@
 }
 
 .no-touch .chat-message-container {
-  &:hover,
-  &.-active {
-    background: var(--d-hover);
-  }
-
   &:hover {
     .chat-message-reaction-list .chat-message-react-btn {
-      display: inline-block;
+      visibility: visible;
     }
   }
 
-  &.-active,
-  &:hover {
+  &:hover,
+  &.-active {
+    background: var(--d-hover);
+
     &.-bookmarked {
       background: var(--highlight-medium);
     }
 
     &.-deleted {
       background-color: var(--danger-low);
+
       .chat-message-expand {
         color: var(--danger);
       }
@@ -250,6 +248,6 @@
   }
 
   .chat-message-reaction-list .chat-message-react-btn {
-    display: none;
+    visibility: hidden;
   }
 }

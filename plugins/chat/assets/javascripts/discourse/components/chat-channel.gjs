@@ -10,13 +10,13 @@ import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -55,7 +55,6 @@ export default class ChatChannel extends Component {
   @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
-  @service chatEmojiPickerManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;
@@ -323,7 +322,7 @@ export default class ChatChannel extends Component {
   processMessages(channel, result) {
     const messages = [];
     let foundFirstNew = false;
-    const hasNewest = this.messagesManager.messages.some((m) => m.newest);
+    channel.newestMessage = null;
 
     result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
@@ -343,19 +342,22 @@ export default class ChatChannel extends Component {
         messageData.expanded = !(messageData.hidden || messageData.deleted_at);
       }
 
+      const message = ChatMessage.create(channel, messageData);
+      message.manager = channel.messagesManager;
+
       // newest has to be in after fetch callback as we don't want to make it
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
-        !hasNewest &&
         !foundFirstNew &&
         messageData.id > this.currentUserMembership?.lastReadMessageId
       ) {
         foundFirstNew = true;
-        messageData.newest = true;
+        if (message !== channel.lastMessage) {
+          channel.newestMessage = message;
+        } else {
+          channel.newestMessage = null;
+        }
       }
-
-      const message = ChatMessage.create(channel, messageData);
-      message.manager = channel.messagesManager;
 
       if (message.thread) {
         this.#preloadThreadTrackingState(
@@ -430,6 +432,10 @@ export default class ChatChannel extends Component {
     if (lastReadId >= firstMessage.id) {
       return;
     }
+
+    // optimistic update
+    this.args.channel.currentUserMembership.lastReadMessageId = firstMessage.id;
+    this.args.channel.updateLastViewedAt();
 
     return this.chatApi.markChannelAsRead(
       this.args.channel.id,
@@ -558,17 +564,13 @@ export default class ChatChannel extends Component {
     }
 
     try {
-      const params = {
+      await this.chatApi.sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      };
-
-      await this.chatApi.sendMessage(
-        this.args.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
-      );
+        ...extractCurrentTopicInfo(this),
+      });
 
       if (!this.capabilities.isIOS) {
         this.scrollToLatestMessage();
@@ -656,7 +658,11 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    if (!target || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) {
+    if (
+      !target ||
+      /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) ||
+      target.closest('[contenteditable="true"]')
+    ) {
       return;
     }
 

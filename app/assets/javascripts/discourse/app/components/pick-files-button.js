@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with

@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
 
 @classNames("multi-select-filter")

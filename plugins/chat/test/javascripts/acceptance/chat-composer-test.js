@@ -1,4 +1,10 @@
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { skip } from "qunit";
 import {
   acceptance,
@@ -20,7 +26,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
     server.get("/chat/:id/messages.json", () =>
       helper.response({ chat_messages: [], meta: {} })
     );
-    server.get("/chat/emojis.json", () =>
+    server.get("/emojis.json", () =>
       helper.response({ favorites: [{ name: "grinning" }] })
     );
     server.post("/chat/drafts", () => {
@@ -45,21 +51,17 @@ acceptance("Discourse Chat - Composer", function (needs) {
   skip("when pasting html in composer", async function (assert) {
     await visit("/chat/c/another-category/11");
 
-    const clipboardEvent = new Event("paste", { bubbles: true });
-    clipboardEvent.clipboardData = {
-      types: ["text/html"],
-      getData: (type) => {
-        if (type === "text/html") {
-          return "<a href>Foo</a>";
-        }
+    await triggerEvent(".chat-composer__input", "paste", {
+      bubbles: true,
+      clipboardData: {
+        types: ["text/html"],
+        getData: (type) => {
+          if (type === "text/html") {
+            return "<a href>Foo</a>";
+          }
+        },
       },
-    };
-
-    document
-      .querySelector(".chat-composer__input")
-      .dispatchEvent(clipboardEvent);
-
-    await settled();
+    });
 
     assert.dom(".chat-composer__input").hasValue("Foo");
   });

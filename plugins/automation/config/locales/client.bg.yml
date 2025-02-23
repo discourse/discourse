@@ -7,8 +7,8 @@
 bg:
   js:
     discourse_automation:
-      create: Създай
-      update: Актуализация
+      back: Назад
+      edit: Редактирай
       fields:
         user:
           label: Потребител
@@ -135,6 +135,8 @@ bg:
             label: Тригер
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Да е включен
           disabled:

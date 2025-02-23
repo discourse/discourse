@@ -126,6 +126,11 @@ RSpec.describe Jobs do
   end
 
   describe "cancel_scheduled_job" do
+    class Jobs::SomeJob < ::Jobs::Base
+      def execute(args)
+      end
+    end
+
     let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
 
     after { scheduled_jobs.clear }
@@ -135,18 +140,18 @@ RSpec.describe Jobs do
         scheduled_jobs.clear
         expect(scheduled_jobs.size).to eq(0)
 
-        Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)
-        Jobs.enqueue_in(2.years, :run_heartbeat, topic_id: 456)
-        Jobs.enqueue_in(3.years, :run_heartbeat, topic_id: 123, current_site_id: "foo")
-        Jobs.enqueue_in(4.years, :run_heartbeat, topic_id: 123, current_site_id: "bar")
+        Jobs.enqueue_in(1.year, :some_job, topic_id: 123)
+        Jobs.enqueue_in(2.years, :some_job, topic_id: 456)
+        Jobs.enqueue_in(3.years, :some_job, topic_id: 123, current_site_id: "foo")
+        Jobs.enqueue_in(4.years, :some_job, topic_id: 123, current_site_id: "bar")
 
         expect(scheduled_jobs.size).to eq(4)
 
-        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 123)
+        Jobs.cancel_scheduled_job(:some_job, topic_id: 123)
 
         expect(scheduled_jobs.size).to eq(3)
 
-        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 123, all_sites: true)
+        Jobs.cancel_scheduled_job(:some_job, topic_id: 123, all_sites: true)
 
         expect(scheduled_jobs.size).to eq(1)
       end

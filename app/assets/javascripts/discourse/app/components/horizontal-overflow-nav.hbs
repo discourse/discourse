@@ -22,8 +22,8 @@
   {{/if}}
 
   <ul
-    {{on-resize this.checkScroll}}
-    {{on "scroll" this.watchScroll}}
+    {{on-resize this.onResize}}
+    {{on "scroll" this.onScroll}}
     {{did-insert this.scrollToActive}}
     {{on "mousedown" this.scrollDrag}}
     class="nav-pills action-list {{@className}}"

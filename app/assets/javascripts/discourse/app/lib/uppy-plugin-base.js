@@ -1,7 +1,7 @@
 import { warn } from "@ember/debug";
 import { BasePlugin } from "@uppy/core";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export class UppyPluginBase extends BasePlugin {
   constructor(uppy, opts) {
@@ -12,13 +12,6 @@ export class UppyPluginBase extends BasePlugin {
   _consoleWarn(msg) {
     if (!isTesting()) {
       warn(`[${this.id}] ${msg}`, { id: `discourse.${this.id}` });
-    }
-  }
-
-  _consoleDebug(msg) {
-    if (this.siteSettings?.enable_upload_debug_mode) {
-      // eslint-disable-next-line no-console
-      console.log(`[${this.id}] ${msg}`);
     }
   }
 

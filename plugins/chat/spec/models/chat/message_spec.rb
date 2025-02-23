@@ -314,7 +314,7 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
+      <img alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
       <p>Mark me…this will go down in history.</p>
       </blockquote>
@@ -360,7 +360,7 @@ describe Chat::Message do
         Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
+        <img alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
@@ -372,7 +372,7 @@ describe Chat::Message do
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
+        <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
@@ -616,18 +616,15 @@ describe Chat::Message do
   end
 
   describe "blocking duplicate messages" do
-    fab!(:channel) { Fabricate(:chat_channel, user_count: 10) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    let(:message) { "this is duplicate" }
+    fab!(:chat_channel)
+    fab!(:user)
 
-    before { SiteSetting.chat_duplicate_message_sensitivity = 1 }
-
-    it "blocks duplicate messages for the message, channel user, and message age requirements" do
-      Fabricate(:chat_message, message: "this is duplicate", chat_channel: channel, user: user1)
-      message =
-        described_class.new(message: "this is duplicate", chat_channel: channel, user: user2)
-      message.valid?
-      expect(message.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
+    it "blocks duplicate messages" do
+      Fabricate(:chat_message, message:, chat_channel:, user:)
+      msg = described_class.new(message:, chat_channel:, user:)
+      msg.valid?
+      expect(msg.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
     end
   end
 
@@ -786,6 +783,22 @@ describe Chat::Message do
 
         expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
         expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
+
+      it "creates thread memberships for mentioned users when replying to a thread" do
+        thread = Fabricate(:chat_thread)
+        thread_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: thread.channel,
+            thread: thread,
+            message: "cc @#{user3.username} and @#{user4.username}",
+          )
+
+        thread_message.cook
+        thread_message.upsert_mentions
+
+        expect(thread.user_chat_thread_memberships.pluck(:user_id)).to include(user3.id, user4.id)
       end
     end
 

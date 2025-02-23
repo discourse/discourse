@@ -14,13 +14,16 @@ RSpec.describe Service::StepsInspector do
 
     params do
       attribute :parameter
+      attribute :other_param, :integer
 
       validates :parameter, presence: true
     end
 
-    transaction do
-      step :in_transaction_step_1
-      step :in_transaction_step_2
+    lock(:parameter, :other_param) do
+      transaction do
+        step :in_transaction_step_1
+        step :in_transaction_step_2
+      end
     end
 
     try { step :might_raise }
@@ -45,23 +48,28 @@ RSpec.describe Service::StepsInspector do
     end
   end
 
-  describe "#inspect" do
-    subject(:output) { inspector.inspect.strip }
+  describe "#execution_flow" do
+    subject(:output) { inspector.execution_flow.strip.gsub(%r{ \(\d+\.\d+ ms\)}, "") }
 
     context "when service runs without error" do
       it "outputs all the steps of the service" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ✅
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise' ✅
-        [10/10] [step] 'final_step' ✅
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ✅
+        [ 5/11] [lock] parameter:other_param ✅
+        [ 6/11]   [transaction]
+        [ 7/11]     [step] in_transaction_step_1 ✅
+        [ 8/11]     [step] in_transaction_step_2 ✅
+        [ 9/11] [try]
+        [10/11]   [step] might_raise ✅
+        [11/11] [step] final_step ✅
         OUTPUT
+      end
+
+      it "outputs time taken by each step" do
+        expect(inspector.execution_flow).to match(/\d+\.\d+ ms/)
       end
     end
 
@@ -76,16 +84,10 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ❌
-        [ 3/10] [policy] 'policy'
-        [ 4/10] [params] 'default'
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ❌
+
+        (9 more steps not shown as the execution flow was stopped before reaching them)
         OUTPUT
       end
     end
@@ -101,16 +103,11 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ❌
-        [ 4/10] [params] 'default'
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ❌
+
+        (8 more steps not shown as the execution flow was stopped before reaching them)
         OUTPUT
       end
     end
@@ -120,16 +117,12 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ❌
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ❌
+
+        (7 more steps not shown as the execution flow was stopped before reaching them)
         OUTPUT
       end
     end
@@ -145,16 +138,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ❌
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ✅
+        [ 5/11] [lock] parameter:other_param ✅
+        [ 6/11]   [transaction]
+        [ 7/11]     [step] in_transaction_step_1 ✅
+        [ 8/11]     [step] in_transaction_step_2 ❌
+
+        (3 more steps not shown as the execution flow was stopped before reaching them)
         OUTPUT
       end
     end
@@ -170,16 +163,34 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
-        [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ✅
-        [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise' 💥
-        [10/10] [step] 'final_step'
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ✅
+        [ 5/11] [lock] parameter:other_param ✅
+        [ 6/11]   [transaction]
+        [ 7/11]     [step] in_transaction_step_1 ✅
+        [ 8/11]     [step] in_transaction_step_2 ✅
+        [ 9/11] [try]
+        [10/11]   [step] might_raise 💥
+
+        (1 more steps not shown as the execution flow was stopped before reaching them)
+        OUTPUT
+      end
+    end
+
+    context "when the lock step is failing" do
+      before { allow(DistributedMutex).to receive(:synchronize) }
+
+      it "shows the failing step" do
+        expect(output).to eq <<~OUTPUT.chomp
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ✅
+        [ 5/11] [lock] parameter:other_param ❌
+
+        (6 more steps not shown as the execution flow was stopped before reaching them)
         OUTPUT
       end
     end
@@ -190,16 +201,17 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [ 1/10] [options] 'default' ✅
-          [ 2/10] [model] 'model' ✅
-          [ 3/10] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
-          [ 4/10] [params] 'default' ✅
-          [ 5/10] [transaction]
-          [ 6/10]   [step] 'in_transaction_step_1' ✅
-          [ 7/10]   [step] 'in_transaction_step_2' ✅
-          [ 8/10] [try]
-          [ 9/10]   [step] 'might_raise' ✅
-          [10/10] [step] 'final_step' ✅
+          [ 1/11] [options] default ✅
+          [ 2/11] [model] model ✅
+          [ 3/11] [policy] policy ✅ ⚠️  <= expected to return false but got true instead
+          [ 4/11] [params] default ✅
+          [ 5/11] [lock] parameter:other_param ✅
+          [ 6/11]   [transaction]
+          [ 7/11]     [step] in_transaction_step_1 ✅
+          [ 8/11]     [step] in_transaction_step_2 ✅
+          [ 9/11] [try]
+          [10/11]   [step] might_raise ✅
+          [11/11] [step] final_step ✅
           OUTPUT
         end
       end
@@ -216,16 +228,11 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [ 1/10] [options] 'default' ✅
-          [ 2/10] [model] 'model' ✅
-          [ 3/10] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
-          [ 4/10] [params] 'default'
-          [ 5/10] [transaction]
-          [ 6/10]   [step] 'in_transaction_step_1'
-          [ 7/10]   [step] 'in_transaction_step_2'
-          [ 8/10] [try]
-          [ 9/10]   [step] 'might_raise'
-          [10/10] [step] 'final_step'
+          [ 1/11] [options] default ✅
+          [ 2/11] [model] model ✅
+          [ 3/11] [policy] policy ❌ ⚠️  <= expected to return true but got false instead
+
+          (8 more steps not shown as the execution flow was stopped before reaching them)
           OUTPUT
         end
       end
@@ -279,7 +286,7 @@ RSpec.describe Service::StepsInspector do
       end
 
       it "returns the provided paramaters" do
-        expect(error).to match(/{"parameter"=>nil}/)
+        expect(error).to match(/{"parameter"=>nil, "other_param"=>nil}/)
       end
     end
 
@@ -325,8 +332,39 @@ RSpec.describe Service::StepsInspector do
       end
 
       it "returns an error related to the exception" do
-        expect(error).to match(/RuntimeError: BOOM/)
+        expect(error).to match(/BOOM \([^(]*RuntimeError[^)]*\)/)
       end
+    end
+
+    context "when the lock step is failing" do
+      before { allow(DistributedMutex).to receive(:synchronize) }
+
+      it "returns an error" do
+        expect(error).to eq("Lock 'parameter:other_param' was not acquired.")
+      end
+    end
+  end
+
+  describe "#inspect" do
+    let(:parameter) { nil }
+
+    it "outputs the service class name, the steps results and the specific error" do
+      expect(inspector.inspect.gsub(%r{ \(\d+\.\d+ ms\)}, "")).to eq(<<~OUTPUT)
+        Inspecting DummyService result object:
+
+        [ 1/11] [options] default ✅
+        [ 2/11] [model] model ✅
+        [ 3/11] [policy] policy ✅
+        [ 4/11] [params] default ❌
+
+        (7 more steps not shown as the execution flow was stopped before reaching them)
+
+        Why it failed:
+
+        #<ActiveModel::Errors [#<ActiveModel::Error attribute=parameter, type=blank, options={}>]>
+
+        Provided parameters: {"parameter"=>nil, "other_param"=>nil}
+      OUTPUT
     end
   end
 end

@@ -13,13 +13,12 @@ fi:
             delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
-      create: Aloitus
-      update: Päivitä
+      back: Takaisin
+      edit: Muokkaa
       select_script: Valitse skripti
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
-      no_automation_yet: Et ole vielä luonut automaatioita. Aloita valitsemalla vaihtoehto alta.
       filter_placeholder: Suodata nimen tai kuvauksen mukaan...
       edit_automation:
         trigger_section:
@@ -167,10 +166,10 @@ fi:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti tämän ryhmän postilaatikossa
             restricted_groups:
               label: Ryhmät
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti jossakin ryhmän postilaatikoista
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
             ignore_group_members:
               label: Ohita ryhmän jäsenet
               description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
@@ -228,6 +227,10 @@ fi:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tunnisteita lisätty tai poistettu
+            tags_added: Tunnisteita lisätty
+            tags_removed: Tunnisteita poistettu
           fields:
             watching_categories:
               label: Tarkkailussa olevat alueet
@@ -235,6 +238,8 @@ fi:
             watching_tags:
               label: Tarkkailussa olevat tunnisteet
               description: Käynnistyy vain, jos ketjulla on jokin näistä tunnisteista
+            trigger_on:
+              label: Triggeri
             trigger_with_pms:
               label: Käynnistä yksityisviesteillä
               description: Käynnistyy, vaikka tunnisteet olisi muutettu yksityisviestillä
@@ -413,6 +418,8 @@ fi:
             label: Skripti
           version:
             label: Versio
+          status:
+            label: Tila
           enabled:
             label: Käytössä
           disabled:

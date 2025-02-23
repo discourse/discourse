@@ -2,10 +2,12 @@ import { next } from "@ember/runloop";
 import {
   click,
   fillIn,
+  find,
   focus,
   render,
   settled,
   triggerEvent,
+  triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -13,7 +15,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import { paste, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
+import { paste, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
   setTextareaSelection,
@@ -61,6 +64,10 @@ module("Integration | Component | d-editor", function (hooks) {
   });
 
   function jumpEnd(textarea) {
+    if (typeof textarea === "string") {
+      textarea = find(textarea);
+    }
+
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
     return textarea;
@@ -77,7 +84,7 @@ module("Integration | Component | d-editor", function (hooks) {
 
       await render(hbs`<DEditor @value={{this.value}} />`);
 
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+      const textarea = jumpEnd("textarea.d-editor-input");
       await testFunc.call(this, assert, textarea);
     });
   }
@@ -90,7 +97,7 @@ module("Integration | Component | d-editor", function (hooks) {
         hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
       );
 
-      const textarea = jumpEnd(query("textarea.d-editor-input"));
+      const textarea = jumpEnd("textarea.d-editor-input");
       await testFunc.call(this, assert, textarea);
     });
   }
@@ -245,7 +252,7 @@ function xyz(x, y, z) {
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    const textarea = query("textarea.d-editor-input");
+    const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -267,7 +274,7 @@ function xyz(x, y, z) {
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    const textarea = jumpEnd(query("textarea.d-editor-input"));
+    const textarea = jumpEnd("textarea.d-editor-input");
 
     await click("button.code");
     assert.strictEqual(this.value, `    ${i18n("composer.code_text")}`);
@@ -348,7 +355,7 @@ third line`
     this.set("value", "existing");
 
     await render(hbs`<DEditor @value={{this.value}} />`);
-    const textarea = query("textarea.d-editor-input");
+    const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = 8;
 
@@ -369,7 +376,7 @@ third line`
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    const textarea = jumpEnd(query("textarea.d-editor-input"));
+    const textarea = jumpEnd("textarea.d-editor-input");
 
     await click("button.code");
     assert.strictEqual(
@@ -484,7 +491,7 @@ third line`
       hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
     );
 
-    const textarea = jumpEnd(query("textarea.d-editor-input"));
+    const textarea = jumpEnd("textarea.d-editor-input");
 
     textarea.selectionStart = 0;
 
@@ -505,7 +512,7 @@ third line`
       hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
     );
 
-    const textarea = jumpEnd(query("textarea.d-editor-input"));
+    const textarea = jumpEnd("textarea.d-editor-input");
 
     textarea.selectionStart = 6;
     textarea.selectionEnd = 10;
@@ -702,44 +709,31 @@ third line`
   );
 
   test("emoji", async function (assert) {
-    // Test adding a custom button
-    withPluginApi("0.1", (api) => {
-      api.onToolbarCreate((toolbar) => {
-        toolbar.addButton({
-          id: "emoji",
-          group: "extras",
-          icon: "far-face-smile",
-          action: () => toolbar.context.send("emoji"),
-        });
-      });
-    });
     this.set("value", "hello world.");
+    // we need DMenus here, as we are testing the d-editor which is not renderining
+    // the in-element outlet container necessary for DMenu to work
+    await render(hbs`<DMenus /><DEditor @value={{this.value}} />`);
+    const picker = emojiPicker();
+    jumpEnd("textarea.d-editor-input");
+    await click(".d-editor-button-bar .emoji");
+    await picker.select("raised_hands");
 
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
-    jumpEnd(query("textarea.d-editor-input"));
-    await click("button.emoji");
-
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "hello world. :grinning:",
+      "hello world. :raised_hands:",
       "it works when there is no partial emoji"
     );
 
     await click("textarea.d-editor-input");
-    await fillIn(".d-editor-input", "starting to type an emoji like :gri");
-    jumpEnd(query("textarea.d-editor-input"));
-    await click("button.emoji");
+    await fillIn(".d-editor-input", "starting to type an emoji like :woman");
+    jumpEnd("textarea.d-editor-input");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace"); //simplest way to trigger more menu here
+    await click(".ac-emoji li:last-child a");
+    await picker.select("womans_clothes");
 
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "starting to type an emoji like :grinning:",
+      "starting to type an emoji like :womans_clothes:",
       "it works when there is a partial emoji"
     );
   });
@@ -903,8 +897,7 @@ third line`
       hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
     );
 
-    let element = query(".d-editor");
-    await paste(element, "\ta\tb\n1\t2\t3");
+    await paste(".d-editor", "\ta\tb\n1\t2\t3");
     assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
 
     document.execCommand("undo");
@@ -919,8 +912,7 @@ third line`
       hbs`<DEditor @value={{this.value}} @composerEvents={{true}} />`
     );
 
-    let element = query(".d-editor");
-    await paste(element, '\ta\tb\n1\t"2\n2.5"\t3');
+    await paste(".d-editor", '\ta\tb\n1\t"2\n2.5"\t3');
     assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");
   });
 
@@ -929,13 +921,12 @@ third line`
     async function (assert, textarea) {
       this.set("value", "See discourse in action");
       setTextareaSelection(textarea, 4, 13);
-      const element = query(".d-editor");
-      const event = await paste(element, "https://www.discourse.org/");
+      const event = await paste(".d-editor", "https://www.discourse.org/");
       assert.strictEqual(
         this.value,
         "See [discourse](https://www.discourse.org/) in action"
       );
-      assert.strictEqual(event.defaultPrevented, true);
+      assert.true(event.defaultPrevented);
 
       document.execCommand("undo");
       assert.strictEqual(this.value, "See discourse in action");
@@ -947,11 +938,10 @@ third line`
     async function (assert, textarea) {
       this.set("value", "good morning");
       setTextareaSelection(textarea, 5, 12);
-      const element = query(".d-editor");
-      const event = await paste(element, "evening");
+      const event = await paste(".d-editor", "evening");
       // Synthetic paste events do not manipulate document content.
       assert.strictEqual(this.value, "good morning");
-      assert.strictEqual(event.defaultPrevented, false);
+      assert.false(event.defaultPrevented);
     }
   );
 
@@ -960,11 +950,10 @@ third line`
     async function (assert, textarea) {
       this.set("value", "a link example:");
       jumpEnd(textarea);
-      const element = query(".d-editor");
-      const event = await paste(element, "https://www.discourse.org/");
+      const event = await paste(".d-editor", "https://www.discourse.org/");
       // Synthetic paste events do not manipulate document content.
       assert.strictEqual(this.value, "a link example:");
-      assert.strictEqual(event.defaultPrevented, false);
+      assert.false(event.defaultPrevented);
     }
   );
 
@@ -973,14 +962,13 @@ third line`
     async function (assert, textarea) {
       this.set("value", "a link example:");
       setTextareaSelection(textarea, 0, 1);
-      const element = query(".d-editor");
       const event = await paste(
-        element,
+        ".d-editor",
         "Try out Discourse at: https://www.discourse.org/"
       );
       // Synthetic paste events do not manipulate document content.
       assert.strictEqual(this.value, "a link example:");
-      assert.strictEqual(event.defaultPrevented, false);
+      assert.false(event.defaultPrevented);
     }
   );
 
@@ -989,10 +977,9 @@ third line`
     async function (assert, textarea) {
       this.set("value", "team email");
       setTextareaSelection(textarea, 5, 10);
-      const element = query(".d-editor");
-      const event = await paste(element, "mailto:team@discourse.org");
+      const event = await paste(".d-editor", "mailto:team@discourse.org");
       assert.strictEqual(this.value, "team [email](mailto:team@discourse.org)");
-      assert.strictEqual(event.defaultPrevented, true);
+      assert.true(event.defaultPrevented);
     }
   );
 
@@ -1001,11 +988,10 @@ third line`
     async function (assert, textarea) {
       this.set("value", "Try https://www.discourse.org");
       setTextareaSelection(textarea, 0, 29);
-      const element = query(".d-editor");
-      const event = await paste(element, "https://www.discourse.com/");
+      const event = await paste(".d-editor", "https://www.discourse.com/");
       // Synthetic paste events do not manipulate document content.
       assert.strictEqual(this.value, "Try https://www.discourse.org");
-      assert.strictEqual(event.defaultPrevented, false);
+      assert.false(event.defaultPrevented);
     }
   );
 
@@ -1014,11 +1000,10 @@ third line`
     async function (assert, textarea) {
       this.set("value", "hello [url=foobar]foobar[/url]");
       setTextareaSelection(textarea, 0, 30);
-      const element = query(".d-editor");
-      const event = await paste(element, "https://www.discourse.com/");
+      const event = await paste(".d-editor", "https://www.discourse.com/");
       // Synthetic paste events do not manipulate document content.
       assert.strictEqual(this.value, "hello [url=foobar]foobar[/url]");
-      assert.strictEqual(event.defaultPrevented, false);
+      assert.false(event.defaultPrevented);
     }
   );
 

@@ -9,11 +9,11 @@ import RejectReasonReviewableModal from "discourse/components/modal/reject-reaso
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _components = {};
@@ -59,9 +59,16 @@ export default class ReviewableItem extends Component {
     "reviewable.type",
     "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
-    "reviewable.target_created_by_trust_level"
+    "reviewable.target_created_by_trust_level",
+    "reviewable.deleted_at"
   )
-  customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
+  customClasses(
+    type,
+    lastPerformingUsername,
+    blurEnabled,
+    trustLevel,
+    deletedAt
+  ) {
     let classes = dasherize(type);
 
     if (lastPerformingUsername) {
@@ -70,6 +77,10 @@ export default class ReviewableItem extends Component {
 
     if (blurEnabled && trustLevel === 0) {
       classes = `${classes} blur-images`;
+    }
+
+    if (deletedAt) {
+      classes = `${classes} reviewable-deleted`;
     }
 
     return classes;
@@ -177,6 +188,15 @@ export default class ReviewableItem extends Component {
     return updatedCategoryId || categoryId;
   }
 
+  @discourseComputed("reviewable.type", "reviewable.target_created_by")
+  showIpLookup(reviewableType) {
+    return (
+      reviewableType !== "ReviewableUser" &&
+      this.currentUser.staff &&
+      this.reviewable.target_created_by
+    );
+  }
+
   @bind
   _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
@@ -276,7 +296,6 @@ export default class ReviewableItem extends Component {
       action: Composer.EDIT,
       draftKey: post.get("topic.draft_key"),
       draftSequence: post.get("topic.draft_sequence"),
-      skipDraftCheck: true,
       skipJumpOnSave: true,
     };
 

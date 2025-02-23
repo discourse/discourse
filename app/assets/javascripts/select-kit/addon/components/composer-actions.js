@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -13,7 +14,6 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
@@ -289,7 +289,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = PRIVATE_MESSAGE;
     options.recipients = recipients.join(",");
     options.archetypeId = "private_message";
-    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
@@ -297,14 +296,12 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
   replyToTopicSelected(options) {
     options.action = REPLY;
     options.topic = _topicSnapshot;
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 
@@ -326,7 +323,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
-    options.skipDraftCheck = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
@@ -352,7 +348,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = PRIVATE_MESSAGE;
     options.recipients = usernames;
     options.archetypeId = "private_message";
-    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
@@ -362,7 +357,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.categoryId = this.get("composerModel.categoryId");
     options.topicTitle = this.get("composerModel.title");
     options.tags = this.get("composerModel.tags");
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 

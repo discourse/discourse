@@ -326,8 +326,8 @@ RSpec.describe DirectoryItemsController do
       expect(json).to be_present
       items = json["directory_items"]
       # Internal reference: /t/139545
-      expect(items.length).to eq(20)
-      expect(json["meta"]["total_rows_directory_items"]).to eq(20)
+      expect(items.length).to eq(30)
+      expect(json["meta"]["total_rows_directory_items"]).to eq(30)
     end
 
     it "checks group permissions" do
@@ -352,6 +352,40 @@ RSpec.describe DirectoryItemsController do
 
       get "/directory_items.json", params: { period: "all", group: group.name }
       expect(response.parsed_body["directory_items"].length).to eq(2)
+    end
+  end
+
+  context "when searching by name" do
+    it "searches users by custom field 'Music' ignoring the default 20 user limit" do
+      field = Fabricate(:user_field, searchable: true)
+      users = Fabricate.times(100, :user)
+
+      users
+        .first(70)
+        .each do |u|
+          UserCustomField.create!(user_id: u.id, name: "user_field_#{field.id}", value: "Music")
+        end
+
+      DirectoryItem.refresh!
+      SearchIndexer.with_indexing { users.each { |u| SearchIndexer.index(u, force: true) } }
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            name: "Music",
+            user_field_ids: field.id.to_s,
+          }
+
+      json = response.parsed_body
+      items = json["directory_items"]
+
+      expect(items.size).to eq(50) # The directory’s PAGE_SIZE is set to 50, so we only see 50 per page
+      expect(json["meta"]["total_rows_directory_items"]).to eq(70) # only 70 users have the Music field set
+
+      items.each do |item|
+        fields = item["user"]["user_fields"]
+        expect(fields[field.id.to_s]["value"]).to include("Music")
+      end
     end
   end
 end

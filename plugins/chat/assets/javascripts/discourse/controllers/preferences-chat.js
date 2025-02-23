@@ -2,8 +2,10 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { isTesting } from "discourse-common/config/environment";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
@@ -16,6 +18,7 @@ const CHAT_ATTRS = [
   "chat_email_frequency",
   "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
+  "chat_send_shortcut",
 ];
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
@@ -28,6 +31,21 @@ export default class PreferencesChatController extends Controller {
   @service siteSettings;
 
   subpageTitle = i18n("chat.admin.title");
+
+  chatSendShortcutOptions = [
+    {
+      label: i18n("chat.send_shortcut.enter.label"),
+      value: "enter",
+      description: i18n("chat.send_shortcut.enter.description"),
+    },
+    {
+      label: i18n("chat.send_shortcut.meta_enter.label", {
+        meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
+      }),
+      value: "meta_enter",
+      description: i18n("chat.send_shortcut.meta_enter.description"),
+    },
+  ];
 
   emailFrequencyOptions = [
     { name: i18n("chat.email_frequency.never"), value: "never" },
@@ -75,6 +93,10 @@ export default class PreferencesChatController extends Controller {
     } else {
       return mode;
     }
+  }
+
+  get chatSendShortcut() {
+    return this.model.get("user_option.chat_send_shortcut");
   }
 
   @discourseComputed

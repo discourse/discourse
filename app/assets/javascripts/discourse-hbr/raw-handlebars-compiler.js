@@ -152,8 +152,8 @@ TemplateCompiler.prototype.processString = function (string, relativePath) {
   );
 
   return `
-    import { template as compiler } from "discourse-common/lib/raw-handlebars";
-    import { addRawTemplate } from "discourse-common/lib/raw-templates";
+    import { template as compiler } from "discourse/lib/raw-handlebars";
+    import { addRawTemplate } from "discourse/lib/raw-templates";
 
     let template = compiler(${this.precompile(string, false)});
 

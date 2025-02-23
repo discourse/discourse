@@ -234,8 +234,6 @@ da:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
-    receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
-    sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
     user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
@@ -1080,12 +1078,10 @@ da:
       title: "Underret moderatorer"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange moderatorer er blevet underrettet privat af en anmeldelse."
     notify_user_private_messages:
       title: "Giv brugeren besked"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange, brugere har fået privat besked af en anmeldelse."
     top_referrers:
       title: "Top henvisere"
       xaxis: "Bruger"
@@ -1276,8 +1272,7 @@ da:
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     default_locale: "Standardsproget for denne Discourse instans. Du kan erstatte teksten for systemgenererede kategorier og emner på <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Tilpas / Tekst</a>."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
-    set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
-    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
+    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre"
     max_post_length: "Maksimal længde af indlæg i tegn"
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_views_for_delete_confirm: "Minimum antal visninger et emne skal have før en bekræftelse popup vises, når det bliver slettet"
@@ -1378,8 +1373,8 @@ da:
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
     min_username_length: "Minimumslængde på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har kortere navne end dette, vil dit websted gå i stykker!"
     max_username_length: "Maksimallængden på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har længere navne end dette, vil dit websted gå i stykker!"
-    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal."
-    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten."
+    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal"
+    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten"
     reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
@@ -1482,7 +1477,6 @@ da:
     title_fancy_entities: "Konverter almindelige ASCII-tegn til smarte HTML-entiteter i emnetitler, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
@@ -1551,7 +1545,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
@@ -3178,15 +3171,7 @@ da:
           homepage_style:
             choices:
               latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
+                label: "Seneste"
       corporate:
         fields:
           governing_law:

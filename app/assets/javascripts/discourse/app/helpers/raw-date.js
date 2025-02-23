@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { longDate } from "discourse/lib/formatter";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("raw-date", rawDate);
 

@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { setPrefix } from "discourse-common/lib/get-url";
+import { setPrefix } from "discourse/lib/get-url";
 
 function reportWithData(data) {
   const store = getOwner(this).lookup("service:store");
@@ -368,7 +368,7 @@ module("Unit | Model | report", function (hooks) {
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
       computedUsernameLabel.formattedValue,
-      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
 
@@ -378,7 +378,7 @@ module("Unit | Model | report", function (hooks) {
     assert.strictEqual(flagCountLabel.title, "Flag count");
     assert.strictEqual(flagCountLabel.type, "number");
     let computedFlagCountLabel = flagCountLabel.compute(row);
-    assert.strictEqual(computedFlagCountLabel.formattedValue, "1.9k");
+    assert.strictEqual(computedFlagCountLabel.formattedValue, "1,876");
     assert.strictEqual(computedFlagCountLabel.value, 1876);
     computedFlagCountLabel = flagCountLabel.compute(row, {
       formatNumbers: false,
@@ -457,7 +457,7 @@ module("Unit | Model | report", function (hooks) {
     const userLink = computedLabels[0].compute(row).formattedValue;
     assert.strictEqual(
       userLink,
-      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/forum/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
   });
 });

@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("span")

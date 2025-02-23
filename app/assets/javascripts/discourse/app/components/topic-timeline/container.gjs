@@ -13,14 +13,15 @@ import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import categoryLink from "discourse/helpers/category-link";
+import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import { bind, debounce } from "discourse/lib/decorators";
+import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
-import icon from "discourse-common/helpers/d-icon";
-import { bind, debounce } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
 import { i18n } from "discourse-i18n";
+import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
 
@@ -657,6 +658,10 @@ export default class TopicTimelineScrollArea extends Component {
             title={{i18n "topic.progress.jump_prompt_long"}}
             class="timeline-open-jump-to-post-prompt-btn jump-to-post"
           />
+        {{/if}}
+
+        {{#if (and this.currentUser this.site.desktopView)}}
+          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
         {{/if}}
 
         <PluginOutlet

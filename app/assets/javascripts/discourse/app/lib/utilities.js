@@ -1,12 +1,12 @@
 import Handlebars from "handlebars";
 import $ from "jquery";
+import * as AvatarUtils from "discourse/lib/avatar-utils";
+import deprecated from "discourse/lib/deprecated";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
-import deprecated from "discourse-common/lib/deprecated";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 let _defaultHomepage;
@@ -14,7 +14,7 @@ let _defaultHomepage;
 function deprecatedAvatarUtil(name) {
   return function () {
     deprecated(
-      `${name} should be imported from discourse-common/lib/avatar-utils instead of discourse/lib/utilities`,
+      `${name} should be imported from discourse/lib/avatar-utils instead of discourse/lib/utilities`,
       { id: "discourse.avatar-utils" }
     );
     return AvatarUtils[name](...arguments);
@@ -169,7 +169,13 @@ export function selectedText() {
   div
     .querySelectorAll("div.video-placeholder-container[data-video-src]")
     .forEach((element) => {
-      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+      const videoBase62Sha1 = element.dataset.videoBase62Sha1;
+      if (videoBase62Sha1) {
+        element.replaceWith(`![|video](upload://${videoBase62Sha1})`);
+      } else {
+        // Fallback for old posts that don't contain data-video-base62-sha1
+        element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+      }
     });
 
   return toMarkdown(div.outerHTML);
@@ -208,6 +214,10 @@ export function caretPosition(el) {
 
 // Set the caret's position
 export function setCaretPosition(ctrl, pos) {
+  if (typeof ctrl === "string") {
+    ctrl = document.querySelector(ctrl);
+  }
+
   let range;
   if (ctrl.setSelectionRange) {
     ctrl.focus();

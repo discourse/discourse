@@ -1,6 +1,6 @@
 import avatar from "discourse/helpers/bound-avatar-template";
+import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import dIcon from "discourse-common/helpers/d-icon";
 
 const ActionsSummary = <template>
   {{#each @data.actionsSummary as |as|}}
@@ -9,7 +9,7 @@ const ActionsSummary = <template>
   {{/each}}
   {{#if @data.deleted_at}}
     <div class="post-action deleted-post">
-      {{dIcon "trash-can"}}
+      {{icon "trash-can"}}
       <a
         class="trigger-user-card"
         data-user-card={{@data.deletedByUsername}}

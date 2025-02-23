@@ -7,8 +7,8 @@
 vi:
   js:
     discourse_automation:
-      create: Tạo
-      update: Cập nhật
+      back: Quay lại
+      edit: Sửa
       fields:
         user:
           label: Người dùng
@@ -138,5 +138,7 @@ vi:
             label: Phát động
           version:
             label: Phiên bản
+          status:
+            label: Trạng thái
           disabled:
             label: Vô hiệu hóa

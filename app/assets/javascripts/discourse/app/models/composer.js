@@ -4,10 +4,14 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
+import { tinyAvatar } from "discourse/lib/avatar-utils";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -17,9 +21,6 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _customizations = [];
@@ -40,7 +41,8 @@ export const CREATE_TOPIC = "createTopic",
   REPLY = "reply",
   EDIT = "edit",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic";
+  NEW_TOPIC_KEY = "new_topic",
+  EDIT_TOPIC_KEY = "topic_";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -140,6 +142,7 @@ export default class Composer extends RestModel {
   // Draft key
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
   static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
+  static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
 
   // TODO: Replace with injection
   static create(args) {
@@ -643,6 +646,9 @@ export default class Composer extends RestModel {
   @discourseComputed("title")
   titleLength(title) {
     title = title || "";
+    if (isHTMLSafe(title)) {
+      return title.toString().length;
+    }
     return title.replace(/\s+/gim, " ").trim().length;
   }
 
@@ -1306,7 +1312,7 @@ export default class Composer extends RestModel {
     return true;
   }
 
-  saveDraft(user) {
+  saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.resolve();
     }
@@ -1335,10 +1341,6 @@ export default class Composer extends RestModel {
             draftConflictUser: result.conflict_user,
           });
         } else {
-          if (this.draftKey === NEW_TOPIC_KEY && user) {
-            user.set("has_topic_draft", true);
-          }
-
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,

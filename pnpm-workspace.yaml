@@ -4,7 +4,6 @@ packages:
 - "app/assets/javascripts/deprecation-silencer"
 - "app/assets/javascripts/dialog-holder"
 - "app/assets/javascripts/discourse"
-- "app/assets/javascripts/discourse-common"
 - "app/assets/javascripts/discourse-hbr"
 - "app/assets/javascripts/discourse-i18n"
 - "app/assets/javascripts/discourse-markdown-it"

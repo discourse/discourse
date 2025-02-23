@@ -1,3 +1,4 @@
+import { triggerKeyEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { compile } from "handlebars";
 import $ from "jquery";
@@ -168,5 +169,74 @@ module("Unit | Utility | autocomplete", function (hooks) {
     document.execCommand("undo");
 
     assert.strictEqual(element.value, "@t");
+  });
+
+  test("Autocomplete does not trigger with right-left arrow keys", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: ":",
+      template,
+      transformComplete: (e) => e.slice(1),
+      dataSource: () => [":smile:"],
+    });
+
+    await simulateKeys(element, ":smi\t");
+
+    assert.dom(element).hasValue(":smile: ");
+
+    async function triggerArrowKey(key) {
+      await triggerKeyEvent(element, "keydown", key, { code: key });
+      await triggerKeyEvent(element, "keyup", key, { code: key });
+
+      const pos = element.selectionStart;
+      const direction = key === "ArrowLeft" ? -1 : 1;
+      element.setSelectionRange(pos + 1 * direction, pos + 1 * direction);
+    }
+
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowRight");
+
+    assert.strictEqual(element.selectionStart, 6);
+
+    // This is passing, but it's a false positive
+    // triggerArrowKey isn't triggering the event the autocomplete listens to
+    assert.dom("#ac-testing").doesNotExist();
+
+    await triggerArrowKey("ArrowRight");
+    await simulateKey(element, "\b");
+
+    assert.dom(element).hasValue(":smile ");
+    assert.dom("#ac-testing").exists();
+  });
+
+  test("Autocomplete respects triggerRule on continued typing", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: ":",
+      template,
+      transformComplete: (e) => e.slice(1),
+      dataSource: () => [":smile:"],
+      triggerRule: async (_, { inCodeBlock }) => !(await inCodeBlock()),
+    });
+
+    await simulateKeys(element, "```\n:");
+
+    assert.dom("#ac-testing").doesNotExist();
+
+    await simulateKey(element, "smil");
+
+    assert.dom("#ac-testing").doesNotExist();
+
+    await simulateKey(element, "\n```\n:");
+
+    assert.dom("#ac-testing").exists();
+
+    await simulateKey(element, "smil");
+
+    assert.dom("#ac-testing").exists();
   });
 });

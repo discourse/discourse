@@ -7,7 +7,7 @@ import {
   navigateToTopic,
   showEntrance,
 } from "discourse/components/topic-list-item";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @attributeBindings("topic.id:data-topic-id")
 @classNameBindings(":latest-topic-list-item", "unboundClassNames")

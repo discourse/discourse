@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
@@ -24,6 +25,12 @@ acceptance("Admin Sidebar - Sections", function (needs) {
         },
       },
     ]);
+
+    pretender.get("/admin/config/site_settings.json", () =>
+      response({
+        site_settings: [],
+      })
+    );
   });
 
   test("default sections are loaded", async function (assert) {
@@ -47,9 +54,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     assert
       .dom(".sidebar-section[data-section-name='admin-email_settings']")
       .exists("email settings section is displayed");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-email_logs']")
-      .exists("email logs settings section is displayed");
     assert
       .dom(".sidebar-section[data-section-name='admin-security']")
       .exists("security settings section is displayed");
@@ -96,11 +100,15 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-toggle-all-sections");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.dom(".admin-reports-list__report").exists({ count: 1 });
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 });
 
     await fillIn(".admin-reports-header__filter", "flags");
 
-    assert.dom(".admin-reports-list__report").doesNotExist();
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .doesNotExist();
 
     await click(
       ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
@@ -108,13 +116,13 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
     assert
-      .dom(".admin-reports-list__report")
+      .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".admin-reports-header__filter", "activities");
 
     assert
-      .dom(".admin-reports-list__report")
+      .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "filter is case insensitive");
   });
 });
@@ -224,16 +232,16 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
       )
       .doesNotExist();
 
-    await click(".sidebar-more-section-links-details-summary");
+    await click(".sidebar-more-section-trigger");
 
     assert
       .dom(
-        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='primary']"
+        "sidebar-more-section-content .sidebar-section-link[data-link-name='primary']"
       )
       .doesNotExist();
     assert
       .dom(
-        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='secondary']"
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='secondary']"
       )
       .exists();
   });

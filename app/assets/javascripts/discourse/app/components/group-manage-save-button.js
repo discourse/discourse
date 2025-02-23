@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class GroupManageSaveButton extends Component {

@@ -871,7 +871,7 @@ class Category < ActiveRecord::Base
 
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
-    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86_400 / num_auto_bump_daily.to_i)
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
   end
 
   def clear_auto_bump_cache!

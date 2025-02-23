@@ -51,15 +51,11 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="<TopicNotificationOptions>"
+  @title="<TopicNotificationsTracking>"
   @initialValue={{1}}
   as |value|
 >
-  <TopicNotificationsOptions
-    @topic={{@dummy.topic}}
-    @value={{value}}
-    @onChange={{fn (mut value)}}
-  />
+  <TopicNotificationsTracking @levelId={{value}} @onChange={{fn (mut value)}} />
 </StyleguideExample>
 
 <StyleguideExample
@@ -82,20 +78,8 @@
   <CategoriesAdminDropdown @onChange={{@dummyAction}} />
 </StyleguideExample>
 
-<StyleguideExample @title="<CategoryNotificationsButton>">
-  <CategoryNotificationsButton
-    @category={{get @dummy "categories.0"}}
-    @value={{1}}
-    @onChange={{@dummyAction}}
-  />
-</StyleguideExample>
-
-<StyleguideExample @title="<NotificationsButton>">
-  <NotificationsButton
-    @options={{hash i18nPrefix="groups.notifications"}}
-    @value={{2}}
-    @onChange={{@dummyAction}}
-  />
+<StyleguideExample @title="<CategoryNotificationsTracking>">
+  <CategoryNotificationsTracking @levelId={{1}} @onChange={{@dummyAction}} />
 </StyleguideExample>
 
 <StyleguideExample @title="<DropdownSelectBox>">

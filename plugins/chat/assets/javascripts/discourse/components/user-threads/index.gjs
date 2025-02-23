@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";

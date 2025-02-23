@@ -726,6 +726,21 @@ RSpec.describe ListController do
       get "/top?period=decadely"
       expect(response.status).to eq(400)
     end
+
+    describe "per page" do
+      it "uses value from params when present" do
+        get "/top.json?per_page=5"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(5)
+      end
+
+      it "uses SiteSetting.topics_per_period_in_top_page when per_page param isn't present" do
+        SiteSetting.topics_per_period_in_top_page = 32
+        get "/top.json"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(32)
+      end
+    end
   end
 
   describe "category" do

@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import Site from "discourse/models/site";
 import groupFixtures from "discourse/tests/fixtures/group-fixtures";
 import {
@@ -7,7 +8,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
@@ -186,6 +186,11 @@ acceptance(
       assert
         .dom(".group-automatic-tooltip")
         .exists("displays automatic tooltip");
+    });
+
+    test("the current user cannot invite users to automatic group", async function (assert) {
+      await visit("/g/moderators");
+      assert.dom(".group-members-add").doesNotExist();
     });
   }
 );

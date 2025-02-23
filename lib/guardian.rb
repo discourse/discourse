@@ -536,17 +536,20 @@ class Guardian
       @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
-  def can_export_entity?(entity)
+  def can_export_entity?(entity, entity_id = nil)
     return false if anonymous?
     return true if is_admin?
-    return entity != "user_list" if is_moderator?
+    return can_see_emails? if entity == "screened_email"
+    return entity != "user_list" if is_moderator? && (entity != "user_archive" || entity_id.nil?)
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
-    UserExport.where(
-      user_id: @user.id,
-      created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day),
-    ).count == 0
+    entity_id == @user.id || entity_id.nil?
+  end
+
+  def can_see_emails?
+    return true if is_admin?
+    SiteSetting.moderators_view_emails && is_moderator?
   end
 
   def can_mute_user?(target_user)
@@ -565,6 +568,22 @@ class Guardian
   def can_ignore_users?
     return false if anonymous?
     @user.staff? || @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+  end
+
+  def is_muting_user?(target_user)
+    @user.muted_user_ids.include?(target_user.id)
+  end
+
+  def is_ignoring_user?(target_user)
+    @user.ignored_user_ids.include?(target_user.id)
+  end
+
+  def is_muted_by_user?(target_user)
+    target_user.muted_user_ids.include?(@user.id)
+  end
+
+  def is_ignored_by_user?(target_user)
+    target_user.ignored_user_ids.include?(@user.id)
   end
 
   def allowed_theme_repo_import?(repo)

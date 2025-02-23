@@ -7,13 +7,17 @@ export default class ChatDraftsManager extends Service {
   drafts = {};
 
   willDestroy() {
-    cancel(this?._persistHandler);
+    super.willDestroy(...arguments);
+    cancel(this._persistHandler);
   }
 
-  async add(message, channelId, threadId) {
+  async add(message, channelId, threadId, persist = true) {
     try {
       this.drafts[this.key(channelId, threadId)] = message;
-      await this.persistDraft(message, channelId, threadId);
+
+      if (persist) {
+        await this.persistDraft(message, channelId, threadId);
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log("Couldn't save draft", e);

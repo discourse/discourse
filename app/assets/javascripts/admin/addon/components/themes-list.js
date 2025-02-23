@@ -4,7 +4,7 @@ import { equal, gt, gte } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 

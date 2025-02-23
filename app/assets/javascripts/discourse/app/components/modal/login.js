@@ -8,6 +8,8 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import {
@@ -16,8 +18,6 @@ import {
 } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 import ForgotPassword from "./forgot-password";
 
@@ -137,6 +137,8 @@ export default class Login extends Component {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
+          } else if (this.args.model.referrerUrl) {
+            window.location.assign(this.args.model.referrerUrl);
           } else {
             window.location.reload();
           }
@@ -288,6 +290,8 @@ export default class Login extends Component {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
+        } else if (this.args.model.referrerUrl) {
+          applyHiddenFormInputValue(this.args.model.referrerUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }

@@ -17,10 +17,10 @@ import {
   disableBodyScroll,
   enableBodyScroll,
 } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
-import { bind } from "discourse-common/utils/decorators";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -108,6 +108,10 @@ export default class DModal extends Component {
     }
   }
 
+  get autofocus() {
+    return this.args.autofocus ?? true;
+  }
+
   shouldTriggerClickOnEnter(event) {
     if (this.args.submitOnEnter === false) {
       return false;
@@ -152,6 +156,12 @@ export default class DModal extends Component {
 
     this.modalContainer.style.transform = `translateY(${swipeEvent.deltaY}px)`;
     this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
+  }
+
+  @action
+  handleWrapperPointerDown(e) {
+    // prevents hamburger menu to close on modal backdrop click
+    e.stopPropagation();
   }
 
   @action
@@ -277,7 +287,7 @@ export default class DModal extends Component {
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
-        {{trapTab preventScroll=false}}
+        {{trapTab preventScroll=false autofocus=this.autofocus}}
       >
         <div class="d-modal__container" {{this.registerModalContainer}}>
           {{yield to="aboveHeader"}}
@@ -392,6 +402,8 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
+          {{! template-lint-disable no-pointer-down-event-binding }}
+          {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
     </ConditionalInElement>

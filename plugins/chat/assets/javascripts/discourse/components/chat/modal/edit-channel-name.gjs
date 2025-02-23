@@ -10,7 +10,7 @@ import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";

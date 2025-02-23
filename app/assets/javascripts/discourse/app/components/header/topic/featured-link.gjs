@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
+import icon from "discourse/helpers/d-icon";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import icon from "discourse-common/helpers/d-icon";
 
 export default class FeaturedLink extends Component {
   get meta() {

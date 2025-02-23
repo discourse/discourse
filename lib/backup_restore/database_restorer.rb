@@ -16,7 +16,7 @@ module BackupRestore
       @current_db = current_db
     end
 
-    def restore(db_dump_path)
+    def restore(db_dump_path, interactive = false)
       BackupRestore.move_tables_between_schemas(MAIN_SCHEMA, BACKUP_SCHEMA)
 
       @db_dump_path = db_dump_path
@@ -24,6 +24,7 @@ module BackupRestore
 
       create_missing_discourse_functions
       restore_dump
+      pause_before_migration if interactive
       migrate_database
       reconnect_database
 
@@ -134,6 +135,16 @@ module BackupRestore
         port_argument, # the port to connect to (if any)
         username_argument, # the username to connect as (if any)
       ].compact.join(" ")
+    end
+
+    def pause_before_migration
+      puts ""
+      puts "Attention! Pausing restore before migrating database.".red.bold
+      puts "You can work on the restored database in a separate Rails console."
+      puts ""
+      puts "Press any key to continue with the restore.".bold
+      puts ""
+      STDIN.getch
     end
 
     def migrate_database

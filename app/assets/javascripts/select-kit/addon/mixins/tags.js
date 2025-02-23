@@ -3,7 +3,7 @@ import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 export default Mixin.create({

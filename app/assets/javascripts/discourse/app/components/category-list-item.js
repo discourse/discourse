@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import discourseComputed from "discourse-common/utils/decorators";
 
 const LIST_TYPE = {
   NORMAL: "normal",

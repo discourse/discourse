@@ -1,4 +1,4 @@
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 
 function highlight(node, pattern, nodeName, className) {
   if (

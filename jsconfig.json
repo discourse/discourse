@@ -5,15 +5,13 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
+    "allowJs": true,
     "paths": {
       "discourse/*": [
         "./app/assets/javascripts/discourse/app/*"
       ],
       "discourse/tests/*": [
         "./app/assets/javascripts/discourse/tests/*"
-      ],
-      "discourse-common/*": [
-        "./app/assets/javascripts/discourse-common/addon/*"
       ],
       "admin/*": [
         "./app/assets/javascripts/admin/addon/*"
@@ -86,7 +84,6 @@
   "include": [
     "./app/assets/javascripts/discourse/app",
     "./app/assets/javascripts/discourse/tests",
-    "./app/assets/javascripts/discourse-common/addon",
     "./app/assets/javascripts/admin/addon",
     "./app/assets/javascripts/pretty-text/addon",
     "./app/assets/javascripts/select-kit/addon",
@@ -120,7 +117,8 @@
   ],
   "exclude": [
     "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
-    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs"
+    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs",
+    "**/*.hbs"
   ],
   "glint": {
     "environment": [

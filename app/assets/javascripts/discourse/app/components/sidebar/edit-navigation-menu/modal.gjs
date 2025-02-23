@@ -5,8 +5,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 

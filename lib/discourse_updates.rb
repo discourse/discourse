@@ -156,8 +156,14 @@ module DiscourseUpdates
       entries.map! do |item|
         next item if !item["experiment_setting"]
 
-        item["experiment_setting"] = nil if !SiteSetting.respond_to?(item["experiment_setting"]) ||
-          SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
+        if !SiteSetting.respond_to?(item["experiment_setting"]) ||
+             SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
+          item["experiment_setting"] = nil
+          item["experiment_enabled"] = false
+        else
+          item["experiment_enabled"] = SiteSetting.send(item["experiment_setting"].to_sym) if item
+        end
+
         item
       end
 

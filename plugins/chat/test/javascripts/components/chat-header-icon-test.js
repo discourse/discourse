@@ -3,13 +3,11 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 module("Discourse Chat | Component | chat-header-icon", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.beforeEach(function () {});
 
   test("full page - never separated sidebar mode", async function (assert) {
     this.currentUser.user_option.chat_separate_sidebar_mode = "never";

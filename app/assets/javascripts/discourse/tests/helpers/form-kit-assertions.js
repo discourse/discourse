@@ -43,9 +43,7 @@ class FieldHelper {
   }
 
   get value() {
-    this.context
-      .dom(this.element)
-      .exists(`Could not find element (name: ${this.name}).`);
+    this.context.dom(this.element).exists(`field '${this.name}' exists`);
 
     switch (this.element.dataset.controlType) {
       case "image": {
@@ -97,8 +95,8 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-select").value;
       }
       case "menu": {
-        return this.element.querySelector(".form-kit__control-menu").dataset
-          .value;
+        return this.element.querySelector(".form-kit__control-menu-trigger")
+          .dataset.value;
       }
       case "checkbox": {
         return this.element.querySelector(".form-kit__control-checkbox")

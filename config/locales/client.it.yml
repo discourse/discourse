@@ -460,6 +460,12 @@ it:
         confirm: "Hai già una bozza in corso. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
+      dropdown:
+        title: "Apri il menu delle ultime bozze"
+        untitled: "Bozza senza titolo"
+        other_drafts:
+          one: "+%{count} altra bozza"
+          other: "+%{count} altre bozze"
     topic_count_all:
       one: "Vedi %{count} nuovo argomento"
       other: "Vedi %{count} nuovi argomenti"
@@ -497,6 +503,8 @@ it:
     continue: "Continua"
     switch_to_anon: "Avvia Modalità Anonima"
     switch_from_anon: "Esci da Modalità Anonima"
+    select_placeholder: "Seleziona…"
+    none_placeholder: "Nessuna"
     banner:
       close: "Ignora questo banner"
       edit: "Modifica"
@@ -518,6 +526,7 @@ it:
       order_by: "Ordina per"
       date_filter: "Pubblicazione tra"
       in_reply_to: "in risposta a"
+      filtered_flagged_by: "Contrassegnato da"
       explain:
         why: "spiega perché questo oggetto è stato aggiunto alla coda"
         title: "Punteggio rivedibile"
@@ -627,6 +636,9 @@ it:
         refresh: "Aggiorna"
         status: "Stato"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
+          all: "(tutti i motivi)"
         orders:
           score: "Punteggio"
           score_asc: "Punteggio (inverso)"
@@ -930,13 +942,13 @@ it:
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (richiede che il gruppo abbia visibilità pubblica)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
-        posts: "Non ci sono messaggi da membri di questo gruppo."
-        members: "Non ci sono membri in questo gruppo."
-        requests: "Non ci sono richieste di iscrizione a questo gruppo."
-        mentions: "Questo gruppo non è stato menzionato."
-        messages: "Non ci sono messaggi per questo gruppo."
-        topics: "Non ci sono argomenti da membri di questo gruppo."
-        logs: "Non ci sono log per questo gruppo."
+        posts: "Non ci sono messaggi da membri di questo gruppo"
+        members: "Non ci sono membri in questo gruppo"
+        requests: "Non ci sono richieste di iscrizione a questo gruppo"
+        mentions: "Questo gruppo non è stato menzionato"
+        messages: "Non ci sono messaggi per questo gruppo"
+        topics: "Non ci sono argomenti da membri di questo gruppo"
+        logs: "Non ci sono log per questo gruppo"
       add: "Aggiungi"
       join: "Partecipa"
       leave: "Abbandona"
@@ -1126,17 +1138,18 @@ it:
         one: "Cancella %{count} account"
         other: "Cancella %{count} account"
       username: "nome utente"
-      trust_level: "TL"
+      trust_level: "livello di attendibilità"
       read_time: "tempo lettura"
       topics_entered: "argomenti visualizzati"
-      post_count: "n° messaggi"
+      post_count: "messaggi"
       confirm_delete_other_accounts: "Vuoi cancellare questi account?"
       powered_by: "tramite<a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiato"
     user_fields:
       none: "(scegli un'opzione)"
       required: 'Inserisci un valore per "%{name}"'
-      same_as_password: "La tua password non deve essere ripetuta in altri campi."
+      required_checkbox: 'Il campo "%{name}" è obbligatorio'
+      same_as_password: "La tua password non deve essere ripetuta in altri campi"
       optional: (opzionale)
     user:
       said: "%{username}:"
@@ -1260,7 +1273,7 @@ it:
       reset_seen_user_tips: "Mostra di nuovo i suggerimenti per gli utenti"
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
       color_scheme_default_on_all_devices: "Imposta questo schema colori predefinito su tutti i miei dispositivi"
-      color_scheme: "Combinazione di colori"
+      color_scheme: "Schema di colori"
       color_schemes:
         default_description: "Tema predefinito"
         disable_dark_scheme: "Come di norma"
@@ -1784,7 +1797,11 @@ it:
         after_4_minutes: "dopo 4 minuti"
         after_5_minutes: "dopo 5 minuti"
         after_10_minutes: "dopo 10 minuti"
-      notification_level_when_replying: "Quando scrivo in un argomento, modifica il titolo dell'argomento a"
+      notification_level_when_replying:
+        label: "Quando si pubblica"
+        watch_topic: "Osserva l'argomento"
+        track_topic: "Traccia l'argomento"
+        do_nothing: "Non fare nulla"
       topics_unread_when_closed: "Considera gli argomenti come non letti quando sono chiusi"
       invited:
         title: "Inviti"
@@ -1856,6 +1873,7 @@ it:
                 one {# giorno}
               other {# giorni}
             }.
+          edit_link_options: "Modifica le opzioni del link o invialo per e-mail."
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
@@ -1905,6 +1923,7 @@ it:
           other: "La password è troppo corta (dev'essere minimo %{count} caratteri)."
         common: "Questa password è troppo comune."
         same_as_username: "La tua password è uguale al tuo nome utente."
+        same_as_name: "La tua password è uguale al tuo nome."
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
         instructions:
@@ -2050,9 +2069,6 @@ it:
       optional: facoltativo
       errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
-      select:
-        select_placeholder: "Seleziona…"
-        none_placeholder: "Nessuna"
       errors:
         required: "Obbligatorio"
         invalid_url: "L'URL deve essere valido"
@@ -2344,6 +2360,10 @@ it:
       categories_boxes: "Riquadri con sottocategorie"
       categories_boxes_with_topics: "Riquadri con Argomenti in evidenza"
       subcategories_with_featured_topics: "Sottocategorie con argomenti in evidenza"
+    full_name_requirement:
+      required_at_signup: "Obbligatorie"
+      optional_at_signup: "Facoltativo"
+      hidden_at_signup: "Facoltativo, nascosto all'iscrizione"
     shortcut_modifier_key:
       shift: "Maiusc"
       ctrl: "Ctrl"
@@ -2690,8 +2710,8 @@ it:
         quoted: "citato"
         edited: "modificato"
         liked: "nuovo \"mi piace\""
-        private_message: "nuovo messaggio privato"
-        invited_to_private_message: "invitato ad un Messaggio Privato"
+        private_message: "nuovo messaggio personale"
+        invited_to_private_message: "invitato/a a messaggio personale"
         invitee_accepted: "invito accettato"
         posted: "nuovo messaggio"
         watching_category_or_tag: "nuovo messaggio"
@@ -2711,7 +2731,7 @@ it:
         membership_request_consolidated: "nuove richieste di iscrizione"
         reaction: "nuova reazione"
         votes_released: "Il voto è stato sbloccato"
-        new_features: "sono state rilasciate nuove funzionalità di Discourse!"
+        new_features: "Sono state rilasciate nuove funzionalità di Discourse!"
         admin_problems: "nuovo avviso sulla dashboard del tuo sito"
     upload_selector:
       uploading: "In caricamento"
@@ -3045,6 +3065,7 @@ it:
         other: "%{count} messaggi in questo argomento"
       create: "Nuovo Argomento"
       create_disabled_category: "Non hai l'autorizzazione per creare argomenti in questa categoria"
+      create_disabled_tag: "Non hai l'autorizzazione per creare argomenti con questa etichetta"
       create_long: "Crea un nuovo Argomento"
       open_draft: "Apri Bozza"
       private_message: "Inizia a scrivere un messaggio"
@@ -3313,7 +3334,7 @@ it:
         help: "Apri una versione facilmente stampabile di questo argomento"
       flag_topic:
         title: "Segnala"
-        help: "segnala questo argomento o invia una notifica privata"
+        help: "segnala privatamente questo argomento o invia un messaggio personale a riguardo"
         success_message: "Hai segnalato questo argomento con successo."
       make_public:
         title: "Converti in argomento pubblico"
@@ -3477,6 +3498,10 @@ it:
           one: Hai selezionato <b>%{count}</b> messaggio.
           other: "Hai selezionato <b>%{count}</b> messaggi."
       deleted_by_author_simple: "(argomento eliminato dall'autore)"
+    post_list:
+      title: "Ultimi messaggi"
+      empty: "Non ci sono messaggi"
+      aria_post_number: "%{title}, messaggio n. %{postNumber}"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
@@ -3521,6 +3546,7 @@ it:
       notice:
         new_user: "Per la prima volta %{user} ha inviato un messaggio. Diamogli il benvenuto nella nostra comunità!"
         returning_user: "Era da un bel po' che %{user} non si faceva vedere: l'ultimo messaggio risale a %{time}."
+        custom_created_by: "(aggiunto da %{userLinkHTML})"
       unread: "Messaggio non letto"
       has_replies:
         one: "%{count} Risposta"
@@ -3548,6 +3574,7 @@ it:
         other: "Visualizzazione di %{count} risposte a"
       in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
+      badge_granted_tooltip: "%{username} ha ottenuto il distintivo \"%{badge_name}\" per questo messaggio!"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -3589,7 +3616,8 @@ it:
         edit_action: "Modifica"
         edit_anonymous: "Spiacenti, devi effettuare l'accesso per poter modificare questo messaggio."
         flag_action: "Segnala"
-        flag: "segnala privatamente questo messaggio o invia una notifica privata"
+        flag: "segnala privatamente questo messaggio o invia un messaggio personale a riguardo"
+        anonymous_flag: "invia un'e-mail allo staff per segnalare questo post"
         delete_action: "Elimina messaggio"
         delete: "cancella questo messaggio"
         undelete_action: "Ripristina messaggio"
@@ -3635,9 +3663,9 @@ it:
         delete_topic_confirm_modal_no: "No, mantieni questo argomento"
         delete_topic_error: "Si è verificato un errore durante l'eliminazione di questo argomento"
         delete_topic: "elimina argomento"
-        add_post_notice: "Aggiungi un avviso per lo staff…"
-        change_post_notice: "Modifica avviso dello staff..."
-        delete_post_notice: "Elimina avviso dello staff"
+        add_post_notice: "Aggiungi un avviso ufficiale…"
+        change_post_notice: "Modifica l'avviso ufficiale…"
+        delete_post_notice: "Elimina l'avviso ufficiale"
         remove_timer: "rimuovi il timer"
         edit_timer: "modifica timer"
       actions:
@@ -3897,6 +3925,9 @@ it:
         all: "tutti gli argomenti"
         none: "nessuna sottocategoria"
       colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
+    anonymous_flagging:
+      title: "Segnala contenuti illegali"
+      description: "Per segnalare contenuti illegali, contatta <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Grazie per aver contribuito alla civile convivenza della nostra community!"
       action: "Segnala Messaggio"
@@ -4051,6 +4082,7 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       filter:
+        title: "Risultati filtrati per %{filter}"
         button:
           label: "Filtro"
       latest:
@@ -4149,20 +4181,6 @@ it:
       close: "Chiudi (Esc)"
       content_load_error: 'Caricamento <a href="%url%">del contenuto</a> non riuscito.'
       image_load_error: 'Caricamento <a href="%url%">dell''immagine</a> non riuscito.'
-    experimental_lightbox:
-      image_load_error: "Caricamento dell'immagine non riuscito."
-      screen_reader_image_title: "Immagine %{current} di %{total}: %{title}"
-      buttons:
-        next: "Successivo (tasto freccia destra o giù)"
-        previous: "Precedente (tasto freccia sinistra o freccia su)"
-        close: "Chiudi (Esc)"
-        download: "Scarica l'immagine"
-        newtab: "Apri l'immagine in una nuova scheda"
-        zoom: "Zoom immagine in/out (tasto Z)"
-        rotate: "Ruota immagine (tasto R)"
-        fullscreen: "Attiva/Disattiva modalità a schermo intero del browser (tasto M)"
-        carousel: "Visualizza tutte le immagini in un carosello (tasto A)"
-        retry: "Riprova a caricare l'immagine"
     cannot_render_video: Questo video non può essere visualizzato perché il tuo browser non supporta il codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4199,7 +4217,7 @@ it:
         title: "Applicazione"
         create: "%{shortcut} Crea un nuovo argomento"
         notifications: "%{shortcut} Apri notifiche"
-        hamburger_menu: "%{shortcut} Apri il menu hamburger"
+        hamburger_menu: "%{shortcut} Apri il menu di navigazione"
         user_profile_menu: "%{shortcut} Apri menu utente"
         show_incoming_updated_topics: "%{shortcut} Mostra argomenti aggiornati"
         search: "%{shortcut} Cerca"
@@ -4249,7 +4267,7 @@ it:
         print: "%{shortcut} Stampa argomento"
         defer: "%{shortcut} Contrassegna argomento come non letto"
         topic_admin_actions: "%{shortcut} Apri azioni amministrative sull'argomento"
-        archive_private_message: "%{shortcut} Attiva/disattiva l'archiviazione del messaggio privato"
+        archive_private_message: "%{shortcut} Attiva/disattiva l'archiviazione del messaggio personale"
       search_menu:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
@@ -4411,7 +4429,10 @@ it:
         everyone_can_use: "Le etichette possono essere usate da tutti"
         usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
         visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
-        cannot_save: "Impossibile salvare il gruppo di etichette. Assicurati che ci sia almeno un'etichetta, che il nome del gruppo di etichette non sia vuoto e non abbia meno di 100 caratteri e che sia selezionato un gruppo etichette per i permessi."
+        cannot_save:
+          empty_name: "Impossibile salvare il gruppo di etichette. Assicurati che il nome del gruppo di etichette non sia vuoto."
+          no_tags: "Impossibile salvare il gruppo di etichette. Assicurati che almeno un'etichetta sia selezionata."
+          no_groups: "Impossibile salvare il gruppo di etichette. Assicurati che almeno un gruppo sia selezionato per l'autorizzazione."
         tags_placeholder: "Cerca o crea etichette"
         parent_tag_placeholder: "Facoltativo"
         select_groups_placeholder: "Seleziona gruppi…"
@@ -4651,6 +4672,10 @@ it:
       no_results:
         title: "Nessun risultato"
         description: 'Nessuna corrispondenza trovata per "%{filter}":<br><br> Vuoi <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">cercare tra le impostazioni del sito</a> o nell''<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">elenco degli utenti amministratori</a>?'
+      footer:
+        interface_color_selector:
+          light: "Chiaro"
+          dark: "Scuro"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
@@ -4753,7 +4778,7 @@ it:
           save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
   admin_js:
-    type_to_filter: "digita per filtrare…"
+    type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
     admin:
       title: "Amministratore Discourse"
@@ -4766,12 +4791,71 @@ it:
           never: "mai"
       reports:
         title: "Elenco dei rapporti disponibili"
-        meta_doc: "Consulta la nostra documentazione <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> per una panoramica dettagliata dei report."
+        meta_doc: "I report sono uno strumento potente per aiutarti a capire cosa sta succedendo sul tuo sito. Possono aiutarti a identificare tendenze, individuare problemi e prendere decisioni basate sui dati."
         sidebar_title: "Report"
+        back: "Torna a tutti i report"
         sidebar_link:
-          all: "Tutti"
+          all: "Tutti i report"
+      config:
+        developer:
+          title: "Sviluppatore"
+          header_description: "Impostazioni da sviluppatore per controllare limiti di velocità, moltiplicatori e calcoli, modalità provvisoria e altre funzionalità avanzate"
+        experimental:
+          title: "Sperimentale"
+          header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"
+        font_style:
+          title: "Stile del carattere"
+          header_description: "Personalizza gli stili dei caratteri utilizzati dai tuoi temi"
+        files:
+          title: "File"
+          header_description: "Impostazioni che controllano i limiti di dimensione e tipo dei file, le dimensioni e le origini degli avatar, l'archiviazione dei file, la qualità e la compressione delle immagini e altro ancora"
+        legal:
+          title: "Informazioni legali"
+          header_description: "Configura le impostazioni legali, come i termini di servizio, l'informativa sulla privacy, i dettagli di contatto e le considerazioni specifiche dell'UE"
+        localization:
+          header_description: "Configura la lingua dell'interfaccia della tua community e altre opzioni di localizzazione per i tuoi membri"
+        login_and_authentication:
+          title: "Accesso e autenticazione"
+          header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
+        logo:
+          title: "Logo del sito"
+          header_description: "Personalizza le varianti del logo del tuo sito"
+        navigation:
+          title: "Navigazione"
+          header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
+        notifications:
+          title: "Notifiche"
+          header_description: "Configura il modo in cui le notifiche vengono gestite e recapitate agli utenti, incluse le preferenze e-mail, le notifiche push, i limiti di menzione e il consolidamento delle notifiche"
+        onebox:
+          title: "Onebox"
+          header_description: "Configura come vengono generate e visualizzate le anteprime Onebox per il tuo sito"
+        other:
+          title: "Altri"
+          header_description: "Impostazioni che non rientrano in nessun'altra categoria"
+        rate_limits:
+          title: "Limiti di frequenza"
+          header_description: "Configura la frequenza con cui gli utenti possono eseguire determinate azioni, come la creazione di argomenti, l'invio di messaggi e la pubblicazione di risposte"
+        search:
+          title: "Cerca"
+          header_description: "Configura le impostazioni di ricerca, tra cui la registrazione e la tokenizzazione per le lingue cinese e giapponese"
+        security:
+          title: "Sicurezza"
+          header_description: "Configura le impostazioni di sicurezza, tra cui l'autenticazione a due fattori, i privilegi di moderatore e le policy di sicurezza dei contenuti"
+        spam:
+          title: "Spam"
+          header_description: "Configura il modo in cui il sistema analizza il comportamento di registrazione e pubblicazione degli utenti per identificare e bloccare rapidamente lo spam"
+        trust_levels:
+          title: "Livelli di attendibilità"
+          header_description: "Le impostazioni del livello di attendibilità ti consentono di perfezionare i requisiti e le notifiche per il sistema di progressione della tua community, che promuove automaticamente gli utenti a livelli di attendibilità più elevati man mano che dimostrano un coinvolgimento costante e positivo con il tuo forum."
+        user_api:
+          title: "API utente"
+          header_description: "Configura quali gruppi di utenti possono accedere all'API, nonché quali ambiti sono consentiti"
+        group_permissions:
+          title: "Autorizzazioni di gruppo"
+          header_description: "Qui vengono gestite tutte le autorizzazioni delle app basate sui gruppi, che controllano l'accesso a varie funzionalità all'interno di Discourse"
       new_features:
-        title: "Cosa c'è di nuovo"
+        title: "Cosa c'è di nuovo?"
+        check_for_updates: "Controlla gli aggiornamenti"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aggiornato:"
@@ -4789,7 +4873,7 @@ it:
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         dismiss_notice: "Ignora"
         new_features:
-          title: "Cosa c'è di nuovo"
+          title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
           previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
@@ -4799,6 +4883,9 @@ it:
           experiment_toggled_too_fast: "Hai attivato la funzionalità sperimentale troppo velocemente. Attendi qualche secondo prima di riprovare."
           experiment_tooltip:
             title_disabled: "Prova la nostra funzionalità sperimentale"
+            title_enabled: "Disattiva la funzionalità sperimentale"
+            content_disabled: "Prova la nostra nuova funzionalità in fase di sviluppo! È ancora in fase sperimentale, quindi potremmo rimuoverla in qualsiasi momento. Puoi disattivarla quando vuoi.<br/><br/>Modificando questa impostazione, la funzionalità verrà abilitata per tutti gli utenti."
+            content_enabled: "Modificando questa impostazione, la funzionalità verrà disabilitata per tutti gli utenti."
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -4840,6 +4927,17 @@ it:
         custom_date_range: Data e ora personalizzate
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
+          percent_change_tooltip: "%{percent} di modifica."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Era %{count} due giorni fa."
+              other: "Erano %{count} due giorni fa."
+            two_weeks_ago:
+              one: "Era %{count} due settimane fa."
+              other: "Erano %{count} due settimane fa."
+            thirty_days_ago:
+              one: "Era %{count} nel periodo di 30 giorni precedente."
+              other: "Era %{count} nel periodo di 30 giorni precedente."
           today: "Oggi"
           yesterday: "Ieri"
           last_7_days: "Ultimi 7"
@@ -4877,7 +4975,7 @@ it:
             type_of_web_hook_event:
               label: "Tipo di evento"
       flags:
-        title: "Segnalazioni da moderare"
+        title: "Moderazione"
         description: "Descrizione"
         enabled: "Abilitato?"
         more_options:
@@ -4958,6 +5056,20 @@ it:
         add_owners: Aggiungi proprietari
         none_selected: "Seleziona un gruppo per iniziare"
         no_custom_groups: "Crea un nuovo gruppo personalizzato"
+      api_keys:
+        title: "Chiavi API"
+        description: "La funzionalità delle chiavi API consente di integrare in modo sicuro Discourse con sistemi esterni e automatizzare le azioni. Gli amministratori possono creare chiavi con ambiti specifici per controllare l'accesso alle risorse e ai dati sensibili. Gli ambiti limitano la funzionalità, garantendo una maggiore sicurezza."
+        add: "Aggiungi chiave API"
+        edit: "Modifica"
+        save: "Salva"
+        cancel: "Annulla"
+        continue: "Continua"
+        back: "Torna alle chiavi API"
+        revoke: "Revoca"
+        undo_revoke: "Annulla la revoca"
+        revoked: "Revocata"
+        delete: Elimina definitivamente
+        no_api_keys: "Non hai ancora alcuna chiave API."
       api:
         generate_master: "Genera una chiave API Master"
         none: "Non ci sono chiavi API attive al momento."
@@ -4965,14 +5077,14 @@ it:
         title: "API"
         key: "Chiave"
         keys: "Chiavi"
-        created: Creazione
+        created: Creato da
         updated: Aggiornato
-        last_used: Ultimo uso
-        never_used: (mai)
+        last_used: Ultimo utilizzo
+        never_used: Mai
         generate: "Genera"
-        undo_revoke: "Annullare Revoca"
+        undo_revoke: "Annulla la revoca"
         revoke: "Revoca"
-        all_users: "Tutti gli Utenti"
+        all_users: "Tutti gli utenti"
         active_keys: "Chiavi API Attive"
         manage_keys: Gestisci Chiavi
         show_details: Dettagli
@@ -4982,7 +5094,7 @@ it:
         user_mode: Livello utente
         scope_mode: Ambito
         impersonate_all_users: Impersona qualsiasi utente
-        single_user: "Utente Singolo"
+        single_user: "Utente singolo"
         user_placeholder: Inserisci nome utente
         description_placeholder: A cosa servirà questa chiave?
         save: Salva
@@ -5003,7 +5115,7 @@ it:
           resource: Risorsa
           action: Azione
           allowed_parameters: Parametri consentiti
-          optional_allowed_parameters: Parametri Consentiti (Opzionali)
+          optional_allowed_parameters: Parametri consentiti (opzionali)
           any_parameter: (qualsiasi parametro)
           allowed_urls: URL consentiti
           descriptions:
@@ -5079,27 +5191,30 @@ it:
               messages: Elenca i messaggi da /logs o ottieni un messaggio di log specifico.
       web_hooks:
         title: "Webhook"
-        none: "Non ci sono webhook disponibili adesso."
+        none: "Non hai ancora nessun webhook"
         instruction: "I Webhook consentono a Discourse di notificare i servizi esterni quando sul tuo sito si verificano determinati eventi. Quando un webhook viene innescato, viene inviata una richiesta di tipo POST agli URL forniti."
         detailed_instruction: "Una richiesta di tipo POST verrà inviata agli URL forniti quando si verifica uno degli eventi scelti."
-        new: "Nuovo Webhook"
+        add: "Aggiungi webhook"
         create: "Crea"
         edit: "Modifica"
         save: "Salva"
+        show: "Eventi"
+        delete: "Elimina"
+        cancel: "Annulla"
         description_label: "Attivazione di eventi"
         controls: "Controlli"
-        go_back: "Torna all'elenco"
+        back: "Torna ai webhook"
         payload_url: "URL di Payload"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "La chiave segreta non può contenere spazi vuoti."
         secret_too_short: "La chiave segreta deve contenere almeno 12 caratteri."
-        secret_placeholder: "Una stringa facoltativa, usata per generare una firma"
+        secret_placeholder: "Stringa utilizzata per generare le firme"
         event_type_missing: "Devi impostare almeno un tipo di evento."
         content_type: "Tipo Contenuto"
         secret: "Chiave segreta"
         event_chooser: "Quali eventi devono attivare questo webhook?"
-        wildcard_event: "Inviami tutto."
-        individual_event: "Seleziona eventi singoli."
+        wildcard_event: "Inviami tutto"
+        individual_event: "Seleziona eventi singoli"
         verify_certificate: "Verifica il certificato TLS dell'URL di payload"
         active: "Attivo"
         active_notice: "Invieremo i dettagli dell'evento quando si verificherà."
@@ -5215,7 +5330,7 @@ it:
         sidebar_link:
           backups: "Backup"
           whats_new:
-            title: "Cosa c'è di nuovo"
+            title: "Cosa c'è di nuovo?"
             keywords: "log modifiche|funzionalità|versione"
       community:
         title: "Community"
@@ -5226,17 +5341,21 @@ it:
           notifications: "Notifiche"
           permalinks: "Collegamenti permanenti"
           trust_levels: "Livelli di attendibilità"
+          group_permissions: "Autorizzazioni di gruppo"
           users: "Utenti"
+          groups: "Gruppi"
           user_fields: "Campi utente"
           watched_words: "Parole osservate"
           legal: "Informazioni legali"
-          moderation_flags: "Segnalazioni da moderare"
+          moderation_flags:
+            title: "Moderazione"
+            keywords: "segnala|controlla"
       appearance:
         title: "Aspetto"
         sidebar_link:
-          font_style: "Stile carattere"
+          font_style: "Stile del carattere"
           site_logo: "Logo del sito"
-          color_schemes: "Schemi colori"
+          color_schemes: "Schemi di colori"
           emoji: "Emoji"
           navigation: "Navigazione"
           themes: "Temi"
@@ -5248,27 +5367,17 @@ it:
         title: "Impostazioni email"
         sidebar_link:
           appearance: "Aspetto"
-          preview_summary: "Riepilogo anteprima"
-          server_setup: "Configurazione server"
-      email_logs:
-        title: "Log email"
-        sidebar_link:
-          sent: "Inviato"
-          skipped: "Saltato"
-          bounced: "Respinto"
-          received: "Ricevuto"
-          rejected: "Rifiutato"
+          server_setup:
+            title: "Configurazione del server e log"
+            keywords: "email|smtp|mailgun|sendgrid|inviato|saltato|rimbalzato|ricevuto|rifiutato|log email|anteprima riepilogo"
       security:
         title: "Sicurezza"
         sidebar_link:
-          error_logs: "Log errori"
-          screened_emails: "E-mail scansionate"
-          screened_ips: "IP scansionati"
-          screened_urls: "URL scansionati"
-          search_logs: "Log di ricerca"
           security: "Impostazioni di sicurezza"
           spam: "Impostazioni antispam"
-          staff_action_logs: "Log azioni staff"
+          staff_action_logs:
+            title: "Log e screening"
+            keywords: "log degli errori|azioni dello staff|email selezionate|IP selezionati|URL selezionati|log di ricerca"
       section_landing_pages:
         account:
           title: "Account"
@@ -5276,7 +5385,7 @@ it:
             title: "Backup"
             description: "Esegui un backup dei dati del tuo sito"
           whats_new:
-            title: "Cosa c'è di nuovo"
+            title: "Cosa c'è di nuovo?"
             description: "Scopri nuove versioni e miglioramenti di Discourse"
       config_areas:
         about:
@@ -5290,8 +5399,6 @@ it:
           community_title: "Titolo della community"
           community_title_help: "Breve descrizione, mostrata nella scheda del browser, per pagine chiave come categorie ed elenchi di argomenti."
           banner_image: "Immagine banner"
-          banner_image_help: |
-            Verrà mostrato sulla tua pagina Informazioni. Dimensioni consigliate: 1100x300px. Formati supportati: JPG, PNG e SVG fino a 10 MB.
           contact_information: "Informazioni di contatto"
           community_owner: "Proprietario della comunità"
           community_owner_placeholder: "Mario Rossi"
@@ -5310,7 +5417,7 @@ it:
             Nome utente appartenente a un membro dello staff da cui inviare tutti i messaggi automatici. Se non compilato, verrà usato l'account predefinito di sistema.
           site_contact_group: "Gruppo contatto del sito"
           site_contact_group_help: |
-            Il gruppo che riceve inviti per tutti i messaggi privati inviati automaticamente.
+            Il gruppo che riceve inviti per tutti i messaggi personali inviati automaticamente.
           your_organization: "La tua organizzazione"
           your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
@@ -5333,7 +5440,7 @@ it:
             your_organization_saved: "Organizzazione salvata"
           saved: "salvato!"
         flags:
-          header: "Segnalazioni da moderare"
+          header: "Moderazione"
           edit_header: "Modifica bandiera"
           subheader: "Il sistema di segnalazioni di Discourse aiuta il team di moderazione a gestire i contenuti e i comportamenti degli utenti per mantenere la comunità un ambiente salubre e improntato al rispetto. Le impostazioni predefinite si adattano alle esigenze della maggior parte delle comunità, per cui non richiedono modifiche. Tuttavia, se il tuo sito web ha requisiti particolari, puoi disabilitare le segnalazioni che non ti servono e aggiungerne di personalizzate."
           description: "Descrizione"
@@ -5369,6 +5476,14 @@ it:
             title: "Altre opzioni"
             move_up: "Sposta su"
             move_down: "Sposta giù"
+        permalinks:
+          edit: "Modifica"
+          delete: "Elimina"
+        embeddable_host:
+          edit: "Modifica"
+          delete: "Elimina"
+          more_options:
+            title: "Altre opzioni"
         look_and_feel:
           title: "Aspetto e feeling"
           description: "Personalizza e dai un branding al tuo sito Discourse, conferendogli uno stile distintivo."
@@ -5382,12 +5497,15 @@ it:
             new_theme: "Nuovo tema"
             user_selectable: "Selezionabile dall'utente"
         user_fields:
+          field: "Campo"
           type: "Tipo"
           more_options:
             title: "Altre opzioni"
             move_up: "Sposta su"
             move_down: "Sposta giù"
           delete: "Elimina"
+          delete_successful: "Campo utente eliminato."
+          save_successful: "Campo utente salvato."
       plugins:
         title: "Plugin"
         installed: "Plugin installati"
@@ -5411,12 +5529,14 @@ it:
       advanced:
         title: "Avanzato"
         sidebar_link:
-          api_keys: "Chiavi API"
+          api_keys:
+            title: "Chiavi API"
+            keywords: "token"
+          webhooks: "Webhook"
           developer: "Sviluppatore"
           embedding: "Integrazione"
-          rate_limits: "Limiti frequenza"
+          rate_limits: "Limiti di frequenza"
           user_api: "API utente"
-          web_hooks: "Webhook"
           onebox: "Onebox"
           files: "File"
           other_options: "Altri"
@@ -5475,7 +5595,7 @@ it:
             title: "Invia una email con il collegamento per il download"
             alert: "Un collegamento per scaricare questo backup ti è stato inviato via e-mail."
           destroy:
-            title: "Rimuovi il backup"
+            title: "Elimina"
             confirm: "Sicuro di voler distruggere questo backup?"
           restore:
             is_disabled: "Il ripristino è attualmente disabilitato. Per abilitarlo, visita le <a href='%{url}'>impostazioni del sito</a>."
@@ -5503,8 +5623,8 @@ it:
       export_json:
         button_text: "Esporta"
       invite:
-        button_text: "Manda Inviti"
-        button_title: "Manda Inviti"
+        button_text: "Invia inviti"
+        button_title: "Invia inviti"
       customize:
         title: "Personalizza"
         preview: "anteprima"
@@ -5560,6 +5680,8 @@ it:
           browse_themes: "Sfoglia i temi della comunità"
           customize_desc: "Personalizza:"
           title: "Temi"
+          description: "I temi sono ampie personalizzazioni che modificano più elementi dello stile del design del tuo forum e spesso includono anche funzionalità front-end aggiuntive."
+          components_description: "I componenti sono piccole personalizzazioni che possono essere aggiunte ai temi per modificare elementi specifici dello stile del design del tuo forum."
           create: "Crea"
           create_type: "Tipo"
           create_name: "Nome"
@@ -5658,7 +5780,8 @@ it:
           install_upload: "Dal tuo dispositivo"
           install_git_repo: "Da un archivio git"
           install_create: "Crea nuovo"
-          installing_message: "Installazione del tema in corso. L'operazione potrebbe richiedere diversi minuti..."
+          installing_message: "Impostazione del nuovo tema…"
+          installing_message_long_time: "L'impostazione del tuo nuovo tema sta richiedendo un po' più di tempo del previsto, attendi…"
           duplicate_remote_theme: "Il componente del tema «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
           force_install: "Il tema non può essere installato perché l'archivio Git è inaccessibile. Vuoi continuare l'installazione?"
           create_placeholder: "Crea Segnaposto"
@@ -5770,10 +5893,11 @@ it:
             title: "Seleziona la tavolozza dei colori di base"
             description: "Tavolozza di base:"
           title: "Colori"
-          edit: "Modifica le tavolozze dei colori"
-          long_title: "Tavolozze dei colori"
+          edit: "Modifica schemi di colori"
+          long_title: "Schemi di colori"
+          description: "Gli schemi di colori definiscono i colori principali utilizzati nell'interfaccia del tuo sito, mentre i temi possono fornire stili, layout e componenti aggiuntivi: entrambi possono interagire tra loro per creare l'aspetto unico del tuo sito ed entrambi possono essere resi disponibili agli utenti affinché selezionino le loro preferenze."
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
-          new_name: "Nuova tavolozza dei colori"
+          new_name: "Nuovo schema di colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa tavolozza dei colori?"
           undo: "Annulla"
@@ -5832,8 +5956,8 @@ it:
           overridden: Il file robots.txt predefinito del tuo sito è sovrascritto.
         email_style:
           title: "Stile Email"
-          heading: "Personalizza Stile Email"
-          html: "Modello HTML"
+          heading: "Personalizza lo stile dell'e-mail"
+          html: "HTML"
           css: "CSS"
           reset: "Ripristina impostazioni predefinite"
           reset_confirm: "Sei sicuro di voler ripristinare il %{fieldName} predefinito e perdere tutte le modifiche?"
@@ -5841,10 +5965,11 @@ it:
           instructions: "Personalizza il modello con cui vengono visualizzate tutte le email html e lo stile usando CSS."
       email:
         title: "Email"
-        settings: "Impostazioni email"
+        description: "Personalizza i modelli utilizzati per creare e-mail, visualizza in anteprima le e-mail di riepilogo che verranno inviate e visualizza i log delle e-mail."
+        settings: "Impostazioni"
         templates: "Modelli"
         templates_title: "Modelli di e-mail"
-        preview_digest: "Anteprima Riepilogo"
+        preview_digest: "Anteprima del riepilogo"
         advanced_test:
           title: "Test avanzato"
           desc: "Vedi come Discourse elabora le email ricevute. Per elaborare correttamente le email, devi incollare qui sotto l'intero messaggio email originale."
@@ -5860,14 +5985,14 @@ it:
         bounced: "Email rimbalzate"
         received: "Ricevute"
         rejected: "Rifiutate"
-        sent_at: "Inviato Alle"
+        sent_at: "Inviato alle"
         time: "Orario"
         user: "Utente"
-        email_type: "Tipo di Email"
+        email_type: "Tipo di e-mail"
         details_title: "Mostra dettagli email"
-        to_address: "Indirizzo Destinazione"
+        to_address: "All'indirizzo"
         test_email_address: "indirizzo email da testare"
-        send_test: "Invia una email di prova"
+        send_test: "Invia un'e-mail di prova"
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
         preview_digest_desc: "Vedi in anteprima il contenuto delle email riepilogative inviate agli utenti inattivi."
@@ -5879,11 +6004,11 @@ it:
         html: "html"
         text: "testo"
         html_preview: "Anteprima Contenuto Email"
-        last_seen_user: "Ultimo accesso utente:"
+        last_seen_user: "Ultimo utente visto:"
         no_result: "Nessun risultato trovato per il riepilogo. "
         reply_key: "Chiave di risposta"
         post_link_with_smtp: "Dettagli posta e SMTP"
-        skipped_reason: "Motivo Omissione"
+        skipped_reason: "Salta il motivo"
         incoming_emails:
           from_address: "Da"
           to_addresses: "A"
@@ -5897,7 +6022,7 @@ it:
             headers: "Intestazioni"
             subject: "Oggetto"
             body: "Corpo"
-            rejection_message: "Messaggio rifiutato"
+            rejection_message: "E-mail di rifiuto"
           filters:
             from_placeholder: "da@esempio.com"
             to_placeholder: "a@esempio.com"
@@ -5927,7 +6052,9 @@ it:
           delete_topic: "Argomento Eliminato"
           post_approved: "Messaggio approvato"
       logs:
-        title: "Log"
+        title: "Log e screening"
+        description: "I log e lo screening ti consentono di monitorare e gestire la tua community, assicurandoti che rimanga sicura e rispettosa. Puoi visualizzare i log di tutte le azioni intraprese dai membri dello staff, i log di ricerca e la configurazione dello screening degli utenti."
+        nav_title: "Log"
         action: "Azione"
         created_at: "Creato"
         last_match_at: "Ultima corrispondenza"
@@ -5945,8 +6072,8 @@ it:
         staff_actions:
           all: "tutte"
           filter: "Filtro:"
-          title: "Azioni Staff"
-          clear_filters: "Mostra Tutto"
+          title: "Azioni dello staff"
+          clear_filters: "Mostra tutto"
           staff_user: "Utente"
           target_user: "Utente destinatario"
           subject: "Oggetto"
@@ -6076,9 +6203,9 @@ it:
             tag_group_change: "cambia gruppo di etichette"
             delete_associated_accounts: "elimina account associati"
         screened_emails:
-          title: "Email scansionate"
+          title: "E-mail filtrate"
           description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email saranno controllati e la loro registrazione bloccata, oppure sarà eseguita qualche altra azione."
-          email: "Indirizzo email"
+          email: "Indirizzo e-mail"
           actions:
             allow: "Permetti"
         screened_urls:
@@ -6093,7 +6220,7 @@ it:
           actions:
             block: "Blocca"
             do_nothing: "Permetti"
-            allow_admin: "Abilita Amministratore"
+            allow_admin: "Consenti amministratore"
           form:
             label: "Nuovo:"
             ip_address: "Indirizzo IP"
@@ -6112,11 +6239,12 @@ it:
             header: "Intestazione"
             full_page: "Pagina completa"
             click_through_only: "Tutti (solo frequenza clic)"
-          header_search_results: "Risultati ricerca nell'intestazione"
+          header_search_results: "Risultati della ricerca nell'intestazione"
         logster:
-          title: "Log Errori"
+          title: "Log errori"
       watched_words:
-        title: "Parole Osservate"
+        title: "Parole osservate"
+        description: "Le parole osservate sono strumenti di moderazione che possono eseguire diverse azioni, tra cui bloccare, censurare, collegare o segnalare post contenenti determinate parole"
         search: "ricerca"
         clear_filter: "Pulisci"
         show_words:
@@ -6125,7 +6253,7 @@ it:
         case_sensitive: "(distingue fra maiuscole e minuscole)"
         html: "(html)"
         download: Scarica
-        clear_all: Deseleziona Tutto
+        clear_all: Deseleziona tutto
         clear_all_confirm: "Vuoi davvero cancellare tutte le parole che osservi per l'azione %{action}?"
         invalid_regex: 'La parola osservata "%{word}" è un''espressione regolare non valida.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Le parole osservate sono espressioni regolari</a> e non includono automaticamente i limiti delle parole. Se vuoi che l''espressione regolare corrisponda solo a parole intere, includi <code>\b</code> all''inizio e alla fine dell''espressione regolare in questione.'
@@ -6262,19 +6390,43 @@ it:
         invalid: "Spiacenti, non puoi impersonare questo utente."
       users:
         title: "Utenti"
+        description: "Visualizza e gestisci gli utenti."
         create: "Aggiungi Utente Amministratore"
         last_emailed: "Ultima email inviata"
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
         id_not_found: "Spiacenti, nel nostro sistema non esiste questo id utente."
         active: "Attivati"
         status: "Stato"
-        show_emails: "Mostra email"
-        hide_emails: "Nascondi email"
+        show_emails: "Mostra e-mail"
+        hide_emails: "Nascondi e-mail"
+        silence_reason: "Motivo del silenzio"
         bulk_actions:
+          title: "Azioni collettive"
+          admin_cant_be_deleted: "Questo utente non può essere eliminato perché è un amministratore"
+          too_many_or_old_posts: "Questo utente non può essere eliminato perché ha troppi messaggi o un messaggio molto vecchio"
+          too_many_selected_users:
+            one: "Hai raggiunto il limite di %{count} utente per l'eliminazione collettiva"
+            other: "Hai raggiunto il limite di %{count} utenti per l'eliminazione collettiva"
           delete:
+            label: "Elimina utenti…"
             confirmation_modal:
+              prompt_text:
+                one: 'Stai per eliminare definitivamente %{count} utente. Digita "%{confirmation_phrase}" qui sotto per procedere:'
+                other: 'Stai per eliminare definitivamente %{count} utenti. Digita "%{confirmation_phrase}" qui sotto per procedere:'
+              confirmation_phrase:
+                one: "elimina %{count} utente"
+                other: "elimina %{count} utenti"
               close: "Chiudi"
               confirm: "Elimina"
+              title:
+                one: "Elimina %{count} utente"
+                other: "Elimina %{count} utenti"
+              bulk_delete_starting: "Avvio eliminazione collettiva…"
+              block_ip_and_email: "Blocca gli indirizzi IP e le e-mail di tutti gli utenti selezionati"
+              user_delete_succeeded: "[%{position}/%{total}] Eliminati con successo @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Impossibili da eliminare @%{username} - %{error}"
+              bulk_delete_finished: "Operazione di eliminazione collettiva completata."
+              failed_to_delete_users: "Non è stato possibile eliminare i seguenti utenti:"
         nav:
           new: "Nuovi"
           active: "Attivi"
@@ -6284,8 +6436,8 @@ it:
           staged: "Temporaneo"
         approved: "Approvato?"
         titles:
-          active: "Utenti Attivi"
-          new: "Nuovi Utenti"
+          active: "Utenti attivi"
+          new: "Nuovi utenti"
           pending: "Revisione degli utenti in sospeso"
           newuser: "Utenti con Livello di attendibilità 0 (Nuovi)"
           basic: "Utenti con livello di attendibilità 1 (Base)"
@@ -6293,10 +6445,10 @@ it:
           regular: "Utenti con livello di attendibilità 3 (Esperti)"
           leader: "Utenti con livello di attendibilità 4 (Veterani)"
           staff: "Staff"
-          admins: "Utenti Amministratori"
+          admins: "Utenti amministratori"
           moderators: "Moderatori"
-          silenced: "Utenti Silenziati"
-          suspended: "Utenti Sospesi"
+          silenced: "Utenti silenziati"
+          suspended: "Utenti sospesi"
           staged: "Utenti temporanei"
         not_verified: "Non verificato"
         check_email:
@@ -6401,6 +6553,19 @@ it:
         approve_bulk_success: "Riuscito! Tutti gli utenti selezionati sono stati approvati e notificati."
         time_read: "Tempo di lettura"
         post_edits_count: "Modifiche Messaggio"
+        exports:
+          title: Esportazioni utente
+          download:
+            description: Scarica l'ultima esportazione
+            expires_in:
+              one: Scade tra %{count} ora
+              other: Scade tra %{count} ore
+            not_available: Nessuna esportazione disponibile
+            button: Richiedi archivio
+            confirm: Vuoi davvero creare un archivio delle attività e delle preferenze di questo utente?
+            started: Abbiamo iniziato a creare l'archivio, il link per il download verrà aggiornato al termine del processo.
+            success: L'archivio è pronto per il download.
+            export_failed: Siamo spiacenti, ma l'esportazione non è riuscita. Controlla i log per ulteriori informazioni.
         anonymize: "Rendi Anonimo Utente "
         anonymize_confirm: "Vuoi davvero rendere anonimo questo account? Il nome utente e l'indirizzo e-mail saranno modificati e saranno reimpostate tutte le informazioni del profilo."
         delete_associated_accounts_confirm: "Vuoi davvero eliminare tutti gli account associati da questo account? L'utente potrebbe non riuscire ad accedere se la sua e-mail è cambiata."
@@ -6463,8 +6628,6 @@ it:
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
         delete_confirm_title: "Vuoi davvero eliminare questo utente? Questa operazione è irreversibile!"
         delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
-        delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
-        delete_dont_block: "Elimina soltanto"
         deleting_user: "Cancellazione utente…"
         deleted: "L'utente è stato cancellato."
         delete_failed: "Si è verificato un errore nella cancellazione dell'utente. Assicurati che tutti i messaggi siano stati cancellati prima di provare a cancellare l'utente."
@@ -6553,7 +6716,13 @@ it:
           delete_sso_record: "Elimina Record SSO"
           confirm_delete: "Sei sicuro di voler eliminare questo record DiscourseConnect?"
       user_fields:
-        title: "Campi Utente"
+        title: "Campi utente"
+        help: "Crea campi utente personalizzati per raccogliere dettagli extra sui membri della tua community. Puoi scegliere quali informazioni sono richieste durante la registrazione, cosa viene mostrato sui profili e cosa gli utenti possono aggiornare."
+        no_user_fields: "Non hai ancora campi utente personalizzati."
+        add: "Aggiungi un campo utente"
+        back: "Torna ai campi utente"
+        edit_header: "Modifica campo utente"
+        new_header: "Aggiungi un campo utente"
         untitled: "Senza nome"
         name: "Nome Campo"
         type: "Tipo Campo"
@@ -6582,23 +6751,30 @@ it:
           confirmation: "Agli utenti già iscritti verrà richiesto di compilare il campo e non potranno intraprendere altre azioni sul sito finché non avranno eseguito. Intendi procedere?"
         editable:
           title: "Modificabile dopo l'iscrizione"
+          enabled: "Modificabile"
+          disabled: "Non modificabile"
         show_on_profile:
           title: "Mostrare nel profilo pubblico"
+          enabled: "Mostrato nel profilo"
+          disabled: "Non mostrato nel profilo"
         show_on_user_card:
           title: "Mostrare sulla scheda utente"
+          enabled: "Mostrato sulla scheda utente"
+          disabled: "Non mostrato sulla scheda utente"
         searchable:
           title: "Ricercabile"
           enabled: "Ricercabile"
+          disabled: "Non ricercabile"
         field_types:
           text: "Testo"
           confirm: "Conferma"
           dropdown: "A discesa"
           multiselect: "Selezione multipla"
       site_text:
-        description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
+        description: "Puoi personalizzare qualsiasi testo sul tuo forum."
         search: "Trova il testo che vorresti modificare"
-        title: "Testo"
-        edit: "modifica"
+        title: "Testi del sito"
+        edit: "Modifica"
         revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
         go_back: "Torna alla Ricerca"
@@ -6606,6 +6782,7 @@ it:
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"
+        only_show_selected_locale: "Mostra solo i risultati nella lingua selezionata"
         locale: "Lingua:"
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
         no_results: "Nessun testo corrispondente trovato nel sito"
@@ -6624,12 +6801,15 @@ it:
         save: "salva"
         cancel: "annulla"
         unmask: "rimuovi maschera input"
+        not_found: "Impossibile trovare le impostazioni"
       site_settings:
+        title: "Impostazioni del sito"
+        description: "Configura le impostazioni del tuo sito Discourse per personalizzarne l'aspetto, le funzionalità e l'esperienza utente."
         emoji_list:
           invalid_input: "L'elenco di emoji dovrebbe contenere solo nomi emoji validi, ad esempio: hugs."
           add_emoji_button:
             label: "Aggiungi Emoji"
-        title: "Impostazioni"
+        nav_title: "Impostazioni"
         no_results: "Nessun risultato trovato."
         more_site_setting_results:
           one: "C'è più di %{count} risultato. Restringi i criteri di ricerca o seleziona una categoria."
@@ -6749,10 +6929,13 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcun distintivo."
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
+        usage_heading: Utilizzo
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
         visibility_heading: Visibilità
         listable: Mostra distintivo sulla pagina pubblica dei distintivi
+        show_in_post_header: Mostra il distintivo sul messaggio per cui è stato concesso
+        show_in_post_header_disabled: Richiede che siano abilitate sia le opzioni "Mostra distintivo sulla pagina pubblica dei distintivi" sia "Visualizza i messaggi che assegnano distintivi sulla pagina dei distintivi".
         enabled: abilitato
         disabled: disabilitata
         icon: Icona
@@ -6797,7 +6980,7 @@ it:
           title: "Scegli un distintivo o creane uno nuovo"
           description: "Inizia selezionando un distintivo esistente da personalizzare o creane uno completamente nuovo"
         mass_award:
-          title: Assegna in blocco
+          title: Premiazione collettiva
           description: Assegna lo stesso distintivo a più utenti contemporaneamente.
           no_badge_selected: Seleziona un distintivo per iniziare.
           perform: "Assegna Distintivo agli Utenti"
@@ -6830,6 +7013,7 @@ it:
         settings: "Impostazioni"
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
+        delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo host?"
         sample: |
           <p>Incolla il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti del discorso. Sostituisci <b>EMBED_URL</b> con l'URL canonico della pagina in cui lo stai incorporando.</p>
@@ -6838,16 +7022,18 @@ it:
 
           <p>Sostituisci <b>DISCOURSE_USERNAME</b> con il Discourse username dell'autore che dovrebbe creare l'argomento. Discourse cercherà automaticamente l'utente in base all'attributo <code>content</code> dell'etichetta <code>&lt;meta&gt;</code> con l'attributo <code>name</code> impostato su <code>discourse-username</code> o <code>author</code>. Il parametro <code>discourseUserName</code> è deprecato e verrà rimosso in Discourse 3.2.</p>
         title: "Integrato"
-        host: "Host Abilitati"
+        description: "Discourse ha la capacità di incorporare i commenti di un argomento in un sito remoto utilizzando un'API Javascript che crea un IFRAME"
+        host: "Host consentiti"
         allowed_paths: "Lista percorsi permessi"
-        edit: "modifica"
-        category: "Pubblica nella Categoria"
+        edit: "Modifica"
+        category: "Pubblica nella categoria"
         tags: "Etichette argomento"
-        post_author: "Autore messaggio - valore predefinito %{author}"
-        add_host: "Aggiungi Host"
-        settings: "Impostazioni di inclusione"
-        crawling_settings: "Impostazioni Crawler"
-        crawling_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
+        post_author: "Autore del messaggio"
+        post_author_with_default: "Autore del messaggio (predefinito %{author})"
+        add_host: "Aggiungi host"
+        posts_and_topics: "Configurazione messaggi e argomenti"
+        crawlers: "Configurazione dei crawler"
+        crawlers_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
         embed_by_username: "Nome utente per la creazione dell'argomento"
         embed_post_limit: "Numero massimo di messaggi da includere"
         embed_title_scrubber: "Espressione regolare usata per ripulire i titoli dei messaggi"
@@ -6856,7 +7042,20 @@ it:
         allowed_embed_selectors: "Selettore CSS per gli elementi ammessi negli incorporamenti"
         blocked_embed_selectors: "Selettore CSS per elementi rimossi dagli incorporamenti"
         allowed_embed_classnames: "Nomi di classi CSS consentiti"
-        save: "Salva Impostazioni Inclusione"
+        save: "Salva"
+        posts_and_topics_settings_saved: "Impostazioni messaggi e argomenti salvate"
+        crawler_settings_saved: "Impostazioni del crawler salvate"
+        back: "Torna all'integrazione"
+        configuration_snippet: "Snippet di configurazione"
+        host_form:
+          add_header: "Aggiungi host"
+          edit_header: "Modifica host"
+          save: "Salva"
+        nav:
+          hosts: "Host"
+          settings: "Impostazioni"
+          posts_and_topics: "Messaggi e argomenti"
+          crawlers: "Crawler"
       permalink:
         title: "Collegamenti permanenti"
         description: "Reindirizzamenti da applicare per URL non conosciuti dal forum."
@@ -6881,6 +7080,9 @@ it:
         back: "Torna ai permalink"
         more_options: "Altre opzioni"
         copy_success: "Permalink copiato negli appunti"
+        nav:
+          settings: "Impostazioni"
+          permalinks: "Permalink"
         form:
           label: "Nuovo:"
           add_header: "Aggiungi permalink"
@@ -6891,7 +7093,7 @@ it:
           save: "Salva"
       reseed:
         action:
-          label: "Sostituisci testo..."
+          label: "Sostituisci testo …"
           title: "Sostituisci il testo delle Categorie e degli Argomenti con le traduzioni"
         modal:
           title: "Sostituisci testo"
@@ -6921,9 +7123,53 @@ it:
           admin: "Amministratore"
           moderator: "Moderatore"
           regular: "Utente Normale"
+      homepage_choices:
+        custom:
+          label: "Personalizzato"
+          description: "Visualizza una homepage focalizzata su %{type} con gli utenti che atterrano su %{landingPage}"
+        style_type:
+          categories: "categoria"
+          topics: "argomento"
+      top_menu_items:
+        new: "Nuovo"
+        unread: "Non letti"
+        top: "Popolari"
+        latest: "Più recenti"
+        hot: "Novità"
+        categories: "Categorie"
+        unseen: "Non visualizzati"
+        read: "Letti"
+        bookmarks: "Segnalibri"
       previews:
-        topic_title: "Il titolo di un argomento di discussione"
+        topic_title: "Quali libri stai leggendo?"
         share_button: "Condividi"
         reply_button: "Rispondi"
         topic_preview: "Anteprima argomento"
         homepage_preview: "Anteprima della home page"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "tutte le categorie"
+        topic_titles:
+          what_books: "Quali libri stai leggendo?"
+          what_movies: "Quali film hai visto di recente?"
+          random_fact: "Un fatto a caso di oggi"
+          tv_show: "Consiglia una serie"
+          what_hobbies: "Quali sono i tuoi hobby?"
+          what_music: "Cosa stai ascoltando in questo momento?"
+          funniest_thing: "La cosa più divertente che hai visto oggi"
+          share_art: "Mostra la tua arte!"
+        topic_ops:
+          what_books: "A tutti noi piace leggere, usiamo questo argomento per\ncondividere le nostre letture attuali o recenti. A me piacciono i \nfantasy e ho riletto Il Signore degli Anelli per la centesima volta.\nE tu?\n"
+        category_descriptions:
+          icebreakers: "Impara a conoscere gli altri membri della tua community ponendo domande divertenti."
+          news: "Discuti le ultime notizie ed eventi."
+          site_feedback: "Condividi i tuoi pensieri sulla community e suggerisci miglioramenti."
+        category_names:
+          icebreakers: "Rompighiaccio"
+          news: "Notizie"
+          site_feedback: "Feedback sito"
+        table_headers:
+          topic: "Argomento"
+          replies: "Risposte"
+          views: "Visualizzazioni"
+          activity: "Attività"

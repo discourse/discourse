@@ -1,5 +1,5 @@
+import deprecated from "discourse/lib/deprecated";
 import { hashtagTriggerRule } from "discourse/lib/hashtag-autocomplete";
-import deprecated from "discourse-common/lib/deprecated";
 
 export const SEPARATOR = ":";
 

@@ -26,10 +26,14 @@
 
 .chat-message-info__bot-indicator {
   text-transform: uppercase;
-  padding: 0.25rem;
+  padding: 0.2rem 0.3rem;
   background: var(--primary-low);
+  color: var(--primary-900);
   border-radius: var(--d-border-radius);
-  font-size: var(--font-down-2);
+  font-size: var(--font-down-3);
+  line-height: var(--line-height-medium);
+  font-weight: 700;
+  letter-spacing: 0.1ch;
 }
 
 .chat-message-info__date {
@@ -92,6 +96,7 @@
       height: 0.9em;
       width: 0.9em;
     }
+
     &__restricted-category-icon {
       background: var(--tertiary-very-low);
       height: 0.355em;
@@ -99,6 +104,7 @@
       margin-right: 0.4em;
       padding: 1px 1px 2px 1px;
     }
+
     &:has(.--users-count) {
       display: none;
     }

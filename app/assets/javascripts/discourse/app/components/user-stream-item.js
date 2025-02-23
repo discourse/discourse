@@ -2,9 +2,10 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { userPath } from "discourse/lib/url";
 import { actionDescription } from "discourse/widgets/post-small-action";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("li")
 @classNameBindings(
@@ -25,6 +26,18 @@ export default class UserStreamItem extends Component {
     "item.action_code_path"
   )
   actionDescription;
+
+  constructor() {
+    super(...arguments);
+    deprecated(
+      `<UserStreamItem /> component is deprecated. Use <PostList /> or <UserStream /> component to render a post list instead.`,
+      {
+        since: "3.4.0.beta4",
+        dropFrom: "3.5.0.beta1",
+        id: "discourse.user-stream-item",
+      }
+    );
+  }
 
   @computed("item.hidden")
   get hidden() {

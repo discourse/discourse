@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class EditCategoryTopicTemplate extends buildCategoryPanel(
   "topic-template"

@@ -1,8 +1,7 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | consistent input/dropdown/button sizes",
@@ -15,13 +14,13 @@ module(
       );
 
       assert.strictEqual(
-        query(".btn:nth-child(1)").offsetHeight,
-        query(".btn:nth-child(2)").offsetHeight,
+        find(".btn:nth-child(1)").offsetHeight,
+        find(".btn:nth-child(2)").offsetHeight,
         "have equal height"
       );
       assert.strictEqual(
-        query(".btn:nth-child(1)").offsetHeight,
-        query(".btn:nth-child(3)").offsetHeight,
+        find(".btn:nth-child(1)").offsetHeight,
+        find(".btn:nth-child(3)").offsetHeight,
         "have equal height"
       );
     });
@@ -32,8 +31,8 @@ module(
       );
 
       assert.strictEqual(
-        query("input").offsetHeight,
-        query(".btn").offsetHeight,
+        find("input").offsetHeight,
+        find(".btn").offsetHeight,
         "have equal height"
       );
     });
@@ -44,8 +43,8 @@ module(
       );
 
       assert.strictEqual(
-        query("input").offsetHeight,
-        query(".combo-box").offsetHeight,
+        find("input").offsetHeight,
+        find(".combo-box").offsetHeight,
         "have equal height"
       );
     });

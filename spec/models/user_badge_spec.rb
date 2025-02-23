@@ -49,6 +49,7 @@ RSpec.describe UserBadge do
 
   describe "featured rank" do
     fab!(:user)
+    fab!(:user_2) { Fabricate(:user) }
     fab!(:user_badge_tl1) do
       UserBadge.create!(
         badge_id: Badge::BasicUser,
@@ -77,6 +78,15 @@ RSpec.describe UserBadge do
       UserBadge.create!(
         badge_id: Badge::FirstLike,
         user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+      )
+    end
+
+    fab!(:user_2_badge_tl1) do
+      UserBadge.create!(
+        badge_id: Badge::BasicUser,
+        user: user_2,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
       )
@@ -121,15 +131,25 @@ RSpec.describe UserBadge do
     it "can ensure consistency per user" do
       user_badge_tl2.update_column(:featured_rank, 20) # Update without hooks
       expect(user_badge_tl2.reload.featured_rank).to eq(20) # Double check
-      UserBadge.update_featured_ranks! user.id
+      user_2_badge_tl1.update_column(:featured_rank, 20) # Update without hooks
+      expect(user_2_badge_tl1.reload.featured_rank).to eq(20) # Double check
+
+      UserBadge.update_featured_ranks!([user.id])
+
       expect(user_badge_tl2.reload.featured_rank).to eq(1)
+      expect(user_2_badge_tl1.reload.featured_rank).to eq(20)
     end
 
     it "can ensure consistency for all users" do
       user_badge_tl2.update_column(:featured_rank, 20) # Update without hooks
       expect(user_badge_tl2.reload.featured_rank).to eq(20) # Double check
+      user_2_badge_tl1.update_column(:featured_rank, 20) # Update without hooks
+      expect(user_2_badge_tl1.reload.featured_rank).to eq(20) # Double check
+
       UserBadge.update_featured_ranks!
+
       expect(user_badge_tl2.reload.featured_rank).to eq(1)
+      expect(user_2_badge_tl1.reload.featured_rank).to eq(1)
     end
   end
 end

@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cloneJSON } from "discourse-common/lib/object";
+import { cloneJSON } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 import Tree from "admin/components/schema-theme-setting/editor/tree";
 import FieldInput from "admin/components/schema-theme-setting/field";
@@ -116,11 +116,6 @@ export default class SchemaThemeSettingNewEditor extends Component {
   @action
   registerInputFieldObserver(index, callback) {
     this.inputFieldObserver[index] = callback;
-  }
-
-  @action
-  unregisterInputFieldObserver(index) {
-    delete this.inputFieldObserver[index];
   }
 
   descriptions(fieldName, key) {
@@ -279,7 +274,6 @@ export default class SchemaThemeSettingNewEditor extends Component {
             @addChildItem={{this.addChildItem}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
             @registerInputFieldObserver={{this.registerInputFieldObserver}}
-            @unregisterInputFieldObserver={{this.unregisterInputFieldObserver}}
           />
 
           <div class="schema-theme-setting-editor__footer">

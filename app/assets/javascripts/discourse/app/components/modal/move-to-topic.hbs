@@ -70,7 +70,8 @@
         <form>
           <ChooseMessage
             @currentTopicId={{@model.topic.id}}
-            @selectedTopicId={{this.selectedTopicId}}
+            @setSelectedTopicId={{fn (mut this.selectedTopic)}}
+            @selectedTopicId={{this.selectedTopic.id}}
           />
 
           <label>{{i18n "topic.move_to_new_message.participants"}}</label>
@@ -80,7 +81,7 @@
             @onChange={{fn (mut this.participants)}}
           />
 
-          {{#if this.selectedTopicId}}
+          {{#if this.selectedTopic}}
             <hr />
             <label for="chronological-order" class="checkbox-label">
               <Input
@@ -145,9 +146,10 @@
           <ChooseTopic
             @topicChangedCallback={{this.newTopicSelected}}
             @currentTopicId={{@model.topic.id}}
+            @selectedTopicId={{this.selectedTopic.id}}
           />
 
-          {{#if this.selectedTopicId}}
+          {{#if this.selectedTopic}}
             <hr />
             <label for="chronological-order" class="checkbox-label">
               <Input

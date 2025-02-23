@@ -12,6 +12,7 @@ import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import DTooltip from "float-kit/components/d-tooltip";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
   setupRenderingTest(hooks);
@@ -82,8 +83,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     await render(<template>
       <Form as |form|>
-        <form.Field @name="foo.bar" @title="Foo" @size={{8}}>
-          Test
+        <form.Field @name="foo.bar" @title="Foo" @size={{8}} as |field|>
+          <field.Input />
         </form.Field>
       </Form>
     </template>);
@@ -101,8 +102,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     await render(<template>
       <Form as |form|>
-        <form.Field @name="foo" @size={{8}}>
-          Test
+        <form.Field @name="foo" @size={{8}} as |field|>
+          <field.Input />
         </form.Field>
       </Form>
     </template>);
@@ -175,12 +176,13 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
-  test("@format full", async function (assert) {
+  test("@format", async function (assert) {
     await render(<template>
       <Form as |form|>
         <form.Field
           @name="foo"
           @title="Foo"
+          @description="foo description"
           @format="full"
           as |field|
         ><field.Input /></form.Field>
@@ -190,6 +192,55 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert
       .dom(".form-kit__field.--full")
       .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-description.--full")
+      .exists("it applies the --full class to the description");
+    assert
+      .dom(".form-kit__container-title.--full")
+      .exists("it applies the --full class to the title");
+  });
+
+  test("@descriptionFormat", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @description="foo description"
+          @format="full"
+          @descriptionFormat="large"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-description.--large")
+      .exists("it applies the --large class to the description");
+  });
+
+  test("@titleFormat", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @format="full"
+          @titleFormat="large"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-title.--large")
+      .exists("it applies the --large class to the title");
   });
 
   test("@onSet", async function (assert) {
@@ -214,5 +265,36 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     await fillIn("input", "bar");
+  });
+
+  test("@tooltip", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @tooltip="text" as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__inner-content").hasText("text");
+
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @tooltip={{component DTooltip content="component"}}
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__inner-content").hasText("component");
   });
 });

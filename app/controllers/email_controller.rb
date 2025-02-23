@@ -26,7 +26,7 @@ class EmailController < ApplicationController
   def perform_unsubscribe
     RateLimiter.new(nil, "unsubscribe_#{request.ip}", 10, 1.minute).performed!
 
-    key = UnsubscribeKey.find_by(key: params[:key])
+    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
     raise Discourse::NotFound if key.nil? || key.user.nil?
     user = key.user
     updated = UnsubscribeKey.get_unsubscribe_strategy_for(key)&.unsubscribe(params)
@@ -46,10 +46,12 @@ class EmailController < ApplicationController
 
   def unsubscribed
     @email = Discourse.cache.read(params[:key])
-    @topic_id = params[:topic_id]
-    user = User.find_by_email(@email)
-    raise Discourse::NotFound unless user
-    topic = Topic.find_by(id: params[:topic_id].to_i) if @topic_id
-    @topic = topic if topic && Guardian.new(nil).can_see?(topic)
+
+    raise Discourse::NotFound unless User.find_by_email(@email)
+
+    if @topic_id = params[:topic_id]
+      topic = Topic.find_by(id: @topic_id)
+      @topic = topic if topic && Guardian.new.can_see?(topic)
+    end
   end
 end

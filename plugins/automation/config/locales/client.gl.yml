@@ -7,8 +7,8 @@
 gl:
   js:
     discourse_automation:
-      create: Crear
-      update: Actualizar
+      back: Volver
+      edit: Editar
       fields:
         user:
           label: Usuario
@@ -143,6 +143,8 @@ gl:
             label: Disparador
           version:
             label: Versión
+          status:
+            label: Estado
           enabled:
             label: Activado
           disabled:

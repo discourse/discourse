@@ -5,7 +5,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("th")
 @classNames("admin-report-table-header")

@@ -32,7 +32,6 @@ hooks:
 
 ```
 cd /var/discourse
-git pull
 ./launcher rebuild app
 ```
 

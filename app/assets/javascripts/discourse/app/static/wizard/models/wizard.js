@@ -24,7 +24,9 @@ export default class Wizard {
   }
 
   get totalSteps() {
-    return this.steps.length;
+    // We used to use this.steps.length() here, but we don't want to
+    // include optional steps after "Ready" here.
+    return 4;
   }
 
   get title() {
@@ -48,11 +50,17 @@ export default class Wizard {
   }
 
   get font() {
-    return this.findStep("styling")?.findField("body_font").chosen;
+    const bodyFont = this.getFont("body");
+    return bodyFont ? bodyFont : this.getFont("site");
   }
 
   get headingFont() {
-    return this.findStep("styling")?.findField("heading_font").chosen;
+    const headingFont = this.getFont("heading");
+    return headingFont ? headingFont : this.getFont("site");
+  }
+
+  getFont(type) {
+    return this.findStep("styling")?.findField(`${type}_font`)?.chosen;
   }
 
   findStep(id) {

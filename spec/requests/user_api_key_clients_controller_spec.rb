@@ -84,6 +84,45 @@ RSpec.describe UserApiKeyClientsController do
             expect(response.status).to eq(403)
           end
         end
+
+        context "with rate limiting" do
+          before { RateLimiter.enable }
+
+          it "works" do
+            SiteSetting.user_api_key_clients_create_per_day = 1
+            post "/user-api-key-client.json", params: args_with_scopes
+            expect(response.status).to eq(200)
+            post "/user-api-key-client.json",
+                 params: args_with_scopes.merge(client_id: "another_client1")
+            expect(response.status).to eq(429)
+          end
+
+          it "can be changed via site setting" do
+            SiteSetting.user_api_key_clients_create_per_day = 2
+            post "/user-api-key-client.json", params: args_with_scopes
+            expect(response.status).to eq(200)
+            post "/user-api-key-client.json",
+                 params: args_with_scopes.merge(client_id: "another_client1")
+            expect(response.status).to eq(200)
+            post "/user-api-key-client.json",
+                 params: args_with_scopes.merge(client_id: "another_client2")
+            expect(response.status).to eq(429)
+          end
+
+          it "can be overriden by ip address set in a site setting" do
+            SiteSetting.user_api_key_clients_create_per_day = 1
+            SiteSetting.create_user_api_key_client_ip_rate_limit_override_ips = "1.2.3.4"
+
+            post "/user-api-key-client.json", params: args_with_scopes
+            expect(response.status).to eq(200)
+            post "/user-api-key-client.json",
+                 params: args_with_scopes.merge(client_id: "another_client1"),
+                 env: {
+                   REMOTE_ADDR: "1.2.3.4",
+                 }
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
   end

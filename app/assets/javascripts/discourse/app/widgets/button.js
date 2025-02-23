@@ -1,8 +1,8 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse/lib/icon-library";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export const ButtonClass = {

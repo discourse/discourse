@@ -13,13 +13,12 @@ nl:
             delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
-      create: Maken
-      update: Bijwerken
+      back: Vorige
+      edit: Bewerken
       select_script: Selecteer een script
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
-      no_automation_yet: Je hebt nog geen automatiseringen gemaakt. Kies hieronder een optie om te beginnen.
       filter_placeholder: Filter op naam of beschrijving...
       edit_automation:
         trigger_section:
@@ -167,10 +166,10 @@ nl:
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
             restricted_group:
               label: Groep
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een privébericht is in de inbox van deze groep'
+              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in de inbox van deze groep'
             restricted_groups:
               label: Groepen
-              description: Optioneel, wordt alleen getriggerd als het topic van het bericht een privébericht is in een van de groepsinboxen
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
             ignore_group_members:
               label: Groepsleden negeren
               description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
@@ -228,6 +227,10 @@ nl:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags toegevoegd of verwijderd
+            tags_added: Tags toegevoegd
+            tags_removed: Tags verwijderd
           fields:
             watching_categories:
               label: Categorieën observeren
@@ -235,6 +238,8 @@ nl:
             watching_tags:
               label: Tags observeren
               description: Wordt alleen getriggerd als het topic een van deze tags heeft
+            trigger_on:
+              label: Triggeren bij
             trigger_with_pms:
               label: Triggeren bij PB's
               description: Wordt ook getriggerd als de tags in een PB zijn gewijzigd
@@ -413,6 +418,8 @@ nl:
             label: Script
           version:
             label: Versie
+          status:
+            label: Status
           enabled:
             label: Ingeschakeld
           disabled:

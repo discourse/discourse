@@ -16,8 +16,11 @@ module PageObjects
         page.has_no_css?(".admin-new-feature-item__screenshot")
       end
 
-      def has_toggle_experiment_button?
-        page.has_css?(".admin-new-feature-item__feature-toggle")
+      def has_toggle_experiment_button?(enabled)
+        page.has_css?(
+          ".admin-new-feature-item__feature-toggle .d-toggle-switch__checkbox[aria-checked='#{enabled}']",
+          visible: false,
+        )
       end
 
       def has_learn_more_link?
@@ -32,11 +35,6 @@ module PageObjects
         page.has_no_css?(".admin-new-feature-item__new-feature-emoji")
       end
 
-      def has_version?(version)
-        element = find(".admin-new-feature-item__new-feature-version")
-        element.has_text?(version)
-      end
-
       def has_date?(date)
         element = find(".admin-config-area-card__title")
         element.has_text?(date)
@@ -48,6 +46,14 @@ module PageObjects
 
       def has_no_experimental_text?
         page.has_no_css?(".admin-new-feature-item__header-experimental")
+      end
+
+      def toggle_experiments_only
+        toggle_switch =
+          PageObjects::Components::DToggleSwitch.new(
+            ".admin-new-features__experiments-filter .d-toggle-switch__checkbox",
+          )
+        toggle_switch.toggle
       end
     end
   end

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { next, schedule, throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
@@ -9,10 +9,15 @@ import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { tinyAvatar } from "discourse/lib/avatar-utils";
+import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
 } from "discourse/lib/hashtag-decorator";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
@@ -25,14 +30,6 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
-import { isTesting } from "discourse-common/config/environment";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  debounce,
-} from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -197,25 +194,38 @@ export default class ComposerEditor extends Component {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.textManipulation = textManipulation;
+    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
 
     const input = this.element.querySelector(".d-editor-input");
 
-    input?.addEventListener(
-      "scroll",
-      this._throttledSyncEditorAndPreviewScroll
-    );
+    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
-    // Focus on the body unless we have a title
-    if (!this.get("composer.model.canEditTitle")) {
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
+    if (
+      // Focus on the editor unless we have a title
+      !this.get("composer.model.canEditTitle") ||
+      // Or focus is in the body (e.g. when the editor is destroyed)
+      document.activeElement.tagName === "BODY"
+    ) {
       this.textManipulation.putCursorAtEnd();
     }
 
+    const destroyComposerPosition = setupComposerPosition(input);
+
     return () => {
-      input?.removeEventListener(
+      destroyComposerPosition();
+
+      input.removeEventListener(
         "scroll",
         this._throttledSyncEditorAndPreviewScroll
       );
@@ -446,8 +456,8 @@ export default class ComposerEditor extends Component {
     $preview.scrollTop(desired + 50);
   }
 
-  _renderMentions(preview, unseen) {
-    unseen ||= linkSeenMentions(preview, this.siteSettings);
+  _renderMentions(preview) {
+    const unseen = linkSeenMentions(preview, this.siteSettings);
     if (unseen.length > 0) {
       this._renderUnseenMentions(preview, unseen);
     } else {
@@ -470,9 +480,9 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  _renderHashtags(preview, unseen) {
+  _renderHashtags(preview) {
     const context = this.site.hashtag_configurations["topic-composer"];
-    unseen ||= linkSeenHashtagsInContext(context, preview);
+    const unseen = linkSeenHashtagsInContext(context, preview);
     if (unseen.length > 0) {
       this._renderUnseenHashtags(preview, unseen, context);
     }
@@ -509,8 +519,12 @@ export default class ComposerEditor extends Component {
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
 
-  _decorateCookedElement(preview) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+  _decorateCookedElement(preview, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      preview,
+      helper
+    );
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -805,13 +819,11 @@ export default class ComposerEditor extends Component {
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
 
-    next(() => {
-      // need to wait a bit for the "slide down" transition of the composer
-      discourseLater(
-        () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-        isTesting() ? 0 : 400
-      );
-    });
+    // need to wait a bit for the "slide down" transition of the composer
+    discourseLater(
+      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
+      400
+    );
 
     preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
@@ -897,15 +909,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, unseenMentions, unseenHashtags) {
-    this._renderMentions(preview, unseenMentions);
-    this._renderHashtags(preview, unseenHashtags);
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      this._decorateCookedElement(preview);
-    }
+    this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
   }

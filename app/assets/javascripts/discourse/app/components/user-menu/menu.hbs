@@ -30,11 +30,15 @@
             />
           {{/each}}
         </div>
+
+        <PluginOutlet
+          @name="user-menu-tabs-list__after"
+          @outletArgs={{hash user=this.currentUser}}
+        />
       </div>
       <div
         id={{concat "quick-access-" this.currentTabId}}
         class="quick-access-panel"
-        tabindex="-1"
       >
         <this.currentPanelComponent
           @closeUserMenu={{@closeUserMenu}}

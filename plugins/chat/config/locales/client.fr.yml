@@ -90,7 +90,7 @@ fr:
       channel_archive:
         title: "Archiver le canal"
         instructions: "<p>L'archivage d'un canal le place en mode lecture seule et déplace tous les messages du canal vers un sujet nouveau ou existant. Aucun nouveau message ne peut être envoyé et aucun message existant ne peut être modifié ou supprimé.</p><p>Voulez-vous vraiment archiver le canal <strong>%{channelTitle}</strong>  ?</p>"
-        process_started: "Le processus d'archivage a commencé. Ce modal sera bientôt fermé et vous recevrez un message personnel lorsque le processus d'archivage sera terminé."
+        process_started: "Le processus d'archivage a commencé. Cette fenêtre modale sera bientôt fermée et vous recevrez un message privé lorsque le processus d'archivage sera terminé."
         retry: "Réessayer"
       channel_open:
         title: "Ouvrir le canal"
@@ -138,6 +138,13 @@ fr:
         never: "Jamais"
       separate_sidebar_mode:
         title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
+      send_shortcut:
+        enter:
+          label: "Envoyer par Entrée"
+          description: "Nouvelle ligne avec Maj + Entrée"
+        meta_enter:
+          label: "Envoyer avec %{meta_key} + Entrée"
+          description: "Nouvelle ligne avec Entrée"
       enable: "Activer la discussion"
       flag: "Signalement"
       emoji: "Insérer un émoji"
@@ -485,7 +492,7 @@ fr:
           title: "Exporter les messages de la discussion"
           description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
-          confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message personnel. Voulez-vous vraiment exporter ?"
+          confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message privé. Voulez-vous vraiment exporter ?"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       my_threads:
         title: Mes fils de discussion
@@ -497,7 +504,7 @@ fr:
         create: "Valider"
         leave: "Quitter cette discussion privée"
         close: "Fermer ce chat personnel"
-        cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
+        cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages directs."
       channel_list:
         title: "Canaux"
         aria_label: "Passer à la liste des chaînes"
@@ -655,6 +662,11 @@ fr:
           other_html: "<span>%{username}</span> <span>a mentionné %{identifier} dans une discussion privée</span>"
         chat_message: "Nouveau message de discussion"
         chat_quoted: "%{username} a cité votre message de discussion"
+      titles:
+        chat_mention: "Mentionné dans la discussion"
+        chat_invitation: "Invité(e) à discuter dans le canal"
+        chat_quoted: "Message de discussion cité"
+        chat_watched_thread: "Fil de discussion regardé"
     action_codes:
       chat:
         enabled: '%{who} a activé la <button class="btn-link open-chat">discussion</button> %{when}'

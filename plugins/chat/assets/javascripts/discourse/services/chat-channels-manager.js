@@ -3,7 +3,7 @@ import Service, { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { debounce } from "discourse-common/utils/decorators";
+import { debounce } from "discourse/lib/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;

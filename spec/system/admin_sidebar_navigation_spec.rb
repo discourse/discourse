@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-describe "Admin Revamp | Sidebar Navigation", type: :system do
+describe "Admin | Sidebar Navigation", type: :system do
+  UNFILTERED_LINK_COUNT = 41
+
   fab!(:admin)
   fab!(:moderator)
 
@@ -50,8 +52,15 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "collapses sections by default" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(4)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.dashboard.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+      ],
+    )
   end
 
   context "when on mobile" do
@@ -87,14 +96,22 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     visit("/admin")
     sidebar.toggle_all_sections
 
-    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
+    expect(page).to have_selector(
+      ".sidebar-section-link-content-text",
+      minimum: UNFILTERED_LINK_COUNT,
+    )
     expect(page).to have_no_css(".sidebar-no-results")
     all_links_count = page.all(".sidebar-section-link-content-text").count
 
     filter.filter("ie")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(["User Fields", "Preview Summary"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
+      ],
+    )
     expect(page).to have_no_css(".sidebar-no-results")
 
     filter.filter("ieeee")
@@ -108,16 +125,15 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(page).to have_css(".sidebar-sections__back-to-forum")
 
     # When match section title, display all links
-    filter.filter("Email Sett")
+    filter.filter("Email")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(3)
-    expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
-
-    filter.filter("   preview   ")
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Preview Summary"])
-    expect(page).to have_no_css(".sidebar-no-results")
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.config.email.title"),
+        I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
+      ],
+    )
   end
 
   it "escapes the filtered expression for regex expressions" do
@@ -152,39 +168,59 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "encodes the url param in the links when the filter has no results" do
     visit("/admin")
 
-    filter.filter("?")
+    unknown_filter = "blahblah"
+    filter.filter(unknown_filter)
     expect(page).to have_no_css(".sidebar-section-link-content-text")
     expect(page).to have_css(".sidebar-no-results")
 
     no_results_description = page.find(".sidebar-no-results__description")
     expect(no_results_description.text).to eq(
-      "We couldn’t find anything matching ‘?’.\n\nDid you want to search site settings or the admin user list?",
+      "We couldn’t find anything matching ‘#{unknown_filter}’.\n\nDid you want to search site settings or the admin user list?",
     )
     expect(no_results_description).to have_link(
       "search site settings",
-      href: "/admin/site_settings/category/all_results?filter=%3F",
+      href: "/admin/site_settings/category/all_results?filter=#{unknown_filter}",
     )
     expect(no_results_description).to have_link(
       "admin user list?",
-      href: "/admin/users/list/active?username=%3F",
+      href: "/admin/users/list/active?username=#{unknown_filter}",
     )
   end
 
   it "temporarily expands section when filter" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(4)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.dashboard.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+      ],
+    )
 
     filter.filter("ie")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(["User Fields", "Preview Summary"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
+      ],
+    )
 
     filter.filter("")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(4)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.dashboard.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+      ],
+    )
   end
 
   it "allows further filtering of site settings or users if links do not show results" do
@@ -220,16 +256,28 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "allows sections to be expanded" do
     visit("/admin")
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
-
-    sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 4)
-    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
-      ["Dashboard", "Users", "All Site Settings", "What's New"],
+    expect(page).to have_selector(
+      ".sidebar-section-link-content-text",
+      minimum: UNFILTERED_LINK_COUNT,
     )
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 5)
+    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.dashboard.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+      ],
+    )
+
+    sidebar.toggle_all_sections
+    expect(page).to have_selector(
+      ".sidebar-section-link-content-text",
+      minimum: UNFILTERED_LINK_COUNT,
+    )
   end
 
   it "accepts hidden keywords like installed plugin names for filter" do
@@ -243,7 +291,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     filter.filter("csp_extension")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Installed"])
+    expect(links.map(&:text)).to eq([I18n.t("admin_js.admin.config.plugins.title")])
   end
 
   it "accepts components and themes keywords for filter" do
@@ -280,16 +328,13 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        "Dashboard",
-        "Users",
-        "What's New",
-        "All",
-        "Watched Words",
-        "Screened Emails",
-        "Screened IPs",
-        "Screened URLs",
-        "Search Logs",
-        "Staff Action Logs",
+        I18n.t("admin_js.admin.dashboard.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+        I18n.t("admin_js.admin.config.reports.title"),
+        I18n.t("admin_js.admin.config.watched_words.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
   end

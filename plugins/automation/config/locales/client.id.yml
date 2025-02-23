@@ -7,7 +7,7 @@
 id:
   js:
     discourse_automation:
-      create: Buat
+      edit: Ubah
       fields:
         user:
           label: Pengguna
@@ -86,6 +86,8 @@ id:
         automation:
           name:
             label: Nama
+          status:
+            label: Status
           enabled:
             label: Diaktifkan
           disabled:

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -8,7 +8,10 @@ import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyMutableValueTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
@@ -98,7 +101,7 @@ export default class TopicList extends Component {
       },
     };
 
-    return applyValueTransformer(
+    return applyMutableValueTransformer(
       "topic-list-columns",
       defaultColumns,
       context
@@ -110,7 +113,9 @@ export default class TopicList extends Component {
   }
 
   get bulkSelectEnabled() {
-    return this.args.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.args.bulkSelectHelper?.bulkSelectEnabled && this.args.canBulkSelect
+    );
   }
 
   get canDoBulkActions() {
@@ -143,7 +148,10 @@ export default class TopicList extends Component {
 
     // work backwards
     // this is more efficient cause we keep appending to list
-    const start = topics.findIndex((topic) => !topic.get("pinned"));
+    const start = Math.max(
+      topics.findIndex((topic) => !topic.get("pinned")),
+      0
+    );
     let lastVisitedTopic, topic;
 
     for (let i = topics.length - 1; i >= start; i--) {
@@ -166,13 +174,19 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("topic-list-class", [], {
+      topics: this.args.topics,
+    });
+  }
+
   <template>
     {{! template-lint-disable table-groups }}
     <table
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
-        (applyValueTransformer "topic-list-class" (array) (hash topics=@topics))
+        this.additionalClasses
       }}
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>

@@ -10,7 +10,7 @@ import BulkTopicActions, {
 import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 

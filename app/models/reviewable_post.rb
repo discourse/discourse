@@ -13,6 +13,10 @@ class ReviewablePost < Reviewable
          created_or_edited_by.has_trust_level?(TrustLevel[4])
       return
     end
+    queue_for_review(post)
+  end
+
+  def self.queue_for_review(post)
     system_user = Discourse.system_user
 
     needs_review!(
@@ -138,6 +142,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null

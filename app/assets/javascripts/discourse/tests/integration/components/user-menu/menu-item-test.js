@@ -1,6 +1,7 @@
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
@@ -11,7 +12,6 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {

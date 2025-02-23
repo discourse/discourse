@@ -8,15 +8,19 @@ acceptance("Reports", function (needs) {
   test("Visit reports page", async function (assert) {
     await visit("/admin/reports");
 
-    assert.dom(".admin-reports-list__report").exists({ count: 1 });
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 });
 
     assert
-      .dom(".admin-reports-list__report .admin-reports-list__report-title")
+      .dom(
+        ".admin-reports-list .admin-section-landing-item__content .admin-section-landing-item__title"
+      )
       .hasHtml("My report");
 
     assert
       .dom(
-        ".admin-reports-list__report .admin-reports-list__report-description"
+        ".admin-reports-list .admin-section-landing-item__content .admin-section-landing-item__description"
       )
       .hasHtml("List of my activities");
   });

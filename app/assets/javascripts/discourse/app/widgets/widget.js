@@ -3,6 +3,8 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import { isProduction } from "discourse/lib/environment";
+import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import {
@@ -20,12 +22,12 @@ import {
   WidgetMouseOutHook,
   WidgetMouseOverHook,
   WidgetMouseUpHook,
+  WidgetPointerOutHook,
+  WidgetPointerOverHook,
   WidgetTouchEndHook,
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import { isProduction } from "discourse-common/config/environment";
-import { deepMerge } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 const _registry = {};
@@ -482,6 +484,14 @@ export default class Widget {
 
     if (this.mouseOver) {
       properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
+    }
+
+    if (this.pointerOver) {
+      properties["widget-pointer-over"] = new WidgetPointerOverHook(this);
+    }
+
+    if (this.pointerOut) {
+      properties["widget-pointer-out"] = new WidgetPointerOutHook(this);
     }
 
     if (this.mouseOut) {

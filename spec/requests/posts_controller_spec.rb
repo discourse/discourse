@@ -566,6 +566,13 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when user is OP but can no longer see the post" do
+        post = Fabricate(:private_message_post, user: user)
+        post.topic.remove_allowed_user(admin, user)
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response).to be_forbidden
+      end
+
       it "updates post's raw attribute" do
         put "/posts/#{post.id}.json", params: { post: { raw: "edited body   " } }
 
@@ -890,7 +897,7 @@ RSpec.describe PostsController do
     include_examples "action requires login", :post, "/posts.json"
 
     before do
-      SiteSetting.min_first_post_typing_time = 0
+      SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
@@ -1148,11 +1155,11 @@ RSpec.describe PostsController do
 
       context "when fast typing" do
         before do
-          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.fast_typing_threshold = "standard"
           SiteSetting.auto_silence_fast_typers_max_trust_level = 1
         end
 
-        it "queues the post if min_first_post_typing_time is not met" do
+        it "queues the post if fast_typing_threshold is not met" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2492,6 +2499,21 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "returns PMs for admins who are also moderators" do
+        admin.update!(moderator: true)
+
+        pm_post = Fabricate(:private_message_post)
+        PostDestroyer.new(admin, pm_post).destroy
+
+        sign_in(admin)
+
+        get "/posts/#{pm_post.user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body.first["id"]).to eq(pm_post.id)
+      end
+
       it "only shows posts deleted by other users" do
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
@@ -2889,6 +2911,7 @@ RSpec.describe PostsController do
         "type" => Post.notices[:custom],
         "raw" => raw_notice,
         "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+        "created_by_user_id" => moderator.id,
       )
       expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
@@ -2922,6 +2945,7 @@ RSpec.describe PostsController do
           "type" => Post.notices[:custom],
           "raw" => raw_notice,
           "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+          "created_by_user_id" => user.id,
         )
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
@@ -3070,7 +3094,7 @@ RSpec.describe PostsController do
 
       before do
         sign_in(user)
-        SiteSetting.min_first_post_typing_time = 0
+        SiteSetting.fast_typing_threshold = "disabled"
       end
 
       it "allows strings to be added" do

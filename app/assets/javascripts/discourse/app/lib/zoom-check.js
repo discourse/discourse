@@ -1,4 +1,4 @@
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 // return true when the browser viewport is zoomed
 export default function isZoomed() {

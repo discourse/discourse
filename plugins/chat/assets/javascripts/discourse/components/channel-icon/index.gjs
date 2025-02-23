@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {

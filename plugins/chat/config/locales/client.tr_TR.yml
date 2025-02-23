@@ -138,6 +138,13 @@ tr_TR:
         never: "Asla"
       separate_sidebar_mode:
         title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
+      send_shortcut:
+        enter:
+          label: "Enter ile gönder"
+          description: "Shift + Enter ile yeni satır"
+        meta_enter:
+          label: "%{meta_key} + Enter ile gönder"
+          description: "Enter ile yeni satır"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -655,6 +662,11 @@ tr_TR:
           other_html: "<span>%{username}</span> <span>kişisel sohbette şundan bahsetti: %{identifier}</span>"
         chat_message: "Yeni sohbet mesajı"
         chat_quoted: "%{username} sohbet mesajınızı alıntıladı"
+      titles:
+        chat_mention: "Sohbette bahsedildi"
+        chat_invitation: "Sohbet kanalına davet edildi"
+        chat_quoted: "Sohbet mesajından alıntı yapıldı"
+        chat_watched_thread: "Sohbet ileti dizisini izledi"
     action_codes:
       chat:
         enabled: '%{who} %{when} <button class="btn-link open-chat">sohbeti</button> etkinleştirdi'

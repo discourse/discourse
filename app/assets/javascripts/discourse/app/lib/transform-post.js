@@ -1,13 +1,13 @@
 import { isEmpty } from "@ember/utils";
+import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import Badge from "discourse/models/badge";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
-const _additionalAttributes = [];
+const _additionalAttributes = new Set();
 
 export function includeAttributes(...attributes) {
-  attributes.forEach((a) => _additionalAttributes.push(a));
+  attributes.forEach((a) => _additionalAttributes.add(a));
 }
 
 export function transformBasicPost(post) {
@@ -169,6 +169,7 @@ export default function transformPost(
 
   if (post.notice) {
     postAtts.notice = post.notice;
+    postAtts.noticeCreatedByUser = post.notice_created_by_user;
     if (postAtts.notice.type === "returning_user") {
       postAtts.notice.lastPostedAt = new Date(post.notice.last_posted_at);
     }

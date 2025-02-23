@@ -42,19 +42,23 @@ module Stylesheet
       contents = +""
 
       contents << <<~CSS if body_font.present?
+          // Body font definition
           #{font_css(body_font)}
-
+          #{render_font_special_properties(body_font, "body")}
           :root {
             --font-family: #{body_font[:stack]};
           }
+
         CSS
 
       contents << <<~CSS if heading_font.present?
+          // Heading font definition
           #{font_css(heading_font)}
-
+          #{render_font_special_properties(heading_font, "heading")}
           :root {
             --heading-font-family: #{heading_font[:stack]};
           }
+
         CSS
 
       contents
@@ -86,10 +90,11 @@ module Stylesheet
           .body-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
-          .heading-font-#{font[:key].tr("_", "-")} h2 {
+          .heading-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
         CSS
+        contents << render_wizard_font_special_properties(font)
       end
 
       contents
@@ -108,7 +113,10 @@ module Stylesheet
 
       if resolved_ids
         theme = Theme.find_by_id(theme_id)
-        contents << theme&.scss_variables.to_s
+
+        contents << "\n\n// Theme SCSS variables\n\n"
+        contents << theme&.scss_variables.to_s.split(";").join(";\n") + ";\n\n"
+        contents << "\n\n"
         Theme
           .list_baked_fields(resolved_ids, :common, :color_definitions)
           .each do |field|
@@ -137,19 +145,21 @@ module Stylesheet
       if @color_scheme_id
         colors =
           begin
-            ColorScheme.find(@color_scheme_id).resolved_colors
+            ColorScheme.find(@color_scheme_id).resolved_colors(dark: @dark)
           rescue StandardError
             ColorScheme.base_colors
           end
       elsif (@theme_id && !theme.component)
-        colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
+        colors = theme&.color_scheme&.resolved_colors(dark: @dark) || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,
         # we shouldn't be using the default theme color scheme for components
         # (most components use CSS custom properties which work fine without this)
         colors =
-          Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
-            ColorScheme.base_colors
+          Theme
+            .find_by_id(SiteSetting.default_theme_id)
+            &.color_scheme
+            &.resolved_colors(dark: @dark) || ColorScheme.base_colors
       end
 
       colors.each { |n, hex| contents << "$#{n}: ##{hex} !default; " }
@@ -170,6 +180,7 @@ module Stylesheet
       @theme = options[:theme]
       @theme_id = options[:theme_id]
       @color_scheme_id = options[:color_scheme_id]
+      @dark = options[:dark]
 
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
@@ -220,9 +231,10 @@ module Stylesheet
                 "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
               end
             )
+
           contents << <<~CSS
             @font-face {
-              font-family: #{font[:name]};
+              font-family: '#{font[:name]}';
               src: #{src};
               font-weight: #{variant[:weight]};
             }
@@ -230,6 +242,42 @@ module Stylesheet
         end
       end
 
+      contents
+    end
+
+    def render_font_special_properties(font, font_type)
+      contents = +""
+      root_elements = font_type == "body" ? "html" : "h1, h2, h3, h4, h5, h6"
+      contents << "#{root_elements} {\n"
+      contents << font_special_properties(font)
+      contents << "}\n"
+    end
+
+    def render_wizard_font_special_properties(font)
+      contents = +""
+      contents << ".wizard-container-heading-font-#{font[:key]} {\n"
+      contents << "  h1, h2, h3, h4, h5, h6 {\n"
+      contents << font_special_properties(font, 4)
+      contents << "  }\n"
+      contents << "}\n"
+      contents << ".wizard-container-body-font-#{font[:key]} {\n"
+      contents << font_special_properties(font)
+      contents << "}\n"
+    end
+
+    def font_special_properties(font, indent = 2)
+      contents = +""
+      if font[:font_variation_settings].present?
+        contents << "#{" " * indent}font-variation-settings: #{font[:font_variation_settings]};\n"
+      else
+        contents << "#{" " * indent}font-variation-settings: normal;\n"
+      end
+
+      if font[:font_feature_settings].present?
+        contents << "#{" " * indent}font-feature-settings: #{font[:font_feature_settings]};\n"
+      else
+        contents << "#{" " * indent}font-feature-settings: normal;\n"
+      end
       contents
     end
   end

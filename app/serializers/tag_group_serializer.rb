@@ -14,19 +14,8 @@ class TagGroupSerializer < ApplicationSerializer
   def permissions
     @permissions ||=
       begin
-        h = {}
-
-        object
-          .tag_group_permissions
-          .joins(:group)
-          .includes(:group)
-          .find_each do |tgp|
-            name = Group::AUTO_GROUP_IDS.fetch(tgp.group_id, tgp.group.name).to_s
-            h[name] = tgp.permission_type
-          end
-
-        h["everyone"] = TagGroupPermission.permission_types[:full] if h.empty?
-
+        h = object.tag_group_permissions.pluck(:group_id, :permission_type).to_h
+        h[0] = TagGroupPermission.permission_types[:full] if h.empty?
         h
       end
   end

@@ -7,6 +7,10 @@ let userFound = false;
 
 acceptance("Forgot password", function (needs) {
   needs.pretender((server, helper) => {
+    needs.settings({
+      hide_email_address_taken: false,
+    });
+
     server.post("/session/forgot_password", () => {
       return helper.response({
         user_found: userFound,
@@ -78,6 +82,10 @@ acceptance("Forgot password", function (needs) {
 acceptance(
   "Forgot password - hide_email_address_taken enabled",
   function (needs) {
+    needs.settings({
+      hide_email_address_taken: true,
+    });
+
     needs.pretender((server, helper) => {
       server.post("/session/forgot_password", () => {
         return helper.response({});
@@ -93,12 +101,12 @@ acceptance(
         .dom(".forgot-password-reset")
         .isDisabled("disables the button until the field is filled");
 
-      await fillIn("#username-or-email", "someuser");
+      await fillIn("#username-or-email", "someuser@discourse.org");
       await click(".forgot-password-reset");
 
       assert.dom(".d-modal__body").hasHtml(
-        i18n("forgot_password.complete_username", {
-          username: "someuser",
+        i18n("forgot_password.complete_email", {
+          email: "someuser@discourse.org",
         }),
         "displays a success message"
       );

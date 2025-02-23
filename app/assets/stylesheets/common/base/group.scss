@@ -10,9 +10,35 @@
 
 .group-details-container {
   background: var(--primary-very-low);
-  padding: 20px;
-  margin-bottom: 15px;
+  padding: 0.8em;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.group-bio {
+  max-width: 80ch;
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.group-info-details {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+}
+
+.group-info-mention-name {
+  margin-bottom: 0.5em;
 }
 
 .group-delete-tooltip {
@@ -30,6 +56,7 @@
   flex-wrap: wrap;
   width: 100%;
   gap: 0.5em 0;
+  margin-bottom: 1em;
 
   .bulk-select + input {
     margin-left: 0.5em;
@@ -98,9 +125,8 @@
   .group-details-button {
     display: flex;
     flex-wrap: wrap;
-    button:not(:last-child) {
-      margin-right: 0.5em;
-    }
+    justify-content: end;
+    gap: 0.5em;
   }
 }
 
@@ -148,9 +174,11 @@ table.group-manage-logs {
         grid-column-start: 1;
         grid-column-end: -1;
       }
+
       .member-settings {
         margin-left: auto;
       }
+
       .user-info {
         padding-right: 3.5em;
       }
@@ -277,11 +305,11 @@ table.group-category-permissions {
     li {
       display: inline-block;
 
-      &:before {
+      &::before {
         content: "|";
       }
 
-      &:first-child:before {
+      &:first-child::before {
         content: "";
       }
     }
@@ -313,6 +341,6 @@ table.group-category-permissions {
 }
 
 .groups-form .control-group.buttons {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   padding: 1em 0;
 }

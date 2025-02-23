@@ -43,11 +43,11 @@ module ChatSystemHelpers
             chat_channel_id: channel.id,
             in_reply_to_id: in_reply_to,
             thread_id: thread_id,
-            message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+            message: fake_chat_message,
           },
         )
 
-      raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
+      raise creator.inspect_steps if creator.failure?
       last_message = creator.message_instance
     end
 
@@ -64,8 +64,12 @@ end
 module ChatSpecHelpers
   def service_failed!(result)
     raise RSpec::Expectations::ExpectationNotMetError.new(
-            "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
+            "Service failed, see below for step details:\n\n" + result.inspect_steps,
           )
+  end
+
+  def fake_chat_message
+    Faker::Alphanumeric.alpha(number: [15, SiteSetting.chat_minimum_message_length].max)
   end
 
   def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)

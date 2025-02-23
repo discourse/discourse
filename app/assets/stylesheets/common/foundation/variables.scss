@@ -6,35 +6,36 @@
 // Layout dimensions
 // --------------------------------------------------
 
+@use "sass:color";
 @use "sass:math";
+@use "sass:meta";
+@use "math" as discourse-math;
 
 $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
-
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 $reply-area-max-width: 1475px !default;
-
 $d-sidebar-width: 17em !default;
 $d-sidebar-narrow-width: 14em !default;
 
 // Brand color variables
 // --------------------------------------------------
 
-$google: #ffffff !default;
-$google-hover: darken($google, 5%) !default;
+$google: #fff !default;
+$google-hover: color.adjust($google, $lightness: -5%) !default;
 $instagram: #e1306c !default;
-$instagram-hover: darken($instagram, 15%) !default;
+$instagram-hover: color.adjust($instagram, $lightness: -15%) !default;
 $facebook: #0866ff !default;
-$facebook-hover: darken($facebook, 15%) !default;
+$facebook-hover: color.adjust($facebook, $lightness: -15%) !default;
 $cas: #70ba61 !default;
 $twitter: #000 !default;
 $github: #100e0f !default;
-$github-hover: lighten($github, 20%) !default;
+$github-hover: color.adjust($github, $lightness: 20%) !default;
 $discord: #7289da !default;
-$discord-hover: darken($discord, 10%) !default;
+$discord-hover: color.adjust($discord, $lightness: -10%) !default;
 
 // Badge color variables
 // --------------------------------------------------
@@ -74,8 +75,6 @@ $line-height-small: var(--line-height-small) !default;
 $line-height-medium: var(--line-height-medium) !default;
 $line-height-large: var(--line-height-large) !default;
 
-@import "common/foundation/math";
-
 // Z-index
 // --------------------------------------------------
 
@@ -110,9 +109,12 @@ $z-layers: (
 
 @function map-has-nested-keys($map, $keys...) {
   @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
     @if not map-has-key($map, $key) {
       @return false;
     }
+
+    /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
   @return true;
@@ -120,6 +122,7 @@ $z-layers: (
 
 @function map-deep-get($map, $keys...) {
   @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
   @return $map;
@@ -127,7 +130,7 @@ $z-layers: (
 
 @function z($layers...) {
   @if not map-has-nested-keys($z-layers, $layers...) {
-    @warn "No layer defined for `#{inspect($layers...)}` in $z-layers map. Check variables.scss, property omitted.";
+    @warn "No layer defined for `#{meta.inspect($layers...)}` in $z-layers map- Check variables.scss, property omitted.";
   }
   @return map-deep-get($z-layers, $layers...);
 }
@@ -138,7 +141,8 @@ $z-layers: (
 // w3c definition of color brightness https://www.w3.org/TR/AERT#color-contrast
 @function dc-color-brightness($color) {
   @return (
-    (red($color) * 0.299) + (green($color) * 0.587) + (blue($color) * 0.114)
+    (color.red($color) * 0.299) + (color.green($color) * 0.587) +
+      (color.blue($color) * 0.114)
   );
 }
 
@@ -146,18 +150,18 @@ $z-layers: (
 @function srgb-scale($foreground, $background, $percent) {
   $ratio: math.div($percent, 100%);
   $iratio: 1 - $ratio;
-  $f_r2: red($foreground) * red($foreground);
-  $f_g2: green($foreground) * green($foreground);
-  $f_b2: blue($foreground) * blue($foreground);
-  $b_r2: red($background) * red($background);
-  $b_g2: green($background) * green($background);
-  $b_b2: blue($background) * blue($background);
+  $f_r2: color.red($foreground) * color.red($foreground);
+  $f_g2: color.green($foreground) * color.green($foreground);
+  $f_b2: color.blue($foreground) * color.blue($foreground);
+  $b_r2: color.red($background) * color.red($background);
+  $b_g2: color.green($background) * color.green($background);
+  $b_b2: color.blue($background) * color.blue($background);
   $r_r2: $f_r2 * $ratio + $b_r2 * $iratio;
   $r_g2: $f_g2 * $ratio + $b_g2 * $iratio;
   $r_b2: $f_b2 * $ratio + $b_b2 * $iratio;
-  $r_r: sqrt($r_r2);
-  $r_g: sqrt($r_g2);
-  $r_b: sqrt($r_b2);
+  $r_r: discourse-math.sqrt($r_r2);
+  $r_g: discourse-math.sqrt($r_g2);
+  $r_b: discourse-math.sqrt($r_b2);
   @return rgb($r_r, $r_g, $r_b);
 }
 
@@ -179,9 +183,9 @@ $z-layers: (
   @if dc-color-brightness($adjusted-color) <
     dc-color-brightness($comparison-color)
   {
-    @return scale-color($adjusted-color, $lightness: $lightness);
+    @return color.scale($adjusted-color, $lightness: $lightness);
   } @else {
-    @return scale-color($adjusted-color, $lightness: $darkness);
+    @return color.scale($adjusted-color, $lightness: $darkness);
   }
 }
 @function dark-light-choose($light-theme-result, $dark-theme-result) {

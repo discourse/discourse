@@ -34,7 +34,7 @@ module("Unit | Model | post", function (hooks) {
 
   test("updateFromPost", function (assert) {
     withPluginApi("1.39.0", (api) => {
-      api.addTrackedPostProperty("plugin_property");
+      api.addTrackedPostProperties("plugin_property", "other_plugin_property");
     });
 
     const post = this.store.createRecord("post", {
@@ -55,6 +55,7 @@ module("Unit | Model | post", function (hooks) {
         yours: false,
         likeAction: { count: 1 },
         plugin_property: "different plugin value",
+        other_plugin_property: "other different plugin value",
       })
     );
 
@@ -68,6 +69,11 @@ module("Unit | Model | post", function (hooks) {
       post.plugin_property,
       "different plugin value",
       "`plugin_property` field was updated"
+    );
+    assert.strictEqual(
+      post.other_plugin_property,
+      "other different plugin value",
+      "`other_plugin_property` field was updated"
     );
   });
 

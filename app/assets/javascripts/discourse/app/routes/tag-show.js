@@ -42,9 +42,16 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
+    const tagIdFromParams = escapeExpression(params.tag_id);
     const tag = this.store.createRecord("tag", {
-      id: escapeExpression(params.tag_id),
+      id: tagIdFromParams,
     });
+
+    // Handles renaming a tag, since we refer to the tag.id instead
+    // of tag.name which is the actual identifier.
+    if (tag.id !== tagIdFromParams) {
+      tag.set("id", tagIdFromParams);
+    }
 
     let additionalTags;
 

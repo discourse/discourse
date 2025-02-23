@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
+import { avatarImg } from "discourse/lib/avatar-utils";
 
 export default function boundAvatar(user, size) {
   if (isEmpty(user)) {

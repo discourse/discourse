@@ -9,12 +9,16 @@ import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SmallUserList from "discourse/components/small-user-list";
+import SmallUserList, {
+  smallUserAttrs,
+} from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
-import { userPath } from "discourse/lib/url";
+import {
+  applyBehaviorTransformer,
+  applyMutableValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -64,16 +68,6 @@ const coreButtonComponents = new Map([
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 
-function smallUserAttributes(user) {
-  return {
-    template: user.avatar_template,
-    username: user.username,
-    post_url: user.post_url,
-    url: userPath(user.username_lower),
-    unknown: user.unknown,
-  };
-}
-
 const defaultDagOptions = {
   defaultPosition: { before: buttonKeys.SHOW_MORE },
   throwErrorOnCycle: false,
@@ -113,6 +107,7 @@ export default class PostMenu extends Component {
       showDeleteTopicModal: this.showDeleteTopicModal,
       showFlags: this.args.showFlags,
       showMoreActions: this.showMoreActions,
+      showLogin: this.args.showLogin,
       toggleReplies: this.args.toggleReplies,
       toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,
@@ -403,9 +398,13 @@ export default class PostMenu extends Component {
 
   @cached
   get visibleButtons() {
-    const nonCollapsed = this.availableButtons.filter((button) => {
-      return !this.availableCollapsedButtons.includes(button);
-    });
+    let nonCollapsed = this.availableButtons;
+
+    if (this.renderableCollapsedButtons.length > 1) {
+      nonCollapsed = nonCollapsed.filter((button) => {
+        return !this.renderableCollapsedButtons.includes(button);
+      });
+    }
 
     return DAG.from(
       nonCollapsed.map((button) => [button.key, button, button.position]),
@@ -446,26 +445,35 @@ export default class PostMenu extends Component {
 
   @action
   async toggleLike() {
-    if (!this.currentUser) {
-      this.keyValueStore &&
-        this.keyValueStore.set({
-          key: "likedPostId",
-          value: this.args.post.id,
-        });
+    await applyBehaviorTransformer(
+      "post-menu-toggle-like-action",
+      async () => {
+        if (!this.currentUser) {
+          this.keyValueStore &&
+            this.keyValueStore.set({
+              key: "likedPostId",
+              value: this.args.post.id,
+            });
 
-      this.args.showLogin();
-      return;
-    }
+          this.args.showLogin();
+          return;
+        }
 
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(VIBRATE_DURATION);
-    }
+        if (
+          this.capabilities.userHasBeenActive &&
+          this.capabilities.canVibrate
+        ) {
+          navigator.vibrate(VIBRATE_DURATION);
+        }
 
-    await this.args.toggleLike();
+        await this.args.toggleLike();
 
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
+        if (!this.collapsed) {
+          await this.#fetchWhoLiked();
+        }
+      },
+      this.staticMethodsArgs
+    );
   }
 
   @action
@@ -560,7 +568,7 @@ export default class PostMenu extends Component {
       post_action_type_id: LIKE_ACTION,
     });
 
-    this.likedUsers = users.map(smallUserAttributes);
+    this.likedUsers = users.map(smallUserAttrs);
     this.totalLikedUsers = users.totalRows;
     this.isWhoLikedVisible = true;
   }
@@ -570,7 +578,7 @@ export default class PostMenu extends Component {
       id: this.args.post.id,
     });
 
-    this.readers = users.map(smallUserAttributes);
+    this.readers = users.map(smallUserAttrs);
     this.totalReaders = users.totalRows;
     this.isWhoReadVisible = true;
   }
@@ -583,6 +591,7 @@ export default class PostMenu extends Component {
       @outletArgs={{hash post=@post state=this.state}}
     >
       <nav
+        {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
         class={{concatClass
           "post-controls"
           "glimmer-post-menu"
@@ -662,7 +671,11 @@ export default class PostMenu extends Component {
           @users={{this.likedUsers}}
         />
       {{/if}}
-      {{#if this.collapsedButtons}}
+      {{#if
+        (this.showMoreButton.shouldRender
+          (hash post=this.post state=this.state)
+        )
+      }}
         <UserTip
           @id="post_menu"
           @triggerSelector=".post-controls .actions .show-more-actions"

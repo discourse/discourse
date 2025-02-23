@@ -8,8 +8,8 @@ da:
   js:
     discourse_automation:
       title: Automatisering
-      create: Opret
-      update: Opdater
+      back: Tilbage
+      edit: Rediger
       select_script: Vælg et script
       select_trigger: Vælg en udløser
       edit_automation:
@@ -258,6 +258,8 @@ da:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiveret
           disabled:

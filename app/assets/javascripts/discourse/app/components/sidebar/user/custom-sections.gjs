@@ -1,5 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import SidebarCustomSections from "../common/custom-sections";
 
 export default class SidebarUserCustomSections extends SidebarCustomSections {

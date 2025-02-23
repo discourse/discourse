@@ -4,10 +4,10 @@ import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
+import computed, { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import computed, { debounce } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
@@ -284,13 +284,11 @@ export default class LocalDatesCreate extends Component {
     return dateTime.format("LLLL");
   }
 
-  @computed("toConfig.dateTime", "toSelected")
-  formattedTo(dateTime, toSelected) {
-    const emptyText = toSelected
-      ? "&nbsp;"
+  @computed("toConfig.dateTime")
+  formattedTo(dateTime) {
+    return dateTime.isValid()
+      ? dateTime.format("LLLL")
       : i18n("discourse_local_dates.create.form.until");
-
-    return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
   }
 
   @action

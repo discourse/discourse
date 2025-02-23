@@ -27,6 +27,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
+    delete "/channels/:channel_id/memberships/:user_id" => "channels_memberships#destroy"
     delete "/channels/:channel_id/memberships/me/follows" =>
              "channels_current_user_membership_follows#destroy"
     put "/channels/:channel_id/memberships/me" => "channels_current_user_membership#update"
@@ -90,8 +91,6 @@ Chat::Engine.routes.draw do
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   post "/:chat_channel_id" => "api/channel_messages#create"
-
-  get "/emojis" => "emojis#index"
 
   base_c_route = "/c/:channel_title/:channel_id"
   get base_c_route => "chat#respond", :as => "channel"

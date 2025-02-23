@@ -37,6 +37,7 @@ es:
     default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros no válidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "La encuesta llamada <strong>%{name}</strong> con opciones múltiples tiene párametros no válidos."
     requires_at_least_1_valid_option: "Debes seleccionar al menos 1 opción válida."
+    requires_that_at_least_one_option_is_ranked: "En las encuestas clasificadas, debes clasificar al menos una opción."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "No puedes cambiar la encuesta después de los primeros %{minutes} minutos."
       cannot_edit_named_poll_with_votes: "No puedes cambiar el nombre de la encuesta <strong>${name}</strong> después de los primeros %{minutes} minutos."

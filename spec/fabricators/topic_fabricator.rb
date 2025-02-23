@@ -8,6 +8,8 @@ Fabricator(:topic) do
   end
 end
 
+Fabricator(:topic_with_op, from: :topic) { after_create { |topic| Fabricate(:post, topic: topic) } }
+
 Fabricator(:deleted_topic, from: :topic) { deleted_at { 1.minute.ago } }
 
 Fabricator(:closed_topic, from: :topic) { closed true }

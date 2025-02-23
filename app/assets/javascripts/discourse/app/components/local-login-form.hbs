@@ -48,6 +48,13 @@
       <label class="alt-placeholder" for="login-account-password">
         {{i18n "login.password"}}
       </label>
+      {{#if @loginPassword}}
+        <TogglePasswordMask
+          @maskPassword={{this.maskPassword}}
+          @togglePasswordMask={{this.togglePasswordMask}}
+          tabindex="3"
+        />
+      {{/if}}
       <div class="login__password-links">
         <a
           href
@@ -57,13 +64,6 @@
         >
           {{i18n "forgot_password.action"}}
         </a>
-        {{#if @loginPassword}}
-          <TogglePasswordMask
-            @maskPassword={{this.maskPassword}}
-            @togglePasswordMask={{this.togglePasswordMask}}
-            tabindex="3"
-          />
-        {{/if}}
       </div>
       <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
         {{d-icon "triangle-exclamation"}}

@@ -269,7 +269,7 @@ class UsersController < ApplicationController
     params.require(:new_username)
 
     if clashing_with_existing_route?(params[:new_username]) ||
-         User.reserved_username?(params[:new_username])
+         (User.reserved_username?(params[:new_username]) && !current_user.admin?)
       return render_json_error(I18n.t("login.reserved_username"))
     end
 
@@ -614,7 +614,7 @@ class UsersController < ApplicationController
     # The special case where someone is changing the case of their own username
     return render_available_true if changing_case_of_own_username(target_user, username)
 
-    checker = UsernameCheckerService.new
+    checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
   end
@@ -664,6 +664,9 @@ class UsersController < ApplicationController
     params.permit(:user_fields)
     params.permit(:external_ids)
 
+    if SiteSetting.enable_discourse_connect && !is_api?
+      return fail_with("login.new_registrations_disabled_discourse_connect")
+    end
     return fail_with("login.new_registrations_disabled") unless SiteSetting.allow_new_registrations
 
     if params[:password] && params[:password].length > User.max_password_length
@@ -1102,6 +1105,8 @@ class UsersController < ApplicationController
   def activate_account
     expires_now
 
+    raise Discourse::NotFound if current_user.present?
+
     respond_to do |format|
       format.html { render "default/empty" }
       format.json { render json: success_json }
@@ -1110,6 +1115,7 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
+    raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
       # Log in the user unless they need to be approved
@@ -1924,9 +1930,7 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
-        Notification.populate_acting_user(reminder_notifications)
-      end
+      Notification.populate_acting_user(reminder_notifications)
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -1997,7 +2001,7 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
+      Notification.populate_acting_user(unread_notifications)
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2010,7 +2014,7 @@ class UsersController < ApplicationController
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
       serialized_users =
-        if SiteSetting.show_user_menu_avatars
+        if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
           users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
           serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
         else
@@ -2019,7 +2023,7 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
+      Notification.populate_acting_user(read_notifications)
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,

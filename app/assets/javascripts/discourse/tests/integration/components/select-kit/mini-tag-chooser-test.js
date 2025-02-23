@@ -2,7 +2,7 @@ import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -96,8 +96,8 @@ module(
 
       await this.subject.expand();
 
-      assert.strictEqual(
-        query("input[name=filter-input-search]").placeholder,
+      assert.dom("input[name=filter-input-search]").hasAttribute(
+        "placeholder",
         i18n("tagging.choose_for_topic_required_group", {
           count: 1,
           name: "monkey group",
@@ -106,10 +106,9 @@ module(
 
       await this.subject.selectRowByValue("monkey");
 
-      assert.strictEqual(
-        query("input[name=filter-input-search]").placeholder,
-        i18n("select_kit.filter_placeholder")
-      );
+      assert
+        .dom("input[name=filter-input-search]")
+        .hasAttribute("placeholder", i18n("select_kit.filter_placeholder"));
     });
 
     test("creating a tag using invalid character", async function (assert) {

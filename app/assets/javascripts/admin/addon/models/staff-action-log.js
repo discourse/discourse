@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 

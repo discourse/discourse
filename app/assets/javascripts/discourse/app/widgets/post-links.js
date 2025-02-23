@@ -1,7 +1,7 @@
 import { h } from "virtual-dom";
+import { iconNode } from "discourse/lib/icon-library";
 import { replaceEmoji } from "discourse/widgets/emoji";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 
 export default createWidget("post-links", {
   tagName: "div.post-links-container",

@@ -1,10 +1,8 @@
 import Component from "@glimmer/component";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookStatus extends Component {
-  iconNames = ["far-circle", "circle-xmark", "circle", "circle"];
-  iconClasses = ["text-muted", "text-danger", "text-successful", "text-muted"];
+  statusClasses = ["--inactive", "--critical", "--success", "--inactive"];
 
   get status() {
     const lastStatus = this.args.webhook.get("last_delivery_status");
@@ -15,16 +13,17 @@ export default class WebhookStatus extends Component {
     return i18n(`admin.web_hooks.delivery_status.${this.status.name}`);
   }
 
-  get iconName() {
-    return this.iconNames[this.status.id - 1];
-  }
-
-  get iconClass() {
-    return this.iconClasses[this.status.id - 1];
+  get statusClass() {
+    return this.statusClasses[this.status.id - 1];
   }
 
   <template>
-    {{icon this.iconName class=this.iconClass}}
-    {{this.deliveryStatus}}
+    <div role="status" class="status-label {{this.statusClass}}">
+      <div class="status-label-indicator">
+      </div>
+      <div class="status-label-text">
+        {{this.deliveryStatus}}
+      </div>
+    </div>
   </template>
 }

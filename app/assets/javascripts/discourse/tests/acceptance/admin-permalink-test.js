@@ -26,23 +26,25 @@ acceptance("Admin - Permalinks", function (needs) {
 
   needs.user();
   needs.pretender((server, helper) => {
-    server.get("/admin/permalinks.json", (response) => {
-      const result =
-        response.queryParams.filter !== "feature" ? [] : startingData;
+    server.get("/admin/permalinks.json", (request) => {
+      const filter = request.queryParams.filter;
+      const result = filter && filter !== "feature" ? [] : startingData;
+
       return helper.response(200, result);
     });
   });
 
   test("search permalinks with result", async function (assert) {
-    await visit("/admin/customize/permalinks");
+    await visit("/admin/config/permalinks");
     await fillIn(".permalink-search input", "feature");
+
     assert
       .dom(".permalink-results span[title='c/feature/announcements']")
       .exists("permalink is found after search");
   });
 
   test("search permalinks without results", async function (assert) {
-    await visit("/admin/customize/permalinks");
+    await visit("/admin/config/permalinks");
     await fillIn(".permalink-search input", "garboogle");
 
     assert

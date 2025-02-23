@@ -42,14 +42,13 @@
         <input
           id="radio_{{this.flag.name_key}}"
           {{on "click" (fn this.changePostActionType this.flag)}}
+          checked={{this.selected}}
           type="radio"
           name="post_action_type_index"
         />
         <div class="flag-action-type-details">
           <strong>{{this.formattedName}}</strong>
-          {{#if this.showDescription}}
-            <div class="description">{{html-safe this.description}}</div>
-          {{/if}}
+          <div class="description">{{html-safe this.description}}</div>
           {{#if this.showMessageInput}}
             <Textarea
               name="message"

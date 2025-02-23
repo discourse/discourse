@@ -13,7 +13,7 @@ module("Integration | Component | da-custom-field", function (hooks) {
   hooks.beforeEach(function () {
     this.automation = new AutomationFabricators(getOwner(this)).automation();
 
-    pretender.get("/admin/customize/user_fields", () => {
+    pretender.get("/admin/config/user_fields", () => {
       return response({
         user_fields: [
           {

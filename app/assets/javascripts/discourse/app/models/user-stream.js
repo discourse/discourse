@@ -1,13 +1,12 @@
 import { A } from "@ember/array";
 import { Promise } from "rsvp";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class UserStream extends RestModel {
   loaded = false;
@@ -116,8 +115,8 @@ export default class UserStream extends RestModel {
             Site.current().updateCategory(category);
           });
 
-          result.user_actions.forEach((action) => {
-            action.title = emojiUnescape(escapeExpression(action.title));
+          result.user_actions?.forEach((action) => {
+            action.titleHtml = replaceEmoji(action.title);
             copy.pushObject(UserAction.create(action));
           });
 

@@ -5,10 +5,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import getURL from "discourse-common/lib/get-url";
 import HomeLogoContents from "./home-logo-contents";
 
 export default class HomeLogo extends Component {

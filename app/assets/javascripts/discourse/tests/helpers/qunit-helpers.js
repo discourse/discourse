@@ -1,5 +1,6 @@
 import { run } from "@ember/runloop";
 import {
+  find,
   getApplication,
   settled,
   triggerKeyEvent,
@@ -10,7 +11,7 @@ import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
 import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
-import QUnit, { module, skip, test } from "qunit";
+import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -28,7 +29,6 @@ import { resetDecorators as resetPluginOutletDecorators } from "discourse/compon
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
-import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
@@ -36,9 +36,13 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
+import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
   clearDisabledDefaultKeyboardBindings,
@@ -50,11 +54,13 @@ import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { cloneJSON, deepMerge } from "discourse/lib/object";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
 import PreloadStore from "discourse/lib/preload-store";
+import { resetNeedsHbrTopicList } from "discourse/lib/raw-templates";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
@@ -86,6 +92,7 @@ import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { clearResolverOptions } from "discourse/resolver";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
@@ -95,15 +102,11 @@ import {
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetDecorators } from "discourse/widgets/widget";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import { resetNeedsHbrTopicList } from "discourse-common/lib/raw-templates";
-import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
+import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
@@ -199,6 +202,7 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  resetAdditionalReportModes();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -206,7 +210,6 @@ export function testCleanup(container, app) {
   resetDecorators();
   resetPostCookedDecorators();
   resetPluginOutletDecorators();
-  resetTopicTitleDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
   resetCustomPostMessageCallbacks();
@@ -483,6 +486,8 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
+setupDSelectAssertions();
+setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
   const elem = document.querySelector(selector);
@@ -563,8 +568,6 @@ export async function selectText(selector, endOffset = null) {
 export function conditionalTest(name, condition, testCase) {
   if (condition) {
     test(name, testCase);
-  } else {
-    skip(name, testCase);
   }
 }
 
@@ -587,15 +590,23 @@ export function createFile(name, type = "image/png", blobData = null) {
   return file;
 }
 
-export async function paste(element, text, otherClipboardData = {}) {
-  let e = new Event("paste", { cancelable: true });
+export async function paste(selector, text, otherClipboardData = {}) {
+  const e = new Event("paste", { cancelable: true });
   e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
+
+  const element = typeof selector === "string" ? find(selector) : selector;
+
   element.dispatchEvent(e);
+
   await settled();
   return e;
 }
 
 export async function simulateKey(element, key) {
+  if (typeof element === "string") {
+    element = find(element);
+  }
+
   if (key === "\b") {
     await triggerKeyEvent(element, "keydown", "Backspace");
 

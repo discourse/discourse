@@ -105,6 +105,7 @@ module Chat
     %i[
       category_channel?
       direct_message_channel?
+      direct_message_group?
       public_channel?
       chatable_has_custom_fields?
       read_restricted?

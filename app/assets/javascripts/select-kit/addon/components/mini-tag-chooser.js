@@ -6,7 +6,7 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {

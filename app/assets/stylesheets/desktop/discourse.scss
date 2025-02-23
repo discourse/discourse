@@ -2,7 +2,6 @@
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
-
 :root {
   --d-max-width: 1110px;
 }
@@ -25,6 +24,7 @@ body.dragging {
   .control-group {
     margin-bottom: 1.25em;
   }
+
   .controls:not(.controls-dropdown) + .controls {
     margin-top: 0.5em;
   }
@@ -119,8 +119,8 @@ select {
   }
 
   .control-group {
-    @include clearfix;
     margin-bottom: 18px;
+    @include clearfix;
   }
 
   .control-indent {
@@ -162,10 +162,11 @@ body.has-sidebar-page {
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 2em;
+    padding-left: 0;
+
     @include breakpoint(large) {
       gap: 0 1em;
     }
-    padding-left: 0;
   }
 }
 

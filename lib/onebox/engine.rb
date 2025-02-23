@@ -4,6 +4,13 @@ module Onebox
   module Engine
     def self.included(object)
       object.extend(ClassMethods)
+      object.singleton_class.class_eval do
+        def method_added(method_name)
+          if method_name == :matches_path
+            raise "Define matches_path as a class method (def self.matches_path) in #{self}"
+          end
+        end
+      end
     end
 
     def self.engines
@@ -100,9 +107,15 @@ module Onebox
         end
       end
 
-      def ===(other)
-        if other.kind_of?(URI)
-          !!(other.to_s =~ class_variable_get(:@@matcher))
+      def ===(uri)
+        if uri.is_a?(URI)
+          # Check for new domain/path matching
+          if class_variable_defined?(:@@domains)
+            matches?(uri) && matches_path(uri.path)
+          else
+            # Fallback to matches_regexp if no domains are defined
+            class_variable_defined?(:@@matcher) && !!(uri.to_s =~ class_variable_get(:@@matcher))
+          end
         else
           super
         end
@@ -114,6 +127,28 @@ module Onebox
 
       def matches_regexp(r)
         class_variable_set :@@matcher, r
+      end
+
+      def matches_domain(*domains, allow_subdomains: false)
+        class_variable_set :@@domains, domains.map(&:downcase)
+        class_variable_set :@@allow_subdomains, allow_subdomains
+      end
+
+      def matches?(uri)
+        domains = class_variable_get(:@@domains)
+        allow_subdomains = class_variable_get(:@@allow_subdomains)
+
+        if allow_subdomains
+          domains.any? do |domain|
+            uri.host.downcase.end_with?(".#{domain}") || uri.host.downcase == domain
+          end
+        else
+          domains.include?(uri.host.downcase)
+        end
+      end
+
+      def matches_path(path)
+        true
       end
 
       def matches_content_type(ct)

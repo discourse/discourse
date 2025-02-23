@@ -6,8 +6,8 @@ import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
+import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import DMenu from "float-kit/components/d-menu";
 
 export default class TopicAdminMenu extends Component {
@@ -89,7 +89,7 @@ export default class TopicAdminMenu extends Component {
         @onRegisterApi={{this.onRegisterApi}}
         @modalForMobile={{true}}
         @autofocus={{true}}
-        @triggerClass="btn-default btn-icon toggle-admin-menu"
+        @triggerClass="btn-default btn-icon toggle-admin-menu {{@buttonClasses}}"
       >
         <:trigger>
           {{icon "wrench"}}

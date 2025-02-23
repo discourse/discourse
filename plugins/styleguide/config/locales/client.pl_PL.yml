@@ -74,6 +74,8 @@ pl_PL:
           title: "Powiadomienia tematu"
         post:
           title: "Wpis"
+        post_list:
+          title: "Lista postów"
         topic_map:
           title: "Mapa tematu"
         site_header:

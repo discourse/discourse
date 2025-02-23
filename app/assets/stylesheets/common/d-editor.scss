@@ -42,6 +42,7 @@
 
   &.disabled {
     cursor: not-allowed;
+
     .d-editor-button-bar {
       opacity: 0.5;
       pointer-events: none;
@@ -57,7 +58,6 @@
   overflow: auto;
   overflow-anchor: none;
   cursor: default;
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
@@ -69,7 +69,7 @@
   margin: 0;
   min-height: auto;
   word-wrap: break-word;
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 0;
 }
 
@@ -117,24 +117,30 @@
     height: 100%;
     min-height: 10em;
   }
+
   .local-dates.btn {
     display: none;
   }
+
   .d-editor-container {
     display: block;
   }
+
   .d-editor-textarea-wrapper {
     border: 1px solid var(--primary-low);
   }
+
   .d-editor-preview-wrapper {
     max-width: 100%;
     margin: 0;
     padding: 0;
   }
+
   .d-editor-preview {
     background-color: var(--primary-very-low);
     margin-top: 1em;
     padding: 0.667em;
+
     &:empty {
       margin: 0;
       padding: 0;
@@ -150,12 +156,14 @@
 
 .d-editor-preview img {
   vertical-align: baseline; // consistent with cooked
+
   &.emoji,
   &.avatar,
   &.onebox-avatar,
   &.site-icon {
     vertical-align: text-bottom;
   }
+
   &.resizable {
     object-fit: cover;
     object-position: top;
@@ -221,6 +229,7 @@
 
     .alt-text-readonly-container {
       flex: 1 1 auto;
+
       // arbitrary min-width value allows for correct shrinking
       min-width: 100px;
 
@@ -246,6 +255,7 @@
       flex: 1;
       max-width: 100%;
       height: 95%; // gives input some padding
+
       .alt-text-input,
       .alt-text-edit-ok,
       .alt-text-edit-cancel {
@@ -297,18 +307,20 @@
 .d-editor-button-bar {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
-  @include breakpoint(tablet) {
-    // occupy available space on narrower screens
-    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
-  }
-  @include breakpoint(mobile-medium) {
-    font-size: var(--font-down-1);
-  }
   align-items: center;
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
+
+  @include breakpoint(tablet) {
+    // occupy available space on narrower screens
+    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
+  }
+
+  @include breakpoint(mobile-medium) {
+    font-size: var(--font-down-1);
+  }
 
   .btn:focus {
     @include default-focus;
@@ -320,8 +332,9 @@
     color: var(--primary-medium);
 
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
+
     .discourse-no-touch & {
       &:hover {
         color: var(--primary-low);

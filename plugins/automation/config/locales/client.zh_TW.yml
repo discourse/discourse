@@ -7,8 +7,8 @@
 zh_TW:
   js:
     discourse_automation:
-      create: 創建
-      update: 更新
+      back: 上一步
+      edit: 編輯
       fields:
         user:
           label: 使用者
@@ -141,6 +141,8 @@ zh_TW:
             label: 觸發
           version:
             label: 版本
+          status:
+            label: 狀態
           enabled:
             label: 啟用
           disabled:

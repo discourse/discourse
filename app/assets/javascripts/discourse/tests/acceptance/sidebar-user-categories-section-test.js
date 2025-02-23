@@ -2,6 +2,7 @@ import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { TOP_SITE_CATEGORIES_TO_SHOW } from "discourse/components/sidebar/common/categories-section";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import Site from "discourse/models/site";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
@@ -11,7 +12,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance(
@@ -70,7 +70,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    ["latest", "top", "new", "unread"].forEach((type) => {
+    ["latest", "top", "new", "unread", "hot"].forEach((type) => {
       server.get(`/c/:categorySlug/:categoryId/l/${type}.json`, () => {
         return helper.response(
           cloneJSON(discoveryFixture["/c/bug/1/l/latest.json"])
@@ -715,6 +715,26 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       )
       .exists(
         "the category1 section link is marked as active for the top route"
+      );
+  });
+
+  test("visiting category discovery hot route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit(`/c/${category1.slug}/${category1.id}/l/hot`);
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
+
+    assert
+      .dom(
+        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a.active`
+      )
+      .exists(
+        "the category1 section link is marked as active for the hot route"
       );
   });
 

@@ -5,8 +5,24 @@ end
 
 # intelligent fork based demonizer
 class Demon::Base
+  HOSTNAME = Socket.gethostname
+
   def self.demons
     @demons
+  end
+
+  if Rails.env.test?
+    def self.set_demons(demons)
+      @demons = demons
+    end
+
+    def self.reset_demons
+      @demons = {}
+    end
+
+    def set_pid(pid)
+      @pid = pid
+    end
   end
 
   def self.start(count = 1, verbose: false, logger: nil)
@@ -21,10 +37,7 @@ class Demon::Base
 
   def self.restart
     return unless @demons
-    @demons.values.each do |demon|
-      demon.stop
-      demon.start
-    end
+    @demons.values.each { |demon| demon.restart }
   end
 
   def self.ensure_running
@@ -75,6 +88,11 @@ class Demon::Base
     "HUP"
   end
 
+  def restart
+    stop
+    start
+  end
+
   def stop
     @started = false
 
@@ -105,7 +123,9 @@ class Demon::Base
       wait_for_stop.call
 
       if alive?
-        log("Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}")
+        log(
+          "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}\n#{caller.join("\n")}",
+        )
         Process.kill("KILL", @pid)
       end
 

@@ -16,7 +16,6 @@ import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
-import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n, { i18n } from "discourse-i18n";
 import { FORMAT as DATE_INPUT_FORMAT } from "select-kit/components/future-date-input-selector";
@@ -37,20 +36,12 @@ export default class CreateInvite extends Component {
   @tracked flashClass = "info";
 
   @tracked topics = this.invite.topics ?? this.model.topics ?? [];
-  @tracked allGroups;
+  allGroups = this.site.groups.filter((g) => !g.automatic);
 
   model = this.args.model;
   invite = this.model.invite ?? Invite.create();
   sendEmail = false;
   formApi;
-
-  constructor() {
-    super(...arguments);
-
-    Group.findAll().then((groups) => {
-      this.allGroups = groups.filter((group) => !group.automatic);
-    });
-  }
 
   get linkValidityMessageFormat() {
     return I18n.messageFormat("user.invited.invite.link_validity_MF", {
@@ -242,8 +233,10 @@ export default class CreateInvite extends Component {
   }
 
   @action
-  showAdvancedMode() {
+  showAdvancedMode(event) {
     this.displayAdvancedOptions = true;
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   @action
@@ -326,7 +319,9 @@ export default class CreateInvite extends Component {
             <a
               class="edit-link-options"
               role="button"
+              tabindex="0"
               {{on "click" this.showAdvancedMode}}
+              {{on "keydown" this.showAdvancedMode}}
             >{{i18n "user.invited.invite.edit_link_options"}}</a>
           </p>
         {{else}}
@@ -463,6 +458,7 @@ export default class CreateInvite extends Component {
             @action={{this.createLink}}
             @disabled={{this.saving}}
             class="btn-primary save-invite"
+            autofocus="true"
           />
         {{else}}
           <DButton
@@ -484,6 +480,7 @@ export default class CreateInvite extends Component {
               }}
               @action={{this.saveInviteAndSendEmail}}
               @disabled={{this.saving}}
+              autofocus="true"
               class="btn-primary save-invite-and-send-email"
             />
           {{/if}}

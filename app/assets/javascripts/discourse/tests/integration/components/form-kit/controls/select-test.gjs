@@ -1,9 +1,10 @@
+import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { NO_VALUE_OPTION } from "discourse/components/d-select";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | FormKit | Controls | Select",
@@ -38,7 +39,7 @@ module(
       assert.deepEqual(data, { foo: "option-3" });
     });
 
-    test("when disabled", async function (assert) {
+    test("@disabled", async function (assert) {
       await render(<template>
         <Form as |form|>
           <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
@@ -52,31 +53,92 @@ module(
       assert.dom(".form-kit__control-select").hasAttribute("disabled");
     });
 
-    test("no selection", async function (assert) {
+    test("include none", async function (assert) {
       await render(<template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Select as |select|>
-              <select.Option @value="option-1">Option 1</select.Option>
-            </field.Select>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Select />
           </form.Field>
         </Form>
       </template>);
 
       assert
-        .dom(".form-kit__control-select option:nth-child(1)")
-        .hasText(
-          i18n("form_kit.select.select_placeholder"),
-          "it shows a placeholder for selection"
-        );
+        .form()
+        .field("foo")
+        .hasValue(NO_VALUE_OPTION, "it has the none when no value is present");
 
-      await formKit().field("foo").select("option-1");
+      await render(<template>
+        <Form @data={{hash foo="1"}} as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Select />
+          </form.Field>
+        </Form>
+      </template>);
 
       assert
-        .dom(".form-kit__control-select option:nth-child(1)")
-        .hasText(
-          i18n("form_kit.select.none_placeholder"),
-          "it shows a placeholder for unselection"
+        .form()
+        .field("foo")
+        .hasNoValue(
+          NO_VALUE_OPTION,
+          "it doesn’t have the none when value is present"
+        );
+
+      await render(<template>
+        <Form @data={{hash foo="1"}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Select />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .form()
+        .field("foo")
+        .hasValue(
+          NO_VALUE_OPTION,
+          "it has the none when value is present and field is not required"
+        );
+
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Select />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .form()
+        .field("foo")
+        .hasValue(
+          NO_VALUE_OPTION,
+          "it has the none when no value is present and field is not required"
+        );
+
+      await render(<template>
+        <Form @data={{hash foo="1"}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Select @includeNone={{false}} />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .form()
+        .field("foo")
+        .hasNoValue(
+          NO_VALUE_OPTION,
+          "it doesn’t have the none for an optional field when value is present and includeNone is false"
         );
     });
   }

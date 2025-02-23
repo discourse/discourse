@@ -10,10 +10,14 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import discourseComputed from "discourse/lib/decorators";
+import {
+  currentThemeId,
+  listThemes,
+  setLocalTheme,
+} from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
@@ -35,7 +39,7 @@ export default class InterfaceController extends Controller {
   @service session;
   @controller("preferences") preferencesController;
 
-  currentThemeId = -1;
+  currentThemeId = currentThemeId();
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
@@ -52,10 +56,6 @@ export default class InterfaceController extends Controller {
   init() {
     super.init(...arguments);
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-    this.set(
-      "enableDarkMode",
-      this.get("model.user_option.dark_scheme_id") === -1 ? false : true
-    );
     this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
   }
 
@@ -72,7 +72,6 @@ export default class InterfaceController extends Controller {
       "allow_private_messages",
       "enable_allowed_pm_users",
       "homepage_id",
-      "hide_profile",
       "hide_presence",
       "text_size",
       "title_count_mode",

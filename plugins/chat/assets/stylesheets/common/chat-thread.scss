@@ -2,5 +2,5 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  @include chat-height(var(--chat-header-expanded-offset, 0px));
+  @include chat-height(var(--chat-header-expanded-offset, 0));
 }

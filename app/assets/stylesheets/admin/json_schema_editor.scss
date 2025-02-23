@@ -1,0 +1,120 @@
+.json-schema-editor-modal {
+  h3.card-title {
+    margin-top: 0;
+
+    label {
+      display: none;
+    }
+  }
+
+  .je-object__container {
+    border-bottom: 1px dashed var(--primary-low);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    position: relative;
+
+    .card-title label {
+      display: inline-block;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+
+    .form-group {
+      label {
+        display: inline-block;
+        width: 35%;
+      }
+
+      .form-control {
+        width: 65%;
+      }
+    }
+
+    > .btn-group:last-child {
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      .btn {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    > .btn-group {
+      margin-top: 0;
+      display: flex;
+      align-items: stretch;
+      gap: 0.25em;
+    }
+  }
+
+  .btn-group .btn .d-icon {
+    margin-right: 0;
+  }
+
+  .card-body > .btn-group {
+    // !important needed to override inline style :-(
+    display: block !important;
+    text-align: right;
+  }
+
+  .table {
+    width: 100%;
+    margin-bottom: 0.5em;
+
+    td,
+    th {
+      vertical-align: middle;
+      padding: 0.5em 0;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    .btn-group .btn {
+      margin-left: 0.25em;
+      font-size: var(--font-down-1);
+    }
+
+    td.compact {
+      .invalid-feedback {
+        margin: 0;
+        font-size: var(--font-down-1);
+        color: var(--danger);
+      }
+    }
+
+    input[type="text"],
+    .form-group .form-control {
+      margin-bottom: 0;
+      width: 95%;
+
+      &.is-invalid {
+        border-color: var(--danger);
+        outline: 1px solid var(--danger);
+      }
+    }
+  }
+
+  .row div[data-schematype="array"] {
+    padding: 0.5em;
+    background-color: var(--primary-very-low);
+
+    > .card-title {
+      width: 100%;
+      border-bottom: 1px solid var(--primary-low);
+
+      > .json-editor-btn-collapse {
+        float: right;
+      }
+    }
+  }
+
+  .card-title.level-1,
+  .card-title.je-object__title {
+    > .json-editor-btn-collapse {
+      display: none;
+    }
+  }
+}

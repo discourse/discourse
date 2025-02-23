@@ -15,10 +15,6 @@ export function registerEmoji(code, url, group) {
   extendedEmojiMap.set(code, { url, group });
 }
 
-export function extendedEmojiList() {
-  return extendedEmojiMap;
-}
-
 const emojiMap = new Map();
 
 // Regex from https://github.com/mathiasbynens/emoji-test-regex-pattern/blob/main/dist/latest/javascript.txt
@@ -186,6 +182,14 @@ export function buildEmojiUrl(code, opts) {
 export function emojiExists(code) {
   code = code.toLowerCase();
   return extendedEmojiMap.has(code) || emojiMap.has(code) || aliasMap.has(code);
+}
+
+export function normalizeEmoji(code) {
+  code = code.toLowerCase();
+  if (extendedEmojiMap.get(code) || emojiMap.get(code)) {
+    return code;
+  }
+  return aliasMap.get(code);
 }
 
 let toSearch;

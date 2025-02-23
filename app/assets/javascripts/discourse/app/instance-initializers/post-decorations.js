@@ -6,14 +6,13 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default {
@@ -25,33 +24,13 @@ export default {
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
       // will eventually just be called lightbox
-      const lightboxService = owner.lookup("service:lightbox");
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);
       });
 
-      if (siteSettings.enable_experimental_lightbox) {
-        api.decorateCookedElement(
-          (element, helper) => {
-            return helper &&
-              element.querySelector(SELECTORS.DEFAULT_ITEM_SELECTOR)
-              ? lightboxService.setupLightboxes({
-                  container: element,
-                  selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-                })
-              : null;
-          },
-          {
-            onlyStream: true,
-          }
-        );
-
-        api.cleanupStream(lightboxService.cleanupLightboxes);
-      } else {
-        api.decorateCookedElement((elem) => {
-          return lightbox(elem, siteSettings);
-        });
-      }
+      api.decorateCookedElement((elem) => {
+        return lightbox(elem, siteSettings);
+      });
 
       api.decorateCookedElement((elem) => {
         const grids = elem.querySelectorAll(".d-image-grid");
@@ -119,7 +98,7 @@ export default {
           "btn-default",
           "btn",
           "btn-icon",
-          ...(props.label ? ["no-text"] : []),
+          ...(props.label ? [] : ["no-text"]),
         ];
 
         openPopupBtn.classList.add(...defaultClasses);
@@ -197,7 +176,6 @@ export default {
           const tableEditorBtn = _createButton({
             classes: ["btn-edit-table"],
             title: "table_builder.edit.btn_edit",
-            label: "table_builder.edit.btn_edit",
             icon: {
               name: "pencil",
               class: "edit-table-icon",
@@ -208,6 +186,7 @@ export default {
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
           if (attrs.canEdit) {
+            table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
               "click",
@@ -228,6 +207,8 @@ export default {
           if (site.isMobileDevice) {
             return;
           }
+
+          table.parentNode.classList.add("--has-overflow");
 
           const expandTableBtn = _createButton({
             classes: ["btn-expand-table"],

@@ -2,6 +2,8 @@ import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -9,8 +11,6 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { escapeExpression } from "discourse/lib/utilities";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -60,7 +60,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get text() {
     return this.adminSidebarNavLink.label
-      ? i18n(this.adminSidebarNavLink.label)
+      ? i18n(this.adminSidebarNavLink.label, {
+          translatedFallback: this.adminSidebarNavLink.text,
+        })
       : this.adminSidebarNavLink.text;
   }
 
@@ -82,9 +84,8 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     // for the plugin ID has its own nested routes defined in the plugin.
     if (this.router.currentRoute.name === "adminPlugins.show.settings") {
       if (
-        this.adminSidebarNavLink.route?.includes(
-          this.router.currentRoute.parent.params.plugin_id
-        )
+        this.adminSidebarNavLink.route?.split(".").last ===
+        this.router.currentRoute.parent.params.plugin_id
       ) {
         return this.router.currentRoute.name;
       }
@@ -182,46 +183,6 @@ function defineAdminSection(
 }
 
 export function useAdminNavConfig(navMap) {
-  const adminNavSections = [
-    {
-      text: "",
-      name: "root",
-      hideSectionHeader: true,
-      links: [
-        {
-          name: "admin_home",
-          route: "admin.dashboard.general",
-          label: "admin.dashboard.title",
-          icon: "house",
-          moderator: true,
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.community.sidebar_link.users",
-          icon: "users",
-          moderator: true,
-        },
-        {
-          name: "admin_all_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "gear",
-        },
-        {
-          name: "admin_whats_new",
-          route: "admin.whatsNew",
-          label: "admin.account.sidebar_link.whats_new.title",
-          icon: "gift",
-          keywords: "admin.account.sidebar_link.whats_new.keywords",
-          moderator: true,
-        },
-      ],
-    },
-  ];
-
-  navMap = adminNavSections.concat(navMap);
-
   for (const [sectionName, additionalLinks] of Object.entries(
     additionalAdminSidebarSectionLinks
   )) {
@@ -309,7 +270,9 @@ function pluginAdminRouteLinks(router) {
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
+        text: plugin.humanized_name,
         icon: "gear",
+        description: plugin.description,
       };
     });
 }
@@ -400,7 +363,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!currentUser.admin && currentUser.moderator) {
       navConfig.forEach((section) => {
-        section.links = section.links.filterBy("moderator");
+        section.links = section.links.filter((link) => {
+          return link.moderator;
+        });
       });
       navConfig = navConfig.filterBy("links.length");
     }

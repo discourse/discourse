@@ -1,13 +1,12 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import domUtils from "discourse/lib/dom-utils";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import DiscourseURL from "discourse/lib/url";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 
@@ -64,21 +63,7 @@ export default class ScrollingPostStream extends MountWidget {
       return;
     }
 
-    if (
-      isWorkaroundActive() ||
-      document.webkitFullscreenElement ||
-      document.fullscreenElement
-    ) {
-      return;
-    }
-
-    // We use this because watching videos fullscreen in Chrome was super buggy
-    // otherwise. Thanks to arrendek from q23 for the technique.
-    const topLeftCornerElement = document.elementFromPoint(0, 0);
-    if (
-      topLeftCornerElement &&
-      topLeftCornerElement.tagName.toUpperCase() === "IFRAME"
-    ) {
+    if (document.webkitFullscreenElement || document.fullscreenElement) {
       return;
     }
 

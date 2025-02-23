@@ -19,6 +19,19 @@ describe "User preferences | Profile", type: :system do
     end
   end
 
+  describe "hiding profile" do
+    it "allows user to hide their profile" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      user_preferences_profile_page.visit(user)
+      user_preferences_profile_page.hide_profile
+      user_preferences_profile_page.save
+      page.refresh
+
+      expect(user_preferences_profile_page).to have_hidden_profile
+    end
+  end
+
   describe "enforcing required fields" do
     before do
       UserRequiredFieldsVersion.create!

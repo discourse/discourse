@@ -13,13 +13,12 @@ hu:
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
-      create: Létrehozás
-      update: Frissítés
+      back: Vissza
+      edit: Szerkesztés
       select_script: Válasszon egy parancsfájlt
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
-      no_automation_yet: Még nem hozott létre automatizálást. A kezdéshez válasszon az alábbi lehetőségek közül.
       filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
@@ -167,10 +166,10 @@ hu:
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_group:
               label: Csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoport postafiókjában
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
             restricted_groups:
               label: Csoportok
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoportok egyikében
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
@@ -228,6 +227,10 @@ hu:
               label: Érvényes bizalmi szintek
               description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
+            tags_added: Címkék hozzáadva
+            tags_removed: Címkék eltávolítva
           fields:
             watching_categories:
               label: Figyelt kategóriák
@@ -235,6 +238,8 @@ hu:
             watching_tags:
               label: Figyelt címkék
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
+            trigger_on:
+              label: Trigger bekapcsolva
             trigger_with_pms:
               label: Aktiválás PÜ-el
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
@@ -413,6 +418,8 @@ hu:
             label: Szkript
           version:
             label: Verzió
+          status:
+            label: Állapot
           enabled:
             label: Engedélyezed
           disabled:

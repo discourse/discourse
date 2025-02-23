@@ -19,4 +19,8 @@
           >*</span>{{/if}}{{/unless}}
     </span>
   </label>
+  <InputTip
+    @validation={{@validation}}
+    class={{unless @validation.reason "hidden"}}
+  />
 </div>

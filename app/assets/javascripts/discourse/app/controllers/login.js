@@ -9,6 +9,8 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import {
@@ -17,8 +19,6 @@ import {
 } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
@@ -119,7 +119,8 @@ export default class LoginPageController extends Controller {
   get shouldTriggerRouteAction() {
     return (
       !this.siteSettings.full_page_login ||
-      this.siteSettings.enable_discourse_connect
+      this.siteSettings.enable_discourse_connect ||
+      this.singleExternalLogin
     );
   }
 
@@ -159,6 +160,8 @@ export default class LoginPageController extends Controller {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
+          } else if (this.referrerUrl) {
+            window.location.assign(this.referrerUrl);
           } else {
             window.location.reload();
           }
@@ -220,7 +223,10 @@ export default class LoginPageController extends Controller {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (
+        this.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately
+      ) {
         // we will automatically redirect to the external auth service
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
@@ -333,6 +339,8 @@ export default class LoginPageController extends Controller {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
+        } else if (this.referrerUrl) {
+          applyHiddenFormInputValue(this.referrerUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }

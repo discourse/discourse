@@ -13,13 +13,12 @@ ru:
             delete_automation: удалить автоматизацию
     discourse_automation:
       title: Автоматизация
-      create: Создать
-      update: Обновить
+      back: Назад
+      edit: Отредактировать
       select_script: Выберите скрипт
       select_trigger: Выберите триггер
       confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
       confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
-      no_automation_yet: Вы еще не создали ни одной автоматизации. Выберите вариант ниже, чтобы начать.
       filter_placeholder: Фильтровать по имени или описанию...
       edit_automation:
         trigger_section:
@@ -230,6 +229,10 @@ ru:
               label: Допустимые уровни доверия
               description: Сработает, только если публикация создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Теги добавлены или удалены
+            tags_added: Теги добавлены
+            tags_removed: Теги удалены
           fields:
             watching_categories:
               label: Отслеживаемые категории
@@ -237,6 +240,8 @@ ru:
             watching_tags:
               label: Отслеживаемые теги
               description: Сработает только в том случае, если тема содержит любой из этих тегов
+            trigger_on:
+              label: 'Запустить при условии:'
             trigger_with_pms:
               label: Запуск при изменении в ЛС
               description: Срабатывает, даже если теги были изменены в личном сообщении
@@ -415,6 +420,8 @@ ru:
             label: Скрипт
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Включено
           disabled:

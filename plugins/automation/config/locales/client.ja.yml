@@ -13,13 +13,12 @@ ja:
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
-      create: 作成
-      update: 更新
+      back: 戻る
+      edit: 編集
       select_script: スクリプトを選択
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
-      no_automation_yet: 自動化をまだ作成していません。以下のオプションを選択して開始してください。
       filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:
@@ -166,10 +165,10 @@ ja:
               description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
             restricted_group:
               label: グループ
-              description: オプション。投稿のトピックがこのグループの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
+              description: オプション。投稿のトピックがこのグループの受信トレイにある個人メッセージである場合にのみトリガーされます。
             restricted_groups:
               label: グループ
-              description: オプション。投稿のトピックがグループのいずれかの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
+              description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
             ignore_group_members:
               label: グループメンバーを無視
               description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
@@ -227,6 +226,10 @@ ja:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: タグの追加または削除
+            tags_added: タグの追加
+            tags_removed: タグの削除
           fields:
             watching_categories:
               label: ウォッチ中のカテゴリ
@@ -234,6 +237,8 @@ ja:
             watching_tags:
               label: ウォッチ中のタグ
               description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
+            trigger_on:
+              label: 次の場合にトリガー
             trigger_with_pms:
               label: PM でトリガー
               description: タグが PM で変更された場合でもトリガーされます
@@ -412,6 +417,8 @@ ja:
             label: スクリプト
           version:
             label: バージョン
+          status:
+            label: ステータス
           enabled:
             label: 有効
           disabled:
