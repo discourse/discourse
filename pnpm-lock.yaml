@@ -285,8 +285,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       ace-builds:
-        specifier: ^1.38.0
-        version: 1.38.0
+        specifier: ^1.39.0
+        version: 1.39.0
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.9)
@@ -2838,8 +2838,8 @@ packages:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
 
-  ace-builds@1.38.0:
-    resolution: {integrity: sha512-5W3B5/5Rl/dAsp7Fb6xXOc6bCYln+4qOnpQHh4OpxZSoDsp1KFiu5lA3TJBr8/5DQu6+8rlduCGecMSnKuU2MQ==}
+  ace-builds@1.39.0:
+    resolution: {integrity: sha512-MqoZojv4gpc5QyTMor/dS6kmruDV9db9LVZbCiT4qYz6WsDiv4qyG5f7ZPc+wjUl6oLMqgCAsBjo1whdSVyMlQ==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -10976,7 +10976,7 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  ace-builds@1.38.0: {}
+  ace-builds@1.39.0: {}
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
