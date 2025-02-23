@@ -23,6 +23,7 @@ RSpec.describe DirectoryItemSerializer do
             "user_field_2" => user_field_2.id,
           },
           searchable_fields: [user_field_1],
+          scope: PlaceholderGuardian.new,
         )
 
       expect(user_fields).to eq(
@@ -48,6 +49,7 @@ RSpec.describe DirectoryItemSerializer do
             "user_field_1" => user_field_1.id,
           },
           searchable_fields: [],
+          scope: PlaceholderGuardian.new,
         )
 
       expect(user_fields[user_field_1.id]).to eq(
@@ -63,7 +65,8 @@ RSpec.describe DirectoryItemSerializer do
         DirectoryItem.find_by(user: user, period_type: DirectoryItem.period_types[:all])
       DirectoryItemSerializer.new(
         directory_item,
-        { attributes: DirectoryColumn.active_column_names },
+        { attributes: DirectoryColumn.active_column_names,
+          scope: PlaceholderGuardian.new },
       )
     end
 

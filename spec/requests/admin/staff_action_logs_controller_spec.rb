@@ -112,7 +112,7 @@ RSpec.describe Admin::StaffActionLogsController do
         theme.set_field(target: :common, name: :scss, value: "omit-dupe")
 
         original_json =
-          ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
+          ThemeSerializer.new(theme, scope: PlaceholderGuardian.new, root: false, include_theme_field_values: true).to_json
 
         theme.set_field(target: :mobile, name: :scss, value: "body {.down}")
 
@@ -136,11 +136,11 @@ RSpec.describe Admin::StaffActionLogsController do
         tag3 = Fabricate(:tag)
         tag_group1 = Fabricate(:tag_group, tags: [tag1, tag2])
 
-        old_json = TagGroupSerializer.new(tag_group1, root: false).to_json
+        old_json = TagGroupSerializer.new(tag_group1, scope: PlaceholderGuardian.new, root: false).to_json
 
         tag_group2 = Fabricate(:tag_group, tags: [tag2, tag3])
 
-        new_json = TagGroupSerializer.new(tag_group2, root: false).to_json
+        new_json = TagGroupSerializer.new(tag_group2, scope: PlaceholderGuardian.new, root: false).to_json
 
         record =
           StaffActionLogger.new(Discourse.system_user).log_tag_group_change(

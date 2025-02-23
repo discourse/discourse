@@ -6,7 +6,7 @@ RSpec.describe Chat::ThreadOriginalMessageSerializer do
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     fab!(:message) { Fabricate(:chat_message, user: user) }
 
-    subject(:serializer) { described_class.new(message, root: nil) }
+    subject(:serializer) { described_class.new(message, scope: PlaceholderGuardian.new, root: nil) }
 
     it "adds status to user if status is enabled" do
       SiteSetting.enable_user_status = true
@@ -39,7 +39,7 @@ RSpec.describe Chat::ThreadOriginalMessageSerializer do
       Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
     end
 
-    subject(:serializer) { described_class.new(message, root: nil) }
+    subject(:serializer) { described_class.new(message, scope: PlaceholderGuardian.new, root: nil) }
 
     it "adds status to mentioned users if status is enabled" do
       SiteSetting.enable_user_status = true

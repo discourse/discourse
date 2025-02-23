@@ -14,7 +14,7 @@ module DiscourseAutomation
     attribute :stats
 
     def last_updated_by
-      BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, root: false).as_json
+      BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, scope: scope, root: false).as_json
     end
 
     def include_next_pending_automation_at?
@@ -135,6 +135,7 @@ module DiscourseAutomation
       ActiveModel::ArraySerializer.new(
         fields || [],
         each_serializer: DiscourseAutomation::FieldSerializer,
+        scope: scope,
       ).as_json || []
     end
 

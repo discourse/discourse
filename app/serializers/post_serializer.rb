@@ -311,7 +311,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def deleted_by
-    BasicUserSerializer.new(object.deleted_by, root: false).as_json
+    BasicUserSerializer.new(object.deleted_by, scope: scope, root: false).as_json
   end
 
   def include_deleted_by?
@@ -536,7 +536,7 @@ class PostSerializer < BasicPostSerializer
     return if notice["created_by_user_id"].blank?
     found_user = notice_created_by_users&.find { |user| user.id == notice["created_by_user_id"] }
     return if !found_user
-    BasicUserSerializer.new(found_user, root: false).as_json
+    BasicUserSerializer.new(found_user, scope: scope, root: false).as_json
   end
 
   def notice
@@ -634,7 +634,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_status
-    UserStatusSerializer.new(object.user&.user_status, root: false)
+    UserStatusSerializer.new(object.user&.user_status, scope: scope, root: false)
   end
 
   def mentioned_users
@@ -647,7 +647,7 @@ class PostSerializer < BasicPostSerializer
         query = query.where(username_lower: object.mentions)
       end
 
-    users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }
+    users.map { |user| BasicUserSerializer.new(user, scope: scope, root: false, include_status: true).as_json }
   end
 
   def include_mentioned_users?

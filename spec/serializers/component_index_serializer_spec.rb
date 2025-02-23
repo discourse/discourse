@@ -30,7 +30,7 @@ RSpec.describe ComponentIndexSerializer do
     )
   end
 
-  let(:json) { described_class.new(component, root: false).as_json }
+  let(:json) { described_class.new(component, scope: PlaceholderGuardian.new, root: false).as_json }
 
   it "includes remote_theme object" do
     expect(json[:remote_theme][:id]).to eq(component.remote_theme.id)

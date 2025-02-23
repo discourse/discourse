@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadSerializer do
-  subject(:serializer) { UploadSerializer.new(upload, root: false) }
+  subject(:serializer) { UploadSerializer.new(upload, scope: PlaceholderGuardian.new, root: false) }
 
   fab!(:upload)
 

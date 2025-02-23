@@ -268,7 +268,7 @@ class UploadsController < ApplicationController
   def self.serialize_upload(data)
     # as_json.as_json is not a typo... as_json in AM serializer returns keys as symbols, we need them
     # as strings here
-    serialized = UploadSerializer.new(data, root: nil).as_json.as_json if Upload === data
+    serialized = UploadSerializer.new(data, scope: PlaceholderGuardian.new, root: nil).as_json.as_json if Upload === data
     serialized ||= (data || {}).as_json
   end
 

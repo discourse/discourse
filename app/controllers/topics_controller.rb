@@ -144,7 +144,7 @@ class TopicsController < ApplicationController
                   custom_message_params: {
                     group: group.name,
                   },
-                  group: serialize_data(group, BasicGroupSerializer, root: false),
+                  group: serialize_data(group, BasicGroupSerializer, scope: PlaceholderGuardian.new, root: false),
                 )
         end
 
@@ -542,7 +542,7 @@ class TopicsController < ApplicationController
     render json:
              success_json.merge!(
                topic_status_update:
-                 TopicTimerSerializer.new(TopicTimer.find_by(topic: @topic), root: false),
+                 TopicTimerSerializer.new(TopicTimer.find_by(topic: @topic), scope: PlaceholderGuardian.new, root: false),
              )
   end
 

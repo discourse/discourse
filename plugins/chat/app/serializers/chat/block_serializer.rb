@@ -11,7 +11,7 @@ module Chat
     def elements
       object["elements"].map do |element|
         serializer = self.class.element_serializer_for(element["type"])
-        serializer.new(element, root: false).as_json
+        serializer.new(element, scope: scope, root: false).as_json
       end
     end
 

@@ -2099,7 +2099,7 @@ class Topic < ActiveRecord::Base
       stats = {
         posts_count: topic.posts_count,
         last_posted_at: topic.last_posted_at.as_json,
-        last_poster: BasicUserSerializer.new(topic.last_poster, root: false).as_json,
+        last_poster: BasicUserSerializer.new(topic.last_poster, scope: PlaceholderGuardian.new, root: false).as_json,
       }
     else
       stats = nil

@@ -38,14 +38,14 @@ RSpec.describe BasicUserSerializer do
       before { SiteSetting.enable_user_status = true }
 
       it "doesn't add status by default" do
-        serializer = BasicUserSerializer.new(user, root: false)
+        serializer = BasicUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false)
         json = serializer.as_json
 
         expect(json.keys).not_to include :status
       end
 
       context "when including user status" do
-        let(:serializer) { BasicUserSerializer.new(user, root: false, include_status: true) }
+        let(:serializer) { BasicUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true) }
 
         it "adds status if `include_status: true` has been passed" do
           json = serializer.as_json
@@ -76,7 +76,7 @@ RSpec.describe BasicUserSerializer do
       before { SiteSetting.enable_user_status = false }
 
       it "doesn't add user status" do
-        serializer = BasicUserSerializer.new(user, root: false, include_status: true)
+        serializer = BasicUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true)
         json = serializer.as_json
 
         expect(json.keys).not_to include :status

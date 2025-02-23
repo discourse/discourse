@@ -196,10 +196,10 @@ TEXT
         @plugin = TroutPlugin.new
         @trout = Trout.new
 
-        poison = TroutSerializer.new(@trout)
+        poison = TroutSerializer.new(@trout, scope: PlaceholderGuardian.new)
         poison.attributes
 
-        poison = TroutJuniorSerializer.new(@trout)
+        poison = TroutJuniorSerializer.new(@trout, scope: PlaceholderGuardian.new)
         poison.attributes
 
         # New method
@@ -221,8 +221,8 @@ TEXT
           include_condition: -> { !!object.data&.[](:has_scales) },
         ) { 4096 }
 
-        @serializer = TroutSerializer.new(@trout)
-        @child_serializer = TroutJuniorSerializer.new(@trout)
+        @serializer = TroutSerializer.new(@trout, scope: PlaceholderGuardian.new)
+        @child_serializer = TroutJuniorSerializer.new(@trout, scope: PlaceholderGuardian.new)
       end
 
       after { DiscourseEvent.off(:hello, &@set.first) }

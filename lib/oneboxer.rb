@@ -432,7 +432,7 @@ module Oneboxer
             date: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
           ),
         website: user.user_profile.website,
-        website_name: UserSerializer.new(user).website_name,
+        website_name: UserSerializer.new(user, scope: PlaceholderGuardian.new).website_name,
         original_url: url,
       }
 

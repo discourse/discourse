@@ -133,7 +133,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def deleted_by
-    BasicUserSerializer.new(object.topic.deleted_by, root: false).as_json
+    BasicUserSerializer.new(object.topic.deleted_by, scope: scope, root: false).as_json
   end
 
   # Topic user stuff
@@ -210,7 +210,7 @@ class TopicViewSerializer < ApplicationSerializer
       return nil if !scope.can_see_category?(Category.find_by(id: topic_timer.category_id))
     end
 
-    TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
+    TopicTimerSerializer.new(object.topic.public_topic_timer, scope: scope, root: false)
   end
 
   def include_featured_link?

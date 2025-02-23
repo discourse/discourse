@@ -11,7 +11,7 @@ RSpec.describe TagGroupSerializer do
     ]
     tag_group.save!
 
-    serialized = TagGroupSerializer.new(tag_group, root: false).as_json
+    serialized = TagGroupSerializer.new(tag_group, scope: PlaceholderGuardian.new, root: false).as_json
 
     expect(serialized[:permissions].keys).to contain_exactly(Group::AUTO_GROUPS[:staff])
   end
@@ -20,7 +20,7 @@ RSpec.describe TagGroupSerializer do
     tag = Fabricate(:tag)
     synonym = Fabricate(:tag, target_tag: tag)
     tag_group = Fabricate(:tag_group, tags: [tag, synonym])
-    serialized = TagGroupSerializer.new(tag_group, root: false).as_json
+    serialized = TagGroupSerializer.new(tag_group, scope: PlaceholderGuardian.new, root: false).as_json
     expect(serialized[:tag_names]).to contain_exactly(tag.name)
   end
 end

@@ -984,7 +984,7 @@ RSpec.describe PostCreator do
         expect(stats_message.data[:posts_count]).to eq(2)
         expect(stats_message.data[:last_posted_at]).to eq(reply_timestamp.as_json)
         expect(stats_message.data[:last_poster]).to eq(
-          BasicUserSerializer.new(evil_trout, root: false).as_json,
+          BasicUserSerializer.new(evil_trout, scope: PlaceholderGuardian.new, root: false).as_json,
         )
       end
 

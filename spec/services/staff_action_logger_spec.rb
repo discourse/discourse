@@ -226,7 +226,7 @@ RSpec.describe StaffActionLogger do
     end
 
     it "logs updated site customizations" do
-      old_json = ThemeSerializer.new(theme, root: false).to_json
+      old_json = ThemeSerializer.new(theme, scope: PlaceholderGuardian.new, root: false).to_json
 
       theme.set_field(target: :common, name: :scss, value: "body{margin: 10px;}")
 
@@ -248,7 +248,7 @@ RSpec.describe StaffActionLogger do
     end
 
     it "doesn't log values when the json is too large" do
-      old_json = ThemeSerializer.new(theme, root: false).to_json
+      old_json = ThemeSerializer.new(theme, scope: PlaceholderGuardian.new, root: false).to_json
 
       theme.set_field(target: :common, name: :scss, value: long_string)
 

@@ -213,7 +213,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    original_json = ThemeSerializer.new(@theme, root: false).to_json
+    original_json = ThemeSerializer.new(@theme, scope: PlaceholderGuardian.new, root: false).to_json
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 

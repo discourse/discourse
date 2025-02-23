@@ -5,7 +5,7 @@ module Chat
     attributes :global_presence_channel_state
 
     def global_presence_channel_state
-      PresenceChannelStateSerializer.new(PresenceChannel.new("/chat/online").state, root: nil)
+      PresenceChannelStateSerializer.new(PresenceChannel.new("/chat/online").state, scope: scope, root: nil)
     end
   end
 end

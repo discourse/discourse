@@ -854,7 +854,7 @@ class User < ActiveRecord::Base
 
     # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order("notifications.created_at desc").first
-    json = NotificationSerializer.new(notification).as_json if notification
+    json = NotificationSerializer.new(notification, scope: PlaceholderGuardian.new).as_json if notification
 
     sql = (<<~SQL)
        SELECT * FROM (

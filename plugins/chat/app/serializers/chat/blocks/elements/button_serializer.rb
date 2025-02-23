@@ -19,7 +19,7 @@ module Chat
         end
 
         def text
-          Chat::Blocks::Elements::TextSerializer.new(object["text"], root: false).as_json
+          Chat::Blocks::Elements::TextSerializer.new(object["text"], scope: scope, root: false).as_json
         end
       end
     end

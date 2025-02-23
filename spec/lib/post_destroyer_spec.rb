@@ -1209,7 +1209,7 @@ RSpec.describe PostDestroyer do
       expect(stats_message.data[:posts_count]).to eq(2)
       expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
       expect(stats_message.data[:last_poster]).to eq(
-        BasicUserSerializer.new(reply.user, root: false).as_json,
+        BasicUserSerializer.new(reply.user, scope: PlaceholderGuardian.new, root: false).as_json,
       )
     end
 
@@ -1228,7 +1228,7 @@ RSpec.describe PostDestroyer do
       expect(stats_message.data[:posts_count]).to eq(2)
       expect(stats_message.data[:last_posted_at]).to eq(reply.created_at.as_json)
       expect(stats_message.data[:last_poster]).to eq(
-        BasicUserSerializer.new(reply.user, root: false).as_json,
+        BasicUserSerializer.new(reply.user, scope: PlaceholderGuardian.new, root: false).as_json,
       )
     end
 
@@ -1252,7 +1252,7 @@ RSpec.describe PostDestroyer do
       expect(stats_message.data[:posts_count]).to eq(3)
       expect(stats_message.data[:last_posted_at]).to eq(expendable_reply.created_at.as_json)
       expect(stats_message.data[:last_poster]).to eq(
-        BasicUserSerializer.new(expendable_reply.user, root: false).as_json,
+        BasicUserSerializer.new(expendable_reply.user, scope: PlaceholderGuardian.new, root: false).as_json,
       )
     end
   end

@@ -110,7 +110,7 @@ RSpec.describe "notifications" do
 
         let(:notification) do
           notification = Fabricate(:notification)
-          NotificationSerializer.new(notification).as_json
+          NotificationSerializer.new(notification, scope: PlaceholderGuardian.new).as_json
         end
 
         run_test!

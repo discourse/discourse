@@ -105,6 +105,7 @@ after_initialize do
     ActiveModel::ArraySerializer.new(
       notices,
       each_serializer: DiscourseAutomation::UserGlobalNoticeSerializer,
+      scope: PlaceholderGuardian.new,
     ).as_json
   end
 

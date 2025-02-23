@@ -3562,7 +3562,7 @@ describe Topic do
         expect(stats_message.data[:posts_count]).to eq(topic.posts_count)
         expect(stats_message.data[:last_posted_at]).to eq(topic.last_posted_at.as_json)
         expect(stats_message.data[:last_poster]).to eq(
-          BasicUserSerializer.new(topic.last_poster, root: false).as_json,
+          BasicUserSerializer.new(topic.last_poster, scope: PlaceholderGuardian.new, root: false).as_json,
         )
       end
     end

@@ -61,7 +61,7 @@ class Admin::EmailLogsController < Admin::AdminController
   def incoming
     params.require(:id)
     incoming_email = IncomingEmail.find(params[:id].to_i)
-    serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
+    serializer = IncomingEmailDetailsSerializer.new(incoming_email, scope: PlaceholderGuardian.new, root: false)
     render_json_dump(serializer)
   end
 
@@ -93,7 +93,7 @@ class Admin::EmailLogsController < Admin::AdminController
 
       raise Discourse::NotFound if incoming_email.nil?
 
-      serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
+      serializer = IncomingEmailDetailsSerializer.new(incoming_email, scope: PlaceholderGuardian.new, root: false)
       render_json_dump(serializer)
     rescue => e
       render json: { errors: [e.message] }, status: 404

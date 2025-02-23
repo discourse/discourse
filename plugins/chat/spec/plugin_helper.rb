@@ -131,7 +131,7 @@ module ChatSpecHelpers
   def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
     if data[:uploads]
       data[:uploads] = data[:uploads].map do |upload|
-        UploadSerializer.new(upload, root: false).as_json
+        UploadSerializer.new(upload, scope: PlaceholderGuardian.new, root: false).as_json
       end
     end
 

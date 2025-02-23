@@ -1683,7 +1683,7 @@ HTML
       queries_for_one =
         track_sql_queries do
           components.each do |component|
-            ComponentIndexSerializer.new(component, root: false).as_json
+            ComponentIndexSerializer.new(component, scope: PlaceholderGuardian.new, root: false).as_json
           end
         end
 
@@ -1693,7 +1693,7 @@ HTML
       queries_for_two =
         track_sql_queries do
           components.each do |component|
-            ComponentIndexSerializer.new(component, root: false).as_json
+            ComponentIndexSerializer.new(component, scope: PlaceholderGuardian.new, root: false).as_json
           end
         end
 

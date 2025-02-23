@@ -84,6 +84,7 @@ module Chat
       preview =
         ::Chat::ThreadPreviewSerializer.new(
           thread,
+          scope: PlaceholderGuardian.new,
           participants: ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id],
           root: false,
         ).as_json
@@ -141,7 +142,7 @@ module Chat
         chat_channel,
         {
           action: action,
-          user: BasicUserSerializer.new(user, root: false).as_json,
+          user: BasicUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false).as_json,
           emoji: emoji,
           type: :reaction,
           chat_message_id: chat_message.id,

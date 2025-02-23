@@ -141,7 +141,7 @@ class ApplicationLayoutPreloader
   end
 
   def custom_emoji
-    serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
+    serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer, scope: PlaceholderGuardian.new)
     MultiJson.dump(serializer)
   end
 end

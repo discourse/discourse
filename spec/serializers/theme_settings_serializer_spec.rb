@@ -12,7 +12,7 @@ RSpec.describe ThemeSettingsSerializer do
 
   describe "#objects_schema" do
     it "should include the attribute when theme setting is typed objects" do
-      payload = ThemeSettingsSerializer.new(theme_setting[:objects_setting]).as_json
+      payload = ThemeSettingsSerializer.new(theme_setting[:objects_setting], scope: PlaceholderGuardian.new).as_json
 
       expect(payload[:theme_settings][:objects_schema][:name]).to eq("section")
     end

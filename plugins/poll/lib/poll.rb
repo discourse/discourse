@@ -266,7 +266,7 @@ class DiscoursePoll::Poll
     users =
       User
         .where(id: votes.map(&:user_id).uniq)
-        .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
+        .map { |u| [u.id, UserNameSerializer.new(u, scope: PlaceholderGuardian.new).serializable_hash] }
         .to_h
 
     polls_by_id = polls.index_by(&:id)

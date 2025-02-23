@@ -12,7 +12,7 @@ class WatchedWordListSerializer < ApplicationSerializer
   end
 
   def words
-    object.map { |word| WatchedWordSerializer.new(word, root: false) }
+    object.map { |word| WatchedWordSerializer.new(word, scope: scope, root: false) }
   end
 
   def compiled_regular_expressions

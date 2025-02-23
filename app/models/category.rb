@@ -710,14 +710,14 @@ class Category < ActiveRecord::Base
       if group_ids.present?
         MessageBus.publish(
           "/categories",
-          { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+          { categories: ActiveModel::ArraySerializer.new([self], scope: PlaceholderGuardian.new).as_json },
           group_ids: group_ids,
         )
       end
     else
       MessageBus.publish(
         "/categories",
-        { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+        { categories: ActiveModel::ArraySerializer.new([self], scope: PlaceholderGuardian.new).as_json },
       )
     end
   end

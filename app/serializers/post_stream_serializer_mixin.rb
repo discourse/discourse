@@ -40,7 +40,7 @@ module PostStreamSerializerMixin
     end
 
     if include_gaps? && object.gaps.present?
-      result[:gaps] = GapSerializer.new(object.gaps, root: false)
+      result[:gaps] = GapSerializer.new(object.gaps, scope: scope, root: false)
     end
 
     result

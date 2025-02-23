@@ -9,7 +9,7 @@ RSpec.describe ThemeSerializer do
         .any_instance
         .stubs(:settings)
         .raises(ThemeSettingsParser::InvalidYaml, I18n.t("themes.settings_errors.invalid_yaml"))
-      serialized = ThemeSerializer.new(theme).as_json[:theme]
+      serialized = ThemeSerializer.new(theme, scope: PlaceholderGuardian.new).as_json[:theme]
       expect(serialized[:settings]).to be_nil
       expect(serialized[:errors].count).to eq(1)
       expect(serialized[:errors][0]).to eq(I18n.t("themes.settings_errors.invalid_yaml"))
@@ -18,7 +18,7 @@ RSpec.describe ThemeSerializer do
     it "should add errors messages from theme fields" do
       error = "error when compiling theme field"
       theme_field = Fabricate(:theme_field, error: error, theme: theme)
-      serialized = ThemeSerializer.new(theme.reload).as_json[:theme]
+      serialized = ThemeSerializer.new(theme.reload, scope: PlaceholderGuardian.new).as_json[:theme]
       expect(serialized[:errors].count).to eq(1)
       expect(serialized[:errors][0]).to eq(error)
     end
@@ -26,7 +26,7 @@ RSpec.describe ThemeSerializer do
 
   describe "screenshot_url" do
     fab!(:theme)
-    let(:serialized) { ThemeSerializer.new(theme.reload).as_json[:theme] }
+    let(:serialized) { ThemeSerializer.new(theme.reload, scope: PlaceholderGuardian.new).as_json[:theme] }
 
     it "should include screenshot_url when there is a theme field with screenshot upload type" do
       Fabricate(

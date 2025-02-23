@@ -81,6 +81,7 @@ class SiteSerializer < ApplicationSerializer
       ActiveModel::ArraySerializer.new(
         schemes,
         each_serializer: ColorSchemeSelectableSerializer,
+        scope: scope,
       ).as_json
     end
   end
@@ -88,6 +89,7 @@ class SiteSerializer < ApplicationSerializer
   def default_dark_color_scheme
     ColorSchemeSerializer.new(
       ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      scope: scope,
       root: false,
     ).as_json
   end
@@ -126,11 +128,12 @@ class SiteSerializer < ApplicationSerializer
       .fetch("post_action_types_#{I18n.locale}") do
         if PostActionType.overridden_by_plugin_or_skipped_db?
           types = ordered_flags(PostActionType.types.values)
-          ActiveModel::ArraySerializer.new(types).as_json
+          ActiveModel::ArraySerializer.new(types, scope: scope).as_json
         else
           ActiveModel::ArraySerializer.new(
             Flag.unscoped.order(:position).where(score_type: false).all,
             each_serializer: FlagSerializer,
+            scope: scope,
             target: :post_action,
             used_flag_ids: Flag.used_flag_ids,
           ).as_json
@@ -144,7 +147,7 @@ class SiteSerializer < ApplicationSerializer
       .fetch("post_action_flag_types_#{I18n.locale}") do
         if PostActionType.overridden_by_plugin_or_skipped_db?
           types = ordered_flags(PostActionType.topic_flag_types.values)
-          ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
+          ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer, scope: scope).as_json
         else
           ActiveModel::ArraySerializer.new(
             Flag
@@ -154,6 +157,7 @@ class SiteSerializer < ApplicationSerializer
               .order(:position)
               .all,
             each_serializer: FlagSerializer,
+            scope: scope,
             target: :topic_flag,
             used_flag_ids: Flag.used_flag_ids,
           ).as_json

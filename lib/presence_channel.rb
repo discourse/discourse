@@ -340,6 +340,7 @@ class PresenceChannel
         message["entering_users"] = ActiveModel::ArraySerializer.new(
           users,
           each_serializer: BasicUserSerializer,
+          scope: PlaceholderGuardian.new,
         )
       end
     end

@@ -11,6 +11,6 @@ module UserStatusMixin
   end
 
   def status
-    UserStatusSerializer.new(object.user_status, root: false).as_json
+    UserStatusSerializer.new(object.user_status, scope: scope, root: false).as_json
   end
 end
