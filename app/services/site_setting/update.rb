@@ -20,7 +20,6 @@ class SiteSetting::Update
       self.settings =
         self
           .settings
-          .to_a
           .map do |setting_name, value|
             value =
               case SiteSetting.type_supervisor.get_type(setting_name)
@@ -45,8 +44,8 @@ class SiteSetting::Update
          class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
   policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
   policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
-  policy :settings_are_valid, class_name: SiteSetting::Policy::SettingsAreValid
-  step :save
+  policy :values_are_valid, class_name: SiteSetting::Policy::ValuesAreValid
+  transaction { step :save }
 
   private
 
@@ -55,10 +54,8 @@ class SiteSetting::Update
   end
 
   def save(params:, guardian:)
-    ActiveRecord::Base.transaction do
-      params.settings.each do |setting_name, value|
-        SiteSetting.set_and_log(setting_name, value, guardian.user)
-      end
+    params.settings.each do |setting_name, value|
+      SiteSetting.set_and_log(setting_name, value, guardian.user)
     end
   end
 end
