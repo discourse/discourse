@@ -157,7 +157,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
+        version: 4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.9)
@@ -406,20 +406,20 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/compat':
-        specifier: ^3.8.2
-        version: 3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)
+        specifier: ^3.8.3
+        version: 3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/core':
-        specifier: ^3.5.1
-        version: 3.5.1(@glint/template@1.4.1-unstable.34c4510)
+        specifier: ^3.5.2
+        version: 3.5.2(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/macros':
         specifier: ^1.16.11
         version: 1.16.11(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/router':
         specifier: ^2.1.8
-        version: 2.1.8(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))
+        version: 2.1.8(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))
       '@embroider/webpack':
-        specifier: ^4.0.10
-        version: 4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
+        specifier: ^4.1.0
+        version: 4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
       '@floating-ui/dom':
         specifier: ^1.6.13
         version: 1.6.13
@@ -730,7 +730,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
+        version: 4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.9)
@@ -802,7 +802,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
+        version: 4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.9)
@@ -878,7 +878,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
+        version: 4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.9)
@@ -957,7 +957,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
+        version: 4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.9)
@@ -1674,19 +1674,19 @@ packages:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
 
-  '@csstools/color-helpers@5.0.1':
-    resolution: {integrity: sha512-MKtmkA0BX87PKaO1NFRTFH+UnkgnmySQOvNxJubsadusqPEC2aJ9MOQiMceZJJ6oitUl/i0L6u0M1IrmAOmgBA==}
+  '@csstools/color-helpers@5.0.2':
+    resolution: {integrity: sha512-JqWH1vsgdGcw2RR6VliXXdA0/59LttzlU8UlRT/iUUsEeWfYq8I+K0yhihEUTTHLRm1EXvpsCx3083EU15ecsA==}
     engines: {node: '>=18'}
 
-  '@csstools/css-calc@2.1.1':
-    resolution: {integrity: sha512-rL7kaUnTkL9K+Cvo2pnCieqNpTKgQzy5f+N+5Iuko9HAoasP+xgprVh7KN/MaJVvVL1l0EzQq2MoqBHKSrDrag==}
+  '@csstools/css-calc@2.1.2':
+    resolution: {integrity: sha512-TklMyb3uBB28b5uQdxjReG4L80NxAqgrECqLZFQbyLekwwlcDDS8r3f07DKqeo8C4926Br0gf/ZDe17Zv4wIuw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^3.0.4
       '@csstools/css-tokenizer': ^3.0.3
 
-  '@csstools/css-color-parser@3.0.7':
-    resolution: {integrity: sha512-nkMp2mTICw32uE5NN+EsJ4f5N+IGFeCFu4bGpiKgb2Pq/7J/MpyLBeQ5ry4KKtRFZaYs6sTmcMYrSRIyj5DFKA==}
+  '@csstools/css-color-parser@3.0.8':
+    resolution: {integrity: sha512-pdwotQjCCnRPuNi06jFuP68cykU1f3ZWExLe/8MQ1LOs8Xq+fTkYgd+2V8mWUWMrOn9iS2HftPVaMZDaXzGbhQ==}
     engines: {node: '>=18'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^3.0.4
@@ -1823,15 +1823,15 @@ packages:
     peerDependencies:
       '@embroider/core': ^3.4.0
 
-  '@embroider/compat@3.8.2':
-    resolution: {integrity: sha512-mbCFAEn26rcVXudIBJ1JafXghseQ1iZ54Hd/V32PhLQobPyNO4lWFgdMfeCC9Qbz67Krw6OfIPkft0vWlGibIQ==}
+  '@embroider/compat@3.8.3':
+    resolution: {integrity: sha512-FZy8/highQ/4tbbOLpZtmLME+9HYSkcr532Zl2CtsRt1b9gQuOcjCN3tGflpiFFadbaUFaulh8PhWAv6632DuA==}
     engines: {node: 12.* || 14.* || >= 16}
     hasBin: true
     peerDependencies:
-      '@embroider/core': ^3.5.1
+      '@embroider/core': ^3.5.2
 
-  '@embroider/core@3.5.1':
-    resolution: {integrity: sha512-fqTFSfR57ZaKbc/002q4wlhU+HWJNgHB4VNX8fLJzsbr8Y9svllQbYSnz/UAtOiNkLwnj+exC2UKMy6qg/SkyA==}
+  '@embroider/core@3.5.2':
+    resolution: {integrity: sha512-VRHhVgswkTul7a05+QeMgrYjC7ybzPQkNGkad2abdy8a+rJg8/j/QEdmnPf4gG7a12gr88gMT0nAL60O3JbLCQ==}
     engines: {node: 12.* || 14.* || >= 16}
 
   '@embroider/hbs-loader@3.0.3':
@@ -1877,11 +1877,11 @@ packages:
       '@embroider/webpack':
         optional: true
 
-  '@embroider/webpack@4.0.10':
-    resolution: {integrity: sha512-OHpJ5JIT+NaT3ORKaXjSFBPTo3t71LvfkdFd1J0er2zGRGyc39V9E73wolc7Av9yhwlRNN+W0oFj2rFeXUVuQw==}
+  '@embroider/webpack@4.1.0':
+    resolution: {integrity: sha512-sdxOUSP/7VmG/7PHb77IRyaBcu8771ABrcbqOo+5gvbhFMurq+73jAwxCWyKcKJRY8IedR8d8XENSs2hEMIgQQ==}
     engines: {node: 12.* || 14.* || >= 16}
     peerDependencies:
-      '@embroider/core': ^3.5.1
+      '@embroider/core': ^3.5.2
       webpack: ^5.0.0
 
   '@esbuild/aix-ppc64@0.25.0':
@@ -3459,8 +3459,8 @@ packages:
     resolution: {integrity: sha512-Quw8a6y8CPmRd6eU+mwypktYCwUcf8yVFIRbNZ6tPQEckX9yd+EBVEPC/GSZZrMWH9e7Vz4pT7XhpmyApRByLQ==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
-  call-bind-apply-helpers@1.0.1:
-    resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
+  call-bind-apply-helpers@1.0.2:
+    resolution: {integrity: sha512-Sp1ablJ0ivDkSzjcaJdxEunN5/XvksFJ2sMBFfq6x0ryhQV/2b/KwFe21cMpmHtPOSij8K99/wSfoEuTObmuMQ==}
     engines: {node: '>= 0.4'}
 
   call-bind@1.0.8:
@@ -5095,8 +5095,8 @@ packages:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
-  get-intrinsic@1.2.7:
-    resolution: {integrity: sha512-VW6Pxhsrk0KAOqs3WEd0klDiF/+V7gQOpAvY1jVU/LHmaD/kQO4523aiJuikX/QAKYiW6x8Jh+RJej1almdtCA==}
+  get-intrinsic@1.3.0:
+    resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
 
   get-proto@1.0.1:
@@ -8700,8 +8700,8 @@ snapshots:
 
   '@asamuzakjp/css-color@2.8.3':
     dependencies:
-      '@csstools/css-calc': 2.1.1(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
-      '@csstools/css-color-parser': 3.0.7(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-calc': 2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/css-color-parser': 3.0.8(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
       lru-cache: 10.4.3
@@ -9463,17 +9463,17 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@csstools/color-helpers@5.0.1': {}
+  '@csstools/color-helpers@5.0.2': {}
 
-  '@csstools/css-calc@2.1.1(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
+  '@csstools/css-calc@2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
 
-  '@csstools/css-color-parser@3.0.7(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
+  '@csstools/css-color-parser@3.0.8(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)':
     dependencies:
-      '@csstools/color-helpers': 5.0.1
-      '@csstools/css-calc': 2.1.1(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
+      '@csstools/color-helpers': 5.0.2
+      '@csstools/css-calc': 2.1.2(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
 
@@ -9655,16 +9655,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/babel-loader-9@3.1.1(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(supports-color@8.1.1)(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
+  '@embroider/babel-loader-9@3.1.1(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(supports-color@8.1.1)(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
     dependencies:
       '@babel/core': 7.26.9(supports-color@8.1.1)
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
       babel-loader: 9.2.1(@babel/core@7.26.9)(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
     transitivePeerDependencies:
       - supports-color
       - webpack
 
-  '@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)':
+  '@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)':
     dependencies:
       '@babel/code-frame': 7.26.2
       '@babel/core': 7.26.9(supports-color@8.1.1)
@@ -9675,7 +9675,7 @@ snapshots:
       '@babel/preset-env': 7.26.9(@babel/core@7.26.9)(supports-color@8.1.1)
       '@babel/runtime': 7.26.9
       '@babel/traverse': 7.26.9(supports-color@8.1.1)
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/macros': 1.16.11(@glint/template@1.4.1-unstable.34c4510)
       '@types/babel__code-frame': 7.0.6
       '@types/yargs': 17.0.33
@@ -9717,7 +9717,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510)':
+  '@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510)':
     dependencies:
       '@babel/core': 7.26.9(supports-color@8.1.1)
       '@babel/parser': 7.26.9
@@ -9751,9 +9751,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@embroider/hbs-loader@3.0.3(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
+  '@embroider/hbs-loader@3.0.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
     dependencies:
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
       webpack: 5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)
 
   '@embroider/macros@1.16.11(@glint/template@1.4.1-unstable.34c4510)':
@@ -9771,12 +9771,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/router@2.1.8(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))':
+  '@embroider/router@2.1.8(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))':
     dependencies:
       '@ember/test-waiters': 3.1.0
       '@embroider/addon-shim': 1.9.0
     optionalDependencies:
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
     transitivePeerDependencies:
       - supports-color
 
@@ -9797,22 +9797,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/test-setup@4.0.0(@embroider/compat@3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))':
+  '@embroider/test-setup@4.0.0(@embroider/compat@3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510))(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0)))':
     dependencies:
       lodash: 4.17.21
       resolve: 1.22.10
     optionalDependencies:
-      '@embroider/compat': 3.8.2(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
-      '@embroider/webpack': 4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
+      '@embroider/compat': 3.8.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/webpack': 4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
 
-  '@embroider/webpack@4.0.10(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
+  '@embroider/webpack@4.1.0(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))':
     dependencies:
       '@babel/core': 7.26.9(supports-color@8.1.1)
       '@babel/preset-env': 7.26.9(@babel/core@7.26.9)(supports-color@8.1.1)
-      '@embroider/babel-loader-9': 3.1.1(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(supports-color@8.1.1)(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
-      '@embroider/core': 3.5.1(@glint/template@1.4.1-unstable.34c4510)
-      '@embroider/hbs-loader': 3.0.3(@embroider/core@3.5.1(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
+      '@embroider/babel-loader-9': 3.1.1(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(supports-color@8.1.1)(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
+      '@embroider/core': 3.5.2(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/hbs-loader': 3.0.3(@embroider/core@3.5.2(@glint/template@1.4.1-unstable.34c4510))(webpack@5.98.0(@swc/core@1.10.18)(esbuild@0.25.0))
       '@embroider/shared-internals': 2.9.0(supports-color@8.1.1)
       '@types/supports-color': 8.1.3
       assert-never: 1.4.0
@@ -11114,7 +11114,7 @@ snapshots:
       define-properties: 1.2.1
       es-abstract: 1.23.9
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       is-array-buffer: 3.0.5
 
   assert-never@1.4.0: {}
@@ -11902,22 +11902,22 @@ snapshots:
     dependencies:
       json-stable-stringify: 1.2.1
 
-  call-bind-apply-helpers@1.0.1:
+  call-bind-apply-helpers@1.0.2:
     dependencies:
       es-errors: 1.3.0
       function-bind: 1.1.2
 
   call-bind@1.0.8:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
+      call-bind-apply-helpers: 1.0.2
       es-define-property: 1.0.1
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       set-function-length: 1.2.2
 
   call-bound@1.0.3:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
-      get-intrinsic: 1.2.7
+      call-bind-apply-helpers: 1.0.2
+      get-intrinsic: 1.3.0
 
   callsites@3.1.0: {}
 
@@ -12435,7 +12435,7 @@ snapshots:
 
   dunder-proto@1.0.1:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
+      call-bind-apply-helpers: 1.0.2
       es-errors: 1.3.0
       gopd: 1.2.0
 
@@ -13290,7 +13290,7 @@ snapshots:
       es-set-tostringtag: 2.1.0
       es-to-primitive: 1.3.0
       function.prototype.name: 1.1.8
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       get-proto: 1.0.1
       get-symbol-description: 1.1.0
       globalthis: 1.0.4
@@ -13341,7 +13341,7 @@ snapshots:
   es-set-tostringtag@2.1.0:
     dependencies:
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       has-tostringtag: 1.0.2
       hasown: 2.0.2
 
@@ -14112,9 +14112,9 @@ snapshots:
 
   get-caller-file@2.0.5: {}
 
-  get-intrinsic@1.2.7:
+  get-intrinsic@1.3.0:
     dependencies:
-      call-bind-apply-helpers: 1.0.1
+      call-bind-apply-helpers: 1.0.2
       es-define-property: 1.0.1
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
@@ -14148,7 +14148,7 @@ snapshots:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
 
   get-uri@6.0.4:
     dependencies:
@@ -14609,7 +14609,7 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       call-bound: 1.0.3
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
 
   is-arrayish@0.2.1: {}
 
@@ -14647,7 +14647,7 @@ snapshots:
   is-data-view@1.0.2:
     dependencies:
       call-bound: 1.0.3
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       is-typed-array: 1.1.15
 
   is-date-object@1.1.0:
@@ -14798,7 +14798,7 @@ snapshots:
   is-weakset@2.0.4:
     dependencies:
       call-bound: 1.0.3
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
 
   is-windows@1.0.2: {}
 
@@ -15845,7 +15845,7 @@ snapshots:
 
   own-keys@1.0.1:
     dependencies:
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
@@ -16403,7 +16403,7 @@ snapshots:
       es-abstract: 1.23.9
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       get-proto: 1.0.1
       which-builtin-type: 1.2.1
 
@@ -16598,7 +16598,7 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       call-bound: 1.0.3
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       has-symbols: 1.1.0
       isarray: 2.0.5
 
@@ -16722,7 +16722,7 @@ snapshots:
       define-data-property: 1.1.4
       es-errors: 1.3.0
       function-bind: 1.1.2
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       gopd: 1.2.0
       has-property-descriptors: 1.0.2
 
@@ -16775,14 +16775,14 @@ snapshots:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       object-inspect: 1.13.4
 
   side-channel-weakmap@1.0.2:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       object-inspect: 1.13.4
       side-channel-map: 1.0.1
 
@@ -17068,7 +17068,7 @@ snapshots:
       es-abstract: 1.23.9
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       gopd: 1.2.0
       has-symbols: 1.1.0
       internal-slot: 1.1.0
