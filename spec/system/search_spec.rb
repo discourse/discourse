@@ -127,6 +127,33 @@ describe "Search", type: :system do
       expect(log.search_result_id).to eq(topic.first_post.id)
       expect(log.search_type).to eq(SearchLog.search_types[:header])
     end
+
+    it "displays search icon by default" do
+      visit("/")
+      expect(page).to have_css(".d-header #search-button.btn-icon")
+    end
+
+    describe "with search field in header" do
+      fab!(:user)
+
+      before do
+        SiteSetting.search_experience = "search_field"
+        sign_in(user)
+      end
+
+      it "displays correct search mode" do
+        visit("/")
+        expect(page).to have_no_css(".d-header #search-button.btn-icon")
+        expect(page).to have_css(".floating-search-input .search-menu")
+      end
+
+      it "switches to search icon when header is minimized" do
+        5.times { Fabricate(:post, topic: topic) }
+        visit("/t/#{topic.id}")
+        find(".timeline-date-wrapper:last-child a").click
+        expect(page).to have_css(".d-header #search-button.btn-icon")
+      end
+    end
   end
 
   describe "bulk actions" do
