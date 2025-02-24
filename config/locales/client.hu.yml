@@ -4190,6 +4190,7 @@ hu:
       content_load_error: 'A <a href="%url%">tartalom</a> nem tölthető be.'
       image_load_error: '<a href="%url%">A képet</a> nem lehetett betölteni.'
     cannot_render_video: A videó nem jeleníthető meg, mert a böngésző nem támogatja ezt a kodeket.
+    invalid_video_url: Ez a videó nem játszható le, mert az URL érvénytelen vagy nem érhető el.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4816,6 +4817,9 @@ hu:
         legal:
           title: "Jogszabály"
           header_description: "Jogi beállítások konfigurálása, például a szolgáltatási feltételek, adatvédelmi irányelvek, elérhetőségek és EU-specifikus szempontok."
+        localization:
+          title: "Lokalizáció"
+          header_description: "Konfigurálja a közösség kezelőfelületének nyelvét és egyéb lokalizációs beállításokat tagjai számára"
         login_and_authentication:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
@@ -5346,6 +5350,9 @@ hu:
           group_permissions: "Csoportengedélyek"
           users: "Felhasználók"
           groups: "Csoportok"
+          localization:
+            title: "Lokalizáció"
+            keywords: "hely|nyelv|időzóna|unicode|ltr"
           user_fields: "Felhasználói mezők"
           watched_words: "Figyelt szavak"
           legal: "Jogszabály"

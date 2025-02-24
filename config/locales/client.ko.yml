@@ -177,6 +177,8 @@ ko:
     broken_transformer_alert: "오류가 발생했습니다. 사이트가 제대로 작동하지 않을 수 있습니다."
     critical_deprecation:
       notice: "<b>[관리자 알림]</b> 예정된 Discourse 핵심 변경 사항과 호환되도록 테마 또는 플러그인을 업데이트해야 합니다."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "식별된 테마: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "식별된 플러그인: '%{name}'"
     s3:
@@ -261,6 +263,7 @@ ko:
       see_all: '@%{username}님이 보낸 <a href="%{path}">모든 메시지</a> 보기...'
     suggested_topics:
       title: "새 주제 또는 읽지 않은 주제"
+      pill: "추천"
       pm_title: "제안된 메시지"
     about:
       edit: "이 페이지 수정"
@@ -278,6 +281,14 @@ ko:
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
+      user_count: "가입하기"
+      active_user_count: "활성 사용자"
+      visitor_count: "방문자"
+      eu_visitor_count: "유럽 연합 방문자"
+      contact: "문의하기"
+      contact_info: "이 사이트에 영향을 미치는 중대한 문제나 긴급한 사안이 발생한 경우 %{contact_info}으로 문의하시기 바랍니다."
+      site_activity: "사이트 활동"
+      view_more: "자세히 보기"
       activities:
         topics:
           other: "%{formatted_number}개의 글"
@@ -299,6 +310,7 @@ ko:
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
+      bookmarked_success: "북마크에 추가했습니다!"
       created: "이 게시물을 북마크했습니다. %{name}"
       created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"

@@ -4129,6 +4129,8 @@ sq:
         title: "Llogaria"
         sidebar_link:
           backups: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       community:
         title: "Komuniteti"
         sidebar_link:
@@ -4142,6 +4144,8 @@ sq:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Shfletimi"
+      email_settings:
+        title: "Cilësimet e emailit"
       security:
         title: "Siguria"
       section_landing_pages:
@@ -4149,6 +4153,8 @@ sq:
           title: "Llogaria"
           backups:
             title: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       config_areas:
         about:
           your_organization: "Organizata juaj"
@@ -4194,6 +4200,8 @@ sq:
           installed: "Instaluar"
       advanced:
         sidebar_link:
+          api_keys:
+            title: "Çelësat API"
           webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
