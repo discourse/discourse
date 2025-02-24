@@ -277,7 +277,7 @@ describe Chat::Notifier do
         expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
       end
 
-      it "doesn’t attempt to notify bots" do
+      it "doesn’t attempt to notify bots not in the channel" do
         bot = Fabricate(:user, username: "bot", id: -999)
 
         msg = build_cooked_msg("Hello @bot", user_1)
