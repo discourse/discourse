@@ -4,6 +4,8 @@ module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
   include HasSanitizableFields
 
+  SiteSettingChangeResult = Struct.new(:previous_value, :new_value)
+
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
   # for site locale
@@ -525,7 +527,7 @@ module SiteSettingExtension
       set(name, value)
       # Logging via the rails console is already handled in add_override!
       log(name, value, prev_value, user, detailed_message) unless defined?(Rails::Console)
-      OpenStruct.new(previous_value: prev_value, new_value: public_send(name))
+      SiteSettingChangeResult.new(prev_value, public_send(name))
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
