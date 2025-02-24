@@ -14,6 +14,7 @@ ro:
     deleted_chat_username: șters
     errors:
       users_cant_be_added_to_channel: "Utilizatorii nu pot fi adăugați la acest canal."
+      user_cant_be_removed_from_channel: "Utilizatorul nu poate fi eliminat de pe acest canal"
       not_accepting_dms: "Regret, %{username} nu acceptă mesaje în acest moment."
       invalid_direct_message: "Nu ai voie să creezi acest mesaj direct."
     reviewables:

@@ -418,9 +418,6 @@ ar:
     site_settings:
       invalid_site_setting: "لا يوجد إعداد موجود باسم \"%{name}\""
       invalid_category_id: "الفئة التي حدَّدتها غير موجودة"
-      site_setting_is_hidden: "لا يُسمَح لك بتغيير الإعدادات المخفية"
-      site_setting_is_shadowed_globally: "لا يمكنك تغيير هذا الإعداد لأنه تم تكوينه بشكلٍ عام"
-      site_setting_is_unconfigurable: "لا يُسمَح لك بتغيير الإعدادات غير القابلة للإعداد"
       invalid_choice:
         zero: "'%{name}' هو خيار غير صالح."
         one: "'%{name}' هو خيار غير صالح."

@@ -4402,11 +4402,32 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
-        sidebar_link:
-          all: "అన్ని నివేదికలు"
+      config_sections:
+        account:
+          title: "ఖాతా"
+        reports:
+          title: "నివేదికలు"
+        community:
+          title: "సంఘం"
+        appearance:
+          title: "స్వరూపం"
+        email:
+          title: "మెయిల్"
+        security:
+          title: "సెక్యూరిటీ"
+        plugins:
+          title: "చొప్పింతలు"
+        advanced:
+          title: "అధునాతన"
       config:
+        about:
+          title: "మీ సైట్ గురించి"
         developer:
           title: "డవలపరు"
+        emojis:
+          title: "ఇమోజి"
+        flags:
+          title: "మోడరేషన్"
         files:
           title: "ఫైళ్లు"
         legal:
@@ -4429,6 +4450,63 @@ te:
           title: "స్పామ్"
         user_api:
           title: "సబ్యుల API"
+        dashboard:
+          title: "ప్రధాన పేజీ"
+        users:
+          title: "సభ్యులు"
+        groups:
+          title: "సమూహాలు"
+        backups:
+          title: "బ్యాకప్పులు"
+          sub_pages:
+            logs:
+              title: "లాగులు"
+        reports:
+          title: "నివేదికలు"
+        badges:
+          title: "బ్యాడ్జీలు"
+        permalinks:
+          title: "శాశ్వత లింక్‌లు"
+        emoji:
+          title: "ఇమోజి"
+        themes:
+          title: "థీమ్స్"
+        components:
+          title: "భాగాలు"
+        email:
+          sub_pages:
+            templates:
+              title: "టెంప్లేట్లు"
+            sent:
+              title: "పంపిన"
+            skipped:
+              title: "వదిలిన"
+            bounced:
+              title: "బౌన్స్ అయింది"
+            received:
+              title: "అందినవి"
+            rejected:
+              title: "తిరస్కరించబడినవి"
+        email_appearance:
+          title: "స్వరూపం"
+        staff_action_logs:
+          sub_pages:
+            screened_ips:
+              title: "స్క్రీన్ చేసిన ఐపీలు"
+            screened_urls:
+              title: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
+        webhooks:
+          title: "వెబ్‌బూక్స్"
+        embedding:
+          title: "పొందుపరచడం"
+      search:
+        result_types:
+          theme:
+            one: "థీమ్"
+            other: "థీమ్స్"
+          component:
+            one: "భాగం"
+            other: "భాగాలు"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -4832,45 +4910,8 @@ te:
             failed: "విఫలం"
       home:
         title: "మొదటి పేజీ"
-      account:
-        title: "ఖాతా"
-        sidebar_link:
-          backups: "బ్యాకప్పులు"
-      community:
-        title: "సంఘం"
-        sidebar_link:
-          about_your_site: "మీ సైట్ గురించి"
-          badges: "బ్యాడ్జీలు"
-          notifications: "నోటిఫికేషన్‌లు"
-          permalinks: "శాశ్వత లింక్‌లు"
-          users: "సభ్యులు"
-          groups: "సమూహాలు"
-          legal: "చట్టపరమైన"
-          moderation_flags:
-            title: "మోడరేషన్"
-      appearance:
-        title: "స్వరూపం"
-        sidebar_link:
-          site_logo: "సైట్ లోగో"
-          emoji: "ఇమోజి"
-          navigation: "నావిగేషన్"
-          themes: "థీమ్స్"
-          components:
-            title: "భాగాలు"
-      email_settings:
-        title: "ఇమెయిల్ సెట్టింగ్‌లు"
-        sidebar_link:
-          appearance: "స్వరూపం"
-      security:
-        title: "సెక్యూరిటీ"
-      section_landing_pages:
-        account:
-          title: "ఖాతా"
-          backups:
-            title: "బ్యాకప్పులు"
       config_areas:
         about:
-          header: "మీ సైట్ గురించి"
           community_name: "సంఘం పేరు"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "మీ సంస్థ"
@@ -4882,7 +4923,6 @@ te:
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
         flags:
-          header: "మోడరేషన్"
           description: "వివరణ"
           enabled: "ప్రారంభించబడిందా?"
           edit: "సవరించండి"
@@ -4903,7 +4943,6 @@ te:
           edit: "సవరించండి"
           delete: "తొలగించు"
         look_and_feel:
-          title: "రూపం మరియు అనుభూతి"
           themes:
             title: "థీమ్స్"
         user_fields:
@@ -4924,19 +4963,6 @@ te:
         author: " %{author} రాసిన"
         experimental_badge: "ప్రయోగాత్మకమైన"
         learn_more: "మరింత తెలుసుకోండి"
-        sidebar_link:
-          installed: "ప్రతిష్టించబడింది"
-      advanced:
-        title: "అధునాతన"
-        sidebar_link:
-          webhooks: "వెబ్‌బూక్స్"
-          developer: "డవలపరు"
-          embedding: "పొందుపరచడం"
-          user_api: "సబ్యుల API"
-          onebox: "వన్బాక్స్"
-          files: "ఫైళ్లు"
-          other_options: "ఇతర"
-          search: "శోధించండి"
       navigation_menu:
         sidebar: "సైడ్‌బార్"
         header_dropdown: "హెడర్ లో డ్రాప్‌డౌన్"
@@ -5074,16 +5100,11 @@ te:
           common: "సాధారణ"
           desktop: "డెస్క్‌టాప్"
           mobile: "మొబైల్"
-          settings: "అమరికలు"
-          translations: "అనువాదాలు"
-          extra_scss: "అదనపు SCSS"
           extra_files: "అదనపు ఫైళ్లు"
           extra_files_upload: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి."
           extra_files_remote: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి లేదా git రిపోజిటరీని తనిఖీ చేయండి."
           preview: "ప్రివ్యూ"
           settings_editor: "అమరికల ఎడిటర్"
-          show_advanced: "అధునాతన ఫీల్డ్‌లను చూపించండి"
-          hide_advanced: "అధునాతన ఫీల్డ్‌లను దాచండి"
           hide_unused_fields: "ఉపయోగించని ఫీల్డ్‌లను దాచండి"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
