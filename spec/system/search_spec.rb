@@ -150,8 +150,13 @@ describe "Search", type: :system do
       it "switches to search icon when header is minimized" do
         5.times { Fabricate(:post, topic: topic) }
         visit("/t/#{topic.id}")
+        expect(page).to have_no_css(".d-header #search-button.btn-icon")
+
         find(".timeline-date-wrapper:last-child a").click
         expect(page).to have_css(".d-header #search-button.btn-icon")
+
+        find(".timeline-date-wrapper:first-child a").click
+        expect(page).to have_no_css(".d-header #search-button.btn-icon")
       end
     end
   end
