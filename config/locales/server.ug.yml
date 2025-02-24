@@ -625,7 +625,7 @@ ug:
 
       - باشقىلارنىڭ ئىزدەپ تېپىشىغا قۇلاي بولۇشى ئۈچۈن سۆھبىتىڭىزدە تىلغا ئېلىنغان ئاتالغۇ. ئەگەر سۆھبىتىڭىز بىلەن مۇناسىۋەتلىك تېما بىر گۇرۇپپا قىلىنىدىغان بولسا، سەھىپە (ياكى بەلگە) تاللاڭ.
 
-      مۇناسىۋەتلىك تەپسىلاتىنى [جامائەت تۈزۈمىمىزدىن كۆرۈڭ] (%{base_path}/guidelines). بۇ تاختا پەقەت تۇنجى %{education_posts_text} كۆرۈنىدۇ.
+      مۇناسىۋەتلىك تەپسىلاتىنى [جامائەت كۆرسەتمىمىزدىن كۆرۈڭ] (%{base_path}/guidelines). بۇ تاختا پەقەت تۇنجى %{education_posts_text} كۆرۈنىدۇ.
     "new-reply": |
       %{site_name} &mdash; غا خۇش كەلدىڭىز **تۆھپىڭىزگە رەھمەت**!
 
@@ -635,7 +635,7 @@ ug:
 
       - ئىجابىي تەنقىت قارشى ئېلىنىدۇ ئەمما ئادەمگە ئەمەس بەلكى ئىشقا.
 
-      - مۇناسىۋەتلىك تەپسىلاتنى [جامائەت يېتەكچىمىزدىن كۆرۈڭ] (%{base_path}/guidelines) بۇ تاختا پەقەت سىزنىڭ ئالدىنقى %{education_posts_text} دا كۆرۈنىدۇ
+      - مۇناسىۋەتلىك تەپسىلاتنى [جامائەت مىزانىمىزدىن كۆرۈڭ] (%{base_path}/guidelines) بۇ تاختا پەقەت سىزنىڭ ئالدىنقى %{education_posts_text} دا كۆرۈنىدۇ
     avatar: |
       ###ھېساباتىڭىزغا رەسىم قوشسىڭىز قانداق؟
 
@@ -795,7 +795,7 @@ ug:
 
       :open_book:[سۆھبەتكە كۆز يۈگۈرتۈش] (%{base_path}/latest) ئارقىلىق **جامائەتنى چۈشىنىش** بىرەر قىزىقارلىق يازمىنى بايقاپ، ئۇچۇر مىقدارىنىڭ كۆپلىكى ياكى كۆڭۈل ئېچىشچانلىقى يۇقىرى ئىكەنلىكىنى بايقىسىڭىز، :heart: ئىشلىتىپ خۇشال بولغانلىقىڭىز ياكى قوللايدىغانلىقىڭىزنى بىلدۈرۈڭ!
 
-      :handshake:ئىنكاس يېزىش ئارقىلىق قارىشىڭىزنى ھەمبەھىرلەپ، مەسىلە ئوتتۇرىغا قويۇڭ ياكى قايتۇرما ئىنكاس يوللاش ئارقىلىق **تۆھپە** قوشۇڭ. ئىنكاس يېزىش ياكى يېڭى تېما باشلاشتىن ئىلگىرى، [جامائەت تۈزۈمى] (%{base_path}/faq)نى كۆرۈڭ.
+      :handshake:ئىنكاس يېزىش ئارقىلىق قارىشىڭىزنى ھەمبەھىرلەپ، مەسىلە ئوتتۇرىغا قويۇڭ ياكى قايتۇرما ئىنكاس يوللاش ئارقىلىق **تۆھپە** قوشۇڭ. ئىنكاس يېزىش ياكى يېڭى تېما باشلاشتىن ئىلگىرى، [جامائەت مىزانى] (%{base_path}/faq)نى كۆرۈڭ.
 
       › ئەگەر سىز ياردەمگە ئېھتىياجلىق بولسىڭىز ياكى تەكلىپىڭىز بولسا، خالىغان ۋاقىتتا %{feedback_category}دا سوئال سوراڭ ياكى [باشقۇرغۇچى بىلەن ئالاقىلىشىڭ](%{base_path}/about).
   admin_quick_start_title: "باشقۇرغۇچى يېتەكچىسى: باشلاش"
@@ -1019,7 +1019,7 @@ ug:
     inappropriate:
       title: "نامۇۋاپىق"
       description: 'ئەقىللىق بىر ئادەم بۇ يازمىدا ھۇجۇم، ھاقارەت ياكى <a href="%{base_path}/guidelines">جامائەت كۆرسەتمىمىز</a>گە خىلاپ مەزمۇن بار دەپ قارايدۇ.'
-      short_description: '<a href="%{base_path}/guidelines">جامائەت يېتەكچىمىز</a>گە خىلاپ'
+      short_description: '<a href="%{base_path}/guidelines">جامائەت مىزانىمىز</a>غا خىلاپ'
     illegal:
       title: "قانۇنسىز"
       description: "بۇ يازمىغا باشقۇرغۇچى دىققەت قىلىشى زۆرۈر چۈنكى ئۇنىڭدا قانۇنسىز مەزمۇن بارلىقىغا ئىشىنىمەن."
@@ -1094,9 +1094,9 @@ ug:
       short_description: "بۇ بىر ئېلان"
     inappropriate:
       title: "نامۇۋاپىق"
-      description: 'ئەقىللىق بىر ئادەم بۇ تېمىدا ھۇجۇم، ھاقارەت ياكى <a href="%{base_path}/guidelines">جامائەت كۆرسەتمىمىز</a>گە خىلاپ مەزمۇن بار دەپ قارايدۇ.'
+      description: 'ئەقىللىق بىر ئادەم بۇ تېمىدا ھۇجۇم، ھاقارەت ياكى <a href="%{base_path}/guidelines">جامائەت مىزانىمىز</a>غا خىلاپ مەزمۇن بار دەپ قارايدۇ.'
       long_form: "بۇ نامۇۋاپىق دەپ پاش قىلىنغان"
-      short_description: '<a href="%{base_path}/guidelines">جامائەت يېتەكچىمىز</a>گە خىلاپ'
+      short_description: '<a href="%{base_path}/guidelines">جامائەت مىزانىمىز</a>غا خىلاپ'
     notify_moderators:
       title: "باشقا مەزمۇن"
       description: '<a href="%{base_path}/guidelines">يېتەكچى</a>گە ئاساسلانغاندا، <a href="%{tos_url}">مۇلازىمەت بەلگىلىمىسى</a> ۋە ياكى يۇقىرىدا تىلغا ئېلىنمىغان باشقا سەۋەب تۈپەيلىدىن بۇ تىمىغا باشقۇرغۇچى خادىم دىققەت قىلىشى زۆرۈر.'
@@ -2404,7 +2404,12 @@ ug:
       invalid_alternative_reply_by_email_addresses: "بارلىق قىممەت چوقۇم «%{reply_key}» ئۆز ئىچىگە ئېلىشى ھەمدە ئۇقتۇرۇش ئېلخىتى بىلەن پەرقلىق بولۇشى كېرەك."
       invalid_domain_hostname: "* ياكى ? ھەرپنى ئۆز ئىچىگە ئالماسلىقى كدرەك."
       invalid_allowed_iframes_url: "Iframe تور ئادرېسى چوقۇم http:// ياكى https:// دىن باشلىنىش ھەمدە كەم دېگەندە يەنە بىر قوشۇمچە «/» بولۇشى كېرەك"
+      pop3_polling_username_is_empty: "POP3 سۈرۈشتۈرۈشنى قوزغىتىشتىن ئىلگىرى، «POP3 سۈرۈشتۈرۈش ئىشلەتكۈچى ئاتى» نى تەڭشىشىڭىز كېرەك."
+      pop3_polling_password_is_empty: "POP3 سۈرۈشتۈرۈشنى قوزغىتىشتىن ئىلگىرى، «POP3 سۈرۈشتۈرۈش ئىم» نى تەڭشىشىڭىز كېرەك."
+      pop3_polling_authentication_failed: "POP3 سالاھىيەت دەلىللىيەلمىدى. POP3 ئىسپاتنامىڭىزنى دەلىللەڭ."
+      reply_by_email_address_is_empty: "ئېلخەت ئارقىلىق جاۋاب قايتۇرۇشتىن ئىلگىرى، چوقۇم «جاۋاب ئېلخەت ئادرېسى» نى تەڭشىشىڭىز كېرەك."
       email_polling_disabled: "سىز چوقۇم قولدا، POP3 راي سىناشنى قوزغىتىپ ياكى ئىختىيارى ئېلخەت راي سىنىغۇچنى قوزغاتقاندىلا ئاندىن ئېلخەت ئارقىلىق جاۋاب قايتۇرغىلى بولىدۇ."
+      user_locale_not_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى ئالدى بىلەن «ئىشلەتكۈچى يەرلىك تىلىغا يول قوي»نى تاللىشىڭىز كېرەك"
       at_least_one_group_required: "بۇ تەڭشەككە ئاز دېگەندە بىر گۇرۇپپا بەلگىلەش كېرەك."
       invalid_regex: "مۇنتىزىم ئىپادە ئىناۋەتسىز ياكى يول قويۇلمايدۇ."
       invalid_regex_with_message: "مۇنتىزىم ئىپادە «%{regex}» دا بىر خاتالىق بار: %{message}"
@@ -2464,11 +2469,19 @@ ug:
     timeout_expired: "ھېسابات تىزىمغا كىرىش ۋاقىت ھالقىدى، قايتا تىزىمغا كىرىشنى سىناڭ."
     no_email: "ئېلخەت ئادرېسى تەمىنلەنمىگەن. تور بېكەتنىڭ باشقۇرغۇچىسى بىلەن ئالاقىلىشىڭ."
     blank_id_error: "«external_id» زۆرۈر ئەمما بوش ئىكەن"
+    email_error: "ئېلخەت ئادرېسى <b>%{email}</b> ئارقىلىق ھېساباتنى تىزىملاتقىلى بولمايدۇ. تور بېكەت باشقۇرغۇچىسى بىلەن ئالاقىلىشىڭ."
+    missing_secret: "بىخەتەرلىك ئاچقۇچى كەم بولغانلىقتىن، سالاھىيەت دەلىللىيەلمىدى. تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىپ مەسىلىنى ھەل قىلىڭ."
+    invite_redeem_failed: "تەكلىپنى جەزملىيەلمىدى. تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىڭ."
     invalid_parameter_value: "«%{param}» نىڭ پارامېتىر قىممىتى ئىناۋەتسىز بولغانلىقتىن، دەلىللىيەلمىدى. تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىپ مەسىلىنى ھەل قىلىڭ."
+    payload_parse_error: "سالاھىيەت دەلىللىيەلمىدى (يۈك ئىناۋەتلىك Base64 ئەمەس). تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىڭ."
+    signature_error: "سالاھىيەت دەلىللىيەلمىدى (ئىمزا خاتا). تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىڭ."
   original_poster: "ئەسلى يازما يوللىغۇچى"
   most_recent_poster: "ئەڭ يېقىنقى يازما يوللىغۇچى"
   frequent_poster: "كۆپ يازما يوللىغۇچى"
   poster_description_joiner: "، "
+  redirected_to_top_reasons:
+    new_user: "جامائىتىمىزگە كەلگىنىڭىزنى قارشى ئالىمىز! بۇلار يېقىنقى ئەڭ ئالقىشلانغان تېمىلار."
+    not_seen_in_a_month: "قايتا خۇش كەپسىز! سىزنى كۆرمىگىلى بىر مەزگىل بولدى. بۇلار سىز يوق ۋاقىتلاردىكى ئەڭ ئالقىشلىق تېمىلار."
   merge_posts:
     edit_reason:
       one: "بىر يازمىنى %{username} بىرلەشتۈردى"
@@ -2547,6 +2560,7 @@ ug:
   login:
     invalid_second_factor_method: "تاللانغان ئىككى ئامىللىق ئۇسۇل ئىناۋەتسىز."
     not_enabled_second_factor_method: "تاللانغان ئىككى ئامىللىق ئۇسۇل ھېساباتىڭىزغا قوزغىتىلمىدى."
+    security_key_description: "سىزدە فىزىكىلىق بىخەتەرلىك ئاچقۇچى بولسا تۆۋەندىكى بىخەتەرلىك ئاچقۇچ توپچىنى چېكىڭ."
     security_key_alternative: "باشقا ئۇسۇلنى سىناي"
     security_key_authenticate: "بىخەتەرلىك ئاچقۇچى بىلەن دەلىللەيدۇ"
     security_key_not_allowed_error: "بىخەتەرلىك ئاچقۇچىنى دەلىللەش جەريانىنىڭ ۋاقتى ئۆتۈپ كەتتى ياكى بىكار قىلىندى."
@@ -2569,12 +2583,20 @@ ug:
     suspended_with_reason_forever: "ھېسابات توڭلىتىلدى: %{reason}"
     errors: "%{errors}"
     not_available: "ئىشلەتكىلى بولمايدۇ. %{suggestion} نى سىنامسىز؟"
+    something_already_taken: "خاتالىق كۆرۈلدى، بەلكىم ئىشلەتكۈچى ئاتى ياكى ئېلخەت تىزىملىتىلغان بولۇشى مۇمكىن، ئىم ئۇنتۇش ئۇلانمىسىنى سىناپ بېقىڭ."
+    omniauth_error:
+      generic: "كەچۈرۈڭ، ھېساباتىڭىزنى دەلىللەۋاتقاندا خاتالىق كۆرۈلگەن. قايتا سىناڭ."
+      csrf_detected: "دەلىللەش ۋاقتى ئۆتتى ياكى توركۆرگۈ ئالماشتۇردىڭىز. قايتا سىناڭ."
+      request_error: "سالاھىيەت دەلىللەشنى باشلىغاندا خاتالىق كۆرۈلدى. قايتا سىناڭ."
+      invalid_iat: "مۇلازىمېتىر سائەت پەرقى سەۋەبىدىن پەرمان تاختىسىنى دەلىللىيەلمەيدۇ. قايتا سىناڭ."
+    omniauth_error_unknown: "تىزىمغا كىرىش جەريانىڭىزنى بىر تەرەپ قىلىۋاتقاندا خاتالىق كۆرۈلدى، قايتا سىناڭ."
     omniauth_confirm_title: "%{provider} ئارقىلىق تىزىمغا كىرىدۇ"
     omniauth_confirm_button: "داۋاملاشتۇر"
     authenticator_error_no_valid_email: "%{account} بىلەن ئالاقىدار ئېلخەت ئادرېسىغا يول قويۇلمايدۇ. سىز پەرقلىق بىر ئېلخەت ئادرېسىنى ئىشلىتىپ ھېساباتىڭىزنى تەڭشىشىڭىز كېرەك بولۇشى مۇمكىن."
     new_registrations_disabled: "بۇ ۋاقىتتا يېڭى ھېسابات تىزىملىتىشقا يول قويۇلمايدۇ."
     new_registrations_disabled_discourse_connect: "پەقەت Discourse Connect.ئارقىلىقلا يېڭى ئىشلەتكۈچىنى تىزىملاتقىلى بولىدۇ."
     password_too_long: "ئىم 200 ھەرپتە چەكلىنىدۇ."
+    email_too_long: "سىز تەمىنلىگەن ئېلخەت بەك ئۇزۇن. خەت ساندۇقىنىڭ ئىسمى 254 ھەرپتىن ئاشماسلىقى، دائىرە نامى 253 ھەرپتىن ئاشماسلىقى كېرەك."
     wrong_invite_code: "سىز كىرگۈزگەن تەكلىپ كودى خاتا."
     reserved_username: "ئۇ ئىشلەتكۈچى نامىغا يول قويۇلمايدۇ."
     missing_user_field: "چوقۇم تولدۇرۇشقا تېگىشلىك ئىشلەتكۈچى بۆلەكلىرىنى تاماملىمىدىڭىز"
@@ -2719,7 +2741,7 @@ ug:
     title: "مۇنبەر خەت تەكلىپى"
     subject_template: "%{inviter_name} سىزنى %{site_domain_name} غا قوشۇلۇشقا تەكلىپ قىلدى"
     text_body_template: |
-      %{inviter_name} سىزن قوشۇلۇشقا تەكلىپ قىلدى
+      %{inviter_name} سىزنى قوشۇلۇشقا تەكلىپ قىلدى
 
       › **%{site_title}**
       ›
@@ -2729,7 +2751,95 @@ ug:
       ئەگەر قىزىقسىڭىز، تۆۋەندىكى ئۇلانمىنى چېكىڭ:
 
       %{invite_link}
+  custom_invite_forum_mailer:
+    title: "ئىختىيارى مۇنبەر تەكلىپ خېتى"
+    subject_template: "%{inviter_name} سىزنى %{site_domain_name} غا قوشۇلۇشقا تەكلىپ قىلدى"
+    text_body_template: |
+      %{inviter_name} سىزنى قوشۇلۇشقا تەكلىپ قىلدى
+
+      › **%{site_title}**
+      ›
+      › %{site_description}
+
+      ئۇچۇر
+
+      › %{user_custom_message}
+
+      ئەگەر قىزىقسىڭىز، تۆۋەندىكى ئۇلانمىنى چېكىڭ:
+
+      %{invite_link}
+  invite_password_instructions:
+    title: "تەكلىپ ئىم كۆرسەتمىسى"
+    subject_template: "%{site_name} دىكى ھېساباتىڭىزغا ئىم تەڭشەيدۇ"
+    text_body_template: |
+      %{site_name} تەكلىپىگە قوشۇلغانلىقىڭىزغا رەھمەت - خۇش كەلدىڭىز!
+
+      بۇ ئۇلانما چېكىلسە ئىم تاللىنىدۇ:
+      %{base_url}/u/password-reset/%{email_token}
+
+      (ئەگەر يۇقىرىدىكى ئۇلانمىنىڭ ۋاقتى ئۆتكەن بولسا، ئېلخەت ئادرېسىدا تىزىمغا كىرگەندە «ئىم ئۇنتۇپتىمەن» نى تاللاڭ)
+  download_backup_mailer:
+    title: "زاپاس خەتنى چۈشۈرىدۇ"
+    subject_template: "[%{email_prefix}] بېكەت زاپىسىنى چۈشۈر"
+    text_body_template: |
+      بۇ سىز ئىلتىماس قىلغان [بېكەت زاپىسىنى چۈشۈر] (%{backup_file_path}).
+    no_token: |
+      كەچۈرۈڭ، بۇ زاپاس چۈشۈرۈش ئۇلانمىسى ئىشلىتىلگەن ياكى ۋاقتى ئۆتكەن.
+  admin_confirmation_mailer:
+    title: "باشقۇرغۇچى جەزملەش"
+    subject_template: "[%{email_prefix}] يېڭى باشقۇرغۇچى ھېساباتىنى جەزملەيدۇ"
+    text_body_template: |
+      مۇنبىرىڭىزگە **%{target_username} (%{target_email})** نى باشقۇرغۇچى سۈپىتىدە قوشۇشنى جەزملەڭ.
+
+      [باشقۇرغۇچى ھېساباتىنى جەزملەش] (%{admin_confirm_url})
+  test_mailer:
+    title: "سىناق خەت"
+    subject_template: "[%{email_prefix}] ئېلخەت يەتكۈزۈشچانلىق سىنىقى"
+  new_version_mailer:
+    title: "يېڭى نەشرىدىكى خەت"
+    subject_template: "[%{email_prefix}] يېڭى Discourse نەشرى، يېڭىلانما بار"
+    text_body_template: |
+      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
+
+      نەشرىڭىز: %{installed_version}
+      يېڭى نەشرى: **%{new_version}**
+
+      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
+
+      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
+
+      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
+  new_version_mailer_with_notes:
+    title: "نەشر ئىزاھاتى بار يېڭى نەشرىدىكى خەت"
+    subject_template: "[%{email_prefix}] يېڭىلانما بار"
+    text_body_template: |
+      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
+
+      نەشرىڭىز: %{installed_version}
+      يېڭى نەشرى: **%{new_version}**
+
+      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
+
+      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
+
+      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
+
+      ###تارقىتىش ئىزاھاتى
+
+      %{notes}
+  flags_dispositions:
+    disagreed: "بىزگە خەۋەر قىلغىنىڭىزغا رەھمەت. بىز ئۇنى تەكشۈرۈۋاتىمىز."
+    ignored: "بىزگە خەۋەر قىلغىنىڭىزغا رەھمەت. بىز ئۇنى تەكشۈرۈۋاتىمىز."
+    ignored_and_deleted: "بىزگە خەۋەر قىلغىنىڭىزغا رەھمەت. بىزيازمىنى چىقىرىۋەتتۇق."
+  temporarily_closed_due_to_flags:
+    one: "كۆپلىگەن جامائەت پاش قىلغانلىقتىن بۇ تېما كەم دېگەندە %{count} سائەت ۋاقىتلىق تاقالدى."
+    other: "كۆپلىگەن جامائەت پاش قىلغانلىقتىن بۇ تېما كەم دېگەندە %{count} سائەت ۋاقىتلىق تاقالدى."
   system_messages:
+    reviewables_reminder:
+      subject_template: "تەكشۈرۈش ئۆچرىتىدە تەكشۈرۈشكە تېگىشلىك تۈر بار"
+      text_body_template:
+        one: "%{mentions} تۈر تاپشۇرۇلغىنى %{count} سائەتتىن ئاشقان. [ئۇلارنى تەكشۈرۈڭ](%{base_url}/review)"
+        other: "%{mentions} تۈر تاپشۇرۇلغىنى %{count} سائەتتىن ئاشقان. [ئۇلارنى تەكشۈرۈڭ](%{base_url}/review)"
     private_topic_title: "تېما #%{id}"
     contents_hidden: "مەزمۇنىنى كۆرۈش ئۈچۈن يازمىنى زىيارەت قىلىڭ."
     post_hidden:
@@ -2784,24 +2894,326 @@ ug:
       subject_template: "جامائەت پاش قىلغانلىقتىن يازما يوشۇرۇلدى، باشقۇرغۇچى خادىمغا ئۇقتۇرۇش قىلىندى"
     queued_by_staff:
       title: "يازما تەستىقلاشقا موھتاج"
+      subject_template: "يازمىنى باشقۇرغۇچى خادىم يوشۇرغان، تەستىقلاشنى كۈتۈۋاتىدۇ"
+      text_body_template: |
+        سالام،
+
+        بۇ يازمىڭىزنىڭ يوشۇرۇلغانلىقىنى بىلدۈرۈش ئۈچۈن %{site_name} ئاپتوماتىك يوللىغان ئۇچۇر.
+
+        <%{base_url}%{url}>
+
+        يازمىڭىز باشقۇرغۇچى خادىم تەكشۈرگۈچە يوشۇرۇن ھالەتتە تورىدۇ.
+
+        تېخىمۇ كۆپ كۆرسەتمە ئۈچۈن، بىزنىڭ [جامائەت كۆرسەتمىسى] دىن كۆرۈڭ(%{base_url}/guidelines).
+    flags_disagreed:
+      title: "پاش قىلىنغان يازمىنى باشقۇرغۇچى خادىم ئەسلىگە قايتۇردى"
+      subject_template: "پاش قىلىنغان يازمىنى باشقۇرغۇچى خادىم ئەسلىگە قايتۇردى"
+    flags_agreed_and_post_deleted:
+      title: "پاش قىلىنغان يازمىنى باشقۇرغۇچى خادىم چىقىرىۋەتتى"
+      subject_template: "پاش قىلىنغان يازمىنى باشقۇرغۇچى خادىم چىقىرىۋەتتى"
+    flags_agreed_and_post_deleted_for_responders:
+      title: "باشقۇرغۇچى خادىم پاش قىلىنغان يازمىدىن جاۋابنى چىقىرىۋەتتى"
+      subject_template: "باشقۇرغۇچى خادىم پاش قىلىنغان يازمىدىن جاۋابنى چىقىرىۋەتتى"
     welcome_user:
+      title: "ئىشلەتكۈچى خۇش كەلدىڭىز"
       subject_template: "%{site_name} غا خۇش كەلدىڭىز!"
+    welcome_tl1_user:
+      title: "ئىشەنچ دەرىجىسى 1 ئىشلەتكۈچى خۇش كەلدىڭىز"
+      subject_template: "ۋاقىتنى بىز بىلەن بىللە ئۆتكۈزگىنىڭىزگە رەھمەت"
+    welcome_staff:
+      title: "باشقۇرغۇچى خادىم خۇش كەلدىڭىز"
+      subject_template: "مۇبارەك بولسۇن، سىزگە %{role} ئىجازىتى بېرىلدى!"
     welcome_invite:
+      title: "خۇش كەلدىڭىز تەكلىپى"
       subject_template: "%{site_name} غا خۇش كەلدىڭىز!"
+    tl2_promotion_message:
+      subject_template: "ئىشەنچ دەرىجىڭىزنىڭ ئۆستۈرۈلگەنلىكىگە مۇبارەك بولساۇن!"
     backup_succeeded:
       title: "زاپاسلاش مۇۋەپپەقىيەتلىك بولدى"
+      subject_template: "زاپاسلاش مۇۋەپپەقىيەتلىك تاماملاندى"
+    backup_failed:
+      title: "زاپاسلىيالمىدى"
+      subject_template: "زاپاسلىيالمىدى"
+      text_body_template: |
+        زاپاسلىيالمىغان.
+
+        تۆۋەندىكى خاتىرىسى:
+
+        %{logs}
+    restore_succeeded:
+      title: "مۇۋەپپەقىيەتلىك ئەسلىگە كەلتۈرۈلدى"
+      subject_template: "ئەسلىگە كەلتۈرۈش مۇۋەپپەقىيەتلىك تاماملاندى"
+      text_body_template: |
+        مۇۋەپپەقىيەتلىك ئەسلىگە كەلتۈرۈلگەن.
+
+        تۆۋەندىكى خاتىرىسى:
+
+        %{logs}
+    restore_failed:
+      title: "ئەسلىگە كەلتۈرەلمىدى"
+      subject_template: "ئەسلىگە كەلتۈرەلمىدى"
+      text_body_template: |
+        ئەسلىگە كەلتۈرەلمىدى.
+
+        تۆۋەندىكى خاتىرىسى:
+
+        %{logs}
     bulk_invite_succeeded:
+      title: "تۈركۈملەپ تەكلىپ قىلىش مۇۋەپپەقىيەتلىك بولدى"
       subject_template: "تۈركۈملەپ ئىشلەتكۈچى تەكلىپ قىلىش مۇۋەپپەقىيەتلىك بىر تەرەپ قىلىندى"
     bulk_invite_failed:
       title: "تۈركۈملەپ تەكلىپ قىلالمىدى"
       subject_template: "تۈركۈملەپ ئىشلەتكۈچى تەكلىپ قىلىش بىر تەرەپ قىلىندى ئەمما خاتالىق كۆرۈلدى"
     user_added_to_group_as_owner:
       title: "ئىگىدار سۈپىتىدە گۇرۇپپىغا قوشۇلدى"
+      subject_template: "سىز %{group_name} گۇرۇپپىنىڭ ئىگىدارى سۈپىتىدە قوشۇلدىڭىز"
+      text_body_template: |
+        سىز [%{group_name}](%{base_url}%{group_path}) گۇرۇپپىنىڭ ئىگىسى سۈپىتىدە قوشۇلدىڭىز.
+    user_added_to_group_as_member:
+      title: "ئەزا سۈپىتىدە گۇرۇپپىغا قوشۇلدى"
+      subject_template: "سىز %{group_name} گۇرۇپپىنىڭ ئەزاسى سۈپىتىدە قوشۇلدىڭىز"
+      text_body_template: |
+        سىز [%{group_name}](%{base_url}%{group_path}) گۇرۇپپىنىڭ ئەزاسى سۈپىتىدە قوشۇلدىڭىز.
+    csv_export_succeeded:
+      title: "CSV چىقىرىش مۇۋەپپەقىيەتلىك بولدى"
+      subject_template: "[%{export_title}] سانلىق مەلۇمات چىقىرىش تاماملاندى"
+      text_body_template: |
+        سانلىق مەلۇماتىڭىز مۇۋەپپەقىيەتلىك چىقىرىلدى! :dvd:
+
+        %{download_link}
+
+        يۇقىرىدىكى چۈشۈرۈش ئۇلانمىسى 48 سائەت كۈچكە ئىگە.
+
+        سانلىق مەلۇمات zip ئارخىپى سۈپىتىدە پىرىسلاندى. ئەگەر ئارخىپنى ئاچقاندا ئۆزلۈكىدىن ئېچىلمىسا، تۆۋەندە تەۋسىيە قىلىنغان قورالنى ئىشلىتىڭ:
+        https://www.7-zip.org/
+    csv_export_failed:
+      title: "CSV چىقىرالمىدى"
+      subject_template: "سانلىق مەلۇمات چىقىرالمىدى"
+      text_body_template: "كەچۈرۈڭ، سانلىق مەلۇماتنى چىقىرالمىدى. خاتىرىنى تەكشۈرۈڭ ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about)."
+    email_reject_insufficient_trust_level:
+      title: "ئىشەنچ دەرىجىسى يېتەرسىز ئېلخەت رەت قىلىندى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئىشەنچ دەرىجىسى يېتەرسىز"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ھېساباتىڭىزنىڭ بۇ ئېلخەت ئادرېسىغا يېڭى تېما يوللاشقا زۆرۈر بولغان ئىشەنچ دەرىجىسى يوق. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_user_not_found:
+      title: "ئېلخەت رەت قىلىندى ئىشلەتكۈچى تېپىلمىدى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئىشلەتكۈچى تېپىلمىدى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        جاۋابىڭىز يوچۇن ئېلخەت ئادرېسىدىن يوللانغان. باشقا ئېلخەت ئادرېسىدا يوللاپ سىناپ بېقىڭ، ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_screened_email:
+      title: "ئېلخەت رەت قىلىندى سۈزۈلگەن ئېلخەت"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - توسۇلغان ئېلخەت"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        جاۋابىڭىز توسۇلغان ئېلخەت ئادرېسىدىن يوللانغان. باشقا ئېلخەت ئادرېسىدا يوللاپ سىناپ بېقىڭ، ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_not_allowed_email:
+      title: "ئېلخەت رەت قىلىندى يول قويۇلمايدىغان ئېلخەت"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - توسۇلغان ئېلخەت"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        جاۋابىڭىز توسۇلغان ئېلخەت ئادرېسىدىن يوللانغان. باشقا ئېلخەت ئادرېسىدا يوللاپ سىناپ بېقىڭ، ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_inactive_user:
+      title: "ئېلخەت رەت قىلىندى پاسسىپ ئىشلەتكۈچى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - پاسسىپ ئىشلەتكۈچى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        بۇ ئېلخەتكە مۇناسىۋەتلىك بولغان ھېساباتىڭىز ئاكتىپلانمىغان. ھېساباتىڭىزنى ئاكتىپلاپ ئاندىن ئېلخەت يوللاڭ.
+    email_reject_silenced_user:
+      title: "ئېلخەت رەت قىلىندى ئۈنسىزلەنگەن ئىشلەتكۈچى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئۈنسىزلەنگەن ئىشلەتكۈچى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        بۇ ئېلخەتكە مۇناسىۋەتلىك بولغان ھېساباتىڭىزئۈنسىزلەنگەن.
+    email_reject_reply_user_not_matching:
+      title: "ئېلخەت رەت قىلىندى ئىشلەتكۈچى ماس كەلمىدى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئويلىشىلمىغان جاۋاب ئادرېسى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        جاۋابىڭىز بىز كۈتكەندىن پەرقلىق ئېلخەت ئادرېسىدىن يوللانغان، شۇڭا بىز ئوخشاش بىر ئادەم ئىكەنلىكىنى جەزملىيەلمىدۇق. باشقا ئېلخەت ئادرېسىدا يوللاپ سىناپ بېقىڭ ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_empty:
+      title: "ئېلخەت رەت قىلىندى بوش"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى -- مەزمۇن يوق"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ئېلخېتىڭىزدىن ھېچقانداق جاۋاب ئۇچۇرىنى تاپالمىدۇق.
+
+        ئەگەر ئېلخېتىڭىزدە جاۋاب ئۇچۇرى بارلىقىنى جەزملىسىڭىز، تېخىمۇ ئاددى پىچىمدا قايتا سىناڭ.
+    email_reject_parsing:
+      title: "ئېلخەت رەت قىلىندى يېشىۋاتىدۇ"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى -مەزمۇننى تونۇيالمىدى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ئېلخېتىڭىزدىن جاۋابىڭىزنى تاپالمىدۇق. **جاۋابىڭىزنىڭ ئېلخەتنىڭ چوققىسىدا ئىكەنلىكىنى جەزملەڭ** - بىز سىڭدۈرمە جاۋابنى بىر تەرەپ قىلالمايمىز.
+    email_reject_invalid_access:
+      title: "ئېلخەت رەت قىلىندى ئىناۋەتسىز زىيارەت"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئىناۋەتسىز زىيارەت"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ھېساباتىڭىزنىڭ بۇسەھىپىگە يېڭى تېما يوللاش ئىجازىتىڭىز يوق. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_strangers_not_allowed:
+      title: "ئېلخەت رەت قىلىندى ناتونۇشلارغا يول قويۇلمايدۇ"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئىناۋەتسىز زىيارەت"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        سىز بۇ ئېلخەتنى يوللىغان سەھىپە پەقەت ئىناۋەتلىك ھېسابات ئىشلەتكەن ۋە بىلىدىغان ئېلخەت ئادرېسىدىن ئەۋەتىلگەن ئىشلەتكۈچىنىڭ جاۋابىغا يول قويىدۇ. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_invalid_post:
+      title: "ئېلخەت رەت قىلىندى ئىناۋەتسىز ئېغىز"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يازما يوللاش خاتالىقى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        مۇمكىنچىلىكى بار سەۋەبلەر: مۇرەككەپ پىچىم، ئۇچۇر بەك ئۇزۇن، ئۇچۇر بەك قىسقا. قايتا سىناڭ، ئەگەر مەسىلە يەنىلا داۋاملاشسا، تور بېكەت ئارقىلىق يازما يوللاڭ.
+    email_reject_invalid_post_specified:
+      title: "ئېلخەت رەت قىلىندى بەلگىلەنگەن يازما ئىناۋەتسىز"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يازما يوللاش خاتالىقى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        سەۋەب:
+
+        %{post_error}
+
+        ئەگەر مەسىلىنى ئوڭشىيالىسىڭىز، قايتا سىناڭ.
+      date_invalid: "يازما قۇرغان ۋاقىت تېپىلمىدى. ئېلخەتنىڭ چېسلاسى كەممۇ: ماۋزۇ؟"
+    email_reject_post_too_short:
+      title: "ئېلخەت رەت قىلىندى يازما بەك قىسقا"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يازما بەك قىسقا"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        تېخىمۇ چوڭقۇر سۆھبەتلىشىش ئۈچۈن، ئىنتايىن قىسقا جاۋابقا يول قويۇلمايدۇ. سىز كەم دېگەندە %{count} ھەرپ جاۋاب قايتۇرالامسىز؟ ياكى سىز «+1» نى جاۋاب سۈپىتىدە قايتۇرۇپ، ئېلخەتتە يازمىنى ياقتۇرالايسىز.
+    email_reject_invalid_post_action:
+      title: "ئېلخەت رەت قىلىندى يازما مەشغۇلاتى ئىناۋەتسىز"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يازما مەشغۇلاتى ئىناۋەتسىز"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        يازما مەشغۇلاتىنى تونۇيالمىدى. قايتا سىناڭ، ئەگەر مەسىلە يەنىلا داۋاملاشسا، تور بېكەت ئارقىلىق يازما يوللاڭ.
+    email_reject_reply_key:
+      title: "ئېلخەت رەت قىلىندى جاۋاب كۇنۇپكىسى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ئېلخەتتىكى جاۋاب ئاچقۇچى ئىناۋەتسىز ياكى يوچۇن، شۇڭلاشقا بىز بۇ ئېلخەتنىڭ كىمگە جاۋاب قايتۇرغانلىقىنى بىر تەرەپ قىلالمىدۇق. [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_bad_destination_address:
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يوچۇن تاپشۇرۇۋالغۇچى: ئادرېس"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        تۆۋەندىكىسى بەزى تەكشۈرىدىغان ئىشلار:
+
+         - بىردىن كۆپ ئېلخەت ئادرېسى ئىشلەتتىڭىزمۇ؟ ئادەتتە ئىشلىتىدىغان ئېلخەت ئادرېسىدىن باشقا پەرقلىق ئېلخەت ئادرېسىدا جاۋاب قايتۇردىڭىزمۇ؟ ئېلخەتتە جاۋاب قايتۇرغاندا ئوخشاش بىر ئېلخەت ئادرېسىدا جاۋاب قايتۇرۇشنى تەلەپ قىلىدۇ.
+
+         - ئېلخەت يۇمشاق دېتالى جاۋاب قايتۇرغاندا جاۋاب ئېلخەت ئادرېسىنى ئۆلچەملىك ئىشلەتتىمۇ؟ ئەپسۇسلىنارلىقى، بەزى ئېلخەت يۇمشاق دېتالى جاۋابنى كەلگەن: ئادرېسنى خاتا ئىشلەتسە، توغرا ئىشلىمەسلىكى مۇمكىن.
+
+         - ئۇچۇر كىملىكى بېشى ئېلخەتتە ئۆزگەرتىلگەنمۇ؟ ئۇچۇر كىملىكى بىردەك ۋە ئۆزگەرمەسلىكى كېرەك.
+
+        تېخىمۇ كۆپ ياردەمگە ئېھتىياجلىقمۇ؟ %{base_url}/about دىكى ئالاقەداش تەپسىلاتى ئارقىلىق بىز بىلەن ئالاقىلىشىڭ
+    email_reject_old_destination:
+      title: "ئېلخەت رەت قىلىندى كونا مەنزىل"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - سىز كونا ئۇقتۇرۇشقا جاۋاب قايتۇرۇشنى سىناۋاتىسىز"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        بىز پەقەت %{number_of_days} كۈن ئىچىدىكى ئەسلى ئۇقتۇرۇشقا جاۋاب قايتۇرۇشقا يول قويىمىز. سۆھبەتنى داۋاملاشتۇرۇش ئۈچۈن [تېمىنى زىيارەت قىلىڭ](%{short_url}).
+    email_reject_topic_not_found:
+      title: "ئېلخەت رەت قىلىندى تېما تېپىلمىدى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - تېما تېپىلمىدى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        سىز جاۋاب قايتۇرماقچى بولغان تېما مەۋجۇت ئەمەس - بەلكىم ئۇ ئۆچۈرۈلگەن بولۇشى مۇمكىن؟ ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_topic_closed:
+      title: "ئېلخەت رەت قىلىندى تېما تاقالدى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - تېما تاقالدى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        سىز جاۋاب قايتۇرماقچى بولغان تېما ھازىر تاقالغان، ئەمدى ئۇنىڭغا جاۋاب قايتۇرۇشقا يول قويۇلمايدۇ. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_auto_generated:
+      title: "ئېلخەت رەت قىلىندى ئۆزلۈكىدىن ھاسىللانغان"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - ئۆزلۈكىدىن ھاسىللانغان جاۋاب"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ئېلخېتىڭىزگە «ئۆزلۈكىدىن ھاسىللانغان» بەلگىسى قويۇلغان، بۇ ئۇنى ئىنسان كىرگۈزمەستىن بەلكى كومپيۇتېر ئۆزلۈكىدىن ھاسىللىغانلىقىنى بىلدۈرىدۇ؛ بىزن ئۇنداق ئېلخەتلەرگە يول قويمايمىز. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_unrecognized_error:
+      title: "ئېلخەت رەت قىلىندى تونۇيالمىغان خاتالىق"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - تونۇيالمىغان خاتالىقى"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        ئېلخېتىڭىزنى بىر تەرەپ قىلىۋاتقاندا تونۇيالمايدىغان خاتالىق كۆرۈلگەن، ئېلخەت يوللانمىدى. قايتا سىناڭ ياكى [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_attachment:
+      title: "ئېلخەت يۈكلەنمىسى رەت قىلىندى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - يۈكلەنمە رەت قىلىندى"
+    email_reject_reply_not_allowed:
+      title: "ئېلخەت رەت قىلىندى جاۋابقا يول قويۇلمايدۇ"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - جاۋابقا يول قويۇلمايدۇ"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        بۇ تېمىغا جاۋاب بېرىش ئىجازىتىڭىز يوق. ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_reply_to_digest:
+      title: "ئېلخەت رەت قىلىندى خۇلاسىگە جاۋاب"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - خۇلاسىگە جاۋاب"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        خۇلاسە ئېلخەت جاۋاب قايتۇردىڭىز بۇنىڭغا يول قويۇلمايدۇ.
+
+        ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "ئېلخەت رەت قىلىندى تاپشۇرۇۋالغۇچى بەك كۆپ"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى -- تاپشۇرۇۋالغۇچى بەك كۆپ"
+      text_body_template: |
+        كەچۈرۈڭ، سىز %{destination} غا يوللىغان (%{former_title} ماۋزۇلۇق) ئېلخەتتە مەسىلە كۆرۈلدى.
+
+        سىز %{max_recipients_count} دىن كۆپ كىشىگە ئېلخەت يوللىماقچى بولۇۋاتىسىز، سىستېمىمىز ئېلخەت ئادرېسىڭىزنى ئەخلەت خەت دەپ بەلگە قويدى.
+
+        ئەگەر بۇنى خاتالىق دەپ قارىسىڭىز، [باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ](%{base_url}/about).
+    email_error_notification:
+      title: "ئېلخەت خاتالىق ئۇقتۇرۇشى"
+      subject_template: "[%{email_prefix}] ئېلخەت مەسىلىسى - POP سالاھىيەت دەلىللەش خاتالىقى"
+    email_revoked:
+      title: "ئېلخەت بىكار قىلىندى"
+      subject_template: "ئېلخەت ئادرېسىڭىز توغرىمۇ؟"
+    too_many_spam_flags:
+      subject_template: "يېڭى ھېسابات توختىتىلدى"
+    too_many_tl3_flags:
+      subject_template: "يېڭى ھېسابات توختىتىلدى"
+    silenced_by_staff:
+      title: "باشقۇرغۇچى خادىم ئۈنسىزلىدى"
+      subject_template: "ھېسابات ۋاقتىنچە توختىتىلدى"
+    user_automatically_silenced:
+      title: "ئىشلەتكۈچى ئۆزلۈكىدىن ئۈنسىزلەندى"
+    spam_post_blocked:
+      title: "ئەخلەت ئۇچۇر يازما توسۇلدى"
     pending_users_reminder:
+      title: "كېچىكتۈرۈلگەن ئىشلەتكۈچى ئەسكەرتىشى"
+      subject_template:
+        one: "%{count} ئىشلەتكۈچى تەستىق كۈتۈۋاتىدۇ"
+        other: "%{count} ئىشلەتكۈچى تەستىق كۈتۈۋاتىدۇ"
       text_body_template: |
         بۇ مۇنبەرنى زىيارەت قىلىش ئۈچۈن يېڭى ئىشلەتكۈچى تەستىقلىنىش (ياكى رەت قىلىنىش) نى كۈتۈۋاتىدۇ.
 
         [ئۇلارنى تەكشۈرۈڭ] (%{base_url}/review).
+    new_user_of_the_month:
+      title: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
+      subject_template: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
   subject_re: "جاۋاب: "
   subject_pm: "[شەخسىي ئۇچۇر] "
   email_from: "%{user_name} %{site_name} ئارقىلىق"
@@ -2827,24 +3239,112 @@ ug:
         %{message}
 
         %{respond_instructions}
+    user_invited_to_topic:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
+      title: "ئىشلەتكۈچى جاۋاب قايتۇردى"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_replied_pm:
+      title: "ئىشلەتكۈچى شەخسىي ئۇچۇرغا جاۋاب قايتۇردى"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
+      title: "ئىشلەتكۈچى نەقىل ئېلىنغان"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_linked:
+      title: "ئىشلەتكۈچى باغلاندى"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned:
+      title: "ئىشلەتكۈچى ئاتالدى"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned_pm:
+      title: "ئىشلەتكۈچى شەخسىي ئۇچۇردا ئاتالدى"
       subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
+      title: "ئىشلەتكۈچى گۇرۇپپىدا ئاتالدى"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned_pm:
+      title: "ئىشلەتكۈچى شەخسىي ئۇچۇر گۇرۇپپىدا ئاتالدى"
       subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned_pm_group:
+      title: "ئىشلەتكۈچى شەخسىي ئۇچۇر گۇرۇپپىدا ئاتالدى"
       subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       title: "ئىشلەتكۈچى يوللىغان يازما"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2943,9 +3443,19 @@ ug:
       liked_received: "تاپشۇرۇۋالغان ياقتۇرۇش"
       new_users: "يېڭى ئىشلەتكۈچى"
       popular_topics: "ئالقىشلىق تېما"
+      join_the_discussion: "تېخىمۇ كۆپ بىلدۈرگۈ"
       popular_posts: "ئالقىشلىق يازما"
+      more_new: "يېڭى مەزمۇن"
       subject_template: "[%{email_prefix}] خۇلاسە"
+      your_email_settings: "ئېلخەت تەڭشىكىڭىز"
+      click_here: "بۇ جاينى چېكىڭ"
       from: "%{site_name}"
+    forgot_password:
+      title: "ئىم ئۇنتۇغان"
+      subject_template: "[%{email_prefix}] ئىم ئەسلىگە قايتۇر"
+    email_login:
+      title: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
+      subject_template: "[%{email_prefix}] ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
     set_password:
       title: "ئىم تەڭشەك"
     admin_login:
@@ -3248,7 +3758,7 @@ ug:
       description: بىر يازمىنى نەقىل ئالدى
     read_guidelines:
       name: كۆرسەتمە ئوقۇش
-      description: <a href="%{base_uri}/guidelines">جامائەت كۆرسەتمىسى</a>نى ئوقۇش
+      description: <a href="%{base_uri}/guidelines">جامائەت مىزانى</a>نى ئوقۇش
     reader:
       name: ئوقۇرمەن
       description: ئىنكاس سانى 100 دىن ئاشقان تېمىدىكى ھەر بىر ئىنكاسنى ئوقۇغان

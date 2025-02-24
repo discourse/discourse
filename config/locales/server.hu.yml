@@ -60,6 +60,8 @@ hu:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
+    too_many_urls: "Egy kérelemben nem lehet 10-nél több URL-címet beilleszteni."
+    concurrency_not_allowed: "Egyidejű beágyazott egydobozos kérések nem engedélyezettek. Kérjük, egyszerre egy kérést küldjön."
   components:
     enabled_filter: "Engedélyezed"
     disabled_filter: "Kikapcsolt"
@@ -1622,6 +1624,7 @@ hu:
     delete_old_hidden_posts: "A 30 napnál tovább rejtve maradó rejtett bejegyzések automatikus törlése."
     default_locale: "A Discourse alapértelmezett nyelve. A rendszer által generált kategóriák és témák szövegét lecserélheted a <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Személyre szabás / Szöveg</a>oldalon."
     allow_user_locale: "A felhasználók számára lehetővé teszi, hogy kiválasszák saját nyelvi felület preferenciájukat."
+    set_locale_from_accept_language_header: "Állítsa be a kezelőfelület nyelvét az anonim felhasználók számára a böngésző nyelvi fejlécéből"
     set_locale_from_cookie: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a \"locale\" böngésző süti segítségével."
     set_locale_from_param: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a 'lang' URL paraméteren keresztül, pl. ?lang=es"
     support_mixed_text_direction: "Támogatja a vegyes balról jobbra és jobbról balra haladó szöveges irányokat"
@@ -2441,6 +2444,7 @@ hu:
     share_quote_visibility: "Határozza meg, mikor jelenjenek meg az idézet megosztási gombok: soha, csak névtelen felhasználóknak, vagy minden felhasználónak. "
     create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
+    use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
     use_name_for_username_suggestions: "Használja a felhasználó teljes nevét, amikor felhasználóneveket javasol."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
     show_bottom_topic_map: "Megjeleníti a téma térképét a téma alján, ha az legalább 10 választ tartalmaz."
