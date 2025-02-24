@@ -4,6 +4,8 @@ module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
   include HasSanitizableFields
 
+  SiteSettingChangeResult = Struct.new(:previous_value, :new_value)
+
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
   # for site locale
@@ -457,9 +459,13 @@ module SiteSettingExtension
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
-    if old_val != current[name]
-      DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
+
+    if defined?(Rails::Console)
+      details = "Updated via Rails console"
+      log(name, val, old_val, Discourse.system_user, details)
     end
+
+    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
   def notify_changed!
@@ -519,13 +525,9 @@ module SiteSettingExtension
     if has_setting?(name)
       prev_value = public_send(name)
       set(name, value)
-      value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
-      StaffActionLogger.new(user).log_site_setting_change(
-        name,
-        prev_value,
-        value,
-        { details: detailed_message }.compact_blank,
-      )
+      # Logging via the rails console is already handled in add_override!
+      log(name, value, prev_value, user, detailed_message) unless defined?(Rails::Console)
+      SiteSettingChangeResult.new(prev_value, public_send(name))
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
@@ -775,6 +777,17 @@ module SiteSettingExtension
         setup_methods(name)
       end
     end
+  end
+
+  def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
+    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
+    return if hidden_settings.include?(name.to_sym)
+    StaffActionLogger.new(user).log_site_setting_change(
+      name,
+      prev_value,
+      value,
+      { details: detailed_message }.compact_blank,
+    )
   end
 
   def default_uploads
