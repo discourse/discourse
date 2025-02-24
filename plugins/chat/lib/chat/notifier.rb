@@ -172,8 +172,8 @@ module Chat
 
       {
         members: members || [],
-        welcome_to_join: welcome_to_join || [],
-        unreachable: unreachable || [],
+        welcome_to_join: (welcome_to_join || []).select { |u| u.human? },
+        unreachable: (unreachable || []).select { |u| u.human? },
       }
     end
 
@@ -187,7 +187,6 @@ module Chat
             .not_suspended
             .where.not(username_lower: @user.username_lower)
             .where.not(id: already_covered_ids)
-            .human_users
       end
 
       grouped = group_users_to_notify(direct_mentions)

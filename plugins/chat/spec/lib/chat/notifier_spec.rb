@@ -285,12 +285,15 @@ describe Chat::Notifier do
 
         expect(inaccessible[:welcome_to_join]).to be_empty
 
-        channel.add(bot)
+        msg =
+          build_cooked_msg(
+            "Hello @bot",
+            user_1,
+            chat_channel: Fabricate(:private_category_channel, group: Fabricate(:group)),
+          )
+        _, inaccessible, _ = described_class.new(msg, msg.created_at).list_users_to_notify
 
-        msg = build_cooked_msg("Hello @bot", user_1)
-        to_notify, _, _ = described_class.new(msg, msg.created_at).list_users_to_notify
-
-        expect(to_notify[:direct_mentions]).to be_empty
+        expect(inaccessible[:unreachable]).to be_empty
       end
 
       it "include users as direct mentions even if there's a @all mention" do
