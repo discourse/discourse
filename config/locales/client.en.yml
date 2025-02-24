@@ -3020,7 +3020,7 @@ en:
 
       experience:
         search_field: "Search field in site header"
-        search_icon: "Search icon by profile avatar"
+        search_icon: "Search icon near profile avatar"
 
       type:
         default: "Topics/posts"

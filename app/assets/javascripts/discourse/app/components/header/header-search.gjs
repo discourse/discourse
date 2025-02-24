@@ -12,6 +12,8 @@ export default class HeaderSearch extends Component {
   @service currentUser;
   @service appEvents;
 
+  advancedSearchButtonHref = "/search?expanded=true";
+
   handleKeyboardShortcut = modifierFn(() => {
     const cb = () => focusSearchInput();
     this.appEvents.on("header:keyboard-trigger", cb);
@@ -23,10 +25,6 @@ export default class HeaderSearch extends Component {
       (this.siteSettings.login_required && this.currentUser) ||
       !this.siteSettings.login_required
     );
-  }
-
-  get advancedSearchButtonHref() {
-    return "/search?expanded=true";
   }
 
   <template>
