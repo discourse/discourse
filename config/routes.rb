@@ -460,7 +460,7 @@ Discourse::Application.routes.draw do
     get "email/unsubscribed" => "email#unsubscribed", :as => "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", :as => "email_perform_unsubscribe"
 
-    get "extra-locales/:bundle" => "extra_locales#show"
+    get "extra-locales/:digest/:bundle" => "extra_locales#show"
 
     resources :session, id: RouteFormat.username, only: %i[create destroy become] do
       get "become" if !Rails.env.production?

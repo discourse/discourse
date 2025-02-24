@@ -10,7 +10,7 @@ class ExtraLocalesController < ApplicationController
                      :verify_authenticity_token
 
   OVERRIDES_BUNDLE = "overrides"
-  MD5_HASH_LENGTH = 32
+  SHA1_HASH_LENGTH = 40
   MF_BUNDLE = "mf"
   ADMIN_BUNDLE = "admin"
   WIZARD_BUNDLE = "wizard"
@@ -31,17 +31,20 @@ class ExtraLocalesController < ApplicationController
         js_digests[:site_specific][site] ||= {}
         js_digests[:site_specific][site][bundle_key] ||= begin
           js = bundle_js(bundle)
-          js.present? ? Digest::MD5.hexdigest(js) : nil
+          js.present? ? digest_for_content(js) : nil
         end
       elsif bundle.in?(SHARED_BUNDLES)
-        js_digests[:shared][bundle_key] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+        js_digests[:shared][bundle_key] ||= digest_for_content(bundle_js(bundle))
       else
         raise "Unknown bundle: #{bundle}"
       end
     end
 
     def url(bundle)
-      "#{GlobalSetting.cdn_url}#{Discourse.base_path}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}&__ws=#{Discourse.current_hostname}"
+      base = "#{GlobalSetting.cdn_url}#{Discourse.base_path}"
+      path = "/extra-locales/#{bundle_js_hash(bundle)}/#{bundle}"
+      query = SITE_SPECIFIC_BUNDLES.include?(bundle) ? "?__ws=#{Discourse.current_hostname}" : ""
+      "#{base}#{path}#{query}"
     end
 
     def client_overrides_exist?
@@ -64,12 +67,16 @@ class ExtraLocalesController < ApplicationController
 
     def bundle_js_with_hash(bundle)
       js = bundle_js(bundle)
-      [js, Digest::MD5.hexdigest(js)]
+      [js, digest_for_content(js)]
     end
 
     def clear_cache!
       site = RailsMultisite::ConnectionManagement.current_db
       js_digests[:site_specific].delete(site)
+    end
+
+    def digest_for_content(js)
+      Digest::SHA1.hexdigest(js)
     end
   end
 
@@ -77,13 +84,13 @@ class ExtraLocalesController < ApplicationController
     bundle = params[:bundle]
     raise Discourse::InvalidAccess.new if !valid_bundle?(bundle)
 
-    version = params[:v]
-    if version.present?
-      raise Discourse::InvalidParameters.new(:v) unless version.to_s.size == MD5_HASH_LENGTH
+    digest = params[:digest]
+    if digest.present?
+      raise Discourse::InvalidParameters.new(:digest) unless digest.to_s.size == SHA1_HASH_LENGTH
     end
 
     content, hash = ExtraLocalesController.bundle_js_with_hash(bundle)
-    immutable_for(1.year) if hash == version
+    immutable_for(1.year) if hash == digest
 
     render plain: content, content_type: "application/javascript"
   end
