@@ -165,6 +165,7 @@ table.group-manage-logs {
 
   &--can-manage {
     grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
+
     @container (max-width: 47em) {
       // positioning the member settings button within the same cell
       // and avoiding overlap with padding-right on user-info

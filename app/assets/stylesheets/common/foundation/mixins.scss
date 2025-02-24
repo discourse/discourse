@@ -129,6 +129,7 @@ $hpad: 0.65em;
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 @mixin unselectable {
   cursor: default;
+
   @include user-select(none);
 }
 
@@ -222,6 +223,7 @@ $hpad: 0.65em;
   @if global-variable-exists(public_image_path) {
     @if string.index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");
+
       @return url("#{$plugin_asset_path}#{$path}");
     } @else {
       @return url("#{$public_image_path}#{$path}");

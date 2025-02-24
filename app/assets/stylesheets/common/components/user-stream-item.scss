@@ -166,6 +166,7 @@
   .name {
     font-size: var(--font-0);
     max-width: 400px;
+
     @include ellipsis;
   }
 

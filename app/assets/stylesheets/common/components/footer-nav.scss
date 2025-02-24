@@ -48,6 +48,7 @@ html.footer-nav-visible {
   .footer-nav-widget {
     display: flex;
     justify-content: "space-evenly";
+
     @include unselectable;
 
     button {

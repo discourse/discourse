@@ -9,6 +9,7 @@
 .staff-actions {
   width: 100%;
   word-wrap: break-word;
+
   @media screen and (min-width: 550px) and (max-width: 767px) {
     table.staff-logs tr {
       display: grid;
@@ -169,9 +170,11 @@
     .combobox {
       width: 140px;
     }
+
     @media screen and (min-width: 900px) {
       margin-left: auto;
     }
+
     @media screen and (max-width: 899px) {
       margin-top: 1em;
     }
@@ -244,6 +247,7 @@ table.screened-ip-addresses {
 .screened-emails {
   td.ip_address {
     word-wrap: break-word;
+
     @include breakpoint(tablet, min-width) {
       max-width: 20vw;
     }
@@ -382,6 +386,7 @@ table.search-logs-list {
   td.term {
     width: 60%;
     word-wrap: break-word;
+
     @media screen and (max-width: 767px) {
       width: 100%;
     }
@@ -391,6 +396,7 @@ table.search-logs-list {
   td:not(.term) {
     text-align: center;
   }
+
   @media screen and (min-width: 550px) {
     tr {
       td.term {
@@ -398,6 +404,7 @@ table.search-logs-list {
       }
     }
   }
+
   @include breakpoint(mobile-extra-large) {
     tr {
       td.term {

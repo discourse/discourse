@@ -16,6 +16,7 @@
 
   &.timeline-fullscreen.show {
     max-height: 700px;
+
     @media (prefers-reduced-motion: no-preference) {
       transition: max-height 0.4s ease-out;
     }
@@ -79,7 +80,9 @@
         max-width: 650px;
         line-height: var(--line-height-large);
         display: block;
+
         @include line-clamp(8);
+
         @media screen and (max-height: 425px) {
           @include line-clamp(5);
         }
@@ -103,6 +106,7 @@
           display: block;
           line-height: var(--line-height-medium);
           font-size: var(--font-up-2);
+
           @include line-clamp(4);
         }
 

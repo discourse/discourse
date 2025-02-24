@@ -29,10 +29,12 @@ $SQRT2: 1.4142135623730951;
   }
 
   $ret: 1;
+
   @while $x > 0 {
     $ret: $ret * $x;
     $x: $x - 1;
   }
+
   @return $ret;
 }
 
@@ -41,9 +43,11 @@ $SQRT2: 1.4142135623730951;
 // @return {List} fraction, exponent
 @function frexp($x) {
   $exp: 0;
+
   @if $x < 0 {
     $x: $x * -1;
   }
+
   @if $x < 0.5 {
     @while $x < 0.5 {
       $x: $x * 2;
@@ -55,6 +59,7 @@ $SQRT2: 1.4142135623730951;
       $exp: $exp + 1;
     }
   }
+
   @return $x, $exp;
 }
 
@@ -63,9 +68,11 @@ $SQRT2: 1.4142135623730951;
 // @param {Number} $exp
 @function ldexp($x, $exp) {
   $b: if($exp >= 0, 2, 1 * 0.5);
+
   @if $exp < 0 {
     $exp: $exp * -1;
   }
+
   @while $exp > 0 {
     @if $exp % 2 == 1 {
       $x: $x * $b;
@@ -74,6 +81,7 @@ $SQRT2: 1.4142135623730951;
     $b: $b * $b;
     $exp: math.floor($exp * 0.5);
   }
+
   @return $x;
 }
 
@@ -94,12 +102,14 @@ $SQRT2: 1.4142135623730951;
   $i: 1;
   $s: $x;
   $sp: null;
+
   @while $sp != $s {
     $x: $x * $x2;
     $i: $i + 2;
     $sp: $s;
     $s: $s + math.div($x, $i);
   }
+
   @return $LN2 * $k + 2 * $s;
 }
 
@@ -110,10 +120,12 @@ $SQRT2: 1.4142135623730951;
 
   $r: 1;
   $s: 0;
+
   @if $exp < 0 {
     $exp: $exp * -1;
     $s: 1;
   }
+
   @while $exp > 0 {
     @if $exp % 2 == 1 {
       $r: $r * $base;
@@ -122,6 +134,7 @@ $SQRT2: 1.4142135623730951;
     $exp: math.floor($exp * 0.5);
     $base: $base * $base;
   }
+
   @return if($s != 0, math.div(1, $r), $r);
 }
 
@@ -132,9 +145,11 @@ $SQRT2: 1.4142135623730951;
 //     exp(-1) // 0.36788
 @function exp($x) {
   $ret: 0;
+
   @for $n from 0 to 24 {
     $ret: $ret + math.div(ipow($x, $n), fact($n));
   }
+
   @return $ret;
 }
 
@@ -165,8 +180,10 @@ $SQRT2: 1.4142135623730951;
   }
 
   $ret: 1;
+
   @for $i from 1 through 24 {
     $ret: $ret - math.div(pow($ret, 2) - $x, 2 * $ret);
   }
+
   @return $ret;
 }

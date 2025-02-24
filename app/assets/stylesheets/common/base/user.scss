@@ -742,6 +742,7 @@
       @include inactiveMode;
     }
   }
+
   @media (prefers-color-scheme: light) {
     .dark-color-scheme {
       @include inactiveMode;
@@ -940,6 +941,7 @@
 .user-profile-names__secondary {
   max-width: 100%;
   margin: 0;
+
   @include ellipsis;
 }
 
@@ -967,6 +969,7 @@
 .user-profile__location-and-website {
   font-size: var(--font-0);
   margin-top: 0.5em;
+
   @include ellipsis;
 
   .d-icon {

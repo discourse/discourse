@@ -11,6 +11,7 @@
 
   .user-detail {
     min-width: 0;
+
     @include breakpoint(mobile-medium) {
       font-size: var(--font-down-1);
     }
@@ -26,6 +27,7 @@
       .name,
       .username {
         width: 100%;
+
         @include ellipsis;
       }
 
@@ -44,6 +46,7 @@
 
     .title {
       color: var(--primary-medium);
+
       @include ellipsis;
     }
   }

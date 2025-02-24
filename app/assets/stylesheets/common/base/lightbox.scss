@@ -51,6 +51,7 @@ $meta-element-margin: 6px;
 
   .filename {
     margin: $meta-element-margin;
+
     @include ellipsis;
   }
 

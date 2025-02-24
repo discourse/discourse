@@ -8,6 +8,7 @@
   display: flex;
   gap: 0.5em;
   padding: 1rem 0.66em 0;
+
   @include breakpoint("tablet", min-width) {
     padding: 1rem 1.5rem 0;
   }

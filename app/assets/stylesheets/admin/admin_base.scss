@@ -33,6 +33,7 @@ $mobile-breakpoint: 700px;
     width: calc(100% - 10px);
     flex: 1 0 auto;
     margin-top: 0;
+
     @include breakpoint(tablet) {
       white-space: nowrap;
       flex-wrap: nowrap;
@@ -55,6 +56,7 @@ $mobile-breakpoint: 700px;
       }
     }
   }
+
   @include breakpoint(tablet) {
     // Fade-out for horizontal scroll nav
     &::before {
@@ -289,6 +291,7 @@ $mobile-breakpoint: 700px;
     h3 {
       font-weight: normal;
       font-size: var(--font-0);
+
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
       }
@@ -346,6 +349,7 @@ $mobile-breakpoint: 700px;
     .title {
       margin-bottom: 1em;
     }
+
     @include breakpoint(mobile-extra-large) {
       .title {
         word-wrap: break-word;
@@ -405,6 +409,7 @@ $mobile-breakpoint: 700px;
 .admin-content {
   .admin-contents {
     padding: 0 0 8px 0;
+
     @include clearfix;
   }
 
@@ -437,6 +442,7 @@ $mobile-breakpoint: 700px;
 
       td.x-value {
         max-width: 0;
+
         @include ellipsis;
       }
     }
@@ -586,6 +592,7 @@ $mobile-breakpoint: 700px;
   .username {
     input[type="text"] {
       min-width: 15em;
+
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
         width: 100%;
@@ -607,6 +614,7 @@ $mobile-breakpoint: 700px;
 
   .search-logs-filter {
     margin-left: auto;
+
     @media screen and (max-width: 700px) {
       flex: 1 1 100%;
       margin-left: 0;
@@ -656,6 +664,7 @@ $mobile-breakpoint: 700px;
     overflow: hidden;
     padding: 0;
     height: 100%;
+
     @include breakpoint(tablet) {
       width: calc(100% + 10px);
       padding-left: 10px;
@@ -698,6 +707,7 @@ $mobile-breakpoint: 700px;
     margin: 0;
     white-space: nowrap;
     overflow-x: auto;
+
     @include breakpoint(tablet) {
       margin-left: -10px;
       overflow-x: scroll;
@@ -822,11 +832,13 @@ $mobile-breakpoint: 700px;
   width: 18%;
   box-sizing: border-box;
   position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
+
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
     z-index: z("base") - 1;
     width: 250px;
   }
+
   @media (max-width: 500px) {
     width: 50%;
   }
@@ -851,6 +863,7 @@ $mobile-breakpoint: 700px;
   padding: 30px 0 30px 30px;
   width: 82%;
   box-sizing: border-box;
+
   @media (max-width: $mobile-breakpoint) {
     width: 100%;
     border: none;
@@ -862,6 +875,7 @@ $mobile-breakpoint: 700px;
     transition: transform 0.3s ease;
     transform: translateX(250px);
   }
+
   @media (max-width: 500px) {
     transition: transform 0.3s ease;
     transform: translateX(50%);
@@ -894,6 +908,7 @@ section.details {
   .btn {
     line-height: var(--line-height-medium);
   }
+
   @media (max-width: $mobile-breakpoint) {
     .btn {
       margin: 2px;
@@ -1034,6 +1049,7 @@ table#user-badges {
 .value-list {
   .value {
     padding: 0.125em 0;
+
     @include ellipsis;
     display: flex;
 
@@ -1056,6 +1072,7 @@ table#user-badges {
 
     .remove-value-btn {
       margin-right: 0.25em;
+
       @include value-btn;
     }
 
@@ -1117,6 +1134,7 @@ table#user-badges {
 .shift-down-value-btn {
   margin-right: 0 !important;
   margin-left: 0.25em;
+
   @include value-btn;
 }
 
@@ -1148,6 +1166,7 @@ table#user-badges {
     .add-value-btn {
       margin-left: 0.25em;
       margin-top: 0.125em;
+
       @include value-btn;
     }
   }

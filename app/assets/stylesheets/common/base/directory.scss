@@ -205,10 +205,12 @@
     .user-detail {
       padding: 0;
       width: 100%;
+
       @include breakpoint(tablet) {
         // overrides existing media query
         font-size: var(--font-0);
       }
+
       @include breakpoint("mobile-medium") {
         font-size: var(--font-down-1);
       }
@@ -252,6 +254,7 @@
         // caution: display flex here can interfere with overflow hiding
         flex: 0 1 auto; // can shrink if needed
         margin-right: 0.25em;
+
         @include ellipsis;
       }
 

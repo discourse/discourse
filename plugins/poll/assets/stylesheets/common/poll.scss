@@ -4,6 +4,7 @@ div.poll-outer {
     border: 1px solid var(--primary-low);
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
+
     @include breakpoint("mobile-extra-large", min-width) {
       grid-template-columns: 1fr 10em;
       grid-template-areas: "poll info" "buttons buttons";
@@ -184,6 +185,7 @@ div.poll-outer {
             }
           }
         }
+
         @include breakpoint("mobile-extra-large", min-width) {
           + .poll-info_instructions:not(:empty) {
             margin-top: 1.25em;

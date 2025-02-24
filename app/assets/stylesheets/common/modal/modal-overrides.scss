@@ -464,6 +464,7 @@
         border: 0;
         outline: none;
         flex: 1;
+
         @include ellipsis;
         width: 100%;
         justify-content: flex-start;
