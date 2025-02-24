@@ -74,9 +74,14 @@ class ExtraLocalesController < ApplicationController
       [js, digest_for_content(js)]
     end
 
-    def clear_cache!
+    def clear_cache!(all_sites: false)
       site = RailsMultisite::ConnectionManagement.current_db
-      js_digests[:site_specific].delete(site)
+      if all_sites
+        js_digests[:site_specific].clear
+        js_digests[:shared].clear
+      else
+        js_digests[:site_specific].delete(site)
+      end
     end
 
     def digest_for_content(js)

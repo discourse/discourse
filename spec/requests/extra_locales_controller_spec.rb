@@ -2,6 +2,9 @@
 
 RSpec.describe ExtraLocalesController do
   around { |example| allow_missing_translations(&example) }
+
+  after { ExtraLocalesController.clear_cache!(all_sites: true) }
+
   let(:fake_digest) { "a" * 40 }
 
   describe "#show" do
