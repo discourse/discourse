@@ -3,10 +3,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import RelativeDate from "discourse/components/relative-date";
 import concatClass from "discourse/helpers/concat-class";
-import ShareTopicModal from "discourse/modal/share-topic";
 import { i18n } from "discourse-i18n";
-import RelativeDate from "../../relative-date";
 
 export default class PostMetadataDate extends Component {
   @service modal;
@@ -36,7 +36,7 @@ export default class PostMetadataDate extends Component {
       <a
         class={{concatClass
           "post-date"
-          (if (and @post.wiki @post.last_wiki_edit))
+          (if (and @post.wiki @post.last_wiki_edit) "last-wiki-edit")
         }}
         href={{@post.shareUrl}}
         title={{i18n "post.sr_date"}}

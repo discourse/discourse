@@ -411,6 +411,7 @@ createWidget("post-meta-data", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("expand-hidden", {
   tagName: "a.expand-hidden",
 
@@ -423,6 +424,7 @@ createWidget("expand-hidden", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
@@ -457,6 +459,7 @@ createWidget("post-date", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("expand-post-button", {
   tagName: "button.btn.expand-post",
   buildKey: (attrs) => `expand-post-button-${attrs.id}`,
@@ -479,6 +482,7 @@ createWidget("expand-post-button", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-group-request", {
   buildKey: (attrs) => `post-group-request-${attrs.id}`,
 
@@ -495,6 +499,7 @@ createWidget("post-group-request", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
@@ -791,6 +796,7 @@ createWidget("post-contents", {
   },
 
   init() {
+    // TODO (glimmer-post-stream): How does this fit into the Glimmer lifecycle?
     this.postContentsDestroyCallbacks = [];
   },
 
@@ -884,6 +890,7 @@ createWidget("post-body", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-article", {
   tagName: "article.boxed.onscreen-post",
   buildKey: (attrs) => `post-article-${attrs.id}`,
@@ -1044,15 +1051,15 @@ createWidget("post-article", {
       this,
       "div.topic-map.--op",
       hbs`
-        <TopicMap
-          @model={{@data.model}}
-          @topicDetails={{@data.topicDetails}}
-          @postStream={{@data.postStream}}
-          @showPMMap={{@data.showPMMap}}
-          @showInvite={{@data.showInvite}}
-          @removeAllowedGroup={{@data.removeAllowedGroup}}
-          @removeAllowedUser={{@data.removeAllowedUser}}
-        />`,
+          <TopicMap
+                  @model={{@data.model}}
+                  @topicDetails={{@data.topicDetails}}
+                  @postStream={{@data.postStream}}
+                  @showPMMap={{@data.showPMMap}}
+                  @showInvite={{@data.showInvite}}
+                  @removeAllowedGroup={{@data.removeAllowedGroup}}
+                  @removeAllowedUser={{@data.removeAllowedUser}}
+          />`,
       {
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),
@@ -1075,6 +1082,7 @@ export function addPostClassesCallback(callback) {
   addPostClassesCallbacks.push(callback);
 }
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
   services: ["dialog", "user-tips"],

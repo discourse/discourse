@@ -191,6 +191,9 @@ export default class Post extends RestModel {
   @trackedPostProperty user_title;
   @trackedPostProperty title_is_group;
   @trackedPostProperty badges_granted;
+  @trackedPostProperty cooked;
+  @trackedPostProperty cooked_hidden;
+  @trackedPostProperty can_see_hidden_post;
 
   customShare = null;
 
@@ -439,13 +442,9 @@ export default class Post extends RestModel {
   }
 
   // Expands the first post's content, if embedded and shortened.
-  expand() {
-    return ajax(`/posts/${this.id}/expand-embed`).then((post) => {
-      this.set(
-        "cooked",
-        `<section class="expanded-embed">${post.cooked}</section>`
-      );
-    });
+  async expand() {
+    const post = await ajax(`/posts/${this.id}/expand-embed`);
+    this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
   }
 
   // Recover a deleted post
@@ -701,5 +700,17 @@ export default class Post extends RestModel {
 
   get badgesGranted() {
     return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
+  }
+
+  get requestedGroupName() {
+    return this.post_number === 1 ? this.topic?.requested_group_name : null;
+  }
+
+  get expandablePost() {
+    return this.post_number === 1 && !!this.topic?.expandable_first_post;
+  }
+
+  get topicUrl() {
+    return this.topic?.url;
   }
 }

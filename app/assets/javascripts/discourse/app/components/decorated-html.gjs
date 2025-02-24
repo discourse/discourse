@@ -24,6 +24,10 @@ export default class DecoratedHtml extends Component {
     untrack(() => decorateFn?.(cookedDiv, helper));
 
     document.adoptNode(cookedDiv);
+
+    const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
+    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper));
+
     return cookedDiv;
   });
 

@@ -2,8 +2,8 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import { gt } from "truth-helpers";
-import icon from "discourse/helper/icon";
 import avatar from "discourse/helpers/avatar";
+import icon from "discourse/helpers/d-icon";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 
 export default class PostMetaDataReplyToTab {

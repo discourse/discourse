@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import icon from "discourse/helper/icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostWhisperMetaDataIndicator {

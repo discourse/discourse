@@ -660,6 +660,13 @@ class PluginApi {
 
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
+    this.onAppEvent(
+      opts.afterAdopt
+        ? "decorate-post-cooked-element:after-adopt"
+        : "decorate-post-cooked-element:before-adopt",
+      callback
+    );
+
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
