@@ -732,12 +732,12 @@ RSpec.describe PrettyText do
     end
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
-      cooked = <<~COOKED
+      cooked = <<~HTML
         <p>X</p>
         <pre><code class="lang-auto">var isAdmin = false;
-        ‮
+        \u202E
         </code></pre>
-      COOKED
+      HTML
       cleaned = PrettyText.cleanup(cooked)
       hidden_bidi_title = I18n.t("post.hidden_bidi_character")
 
