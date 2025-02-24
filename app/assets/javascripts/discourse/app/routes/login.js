@@ -15,6 +15,27 @@ export default class LoginRoute extends DiscourseRoute {
     redirect: { refreshModel: true },
   };
 
+  beforeUnloadListener(event) {
+    event.preventDefault();
+    if (this.controller?.isRedirectingToExternalAuth !== true) {
+      removeCookie("destination_url");
+    }
+  }
+
+  activate() {
+    const { redirect } = this.paramsFor(this.routeName);
+    if (redirect) {
+      window.addEventListener("unload", this.beforeUnloadListener);
+    }
+  }
+
+  deactivate() {
+    const { redirect } = this.paramsFor(this.routeName);
+    if (redirect) {
+      window.removeEventListener("unload", this.beforeUnloadListener);
+    }
+  }
+
   beforeModel(transition) {
     const redirect = transition.to.queryParams.redirect;
 

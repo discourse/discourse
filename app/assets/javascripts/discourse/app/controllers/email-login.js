@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -47,6 +48,7 @@ export default class EmailLoginController extends Controller {
       }
 
       let destination = "/";
+      const destinationUrl = cookie("destination_url");
 
       const safeMode = new URL(
         this.router.currentURL,
@@ -57,6 +59,11 @@ export default class EmailLoginController extends Controller {
         const params = new URLSearchParams();
         params.set("safe_mode", safeMode);
         destination += `?${params.toString()}`;
+      }
+
+      if (destinationUrl) {
+        destination = destinationUrl;
+        removeCookie("destination_url");
       }
 
       DiscourseURL.redirectTo(destination);

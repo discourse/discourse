@@ -50,6 +50,30 @@ export default class Login extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
+  @tracked externalAuthRedirecting = false;
+
+  constructor() {
+    super(...arguments);
+    const { hasRedirectParam } = this.args.model;
+    if (hasRedirectParam) {
+      this.addUnloadListener();
+    }
+  }
+
+  beforeUnloadListener(event) {
+    event.preventDefault();
+    if (this.externalAuthRedirecting !== true) {
+      removeCookie("destination_url");
+    }
+  }
+
+  addUnloadListener() {
+    window.addEventListener("unload", this.beforeUnloadListener);
+  }
+
+  removeUnloadListener() {
+    window.removeEventListener("unload", this.beforeUnloadListener);
+  }
 
   get awaitingApproval() {
     return (
@@ -335,6 +359,7 @@ export default class Login extends Component {
     if (this.loginDisabled) {
       return;
     }
+    this.removeUnloadListener();
     this.login.externalLogin(loginMethod, {
       signup: false,
       setLoggingIn: (value) => (this.loggingIn = value),
