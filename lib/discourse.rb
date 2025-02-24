@@ -169,13 +169,8 @@ module Discourse
         stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
-          failure_message = "#{failure_message}\n" if !failure_message.blank?
-          raise CommandError.new(
-                  "#{caller[0]}: #{failure_message}#{stderr}",
-                  stdout: stdout,
-                  stderr: stderr,
-                  status: status,
-                )
+          message = [command, failure_message, stderr].filter(&:present?).join("\n")
+          raise CommandError.new(message, stdout: stdout, stderr: stderr, status: status)
         end
 
         stdout
