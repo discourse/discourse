@@ -1133,7 +1133,7 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      it "logs filtered values" do
+      it "does not log the change" do
         logger_spy = instance_spy(StaffActionLogger)
         allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
 
