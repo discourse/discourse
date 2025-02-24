@@ -49,6 +49,7 @@
             font-size: var(--font-0);
             color: var(--primary);
             padding: 0;
+
             @include ellipsis;
             max-width: 100%;
           }

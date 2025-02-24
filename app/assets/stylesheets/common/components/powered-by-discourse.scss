@@ -42,6 +42,7 @@
   .discourse-no-touch & {
     &:hover {
       color: var(--primary-high);
+
       @media (prefers-reduced-motion: no-preference) {
         // secondary repeat is an intentional buffer
         background: linear-gradient(

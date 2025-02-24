@@ -588,6 +588,7 @@ blockquote {
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;
+
   @include breakpoint(extra-large, min-width) {
     right: auto;
     margin-left: 330px;

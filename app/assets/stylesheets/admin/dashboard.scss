@@ -634,6 +634,7 @@
     box-sizing: border-box;
     padding-right: 20px;
     min-width: 250px;
+
     @include breakpoint(medium) {
       max-width: unset;
     }

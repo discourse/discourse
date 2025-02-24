@@ -53,9 +53,11 @@ body.wizard {
     position: relative;
     height: 70px;
     width: auto;
+
     @include breakpoint("mobile-extra-large") {
       height: 50px;
     }
+
     @media screen and (max-height: 900px) {
       .desktop-view & {
         display: none;
@@ -127,6 +129,7 @@ body.wizard {
   &__step-description {
     font-size: var(--font-up-2);
     flex: 1 0 40%;
+
     @include breakpoint("tablet") {
       font-size: var(--font-up-2);
     }
@@ -169,6 +172,7 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
+
     @media (prefers-reduced-motion: no-preference) {
       animation: bump 0.25s ease-in-out;
       animation-iteration-count: 2;
@@ -195,6 +199,7 @@ body.wizard {
   &__step-form {
     display: flex;
     flex: 1 0 50%;
+
     @media only screen and (max-width: 568px) {
       width: 100%;
     }
@@ -292,6 +297,7 @@ body.wizard {
     color: var(--primary);
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
+
     @include breakpoint("medium") {
       font-size: var(--font-up-5);
     }
@@ -322,6 +328,7 @@ body.wizard {
     flex-wrap: wrap;
     gap: 1em;
     align-items: center;
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -340,6 +347,7 @@ body.wizard {
 
   &__step-text {
     display: inline;
+
     @media only screen and (max-width: 568px) {
       display: none;
     }
@@ -399,6 +407,7 @@ body.wizard {
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
+
     @include breakpoint("mobile-extra-large") {
       order: 1;
       margin-left: 0;
@@ -422,6 +431,7 @@ body.wizard {
     margin-right: 1em;
     background-color: transparent;
     color: var(--tertiary);
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -440,6 +450,7 @@ body.wizard {
 
   &__button.finish {
     color: var(--tertiary);
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -458,6 +469,7 @@ body.wizard {
   &__button.next {
     min-width: 70px;
     margin-left: 1em;
+
     @include breakpoint("mobile-extra-large") {
       order: 1;
       margin-left: 0;
@@ -514,6 +526,7 @@ body.wizard {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     @include breakpoint("mobile-extra-large") {
       flex-direction: column;
       justify-content: center;
@@ -554,6 +567,7 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
+
     @media only screen and (max-width: 568px) {
       margin-left: 2em;
     }
@@ -615,6 +629,7 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
+
     @media only screen and (max-width: 568px) {
       height: 20px;
       width: 35px;
@@ -633,6 +648,7 @@ body.wizard {
     color: var(--secondary);
     top: 4px;
     left: 9px;
+
     @media only screen and (max-width: 568px) {
       top: 3px;
       left: 5px;
@@ -648,6 +664,7 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
+
     @media only screen and (max-width: 568px) {
       height: 12px;
       width: 12px;
@@ -667,6 +684,7 @@ body.wizard {
 
   &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
+
     @media only screen and (max-width: 568px) {
       left: 20px;
     }
@@ -691,6 +709,7 @@ body.wizard {
     align-items: stretch;
     display: flex;
     gap: 1em;
+
     @include breakpoint(mobile-extra-large) {
       flex-direction: column;
     }
@@ -746,6 +765,7 @@ body.wizard {
     .wizard-congratulations-wrap {
       display: flex;
       gap: 1em;
+
       @media screen and (max-width: 750px) {
         flex-direction: column-reverse;
       }

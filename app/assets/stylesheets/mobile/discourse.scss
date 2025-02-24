@@ -61,6 +61,7 @@ blockquote {
   > li > a.expander {
     display: flex;
     align-items: center;
+
     @include form-item-sizing;
     border-color: var(--primary-medium);
     max-width: 100%;
@@ -102,6 +103,7 @@ blockquote {
           height: 100%;
           display: block;
           padding: 5px 8px;
+
           @include ellipsis;
         }
       }

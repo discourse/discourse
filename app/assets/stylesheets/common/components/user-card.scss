@@ -99,6 +99,7 @@
       .name-username-wrapper {
         margin-right: 0;
         flex: 0 1 auto;
+
         @include ellipsis;
       }
 
@@ -151,6 +152,7 @@
   .names__secondary,
   [class*="metadata__"] {
     margin: 0;
+
     @include ellipsis;
   }
 
