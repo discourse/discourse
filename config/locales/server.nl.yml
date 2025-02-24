@@ -314,9 +314,6 @@ nl:
     site_settings:
       invalid_site_setting: "Er bestaat geen instelling met de naam '%{name}'"
       invalid_category_id: "Je hebt een categorie opgegeven die niet bestaat"
-      site_setting_is_hidden: "Je mag verborgen instellingen niet wijzigen"
-      site_setting_is_shadowed_globally: "Je kunt deze instelling niet wijzigen omdat deze globaal is geconfigureerd"
-      site_setting_is_unconfigurable: "Je mag niet-configureerbare instellingen niet wijzigen"
       invalid_choice:
         one: "'%{name}' is een ongeldige keuze."
         other: "'%{name}' zijn ongeldige keuzes."

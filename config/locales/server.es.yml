@@ -314,9 +314,6 @@ es:
     site_settings:
       invalid_site_setting: "No existe ningún ajuste llamado «%{name}»."
       invalid_category_id: "Especificaste una categoría que no existe"
-      site_setting_is_hidden: "No puedes cambiar los ajustes ocultos"
-      site_setting_is_shadowed_globally: "No puedes cambiar este ajuste porque está configurado globalmente"
-      site_setting_is_unconfigurable: "No se le permite cambiar los ajustes no configurables"
       invalid_choice:
         one: "«%{name}» es una opción no válida."
         other: "«%{name}» son opciones no válidas."

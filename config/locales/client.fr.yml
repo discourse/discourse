@@ -4794,15 +4794,39 @@ fr:
         meta_doc: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
-        sidebar_link:
-          all: "Tous les rapports"
+      config_sections:
+        account:
+          title: "Compte"
+        reports:
+          title: "Rapports"
+        community:
+          title: "Communauté"
+        appearance:
+          title: "Apparence"
+        email:
+          title: "E-mail"
+        security:
+          title: "Sécurité"
+        plugins:
+          title: "Extensions"
+        advanced:
+          title: "Avancé"
       config:
+        about:
+          title: "À propos de votre site"
+          header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
         developer:
           title: "Développeur"
           header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
+        emojis:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps"
+        flags:
+          title: "Modération"
+          header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
         font_style:
           title: "Style de police"
           header_description: "Personnalisez les styles de police utilisés par vos thèmes"
@@ -4851,6 +4875,110 @@ fr:
         group_permissions:
           title: "Autorisations de groupe"
           header_description: "Toutes les autorisations des applications basées sur les groupes sont gérées ici, ce qui permet de contrôler l'accès aux différentes fonctionnalités de Discourse"
+        dashboard:
+          title: "Tableau de bord"
+        users:
+          title: "Utilisateurs"
+        groups:
+          title: "Groupes"
+        site_settings:
+          title: "Tous les paramètres du site"
+        whats_new:
+          title: "Quoi de neuf ?"
+          keywords: "journal des modifications|fonctionnalité|version"
+        backups:
+          title: "Sauvegardes"
+          header_description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
+          sub_pages:
+            logs:
+              title: "Journaux"
+        reports:
+          title: "Rapports"
+          header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
+        badges:
+          title: "Badges"
+          header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et interactions positives au sein de la communauté"
+        permalinks:
+          title: "Permaliens"
+          header_description: "Redirections à appliquer pour les URL non connues par le forum"
+        user_fields:
+          title: "Champs utilisateur"
+          header_description: "Créez des champs utilisateur personnalisés pour recueillir des informations supplémentaires concernant les membres de votre communauté. Vous pouvez choisir les informations requises lors de l'inscription, celles qui apparaissent sur les profils et les informations que les utilisateurs peuvent mettre à jour."
+        watched_words:
+          title: "Mots surveillés"
+          header_description: "Les mots surveillés sont des outils de modération qui peuvent effectuer de multiples actions, notamment le blocage, la censure, la création de liens ou le signalement de publications contenant certains mots"
+        color_palettes:
+          title: "Palettes de couleurs"
+        emoji:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps."
+        themes:
+          title: "Thèmes"
+          header_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires"
+        components:
+          title: "Composants"
+          header_description: "Les composants sont de petites personnalisations qui peuvent être ajoutées aux thèmes afin de modifier des éléments spécifiques du style de conception de votre forum"
+        site_texts:
+          title: "Textes du site"
+        email:
+          title: "Configuration du serveur et journaux"
+          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
+          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
+          sub_pages:
+            preview_summary:
+              title: "Prévisualiser le résumé"
+              header_description: "Prévisualiser le contenu des résumés par e-mail envoyés aux utilisateurs inactifs"
+            advanced_test:
+              title: "Test avancé"
+            templates:
+              title: "Modèles"
+            sent:
+              title: "Envoyés"
+            skipped:
+              title: "Ignorés"
+            bounced:
+              title: "Non délivrés"
+            received:
+              title: "Reçus"
+            rejected:
+              title: "Rejetés"
+        email_appearance:
+          title: "Apparence"
+          header_description: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS"
+        staff_action_logs:
+          title: "Journaux et filtrage"
+          header_description: "Les journaux et le filtrage vous permettent de surveiller et de gérer votre communauté, en veillant à ce qu'elle reste sûre et respectueuse. Vous pouvez consulter les journaux de toutes les actions entreprises par les membres du personnel, les journaux de recherche et la configuration du filtrage des utilisateurs"
+          keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
+          sub_pages:
+            screened_emails:
+              title: "E-mails filtrés"
+              header_description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses e-mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée"
+            screened_ips:
+              title: "IP sous surveillance"
+            screened_urls:
+              title: "URL sous surveillance"
+              header_description: "Les URL listées ici ont été utilisées dans des messages publiés par des utilisateurs ayant été identifiés comme spammeurs"
+            search_logs:
+              title: "Journaux de recherche"
+        plugins:
+          title: "Extensions installées"
+          header_description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste"
+        api_keys:
+          title: "Clés d'API"
+          header_description: "La fonctionnalité des clés d'API vous permet d'intégrer Discourse à des systèmes externes en toute sécurité et d'automatiser les actions. Les administrateurs peuvent créer des clés avec des autorisations spécifiques pour contrôler l'accès aux ressources et aux données sensibles. Les autorisations limitent les fonctionnalités et garantissent ainsi une sécurité accrue."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Intégration"
+          header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+      search:
+        result_types:
+          theme:
+            one: "Thème"
+            other: "Thèmes"
+          component:
+            one: "Composant"
+            other: "Composants"
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
@@ -5323,72 +5451,8 @@ fr:
             failed: "Échec"
       home:
         title: "Accueil"
-      account:
-        title: "Compte"
-        sidebar_link:
-          backups: "Sauvegardes"
-          whats_new:
-            title: "Quoi de neuf ?"
-            keywords: "journal des modifications|fonctionnalité|version"
-      community:
-        title: "Communauté"
-        sidebar_link:
-          about_your_site: "À propos de votre site"
-          badges: "Badges"
-          login_and_authentication: "Connexion et authentification"
-          notifications: "Notifications"
-          permalinks: "Permaliens"
-          trust_levels: "Niveaux de confiance"
-          group_permissions: "Autorisations de groupe"
-          users: "Utilisateurs"
-          groups: "Groupes"
-          user_fields: "Champs utilisateur"
-          watched_words: "Mots surveillés"
-          legal: "Mentions légales"
-          moderation_flags:
-            title: "Modération"
-            keywords: "signaler|examiner"
-      appearance:
-        title: "Apparence"
-        sidebar_link:
-          font_style: "Style de police"
-          site_logo: "Logo du site"
-          color_schemes: "Palettes de couleurs"
-          emoji: "Émoji"
-          navigation: "Navigation"
-          themes: "Thèmes"
-          components:
-            title: "Composants"
-            keywords: "thème|extension"
-          site_texts: "Textes du site"
-      email_settings:
-        title: "Paramètres de messagerie"
-        sidebar_link:
-          appearance: "Apparence"
-          server_setup:
-            title: "Configuration du serveur et journaux"
-            keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
-      security:
-        title: "Sécurité"
-        sidebar_link:
-          security: "Paramètres de sécurité"
-          spam: "Paramètres anti-spam"
-          staff_action_logs:
-            title: "Journaux et filtrage"
-            keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
-      section_landing_pages:
-        account:
-          title: "Compte"
-          backups:
-            title: "Sauvegardes"
-            description: "Effectuez une sauvegarde des données de votre site"
-          whats_new:
-            title: "Quoi de neuf ?"
-            description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
-          header: "À propos de votre site"
-          description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
           general_settings: "Paramètres généraux"
           community_name: "Nom de la communauté"
           community_name_placeholder: "Exemple de communauté"
@@ -5438,9 +5502,7 @@ fr:
             your_organization_saved: "Votre organisation enregistrée"
           saved: "enregistré !"
         flags:
-          header: "Modération"
           edit_header: "Modifier le signalement"
-          subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
           enabled: "Activé ?"
           add: "Ajouter un signalement"
@@ -5483,8 +5545,6 @@ fr:
           more_options:
             title: "Plus d'options"
         look_and_feel:
-          title: "Apparence"
-          description: "Personnalisez et marquez votre site Discourse en lui donnant un style distinctif."
           themes:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
@@ -5506,8 +5566,6 @@ fr:
           save_successful: "Champ utilisateur enregistré."
       plugins:
         title: "Extensions"
-        installed: "Extensions installées"
-        description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste."
         name: "Nom"
         none_installed: "Vous n'avez aucune extension installée."
         version: "Version"
@@ -5522,25 +5580,6 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
-        sidebar_link:
-          installed: "Installé"
-      advanced:
-        title: "Avancé"
-        sidebar_link:
-          api_keys:
-            title: "Clés d'API"
-            keywords: "jeton"
-          webhooks: "Webhooks"
-          developer: "Développeur"
-          embedding: "Intégration"
-          rate_limits: "Limites d'utilisation"
-          user_api: "API utilisateur"
-          onebox: "Onebox"
-          files: "Fichiers"
-          other_options: "Autre"
-          search: "Recherche"
-          experimental: "Expérimental"
-          all_site_settings: "Tous les paramètres du site"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -5548,7 +5587,6 @@ fr:
       backups:
         title: "Sauvegardes"
         files_title: "Fichiers de sauvegarde"
-        description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
         menu:
           backups: "Sauvegardes"
           backup_files: "Fichiers de sauvegarde"
@@ -5692,16 +5730,11 @@ fr:
           common: "Général"
           desktop: "Bureau"
           mobile: "Mobile"
-          settings: "Paramètres"
-          translations: "Traductions"
-          extra_scss: "Extra SCSS"
           extra_files: "Fichiers supplémentaires"
           extra_files_upload: "Exportez le thème pour voir ces fichiers."
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
           settings_editor: "Éditeur de paramètres"
-          show_advanced: "Afficher les champs avancés"
-          hide_advanced: "Masquer les champs avancés"
           hide_unused_fields: "Masquer les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"

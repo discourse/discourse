@@ -104,6 +104,7 @@ ro:
         tabs:
           members: Membri
           settings: Setări
+        remove_member: "Elimină"
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
         create_group_placeholder: "Nume grup discuție (opțional)"

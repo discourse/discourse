@@ -1665,6 +1665,7 @@ cs:
       google_analytics_version: "Váš Discourse v současné době používá službu Google Analytics 3, která po červenci 2023 již nebude podporována. Chcete-li i nadále získávat cenné informace a analytické údaje o výkonu svých webových stránek, proveďte nyní <a href='https://meta.discourse.org/t/260498'>upgrade na Google Analytics 4</a>."
       category_style_deprecated: "Váš Discourse v současné době používá zastaralý styl kategorií, který bude odstraněn před vydáním finální beta verze Discourse 3.2. Pokyny, jak zachovat zvolený styl kategorií, naleznete v části <a href='https://meta.discourse.org/t/282441'>Přechod na nastavení webu s jedním stylem kategorií</a>."
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
+      admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
@@ -2776,10 +2777,10 @@ cs:
         Nyní můžete opět vytvářet nové odpovědi a témata. Děkujeme vám za trpělivost.
     pending_users_reminder:
       subject_template:
-        one: "%{count} user waiting for approval"
-        few: "%{count} users waiting for approval"
-        many: "%{count} users waiting for approval"
-        other: "%{count} users waiting for approval"
+        one: "%{count} uživatel čeká na schválení"
+        few: "%{count} uživatelé čekají na schválení"
+        many: "%{count} uživatelů čeká na schválení"
+        other: "%{count} uživatelů čeká na schválení"
       text_body_template: |
         Jsou zde nové uživatelské registrace, které čekají na schválení (nebo zamítnutí), než budou mít přístup k tomuto fóru.
 

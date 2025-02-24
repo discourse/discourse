@@ -366,9 +366,6 @@ ru:
     site_settings:
       invalid_site_setting: "Настройка с именем «%{name}» не существует"
       invalid_category_id: "Вы указали несуществующую категорию"
-      site_setting_is_hidden: "Вы не можете изменять скрытые настройки"
-      site_setting_is_shadowed_globally: "Этот параметр нельзя изменить, так как он настроен глобально"
-      site_setting_is_unconfigurable: "Вы не можете изменять неконфигурируемые настройки"
       invalid_choice:
         one: "«%{name}» — недопустимые варианты."
         few: "«%{name}» — недопустимые варианты."
