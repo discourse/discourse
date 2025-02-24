@@ -42,7 +42,15 @@ class PostAnalyzer
         limit -= 1
         @onebox_urls << url
         onebox = Oneboxer.cached_onebox(url)
-        @found_oneboxes = true if onebox.present?
+        if onebox.present?
+          @found_oneboxes = true
+        elsif opts[:retry_onebox_cache_miss]
+          # If it's not cached we can at least try once to get it and
+          # cache it before failing, user could have posted fast before the
+          # onebox GET request was done in the browser.
+          onebox = Oneboxer.onebox(url)
+          @found_oneboxes = true if onebox.present?
+        end
         onebox
       end
 

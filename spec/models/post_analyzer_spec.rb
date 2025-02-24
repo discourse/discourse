@@ -23,6 +23,15 @@ RSpec.describe PostAnalyzer do
       post_analyzer.cook(raw, options)
     end
 
+    it "can handle retrying fetching the onebox for a url if it's not yet cached" do
+      Oneboxer.expects(:cached_onebox).with(url).at_least_once.returns(nil)
+      post_analyzer.cook(raw, options)
+      expect(post_analyzer.found_oneboxes?).to be(false)
+      Oneboxer.expects(:onebox).with(url).at_least_once.returns("something")
+      post_analyzer.cook(raw, options.merge(retry_onebox_cache_miss: true))
+      expect(post_analyzer.found_oneboxes?).to be(true)
+    end
+
     context "when invalidating oneboxes" do
       let(:options) { { invalidate_oneboxes: true } }
 

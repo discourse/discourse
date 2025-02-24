@@ -269,7 +269,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      @post.post_analyzer.cook(@post.raw, {})
+      @post.post_analyzer.cook(@post.raw, { retry_onebox_cache_miss: true })
 
       if @post.post_analyzer.found_oneboxes?
         raw = <<~MD
