@@ -13,6 +13,34 @@
 
       {{this.passwordProgress}}
     </div>
+
+    {{#unless this.model.no_password}}
+      {{#if this.associatedAccountsLoaded}}
+        {{#if this.canRemovePassword}}
+          <div class="controls">
+            <DButton
+              @action={{this.removePassword}}
+              @icon="trash-can"
+              @label="user.change_password.remove"
+              class="btn-default"
+              @isLoading={{this.removePasswordInProgress}}
+            />
+          </div>
+          <div class="instructions">
+            {{i18n "user.change_password.remove_detail"}}
+          </div>
+        {{/if}}
+      {{else}}
+        <div class="controls">
+          <DButton
+            @action={{fn (route-action "checkEmail") this.model}}
+            @title="admin.users.check_email.title"
+            @icon="envelope"
+            @label="admin.users.check_email.text"
+          />
+        </div>
+      {{/if}}
+    {{/unless}}
   </div>
 
   {{#if this.canUsePasskeys}}
