@@ -35,7 +35,7 @@ export default class CreateAccount extends Component.extend(
   @tracked accountUsername = this.model.accountUsername;
   @tracked accountPassword = this.model.accountPassword;
   @tracked authOptions = this.model.authOptions;
-  @tracked skipConfirmation;
+  @tracked skipConfirmation = this.model.skipConfirmation;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
