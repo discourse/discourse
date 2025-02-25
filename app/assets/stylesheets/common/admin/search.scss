@@ -126,4 +126,10 @@
     color: var(--primary-high);
     margin-top: var(--space-1);
   }
+
+  a {
+    display: inline-block;
+    width: 100%;
+    pointer-events: auto;
+  }
 }

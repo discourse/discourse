@@ -92,6 +92,42 @@ export default class AdminSearch extends Component {
     discourseDebounce(this, this.#search, INPUT_DELAY);
   }
 
+  // TODO (martin) Maybe we can move ListHandler / iterate-list from chat into
+  // core so we can use it here too.
+  @action
+  handleResultKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      event.target.click();
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
+      const previousResult = event.target.parentElement.previousElementSibling;
+      if (previousResult) {
+        previousResult.firstElementChild?.focus();
+      } else {
+        document.querySelector(".admin-search__input-field").focus();
+      }
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      event.stopPropagation();
+      event.target.parentElement.nextElementSibling.firstElementChild?.focus();
+    }
+  }
+
+  @action
+  handleSearchKeyDown(event) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      document.querySelector(".admin-search__result a").focus();
+    }
+  }
+
   #search() {
     this.searchResults = this.adminSearchDataSource.search(this.filter, {
       types: this.visibleTypes,
@@ -108,6 +144,7 @@ export default class AdminSearch extends Component {
           class="admin-search__input-field"
           {{autoFocus}}
           {{on "input" this.changeSearchTerm}}
+          {{on "keydown" this.handleSearchKeyDown}}
         />
       </div>
       <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
@@ -125,7 +162,7 @@ export default class AdminSearch extends Component {
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result">
-            <a href={{result.url}}>
+            <a href={{result.url}} {{on "keydown" this.handleResultKeyDown}}>
               <div class="admin-search__result-name">
                 {{#if result.icon}}
                   {{icon result.icon}}
