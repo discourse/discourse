@@ -14,8 +14,11 @@ import autoFocus from "discourse/modifiers/auto-focus";
 import AdminSearchFilters from "admin/components/admin-search-filters";
 import { RESULT_TYPES } from "admin/services/admin-search-data-source";
 
+const ADMIN_SEARCH_FILTERS = "admin_search_filters";
+
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
+  @service keyValueStore;
 
   @tracked filter = "";
   @tracked searchResults = [];
@@ -32,6 +35,13 @@ export default class AdminSearch extends Component {
   constructor() {
     super(...arguments);
     this.adminSearchDataSource.buildMap();
+
+    if (this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS)) {
+      this.typeFilters = new TrackedObject(
+        JSON.parse(this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS))
+      );
+      this.showFilters = true;
+    }
   }
 
   get visibleTypes() {
@@ -52,6 +62,20 @@ export default class AdminSearch extends Component {
   @action
   toggleTypeFilter(type) {
     this.typeFilters[type] = !this.typeFilters[type];
+
+    const allFiltersShowing = Object.values(this.typeFilters).every(
+      (value) => value
+    );
+
+    if (!allFiltersShowing) {
+      this.keyValueStore.setItem(
+        ADMIN_SEARCH_FILTERS,
+        JSON.stringify(this.typeFilters)
+      );
+    } else {
+      this.keyValueStore.removeItem(ADMIN_SEARCH_FILTERS);
+    }
+
     this.search();
   }
 
