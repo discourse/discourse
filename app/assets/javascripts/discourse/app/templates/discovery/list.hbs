@@ -29,6 +29,7 @@
       <Discovery::CategoriesDisplay
         @categories={{this.model.subcategoryList.categories}}
         @parentCategory={{this.model.subcategoryList.parentCategory}}
+        @loadMore={{this.model.subcategoryList.loadMore}}
       />
     {{/if}}
     {{#if (and this.showTagInfo this.model.tag)}}
