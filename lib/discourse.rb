@@ -169,7 +169,7 @@ module Discourse
         stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
-          message = [command, failure_message, stderr].filter(&:present?).join("\n")
+          message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")
           raise CommandError.new(message, stdout: stdout, stderr: stderr, status: status)
         end
 
