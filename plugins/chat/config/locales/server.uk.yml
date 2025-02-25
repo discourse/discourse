@@ -59,6 +59,7 @@ uk:
     deleted_chat_username: видалено
     errors:
       users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
+      user_cant_be_removed_from_channel: "Користувач не може бути видалений з цього каналу"
       channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"

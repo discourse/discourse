@@ -67,6 +67,7 @@
       display: inline-flex;
       align-items: baseline;
       gap: 0.25em;
+
       @include ellipsis;
 
       .badge-category {
@@ -173,9 +174,11 @@
     @media all and (max-width: 600px) {
       margin-right: 0;
     }
+
     @media all and (min-width: 600px) {
       margin-right: 1em;
     }
+
     @media all and (min-width: 700px) {
       margin-right: 2em;
     }

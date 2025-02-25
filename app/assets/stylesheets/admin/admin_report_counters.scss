@@ -13,6 +13,7 @@
 
       &.title {
         text-align: left;
+
         @include ellipsis;
 
         .d-icon {

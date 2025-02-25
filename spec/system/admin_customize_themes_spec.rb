@@ -108,6 +108,30 @@ describe "Admin Customize Themes", type: :system do
       ace_content = find(".ace_content")
       expect(ace_content.text).to eq("console.log('test')")
     end
+
+    it "can edit the js field" do
+      visit("/admin/customize/themes/#{theme.id}/common/js/edit")
+
+      ace_content = find(".ace_content")
+      expect(ace_content.text).to include("// Your code here")
+      find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
+      find(".save-theme").click
+
+      try_until_success do
+        expect(
+          theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value,
+        ).to start_with("console.log('test')\n")
+      end
+
+      # Check content is loaded from db correctly
+      theme
+        .theme_fields
+        .find_by(target_id: Theme.targets[:extra_js])
+        .update!(value: "console.log('second test')")
+      visit("/admin/customize/themes/#{theme.id}/common/js/edit")
+      ace_content = find(".ace_content")
+      expect(ace_content.text).to include("console.log('second test')")
+    end
   end
 
   describe "when editing theme translations" do

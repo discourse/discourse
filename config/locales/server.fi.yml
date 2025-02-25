@@ -314,9 +314,6 @@ fi:
     site_settings:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
-      site_setting_is_hidden: "Et voi muuttaa piilotettuja asetuksia"
-      site_setting_is_shadowed_globally: "Et voi muuttaa tätä asetusta, koska se on määritetty yleisesti"
-      site_setting_is_unconfigurable: "Et voi muuttaa asetuksia, jotka eivät ole määritettävissä"
       invalid_choice:
         one: "\"%{name}\" on virheellinen valinta."
         other: "\"%{name}\" ovat virheellisiä valintoja."

@@ -2,23 +2,24 @@
 
 RSpec.describe SiteSetting::Update do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of :setting_name }
+    it { is_expected.to validate_presence_of :settings }
   end
 
   describe ".call" do
     subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:admin)
-    let(:params) { { setting_name:, new_value: } }
+    let(:params) { { settings: } }
+    let(:settings) { { setting_name => new_value } }
     let(:options) { { allow_changing_hidden: } }
     let(:dependencies) { { guardian: } }
     let(:setting_name) { :title }
     let(:new_value) { "blah whatever" }
     let(:guardian) { admin.guardian }
-    let(:allow_changing_hidden) { false }
+    let(:allow_changing_hidden) { [] }
 
-    context "when setting_name is blank" do
-      let(:setting_name) { nil }
+    context "when settings is blank" do
+      let(:settings) { nil }
 
       it { is_expected.to fail_a_contract }
     end
@@ -33,12 +34,12 @@ RSpec.describe SiteSetting::Update do
       let(:setting_name) { :max_category_nesting }
       let(:new_value) { 3 }
 
-      context "when allow_changing_hidden is false" do
-        it { is_expected.to fail_a_policy(:setting_is_visible) }
+      context "when allow_changing_hidden is empty array" do
+        it { is_expected.to fail_a_policy(:settings_are_visible) }
       end
 
-      context "when allow_changing_hidden is true" do
-        let(:allow_changing_hidden) { true }
+      context "when allow_changing_hidden is including setting" do
+        let(:allow_changing_hidden) { [:max_category_nesting] }
 
         it { is_expected.to run_successfully }
 
@@ -54,7 +55,7 @@ RSpec.describe SiteSetting::Update do
 
       before { SiteSetting.stubs(:shadowed_settings).returns(Set.new([:max_category_nesting])) }
 
-      it { is_expected.to fail_a_policy(:setting_is_shadowed_globally) }
+      it { is_expected.to fail_a_policy(:settings_are_unshadowed_globally) }
     end
 
     context "when the user changes a visible setting" do
@@ -82,6 +83,16 @@ RSpec.describe SiteSetting::Update do
         it "cleans up the new setting value before using it" do
           expect { result }.to change { SiteSetting.max_image_size_kb }.to(8843)
         end
+      end
+    end
+
+    context "when one setting is having invalid value" do
+      let(:settings) { { title: "hello this is title", default_categories_watching: "999999" } }
+
+      it { is_expected.to fail_a_policy(:values_are_valid) }
+
+      it "does not update valid setting" do
+        expect { result }.not_to change { SiteSetting.title }
       end
     end
   end

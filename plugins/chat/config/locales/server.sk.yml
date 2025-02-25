@@ -59,6 +59,7 @@ sk:
     deleted_chat_username: vymazané
     errors:
       users_cant_be_added_to_channel: "Do tohto kanála nie je možné pridať používateľov."
+      user_cant_be_removed_from_channel: "Používateľ nemôže byť odstránený z tohto kanála"
       channel_exists_for_category: "Kanál už existuje pre túto kategóriu a názov"
       channel_new_message_disallowed:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy"

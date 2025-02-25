@@ -3436,9 +3436,22 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
+      config_sections:
+        account:
+          title: "Профил"
+        community:
+          title: "Общност "
+        email:
+          title: "Имейл "
+        security:
+          title: "Сигурност"
+        plugins:
+          title: "Приставки"
       config:
         developer:
           title: "Разработчик"
+        emojis:
+          title: "Емотикони"
         files:
           title: "Файлове"
         legal:
@@ -3457,6 +3470,48 @@ bg:
           title: "Сигурност"
         spam:
           title: "Спам"
+        dashboard:
+          title: "Работен плот"
+        users:
+          title: "Потребители"
+        groups:
+          title: "Групи"
+        backups:
+          title: "Бекъпи"
+          sub_pages:
+            logs:
+              title: "Логове"
+        badges:
+          title: "Значки"
+        permalinks:
+          title: "Постоянни адреси"
+        emoji:
+          title: "Емотикони"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
+            templates:
+              title: "Шаблони"
+            sent:
+              title: "Изпрати"
+            skipped:
+              title: "Пропусни"
+            received:
+              title: "Получени"
+            rejected:
+              title: "Отхвърлени"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Когато някой се опита да създаде нов профил, следните имейл адреси ще бъдат проверени и регистрацията ще бъде отказана или ще бъде предприето друго действие"
+            screened_ips:
+              title: "Проверени IP-та"
+            screened_urls:
+              title: "Проверени URL-та"
+              header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
+        embedding:
+          title: "Ембедване"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3584,30 +3639,6 @@ bg:
             failed: "Провалени"
       home:
         title: "Начало"
-      account:
-        title: "Профил"
-        sidebar_link:
-          backups: "Бекъпи"
-      community:
-        title: "Общност "
-        sidebar_link:
-          badges: "Значки"
-          notifications: "Известия"
-          permalinks: "Постоянни адреси"
-          users: "Потребители"
-          groups: "Групи"
-          legal: "Правни"
-      appearance:
-        sidebar_link:
-          emoji: "Емотикони"
-          navigation: "Навигация"
-      security:
-        title: "Сигурност"
-      section_landing_pages:
-        account:
-          title: "Профил"
-          backups:
-            title: "Бекъпи"
       config_areas:
         about:
           company_name: "Име"
@@ -3648,16 +3679,6 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
-        sidebar_link:
-          installed: "Инсталирани"
-      advanced:
-        sidebar_link:
-          developer: "Разработчик"
-          embedding: "Ембедване"
-          onebox: "Onebox"
-          files: "Файлове"
-          other_options: "Други"
-          search: "Търсене"
       navigation_menu:
         sidebar: "Странична лента"
       backups:
@@ -3750,7 +3771,6 @@ bg:
           save: "Запази "
           edit: "Редактирай"
           mobile: "Мобилен"
-          settings: "Настройки"
           preview: "Преглед"
           cancel: "Прекрати"
           collapse: Намали

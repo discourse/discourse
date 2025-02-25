@@ -50,6 +50,7 @@ class Admin::UsersController < Admin::StaffController
       AdminDetailedUserSerializer,
       root: false,
       similar_users_count: @user.similar_users.count,
+      include_silence_reason: true,
     )
   end
 

@@ -267,6 +267,7 @@
       position: relative;
       border-radius: 0;
       padding: 0.857em;
+
       @media screen and (max-height: 400px) {
         // helps with 400% zoom level
         font-size: var(--font-down-1);
@@ -283,6 +284,7 @@
         right: 6px;
         top: 6px;
         font-size: var(--font-down-3);
+
         @media screen and (max-height: 400px) {
           // helps with 400% zoom level
           right: 0;

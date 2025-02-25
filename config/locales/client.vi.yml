@@ -3674,11 +3674,30 @@ vi:
       reports:
         title: "Danh sách các báo cáo có sẵn"
         sidebar_title: "Báo cáo"
-        sidebar_link:
-          all: "Tất cả các báo cáo"
+      config_sections:
+        account:
+          title: "Tài khoản"
+        reports:
+          title: "Báo cáo"
+        community:
+          title: "Cộng đồng"
+        appearance:
+          title: "Ngoại hình"
+        email:
+          title: "Email"
+        security:
+          title: "Bảo mật"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Nâng cao"
       config:
         developer:
           title: "Nhà phát triển"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Người kiểm duyệt"
         files:
           title: "Tập tin"
         legal:
@@ -3699,6 +3718,72 @@ vi:
           title: "Rác"
         user_api:
           title: "API người dùng"
+        dashboard:
+          title: "Bảng điều khiển"
+        users:
+          title: "Thành viên"
+        groups:
+          title: "Nhóm"
+        backups:
+          title: "Bản sao lưu"
+          sub_pages:
+            logs:
+              title: "Log"
+        reports:
+          title: "Báo cáo"
+        badges:
+          title: "Huy hiệu"
+        permalinks:
+          title: "Liên kết cố định"
+          header_description: "Chuyển hướng để áp dụng cho các URL mà diễn đàn không biết"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Themes"
+        components:
+          title: "Các thành phần"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động"
+            templates:
+              title: "Templates"
+            sent:
+              title: "Đã gửi"
+            skipped:
+              title: "Đã bỏ qua"
+            bounced:
+              title: "Bị trả lại"
+            received:
+              title: "Đã nhận"
+            rejected:
+              title: "Từ chối"
+        email_appearance:
+          title: "Ngoại hình"
+          header_description: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "Các URL được liệt kê ở đây được sử dụng trong các bài viết của người dùng đã được xác định là spammer"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Nhúng"
+      search:
+        result_types:
+          report:
+            other: "Báo cáo"
+          setting:
+            other: "Cài đặt"
+          theme:
+            other: "Themes"
+          component:
+            other: "Các thành phần"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
@@ -4033,39 +4118,6 @@ vi:
             failed: "Thất bại"
       home:
         title: "Trang chủ"
-      account:
-        title: "Tài khoản"
-        sidebar_link:
-          backups: "Bản sao lưu"
-      community:
-        title: "Cộng đồng"
-        sidebar_link:
-          badges: "Huy hiệu"
-          notifications: "Thông báo"
-          permalinks: "Liên kết cố định"
-          users: "Thành viên"
-          groups: "Nhóm"
-          legal: "Legal"
-          moderation_flags:
-            title: "Người kiểm duyệt"
-      appearance:
-        title: "Ngoại hình"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Điều hướng"
-          themes: "Themes"
-          components:
-            title: "Các thành phần"
-      email_settings:
-        sidebar_link:
-          appearance: "Ngoại hình"
-      security:
-        title: "Bảo mật"
-      section_landing_pages:
-        account:
-          title: "Tài khoản"
-          backups:
-            title: "Bản sao lưu"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4074,7 +4126,6 @@ vi:
           update: "Cập nhật"
           saved: "đã lưu"
         flags:
-          header: "Người kiểm duyệt"
           description: "Mô tả"
           enabled: "Kích hoạt"
           edit: "Sửa"
@@ -4112,19 +4163,6 @@ vi:
         howto: "Plugin cài như thế nào?"
         author: "Bởi %{author}"
         learn_more: "Tìm hiểu thêm"
-        sidebar_link:
-          installed: "Đã cài đặt"
-      advanced:
-        title: "Nâng cao"
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Nhà phát triển"
-          embedding: "Nhúng"
-          user_api: "API người dùng"
-          onebox: "Onebox"
-          files: "Tập tin"
-          other_options: "Khác"
-          search: "Tìm kiếm"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:
@@ -4246,15 +4284,10 @@ vi:
           common: "Chung"
           desktop: "Máy tính để bàn"
           mobile: "Điện thoại"
-          settings: "Cài đặt"
-          translations: "Bản dịch"
-          extra_scss: "SCSS bổ sung"
           extra_files: "Các tệp bổ sung"
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
-          show_advanced: "Hiển thị các trường nâng cao"
-          hide_advanced: "Ẩn các trường nâng cao"
           hide_unused_fields: "Ẩn các trường không sử dụng"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"

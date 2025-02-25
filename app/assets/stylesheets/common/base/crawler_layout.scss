@@ -227,6 +227,7 @@ body > noscript {
       a {
         font-weight: bold;
       }
+
       @include breakpoint(tablet) {
         display: inline-block;
         margin-bottom: 0.25em;
@@ -237,6 +238,7 @@ body > noscript {
   .crawler-post-infos {
     color: #666;
     display: inline-block;
+
     @include breakpoint(tablet, min-width) {
       float: right;
     }
@@ -348,6 +350,7 @@ body > noscript {
   color: #e25600;
   text-decoration: underline;
 }
+
 @media print {
   .buorg {
     display: none !important;
