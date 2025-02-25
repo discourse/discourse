@@ -5981,6 +5981,9 @@ fr:
           hover:
             name: "survol"
             description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
+          editor:
+            light: "Clair"
+            dark: "Sombre"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."

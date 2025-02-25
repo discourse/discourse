@@ -166,22 +166,8 @@ da:
 
           - Vi tror på [civiliseret samfundsmæssig adfærd](%{base_uri}/guidelines) til hver en tid.
       onebox:
-        instructions: |-
-          Næste, kan du dele en af disse links med mig? Svar med **et link på en linje af sig selv**, så udvides den automatisk til at omfatte en fiks oversigt.
-
-          Hvis du vil kopiere et link, skal du trykke og holde på mobilen eller højreklikke med dit pegeredskab:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Fedt nok! Dette fungerer for de fleste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Husk, at det skal være på en linje _for sig selv_, uden noget foran eller bagved.
-        not_found: |-
-          Beklager, jeg kunne ikke finde linket i dit svar! :cry:
-
-          Kan du prøve at tilføje følgende link på sin egen linje i dit næste svar?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Her er et billede af en enhjørning:

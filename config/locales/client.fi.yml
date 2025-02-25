@@ -5980,6 +5980,9 @@ fi:
           hover:
             name: "osoitus"
             description: "Elementtien, kuten luettelon kohteiden, taustaväri, kun niitä osoitetaan tai kohdistus on siirretty niihin näppäimistöllä."
+          editor:
+            light: "Vaalea"
+            dark: "Tumma"
         robots:
           title: "Ohita sivustosi robots.txt-tiedosto:"
           warning: "Tämä ohittaa pysyvästi kaikki asiaankuuluvat sivuston asetukset."

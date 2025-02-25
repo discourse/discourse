@@ -4347,6 +4347,9 @@ lt:
             description: "Mygtuko \"Patinka\" spalva."
           selected:
             name: "pasirinktas"
+          editor:
+            light: "Šviesi"
+            dark: "Tamsi"
         robots:
           title: "Nepaisykite savo svetainės robots.txt failo:"
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."

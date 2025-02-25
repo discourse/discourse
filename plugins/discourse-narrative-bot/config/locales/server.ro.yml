@@ -23,6 +23,21 @@ ro:
           - Din motive de securitate, limităm temporar ceea ce pot face noii utilizatori. Vei dobândi [noi abilități](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (și [insigne](%{base_uri}/badges)) pe măsură ce te cunoaștem.
 
           - Credem tot timpul în [comportamentul civilizat al comunității](%{base_uri}/guidelines).
+      onebox:
+        instructions: |-
+          În continuare, poți partaja una dintre aceste legături? Răspunde cu **o legătură pe o singură linie**, iar acesta se va extinde automat pentru a include un rezumat ingenios.
+
+          Pentru a copia orice legătură, atinge și ține apăsat pe mobil sau dă clic dreapta pe dispozitivul de indicare:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+        not_found: |-
+          Scuze, nu am găsit legătura în răspunsul tău! :cry:
+
+          Poți încerca să adaugi următoarea legătură, pe propria linie, în următorul răspuns?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       bookmark:
         instructions: |-
           Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> de mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marchează ca semn de carte acest mesaj**. Dacă o faci, ar putea fi un :gift: în viitor!

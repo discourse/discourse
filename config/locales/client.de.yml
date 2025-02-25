@@ -6044,6 +6044,9 @@ de:
           hover:
             name: "unter Mauszeiger"
             description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie sich unter dem Mauszeiger befinden oder den Tastaturfokus haben."
+          editor:
+            light: "Hell"
+            dark: "Dunkel"
         robots:
           title: "Überschreibe die robots.txt-Datei deiner Website:"
           warning: "Dies wird sämtliche zugehörigen Website-Einstellungen dauerhaft überschreiben."
