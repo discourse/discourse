@@ -62,8 +62,8 @@ const Picker = class extends Component {
       this.args.onDarkChange(color);
       this.args.color.darkValue = color;
     } else {
-      this.args.color.lightValue = color;
       this.args.onLightChange(color);
+      this.args.color.lightValue = color;
     }
   }
 
