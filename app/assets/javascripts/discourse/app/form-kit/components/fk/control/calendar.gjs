@@ -74,8 +74,8 @@ export default class FKControlCalendar extends Component {
       <div id={{this.containerId}} class="date-picker-container"></div>
     {{else}}
       <input
-        min={{(this.formatForInput this.minDate)}}
-        max={{(this.formatForInput this.maxDate)}}
+        min={{this.formatForInput this.minDate}}
+        max={{this.formatForInput this.maxDate}}
         disabled={{@field.disabled}}
         class="form-kit__control-input form-kit__control-date"
         type="date"
