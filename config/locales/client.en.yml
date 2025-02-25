@@ -5368,6 +5368,7 @@ en:
 
       search:
         modal_title: "Search anything in admin"
+        instructions: "Type to search for pages, settings, reports, themes, components, and more..."
         result_types:
           page:
             one: "Page"

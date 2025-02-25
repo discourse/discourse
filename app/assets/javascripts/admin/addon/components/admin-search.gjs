@@ -11,6 +11,7 @@ import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
+import { i18n } from "discourse-i18n";
 import AdminSearchFilters from "admin/components/admin-search-filters";
 import { RESULT_TYPES } from "admin/services/admin-search-data-source";
 
@@ -160,6 +161,12 @@ export default class AdminSearch extends Component {
 
     <div class="admin-search__results">
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
+        {{#unless this.searchResults.length}}
+          <div class="admin-search__instructions-placeholder admin-empty-list">
+            {{i18n "admin.search.instructions"}}
+          </div>
+        {{/unless}}
+
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result">
             <a href={{result.url}} {{on "keydown" this.handleResultKeyDown}}>
