@@ -91,7 +91,7 @@ export default class CreateAccount extends Component.extend(
 
   @dependentKeyCompat
   get hasAuthOptions() {
-    return !this.authOptions;
+    return !isEmpty(this.authOptions);
   }
 
   @dependentKeyCompat
@@ -150,11 +150,11 @@ export default class CreateAccount extends Component.extend(
   }
 
   get usernameDisabled() {
-    return this.authOptions?.can_edit_username;
+    return this.authOptions && !this.authOptions.can_edit_username;
   }
 
   get nameDisabled() {
-    return this.authOptions?.can_edit_name;
+    return this.authOptions && !this.authOptions.can_edit_name;
   }
 
   @discourseComputed
