@@ -93,13 +93,34 @@ export default class Post extends Component {
       }}
     >
       {{#unless @cloaked}}
+        {{log "editPost" @editPost}}
+
         <PostArticle
           id={{this.id}}
-          @canCreatePost={{@canCreatePost}}
           @post={{@post}}
           @prevPost={{@prevPost}}
           @nextPost={{@nextPost}}
+          @canCreatePost={{@canCreatePost}}
+          @changeNotice={{@changeNotice}}
+          @changePostOwner={{@changePostOwner}}
+          @deletePost={{@deletePost}}
+          @editPost={{@editPost}}
+          @grantBadge={{@grantBadge}}
+          @lockPost={{@lockPost}}
+          @permanentlyDeletePost={{@permanentlyDeletePost}}
+          @rebakePost={{@rebakePost}}
+          @recoverPost={{@recoverPost}}
+          @replyToPost={{@replyToPost}}
+          @showFlags={{@showFlags}}
+          @showLogin={{@showLogin}}
+          @showPagePublish={{@showPagePublish}}
           @showReadIndicator={{@showReadIndicator}}
+          @toggleLike={{this.toggleLike}}
+          @togglePostType={{@togglePostType}}
+          @toggleReplies={{@toggleReplies}}
+          @toggleWiki={{@toggleWiki}}
+          @unhidePost={{@unhidePost}}
+          @unlockPost={{@unlockPost}}
         />
       {{/unless}}
     </div>

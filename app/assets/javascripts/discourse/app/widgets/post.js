@@ -1203,9 +1203,29 @@ registerWidgetShim(
   "glimmer-post",
   "div.post-shim",
   hbs`
-      <Post @post={{@data.post}}
-            @canCreatePost={{@data.canCreatePost}}
-            @prevPost={{@data.prevPost}}
-            @nextPost={{@data.nextPost}}
-            @showReadIndicator={{@data.showReadIndicator}} />`
+    <Post
+      @canCreatePost={{@data.canCreatePost}}
+      @changeNotice={{@data.changeNotice}}
+      @changePostOwner={{@data.changePostOwner}}
+      @deletePost={{@data.deletePost}}
+      @editPost={{@data.editPost}}
+      @grantBadge={{@data.grantBadge}}
+      @lockPost={{@data.lockPost}}
+      @nextPost={{@data.nextPost}}
+      @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+      @post={{@data.post}}
+      @prevPost={{@data.prevPost}}
+      @rebakePost={{@data.rebakePost}}
+      @recoverPost={{@data.recoverPost}}
+      @replyToPost={{@data.replyToPost}}
+      @showFlags={{@data.showFlags}}
+      @showLogin={{@data.showLogin}}
+      @showPagePublish={{@data.showPagePublish}}
+      @showReadIndicator={{@data.showReadIndicator}}
+      @togglePostType={{@data.togglePostType}}
+      @toggleReplies={{@toggleReplies}}
+      @toggleWiki={{@data.toggleWiki}}
+      @unhidePost={{@data.unhidePost}}
+      @unlockPost={{@data.unlockPost}}
+    />`
 );

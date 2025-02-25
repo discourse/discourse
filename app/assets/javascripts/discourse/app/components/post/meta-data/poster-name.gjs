@@ -165,7 +165,6 @@ export default class PostMetaDataPosterName extends Component {
         {{#if @post.badgesGranted}}
           <span class="user-badge-buttons">
             {{#each @post.badgesGranted key="id" as |badge|}}
-              {{log "badge" badge}}
               <span class={{concat "user-badge-button-" badge.slug}}>
                 <UserBadge
                   @badge={{this.withBadgeDescription badge}}

@@ -123,12 +123,31 @@ export default class PostArticle extends Component {
       <div class="row">
         <PostAvatar @post={{@post}} />
         <PostBody
-          @canCreatePost={{@canCreatePost}}
-          @nextPost={{@nextPost}}
           @post={{@post}}
           @prevPost={{@prevPost}}
+          @nextPost={{@nextPost}}
+          @canCreatePost={{@canCreatePost}}
+          @changeNotice={{@changeNotice}}
+          @changePostOwner={{@changePostOwner}}
+          @deletePost={{@deletePost}}
+          @editPost={{@editPost}}
+          @grantBadge={{@grantBadge}}
+          @lockPost={{@lockPost}}
+          @permanentlyDeletePost={{@permanentlyDeletePost}}
+          @rebakePost={{@rebakePost}}
+          @recoverPost={{@recoverPost}}
           @repliesAbove={{this.repliesAbove}}
+          @replyToPost={{@replyToPost}}
+          @showFlags={{@showFlags}}
+          @showLogin={{@showLogin}}
+          @showPagePublish={{@showPagePublish}}
           @showReadIndicator={{@showReadIndicator}}
+          @toggleLike={{@toggleLike}}
+          @togglePostType={{@togglePostType}}
+          @toggleReplies={{@toggleReplies}}
+          @toggleWiki={{@toggleWiki}}
+          @unhidePost={{@unhidePost}}
+          @unlockPost={{@unlockPost}}
         />
       </div>
 

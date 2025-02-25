@@ -308,8 +308,28 @@ export default createWidget("post-stream", {
             post,
             prevPost,
             nextPost,
-            canCreatePost: attrs.canCreatePost,
+            canCreatePost: attrs.canCreatePost, //ok
+            changeNotice: () => this.sendWidgetAction("changeNotice", post),
+            changePostOwner: () =>
+              this.sendWidgetAction("changePostOwner", post),
+            deletePost: () => this.sendWidgetAction("deletePost", post),
+            editPost: () => this.sendWidgetAction("editPost", post),
+            grantBadge: () => this.sendWidgetAction("grantBadge", post),
+            lockPost: () => this.sendWidgetAction("lockPost", post),
+            permanentlyDeletePost: () =>
+              this.sendWidgetAction("permanentlyDeletePost", post),
+            rebakePost: () => this.sendWidgetAction("rebakePost", post),
+            recoverPost: () => this.sendWidgetAction("recoverPost", post),
+            replyToPost: () => this.sendWidgetAction("replyToPost", post),
+            showFlags: () => this.sendWidgetAction("showFlags", post),
+            showLogin: () => this.sendWidgetAction("showLogin", post),
+            showPagePublish: () =>
+              this.sendWidgetAction("showPagePublish", post),
             showReadIndicator: attrs.showReadIndicator,
+            togglePostType: () => this.sendWidgetAction("togglePostType", post),
+            toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
+            unhidePost: () => this.sendWidgetAction("unhidePost", post),
+            unlockPost: () => this.sendWidgetAction("unlockPost", post),
           })
         );
       }

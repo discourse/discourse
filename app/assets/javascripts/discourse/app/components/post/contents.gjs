@@ -51,7 +51,7 @@ export default class PostContents extends Component {
   get repliesShown() {
     return this.filteredRepliesView
       ? this.filteredRepliesShown
-      : this.this.repliesBelow.length > 0;
+      : this.repliesBelow.length > 0;
   }
 
   @bind
@@ -130,6 +130,13 @@ export default class PostContents extends Component {
   }
 
   @action
+  async toggleReplies() {
+    return this.filteredRepliesView
+      ? await this.toggleFilteredRepliesView()
+      : await this.toggleRepliesBelow();
+  }
+
+  @action
   async toggleFilteredRepliesView() {
     const post = this.args.post;
     const currentFilterPostNumber =
@@ -200,28 +207,28 @@ export default class PostContents extends Component {
 
     <section class="post-menu-area clearfix">
       <PostMenu
-        @canCreatePost={{@canCreatePost}}
-        @filteredRepliesView={{this.filteredRepliesView}}
-        @nextPost={{@nextPost}}
         @post={{@post}}
         @prevPost={{@prevPost}}
-        @repliesShown={{@data.repliesShown}}
-        @showReadIndicator={{@showReadIndicator}}
+        @nextPost={{@nextPost}}
+        @canCreatePost={{@canCreatePost}}
         @changeNotice={{@changeNotice}}
         @changePostOwner={{@changePostOwner}}
-        @copyLink={{@copyLink}}
+        @copyLink={{this.copyLink}}
         @deletePost={{@deletePost}}
         @editPost={{@editPost}}
+        @filteredRepliesView={{this.filteredRepliesView}}
         @grantBadge={{@grantBadge}}
         @lockPost={{@lockPost}}
         @permanentlyDeletePost={{@permanentlyDeletePost}}
         @rebakePost={{@rebakePost}}
         @recoverPost={{@recoverPost}}
+        @repliesShown={{this.repliesShown}}
         @replyToPost={{@replyToPost}}
-        @share={{@share}}
+        @share={{this.share}}
         @showFlags={{@showFlags}}
         @showLogin={{@showLogin}}
         @showPagePublish={{@showPagePublish}}
+        @showReadIndicator={{@showReadIndicator}}
         @toggleLike={{@toggleLike}}
         @togglePostType={{@togglePostType}}
         @toggleReplies={{@toggleReplies}}
