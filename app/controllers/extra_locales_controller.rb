@@ -10,7 +10,7 @@ class ExtraLocalesController < ApplicationController
                      :verify_authenticity_token
 
   OVERRIDES_BUNDLE = "overrides"
-  MD5_HASH_LENGTH = 32
+  SHA1_HASH_LENGTH = 40
   MF_BUNDLE = "mf"
   ADMIN_BUNDLE = "admin"
   WIZARD_BUNDLE = "wizard"
@@ -23,67 +23,86 @@ class ExtraLocalesController < ApplicationController
       @js_digests ||= { site_specific: {}, shared: {} }
     end
 
-    def bundle_js_hash(bundle)
-      bundle_key = "#{bundle}_#{I18n.locale}"
+    def bundle_js_hash(bundle, locale:)
+      bundle_key = "#{bundle}_#{locale}"
       if bundle.in?(SITE_SPECIFIC_BUNDLES)
         site = RailsMultisite::ConnectionManagement.current_db
 
         js_digests[:site_specific][site] ||= {}
         js_digests[:site_specific][site][bundle_key] ||= begin
-          js = bundle_js(bundle)
-          js.present? ? Digest::MD5.hexdigest(js) : nil
+          js = bundle_js(bundle, locale: locale)
+          js.present? ? digest_for_content(js) : nil
         end
       elsif bundle.in?(SHARED_BUNDLES)
-        js_digests[:shared][bundle_key] ||= Digest::MD5.hexdigest(bundle_js(bundle))
+        js_digests[:shared][bundle_key] ||= digest_for_content(bundle_js(bundle, locale: locale))
       else
         raise "Unknown bundle: #{bundle}"
       end
     end
 
-    def url(bundle)
-      "#{GlobalSetting.cdn_url}#{Discourse.base_path}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+    def url(bundle, locale: I18n.locale)
+      hash = bundle_js_hash(bundle, locale:)
+
+      base = "#{GlobalSetting.cdn_url}#{Discourse.base_path}"
+      path = "/extra-locales/#{hash}/#{locale}/#{bundle}.js"
+      query = SITE_SPECIFIC_BUNDLES.include?(bundle) ? "?__ws=#{Discourse.current_hostname}" : ""
+      "#{base}#{path}#{query}"
     end
 
-    def client_overrides_exist?
-      bundle_js_hash(OVERRIDES_BUNDLE).present?
+    def client_overrides_exist?(locale: I18n.locale)
+      bundle_js_hash(OVERRIDES_BUNDLE, locale: locale).present?
     end
 
-    def bundle_js(bundle)
-      locale_str = I18n.locale.to_s
+    def bundle_js(bundle, locale:)
+      locale_str = locale.to_s
       bundle_str = "#{bundle}_js"
 
-      case bundle
-      when OVERRIDES_BUNDLE
-        JsLocaleHelper.output_client_overrides(locale_str)
-      when MF_BUNDLE
-        JsLocaleHelper.output_MF(locale_str)
-      else
-        JsLocaleHelper.output_extra_locales(bundle_str, locale_str)
+      I18n.with_locale(locale) do
+        case bundle
+        when OVERRIDES_BUNDLE
+          JsLocaleHelper.output_client_overrides(locale_str)
+        when MF_BUNDLE
+          JsLocaleHelper.output_MF(locale_str)
+        else
+          JsLocaleHelper.output_extra_locales(bundle_str, locale_str)
+        end
       end
     end
 
-    def bundle_js_with_hash(bundle)
-      js = bundle_js(bundle)
-      [js, Digest::MD5.hexdigest(js)]
+    def bundle_js_with_hash(bundle, locale:)
+      js = bundle_js(bundle, locale: locale)
+      [js, digest_for_content(js)]
     end
 
-    def clear_cache!
+    def clear_cache!(all_sites: false)
       site = RailsMultisite::ConnectionManagement.current_db
-      js_digests[:site_specific].delete(site)
+      if all_sites
+        js_digests[:site_specific].clear
+        js_digests[:shared].clear
+      else
+        js_digests[:site_specific].delete(site)
+      end
+    end
+
+    def digest_for_content(js)
+      Digest::SHA1.hexdigest(js)
     end
   end
 
   def show
     bundle = params[:bundle]
-    raise Discourse::InvalidAccess.new if !valid_bundle?(bundle)
+    raise Discourse::NotFound if !valid_bundle?(bundle)
 
-    version = params[:v]
-    if version.present?
-      raise Discourse::InvalidParameters.new(:v) unless version.to_s.size == MD5_HASH_LENGTH
+    locale = params[:locale]
+    raise Discourse::NotFound if !I18n.available_locales.include?(locale.to_sym)
+
+    digest = params[:digest]
+    if digest.present?
+      raise Discourse::InvalidParameters.new(:digest) unless digest.to_s.size == SHA1_HASH_LENGTH
     end
 
-    content, hash = ExtraLocalesController.bundle_js_with_hash(bundle)
-    immutable_for(1.year) if hash == version
+    content, hash = ExtraLocalesController.bundle_js_with_hash(bundle, locale:)
+    immutable_for(1.year) if hash == digest
 
     render plain: content, content_type: "application/javascript"
   end

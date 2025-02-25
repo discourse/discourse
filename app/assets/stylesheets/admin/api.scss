@@ -153,6 +153,7 @@
 
     .hook-event {
       margin-bottom: 0.5em;
+
       @include breakpoint(mobile-extra-large) {
         width: 100%;
       }

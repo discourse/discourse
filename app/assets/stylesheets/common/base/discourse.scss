@@ -93,6 +93,7 @@ small {
 
 blockquote {
   clear: both;
+
   @include post-aside;
 }
 

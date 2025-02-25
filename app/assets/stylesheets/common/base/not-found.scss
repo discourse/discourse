@@ -24,6 +24,7 @@
 
 .page-not-found-topics {
   display: flex;
+
   @media screen and (max-width: 600px) {
     flex-wrap: wrap;
   }
@@ -36,6 +37,7 @@
   max-width: 400px;
   margin-bottom: 40px;
   padding-right: 20px;
+
   @media screen and (max-width: 600px) {
     width: 100%;
   }
@@ -50,6 +52,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   margin-bottom: 15px;
+
   @media screen and (max-width: 600px) {
     &:nth-of-type(n + 6) {
       display: none;

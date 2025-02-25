@@ -290,9 +290,9 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
-      site_setting_is_hidden: "您无权更改隐藏设置"
-      site_setting_is_shadowed_globally: "您无法更改此设置，因为它在全局级别配置"
-      site_setting_is_unconfigurable: "您无权更改不可配置的设置"
+      site_settings_are_hidden: "你无权更改隐藏设置： %{setting_names}"
+      site_settings_are_shadowed_globally: "你无法更改这些设置，因为它们是全局配置的： %{setting_names}"
+      site_settings_are_unconfigurable: "你无权更改不可配置的设置： %{setting_names}"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"

@@ -550,6 +550,12 @@ RSpec.describe Discourse do
         "a b c",
       )
     end
+
+    it "includes the command in the error message" do
+      expect do
+        Discourse::Utils.execute_command("false", failure_message: "oops")
+      end.to raise_error(RuntimeError, "false\noops")
+    end
   end
 
   describe ".clear_all_theme_cache!" do

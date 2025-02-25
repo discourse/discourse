@@ -385,6 +385,7 @@ en:
               label: PMs
             sender:
               label: PMs sender
+              description: "Ensure the sender has the correct permissions to send PMs to receiver"
         close_topic:
           fields:
             topic:

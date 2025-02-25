@@ -308,6 +308,7 @@ $search-pad-horizontal: 0.5em;
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
+
         @include ellipsis;
 
         .d-icon {

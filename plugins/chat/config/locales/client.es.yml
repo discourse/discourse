@@ -342,6 +342,7 @@ es:
         tabs:
           members: Miembros
           settings: Ajustes
+        remove_member: "Eliminar"
       new_message_modal:
         title: Enviar mensaje
         add_user_long: <kbd>mayúsculas + clic</kbd> o <kbd>mayúsculas + intro</kbd><span>Añadir @%{username}</span>

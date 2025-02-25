@@ -128,6 +128,7 @@
   width: 100vw;
   background-color: rgba(black, 0.5);
   animation: fadein 0.2s;
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }

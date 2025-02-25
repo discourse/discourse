@@ -291,9 +291,6 @@ pl_PL:
     site_settings:
       invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
-      site_setting_is_hidden: "Nie masz uprawnień do zmiany ukrytych ustawień"
-      site_setting_is_shadowed_globally: "Nie możesz zmienić tego ustawienia, ponieważ jest ono skonfigurowane globalnie"
-      site_setting_is_unconfigurable: "Nie masz uprawnień do zmiany ustawień niekonfigurowalnych"
       invalid_choice:
         one: "'%{name}' jest nieprawidłowym wyborem."
         few: "'%{name}' są nieprawidłowym wyborem."

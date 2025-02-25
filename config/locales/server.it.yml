@@ -314,9 +314,6 @@ it:
     site_settings:
       invalid_site_setting: "Non esiste alcuna impostazione di nome '%{name}'"
       invalid_category_id: "Hai specificato una categoria che non esiste"
-      site_setting_is_hidden: "Non disponi dei permessi per modificare le impostazioni nascoste"
-      site_setting_is_shadowed_globally: "Non è possibile modificare questa impostazione perché è configurata a livello globale."
-      site_setting_is_unconfigurable: "Non disponi dei permessi per modificare le impostazioni non configurabili"
       invalid_choice:
         one: "'%{name}' è una scelta non valida."
         other: "'%{name}' sono scelte non valide."

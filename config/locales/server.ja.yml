@@ -288,9 +288,6 @@ ja:
     site_settings:
       invalid_site_setting: "'%{name}' という名前の設定は存在しません"
       invalid_category_id: "存在しないカテゴリを指定しました"
-      site_setting_is_hidden: "非表示の設定を変更する権限がありません"
-      site_setting_is_shadowed_globally: "この設定はグローバルに構成されているため変更できません"
-      site_setting_is_unconfigurable: "構成不可能な設定を変更する権限がありません"
       invalid_choice:
         other: "'%{name}' は無効な選択です。"
       default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"

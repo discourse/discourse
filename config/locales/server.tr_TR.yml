@@ -314,9 +314,6 @@ tr_TR:
     site_settings:
       invalid_site_setting: "\"%{name}\" adlı bir ayar mevcut değil"
       invalid_category_id: "Mevcut olmayan bir kategori belirttiniz"
-      site_setting_is_hidden: "Gizli ayarları değiştirmenize izin verilmiyor"
-      site_setting_is_shadowed_globally: "Global olarak yapılandırıldığından bu ayarı değiştiremezsiniz"
-      site_setting_is_unconfigurable: "Yapılandırılamayan ayarları değiştirmenize izin verilmiyor"
       invalid_choice:
         one: "\"%{name}\", geçersiz bir seçim."
         other: "\"%{name}\", geçersiz bir seçim."
