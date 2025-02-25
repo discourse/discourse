@@ -5962,6 +5962,11 @@ packages:
     cpu: [arm64]
     os: [linux]
 
+  lefthook-linux-x64@1.11.0:
+    resolution: {integrity: sha512-2NtenHWnPbv27CufQwxVj6HaHqvZmP4qfFwgt+yMmghLml9WLmY3fHjw+CDhAKvlKsBv1mPuE+sGVEhnz7R0zA==}
+    cpu: [x64]
+    os: [linux]
+
   lefthook-openbsd-arm64@1.11.0:
     resolution: {integrity: sha512-j4kxeWUWDcofJHZs4yF0JnoRRuE92xekxh2i22mdufVmCBNOSiWGOT78hT5UwfQucjVjKY3oCtGH29ItiY0J1g==}
     cpu: [arm64]
@@ -15026,6 +15031,9 @@ snapshots:
   lefthook-linux-arm64@1.11.0:
     optional: true
 
+  lefthook-linux-x64@1.11.0:
+    optional: true
+
   lefthook-openbsd-arm64@1.11.0:
     optional: true
 
@@ -15045,6 +15053,7 @@ snapshots:
       lefthook-freebsd-arm64: 1.11.0
       lefthook-freebsd-x64: 1.11.0
       lefthook-linux-arm64: 1.11.0
+      lefthook-linux-x64: 1.11.0
       lefthook-openbsd-arm64: 1.11.0
       lefthook-openbsd-x64: 1.11.0
       lefthook-windows-arm64: 1.11.0
