@@ -277,6 +277,25 @@ describe Chat::Notifier do
         expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
       end
 
+      it "doesn’t attempt to notify bots not in the channel" do
+        bot = Fabricate(:user, username: "bot", id: -999)
+
+        msg = build_cooked_msg("Hello @bot", user_1)
+        _, inaccessible, _ = described_class.new(msg, msg.created_at).list_users_to_notify
+
+        expect(inaccessible[:welcome_to_join]).to be_empty
+
+        msg =
+          build_cooked_msg(
+            "Hello @bot",
+            user_1,
+            chat_channel: Fabricate(:private_category_channel, group: Fabricate(:group)),
+          )
+        _, inaccessible, _ = described_class.new(msg, msg.created_at).list_users_to_notify
+
+        expect(inaccessible[:unreachable]).to be_empty
+      end
+
       it "include users as direct mentions even if there's a @all mention" do
         msg = build_cooked_msg("Hello @all and @#{user_2.username}", user_1)
 
