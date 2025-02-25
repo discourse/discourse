@@ -636,6 +636,9 @@ importers:
 
   app/assets/javascripts/discourse-hbr:
     dependencies:
+      broccoli-filter:
+        specifier: '*'
+        version: 1.3.0
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8

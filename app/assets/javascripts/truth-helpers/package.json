@@ -10,7 +10,7 @@
   ],
   "exports": {
     ".": "./src/index.js",
-    "./*": "./src/*.js",
+    "./*": "./src/*",
     "./addon-main.js": "./addon-main.cjs"
   },
   "files": [
@@ -35,16 +35,16 @@
     "type": "addon",
     "main": "addon-main.cjs",
     "app-js": {
-      "./helpers/and.js": "./app/helpers/and.js",
-      "./helpers/eq.js": "./app/helpers/eq.js",
-      "./helpers/gt.js": "./app/helpers/gt.js",
-      "./helpers/gte.js": "./app/helpers/gte.js",
-      "./helpers/includes.js": "./app/helpers/includes.js",
-      "./helpers/lt.js": "./app/helpers/lt.js",
-      "./helpers/lte.js": "./app/helpers/lte.js",
-      "./helpers/not-eq.js": "./app/helpers/not-eq.js",
-      "./helpers/not.js": "./app/helpers/not.js",
-      "./helpers/or.js": "./app/helpers/or.js"
+      "./helpers/and.js": "./helpers/and.js",
+      "./helpers/eq.js": "./helpers/eq.js",
+      "./helpers/gt.js": "./helpers/gt.js",
+      "./helpers/gte.js": "./helpers/gte.js",
+      "./helpers/includes.js": "./helpers/includes.js",
+      "./helpers/lt.js": "./helpers/lt.js",
+      "./helpers/lte.js": "./helpers/lte.js",
+      "./helpers/not-eq.js": "./helpers/not-eq.js",
+      "./helpers/not.js": "./helpers/not.js",
+      "./helpers/or.js": "./helpers/or.js"
     }
   }
 }
