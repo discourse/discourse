@@ -186,7 +186,8 @@ export default class BookmarkModal extends Component {
   }
 
   @action
-  onTimeSelected(type, time) {
+  onTimeSelected(type, timeFn) {
+    const time = timeFn?.();
     this.bookmark.selectedReminderType = type;
     this.bookmark.selectedDatetime = time;
     this.bookmark.reminderAt = time;

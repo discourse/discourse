@@ -18,7 +18,6 @@ import {
   TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
-import { i18n } from "discourse-i18n";
 
 const BINDINGS = {
   "l t": {
@@ -191,7 +190,7 @@ export default class TimeShortcutPicker extends Component {
         "id",
         TIME_SHORTCUT_TYPES.LAST_CUSTOM
       );
-      lastCustom.time = this.parsedLastCustomDatetime;
+      lastCustom.timeFn = () => this.parsedLastCustomDatetime;
       lastCustom.timeFormatKey = "dates.long_no_year";
       lastCustom.hidden = false;
     }
@@ -253,7 +252,7 @@ export default class TimeShortcutPicker extends Component {
         this.keyValueStore.lastCustomDate = this.customDate;
       }
     } else {
-      dateTime = this.options.findBy("id", type).time;
+      dateTime = this.options.findBy("id", type).timeFn();
     }
 
     this.setProperties({
@@ -275,11 +274,7 @@ export default class TimeShortcutPicker extends Component {
   }
 
   _formatTime(options) {
-    options.forEach((option) => {
-      if (option.time && option.timeFormatKey) {
-        option.timeFormatted = option.time.format(i18n(option.timeFormatKey));
-      }
-    });
+    options.forEach((option) => (option.formattedTime = formatTime(option)));
   }
 
   _defaultCustomDateTime() {
