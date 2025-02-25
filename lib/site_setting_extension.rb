@@ -358,6 +358,12 @@ module SiteSettingExtension
     "client_settings_json_#{Discourse.git_version}"
   end
 
+  def self.in_console?
+    # Locally we can check for Rails::Console, but in production we need to check if the
+    # $PROGRAM_NAME is "pry"
+    !!(defined?(Rails::Console) || ($PROGRAM_NAME =~ /pry/i))
+  end
+
   # refresh all the site settings
   def refresh!
     mutex.synchronize do
@@ -460,7 +466,7 @@ module SiteSettingExtension
     notify_clients!(name) if client_settings.include? name
     clear_cache!
 
-    if defined?(Rails::Console)
+    if SiteSettingExtension.in_console?
       details = "Updated via Rails console"
       log(name, val, old_val, Discourse.system_user, details)
     end
@@ -526,7 +532,7 @@ module SiteSettingExtension
       prev_value = public_send(name)
       set(name, value)
       # Logging via the rails console is already handled in add_override!
-      log(name, value, prev_value, user, detailed_message) unless defined?(Rails::Console)
+      log(name, value, prev_value, user, detailed_message) unless SiteSettingExtension.in_console?
       SiteSettingChangeResult.new(prev_value, public_send(name))
     else
       raise Discourse::InvalidParameters.new(
@@ -545,7 +551,7 @@ module SiteSettingExtension
     end
   end
 
-  if defined?(Rails::Console)
+  if SiteSettingExtension.in_console?
     # Convenience method for debugging site setting issues
     # Returns a hash with information about a specific setting
     def info(name)

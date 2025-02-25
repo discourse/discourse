@@ -1143,4 +1143,49 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
+
+  describe "#in_console?" do
+    subject(:in_console_result) { SiteSettingExtension.in_console? }
+
+    around do |example|
+      original_program_name = $PROGRAM_NAME.dup
+      example.run
+      $PROGRAM_NAME.replace(original_program_name)
+    end
+
+    context "when Rails::Console is defined" do
+      before do
+        @console_was_defined = Rails.const_defined?(:Console)
+        Rails.const_set(:Console, Module.new) unless @console_was_defined
+      end
+
+      after { Rails.send(:remove_const, :Console) unless @console_was_defined }
+
+      it "returns true" do
+        expect(SiteSettingExtension.in_console?).to be true
+      end
+    end
+
+    context "when Rails::Console is not defined and $PROGRAM_NAME contains 'pry'" do
+      before do
+        hide_const("Rails::Console")
+        $PROGRAM_NAME.replace("pry")
+      end
+
+      it "returns true" do
+        expect(in_console_result).to be true
+      end
+    end
+
+    context "when Rails::Console is not defined and $PROGRAM_NAME does not contain 'pry'" do
+      before do
+        hide_const("Rails::Console")
+        $PROGRAM_NAME.replace("bin/rails")
+      end
+
+      it "returns false" do
+        expect(in_console_result).to be false
+      end
+    end
+  end
 end
