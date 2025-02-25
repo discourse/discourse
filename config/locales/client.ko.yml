@@ -4452,6 +4452,9 @@ ko:
             description: "좋아요 버튼 색입니다."
           selected:
             name: "선택됨"
+          editor:
+            light: "라이트"
+            dark: "다크"
         robots:
           title: "사이트의 robots.txt 파일 오버라이드:"
           warning: "관련된 모든 사이트 설정이 영구적으로 오버라이드됩니다."

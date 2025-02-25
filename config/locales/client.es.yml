@@ -5980,6 +5980,9 @@ es:
           hover:
             name: "pasar el ratón por encima"
             description: "El color de fondo de elementos como los elementos de lista cuando se pasa el ratón sobre ellos o tienen el foco del teclado."
+          editor:
+            light: "Claro"
+            dark: "Oscuro"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."

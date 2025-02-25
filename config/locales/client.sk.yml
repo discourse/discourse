@@ -6612,6 +6612,9 @@ sk:
           hover:
             name: "hover"
             description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď na ne umiestnite kurzor myši alebo je na ne aktívna klávesnica."
+          editor:
+            light: "Svetlá"
+            dark: "Tmavá"
         robots:
           title: "Prepíšte súbor robots.txt na svojom webe:"
           warning: "Toto natrvalo prepíše všetky súvisiace nastavenia lokality."
