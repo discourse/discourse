@@ -358,10 +358,14 @@ module SiteSettingExtension
     "client_settings_json_#{Discourse.git_version}"
   end
 
+  def self.program_name
+    $PROGRAM_NAME
+  end
+
   def self.in_console?
     # Locally we can check for Rails::Console, but in production we need to check if the
     # $PROGRAM_NAME is "pry"
-    !!(defined?(Rails::Console) || ($PROGRAM_NAME =~ /pry/i))
+    !!(defined?(Rails::Console) || (program_name =~ /pry/i))
   end
 
   # refresh all the site settings
