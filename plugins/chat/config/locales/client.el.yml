@@ -112,6 +112,7 @@ el:
         tabs:
           members: Μέλη
           settings: Ρυθμίσεις
+        remove_member: "Αφαίρεση"
       new_message_modal:
         no_items: "Δεν υπάρχουν στοιχεία"
         filter: "Φίλτρο"

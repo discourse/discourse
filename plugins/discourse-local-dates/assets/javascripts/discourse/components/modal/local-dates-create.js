@@ -284,13 +284,11 @@ export default class LocalDatesCreate extends Component {
     return dateTime.format("LLLL");
   }
 
-  @computed("toConfig.dateTime", "toSelected")
-  formattedTo(dateTime, toSelected) {
-    const emptyText = toSelected
-      ? "&nbsp;"
+  @computed("toConfig.dateTime")
+  formattedTo(dateTime) {
+    return dateTime.isValid()
+      ? dateTime.format("LLLL")
       : i18n("discourse_local_dates.create.form.until");
-
-    return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
   }
 
   @action

@@ -34,7 +34,9 @@ class BasicPostSerializer < ApplicationSerializer
         I18n.t("flagging.user_must_edit")
       end
     else
-      object.filter_quotes(@parent_post)
+      cooked = object.filter_quotes(@parent_post)
+      modified = DiscoursePluginRegistry.apply_modifier(:basic_post_serializer_cooked, cooked, self)
+      modified || cooked
     end
   end
 

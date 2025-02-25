@@ -451,7 +451,7 @@ export default class AdminUserIndexController extends Controller {
       buttons: [
         {
           label: i18n("admin.user.delete_dont_block"),
-          class: "btn-primary",
+          class: "btn-danger delete-dont-block",
           action: () => {
             return performDestroy(false);
           },
@@ -459,7 +459,7 @@ export default class AdminUserIndexController extends Controller {
         {
           icon: "triangle-exclamation",
           label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger",
+          class: "btn-danger delete-and-block",
           action: () => {
             return performDestroy(true);
           },

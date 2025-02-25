@@ -13,13 +13,12 @@ es:
             delete_automation: eliminar automatización
     discourse_automation:
       title: Automatización
-      create: Crear
-      update: Actualizar
+      back: Atrás
+      edit: Editar
       select_script: Selecciona un script
       select_trigger: Selecciona un activador
       confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
       confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
-      no_automation_yet: Aún no has creado ninguna automatización. Elige una opción a continuación para empezar.
       filter_placeholder: Filtrar por nombre o descripción...
       edit_automation:
         trigger_section:

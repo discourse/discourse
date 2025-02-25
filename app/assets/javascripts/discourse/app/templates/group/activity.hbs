@@ -1,8 +1,5 @@
 <section class="user-secondary-navigation">
-  <MobileNav
-    @desktopClass="action-list activity-list nav-stacked"
-    class="activity-nav"
-  >
+  <HorizontalOverflowNav class="activity-nav">
     {{#if this.model.can_see_members}}
       <GroupActivityFilter @filter="posts" @categoryId={{this.category_id}} />
       <GroupActivityFilter @filter="topics" @categoryId={{this.category_id}} />
@@ -14,7 +11,7 @@
       />
     {{/if}}
     <PluginOutlet @name="group-activity-bottom" @connectorTagName="li" />
-  </MobileNav>
+  </HorizontalOverflowNav>
 </section>
 <section class="user-content" id="user-content">
   {{outlet}}

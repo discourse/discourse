@@ -362,6 +362,7 @@ cs:
         tabs:
           members: Členové
           settings: Nastavení
+        remove_member: "Smazat"
       new_message_modal:
         title: Odeslání zprávy
         add_user_long: <kbd>shift + kliknutí</kbd> nebo <kbd>shift + enter</kbd><span>Přidat @%{username}</span>

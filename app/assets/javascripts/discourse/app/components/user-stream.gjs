@@ -1,12 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
-import $ from "jquery";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
@@ -26,28 +23,6 @@ export default class UserStreamComponent extends Component {
   @service appEvents;
   @service currentUser;
   @service router;
-  @tracked lastDecoratedElement;
-
-  eventListeners = modifier((element) => {
-    $(element).on("click.details-disabled", "details.disabled", () => false);
-    $(element).on("click.discourse-redirect", ".excerpt a", (e) => {
-      return ClickTrack.trackClick(e, getOwner(this));
-    });
-    later(() => {
-      this.updateLastDecoratedElement();
-      this.appEvents.trigger("decorate-non-stream-cooked-element", element);
-    });
-
-    return () => {
-      $(element).off("click.details-disabled", "details.disabled");
-      // Unbind link tracking
-      $(element).off("click.discourse-redirect", ".excerpt a");
-    };
-  });
-
-  constructor() {
-    super(...arguments);
-  }
 
   get filterClassName() {
     const filter = this.args.stream?.filter;
@@ -66,20 +41,6 @@ export default class UserStreamComponent extends Component {
     }
 
     return "username";
-  }
-
-  @action
-  updateLastDecoratedElement() {
-    const nodes = document.querySelectorAll(".user-stream-item");
-    if (!nodes || nodes.length === 0) {
-      return;
-    }
-
-    const lastElement = nodes[nodes.length - 1];
-    if (lastElement === this.lastDecoratedElement) {
-      return;
-    }
-    this.lastDecoratedElement = lastElement;
   }
 
   @action
@@ -140,17 +101,19 @@ export default class UserStreamComponent extends Component {
       return [];
     }
 
-    later(() => {
-      let element = this.lastDecoratedElement?.nextElementSibling;
-      while (element) {
-        this.appEvents.trigger("user-stream:new-item-inserted", element);
-        this.appEvents.trigger("decorate-non-stream-cooked-element", element);
-        element = element.nextElementSibling;
-      }
-      this.updateLastDecoratedElement();
-    });
-
     return this.args.stream.content;
+  }
+
+  @action
+  handleClick(event) {
+    if (event.target.matches("details.disabled")) {
+      event.preventDefault();
+      return;
+    }
+
+    if (event.target.matches(".excerpt a")) {
+      return ClickTrack.trackClick(event, getOwner(this));
+    }
   }
 
   <template>
@@ -166,7 +129,7 @@ export default class UserStreamComponent extends Component {
       @resumeDraft={{this.resumeDraft}}
       @removeDraft={{this.removeDraft}}
       class={{concatClass "user-stream" this.filterClassName}}
-      {{this.eventListeners @stream}}
+      {{on "click" this.handleClick}}
     >
       <:abovePostItemHeader as |post|>
         <PluginOutlet
@@ -186,7 +149,6 @@ export default class UserStreamComponent extends Component {
       <:abovePostItemExcerpt as |post|>
         <PostActionDescription
           @actionCode={{post.action_code}}
-          @createdAt={{post.created_at}}
           @username={{post.action_code_who}}
           @path={{post.action_code_path}}
         />

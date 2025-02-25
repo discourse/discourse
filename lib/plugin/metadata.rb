@@ -25,7 +25,6 @@ class Plugin::Metadata
         discourse-characters-required
         discourse-chat-integration
         discourse-code-review
-        discourse-crowd
         discourse-data-explorer
         discourse-details
         discourse-docs

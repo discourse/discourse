@@ -1,66 +1,3 @@
-// Mobile styles for "/user" section
-.user-content-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
-  grid-gap: 16px;
-  padding-top: 1em;
-
-  .user-primary-navigation {
-    grid-column-start: 1;
-    grid-row-start: 1;
-    grid-column-end: 2;
-    min-width: 120px;
-  }
-
-  .user-secondary-navigation {
-    grid-column-start: 2;
-    grid-row-start: 1;
-    min-width: 120px;
-  }
-
-  .user-additional-controls + .user-content,
-  .user-secondary-navigation + .user-content {
-    grid-column-start: 1;
-  }
-
-  .user-additional-controls {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 2;
-  }
-
-  .user-content,
-  .spinner {
-    grid-row-start: 3;
-    grid-column-start: 1;
-  }
-
-  // specific to messages
-  .user-messages {
-    grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-
-    + .user-additional-controls {
-      grid-row-start: 2;
-      grid-column-start: 1;
-    }
-  }
-
-  .inboxes-controls {
-    display: flex;
-  }
-
-  .new-private-message {
-    grid-row-start: 1;
-    grid-column-start: 2;
-  }
-}
-
 .user-messages-page {
   .paginated-topics-list {
     margin-top: 0;
@@ -367,6 +304,7 @@
       order: 2;
       align-self: center;
       text-align: right;
+      display: flex;
 
       button {
         margin: 0.25em;
@@ -383,10 +321,6 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
-    }
-
-    td.invite-actions {
-      display: flex;
     }
   }
 

@@ -382,6 +382,7 @@ ar:
         tabs:
           members: الأعضاء
           settings: الإعدادات
+        remove_member: "إزالة"
       new_message_modal:
         title: إرسال رسالة
         add_user_long: <kbd>مفتاح Shift + نقرة</kbd> أو <kbd>مفتاح Shift + مفتاح Enter</kbd><span>أضِف @%{username}</span>

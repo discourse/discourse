@@ -6,7 +6,11 @@
 # authors: xrav3nz
 
 extend_content_security_policy(
-  script_src: %w[https://from-plugin.com /local/path],
+  script_src: [
+    "https://from-plugin.com",
+    "/local/path",
+    "'unsafe-eval' https://invalid.example.com",
+  ],
   object_src: ["https://test-stripping.com"],
   frame_ancestors: ["https://frame-ancestors-plugin.ext"],
   manifest_src: ["https://manifest-src.com"],

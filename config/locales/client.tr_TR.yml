@@ -463,7 +463,6 @@ tr_TR:
       dropdown:
         title: "En son taslaklar menüsünü açın"
         untitled: "Başlıksız taslak"
-        view_all: "tümünü görüntüle"
         other_drafts:
           one: "+%{count} taslak daha"
           other: "+%{count} taslak daha"
@@ -4673,6 +4672,10 @@ tr_TR:
       no_results:
         title: "Sonuç yok"
         description: '"%{filter}" ile eşleşen bir şey bulamadık.<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Site ayarlarında</a> veya <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">yönetici kullanıcı listesinde</a> arama yapmak ister misiniz?'
+      footer:
+        interface_color_selector:
+          light: "Açık"
+          dark: "Koyu"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4791,15 +4794,39 @@ tr_TR:
         meta_doc: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
-        sidebar_link:
-          all: "Tüm raporlar"
+      config_sections:
+        account:
+          title: "Hesap"
+        reports:
+          title: "Raporlar"
+        community:
+          title: "Topluluk"
+        appearance:
+          title: "Görünüm"
+        email:
+          title: "E-posta"
+        security:
+          title: "Güvenlik"
+        plugins:
+          title: "Eklentiler"
+        advanced:
+          title: "Gelişmiş"
       config:
+        about:
+          title: "Siteniz hakkında"
+          header_description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
         developer:
           title: "Geliştirici"
           header_description: "Hız limitlerini, çarpanları ve hesaplamaları, güvenli modu ve diğer gelişmiş özellikleri kontrol etmek için geliştirici ayarları"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
+        emojis:
+          title: "Emoji"
+          header_description: "Herkesin kullanabileceği yeni emoji ekleyin. Dosya adlarını kullanarak emoji'ler oluşturmak için birden fazla dosya seçin. Seçilen grup aynı anda eklenen tüm dosyalar için kullanılır"
+        flags:
+          title: "Moderasyon"
+          header_description: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
         font_style:
           title: "Yazı tipi stili"
           header_description: "Temalarınız tarafından kullanılan yazı tipi stillerini özelleştirin"
@@ -4848,6 +4875,109 @@ tr_TR:
         group_permissions:
           title: "Grup izinleri"
           header_description: "Discourse dâhilindeki çeşitli özelliklere erişimi kontrol eden tüm grup tabanlı uygulama izinleri burada yönetilir"
+        dashboard:
+          title: "Pano"
+        users:
+          title: "Kullanıcılar"
+        groups:
+          title: "Grup"
+        site_settings:
+          title: "Tüm site ayarları"
+        whats_new:
+          title: "Yenilikler"
+          keywords: "değişiklik günlüğü|özellik|yayın"
+        backups:
+          title: "Yedeklemeler"
+          header_description: "Discourse yedeklemeleri, sitedeki her şeyi içeren tam site veri tabanını içerir: konular, gönderiler, kullanıcılar, gruplar, ayarlar, temalar, vb. Yedekleme dosyasının nasıl oluşturulduğuna bağlı olarak, yüklemeleri içerebilir veya içermeyebilir."
+          sub_pages:
+            logs:
+              title: "Günlükler"
+        reports:
+          title: "Raporlar"
+          header_description: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
+        badges:
+          title: "Rozetler"
+          header_description: "Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir"
+        permalinks:
+          title: "Kalıcı Bağlantılar"
+        user_fields:
+          title: "Kullanıcı alanları"
+          header_description: "Topluluk üyeleriniz hakkında ekstra ayrıntılar toplamak için özel kullanıcı alanları oluşturun. Kayıt sırasında hangi bilgilerin gerekli olduğunu, profillerde nelerin gösterileceğini ve kullanıcıların neleri güncelleyebileceğini seçebilirsiniz."
+        watched_words:
+          title: "İzlenen kelimeler"
+          header_description: "İzlenen kelimeler, belirli kelimeleri içeren gönderileri engelleme, sansürleme, bağlantı verme veya işaretleme dâhil olmak üzere birden fazla farklı eylem gerçekleştirebilen moderasyon araçlarıdır"
+        color_palettes:
+          title: "Renk paletleri"
+        emoji:
+          title: "Emoji"
+          header_description: "Herkesin kullanabileceği yeni emoji ekleyin. Dosya adlarını kullanarak emoji'ler oluşturmak için birden fazla dosya seçin. Seçilen grup aynı anda eklenen tüm dosyalar için kullanılır."
+        themes:
+          title: "Temalar"
+          header_description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir"
+        components:
+          title: "Bileşenler"
+          header_description: "Bileşenler, forum tasarımınızın stilinin belirli unsurlarını değiştirmek için temalara eklenebilen daha küçük özelleştirmelerdir"
+        site_texts:
+          title: "Site metinleri"
+        email:
+          title: "Sunucu kurulumu ve günlükleri"
+          header_description: "E-posta oluşturmak için kullanılan şablonları özelleştirin, gönderilecek özet e-postaları ön izleyin ve e-posta günlüklerini görüntüleyin"
+          keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
+          sub_pages:
+            preview_summary:
+              title: "Özeti ön izle"
+              header_description: "Aktif olmayan kullanıcılara gönderilen özet e-postaların içeriğini ön izleyin"
+            advanced_test:
+              title: "Gelişmiş test"
+            templates:
+              title: "Şablonlar"
+            sent:
+              title: "Gönderilen"
+            skipped:
+              title: "Atlandı"
+            bounced:
+              title: "Geri Döndü"
+            received:
+              title: "Alındı"
+            rejected:
+              title: "Reddedildi"
+        email_appearance:
+          title: "Görünüm"
+          header_description: "Tüm html e-postalarının oluşturulduğu şablonu özelleştirin ve CSS kullanarak stil verin"
+        staff_action_logs:
+          title: "Günlükler ve tarama"
+          header_description: "Günlükler ve tarama, topluluğunuzu izlemenize ve yönetmenize, güvenli ve saygılı kalmasını sağlamanıza olanak tanır. Personel üyeleri tarafından gerçekleştirilen tüm eylemlerin günlüklerini, arama günlüklerini ve kullanıcı tarama yapılandırmasını görüntüleyebilirsiniz"
+          keywords: "hata günlükleri|personel eylemi|taranan e-postalar|taranan ip'ler|taranan url'ler|arama günlükleri"
+          sub_pages:
+            screened_emails:
+              title: "Taranan e-postalar"
+              header_description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilir ve kayıt engellenir veya başka bir işlem gerçekleştirilir"
+            screened_ips:
+              title: "Taranan IP'ler"
+            screened_urls:
+              title: "Taranan URL'ler"
+              header_description: "Burada listelenen URL'ler, spam gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır"
+            search_logs:
+              title: "Arama günlükleri"
+        plugins:
+          title: "Yüklü eklentiler"
+          header_description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür"
+        api_keys:
+          title: "API anahtarları"
+          header_description: "API anahtarları özelliği, Discourse'u harici sistemlerle güvenli bir şekilde entegre etmenize ve eylemleri otomatikleştirmenize olanak tanır. Yöneticiler, kaynaklara ve hassas verilere erişimi kontrol etmek için belirli kapsamlara sahip anahtarlar oluşturabilir. Kapsamlar işlevselliği sınırlayarak gelişmiş güvenlik sağlar."
+        webhooks:
+          title: "Web Kancaları"
+        embedding:
+          title: "Gömme"
+          header_description: "Discourse, IFRAME oluşturan bir Javascript API'si kullanarak bir konudaki yorumları uzak bir siteye yerleştirme yeteneğine sahiptir"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temalar"
+          component:
+            one: "Bileşen"
+            other: "Bileşenler"
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
@@ -5320,72 +5450,8 @@ tr_TR:
             failed: "Başarısız"
       home:
         title: "Ana Sayfa"
-      account:
-        title: "Hesap"
-        sidebar_link:
-          backups: "Yedeklemeler"
-          whats_new:
-            title: "Yenilikler"
-            keywords: "değişiklik günlüğü|özellik|yayın"
-      community:
-        title: "Topluluk"
-        sidebar_link:
-          about_your_site: "Siteniz hakkında"
-          badges: "Rozetler"
-          login_and_authentication: "Giriş ve kimlik doğrulama"
-          notifications: "Bildirimler"
-          permalinks: "Kalıcı Bağlantılar"
-          trust_levels: "Güven seviyeleri"
-          group_permissions: "Grup izinleri"
-          users: "Kullanıcılar"
-          groups: "Gruplar"
-          user_fields: "Kullanıcı alanları"
-          watched_words: "İzlenen kelimeler"
-          legal: "Yasal"
-          moderation_flags:
-            title: "Moderasyon"
-            keywords: "bayrak|inceleme"
-      appearance:
-        title: "Görünüm"
-        sidebar_link:
-          font_style: "Yazı tipi stili"
-          site_logo: "Site logosu"
-          color_schemes: "Renk paletleri"
-          emoji: "Emoji"
-          navigation: "Navigasyon"
-          themes: "Temalar"
-          components:
-            title: "Bileşenler"
-            keywords: "tema|uzantı"
-          site_texts: "Site metinleri"
-      email_settings:
-        title: "E-posta Ayarları"
-        sidebar_link:
-          appearance: "Görünüm"
-          server_setup:
-            title: "Sunucu kurulumu ve günlükleri"
-            keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
-      security:
-        title: "Güvenlik"
-        sidebar_link:
-          security: "Güvenlik ayarları"
-          spam: "Spam ayarları"
-          staff_action_logs:
-            title: "Günlükler ve tarama"
-            keywords: "hata günlükleri|personel eylemi|taranan e-postalar|taranan ip'ler|taranan url'ler|arama günlükleri"
-      section_landing_pages:
-        account:
-          title: "Hesap"
-          backups:
-            title: "Yedeklemeler"
-            description: "Sitenizin verilerinin yedeğini alın"
-          whats_new:
-            title: "Yenilikler"
-            description: "Discourse'taki yeni yayınları ve iyileştirmeleri keşfedin"
       config_areas:
         about:
-          header: "Siteniz hakkında"
-          description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
           general_settings: "Genel Ayarlar"
           community_name: "Topluluk adı"
           community_name_placeholder: "Örnek Topluluk"
@@ -5394,8 +5460,6 @@ tr_TR:
           community_title: "Topluluk başlığı"
           community_title_help: "Kategoriler ve konu listeleri gibi önemli sayfalar için tarayıcı sekmesinde gösterilen kısa açıklama."
           banner_image: "Banner görüntüsü"
-          banner_image_help: |
-            Bu, Hakkında sayfanızda kullanılır. Önerilen boyut: 1100x300 px. Kabul edilen türler: 10 MB'ye kadar JPG, PNG ve SVG.
           contact_information: "İletişim bilgileri"
           community_owner: "Topluluk sahibi"
           community_owner_placeholder: "Johnny Smith"
@@ -5437,9 +5501,7 @@ tr_TR:
             your_organization_saved: "Kuruluşunuz kaydedildi"
           saved: "kaydedildi!"
         flags:
-          header: "Moderasyon"
           edit_header: "Bayrağı düzenle"
-          subheader: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
           description: "Açıklama"
           enabled: "Etkin mi?"
           add: "Bayrak ekle"
@@ -5482,8 +5544,6 @@ tr_TR:
           more_options:
             title: "Daha fazla seçenek"
         look_and_feel:
-          title: "Görünüm ve his"
-          description: "Discourse sitenizi özelleştirip markalaştırarak ona ayırt edici bir stil kazandırın."
           themes:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
@@ -5505,8 +5565,6 @@ tr_TR:
           save_successful: "Kullanıcı alanı kaydedildi."
       plugins:
         title: "Eklentiler"
-        installed: "Yüklü eklentiler"
-        description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür."
         name: "Ad"
         none_installed: "Yüklü herhangi bir eklentiniz yok."
         version: "Sürüm"
@@ -5521,25 +5579,6 @@ tr_TR:
         author: "Yazan: %{author}"
         experimental_badge: "deneysel"
         learn_more: "Daha fazla bilgi edinin"
-        sidebar_link:
-          installed: "Yüklendi"
-      advanced:
-        title: "Gelişmiş"
-        sidebar_link:
-          api_keys:
-            title: "API anahtarları"
-            keywords: "token"
-          webhooks: "Web Kancaları"
-          developer: "Geliştirici"
-          embedding: "Gömme"
-          rate_limits: "Oran limitleri"
-          user_api: "Kullanıcı API'si"
-          onebox: "Onebox"
-          files: "Dosyalar"
-          other_options: "Diğer"
-          search: "Ara"
-          experimental: "Deneysel"
-          all_site_settings: "Tüm site ayarları"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
@@ -5547,7 +5586,6 @@ tr_TR:
       backups:
         title: "Yedeklemeler"
         files_title: "Yedekleme dosyaları"
-        description: "Discourse yedeklemeleri, sitedeki her şeyi içeren tam site veri tabanını içerir: konular, gönderiler, kullanıcılar, gruplar, ayarlar, temalar, vb. Yedekleme dosyasının nasıl oluşturulduğuna bağlı olarak, yüklemeleri içerebilir veya içermeyebilir."
         menu:
           backups: "Yedeklemeler"
           backup_files: "Yedekleme dosyaları"
@@ -5691,16 +5729,11 @@ tr_TR:
           common: "Yaygın"
           desktop: "Masaüstü"
           mobile: "Mobil"
-          settings: "Ayarlar"
-          translations: "Çeviriler"
-          extra_scss: "Ekstra SCSS"
           extra_files: "Ekstra dosyalar"
           extra_files_upload: "Bu dosyaları görüntülemek için temayı dışa aktarın."
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
           settings_editor: "Ayar Düzenleyici"
-          show_advanced: "Gelişmiş alanları göster"
-          hide_advanced: "Gelişmiş alanları gizle"
           hide_unused_fields: "Kullanılmayan alanları gizle"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
@@ -5947,6 +5980,9 @@ tr_TR:
           hover:
             name: "üzerine gelin"
             description: "Liste ögeleri gibi ögelerin üzerine gelindiğinde veya klavye odağına sahip olduklarında arka plan rengi."
+          editor:
+            light: "Açık"
+            dark: "Koyu"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."
@@ -6625,8 +6661,6 @@ tr_TR:
           other: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
         delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem kalıcıdır!"
         delete_confirm: "Mevcut tartışmalardan içeriğin kaldırılmasını önlemek için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
-        delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
-        delete_dont_block: "Yalnızca sil"
         deleting_user: "Kullanıcı siliniyor…"
         deleted: "Kullanıcı silindi."
         delete_failed: "Bu kullanıcı silinirken bir hata oluştu. Kullanıcıyı silmeye çalışmadan önce tüm gönderilerin silindiğinden emin olun."

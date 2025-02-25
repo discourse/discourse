@@ -75,6 +75,7 @@ export default class FKField extends Component {
       @title={{@title}}
       @tooltip={{@tooltip}}
       @description={{@description}}
+      @helpText={{@helpText}}
       @showTitle={{@showTitle}}
       @collectionIndex={{@collectionIndex}}
       @set={{@set}}

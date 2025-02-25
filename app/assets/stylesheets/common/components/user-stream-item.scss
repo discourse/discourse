@@ -25,12 +25,14 @@
       opacity: 0.4;
     }
 
-    .post-list-item__header {
+    .post-list-item__header,
+    .user-stream-item__header {
       display: flex;
       align-items: flex-start;
     }
 
-    .post-list-item__details {
+    .post-list-item__details,
+    .user-stream-item__details {
       flex-grow: 1;
       min-width: 0;
 
@@ -39,7 +41,8 @@
       }
     }
 
-    .post-list-item__metadata {
+    .post-list-item__metadata,
+    .user-stream-item__metadata {
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -163,6 +166,7 @@
   .name {
     font-size: var(--font-0);
     max-width: 400px;
+
     @include ellipsis;
   }
 

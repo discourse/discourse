@@ -6,10 +6,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import icon from "discourse/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 import MoreSectionLink from "./more-section-link";
+import MoreSectionTrigger from "./more-section-trigger";
 import SectionLinkButton from "./section-link-button";
 
 export default class SidebarMoreSectionLinks extends Component {
@@ -84,21 +83,14 @@ export default class SidebarMoreSectionLinks extends Component {
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="btn-transparent sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
+        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
         @modalForMobile={{true}}
         @autofocus={{true}}
         @placement="bottom"
         @inline={{true}}
         @identifier="sidebar-more-section"
+        @triggerComponent={{MoreSectionTrigger}}
       >
-        <:trigger>
-          <span class="sidebar-section-link-prefix icon">
-            {{icon "ellipsis-vertical"}}
-          </span>
-          <span class="sidebar-section-link-content-text">
-            {{i18n "sidebar.more"}}
-          </span>
-        </:trigger>
 
         <:content as |menu|>
           <DropdownMenu as |dropdown|>

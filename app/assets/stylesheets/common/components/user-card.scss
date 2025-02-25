@@ -10,13 +10,6 @@
   }
 }
 
-.user-card,
-.group-card {
-  --card-width: 39em;
-  --avatar-width: 8em;
-  --avatar-margin: -3.3em; // extends the avatar above the card
-}
-
 .animated-placeholder {
   height: 20px;
   position: relative;
@@ -30,9 +23,6 @@
   overflow: hidden;
 
   &::before {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: placeHolderShimmer 4s linear infinite forwards;
-    }
     position: absolute;
     left: 0;
     content: "";
@@ -44,12 +34,19 @@
     );
     height: var(--avatar-width);
     width: var(--card-width);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
   }
 }
 
 // shared styles for user and group cards
 .user-card,
 .group-card {
+  --card-width: 39em;
+  --avatar-width: 8em;
+  --avatar-margin: -3.3em; // extends the avatar above the card
   min-width: 0;
   width: var(--card-width);
   color: var(--primary);
@@ -102,6 +99,7 @@
       .name-username-wrapper {
         margin-right: 0;
         flex: 0 1 auto;
+
         @include ellipsis;
       }
 
@@ -154,6 +152,7 @@
   .names__secondary,
   [class*="metadata__"] {
     margin: 0;
+
     @include ellipsis;
   }
 

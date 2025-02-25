@@ -154,14 +154,6 @@ lt:
 
           – Mes visada tikime [civilizuotu bendruomenės elgesiu] (%{base_uri}/gairės).
       onebox:
-        instructions: |-
-          Kitas, ar galite pasidalinti su manimi viena iš šių nuorodų? Atsakykite naudodami **nuorodą eilutėje** ir ji automatiškai išsiplės.
-
-          Norėdami nukopijuoti bet kurią nuorodą, bakstelėkite ir palaikykite mobiliajame telefone arba paspauskite dešinį pelės mygtuką:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Šaunu! Tai veiks daugumai <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> nuorodų. Atminkite, kad tai turi būti ant linijos _viskas savaime_, be nieko kito priekyje ar gale.
       images:

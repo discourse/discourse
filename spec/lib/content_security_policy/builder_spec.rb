@@ -24,6 +24,13 @@ RSpec.describe ContentSecurityPolicy::Builder do
       expect(builder.build).to_not include("invalid")
     end
 
+    it "skips invalid sources with whitespace or semicolons" do
+      invalid_sources = ["invalid source;", "'unsafe-eval' https://invalid.example.com'"]
+      builder << { script_src: invalid_sources }
+      script_srcs = parse(builder.build)["script-src"]
+      invalid_sources.each { |invalid_source| expect(script_srcs).not_to include(invalid_source) }
+    end
+
     it "no-ops on invalid values" do
       previous = builder.build
 

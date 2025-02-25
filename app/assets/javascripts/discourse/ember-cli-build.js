@@ -4,9 +4,7 @@ const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
-const { createI18nTree } = require("./lib/translation-plugin");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
-const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
@@ -96,20 +94,12 @@ module.exports = function (defaults) {
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
-  const testStylesheetTree = mergeTrees([
-    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-    discourseScss(
-      `${discourseRoot}/app/assets/stylesheets`,
-      "qunit-custom.scss"
-    ),
-  ]);
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
   let extraPublicTrees = [
-    createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     applyTerser(
@@ -120,7 +110,6 @@ module.exports = function (defaults) {
     ),
     applyTerser(generateScriptsTree(app)),
     applyTerser(discoursePluginsTree),
-    testStylesheetTree,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";

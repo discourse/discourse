@@ -24,6 +24,7 @@ html.modal-open {
 
 .modal.in {
   animation: fade 0.25s;
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }
@@ -32,11 +33,11 @@ html.modal-open {
 .close {
   font-size: var(--font-up-3);
   text-decoration: none;
+  cursor: pointer;
 
   &:visited {
     color: var(--primary-high);
   }
-  cursor: pointer;
 
   &:hover {
     color: var(--primary);
@@ -100,6 +101,12 @@ html.modal-open {
 
     .subtitle {
       margin-left: 0.5em;
+    }
+  }
+
+  .alert-error {
+    label {
+      display: inline-block;
     }
   }
 }
