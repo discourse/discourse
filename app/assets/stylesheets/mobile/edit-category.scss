@@ -55,6 +55,7 @@ div.edit-category {
     h2 {
       order: 2;
       margin-bottom: 0;
+
       @include ellipsis;
     }
   }

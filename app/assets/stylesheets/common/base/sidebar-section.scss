@@ -95,6 +95,7 @@
   .sidebar-section-header-text {
     line-height: normal;
     margin-right: 0.25em;
+
     @include ellipsis;
   }
 

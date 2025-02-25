@@ -18,6 +18,7 @@
     .user-profile-link {
       &:focus-visible {
         border: 1px solid;
+
         @include default-focus;
       }
     }

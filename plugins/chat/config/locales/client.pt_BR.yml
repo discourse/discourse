@@ -342,6 +342,7 @@ pt_BR:
         tabs:
           members: Membros
           settings: Configurações
+        remove_member: "Remover"
       new_message_modal:
         title: Enviar mensagem
         add_user_long: <kbd>shift + clique</kbd> ou <kbd>shift + enter</kbd><span>Adicionar @%{username}</span>

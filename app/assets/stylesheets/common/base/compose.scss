@@ -107,6 +107,7 @@ html.composer-open {
 
     .draft-text {
       display: block;
+
       @include ellipsis;
     }
 
@@ -156,6 +157,7 @@ html.composer-open {
         .user-link,
         .post-link {
           margin-right: 8px;
+
           @include ellipsis;
         }
       }
@@ -163,7 +165,9 @@ html.composer-open {
       .username {
         margin-right: 5px;
         max-width: 100px;
+
         @include ellipsis;
+
         @media screen and (max-width: 500px) {
           display: none;
         }

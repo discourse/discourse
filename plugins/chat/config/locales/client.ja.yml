@@ -326,6 +326,7 @@ ja:
         tabs:
           members: メンバー
           settings: 設定
+        remove_member: "削除"
       new_message_modal:
         title: メッセージを送信する
         add_user_long: <kbd>Shift + クリック</kbd>または <kbd>Shift + Enter</kbd><span>@%{username} を追加</span>

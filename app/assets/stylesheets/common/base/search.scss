@@ -19,6 +19,7 @@
 
   .search-header {
     background: var(--primary-very-low);
+
     @include search-page-spacing;
   }
 
@@ -97,6 +98,7 @@
       padding: 1em 10%;
       background-color: var(--secondary);
       border-bottom: 1px solid var(--primary-low);
+
       @include breakpoint(medium) {
         padding: 0.5em 0;
       }
@@ -113,6 +115,7 @@
 
       button {
         margin: 0 0.5em 0 0;
+
         @include breakpoint(medium) {
           margin: 0 0.5em 0.5em 0;
         }
@@ -442,12 +445,14 @@
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-0);
         font-weight: 700;
+
         @include ellipsis;
       }
 
       .username {
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-down-1);
+
         @include ellipsis;
       }
     }

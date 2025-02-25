@@ -314,9 +314,6 @@ pt_BR:
     site_settings:
       invalid_site_setting: "Não existe nenhuma configuração chamada '%{name}'"
       invalid_category_id: "Você especificou uma categoria que não existe"
-      site_setting_is_hidden: "Você não tem permissão para alterar configurações ocultas"
-      site_setting_is_shadowed_globally: "Não é possível alterar esta opção porque foi configurada globalmente"
-      site_setting_is_unconfigurable: "Você não tem permissão para alterar configurações que não podem ser definidas"
       invalid_choice:
         one: "'%{name}' é uma opção inválida."
         other: "'%{name}' são opções inválidas."

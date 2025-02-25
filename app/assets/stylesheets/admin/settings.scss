@@ -7,6 +7,7 @@
       float: left;
       width: 17.6576%;
       margin-right: 12px;
+
       @media (max-width: $mobile-breakpoint) {
         float: none;
         margin-right: 0;
@@ -42,6 +43,7 @@
       .category-selector {
         width: 95%;
       }
+
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
         padding-right: 0;
@@ -49,6 +51,7 @@
 
       .select-kit {
         width: 100% !important; // Needs !important to override hard-coded value
+
         @media (max-width: $mobile-breakpoint) {
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
@@ -73,6 +76,7 @@
     .input-setting-integer,
     .input-setting-textarea {
       width: 100%;
+
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
       }

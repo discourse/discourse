@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
-import DiscourseRoute from "discourse/routes/discourse";
+import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
 
-export default class AdminConfigLookAndFeelIndexRoute extends DiscourseRoute {
+export default class AdminConfigLookAndFeelIndexRoute extends AdminConfigWithSettingsRoute {
   @service router;
 
   beforeModel() {

@@ -169,6 +169,7 @@ fa_IR:
         tabs:
           members: اعضاء
           settings: تنظیمات
+        remove_member: "پاک کردن"
       new_message_modal:
         filter: "فیلتر"
       channel_edit_name_slug_modal:

@@ -29,6 +29,7 @@ Discourse::Application.routes.draw do
 
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
+      get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -386,9 +387,11 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
+
+      get "search/all" => "search#index"
+
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
-
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"
@@ -457,7 +460,10 @@ Discourse::Application.routes.draw do
     get "email/unsubscribed" => "email#unsubscribed", :as => "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", :as => "email_perform_unsubscribe"
 
-    get "extra-locales/:bundle" => "extra_locales#show"
+    get "extra-locales/:digest/:locale/:bundle" => "extra_locales#show",
+        :constraints => {
+          format: :js,
+        }
 
     resources :session, id: RouteFormat.username, only: %i[create destroy become] do
       get "become" if !Rails.env.production?

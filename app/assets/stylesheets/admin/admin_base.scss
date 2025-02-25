@@ -33,11 +33,11 @@ $mobile-breakpoint: 700px;
     width: calc(100% - 10px);
     flex: 1 0 auto;
     margin-top: 0;
+
     @include breakpoint(tablet) {
       white-space: nowrap;
       flex-wrap: nowrap;
       overflow-x: scroll;
-      -webkit-overflow-scrolling: touch;
       margin: 0 0 0 -10px;
       padding: 0 10px 10px 10px;
     }
@@ -56,6 +56,7 @@ $mobile-breakpoint: 700px;
       }
     }
   }
+
   @include breakpoint(tablet) {
     // Fade-out for horizontal scroll nav
     &::before {
@@ -290,6 +291,7 @@ $mobile-breakpoint: 700px;
     h3 {
       font-weight: normal;
       font-size: var(--font-0);
+
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
       }
@@ -347,6 +349,7 @@ $mobile-breakpoint: 700px;
     .title {
       margin-bottom: 1em;
     }
+
     @include breakpoint(mobile-extra-large) {
       .title {
         word-wrap: break-word;
@@ -406,6 +409,7 @@ $mobile-breakpoint: 700px;
 .admin-content {
   .admin-contents {
     padding: 0 0 8px 0;
+
     @include clearfix;
   }
 
@@ -438,6 +442,7 @@ $mobile-breakpoint: 700px;
 
       td.x-value {
         max-width: 0;
+
         @include ellipsis;
       }
     }
@@ -587,6 +592,7 @@ $mobile-breakpoint: 700px;
   .username {
     input[type="text"] {
       min-width: 15em;
+
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
         width: 100%;
@@ -608,6 +614,7 @@ $mobile-breakpoint: 700px;
 
   .search-logs-filter {
     margin-left: auto;
+
     @media screen and (max-width: 700px) {
       flex: 1 1 100%;
       margin-left: 0;
@@ -657,6 +664,7 @@ $mobile-breakpoint: 700px;
     overflow: hidden;
     padding: 0;
     height: 100%;
+
     @include breakpoint(tablet) {
       width: calc(100% + 10px);
       padding-left: 10px;
@@ -699,10 +707,10 @@ $mobile-breakpoint: 700px;
     margin: 0;
     white-space: nowrap;
     overflow-x: auto;
+
     @include breakpoint(tablet) {
       margin-left: -10px;
       overflow-x: scroll;
-      -webkit-overflow-scrolling: touch;
     }
 
     &::before {
@@ -824,11 +832,13 @@ $mobile-breakpoint: 700px;
   width: 18%;
   box-sizing: border-box;
   position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
+
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
     z-index: z("base") - 1;
     width: 250px;
   }
+
   @media (max-width: 500px) {
     width: 50%;
   }
@@ -853,6 +863,7 @@ $mobile-breakpoint: 700px;
   padding: 30px 0 30px 30px;
   width: 82%;
   box-sizing: border-box;
+
   @media (max-width: $mobile-breakpoint) {
     width: 100%;
     border: none;
@@ -864,6 +875,7 @@ $mobile-breakpoint: 700px;
     transition: transform 0.3s ease;
     transform: translateX(250px);
   }
+
   @media (max-width: 500px) {
     transition: transform 0.3s ease;
     transform: translateX(50%);
@@ -896,6 +908,7 @@ section.details {
   .btn {
     line-height: var(--line-height-medium);
   }
+
   @media (max-width: $mobile-breakpoint) {
     .btn {
       margin: 2px;
@@ -1036,6 +1049,7 @@ table#user-badges {
 .value-list {
   .value {
     padding: 0.125em 0;
+
     @include ellipsis;
     display: flex;
 
@@ -1058,6 +1072,7 @@ table#user-badges {
 
     .remove-value-btn {
       margin-right: 0.25em;
+
       @include value-btn;
     }
 
@@ -1119,6 +1134,7 @@ table#user-badges {
 .shift-down-value-btn {
   margin-right: 0 !important;
   margin-left: 0.25em;
+
   @include value-btn;
 }
 
@@ -1150,6 +1166,7 @@ table#user-badges {
     .add-value-btn {
       margin-left: 0.25em;
       margin-top: 0.125em;
+
       @include value-btn;
     }
   }
@@ -1207,38 +1224,39 @@ a.inline-editable-field {
 }
 
 // Styles for subtabs in admin
-@import "common/admin/dashboard";
-@import "common/admin/sidebar";
-@import "common/admin/settings";
-@import "common/admin/users";
-@import "common/admin/penalty";
-@import "common/admin/badges";
-@import "common/admin/emails";
-@import "common/admin/flags";
-@import "common/admin/json_schema_editor";
-@import "common/admin/schema_field";
-@import "common/admin/staff_logs";
-@import "common/admin/customize";
-@import "common/admin/customize-install-theme";
-@import "common/admin/api";
-@import "common/admin/backups";
-@import "common/admin/plugins";
-@import "common/admin/site-settings";
-@import "common/admin/admin_config_area";
-@import "common/admin/admin_table";
-@import "common/admin/admin_filter";
-@import "common/admin/admin_reports";
-@import "common/admin/admin_report";
-@import "common/admin/admin_report_counters";
-@import "common/admin/admin_report_chart";
-@import "common/admin/admin_report_radar";
-@import "common/admin/admin_report_stacked_chart";
-@import "common/admin/admin_report_stacked_line_chart";
-@import "common/admin/admin_report_table";
-@import "common/admin/admin_report_inline_table";
-@import "common/admin/admin_section_landing_page";
-@import "common/admin/admin_intro";
-@import "common/admin/mini_profiler";
-@import "common/admin/schema_theme_setting_editor";
-@import "common/admin/customize_themes_show_schema";
-@import "common/admin/admin_bulk_users_delete_modal";
+@import "admin/dashboard";
+@import "admin/sidebar";
+@import "admin/settings";
+@import "admin/users";
+@import "admin/penalty";
+@import "admin/badges";
+@import "admin/emails";
+@import "admin/flags";
+@import "admin/json_schema_editor";
+@import "admin/schema_field";
+@import "admin/staff_logs";
+@import "admin/customize";
+@import "admin/customize-install-theme";
+@import "admin/api";
+@import "admin/backups";
+@import "admin/plugins";
+@import "admin/site-settings";
+@import "admin/admin_config_area";
+@import "admin/search";
+@import "admin/admin_table";
+@import "admin/admin_filter";
+@import "admin/admin_reports";
+@import "admin/admin_report";
+@import "admin/admin_report_counters";
+@import "admin/admin_report_chart";
+@import "admin/admin_report_radar";
+@import "admin/admin_report_stacked_chart";
+@import "admin/admin_report_stacked_line_chart";
+@import "admin/admin_report_table";
+@import "admin/admin_report_inline_table";
+@import "admin/admin_section_landing_page";
+@import "admin/admin_intro";
+@import "admin/mini_profiler";
+@import "admin/schema_theme_setting_editor";
+@import "admin/customize_themes_show_schema";
+@import "admin/admin_bulk_users_delete_modal";

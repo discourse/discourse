@@ -93,6 +93,7 @@ small {
 
 blockquote {
   clear: both;
+
   @include post-aside;
 }
 
@@ -305,8 +306,7 @@ textarea {
 .sortable {
   white-space: nowrap;
   cursor: pointer;
-
-  @include user-select(none);
+  user-select: none;
 
   .discourse-no-touch & {
     &:hover,

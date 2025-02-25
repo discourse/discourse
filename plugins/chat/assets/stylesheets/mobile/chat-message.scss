@@ -9,7 +9,7 @@
   }
 
   #skip-link {
-    @include user-select(none);
+    user-select: none;
   }
 
   #skip-link,
@@ -18,13 +18,14 @@
   .chat-channel,
   .chat-thread {
     > * {
-      @include user-select(none);
+      user-select: none;
     }
   }
 
   .chat-message-container {
     transition: transform 400ms;
     transform: scale(1);
+
     @media (prefers-reduced-motion: no-preference) {
       &.-active {
         animation: scale-animation 400ms;
