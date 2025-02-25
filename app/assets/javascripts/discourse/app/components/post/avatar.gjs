@@ -16,13 +16,17 @@ export default class PostAvatar extends Component {
     );
   }
 
+  get userWasDeleted() {
+    return !this.args.post.user_id;
+  }
+
   get size() {
     return this.args.size || "large";
   }
 
   get user() {
     return {
-      template: this.args.post.avatar_template,
+      avatar_template: this.args.post.avatar_template,
       username: this.args.post.username,
       name: this.args.post.name,
       path: this.args.post.usernameUrl,
@@ -32,7 +36,7 @@ export default class PostAvatar extends Component {
   <template>
     <div class="topic-avatar">
       <div class="post-avatar">
-        {{#if @post.user_id}}
+        {{#if this.userWasDeleted}}
           {{icon "trash-can" class="deleted-user-avatar"}}
         {{else}}
           <UserLink tabindex="-1" @user={{this.user}}>

@@ -3,8 +3,8 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 
 const PostActionsSummary = <template>
-  {{#each @post.actionsSummary as |as|}}
-    <div class="post-action">{{as.description}}</div>
+  {{#each @post.actionsSummary key="id" as |actionSummary|}}
+    <div class="post-action">{{actionSummary.description}}</div>
     <div class="clearfix"></div>
   {{/each}}
   {{#if @post.deleted_at}}

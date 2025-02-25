@@ -111,7 +111,7 @@ export default class PostArticle extends Component {
             />
           </section>
         </div>
-        {{#each this.repliesAbove as |reply|}}
+        {{#each this.repliesAbove key="id" as |reply|}}
           <PostEmbedded @post={{reply}} @above={{true}} />
         {{/each}}
       {{/if}}
