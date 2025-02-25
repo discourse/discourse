@@ -95,6 +95,7 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @preview={{@preview}}
+          @includeTime={{@includeTime}}
           @selection={{@selection}}
           @includeNone={{@includeNone}}
           id={{@field.id}}

@@ -13,6 +13,8 @@ const DATE_FORMAT = "YYYY-MM-DD";
 @classNames("date-picker-wrapper")
 export default class DatePicker extends Component {
   value = null;
+  minDate = null;
+  maxDate = null;
   _picker = null;
 
   @discourseComputed("site.mobileView")
@@ -39,6 +41,8 @@ export default class DatePicker extends Component {
           bound: container === null,
           format: DATE_FORMAT,
           firstDay: 1,
+          minDate: this.minDate || null,
+          maxDate: this.maxDate || null,
           i18n: {
             previousMonth: i18n("dates.previous_month"),
             nextMonth: i18n("dates.next_month"),
@@ -50,6 +54,14 @@ export default class DatePicker extends Component {
         };
 
         this._picker = new Pikaday(Object.assign(options, this._opts()));
+
+        if (this.value) {
+          const parsedDate =
+            this.value instanceof moment ? this.date : moment(this.value);
+          this._picker.setDate(parsedDate.toDate(), true);
+        } else {
+          this._picker.setDate(null);
+        }
       });
     });
   }
