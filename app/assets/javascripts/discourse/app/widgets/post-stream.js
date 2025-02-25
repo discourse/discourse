@@ -303,6 +303,7 @@ export default createWidget("post-stream", {
         // converting this widget to a Glimmer component:
         // canCreatePost, showReadIndicator, prevPost, nextPost
         result.push(this.attach("post", transformed, { model: post }));
+        result.push(this.attach("glimmer-post", { post }));
       }
 
       // Post gap - after

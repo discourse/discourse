@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -5,7 +6,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { longDate } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 
-export default class PostMetaDataEditsIndicator {
+export default class PostMetaDataEditsIndicator extends Component {
   @service siteSettings;
 
   get icon() {

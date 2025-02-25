@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { and, not, or } from "truth-helpers";
 import PostMetaDataDate from "./meta-data/date";
-import PostEditsIndicator from "./meta-data/edits-indicator";
+import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostEmailMetaDataIndicator from "./meta-data/email-indicator";
 import PostLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
@@ -12,6 +12,10 @@ import PostWhisperMetaDataIndicator from "./meta-data/whisper-indicator";
 export default class PostMetaData extends Component {
   get displayPosterName() {
     return this.args.displayPosterName ?? true;
+  }
+
+  get shouldDisplayEditsIndicator() {
+    return this.args.post.version > 1 || this.args.post.wiki;
   }
 
   <template>
@@ -36,8 +40,8 @@ export default class PostMetaData extends Component {
           <PostLockedIndicator @post={{@post}} />
         {{/if}}
 
-        {{#if (or @post.version @post.wiki)}}
-          <PostEditsIndicator
+        {{#if this.shouldDisplayEditsIndicator}}
+          <PostMetaDataEditsIndicator
             @post={{@post}}
             @editPost={{@editPost}}
             @showHistory={{@showHistory}}

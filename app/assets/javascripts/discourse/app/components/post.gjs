@@ -70,6 +70,7 @@ export default class Post extends Component {
   <template>
     <div
       class={{concatClass
+        "glimmer-post"
         "topic-post"
         "clearfix"
         (if this.staged "staged")

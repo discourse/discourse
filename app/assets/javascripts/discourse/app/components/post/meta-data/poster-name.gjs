@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
@@ -106,7 +105,7 @@ export default class PostMetaDataPosterName extends Component {
           @name="post-meta-data-poster-name"
           @outletArgs={{hash position="first" name=this.name post=@post}}
         >
-          <UserLink user={{@post}}>
+          <UserLink @user={{@post}}>
             {{this.name}}
             {{#if this.showGlyph}}
               {{#if (or @post.moderator @post.group_moderator)}}
@@ -129,7 +128,7 @@ export default class PostMetaDataPosterName extends Component {
               @name="post-meta-data-poster-name"
               @outletArgs={{hash position="second" name=this.name post=@post}}
             >
-              <UserLink user={{@post}}>
+              <UserLink @user={{@post}}>
                 {{#if this.nameFirst}}
                   {{formatUsername @post.username}}
                 {{else}}

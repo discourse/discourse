@@ -745,6 +745,12 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPosterIcons` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 

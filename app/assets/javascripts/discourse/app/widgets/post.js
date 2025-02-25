@@ -30,7 +30,9 @@ import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
@@ -1051,15 +1053,15 @@ createWidget("post-article", {
       this,
       "div.topic-map.--op",
       hbs`
-          <TopicMap
-                  @model={{@data.model}}
-                  @topicDetails={{@data.topicDetails}}
-                  @postStream={{@data.postStream}}
-                  @showPMMap={{@data.showPMMap}}
-                  @showInvite={{@data.showInvite}}
-                  @removeAllowedGroup={{@data.removeAllowedGroup}}
-                  @removeAllowedUser={{@data.removeAllowedUser}}
-          />`,
+        <TopicMap
+          @model={{@data.model}}
+          @topicDetails={{@data.topicDetails}}
+          @postStream={{@data.postStream}}
+          @showPMMap={{@data.showPMMap}}
+          @showInvite={{@data.showInvite}}
+          @removeAllowedGroup={{@data.removeAllowedGroup}}
+          @removeAllowedUser={{@data.removeAllowedUser}}
+        />`,
       {
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),
@@ -1195,3 +1197,11 @@ export default createWidget("post", {
     }
   },
 });
+
+// TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+registerWidgetShim(
+  "glimmer-post",
+  "div.post-shim",
+  hbs`
+    <Post @post={{@data.post}} />`
+);
