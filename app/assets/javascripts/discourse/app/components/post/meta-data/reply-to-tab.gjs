@@ -7,6 +7,16 @@ import icon from "discourse/helpers/d-icon";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 
 export default class PostMetaDataReplyToTab {
+  static shouldRender(args, context, owner) {
+    const siteSettings = owner.lookup("service:site-settings");
+
+    return (
+      args.post.replyToUsername &&
+      (!args.post.replyDirectlyAbove ||
+        !siteSettings.suppress_reply_directly_above)
+    );
+  }
+
   @service site;
 
   <template>

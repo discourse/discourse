@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { and, not, or } from "truth-helpers";
+import { getOwner } from "@ember/owner";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostEmailMetaDataIndicator from "./meta-data/email-indicator";
@@ -16,6 +16,14 @@ export default class PostMetaData extends Component {
 
   get shouldDisplayEditsIndicator() {
     return this.args.post.version > 1 || this.args.post.wiki;
+  }
+
+  get shouldDisplayReplyToTab() {
+    return PostMetaDataReplyToTab.shouldRender(
+      { post: this.args.post },
+      null,
+      getOwner(this)
+    );
   }
 
   <template>
@@ -58,15 +66,7 @@ export default class PostMetaData extends Component {
           />
         {{/if}}
 
-        {{#if
-          (and
-            @post.replyToUsername
-            (or
-              (not @post.replyDirectlyAbove)
-              (not this.siteSettings.suppress_reply_directly_above)
-            )
-          )
-        }}
+        {{#if this.shouldDisplayReplyToTab}}
           <PostMetaDataReplyToTab
             @post={{@post}}
             @repliesAbove={{@repliesAbove}}
