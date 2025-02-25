@@ -262,7 +262,7 @@ jobs:
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
-        run: bin/ember-cli --build
+        run: bin/ember-cli --build --environment=production
 
       - name: Ensure latest minio binary installed for Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -363,7 +363,6 @@ jobs:
             exit 1
           fi
         timeout-minutes: 30
-
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
