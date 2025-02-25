@@ -60,8 +60,14 @@ export default class FKControlCalendar extends Component {
     return this.args.field.rules?.dateBeforeOrEqual?.date;
   }
 
+  get expandedDatePicker() {
+    return (
+      (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
+    );
+  }
+
   <template>
-    {{#if this.site.desktopView}}
+    {{#if this.expandedDatePicker}}
       <DatePicker
         @value={{readonly @field.value}}
         @onSelect={{this.setDate}}

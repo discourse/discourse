@@ -53,6 +53,30 @@ module(
       assert.dom(".form-kit__control-time").doesNotExist();
     });
 
+    test("@expandedDatePickerOnDesktop", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Calendar />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".date-picker-container").exists();
+      assert.dom(".form-kit__control-date").doesNotExist();
+
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Calendar @expandedDatePickerOnDesktop={{false}} />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".date-picker-container").doesNotExist();
+      assert.dom(".form-kit__control-date").exists();
+    });
+
     test("dateBeforeOrEqual validation", async function (assert) {
       let data = { foo: moment().toDate() };
       const mutateData = (x) => (data = x);
