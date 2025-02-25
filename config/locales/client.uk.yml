@@ -5016,7 +5016,7 @@ uk:
         few: "%{count} нових"
         many: "%{count} нова"
         other: "%{count} нова"
-      toggle_section: "Переключити розділ"
+      toggle_section: "Показати/приховати розділ"
       more: "Більше"
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
