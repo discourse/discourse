@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 describe "Theme qunit testing", type: :system do
+  fab!(:admin)
   let!(:theme_without_tests) { Fabricate(:theme, name: "no-tests-guy") }
   let!(:theme_with_test) do
     t = Fabricate(:theme, name: "Theme With Tests")
     t.set_field(target: :tests_js, type: :js, name: "acceptance/some-test.js", value: <<~JS)
         import { module, test } from "qunit";
-        
+
         module("theme test", function () {
           test("it works", function (assert) {
-            assert.true(true)
+            assert.true(true);
           });
         });
       JS
@@ -19,6 +20,7 @@ describe "Theme qunit testing", type: :system do
   end
 
   it "lists themes and can run tests by id, name and url" do
+    sign_in admin
     visit "/theme-qunit"
 
     expect(page).to have_css("a[href^='/theme-qunit?id=']", count: 1)
