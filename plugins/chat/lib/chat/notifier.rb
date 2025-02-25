@@ -172,8 +172,8 @@ module Chat
 
       {
         members: members || [],
-        welcome_to_join: (welcome_to_join || []).select { |u| u.human? },
-        unreachable: (unreachable || []).select { |u| u.human? },
+        welcome_to_join: (welcome_to_join || []).select(&:human?),
+        unreachable: (unreachable || []).select(&:human?),
       }
     end
 
