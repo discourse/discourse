@@ -218,6 +218,15 @@ en:
     bootstrap_mode: "Getting started"
     back_button: "Back"
 
+    welcome_banner:
+      header:
+        logged_in_members: "Blah"
+        anonymous_members: "Blah"
+      subheader:
+        logged_in_members: "Blah"
+        anonymous_members: "Blah"
+      search: "Search"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors."
