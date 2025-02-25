@@ -122,7 +122,14 @@ export default class PostArticle extends Component {
       {{/if}}
       <div class="row">
         <PostAvatar @post={{@post}} />
-        <PostBody @post={{@post}} @repliesAbove={{this.repliesAbove}} />
+        <PostBody
+          @canCreatePost={{@canCreatePost}}
+          @nextPost={{@nextPost}}
+          @post={{@post}}
+          @prevPost={{@prevPost}}
+          @repliesAbove={{this.repliesAbove}}
+          @showReadIndicator={{@showReadIndicator}}
+        />
       </div>
 
       {{#if this.shouldShowTopicMap}}

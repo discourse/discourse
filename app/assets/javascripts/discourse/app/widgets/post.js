@@ -1203,5 +1203,9 @@ registerWidgetShim(
   "glimmer-post",
   "div.post-shim",
   hbs`
-    <Post @post={{@data.post}} />`
+      <Post @post={{@data.post}}
+            @canCreatePost={{@data.canCreatePost}}
+            @prevPost={{@data.prevPost}}
+            @nextPost={{@data.nextPost}}
+            @showReadIndicator={{@data.showReadIndicator}} />`
 );

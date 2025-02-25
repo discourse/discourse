@@ -22,7 +22,7 @@ const PostBody = <template>
         @toggleReplyAbove={{@toggleReplyAbove}}
       />
     </PluginOutlet>
-    <PostContents @post={{@post}} />
+    <PostContents @post={{@post}} @canCreatePost={{@canCreatePost}} />
     <section class="post-actions">
       <PostActionsSummary @post={{@post}} />
     </section>

@@ -93,7 +93,14 @@ export default class Post extends Component {
       }}
     >
       {{#unless @cloaked}}
-        <PostArticle id={{this.id}} @post={{@post}} />
+        <PostArticle
+          id={{this.id}}
+          @canCreatePost={{@canCreatePost}}
+          @post={{@post}}
+          @prevPost={{@prevPost}}
+          @nextPost={{@nextPost}}
+          @showReadIndicator={{@showReadIndicator}}
+        />
       {{/unless}}
     </div>
   </template>
