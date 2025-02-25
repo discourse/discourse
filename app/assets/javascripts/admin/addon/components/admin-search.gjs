@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
@@ -20,8 +21,9 @@ const ADMIN_SEARCH_FILTERS = "admin_search_filters";
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
   @service keyValueStore;
+  @service router;
 
-  @tracked filter = "";
+  @tracked filter = this.args.initialFilter ?? "";
   @tracked searchResults = [];
   @tracked showFilters = false;
   @tracked loading = false;
@@ -35,7 +37,6 @@ export default class AdminSearch extends Component {
 
   constructor() {
     super(...arguments);
-    this.adminSearchDataSource.buildMap();
 
     if (this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS)) {
       this.typeFilters = new TrackedObject(
@@ -43,6 +44,13 @@ export default class AdminSearch extends Component {
       );
       this.showFilters = true;
     }
+
+    this.adminSearchDataSource.buildMap().then(() => {
+      if (this.filter !== "") {
+        this.loading = true;
+        this.runSearch();
+      }
+    });
   }
 
   get visibleTypes() {
@@ -84,8 +92,7 @@ export default class AdminSearch extends Component {
   changeSearchTerm(event) {
     this.searchResults = [];
     this.filter = event.target.value;
-    this.loading = true;
-    this.search();
+    this.runSearch();
   }
 
   @action
@@ -127,6 +134,25 @@ export default class AdminSearch extends Component {
       event.preventDefault();
       document.querySelector(".admin-search__result a").focus();
     }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.router.transitionTo("adminSearch.index", {
+        queryParams: { filter: this.filter },
+      });
+    }
+  }
+
+  @action
+  initialFilterUpdated() {
+    this.filter = this.args.initialFilter;
+    this.runSearch();
+  }
+
+  @action
+  runSearch() {
+    this.loading = true;
+    this.search();
   }
 
   #search() {
@@ -137,12 +163,16 @@ export default class AdminSearch extends Component {
   }
 
   <template>
-    <div class="admin-search__input-container">
+    <div
+      class="admin-search__input-container"
+      {{didUpdate this.initialFilterUpdated @initialFilter}}
+    >
       <div class="admin-search__input-group">
         {{icon "magnifying-glass" class="admin-search__input-icon"}}
         <input
           type="text"
           class="admin-search__input-field"
+          value={{this.filter}}
           {{autoFocus}}
           {{on "input" this.changeSearchTerm}}
           {{on "keydown" this.handleSearchKeyDown}}

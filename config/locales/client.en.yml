@@ -5368,6 +5368,8 @@ en:
 
       search:
         modal_title: "Search anything in admin"
+        title: "Search"
+        description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
         result_types:
           page:

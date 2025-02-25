@@ -71,6 +71,7 @@ export default class AdminSearchDataSource extends Service {
     // into a service.
     const reportItems = await ajax("/admin/reports.json");
     this.#processReports(reportItems.reports);
+    await Promise.resolve();
 
     this._mapCached = true;
   }

@@ -9,6 +9,7 @@
 .admin-search {
   &__input-container {
     display: flex;
+    margin-bottom: var(--space-4);
   }
 
   &__input-group {

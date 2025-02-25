@@ -360,5 +360,13 @@ export default function () {
         this.route("account");
       }
     );
+
+    this.route(
+      "adminSearch",
+      { path: "/search", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
   });
 }
