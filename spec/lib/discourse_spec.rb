@@ -553,8 +553,8 @@ RSpec.describe Discourse do
 
     it "includes the command in the error message" do
       expect do
-        Discourse::Utils.execute_command("false", failure_message: "oops")
-      end.to raise_error(RuntimeError, "false\noops")
+        Discourse::Utils.execute_command("false", "'foo'", failure_message: "oops")
+      end.to raise_error(RuntimeError, "false 'foo'\noops")
     end
   end
 
