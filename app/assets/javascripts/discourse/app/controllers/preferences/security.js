@@ -107,17 +107,20 @@ export default class SecurityController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "model.is_anonymous",
-    "model.no_password",
-    "model.associated_accounts"
-  )
-  canRemovePassword(isAnonymous, noPassword, associatedAccounts) {
+  @discourseComputed("model", "siteSettings")
+  canRemovePassword(model, siteSettings) {
+    if (
+      model.is_anonymous ||
+      model.no_password ||
+      siteSettings.enable_discourse_connect ||
+      !siteSettings.enable_local_logins
+    ) {
+      return false;
+    }
+
     return (
-      !isAnonymous &&
-      !noPassword &&
-      associatedAccounts &&
-      associatedAccounts.length > 0
+      model.associated_accounts?.length > 0 ||
+      (this.canUsePasskeys && model.user_passkeys?.length > 0)
     );
   }
 

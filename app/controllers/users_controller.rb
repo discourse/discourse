@@ -863,7 +863,9 @@ class UsersController < ApplicationController
 
     raise Discourse::NotFound if !user || !user.user_password
     raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
-    if !user.associated_accounts || user.associated_accounts.empty? || !secure_session_confirmed?
+    raise Discourse::InvalidAccess if !secure_session_confirmed?
+
+    if user.associated_accounts.blank? && user.passkey_credential_ids.blank?
       raise Discourse::InvalidAccess
     end
 
