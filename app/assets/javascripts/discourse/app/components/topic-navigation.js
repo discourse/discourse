@@ -22,6 +22,7 @@ const MIN_HEIGHT_TIMELINE = 325;
 )
 export default class TopicNavigation extends Component {
   @service modal;
+  @service composer;
 
   composerOpen = null;
   info = EmberObject.create();
@@ -56,10 +57,16 @@ export default class TopicNavigation extends Component {
       const verticalSpace =
         window.innerHeight - composerHeight - headerOffset();
 
-      this.info.set(
-        "renderTimeline",
-        this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
-      );
+      if (this.composer.allowPreview) {
+        this._checkSize();
+
+        this.info.set(
+          "renderTimeline",
+          this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
+        );
+      } else {
+        this.info.set("renderTimeline", this.mediaQuery.matches);
+      }
     }
 
     this.info.set(
@@ -100,6 +107,11 @@ export default class TopicNavigation extends Component {
     } else {
       $(window).off("click.hide-fullscreen");
     }
+    this._checkSize();
+  }
+
+  @observes("composer.allowPreview")
+  _handleAllowPreviewChange() {
     this._checkSize();
   }
 

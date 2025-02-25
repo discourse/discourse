@@ -56,6 +56,7 @@ export default class TopicTimelineScrollArea extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service composer;
 
   @tracked showButton = false;
   @tracked current;
@@ -85,10 +86,15 @@ export default class TopicTimelineScrollArea extends Component {
     if (this.site.desktopView) {
       // listen for scrolling event to update timeline
       this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
-      // listen for composer sizing changes to update timeline
-      this.appEvents.on("composer:opened", this.calculatePosition);
-      this.appEvents.on("composer:resized", this.calculatePosition);
-      this.appEvents.on("composer:closed", this.calculatePosition);
+
+      if (this.composer.allowPreview) {
+        // listen for composer sizing changes to update timeline
+        this.appEvents.on("composer:opened", this.calculatePosition);
+        this.appEvents.on("composer:resized", this.calculatePosition);
+        this.appEvents.on("composer:closed", this.calculatePosition);
+        this.addedComposerListeners = true;
+      }
+
       this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
@@ -124,9 +130,12 @@ export default class TopicTimelineScrollArea extends Component {
       this.intersectionObserver?.disconnect();
       this.intersectionObserver = null;
 
-      this.appEvents.off("composer:opened", this.calculatePosition);
-      this.appEvents.off("composer:resized", this.calculatePosition);
-      this.appEvents.off("composer:closed", this.calculatePosition);
+      if (this.addedComposerListeners) {
+        this.appEvents.off("composer:opened", this.calculatePosition);
+        this.appEvents.off("composer:resized", this.calculatePosition);
+        this.appEvents.off("composer:closed", this.calculatePosition);
+      }
+
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
       this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
@@ -209,8 +218,9 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get scrollareaHeight() {
-    const composerHeight =
-        document.getElementById("reply-control").offsetHeight || 0,
+    const composerHeight = this.composer.allowPreview
+        ? document.getElementById("reply-control").offsetHeight || 0
+        : 0,
       headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
     // scrollarea takes up about half of the timeline's height
@@ -219,10 +229,14 @@ export default class TopicTimelineScrollArea extends Component {
 
     const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
-      : desktopMinScrollAreaHeight;
+      : this.composer.allowPreview
+      ? desktopMinScrollAreaHeight
+      : DEFAULT_MIN_SCROLLAREA_HEIGHT;
     const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
-      : desktopMaxScrollAreaHeight;
+      : this.composer.allowPreview
+      ? desktopMaxScrollAreaHeight
+      : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
   }

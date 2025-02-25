@@ -48,6 +48,15 @@
   > * {
     pointer-events: auto; // this unsets the above rule so the child elements are interactive
   }
+
+  .composer-open:not(.composer-has-preview) & {
+    position: fixed;
+    max-width: var(--composer-max-width--hide-preview);
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+  }
 }
 
 #topic-progress-wrapper {
