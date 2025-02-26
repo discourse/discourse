@@ -197,30 +197,45 @@ class ImportScripts::XenForo < ImportScripts::Base
     @prefix_as_category = true
   end
 
+  # Helper method to check if a table exists.
+  def table_exists?(table_name)
+    result = mysql_query("SHOW TABLES LIKE '#{table_name}'").to_a
+    !result.empty?
+  end
+
   def import_likes
+    # Use the reaction content table (with the prefix) for likes.
+    table_name = "#{TABLE_PREFIX}reaction_content"
+
+    unless table_exists?(table_name)
+      puts "Table #{table_name} does not exist. Skipping import of likes."
+      return
+    end
+
     puts "", "importing likes"
-    total_count =
-      mysql_query(
-        "SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'",
-      ).first[
-        "count"
-      ]
+
+    # Count the total number of 'post' likes (only include rows where is_counted = 1)
+    total_count_query = "SELECT COUNT(*) AS count FROM #{table_name} WHERE content_type = 'post' AND is_counted = 1"
+    total_count = mysql_query(total_count_query).first["count"]
+
+    # Process in batches to avoid memory issues
     batches(BATCH_SIZE) do |offset|
-      results =
-        mysql_query(
-          "SELECT like_id, content_id, like_user_id, like_date
-         FROM #{TABLE_PREFIX}liked_content
-         WHERE content_type = 'post'
-         ORDER BY like_id
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};",
-        )
-      break if results.size < 1
+      query = <<-SQL
+        SELECT reaction_content_id AS like_id, content_id, reaction_user_id, reaction_date
+        FROM #{table_name}
+        WHERE content_type = 'post' AND is_counted = 1
+        ORDER BY reaction_content_id
+        LIMIT #{BATCH_SIZE} OFFSET #{offset}
+      SQL
+
+      results = mysql_query(query).to_a
+      break if results.empty?
+
       create_likes(results, total: total_count, offset: offset) do |row|
         {
           post_id: row["content_id"],
-          user_id: row["like_user_id"],
-          created_at: Time.zone.at(row["like_date"]),
+          user_id: row["reaction_user_id"],
+          created_at: Time.zone.at(row["reaction_date"])
         }
       end
     end
