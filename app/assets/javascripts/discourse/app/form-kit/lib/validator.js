@@ -1,4 +1,5 @@
 import { isBlank } from "@ember/utils";
+import moment from "moment";
 import { i18n } from "discourse-i18n";
 
 export default class Validator {
@@ -26,6 +27,22 @@ export default class Validator {
     }
 
     return errors;
+  }
+
+  dateBeforeOrEqualValidator(value, rule) {
+    if (!moment(value).isSameOrBefore(rule.date, "day")) {
+      return i18n("form_kit.errors.date_before_or_equal", {
+        date: moment(rule.date).format("LL"),
+      });
+    }
+  }
+
+  dateAfterOrEqualValidator(value, rule) {
+    if (!moment(value).isSameOrAfter(rule.date, "day")) {
+      return i18n("form_kit.errors.date_after_or_equal", {
+        date: moment(rule.date).format("LL"),
+      });
+    }
   }
 
   integerValidator(value) {

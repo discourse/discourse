@@ -1,6 +1,7 @@
 .form-kit__control-input {
   z-index: 1;
   min-width: auto !important;
+  max-width: 100% !important;
 
   @include default-input;
 
