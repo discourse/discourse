@@ -7,6 +7,7 @@ const extension = {
         title: { default: null },
         autoLink: { default: null },
         attachment: { default: null },
+        "data-orig-href": { default: null },
       },
       inclusive: false,
       parseDOM: [
@@ -17,6 +18,7 @@ const extension = {
               href: dom.getAttribute("href"),
               title: dom.getAttribute("title"),
               attachment: dom.classList.contains("attachment"),
+              "data-orig-href": dom.getAttribute("data-orig-href"),
             };
           },
         },
@@ -28,6 +30,7 @@ const extension = {
             href: node.attrs.href,
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
+            "data-orig-href": node.attrs["data-orig-href"],
           },
           0,
         ];
@@ -50,6 +53,7 @@ const extension = {
           title: tok.attrGet("title") || null,
           autoLink: tok.markup === "autolink",
           attachment,
+          "data-orig-href": tok.attrGet("data-orig-href"),
         };
       },
     },
@@ -70,7 +74,9 @@ const extension = {
         }
 
         const attachment = mark.attrs.attachment ? "|attachment" : "";
-        const href = mark.attrs.href.replace(/[()"]/g, "\\$&");
+        const href =
+          mark.attrs["data-orig-href"] ??
+          mark.attrs.href.replace(/[()"]/g, "\\$&");
         const title = mark.attrs.title
           ? ` "${mark.attrs.title.replace(/"/g, '\\"')}"`
           : "";
