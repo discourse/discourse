@@ -1,0 +1,92 @@
+name: device-screenshots
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  sanitize:
+    if: github.event.comment.user.login != 'dependabot[bot]' && github.event.issue.pull_request != null
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      RAILS_ENV: test
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+      MINIO_RUNNER_LOG_LEVEL: DEBUG
+      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      USES_PARALLEL_DATABASES: "false"
+      CHEAP_SOURCE_MAPS: "1"
+      PGUSER: discourse
+      PGPASSWORD: discourse
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Get CPU cores
+        shell: bash
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
+      - name: Set PARALLEL_TEST_PROCESSORS for system tests
+        if: inputs.build_type == 'system'
+        shell: bash
+        run: |
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+
+      - name: Setup Specs
+        uses: ./.github/actions/test-setup
+        with:
+          uses_parallel_databases: ${{env.USES_PARALLEL_DATABASES}}
+          parallel_test_processors: ${{env.PARALLEL_TEST_PROCESSORS}}
+          build_type: "system"
+          target: "core"
+          browser: "Chrome"
+          cpu_cores: ${{steps.cpu-info.outputs.cpu-cores}}
+          github_token: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Check for screenshot commands in PR comment
+        if: github.event.comment.body =~ '^screenshot:'
+        shell: bash
+        run: |
+          echo "Extracting screenshot commands from PR comment..."
+
+          # Extract screenshot commands and parse device type if provided
+          SCREENSHOTS=$(echo "${{ github.event.comment.body }}" | grep -oP '^screenshot:\s*(\S+)(\s*\(\S+\))?' || true)
+
+          if [[ -z "$SCREENSHOTS" ]]; then
+            echo "No screenshot commands found."
+            exit 0
+          fi
+
+          echo "Found screenshots:"
+          echo "$SCREENSHOTS"
+
+          while IFS= read -r screenshot; do
+            # Split the screenshot command into path and optional device type
+            FILE_PATH=$(echo "$screenshot" | sed -E 's/^screenshot:\s*([^ ]+).*/\1/')
+
+            echo "Running test for $FILE_PATH..."
+            RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec "$FILE_PATH"
+          done <<< "$SCREENSHOTS"
+
+      - name: Upload device system test screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: device-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
+          path: tmp/capybara/device_*.png
+
+      - name: Post Comment with Download Link
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            📸 **Screenshots Captured!**
+
+            You can download the screenshots from the Actions tab:
+
+            [Artifacts - PR_Screenshots](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
