@@ -1,5 +1,5 @@
 name: "Setup specs"
-description: "Sets up the database and other things for tests"
+description: "Sets up the database and other things for tests, and for device screenshots"
 inputs:
   uses_parallel_databases:
     required: true
