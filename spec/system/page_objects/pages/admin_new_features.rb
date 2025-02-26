@@ -47,6 +47,14 @@ module PageObjects
       def has_no_experimental_text?
         page.has_no_css?(".admin-new-feature-item__header-experimental")
       end
+
+      def toggle_experiments_only
+        toggle_switch =
+          PageObjects::Components::DToggleSwitch.new(
+            ".admin-new-features__experiments-filter .d-toggle-switch__checkbox",
+          )
+        toggle_switch.toggle
+      end
     end
   end
 end

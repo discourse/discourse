@@ -12,9 +12,16 @@ class MaxUsernameLengthValidator
       @max_range_violation = true
       return false
     end
-    return false if value < SiteSetting.min_username_length
+
+    if value < SiteSetting.min_username_length
+      @min_value_violation = true
+      return false
+    end
+
     @username = User.where("length(username) > ?", value).pick(:username)
-    @username.blank?
+    @group_name = Group.where(automatic: false).where("length(name) > ?", value).pick(:name)
+
+    @username.blank? && @group_name.blank?
   end
 
   def error_message
@@ -24,10 +31,12 @@ class MaxUsernameLengthValidator
         min: MAX_USERNAME_LENGTH_RANGE.begin,
         max: MAX_USERNAME_LENGTH_RANGE.end,
       )
-    elsif @username.blank?
+    elsif @min_value_violation
       I18n.t("site_settings.errors.max_username_length_range")
-    else
+    elsif @username.present?
       I18n.t("site_settings.errors.max_username_length_exists", username: @username)
+    elsif @group_name.present?
+      I18n.t("site_settings.errors.max_group_name_length_exists", group_name: @group_name)
     end
   end
 end

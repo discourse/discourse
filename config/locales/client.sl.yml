@@ -392,8 +392,6 @@ sl:
       abandon:
         yes_value: "Zavrzi"
         no_value: "Nadaljujt urejanje"
-      dropdown:
-        view_all: "prikaži vse"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -3709,11 +3707,28 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
-        sidebar_link:
-          all: "Vsa poročila"
+      config_sections:
+        account:
+          title: "Račun"
+        reports:
+          title: "Poročila"
+        community:
+          title: "Skupnost"
+        appearance:
+          title: "Videz"
+        email:
+          title: "E-naslov"
+        security:
+          title: "Varnost"
+        plugins:
+          title: "Vtičniki"
       config:
         developer:
           title: "Razvijalci"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderiranje"
         files:
           title: "Datoteke"
         legal:
@@ -3734,6 +3749,57 @@ sl:
           title: "Neželeno"
         user_api:
           title: "Uporabniški API"
+        dashboard:
+          title: "Nadzorna plošča"
+        users:
+          title: "Uporabniki"
+        groups:
+          title: "Skupine"
+        backups:
+          title: "Varnostne kopije"
+          sub_pages:
+            logs:
+              title: "Dnevniki"
+        reports:
+          title: "Poročila"
+        badges:
+          title: "Značke"
+        permalinks:
+          title: "Trajne povezave"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Videzi"
+        email:
+          sub_pages:
+            templates:
+              title: "Predloge"
+            sent:
+              title: "Poslano"
+            received:
+              title: "Prejeto"
+            rejected:
+              title: "Zavrnjeno"
+        email_appearance:
+          title: "Videz"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Nadzorovani e-naslovi se bodo preverili ob vsaki novi registraciji uporabniškega računa - vsak poskus bo blokiran ali bo izvedena druga akcija"
+            screened_ips:
+              title: "Nadzorovani IPji"
+            screened_urls:
+              title: "Nadzorovani URLji"
+              header_description: "Spodnji URLji se pogosto uporabljeni v prispevkih uporabnikov, ki so bili identificirani kot spamerji"
+        embedding:
+          title: "Vdelovanje"
+      search:
+        result_types:
+          theme:
+            one: "Videz"
+            two: "Videzi"
+            few: "Videzi"
+            other: "Videzi"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3944,44 +4010,12 @@ sl:
             failed: "Spodletelo"
       home:
         title: "Domov"
-      account:
-        title: "Račun"
-        sidebar_link:
-          backups: "Varnostne kopije"
-      community:
-        title: "Skupnost"
-        sidebar_link:
-          badges: "Značke"
-          notifications: "Obvestila"
-          permalinks: "Trajne povezave"
-          users: "Uporabniki"
-          groups: "Skupine"
-          legal: "Pravno"
-          moderation_flags:
-            title: "Moderiranje"
-      appearance:
-        title: "Videz"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navigacija"
-          themes: "Videzi"
-      email_settings:
-        sidebar_link:
-          appearance: "Videz"
-      security:
-        title: "Varnost"
-      section_landing_pages:
-        account:
-          title: "Račun"
-          backups:
-            title: "Varnostne kopije"
       config_areas:
         about:
           company_name: "Ime"
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
-          header: "Moderiranje"
           description: "Opis"
           enabled: "Vključeno?"
           edit: "Uredi"
@@ -4019,17 +4053,6 @@ sl:
         author: "Od %{author}"
         experimental_badge: "eksperimentalno"
         learn_more: "Več o tem"
-        sidebar_link:
-          installed: "Nameščeno"
-      advanced:
-        sidebar_link:
-          developer: "Razvijalci"
-          embedding: "Vdelovanje"
-          user_api: "Uporabniški API"
-          onebox: "Onebox"
-          files: "Datoteke"
-          other_options: "Drugo"
-          search: "Išči"
       backups:
         title: "Varnostne kopije"
         menu:
@@ -4103,9 +4126,7 @@ sl:
           common: "Skupno"
           desktop: "Namizno"
           mobile: "Mobilno"
-          settings: "Nastavitve"
           preview: "Predogled"
-          show_advanced: "Pokaži napredna polja"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"
@@ -4482,8 +4503,6 @@ sl:
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           few: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           other: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
-        delete_and_block: "Izbriši in <b>blokiraj</b> ta e-naslov in IP naslov"
-        delete_dont_block: "Samo izbriši"
         deleting_user: "Brišem uporabnika…"
         deleted: "Ta uporabnik je bil izbrisan"
         activate: "Aktiviraj račun"

@@ -13,13 +13,12 @@ ru:
             delete_automation: удалить автоматизацию
     discourse_automation:
       title: Автоматизация
-      create: Создать
-      update: Обновить
+      back: Назад
+      edit: Отредактировать
       select_script: Выберите скрипт
       select_trigger: Выберите триггер
       confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
       confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
-      no_automation_yet: Вы еще не создали ни одной автоматизации. Выберите вариант ниже, чтобы начать.
       filter_placeholder: Фильтровать по имени или описанию...
       edit_automation:
         trigger_section:

@@ -44,6 +44,13 @@ $max_image_height: 150px;
 
         .thumbnail.onebox-avatar {
           display: none;
+          max-width: 20%;
+          margin-right: 0.5rem;
+        }
+
+        .thumbnail {
+          max-width: 100% !important;
+          margin: 0;
         }
 
         .aspect-image {
@@ -61,16 +68,6 @@ $max_image_height: 150px;
 
         p {
           margin-top: 0.5rem;
-        }
-
-        .thumbnail {
-          max-width: 100% !important;
-          margin: 0;
-
-          &.onebox-avatar {
-            max-width: 20%;
-            margin-right: 0.5rem;
-          }
         }
       }
     }

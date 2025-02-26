@@ -20,6 +20,10 @@ module PageObjects
         self
       end
 
+      def dark_mode_checkbox
+        page.find('.dark-mode input[type="checkbox"]')
+      end
+
       def save_changes
         click_button "Save Changes"
         expect(page).to have_content(I18n.t("js.saved"))

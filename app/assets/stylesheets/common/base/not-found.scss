@@ -13,11 +13,18 @@
 
   &-search {
     margin-top: 20px;
+
+    label {
+      color: var(--primary);
+      font-size: var(--font-up-3);
+      margin-bottom: 0.5em;
+    }
   }
 }
 
 .page-not-found-topics {
   display: flex;
+
   @media screen and (max-width: 600px) {
     flex-wrap: wrap;
   }
@@ -30,6 +37,7 @@
   max-width: 400px;
   margin-bottom: 40px;
   padding-right: 20px;
+
   @media screen and (max-width: 600px) {
     width: 100%;
   }
@@ -44,6 +52,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   margin-bottom: 15px;
+
   @media screen and (max-width: 600px) {
     &:nth-of-type(n + 6) {
       display: none;
@@ -52,13 +61,5 @@
 
   a:not(.badge-category__wrapper) {
     flex-basis: 100%;
-  }
-}
-
-.page-not-found-search {
-  label {
-    color: var(--primary);
-    font-size: var(--font-up-3);
-    margin-bottom: 0.5em;
   }
 }

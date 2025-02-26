@@ -21,18 +21,15 @@
       }}
     </span>
 
-    <form>
-      <label></label>
-      <EmailGroupUserChooser
-        @value={{this.newOwner}}
-        @autofocus={{true}}
-        @onChange={{this.updateNewOwner}}
-        @options={{hash
-          maximum=1
-          filterPlaceholder="topic.change_owner.placeholder"
-        }}
-      />
-    </form>
+    <EmailGroupUserChooser
+      @value={{this.newOwner}}
+      @autofocus={{true}}
+      @onChange={{this.updateNewOwner}}
+      @options={{hash
+        maximum=1
+        filterPlaceholder="topic.change_owner.placeholder"
+      }}
+    />
   </:body>
   <:footer>
     <DButton

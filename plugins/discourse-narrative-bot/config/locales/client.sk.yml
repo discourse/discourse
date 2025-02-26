@@ -10,3 +10,8 @@ sk:
       welcome_post_type:
         new_user_track: "Začnite s novým používateľským návodom pre všetkých nových používateľov"
         welcome_message: "Pošlite všetkým novým používateľom uvítaciu správu s rýchlym sprievodcom"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Príbehový Bot Discourse"

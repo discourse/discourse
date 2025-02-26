@@ -1,15 +1,16 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { computedI18n } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
-import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
 
 export default class InvitePanel extends Component {
+  @service site;
   @readOnly("currentUser.staff") isStaff;
   @readOnly("currentUser.admin") isAdmin;
   @alias("inviteModel.id") topicId;
@@ -307,9 +308,10 @@ export default class InvitePanel extends Component {
   }
 
   setGroupOptions() {
-    Group.findAll().then((groups) => {
-      this.set("allGroups", groups.filterBy("automatic", false));
-    });
+    this.set(
+      "allGroups",
+      this.site.groups.filter((g) => !g.automatic)
+    );
   }
 
   @action

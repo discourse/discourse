@@ -548,7 +548,6 @@ pl_PL:
       dropdown:
         title: "Otwórz menu najnowszych wersji roboczych"
         untitled: "Wersja robocza bez tytułu"
-        view_all: "pokaż wszystkie"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -5010,6 +5009,10 @@ pl_PL:
       no_results:
         title: "Brak wyników"
         description: 'Nie mogliśmy znaleźć niczego pasującego do ‘%{filter}’.<br><br>Czy chcesz <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">przeszukać ustawienia witryny</a> lub <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">listę użytkowników administratora?</a>'
+      footer:
+        interface_color_selector:
+          light: "Jasny"
+          dark: "Ciemny"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5134,15 +5137,38 @@ pl_PL:
       reports:
         title: "Lista dostępnych zgłoszeń"
         sidebar_title: "Zgłoszenia"
-        sidebar_link:
-          all: "Wszystkie zgłoszenia"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Zgłoszenia"
+        community:
+          title: "Społeczność"
+        appearance:
+          title: "Wygląd"
+        email:
+          title: "E-mail"
+        security:
+          title: "Bezpieczeństwo"
+        plugins:
+          title: "Wtyczki"
+        advanced:
+          title: "Zaawansowane"
       config:
+        about:
+          title: "O Twojej witrynie"
         developer:
           title: "Deweloperskie"
           header_description: "Ustawienia deweloperskie do kontrolowania limitów szybkości, mnożników i obliczeń, trybu bezpiecznego i innych zaawansowanych funkcji."
         experimental:
           title: "Eksperymentalne"
           header_description: "Włączaj lub wyłączaj eksperymentalne funkcje dla swojej witryny, większość z nich może być kontrolowana dla grupy."
+        emojis:
+          title: "Emoji"
+          header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie"
+        flags:
+          title: "Moderacja"
+          header_description: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
         font_style:
           title: "Styl czcionki"
           header_description: "Dostosuj style czcionek używane w Twoich motywach"
@@ -5191,6 +5217,101 @@ pl_PL:
         group_permissions:
           title: "Uprawnienia grupy"
           header_description: "Tutaj zarządzane są wszystkie uprawnienia aplikacji oparte na grupach, które kontrolują dostęp do różnych funkcji w Discourse"
+        dashboard:
+          title: "Panel"
+        users:
+          title: "Użytkownicy"
+        groups:
+          title: "Grupy"
+        site_settings:
+          title: "Wszystkie ustawienia witryny"
+        whats_new:
+          title: "Co nowego?"
+          keywords: "dziennik zmian|funkcja|wydanie"
+        backups:
+          title: "Kopie zapasowe"
+          header_description: "Kopie zapasowe Discourse obejmują pełną bazę danych witryny, która zawiera wszystko na stronie: tematy, posty, użytkownicy, grupy, ustawienia, motywy itp. W zależności od tego, jak tworzony jest plik kopii zapasowej, może on zawierać przesłane pliki lub nie."
+          sub_pages:
+            logs:
+              title: "Logi"
+        reports:
+          title: "Zgłoszenia"
+        badges:
+          title: "Odznaki"
+          header_description: "Odznaki nagradzają użytkowników za ich aktywność, wkład i osiągnięcia, aby rozpoznawać, potwierdzać i zachęcać do pozytywnych zachowań i zaangażowania w społeczności"
+        permalinks:
+          title: "Permalinki"
+          header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
+        user_fields:
+          title: "Pola użytkownika"
+          header_description: "Twórz niestandardowe pola użytkownika, aby zbierać dodatkowe informacje o członkach społeczności. Możesz wybrać, jakie informacje są wymagane podczas rejestracji, co jest wyświetlane w profilach i co użytkownicy mogą aktualizować."
+        watched_words:
+          title: "Obserwowane słowa"
+          header_description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
+        color_palettes:
+          title: "Palety kolorów"
+        emoji:
+          title: "Emoji"
+          header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie."
+        themes:
+          title: "Motywy"
+          header_description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe"
+        components:
+          title: "Komponenty"
+        site_texts:
+          title: "Teksty witryny"
+        email:
+          title: "Konfiguracja serwera i logi"
+          sub_pages:
+            preview_summary:
+              header_description: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników"
+            templates:
+              title: "Szablony"
+            sent:
+              title: "Wysłane"
+            skipped:
+              title: "Pominięte"
+            bounced:
+              title: "Odbite"
+            received:
+              title: "Otrzymane"
+            rejected:
+              title: "Odrzucony"
+        email_appearance:
+          title: "Wygląd"
+          header_description: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS"
+        staff_action_logs:
+          title: "Logi i kontrola"
+          sub_pages:
+            screened_emails:
+              header_description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana"
+            screened_ips:
+              title: "Ekranowane adresy IP"
+            screened_urls:
+              title: "Ekranowane URLe"
+              header_description: "URLe wypisane tutaj były używane we wpisach przez użytkowników wykrytych jako spamerzy"
+        plugins:
+          title: "Zainstalowane wtyczki"
+          header_description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście"
+        api_keys:
+          title: "Klucze API"
+        webhooks:
+          title: "Webhooki"
+        embedding:
+          title: "Osadzanie"
+          header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+      search:
+        result_types:
+          theme:
+            one: "Motyw"
+            few: "Motywy"
+            many: "Motywy"
+            other: "Motywy"
+          component:
+            one: "Komponent"
+            few: "Komponenty"
+            many: "Komponenty"
+            other: "Komponenty"
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
@@ -5654,68 +5775,8 @@ pl_PL:
             failed: "Niepowodzenie"
       home:
         title: "Strona główna"
-      account:
-        title: "Konto"
-        sidebar_link:
-          backups: "Kopie zapasowe"
-          whats_new:
-            title: "Co nowego?"
-            keywords: "dziennik zmian|funkcja|wydanie"
-      community:
-        title: "Społeczność"
-        sidebar_link:
-          about_your_site: "O Twojej witrynie"
-          badges: "Odznaki"
-          login_and_authentication: "Logowanie i uwierzytelnianie"
-          notifications: "Powiadomienia"
-          permalinks: "Permalinki"
-          trust_levels: "Poziomy zaufania"
-          group_permissions: "Uprawnienia grupy"
-          users: "Użytkownicy"
-          groups: "Grupy"
-          user_fields: "Pola użytkownika"
-          watched_words: "Obserwowane słowa"
-          legal: "Prawne"
-          moderation_flags:
-            title: "Moderacja"
-      appearance:
-        title: "Wygląd"
-        sidebar_link:
-          font_style: "Styl czcionki"
-          site_logo: "Logo witryny"
-          color_schemes: "Palety kolorów"
-          emoji: "Emoji"
-          navigation: "Nawigacja"
-          themes: "Motywy"
-          components:
-            title: "Komponenty"
-            keywords: "motyw|rozszerzenie"
-          site_texts: "Teksty witryny"
-      email_settings:
-        title: "Ustawienia e-mail"
-        sidebar_link:
-          appearance: "Wygląd"
-          server_setup:
-            title: "Konfiguracja serwera i logi"
-      security:
-        title: "Bezpieczeństwo"
-        sidebar_link:
-          security: "Ustawienia zabezpieczeń"
-          spam: "Ustawienia spamu"
-          staff_action_logs:
-            title: "Logi i kontrola"
-      section_landing_pages:
-        account:
-          title: "Konto"
-          backups:
-            title: "Kopie zapasowe"
-            description: "Wykonaj kopię zapasową danych swojej witryny"
-          whats_new:
-            title: "Co nowego?"
-            description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
-          header: "O Twojej witrynie"
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
           community_name_placeholder: "Przykładowa społeczność"
@@ -5723,8 +5784,6 @@ pl_PL:
           community_description: "Opis społeczności"
           community_title: "Tytuł społeczności"
           banner_image: "Obraz banera"
-          banner_image_help: |
-            Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
           community_owner_placeholder: "Jan Kowalski"
@@ -5751,9 +5810,7 @@ pl_PL:
             your_organization_saved: "Twoja organizacja została zapisana"
           saved: "zapisano!"
         flags:
-          header: "Moderacja"
           edit_header: "Edytuj flagę"
-          subheader: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
           description: "Opis"
           enabled: "Włączona?"
           add: "Dodaj flagę"
@@ -5796,7 +5853,6 @@ pl_PL:
           more_options:
             title: "Więcej opcji"
         look_and_feel:
-          title: "Wygląd i odczucia"
           themes:
             title: "Motywy"
             themes_intro_img_alt: "Nowy symbol zastępczy motywu"
@@ -5817,8 +5873,6 @@ pl_PL:
           save_successful: "Pole użytkownika zapisane."
       plugins:
         title: "Wtyczki"
-        installed: "Zainstalowane wtyczki"
-        description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście."
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"
@@ -5833,24 +5887,6 @@ pl_PL:
         author: "Przez %{author}"
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
-        sidebar_link:
-          installed: "Zainstalowane"
-      advanced:
-        title: "Zaawansowane"
-        sidebar_link:
-          api_keys:
-            title: "Klucze API"
-          webhooks: "Webhooki"
-          developer: "Deweloperskie"
-          embedding: "Osadzanie"
-          rate_limits: "Ograniczenia szybkości"
-          user_api: "API użytkownika"
-          onebox: "Onebox"
-          files: "Pliki"
-          other_options: "Inne"
-          search: "Szukaj"
-          experimental: "Eksperymentalne"
-          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5858,7 +5894,6 @@ pl_PL:
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
-        description: "Kopie zapasowe Discourse obejmują pełną bazę danych witryny, która zawiera wszystko na stronie: tematy, posty, użytkownicy, grupy, ustawienia, motywy itp. W zależności od tego, jak tworzony jest plik kopii zapasowej, może on zawierać przesłane pliki lub nie."
         menu:
           backups: "Kopie zapasowe"
           backup_files: "Pliki kopii zapasowej"
@@ -5998,16 +6033,11 @@ pl_PL:
           common: "Wspólne"
           desktop: "Komputer"
           mobile: "Mobilnie"
-          settings: "Ustawienia"
-          translations: "Tłumaczenia"
-          extra_scss: "Dodatkowy SCSS"
           extra_files: "Dodatkowe pliki"
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
           settings_editor: "Edytor ustawień"
-          show_advanced: "Pokaż pola zaawansowane"
-          hide_advanced: "Ukryj pola zaawansowane"
           hide_unused_fields: "Ukryj nieużywane pola"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
@@ -6266,6 +6296,9 @@ pl_PL:
           hover:
             name: "najechanie"
             description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
+          editor:
+            light: "Jasny"
+            dark: "Ciemny"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
@@ -6900,8 +6933,6 @@ pl_PL:
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
         delete_confirm_title: "Czy na pewno chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
-        delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
-        delete_dont_block: "Tylko usuń"
         deleting_user: "Usuwanie użytkownika…"
         deleted: "Użytkownik został usunięty."
         delete_failed: "Wystąpił błąd podczas usuwania użytkownika. Upewnij się, że wszystkie wpisy zostały usunięte przed przystąpieniem do usuwania użytkownika."

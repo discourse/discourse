@@ -3,7 +3,7 @@ import $ from "jquery";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
-function extractErrorInfo(error, defaultMessage) {
+export function extractErrorInfo(error, defaultMessage) {
   if (error instanceof Error) {
     // eslint-disable-next-line no-console
     console.error(error.stack);

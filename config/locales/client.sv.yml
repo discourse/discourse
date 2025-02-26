@@ -391,8 +391,6 @@ sv:
         confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
-      dropdown:
-        view_all: "visa alla"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -4271,6 +4269,10 @@ sv:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
       filter: "Filter..."
+      footer:
+        interface_color_selector:
+          light: "Ljust"
+          dark: "Mörkt"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4386,11 +4388,32 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
-        sidebar_link:
-          all: "Alla rapporter"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Rapporter"
+        community:
+          title: "Community"
+        appearance:
+          title: "Utseende"
+        email:
+          title: "E-postadress"
+        security:
+          title: "Säkerhet"
+        plugins:
+          title: "Tillägg"
+        advanced:
+          title: "Avancerat"
       config:
+        about:
+          title: "Om din webbplats"
         developer:
           title: "Utvecklare"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderering"
         files:
           title: "Filer"
         legal:
@@ -4413,6 +4436,70 @@ sv:
           title: "Skräppost"
         user_api:
           title: "Användar-API"
+        dashboard:
+          title: "Översiktspanel"
+        users:
+          title: "Användare"
+        groups:
+          title: "Grupper"
+        backups:
+          title: "Säkerhetskopior"
+          sub_pages:
+            logs:
+              title: "Loggar"
+        reports:
+          title: "Rapporter"
+        badges:
+          title: "Utmärkelser"
+        permalinks:
+          title: "Permalänkar"
+          header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Teman"
+        components:
+          title: "Komponenter"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
+            templates:
+              title: "Mallar"
+            sent:
+              title: "Skickade"
+            skipped:
+              title: "Överhoppade"
+            bounced:
+              title: "Studsade"
+            received:
+              title: "Mottagna"
+            rejected:
+              title: "Avvisade"
+        email_appearance:
+          title: "Utseende"
+          header_description: "Anpassa mallen där alla e-post renderas, samt stil genom CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas"
+            screened_ips:
+              title: "Granskade IP-adresser"
+            screened_urls:
+              title: "Granskade URL:er"
+              header_description: "URL:erna i denna lista har använts i inlägg av användare som har identifierats som skräppostare"
+        webhooks:
+          title: "Webhookar"
+        embedding:
+          title: "Inbäddning"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Teman"
+          component:
+            one: "Komponent"
+            other: "Komponenter"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4817,45 +4904,8 @@ sv:
             failed: "Misslyckad"
       home:
         title: "Hem"
-      account:
-        title: "Konto"
-        sidebar_link:
-          backups: "Säkerhetskopior"
-      community:
-        title: "Community"
-        sidebar_link:
-          about_your_site: "Om din webbplats"
-          badges: "Utmärkelser"
-          notifications: "Aviseringar"
-          permalinks: "Permalänkar"
-          users: "Användare"
-          groups: "Grupper"
-          legal: "Juridik"
-          moderation_flags:
-            title: "Moderering"
-      appearance:
-        title: "Utseende"
-        sidebar_link:
-          site_logo: "Webbplatsens logotyp"
-          emoji: "Emoji"
-          navigation: "Navigering"
-          themes: "Teman"
-          components:
-            title: "Komponenter"
-      email_settings:
-        title: "E-postinställningar"
-        sidebar_link:
-          appearance: "Utseende"
-      security:
-        title: "Säkerhet"
-      section_landing_pages:
-        account:
-          title: "Konto"
-          backups:
-            title: "Säkerhetskopior"
       config_areas:
         about:
-          header: "Om din webbplats"
           community_name: "Forumets namn"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
@@ -4867,7 +4917,6 @@ sv:
           update: "Uppdatera"
           saved: "sparat!"
         flags:
-          header: "Moderering"
           description: "Beskrivning"
           enabled: "Aktiverad?"
           edit: "Redigera"
@@ -4889,7 +4938,6 @@ sv:
           edit: "Redigera"
           delete: "Radera"
         look_and_feel:
-          title: "Utseende och känsla"
           themes:
             title: "Teman"
         user_fields:
@@ -4910,19 +4958,6 @@ sv:
         author: "Av %{author}"
         experimental_badge: "experimentell"
         learn_more: "Läs mer"
-        sidebar_link:
-          installed: "Installerad"
-      advanced:
-        title: "Avancerat"
-        sidebar_link:
-          webhooks: "Webhookar"
-          developer: "Utvecklare"
-          embedding: "Inbäddning"
-          user_api: "Användar-API"
-          onebox: "Onebox"
-          files: "Filer"
-          other_options: "Övrigt"
-          search: "Sök"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
@@ -5062,16 +5097,11 @@ sv:
           common: "Vanlig"
           desktop: "Skrivbord"
           mobile: "Mobil"
-          settings: "Inställningar"
-          translations: "Översättningar"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra filer"
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
           settings_editor: "Inställningar för redigerare"
-          show_advanced: "Visa avancerade fält"
-          hide_advanced: "Dölj avancerade fält"
           hide_unused_fields: "Dölj oanvända fält"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
@@ -5285,6 +5315,9 @@ sv:
           hover:
             name: "hovra"
             description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
+          editor:
+            light: "Ljust"
+            dark: "Mörkt"
         robots:
           title: "Åsidosätt din sidas robots.txt-fil:"
           warning: "Detta kommer att permanent åsidosätta alla relaterade webbplatsinställningar."
@@ -5857,8 +5890,6 @@ sv:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
         delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
-        delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
-        delete_dont_block: "Radera enbart"
         deleting_user: "Raderar användare…"
         deleted: "Användaren har raderats."
         delete_failed: "Ett problem uppstod då användaren skulle raderas. Kontrollera att alla inlägg är borttagna innan du försöker radera användaren."

@@ -2,12 +2,13 @@ import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
-import { bind, debounce } from "discourse/lib/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import scrollLock from "discourse/lib/scroll-lock";
@@ -64,8 +65,9 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
-    window.removeEventListener("scroll", this._recalculateHeaderOffset);
+    window.removeEventListener("scroll", this.debouncedRecalculateHeaderOffset);
     this._resizeObserver.disconnect();
+    cancel(this.recalculationTimer);
   }
 
   get dropDownHeaderEnabled() {
@@ -84,8 +86,16 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  @debounce(DEBOUNCE_HEADER_DELAY)
-  _recalculateHeaderOffset() {
+  @bind
+  debouncedRecalculateHeaderOffset() {
+    this.recalculationTimer = discourseDebounce(
+      this,
+      this.recalculateHeaderOffset,
+      DEBOUNCE_HEADER_DELAY
+    );
+  }
+
+  recalculateHeaderOffset() {
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -176,7 +186,7 @@ export default class GlimmerSiteHeader extends Component {
         this.headerElement = this._headerWrap.querySelector("header.d-header");
       });
 
-      window.addEventListener("scroll", this._recalculateHeaderOffset, {
+      window.addEventListener("scroll", this.debouncedRecalculateHeaderOffset, {
         passive: true,
       });
 
@@ -184,7 +194,9 @@ export default class GlimmerSiteHeader extends Component {
       const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
 
-      this._resizeObserver = new ResizeObserver(this._recalculateHeaderOffset);
+      this._resizeObserver = new ResizeObserver(
+        this.debouncedRecalculateHeaderOffset
+      );
       this._resizeObserver.observe(document.querySelector(".discourse-root"));
     }
   }
@@ -259,8 +271,10 @@ export default class GlimmerSiteHeader extends Component {
 
         waitForPromise(animationFinished);
 
-        cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
-        cloakElement.style.display = "block";
+        if (cloakElement) {
+          cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
+          cloakElement.style.display = "block";
+        }
 
         animationFinished.then(() => {
           if (isTesting()) {

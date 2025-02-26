@@ -13,13 +13,16 @@ zh_CN:
             delete_automation: 删除自动化
     discourse_automation:
       title: 自动化
-      create: 创建
-      update: 更新
+      table_title: 自动化
+      create: 添加自动化
+      update: 更新自动化
+      back: 返回
+      edit: 编辑
       select_script: 选择脚本
       select_trigger: 选择触发器
       confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
       confirm_automation_trigger: 此操作将触发自动化，要继续吗？
-      no_automation_yet: 您尚未创建任何自动化。请选择以下选项以开始。
+      no_automation_yet: 目前尚未配置自动化。
       filter_placeholder: 按名称或描述筛选…
       edit_automation:
         trigger_section:

@@ -7,8 +7,8 @@
 hr:
   js:
     discourse_automation:
-      create: Kreiraj
-      update: Ažuriraj
+      back: Natrag
+      edit: Uredi
       fields:
         user:
           label: Korisnik

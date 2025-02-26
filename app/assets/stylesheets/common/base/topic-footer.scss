@@ -1,13 +1,13 @@
 #topic-footer-buttons {
   display: flex;
-
-  html.anon & {
-    justify-content: end;
-  }
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
       var(--topic-body-width-padding) * 2
   );
+
+  html.anon & {
+    justify-content: end;
+  }
 
   .topic-footer-main-buttons {
     display: flex;
@@ -45,20 +45,30 @@
   z-index: z("timeline");
   pointer-events: none; // the wrapper can block mobile controls
 
-  #topic-progress-wrapper {
-    pointer-events: auto; // this unsets the above rule so the element is interactive
+  > * {
+    pointer-events: auto; // this unsets the above rule so the child elements are interactive
+  }
+
+  .composer-open:not(.composer-has-preview) & {
+    position: fixed;
+    max-width: var(--composer-max-width--hide-preview);
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
   }
 }
 
 #topic-progress-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+
   &.docked {
     .toggle-admin-menu {
       display: none;
     }
   }
-  display: flex;
-  justify-content: flex-end;
-  overflow: hidden;
 
   .btn {
     border: 0;

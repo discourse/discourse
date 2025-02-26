@@ -35,3 +35,8 @@ Discourse/Plugins/NoMonkeyPatching:
 Lint/Debugger:
   Exclude:
     - script/**/*
+
+RSpec/InstanceVariable:
+  Enabled: true
+  Include:
+    - spec/models/**/*
