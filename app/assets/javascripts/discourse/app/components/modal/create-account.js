@@ -481,7 +481,7 @@ export default class CreateAccount extends Component.extend(
     }
     return i18n("create_account.associate", {
       associate_link: url,
-      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
+      provider: i18n(`login.${this.authOptions.auth_provider}.name`),
     });
   }
 
