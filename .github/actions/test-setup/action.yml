@@ -45,6 +45,9 @@ runs:
 
     - name: Start Postgres
       shell: bash
+      env:
+        PGUSER: discourse
+        PGPASSWORD: discourse
       run: |
         chown -R postgres /var/run/postgresql
         sudo -E -u postgres script/start_test_db.rb
@@ -117,18 +120,14 @@ runs:
 
     - name: Fetch app state cache
       shell: bash
-      uses: actions/cache@v4
-      id: app-cache
-      with:
-        path: tmp/app-cache
-        key: >-
-          ${{ runner.os }}-
-          ${{ steps.cpu-info.outputs.cpu-cores }}-
-          ${{ hashFiles('.github/workflows/tests.yml') }}-
-          ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-          ${{ hashFiles('config/environments/test.rb') }}-
-          ${{ inputs.uses_parallel_databases }}-
-          ${{ env.PARALLEL_TEST_PROCESSORS }}-
+      run: |
+        CACHE_KEY="${{ runner.os }}-$(echo '${{ steps.cpu-info.outputs.cpu-cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ env.PARALLEL_TEST_PROCESSORS }}"
+
+        echo "Attempting to restore cache with key: $CACHE_KEY"
+
+        gh cache restore tmp/app-cache --key "$CACHE_KEY" || echo "No cache available"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Restore database from cache
       shell: bash
@@ -167,13 +166,20 @@ runs:
       run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
     - name: Fetch turbo_rspec_runtime.log cache
-      uses: actions/cache@v4
-      id: test-runtime-cache
       if: inputs.build_type == 'backend' || inputs.build_type == 'system'
-      with:
-        path: tmp/turbo_rspec_runtime.log
-        key: rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-${{ github.run_id }}
-        restore-keys: rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-
+      shell: bash
+      run: |
+        CACHE_KEY="rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-${{ github.run_id }}"
+        RESTORE_KEYS="rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-"
+
+        echo "Attempting to restore cache with key: $CACHE_KEY or restore keys: $RESTORE_KEYS"
+
+        if ! gh cache restore tmp/turbo_rspec_runtime.log --key "$CACHE_KEY"; then
+          echo "Cache not found, trying restore key: $RESTORE_KEYS"
+          gh cache restore tmp/turbo_rspec_runtime.log --key "$RESTORE_KEYS" || echo "No cache available"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Check Zeitwerk reloading
       shell: bash
