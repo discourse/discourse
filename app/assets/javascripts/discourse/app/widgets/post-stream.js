@@ -302,7 +302,7 @@ export default createWidget("post-stream", {
         // The following properties will have to be untangled from the transformed model when
         // converting this widget to a Glimmer component:
         // canCreatePost, showReadIndicator, prevPost, nextPost
-        result.push(this.attach("post", transformed, { model: post }));
+        // result.push(this.attach("post", transformed, { model: post }));
         result.push(
           this.attach("glimmer-post", {
             post,
