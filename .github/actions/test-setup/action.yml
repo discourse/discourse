@@ -16,15 +16,12 @@ inputs:
   cpu_cores:
     required: true
     description: "Number of cores that we are working with"
+  parallel_test_processors:
+    required: true
+    description: "BLAH"
 runs:
   using: "composite"
   steps:
-    - name: Set PARALLEL_TEST_PROCESSORS for system tests
-      if: inputs.build_type == 'system'
-      shell: bash
-      run: |
-        echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
-
     - name: Set QUNIT_PARALLEL for QUnit tests
       if: inputs.build_type == 'frontend'
       shell: bash
@@ -119,7 +116,7 @@ runs:
     - name: Fetch app state cache
       shell: bash
       run: |
-        CACHE_KEY="${{ runner.os }}-$(echo '${{ inputs.cpu_cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ env.PARALLEL_TEST_PROCESSORS }}"
+        CACHE_KEY="${{ runner.os }}-$(echo '${{ inputs.cpu_cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ inputs.parallel_test_processors }}"
 
         echo "Attempting to restore cache with key: $CACHE_KEY"
 

@@ -83,10 +83,17 @@ jobs:
         id: cpu-info
         run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
+      - name: Set PARALLEL_TEST_PROCESSORS for system tests
+        if: inputs.build_type == 'system'
+        shell: bash
+        run: |
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+
       - name: Setup Specs
         uses: ./.github/actions/test-setup
         with:
           uses_parallel_databases: ${{env.USES_PARALLEL_DATABASES}}
+          parallel_test_processors: ${{env.PARALLEL_TEST_PROCESSORS}}
           build_type: ${{matrix.build_type}}
           target: ${{matrix.target}}
           browser: ${{matrix.browser}}
