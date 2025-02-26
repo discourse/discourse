@@ -34,7 +34,21 @@
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
     "morphlex": "^0.0.16",
-    "pretty-text": "workspace:1.0.0"
+    "orderedmap": "^2.1.1",
+    "pretty-text": "workspace:1.0.0",
+    "prosemirror-commands": "^1.6.0",
+    "prosemirror-dropcursor": "^1.8.1",
+    "prosemirror-gapcursor": "^1.3.2",
+    "prosemirror-highlightjs": "^0.9.1",
+    "prosemirror-history": "^1.4.1",
+    "prosemirror-inputrules": "^1.4.0",
+    "prosemirror-keymap": "^1.2.2",
+    "prosemirror-markdown": "^1.13.1",
+    "prosemirror-model": "^1.23.0",
+    "prosemirror-schema-list": "^1.4.1",
+    "prosemirror-state": "^1.4.3",
+    "prosemirror-transform": "^1.10.2",
+    "prosemirror-view": "^1.34.3"
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
@@ -98,7 +112,7 @@
     "ember-modifier": "^4.2.0",
     "ember-qunit": "^9.0.1",
     "ember-source": "~5.12.0",
-    "ember-template-imports": "^4.2.0",
+    "ember-template-imports": "^4.3.0",
     "ember-test-selectors": "^7.0.0",
     "float-kit": "workspace:1.0.0",
     "html-entities": "^2.5.2",
@@ -130,7 +144,7 @@
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": ">= 9"
+    "pnpm": "^9"
   },
   "ember": {
     "edition": "octane"

@@ -58,7 +58,7 @@ export default class Item extends Component {
     let expandPinned;
     if (
       !this.args.topic.pinned ||
-      (this.site.mobileView && !this.siteSettings.show_pinned_excerpt_mobile) ||
+      (this.useMobileLayout && !this.siteSettings.show_pinned_excerpt_mobile) ||
       (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
     ) {
       expandPinned = false;
@@ -71,7 +71,7 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-expand-pinned",
       expandPinned,
-      { topic: this.args.topic, mobileView: this.site.mobileView }
+      { topic: this.args.topic, mobileView: this.useMobileLayout }
     );
   }
 

@@ -339,7 +339,7 @@ pt_BR:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Não é possível adicionar nenhum dos valores a seguir à configuração: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Você não pode desativar a remoção de metadados de imagem se 'a imagem de otimização de mídia do compositor habilitada' estiver ativada. Desative a 'imagem de otimização de mídia do compositor ativada' antes de desativar a remoção dos metadados da imagem."
       twitter_summary_large_image_no_svg: "Imagens de resumo do Twitter usadas para metadados twitter:image não podem ser uma imagem .svg."
-      tl0_and_anonymous_flag: "O e-mail de contato do site ou o endereço de e-mail para denúncia de conteúdo ilegal devem ser fornecidos para usuários(as) anônimos(as)."
+      tl0_and_anonymous_flag: "É preciso informar o \"site contact email\" ou \"email address to report illegal content\" para usuários(as) anônimos(as)."
     conflicting_google_user_id: 'A ID da conta Google para esta conta foi alterada. A intervenção da equipe é necessária por razões de segurança. Entre em contato com a equipe e direcione para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque o servidor \"%{hostname}\" não pôde ser encontrado. Em vez da pré-visualização, apenas um link aparecerá na sua postagem. :cry:"
@@ -2119,7 +2119,7 @@ pt_BR:
     auto_respond_to_flag_actions: "Ative resposta automática ao remover sinalizador."
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que o(a) usuário(a) deve passar digitando durante a primeira postagem. Se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação necessária. Defina como 0 para desativar (não recomendado)"
     fast_typing_threshold: "Tempo mínimo, em milissegundos, que o(a) usuário(a) tem para escrever sua primeira postagem. Se o limite não for cumprido, a postagem entrará automaticamente na fila de revisão. Baixo é 1 segundo, o padrão são 3 segundos e alto são 5 segundos."
-    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem a \"fast typing threshold\""
+    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem ao \"limite de digitação rápida\""
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
     auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"

@@ -4977,9 +4977,11 @@ pl_PL:
             users:
               content: "Użytkownicy"
               title: "Lista wszystkich użytkowników"
-            my_drafts:
-              content: "Moje szkice"
-              title: "Moje nieopublikowane wersje robocze"
+            my_posts:
+              content: "Wysłane"
+              content_drafts: "Moje szkice"
+              title: "Moja ostatnia aktywność w temacie"
+              title_drafts: "Moje nieopublikowane wersje robocze"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"

@@ -5137,9 +5137,11 @@ he:
             users:
               content: "משתמשים"
               title: "רשימת כל המשתמשים"
-            my_drafts:
-              content: "הטיוטות שלי"
-              title: "הטיוטות שלא פרסמתי"
+            my_posts:
+              content: "הפוסטים שלי"
+              content_drafts: "הטיוטות שלי"
+              title: "הפעילות האחרונה שלי בנושא"
+              title_drafts: "הטיוטות שלא פרסמתי"
               draft_count:
                 one: "טיוטה %{count}"
                 two: "%{count} טיוטות"

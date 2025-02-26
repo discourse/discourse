@@ -3631,7 +3631,8 @@ vi:
               content: "Nhóm"
             users:
               content: "Người dùng"
-            my_drafts:
+            my_posts:
+              content: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
             review:

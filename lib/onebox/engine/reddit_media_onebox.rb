@@ -6,7 +6,8 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(www\.)?reddit\.com})
+      always_https
+      matches_domain("reddit.com", "www.reddit.com")
 
       def to_html
         if raw[:type] == "image"

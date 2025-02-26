@@ -214,7 +214,7 @@ acceptance("Composer", function (needs) {
         "supports keyboard shortcuts"
       );
 
-    await click("#reply-control a.cancel");
+    await click("#reply-control button.cancel");
     assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
     await click(".d-modal__footer .discard-draft");
@@ -776,7 +776,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post:nth-of-type(3) button.reply");
-    await click("#reply-control .save-or-cancel a.cancel");
+    await click("#reply-control .save-or-cancel button.cancel");
     await click(".topic-footer-main-buttons button.create");
     await click(".reply-details summary div");
     assert

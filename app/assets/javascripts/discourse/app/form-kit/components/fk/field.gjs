@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
@@ -40,6 +43,30 @@ export default class FKField extends Component {
     }
   }
 
+  @action
+  componentFor(component, field) {
+    const instance = this;
+    const baseArguments = {
+      get errors() {
+        return instance.args.errors;
+      },
+      unregisterField: instance.args.unregisterField,
+      registerField: instance.args.registerField,
+      component,
+      field,
+    };
+
+    if (!component.controlType) {
+      throw new Error(
+        `Static property \`controlType\` is required on component:\n\n ${component}`
+      );
+    }
+
+    field.type = component.controlType;
+
+    return curryComponent(FKControlWrapper, baseArguments, getOwner(this));
+  }
+
   <template>
     <FKFieldData
       @name={{@name}}
@@ -66,104 +93,20 @@ export default class FKField extends Component {
       <this.wrapper @size={{@size}}>
         {{yield
           (hash
-            Custom=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlCustom
-              field=field
-            )
-            Code=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlCode
-              field=field
-            )
-            Question=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlQuestion
-              field=field
-            )
-            Textarea=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlTextarea
-              field=field
-            )
-            Checkbox=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlCheckbox
-              field=field
-            )
-            Image=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlImage
-              field=field
-            )
-            Password=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlPassword
-              field=field
-            )
-            Composer=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlComposer
-              field=field
-            )
-            Icon=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlIcon
-              field=field
-            )
-            Toggle=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlToggle
-              field=field
-            )
-            Menu=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlMenu
-              field=field
-            )
-            Select=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlSelect
-              field=field
-            )
-            Input=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlInput
-              field=field
-            )
-            RadioGroup=(component
-              FKControlWrapper
-              unregisterField=@unregisterField
-              errors=@errors
-              component=FKControlRadioGroup
-              field=field
-            )
+            Custom=(this.componentFor FKControlCustom field)
+            Code=(this.componentFor FKControlCode field)
+            Question=(this.componentFor FKControlQuestion field)
+            Textarea=(this.componentFor FKControlTextarea field)
+            Checkbox=(this.componentFor FKControlCheckbox field)
+            Image=(this.componentFor FKControlImage field)
+            Password=(this.componentFor FKControlPassword field)
+            Composer=(this.componentFor FKControlComposer field)
+            Icon=(this.componentFor FKControlIcon field)
+            Toggle=(this.componentFor FKControlToggle field)
+            Menu=(this.componentFor FKControlMenu field)
+            Select=(this.componentFor FKControlSelect field)
+            Input=(this.componentFor FKControlInput field)
+            RadioGroup=(this.componentFor FKControlRadioGroup field)
             errorId=field.errorId
             id=field.id
             name=field.name

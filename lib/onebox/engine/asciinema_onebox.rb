@@ -7,7 +7,11 @@ module Onebox
       include StandardEmbed
 
       always_https
-      matches_regexp(/^https?:\/\/asciinema\.org\/a\/[\p{Alnum}_\-]+$/)
+      matches_domain("asciinema.org")
+
+      def self.matches_path(path)
+        path.match?(%r{^/a/[\p{Alnum}_\-]+$})
+      end
 
       def to_html
         "<script type='text/javascript' src='https://asciinema.org/a/#{match[:asciinema_id]}.js' id='asciicast-#{match[:asciinema_id]}' async></script>"

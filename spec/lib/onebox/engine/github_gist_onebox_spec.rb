@@ -70,4 +70,31 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
       end
     end
   end
+
+  describe ".===" do
+    it "matches valid Gist URL" do
+      valid_url = URI("https://gist.github.com/username/123456")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid Gist URL with trailing slash" do
+      valid_url_with_slash = URI("https://gist.github.com/username/123456/")
+      expect(described_class === valid_url_with_slash).to eq(true)
+    end
+
+    it "does not match URL with extra domain" do
+      malicious_url = URI("https://gist.github.com.malicious.com/username/123456")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match URL with subdomain" do
+      subdomain_url = URI("https://sub.gist.github.com/username/123456")
+      expect(described_class === subdomain_url).to eq(false)
+    end
+
+    it "does not match URL with wrong domain" do
+      invalid_url = URI("https://gist.github.io/username/123456")
+      expect(described_class === invalid_url).to eq(false)
+    end
+  end
 end
