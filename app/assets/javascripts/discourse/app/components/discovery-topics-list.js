@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import { log } from "qunit";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import LoadMore from "discourse/mixins/load-more";
 
