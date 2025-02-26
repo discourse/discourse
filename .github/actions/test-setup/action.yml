@@ -13,13 +13,12 @@ inputs:
   browser:
     required: true
     description: "The browser that QUnit tests are running in"
+  cpu_cores:
+    required: true
+    description: "Number of cores that we are working with"
 runs:
   using: "composite"
   steps:
-    - name: Install GitHub CLI
-      shell: bash
-      run: sudo apt-get install -y gh
-
     - name: Set PARALLEL_TEST_PROCESSORS for system tests
       if: inputs.build_type == 'system'
       shell: bash
@@ -117,15 +116,10 @@ runs:
         echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
         echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-    - name: Get CPU cores
-      shell: bash
-      id: cpu-info
-      run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
     - name: Fetch app state cache
       shell: bash
       run: |
-        CACHE_KEY="${{ runner.os }}-$(echo '${{ steps.cpu-info.outputs.cpu-cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ env.PARALLEL_TEST_PROCESSORS }}"
+        CACHE_KEY="${{ runner.os }}-$(echo '${{ inputs.cpu_cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ env.PARALLEL_TEST_PROCESSORS }}"
 
         echo "Attempting to restore cache with key: $CACHE_KEY"
 
