@@ -28,6 +28,11 @@ module(
         '<p><a href="https://example.com/file.pdf" class="attachment">File</a></p>',
         "[File|attachment](https://example.com/file.pdf)",
       ],
+      "attachment link with hash upload": [
+        "[File|attachment](upload://some-hash)",
+        '<p><a href="/404" class="attachment" data-orig-href="upload://some-hash">File</a></p>',
+        "[File|attachment](upload://some-hash)",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;
