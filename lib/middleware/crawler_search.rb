@@ -16,8 +16,6 @@ module Middleware
       if should_hide_search_results?
         env["DISABLE_DISCOURSE_ANONYMOUS_CACHE"] = true
 
-        puts env.inspect
-
         return [
           200,
           { "Content-Type" => "text/html", "X-Robots-Tag" => "noindex" },

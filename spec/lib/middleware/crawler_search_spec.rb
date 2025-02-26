@@ -16,7 +16,6 @@ RSpec.describe Middleware::CrawlerSearch do
     it "should return a noindex page for crawlers" do
       middleware = Middleware::CrawlerSearch.new(->(env) { [200, {}, [""]] })
       status, headers, response = middleware.call(env)
-      puts env.inspect
 
       expect(status).to eq(200)
       expect(headers).to eq({ "Content-Type" => "text/html", "X-Robots-Tag" => "noindex" })
