@@ -1,31 +1,39 @@
 name: "Setup specs"
 description: "Sets up the database and other things for tests"
+inputs:
+  uses_parallel_databases:
+    required: true
+    description: "Run specs in parallel, only should be true if build_type is backend or system"
+  build_type:
+    required: true
+    description: "Building for system, backend, or frontend tests, or model annotations"
+  target:
+    required: true
+    description: "Whether we are testing themes, plugins, or core"
+  browser:
+    required: true
+    description: "The browser that QUnit tests are running in"
 env:
   MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
   MINIO_RUNNER_LOG_LEVEL: DEBUG
-  TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-  TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+  TESTEM_BROWSER: ${{ (startsWith(inputs.browser, 'Firefox') && 'Firefox') || inputs.browser }}
+  TESTEM_FIREFOX_PATH: ${{ (inputs.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
   CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
   CHEAP_SOURCE_MAPS: "1"
   PGUSER: discourse
   PGPASSWORD: discourse
-inputs:
-  uses_parallel_databases:
-    required: true
-  build_type:
-    required: true
-  target:
-    required: true
 runs:
   using: "composite"
   steps:
     - name: Set PARALLEL_TEST_PROCESSORS for system tests
       if: inputs.build_type == 'system'
+      shell: bash
       run: |
         echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
 
     - name: Set QUNIT_PARALLEL for QUnit tests
       if: inputs.build_type == 'frontend'
+      shell: bash
       run: |
         if [ "${{ inputs.target }}" = "themes" ]; then
           echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
@@ -34,25 +42,30 @@ runs:
         fi
 
     - name: Setup Git
+      shell: bash
       run: |
         git config --global user.email "ci@ci.invalid"
         git config --global user.name "Discourse CI"
 
     - name: Start redis
+      shell: bash
       run: |
         redis-server /etc/redis/redis.conf &
 
     - name: Start Postgres
+      shell: bash
       run: |
         chown -R postgres /var/run/postgresql
         sudo -E -u postgres script/start_test_db.rb
         sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
     - name: Symlink vendor/bundle from image
+      shell: bash
       run: |
         ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
     - name: Setup gems
+      shell: bash
       run: |
         gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
         bundle config --local path vendor/bundle
@@ -62,13 +75,16 @@ runs:
         bundle clean
 
     - name: pnpm install
+      shell: bash
       run: pnpm install --frozen-lockfile
 
     - name: Checkout official plugins
+      shell: bash
       if: inputs.target == 'plugins'
       run: bin/rake plugin:install_all_official
 
     - name: Symlinking plugin gems from image
+      shell: bash
       if: inputs.target == 'plugins'
       run: |
         for dir in /var/www/discourse/plugins/*/gems; do
@@ -87,24 +103,29 @@ runs:
         done
 
     - name: Pull compatible versions of plugins
+      shell: bash
       if: inputs.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
       run: bin/rake plugin:pull_compatible_all
 
     - name: Checkout official themes
+      shell: bash
       if: inputs.target == 'themes'
       run: bin/rake themes:clone_all_official themes:pull_compatible_all
 
     - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      shell: bash
       if: inputs.build_type == 'system' && inputs.target == 'core'
       run: |
         echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
         echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
     - name: Get CPU cores
+      shell: bash
       id: cpu-info
       run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
     - name: Fetch app state cache
+      shell: bash
       uses: actions/cache@v4
       id: app-cache
       with:
@@ -119,20 +140,24 @@ runs:
           ${{ env.PARALLEL_TEST_PROCESSORS }}-
 
     - name: Restore database from cache
+      shell: bash
       if: steps.app-cache.outputs.cache-hit == 'true'
       run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
 
     - name: Restore uploads from cache
+      shell: bash
       if: steps.app-cache.outputs.cache-hit == 'true'
       run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
     - name: Create and migrate database
+      shell: bash
       if: steps.app-cache.outputs.cache-hit != 'true'
       run: |
         bin/rake db:create
         script/silence_successful_output bin/rake db:migrate
 
     - name: Create and migrate parallel databases
+      shell: bash
       if: >-
         inputs.uses_parallel_databases == 'true' &&
         steps.app-cache.outputs.cache-hit != 'true'
@@ -141,10 +166,12 @@ runs:
         script/silence_successful_output bin/rake parallel:migrate
 
     - name: Dump database for cache
+      shell: bash
       if: steps.app-cache.outputs.cache-hit != 'true'
       run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
 
     - name: Dump uploads for cache
+      shell: bash
       if: steps.app-cache.outputs.cache-hit != 'true'
       run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
@@ -158,6 +185,7 @@ runs:
         restore-keys: rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-
 
     - name: Check Zeitwerk reloading
+      shell: bash
       if: inputs.build_type == 'backend'
       env:
         LOAD_PLUGINS: ${{ (inputs.target == 'plugins') && '1' || '0' }}
