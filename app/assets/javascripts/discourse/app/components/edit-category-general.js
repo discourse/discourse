@@ -8,6 +8,7 @@ import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
+import { i18n } from "discourse-i18n";
 
 export default class EditCategoryGeneral extends buildCategoryPanel("general") {
   @not("category.isUncategorizedCategory") canSelectParentCategory;
@@ -20,6 +21,21 @@ export default class EditCategoryGeneral extends buildCategoryPanel("general") {
   );
 
   foregroundColors = ["FFFFFF", "000000"];
+
+  badgeTypes = [
+    {
+      name: i18n("category.badge_type.options.icon"),
+      value: "icon",
+    },
+    {
+      name: i18n("category.badge_type.options.color"),
+      value: "color",
+    },
+    {
+      name: i18n("category.badge_type.options.emoji"),
+      value: "emoji",
+    },
+  ];
 
   didInsertElement() {
     super.didInsertElement(...arguments);

@@ -232,6 +232,8 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
+  enum :thumbnail_type, { color: 0, icon: 1, emoji: 2 }
+
   def self.preload_user_fields!(guardian, categories)
     category_ids = categories.map(&:id)
 

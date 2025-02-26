@@ -64,7 +64,45 @@
   <section class="field category-colors">
     <label>{{i18n "category.badge_colors"}}</label>
     <div class="category-color-editor">
-      {{html-safe this.categoryBadgePreview}}
+      <section class="field">
+        {{html-safe this.categoryBadgePreview}}
+      </section>
+
+      <section class="field">
+        <label>{{i18n "category.badge_type.title"}}</label>
+        <div class="badge-type field">
+          <ComboBox
+            @valueProperty="value"
+            @value={{this.category.badge_type}}
+            @content={{this.badgeTypes}}
+            @onChange={{fn (mut this.category.badge_type)}}
+            @options={{hash none="category.badge_type.none"}}
+          />
+        </div>
+        <div class="badge-value field">
+          <label>{{i18n "category.badge_type.label"}}</label>
+          {{! if emoji then show emoji picker }}
+          {{! else if icon then show icon picker }}
+          {{! else if color then show color picker }}
+
+          {{#if (eq this.category.thumbnail_type "emoji")}}
+            <EmojiPicker
+              @value={{this.category.thumbnail}}
+              @onChange={{fn (mut this.category.thumbnail)}}
+            />
+          {{else if (eq this.category.thumbnail_type "icon")}}
+            <IconPicker
+              @value={{this.category.thumbnail}}
+              @onChange={{fn (mut this.category.thumbnail)}}
+            />
+          {{else if (eq this.category.thumbnail_type "color")}}
+            <ColorInput
+              @hexValue={{this.category.thumbnail}}
+              @valid={{this.category.thumbnailValid}}
+            />
+          {{/if}}
+        </div>
+      </section>
 
       <section class="field">
         <span id="background-color-label" class="color-title">{{i18n

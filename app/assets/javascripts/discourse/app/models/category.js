@@ -761,6 +761,8 @@ export default class Category extends RestModel {
         moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
+        thumbnail_type: this.thumbnail_type,
+        thumbnail_value: this.thumbnail_value,
       }),
       type: id ? "PUT" : "POST",
     });
