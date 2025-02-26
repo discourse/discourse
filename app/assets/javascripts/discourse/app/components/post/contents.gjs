@@ -191,7 +191,7 @@ export default class PostContents extends Component {
       {{/if}}
 
       {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
-        <a class="expand-hidden" {{on "click" this.args.expandHidden}}>
+        <a class="expand-hidden" {{on "click" @expandHidden}}>
           {{i18n "post.show_hidden"}}
         </a>
       {{/if}}

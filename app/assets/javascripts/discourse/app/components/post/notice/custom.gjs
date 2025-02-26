@@ -39,7 +39,6 @@ export default class PostNoticeCustom extends Component {
         {{#in-element this.createdByAnchorElement}}
           <UserLink
             title={{this.createdByName}}
-            role="listitem"
             @username={{@post.notice_created_by_user.username}}
             @ariaHidden={{false}}
           >

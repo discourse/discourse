@@ -34,7 +34,7 @@ export default class PostMetaDataReplyToTab {
       }}
       tabindex="0"
       title="post.in_reply_to"
-      {{on "click" this.args.toggleReplyAbove}}
+      {{on "click" @toggleReplyAbove}}
     >
       {{#if @repliesAbove.loading}}
         <div class="spinner small"></div>

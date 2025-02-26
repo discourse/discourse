@@ -93,8 +93,6 @@ export default class Post extends Component {
       }}
     >
       {{#unless @cloaked}}
-        {{log "editPost" @editPost}}
-
         <PostArticle
           id={{this.id}}
           @post={{@post}}
