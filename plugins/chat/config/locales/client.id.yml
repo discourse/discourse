@@ -116,6 +116,7 @@ id:
         tabs:
           members: Anggota
           settings: Pengaturan
+        remove_member: "Hapus"
       new_message_modal:
         title: Kirim pesan
         add_user_long: <kbd>shift + click</kbd> atau <kbd>shift + enter</kbd><span>Tambahkan @%{username}</span>

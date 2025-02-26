@@ -18,7 +18,7 @@
       }
 
       &.is-expanded {
-        @include user-select(text);
+        user-select: text;
         max-height: 80px;
         overflow-y: scroll;
       }

@@ -1,6 +1,7 @@
 // Styles for /admin/users
 .display-row.associations .value {
   width: 750px;
+
   @media (max-width: $mobile-breakpoint) {
     width: 75%;
     float: right;
@@ -43,6 +44,7 @@
     width: 17.65765%;
     min-width: 125px;
     margin-left: 12px;
+
     @media (max-width: $mobile-breakpoint) {
       margin-left: 0;
       line-height: var(--line-height-large);
@@ -79,6 +81,7 @@
 
   .controls {
     margin-left: 12px;
+
     @media (max-width: $mobile-breakpoint) {
       width: 75%;
       text-align: left;

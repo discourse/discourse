@@ -59,6 +59,7 @@ de:
     deleted_chat_username: gelöscht
     errors:
       users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
+      user_cant_be_removed_from_channel: "Der Benutzer kann nicht aus diesem Kanal entfernt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
@@ -235,6 +236,12 @@ de:
         private_email:
           one: "[%{site_name}] Neue Nachricht"
           other: "[%{site_name}] Neue Nachrichten"
+        watched_thread:
+          one: "[%{site_name}] Neue Thread-Nachricht in %{channel}"
+          other: "[%{site_name}] Neue Thread-Nachrichten in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen"
+          other: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen"
         chat_dm_1:
           one: "[%{site_name}] Neue Nachricht von %{name}"
           other: "[%{site_name}] Neue Nachrichten von %{name}"

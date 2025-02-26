@@ -555,7 +555,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(6) # 1 + 5 (bootstrap mode)
+          expect(UserHistory.count).to eq(5)
         end
       end
     end
@@ -785,7 +785,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(7) # 2 + 5 (bootstrap mode)
+          expect(UserHistory.count).to eq(6)
         end
 
         it "updates per-category settings correctly" do

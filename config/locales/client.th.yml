@@ -2528,9 +2528,22 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      config_sections:
+        account:
+          title: "บัญชี"
+        community:
+          title: "ชุมชน"
+        email:
+          title: "อีเมล"
+        security:
+          title: "ความปลอดภัย"
+        plugins:
+          title: "ตัวเสริม"
       config:
         developer:
           title: "นักพัฒนา"
+        emojis:
+          title: "Emoji"
         files:
           title: "ไฟล์"
         legal:
@@ -2547,6 +2560,42 @@ th:
           title: "ความปลอดภัย"
         spam:
           title: "ขยะ"
+        dashboard:
+          title: "แดชบอร์ด"
+        users:
+          title: "ผู้ใช้"
+        groups:
+          title: "กลุ่ม"
+        backups:
+          title: "สำรอง"
+        badges:
+          title: "เหรียญ"
+        permalinks:
+          title: "ลิงค์ถาวร"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "ธีม"
+        email:
+          sub_pages:
+            templates:
+              title: "รูปแบบ"
+            sent:
+              title: "ส่ง"
+            skipped:
+              title: "ข้าม"
+            received:
+              title: "รับ"
+            rejected:
+              title: "ถูกปฏิเสธ"
+        embedding:
+          title: "ฝั่ง"
+      search:
+        result_types:
+          setting:
+            other: "การตั้งค่า"
+          theme:
+            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2689,31 +2738,6 @@ th:
             failed: "ล้มเหลว"
       home:
         title: "หน้าแรก"
-      account:
-        title: "บัญชี"
-        sidebar_link:
-          backups: "สำรอง"
-      community:
-        title: "ชุมชน"
-        sidebar_link:
-          badges: "เหรียญ"
-          notifications: "การแจ้งเตือน"
-          permalinks: "ลิงค์ถาวร"
-          users: "ผู้ใช้"
-          groups: "กลุ่ม"
-          legal: "กฎ"
-      appearance:
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "การนำทาง"
-          themes: "ธีม"
-      security:
-        title: "ความปลอดภัย"
-      section_landing_pages:
-        account:
-          title: "บัญชี"
-          backups:
-            title: "สำรอง"
       config_areas:
         about:
           company_name: "ชื่อ"
@@ -2757,15 +2781,6 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
-        sidebar_link:
-          installed: "ติดตั้งแล้ว"
-      advanced:
-        sidebar_link:
-          developer: "นักพัฒนา"
-          embedding: "ฝั่ง"
-          files: "ไฟล์"
-          other_options: "อื่นๆ"
-          search: "ค้นหา"
       backups:
         title: "สำรอง"
         menu:
@@ -2820,7 +2835,6 @@ th:
           save: "บันทึก"
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
-          settings: "การตั้งค่า"
           preview: "แสดงตัวอย่าง"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"

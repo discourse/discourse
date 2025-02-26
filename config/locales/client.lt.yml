@@ -3663,11 +3663,28 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
-        sidebar_link:
-          all: "Visi pranešimai"
+      config_sections:
+        account:
+          title: "Paskyra"
+        reports:
+          title: "Pranešimai"
+        community:
+          title: "Bendruomenė"
+        appearance:
+          title: "išvaizda"
+        email:
+          title: "El. paštas"
+        security:
+          title: "Apsauga"
+        plugins:
+          title: "Apklausos"
       config:
         developer:
           title: "Programuotojams"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderavimas"
         files:
           title: "Failai"
         legal:
@@ -3688,6 +3705,67 @@ lt:
           title: "Šlamštas"
         user_api:
           title: "Nario API"
+        dashboard:
+          title: "Apžvalga"
+        users:
+          title: "Vartotojai"
+        groups:
+          title: "Grupės"
+        backups:
+          title: "Atsarginės kopijos"
+          sub_pages:
+            logs:
+              title: "Įrašai"
+        reports:
+          title: "Pranešimai"
+        badges:
+          title: "Trofėjai"
+        permalinks:
+          title: "Laikinos Nuorodos"
+          header_description: "Peradresavimai taikyti URL, kurių forumas nežino"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temos"
+        components:
+          title: "Komponentai"
+        email:
+          sub_pages:
+            templates:
+              title: "Juodraščiai"
+            sent:
+              title: "Išsiųsti"
+            skipped:
+              title: "Praleisti"
+            received:
+              title: "Gauta"
+            rejected:
+              title: "Atmesta"
+        email_appearance:
+          title: "išvaizda"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kai kažkas kuria naują paskyrą, naudojamas el. pašto adresas bus patikrintas, o registracija bus užblokuota"
+            screened_ips:
+              title: "Tikrinti IP adresai"
+            screened_urls:
+              title: "Tikrintos nuorodos"
+              header_description: "Sąraše esantys URL buvo naudojami vartotojų, kurie yra pažymėti, kaip kenkėjai"
+        embedding:
+          title: "Įterpimai"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            few: "Temos"
+            many: "Temos"
+            other: "Temos"
+          component:
+            one: "Komponentas"
+            few: "Komponentai"
+            many: "Komponentai"
+            other: "Komponentai"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -3947,39 +4025,6 @@ lt:
             failed: "Nepavyko"
       home:
         title: "Pradinis"
-      account:
-        title: "Paskyra"
-        sidebar_link:
-          backups: "Atsarginės kopijos"
-      community:
-        title: "Bendruomenė"
-        sidebar_link:
-          badges: "Trofėjai"
-          notifications: "Pranešimai"
-          permalinks: "Laikinos Nuorodos"
-          users: "Vartotojai"
-          groups: "Grupės"
-          legal: "Naudojimosi taisyklės"
-          moderation_flags:
-            title: "Moderavimas"
-      appearance:
-        title: "išvaizda"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navigacija"
-          themes: "Temos"
-          components:
-            title: "Komponentai"
-      email_settings:
-        sidebar_link:
-          appearance: "išvaizda"
-      security:
-        title: "Apsauga"
-      section_landing_pages:
-        account:
-          title: "Paskyra"
-          backups:
-            title: "Atsarginės kopijos"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3988,7 +4033,6 @@ lt:
           update: "Atnaujinti"
           saved: "išsaugota!"
         flags:
-          header: "Moderavimas"
           description: "Aprašymas"
           enabled: "Galimas?"
           edit: "Redaguoti"
@@ -4026,17 +4070,6 @@ lt:
         howto: "Kaip galiu instaliuoti plungin'us?"
         author: "Pagal %{author}"
         learn_more: "Sužinoti daugiau"
-        sidebar_link:
-          installed: "Įrašyta"
-      advanced:
-        sidebar_link:
-          developer: "Programuotojams"
-          embedding: "Įterpimai"
-          user_api: "Nario API"
-          onebox: "Laukelio nustatymai"
-          files: "Failai"
-          other_options: "Kiti"
-          search: "Paieška"
       backups:
         title: "Atsarginės kopijos"
         menu:
@@ -4149,15 +4182,10 @@ lt:
           common: "Dažni"
           desktop: "Darbalaukis"
           mobile: "Mobilus"
-          settings: "Nustatymai"
-          translations: "Vertimai"
-          extra_scss: "Papildomas SCSS"
           extra_files: "Papildomi failai"
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
-          show_advanced: "Rodyti išplėstinius laukus"
-          hide_advanced: "Slėpti išplėstinius laukus"
           hide_unused_fields: "Slėpti nenaudojamus laukus"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
@@ -4319,6 +4347,9 @@ lt:
             description: "Mygtuko \"Patinka\" spalva."
           selected:
             name: "pasirinktas"
+          editor:
+            light: "Šviesi"
+            dark: "Tamsi"
         robots:
           title: "Nepaisykite savo svetainės robots.txt failo:"
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."

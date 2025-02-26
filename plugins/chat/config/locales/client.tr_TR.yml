@@ -342,6 +342,7 @@ tr_TR:
         tabs:
           members: Üyeler
           settings: Ayarlar
+        remove_member: "Kaldır"
       new_message_modal:
         title: Mesaj gönder
         add_user_long: <kbd>shift + tıklama</kbd> veya <kbd>shift + enter</kbd><span>@%{username} ekleyin</span>

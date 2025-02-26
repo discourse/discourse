@@ -59,6 +59,7 @@ uk:
     deleted_chat_username: видалено
     errors:
       users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
+      user_cant_be_removed_from_channel: "Користувач не може бути видалений з цього каналу"
       channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"
@@ -265,6 +266,16 @@ uk:
           few: "[%{site_name}] Нові повідомлення"
           many: "[%{site_name}] Нові повідомлення"
           other: "[%{site_name}] Нові повідомлення"
+        watched_thread:
+          one: "[%{site_name}] Нове повідомлення в темі %{channel}"
+          few: "[%{site_name}] Нові повідомлення в темі %{channel}"
+          many: "[%{site_name}] Нові повідомлення в темі %{channel}"
+          other: "[%{site_name}] Нові повідомлення в темі %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інше"
+          few: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
+          many: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
+          other: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
         chat_dm_1:
           one: "[%{site_name}] Нове повідомлення від %{name}"
           few: "[%{site_name}] Нове повідомлення від %{name}"

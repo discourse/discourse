@@ -19,6 +19,7 @@
   .category-name {
     display: inline-block;
     max-width: 100%;
+
     @include ellipsis;
     vertical-align: text-top;
     line-height: var(--line-height-medium);
@@ -164,6 +165,7 @@
     font-size: var(--font-0);
     color: var(--primary-med-or-secondary-high);
     position: relative;
+
     @include line-clamp(4);
 
     //  allow clicks to fall through the description text to the category below...
@@ -252,6 +254,7 @@
     .subcategory {
       display: flex;
       align-items: center;
+
       @include ellipsis;
       margin-bottom: 0.6em;
 
@@ -267,6 +270,7 @@
 
       .subcategory-link {
         min-width: 0;
+
         @include ellipsis;
       }
 

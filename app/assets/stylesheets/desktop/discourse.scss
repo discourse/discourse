@@ -120,6 +120,7 @@ select {
 
   .control-group {
     margin-bottom: 18px;
+
     @include clearfix;
   }
 

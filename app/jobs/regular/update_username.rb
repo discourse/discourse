@@ -3,6 +3,9 @@
 module Jobs
   class UpdateUsername < ::Jobs::Base
     sidekiq_options queue: "low"
+    # this is an extremely expensive job
+    # we are limiting it so only 1 per cluster runs
+    cluster_concurrency 1
 
     def execute(args)
       @user_id = args[:user_id]
@@ -110,7 +113,12 @@ module Jobs
                                         ELSE NULL END
                         )
                     )) :: JSON
-        WHERE data ILIKE '%' || :old_username || '%'
+        WHERE data ILIKE '%' || :old_username || '%' AND (
+          data :: JSONB ->> 'original_username' = :old_username OR
+          data :: JSONB ->> 'display_username' = :old_username OR
+          data :: JSONB ->> 'username' = :old_username OR
+          data :: JSONB ->> 'username2' = :old_username
+        )
       SQL
     end
 

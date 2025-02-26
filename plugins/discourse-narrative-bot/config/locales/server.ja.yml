@@ -168,22 +168,8 @@ ja:
 
           - コミュニティーでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。
       onebox:
-        instructions: |-
-          次に、下のいずれかのリンクを私にシェアしてください。**リンクだけを 1 行で**返信すると、気の利いた要約を含めて自動的に展開表示されます。
-
-          リンクは、モバイルでは長押しし、マウスを使用している場合は右クリックするとコピーできます。
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクで使用できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
-        not_found: |-
-          残念ですが、返信にリンクが見つかりませんでした！:cry:
-
-          次のリンクを追加してみてください。次の返信にリンクだけを 1 行に含めてください。
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           ここにユニコーンの画像があります。

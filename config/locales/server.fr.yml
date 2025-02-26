@@ -314,9 +314,6 @@ fr:
     site_settings:
       invalid_site_setting: "Aucun paramètre nommé « %{name} » n'existe"
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
-      site_setting_is_hidden: "Vous n'avez pas l'autorisation de modifier les paramètres masqués"
-      site_setting_is_shadowed_globally: "Vous ne pouvez pas modifier ce paramètre, car il est configuré globalement"
-      site_setting_is_unconfigurable: "Vous n'avez pas l'autorisation de modifier les paramètres non configurables"
       invalid_choice:
         one: "« %{name} » n'est pas un choix valide."
         other: "« %{name} » ne sont pas des choix valides."

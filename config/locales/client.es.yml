@@ -4794,15 +4794,39 @@ es:
         meta_doc: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
-        sidebar_link:
-          all: "Todos los informes"
+      config_sections:
+        account:
+          title: "Cuenta"
+        reports:
+          title: "Informes"
+        community:
+          title: "Comunidad"
+        appearance:
+          title: "Aspecto"
+        email:
+          title: "Correo electrónico"
+        security:
+          title: "Seguridad"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Avanzado"
       config:
+        about:
+          title: "Acerca de tu sitio"
+          header_description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
         developer:
           title: "Desarrollador"
           header_description: "Ajustes del desarrollador para controlar los límites de velocidad, multiplicadores y cálculos, modo seguro y otras funciones avanzadas"
         experimental:
           title: "Experimental"
           header_description: "Activa o desactiva las características experimentales de tu sitio; la mayoría de ellas se pueden controlar en grupo"
+        emojis:
+          title: "Emoji"
+          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo"
+        flags:
+          title: "Moderación"
+          header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
         font_style:
           title: "Estilo de letra"
           header_description: "Personaliza los estilos de fuente utilizados por tus temas"
@@ -4851,6 +4875,110 @@ es:
         group_permissions:
           title: "Permisos de grupo"
           header_description: "Aquí se gestionan todos los permisos de aplicaciones basados en grupos, que controlan el acceso a diversas funciones dentro de Discourse"
+        dashboard:
+          title: "Panel de control"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        site_settings:
+          title: "Todos los ajustes del sitio"
+        whats_new:
+          title: "Novedades"
+          keywords: "registro de cambios|característica|lanzamiento"
+        backups:
+          title: "Copias de seguridad"
+          header_description: "Las copias de seguridad de Discourse incluyen la base de datos completa del sitio, que contiene todo lo que hay en él: temas, entradas, usuarios, grupos, ajustes, etc. Dependiendo de cómo se cree el archivo de copia de seguridad, puede incluir o no las cargas."
+          sub_pages:
+            logs:
+              title: "Registros"
+        reports:
+          title: "Informes"
+          header_description: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
+        badges:
+          title: "Medallas"
+          header_description: "Las insignias recompensan a los usuarios por sus actividades, contribuciones y logros para reconocer, validar y fomentar el comportamiento positivo y el compromiso dentro de la comunidad"
+        permalinks:
+          title: "Enlaces permanentes"
+          header_description: "Redirecciones para URL que no existan ya en el foro"
+        user_fields:
+          title: "Campos de usuario"
+          header_description: "Crea campos de usuario personalizados para recopilar detalles adicionales sobre los miembros de tu comunidad. Puedes elegir qué información se requiere durante el registro, qué se muestra en los perfiles y qué pueden actualizar los usuarios."
+        watched_words:
+          title: "Palabras vigiladas"
+          header_description: "Las palabras vigiladas son herramientas de moderación que pueden realizar varias acciones diferentes, como bloquear, censurar, enlazar o denunciar publicaciones que contengan determinadas palabras"
+        color_palettes:
+          title: "Paletas de colores"
+        emoji:
+          title: "Emoji"
+          header_description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
+        themes:
+          title: "Tema"
+          header_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end"
+        components:
+          title: "Componentes"
+          header_description: "Los componentes son pequeñas personalizaciones que pueden añadirse a los temas para cambiar elementos específicos del estilo del diseño de tu foro"
+        site_texts:
+          title: "Textos del sitio"
+        email:
+          title: "Configuración y registros del servidor"
+          header_description: "Personaliza las plantillas utilizadas para crear correos electrónicos, previsualiza los correos electrónicos de resumen que se enviarán y consulta los registros de correo electrónico"
+          keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
+          sub_pages:
+            preview_summary:
+              title: "Previsualizar resumen"
+              header_description: "Previsualiza el contenido de los correos electrónicos de resumen enviados a los usuarios inactivos"
+            advanced_test:
+              title: "Prueba avanzada"
+            templates:
+              title: "Plantillas"
+            sent:
+              title: "Enviado"
+            skipped:
+              title: "Omitido"
+            bounced:
+              title: "Rebotado"
+            received:
+              title: "Recibido"
+            rejected:
+              title: "Rechazados"
+        email_appearance:
+          title: "Aspecto"
+          header_description: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS"
+        staff_action_logs:
+          title: "Registros y cribado"
+          header_description: "Los registros y la selección te permiten supervisar y gestionar tu comunidad, garantizando que siga siendo segura y respetuosa. Puedes ver los registros de todas las acciones realizadas por los miembros del personal, buscar registros y configurar la selección de usuarios"
+          keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
+          sub_pages:
+            screened_emails:
+              title: "Correos bloqueados"
+              header_description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción"
+            screened_ips:
+              title: "Direcciones IP bloqueadas"
+            screened_urls:
+              title: "URL bloqueadas"
+              header_description: "Las URL listadas aquí fueron utilizadas en publicaciones de usuarios identificados como spammers"
+            search_logs:
+              title: "Registros de búsqueda"
+        plugins:
+          title: "Plugins instalados"
+          header_description: "En esta lista aparecerán todos los plugins de Discourse que tengas instalados o los que vienen preinstalados con el alojamiento de Discourse"
+        api_keys:
+          title: "Claves API"
+          header_description: "La característica de claves API te permite integrar Discourse de forma segura con sistemas externos y automatizar acciones. Los administradores pueden crear claves con ámbitos específicos para controlar el acceso a recursos y datos sensibles. Los ámbitos limitan la funcionalidad, garantizando una mayor seguridad."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incrustado"
+          header_description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Tema"
+          component:
+            one: "Componente"
+            other: "Componentes"
       new_features:
         title: "Novedades"
         check_for_updates: "Buscar actualizaciones"
@@ -5322,72 +5450,8 @@ es:
             failed: "Falló"
       home:
         title: "Inicio"
-      account:
-        title: "Cuenta"
-        sidebar_link:
-          backups: "Copias de seguridad"
-          whats_new:
-            title: "Novedades"
-            keywords: "registro de cambios|característica|lanzamiento"
-      community:
-        title: "Comunidad"
-        sidebar_link:
-          about_your_site: "Acerca de tu sitio"
-          badges: "Medallas"
-          login_and_authentication: "Inicio de sesión y autenticación"
-          notifications: "Notificaciones"
-          permalinks: "Enlaces permanentes"
-          trust_levels: "Niveles de confianza"
-          group_permissions: "Permisos de grupo"
-          users: "Usuarios"
-          groups: "Grupos"
-          user_fields: "Campos de usuario"
-          watched_words: "Palabras vigiladas"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderación"
-            keywords: "denunciar|revisar"
-      appearance:
-        title: "Aspecto"
-        sidebar_link:
-          font_style: "Estilo de letra"
-          site_logo: "Logotipo del sitio"
-          color_schemes: "Paletas de colores"
-          emoji: "Emoji"
-          navigation: "Navegación"
-          themes: "Temas"
-          components:
-            title: "Componentes"
-            keywords: "tema|extensión"
-          site_texts: "Textos del sitio"
-      email_settings:
-        title: "Ajustes del correo electrónico"
-        sidebar_link:
-          appearance: "Aspecto"
-          server_setup:
-            title: "Configuración y registros del servidor"
-            keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
-      security:
-        title: "Seguridad"
-        sidebar_link:
-          security: "Ajustes de seguridad"
-          spam: "Ajustes de correo no deseado"
-          staff_action_logs:
-            title: "Registros y cribado"
-            keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
-      section_landing_pages:
-        account:
-          title: "Cuenta"
-          backups:
-            title: "Copias de seguridad"
-            description: "Haz una copia de seguridad de los datos de tu sitio web"
-          whats_new:
-            title: "Novedades"
-            description: "Descubre nuevas versiones y mejoras de Discourse"
       config_areas:
         about:
-          header: "Acerca de tu sitio"
-          description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
           general_settings: "Ajustes generales"
           community_name: "Nombre de la comunidad"
           community_name_placeholder: "Comunidad de ejemplo"
@@ -5437,9 +5501,7 @@ es:
             your_organization_saved: "Tu organización se ha guardado"
           saved: "guardada!"
         flags:
-          header: "Moderación"
           edit_header: "Editar denuncia"
-          subheader: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
           description: "Descripción"
           enabled: "¿Activado?"
           add: "Añadir denuncia"
@@ -5482,8 +5544,6 @@ es:
           more_options:
             title: "Más opciones"
         look_and_feel:
-          title: "Aspecto y estilo"
-          description: "Personaliza y marca tu sitio de Discourse, dándole un estilo distintivo."
           themes:
             title: "Temas"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
@@ -5505,8 +5565,6 @@ es:
           save_successful: "Campo de usuario guardado."
       plugins:
         title: "Plugins"
-        installed: "Plugins instalados"
-        description: "En esta lista aparecerán todos los plugins de Discourse que tengas instalados o los que vienen preinstalados con el alojamiento de Discourse."
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"
@@ -5521,25 +5579,6 @@ es:
         author: "Por %{author}"
         experimental_badge: "experimental"
         learn_more: "Más información"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        title: "Avanzado"
-        sidebar_link:
-          api_keys:
-            title: "Claves API"
-            keywords: "token"
-          webhooks: "Webhooks"
-          developer: "Desarrollador"
-          embedding: "Incrustado"
-          rate_limits: "Límites de velocidad"
-          user_api: "API de usuario"
-          onebox: "Onebox"
-          files: "Archivos"
-          other_options: "Otros"
-          search: "Buscar"
-          experimental: "Experimental"
-          all_site_settings: "Todos los ajustes del sitio"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"
@@ -5547,7 +5586,6 @@ es:
       backups:
         title: "Copias de seguridad"
         files_title: "Archivos de copia de seguridad"
-        description: "Las copias de seguridad de Discourse incluyen la base de datos completa del sitio, que contiene todo lo que hay en él: temas, entradas, usuarios, grupos, ajustes, etc. Dependiendo de cómo se cree el archivo de copia de seguridad, puede incluir o no las cargas."
         menu:
           backups: "Copias de seguridad"
           backup_files: "Archivos de copia de seguridad"
@@ -5691,16 +5729,11 @@ es:
           common: "Común"
           desktop: "Escritorio"
           mobile: "Móvil"
-          settings: "Ajustes"
-          translations: "Traducciones"
-          extra_scss: "Extra SCSS"
           extra_files: "Archivos extra"
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
           settings_editor: "Editor de ajustes"
-          show_advanced: "Mostrar campos avanzados"
-          hide_advanced: "Ocultar campos avanzados"
           hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
@@ -5947,6 +5980,9 @@ es:
           hover:
             name: "pasar el ratón por encima"
             description: "El color de fondo de elementos como los elementos de lista cuando se pasa el ratón sobre ellos o tienen el foco del teclado."
+          editor:
+            light: "Claro"
+            dark: "Oscuro"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."

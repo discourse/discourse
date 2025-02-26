@@ -368,9 +368,6 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
-      site_setting_is_hidden: "Nie je povolené meniť skryté nastavenia"
-      site_setting_is_shadowed_globally: "Toto nastavenie nemôžete zmeniť, pretože je globálne nakonfigurované"
-      site_setting_is_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
         few: "'%{name}' sú neplatné voľby."
@@ -2679,8 +2676,10 @@ sk:
       discourse_connect_url_is_empty: "Pred povolením tohto nastavenia musíte nastaviť \"url adresu discourse connect\"."
       enable_local_logins_disabled: "Pred povolením tohto nastavenia musíte najskôr povoliť „povoliť miestne prihlásenie“."
       min_username_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratšie používateľské meno (%{username})."
+      min_group_name_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratší názov skupiny (%{group_name})."
       min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
       max_username_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhšie používateľské meno (%{username})."
+      max_group_name_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhší názov skupiny (%{group_name})."
       max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       invalid_hex_value: "Hodnoty farieb musia byť 6-miestne hexadecimálne kódy."
       empty_selectable_avatars: "Pred povolením tohto nastavenia musíte najprv nahrať aspoň dva vyberateľné avatary."

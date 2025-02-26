@@ -224,6 +224,7 @@
 
     .input-group {
       margin: 0 0.5em;
+
       @include breakpoint(mobile-large) {
         margin: 0 0.25em;
       }
@@ -258,6 +259,7 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
+
     @include breakpoint(mobile-extra-large) {
       grid-template-columns: auto 1fr;
       justify-items: left;

@@ -310,6 +310,7 @@
 
       &.active {
         position: relative;
+
         @include nav-active;
       }
     }
@@ -394,6 +395,7 @@
     @media screen and (max-height: 1000px) {
       max-height: 50vh;
     }
+
     @media screen and (max-height: 800px) {
       max-height: 40vh;
     }
@@ -478,6 +480,7 @@
         overflow: hidden;
         display: flex;
         align-items: center;
+
         @include line-clamp(4);
 
         .icons {
@@ -938,6 +941,7 @@
       width: calc(100% - 10px);
     }
   }
+
   @media screen and (max-width: 880px) {
     table.grid {
       thead {

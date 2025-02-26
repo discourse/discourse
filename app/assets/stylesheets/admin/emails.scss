@@ -18,12 +18,14 @@
 
   .username div {
     max-width: 180px;
+
     @include ellipsis;
   }
 
   .addresses p {
     margin: 2px 0;
     max-width: 200px;
+
     @include ellipsis;
   }
 
@@ -36,6 +38,7 @@
 
   .email-address {
     max-width: 250px;
+
     @include ellipsis;
   }
 

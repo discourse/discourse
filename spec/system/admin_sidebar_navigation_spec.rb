@@ -55,10 +55,10 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
   end
@@ -109,9 +109,9 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.community.sidebar_link.user_fields"),
-        I18n.t("admin_js.admin.community.sidebar_link.moderation_flags.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
       ],
     )
     expect(page).to have_no_css(".sidebar-no-results")
@@ -128,12 +128,13 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(page).to have_css(".sidebar-sections__back-to-forum")
 
     # When match section title, display all links
-    filter.filter("Email Sett")
+    filter.filter("Email")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.appearance"),
+        I18n.t("admin_js.admin.config.email.title"),
+        I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
   end
@@ -195,10 +196,10 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
 
@@ -206,9 +207,9 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.community.sidebar_link.user_fields"),
-        I18n.t("admin_js.admin.community.sidebar_link.moderation_flags.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
       ],
     )
 
@@ -217,10 +218,10 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
   end
@@ -268,10 +269,10 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
 
@@ -293,7 +294,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     filter.filter("csp_extension")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Installed"])
+    expect(links.map(&:text)).to eq([I18n.t("admin_js.admin.config.plugins.title")])
   end
 
   it "accepts components and themes keywords for filter" do
@@ -331,12 +332,12 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
-        I18n.t("admin_js.admin.reports.sidebar_link.all"),
-        I18n.t("admin_js.admin.community.sidebar_link.watched_words"),
-        I18n.t("admin_js.admin.security.sidebar_link.staff_action_logs.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+        I18n.t("admin_js.admin.config.reports.title"),
+        I18n.t("admin_js.admin.config.watched_words.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
   end

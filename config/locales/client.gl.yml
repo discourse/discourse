@@ -3406,11 +3406,28 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
-        sidebar_link:
-          all: "Todos os informes"
+      config_sections:
+        account:
+          title: "Conta"
+        reports:
+          title: "Informes"
+        community:
+          title: "Comunidade"
+        appearance:
+          title: "Aparencia"
+        email:
+          title: "Enderezo de correo"
+        security:
+          title: "Seguranza"
+        plugins:
+          title: "Complementos"
       config:
         developer:
           title: "Desenvolvedor"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderación"
         files:
           title: "Ficheiros"
         legal:
@@ -3431,6 +3448,70 @@ gl:
           title: "Lixo"
         user_api:
           title: "API de usuario"
+        dashboard:
+          title: "Panel"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        backups:
+          title: "Copias de seguranza"
+          sub_pages:
+            logs:
+              title: "Rexistros"
+        reports:
+          title: "Informes"
+        badges:
+          title: "Insignias"
+        permalinks:
+          title: "Ligazóns permanentes"
+          header_description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temas"
+        components:
+          title: "Compoñentes"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
+            templates:
+              title: "Modelos"
+            sent:
+              title: "Enviada"
+            skipped:
+              title: "Saltada"
+            bounced:
+              title: "Rebotada"
+            received:
+              title: "Recibidas"
+            rejected:
+              title: "Rexeitada"
+        email_appearance:
+          title: "Aparencia"
+          header_description: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo e bloquearase o rexistro ou se tomará outra medida"
+            screened_ips:
+              title: "IP controlados"
+            screened_urls:
+              title: "URL controlados"
+              header_description: "Os URL listados aquí utilizáronse en publicacións de usuarios que foron identificados como emisores de lixo"
+        webhooks:
+          title: "Enganches de web (webhooks)"
+        embedding:
+          title: "Incorporando"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temas"
+          component:
+            one: "Compoñente"
+            other: "Compoñentes"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3699,39 +3780,6 @@ gl:
             failed: "Fallou"
       home:
         title: "Inicio"
-      account:
-        title: "Conta"
-        sidebar_link:
-          backups: "Copias de seguranza"
-      community:
-        title: "Comunidade"
-        sidebar_link:
-          badges: "Insignias"
-          notifications: "Notificacións"
-          permalinks: "Ligazóns permanentes"
-          users: "Usuarios"
-          groups: "Grupos"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderación"
-      appearance:
-        title: "Aparencia"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navegación"
-          themes: "Temas"
-          components:
-            title: "Compoñentes"
-      email_settings:
-        sidebar_link:
-          appearance: "Aparencia"
-      security:
-        title: "Seguranza"
-      section_landing_pages:
-        account:
-          title: "Conta"
-          backups:
-            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3740,7 +3788,6 @@ gl:
           update: "Actualizar"
           saved: "gardado!"
         flags:
-          header: "Moderación"
           description: "Descrición"
           enabled: "Activado?"
           edit: "Editar"
@@ -3778,18 +3825,6 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        sidebar_link:
-          webhooks: "Enganches de web (webhooks)"
-          developer: "Desenvolvedor"
-          embedding: "Incorporando"
-          user_api: "API de usuario"
-          onebox: "Onebox"
-          files: "Ficheiros"
-          other_options: "Outro"
-          search: "Buscar"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3904,15 +3939,10 @@ gl:
           common: "Común"
           desktop: "Escritorio"
           mobile: "Móbil"
-          settings: "Configuración"
-          translations: "Traducións"
-          extra_scss: "SCSS extra"
           extra_files: "Ficheiros extra"
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          show_advanced: "Amosar campos avanzados"
-          hide_advanced: "Ocultar campos avanzados"
           hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
@@ -4101,6 +4131,9 @@ gl:
             description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
+          editor:
+            light: "Claro"
+            dark: "Escuro"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."

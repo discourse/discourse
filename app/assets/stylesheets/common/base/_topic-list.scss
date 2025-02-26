@@ -71,6 +71,7 @@
   .select-kit-header {
     height: 100%;
   }
+
   @include breakpoint(mobile-large) {
     .edit-category {
       .d-button-label {
@@ -210,7 +211,7 @@
   }
 
   > .topic-list-body > .topic-list-item {
-    &.has-excerpt .star {
+    &.excerpt-expanded .star {
       vertical-align: top;
       margin-top: 2px;
     }
@@ -317,6 +318,7 @@
         border: 1px solid var(--primary-low);
         border-radius: 0.25em;
         min-width: 3em;
+
         @include ellipsis;
 
         > a {

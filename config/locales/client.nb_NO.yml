@@ -4382,11 +4382,28 @@ nb_NO:
       reports:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
-        sidebar_link:
-          all: "Alle rapporter"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Rapporter"
+        community:
+          title: "Gemenskap"
+        appearance:
+          title: "Utseende"
+        email:
+          title: "E-post"
+        security:
+          title: "Sikkerhet"
+        plugins:
+          title: "Utvidelser"
       config:
         developer:
           title: "Utvikler"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderering"
         files:
           title: "Filer"
         legal:
@@ -4407,6 +4424,69 @@ nb_NO:
           title: "Spam"
         user_api:
           title: "Bruker-API"
+        dashboard:
+          title: "Dashbord"
+        users:
+          title: "Brukere"
+        groups:
+          title: "Grupper"
+        backups:
+          title: "Sikkerhetskopier"
+          sub_pages:
+            logs:
+              title: "Logger"
+        reports:
+          title: "Rapporter"
+        badges:
+          title: "Merker"
+        permalinks:
+          title: "Permalenker"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Drakter"
+        components:
+          title: "Komponenter"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere"
+            templates:
+              title: "Maler"
+            sent:
+              title: "Sendt"
+            skipped:
+              title: "Hoppet over"
+            bounced:
+              title: "Tilbakesendt"
+            received:
+              title: "Mottatt"
+            rejected:
+              title: "Avvist"
+        email_appearance:
+          title: "Utseende"
+          header_description: "Tilpass malen hvor alle html e-poster gjengis og stil ved hjelp av CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført"
+            screened_ips:
+              title: "Kontrollerte IP-er"
+            screened_urls:
+              title: "Kontrollerte URL-er"
+              header_description: "Disse URL-ene forekom i innlegg av brukere som har blitt identifisert som spammere"
+        webhooks:
+          title: "Webhooker"
+        embedding:
+          title: "Innbygging"
+      search:
+        result_types:
+          theme:
+            one: "Drakt"
+            other: "Drakter"
+          component:
+            one: "Komponent"
+            other: "Komponenter"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4636,39 +4716,6 @@ nb_NO:
             failed: "Feilet"
       home:
         title: "Hjem"
-      account:
-        title: "Konto"
-        sidebar_link:
-          backups: "Sikkerhetskopier"
-      community:
-        title: "Gemenskap"
-        sidebar_link:
-          badges: "Merker"
-          notifications: "Varsler"
-          permalinks: "Permalenker"
-          users: "Brukere"
-          groups: "Grupper"
-          legal: "Juridisk"
-          moderation_flags:
-            title: "Moderering"
-      appearance:
-        title: "Utseende"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navigasjon"
-          themes: "Drakter"
-          components:
-            title: "Komponenter"
-      email_settings:
-        sidebar_link:
-          appearance: "Utseende"
-      security:
-        title: "Sikkerhet"
-      section_landing_pages:
-        account:
-          title: "Konto"
-          backups:
-            title: "Sikkerhetskopier"
       config_areas:
         about:
           company_name: "Navn"
@@ -4676,7 +4723,6 @@ nb_NO:
           update: "Oppdater"
           saved: "lagret!"
         flags:
-          header: "Moderering"
           description: "Beskrivelse"
           enabled: "Aktivert?"
           edit: "Endre"
@@ -4720,18 +4766,6 @@ nb_NO:
         howto: "Hvordan installerer jeg utvidelser?"
         author: "Av %{author}"
         learn_more: "Finn ut mer"
-        sidebar_link:
-          installed: "Installert"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooker"
-          developer: "Utvikler"
-          embedding: "Innbygging"
-          user_api: "Bruker-API"
-          onebox: "Onebox"
-          files: "Filer"
-          other_options: "Annet"
-          search: "Søk"
       backups:
         title: "Sikkerhetskopier"
         menu:
@@ -4847,15 +4881,10 @@ nb_NO:
           common: "Vanlig"
           desktop: "Skrivebord"
           mobile: "Mobil"
-          settings: "Innstillinger"
-          translations: "Oversettelser"
-          extra_scss: "Extra SCSS"
           extra_files: "Ekstra filer"
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
-          show_advanced: "Vis avanserte felt"
-          hide_advanced: "Skjul avanserte felt"
           hide_unused_fields: "Skjul ubrukte felter"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
@@ -4986,6 +5015,9 @@ nb_NO:
             description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
+          editor:
+            light: "Lys"
+            dark: "Mørk"
         robots:
           title: "Overstyr nettstedets robots.txt fil:"
           warning: "Dette vil permanent overstyre alle relaterte nettstedsinnstillinger."

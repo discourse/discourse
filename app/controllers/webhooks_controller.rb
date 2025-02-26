@@ -25,7 +25,12 @@ class WebhooksController < ActionController::Base
       message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
       to_address = event["email"]
       error_code = event["status"]
+
       if event["event"] == "bounce"
+        # Sendgrid does not provide status field for emails that can't be delivered due to the recipient's server not existing
+        # so we set the error code to 5.1.2 which translates to permanent failure bad destination system address.
+        error_code = "5.1.2" if !error_code && event["type"] == "blocked"
+
         if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
           process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
         else

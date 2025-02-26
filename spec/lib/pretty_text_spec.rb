@@ -731,6 +731,26 @@ RSpec.describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
+    it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
+      cooked = <<~HTML
+        <p>X</p>
+        <pre><code class="lang-auto">var isAdmin = false;
+        \u202E
+        </code></pre>
+      HTML
+      cleaned = PrettyText.cleanup(cooked)
+      hidden_bidi_title = I18n.t("post.hidden_bidi_character")
+
+      html = <<~HTML
+        <p>X</p>
+        <pre><code class="lang-auto">var isAdmin = false;
+        <span class="bidi-warning" title="#{hidden_bidi_title}">&lt;U+202E&gt;</span>
+        </code></pre>
+      HTML
+
+      expect(cleaned.strip).to eq(html.strip)
+    end
+
     it "fuzzes all possible dangerous unicode bidirectional (bidi) override characters, making sure they are replaced" do
       bad_bidi = [
         "\u202A",
@@ -2389,6 +2409,9 @@ HTML
   it "should strip SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
     expect(PrettyText.cook("<div><script>alert(42)</script></div>")).to eq "<div></div>"
+
+    expect(PrettyText.cleanup("<script>alert(42)</script>")).to eq ""
+    expect(PrettyText.cleanup("<div><script>alert(42)</script></div>")).to eq "<div></div>"
   end
 
   it "strips script regardless of sanitize" do

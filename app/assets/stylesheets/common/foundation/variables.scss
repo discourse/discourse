@@ -117,6 +117,7 @@ $z-layers: (
     /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
+
   @return true;
 }
 
@@ -125,6 +126,7 @@ $z-layers: (
     /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
+
   @return $map;
 }
 
@@ -132,6 +134,7 @@ $z-layers: (
   @if not map-has-nested-keys($z-layers, $layers...) {
     @warn "No layer defined for `#{meta.inspect($layers...)}` in $z-layers map- Check variables.scss, property omitted.";
   }
+
   @return map-deep-get($z-layers, $layers...);
 }
 
@@ -162,6 +165,7 @@ $z-layers: (
   $r_r: discourse-math.sqrt($r_r2);
   $r_g: discourse-math.sqrt($r_g2);
   $r_b: discourse-math.sqrt($r_b2);
+
   @return rgb($r_r, $r_g, $r_b);
 }
 
@@ -188,6 +192,7 @@ $z-layers: (
     @return color.scale($adjusted-color, $lightness: $darkness);
   }
 }
+
 @function dark-light-choose($light-theme-result, $dark-theme-result) {
   @if is-light-color-scheme() {
     @return $light-theme-result;

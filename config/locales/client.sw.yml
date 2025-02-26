@@ -2369,11 +2369,22 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
-        sidebar_link:
-          all: "Ripoti zote"
+      config_sections:
+        account:
+          title: "Akaunti"
+        community:
+          title: "Jumuiya"
+        email:
+          title: "Barua pepe"
+        security:
+          title: "Ulinzi"
+        plugins:
+          title: "Programu Jalizi"
       config:
         developer:
           title: "Mtengenezaji"
+        emojis:
+          title: "Emoji"
         files:
           title: "Mafaili"
         legal:
@@ -2394,6 +2405,55 @@ sw:
           title: "Barua Taka"
         user_api:
           title: "API ya Mtumiaji"
+        dashboard:
+          title: "Ubao"
+        users:
+          title: "Watumiaji"
+        groups:
+          title: "Makundi"
+        backups:
+          title: "Machelezo"
+          sub_pages:
+            logs:
+              title: "Batli"
+        badges:
+          title: "Beji"
+        permalinks:
+          title: "Anwani za mtandao"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Mandhari"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Kihakiki maandishi ya barua pepe za jarida zinatomwa kwa watumiaji wasiotembelea jumuiya"
+            templates:
+              title: "Violezo"
+            sent:
+              title: "Imetumwa"
+            skipped:
+              title: "Imerukwa"
+            bounced:
+              title: "Haijafika"
+            received:
+              title: "Imepokelewa"
+            rejected:
+              title: "Imekataliwa"
+        staff_action_logs:
+          sub_pages:
+            screened_ips:
+              title: "Anwani za mtandao zinazoruhusiwa au kukatazwa"
+            screened_urls:
+              title: "Anwani za tovuti zinazoruhusiwa au kukatazwa"
+              header_description: "Anwani za tovuti zilizo orodheshwa hapa zilitumiwa na mtumiaji anayechapisha taka"
+        embedding:
+          title: "Ambatanisha"
+      search:
+        result_types:
+          theme:
+            one: "Mandhari"
+            other: "Mandhari"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2562,31 +2622,6 @@ sw:
             failed: "Kushindwa"
       home:
         title: "Nyumbani"
-      account:
-        title: "Akaunti"
-        sidebar_link:
-          backups: "Machelezo"
-      community:
-        title: "Jumuiya"
-        sidebar_link:
-          badges: "Beji"
-          notifications: "Taarifa"
-          permalinks: "Anwani za mtandao"
-          users: "Watumiaji"
-          groups: "Makundi"
-          legal: "Halali"
-      appearance:
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Abiri"
-          themes: "Mandhari"
-      security:
-        title: "Ulinzi"
-      section_landing_pages:
-        account:
-          title: "Akaunti"
-          backups:
-            title: "Machelezo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -2630,17 +2665,6 @@ sw:
         howto: "Ninawekaje programu-jalizi?"
         author: "Na %{author}"
         learn_more: "Jifunze zaidi"
-        sidebar_link:
-          installed: "Imesanikishwa"
-      advanced:
-        sidebar_link:
-          developer: "Mtengenezaji"
-          embedding: "Ambatanisha"
-          user_api: "API ya Mtumiaji"
-          onebox: "Onebox"
-          files: "Mafaili"
-          other_options: "Nyingine"
-          search: "Tafuta"
       backups:
         title: "Machelezo"
         menu:
@@ -2738,7 +2762,6 @@ sw:
           common: "Kawaida"
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
-          settings: "Mipangilio"
           preview: "Kihakiki"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
@@ -2837,6 +2860,9 @@ sw:
             description: "Rangi ya kitufe cha upendo."
           selected:
             name: "imechaguliwa"
+          editor:
+            light: "Hafifu"
+            dark: "Nyeusi"
         email_style:
           html: "HTML"
           css: "CSS"
