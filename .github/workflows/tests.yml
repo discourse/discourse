@@ -38,6 +38,12 @@ jobs:
     env:
       RAILS_ENV: test
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+      MINIO_RUNNER_LOG_LEVEL: DEBUG
+      TESTEM_BROWSER: ${{ (startsWith(inputs.browser, 'Firefox') && 'Firefox') || inputs.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (inputs.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      CHEAP_SOURCE_MAPS: "1"
 
     strategy:
       fail-fast: false
@@ -70,6 +76,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Setup Specs
+        uses: ./.github/actions/test-setup
+        with:
+          uses_parallel_databases: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
+          build_type: ${{matrix.build_type}}
+          target: ${{matrix.target}}
+          browser: ${{browser.target}}
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'

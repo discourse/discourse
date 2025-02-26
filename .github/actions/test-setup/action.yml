@@ -13,15 +13,6 @@ inputs:
   browser:
     required: true
     description: "The browser that QUnit tests are running in"
-env:
-  MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-  MINIO_RUNNER_LOG_LEVEL: DEBUG
-  TESTEM_BROWSER: ${{ (startsWith(inputs.browser, 'Firefox') && 'Firefox') || inputs.browser }}
-  TESTEM_FIREFOX_PATH: ${{ (inputs.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
-  CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
-  CHEAP_SOURCE_MAPS: "1"
-  PGUSER: discourse
-  PGPASSWORD: discourse
 runs:
   using: "composite"
   steps:
