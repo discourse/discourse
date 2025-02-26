@@ -199,7 +199,7 @@ module Onebox
       end
 
       def has_text?
-        has_title? && data[:description].present?
+        has_title?
       end
 
       def has_title?
@@ -219,7 +219,8 @@ module Onebox
       end
 
       def is_video?
-        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && data[:video].present? # Many sites include 'videos' with text/html types (i.e. iframes)
+        # Many sites include 'videos' with text/html types (i.e. iframes)
+        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && data[:video].present?
       end
 
       def is_embedded?
