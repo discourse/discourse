@@ -14,7 +14,7 @@ module Middleware
 
       # Crawlers don't need to see search results.
       if should_hide_search_results?
-        env["DISABLE_DISCOURSE_ANONYMOUS_CACHE"] = true
+        Middleware::AnonymousCache.disable_anon_cache
 
         return [
           200,
