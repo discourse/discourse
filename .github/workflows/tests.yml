@@ -80,10 +80,10 @@ jobs:
       - name: Setup Specs
         uses: ./.github/actions/test-setup
         with:
-          uses_parallel_databases: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
+          uses_parallel_databases: ${{ toJSON(matrix.build_type == 'backend' || matrix.build_type == 'system') }}
           build_type: ${{matrix.build_type}}
           target: ${{matrix.target}}
-          browser: ${{browser.target}}
+          browser: ${{matrix.browser}}
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
