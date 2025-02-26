@@ -156,7 +156,7 @@ module Onebox
               )
             end
 
-            skip_missing_tags = [:video]
+            skip_missing_tags = %i[video description]
             d.each do |k, v|
               next if skip_missing_tags.include?(k)
               if v == nil || v == ""
