@@ -64,6 +64,12 @@ jobs:
             browser: Firefox ESR
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Setup Specs
         uses: ./.github/actions/test-setup

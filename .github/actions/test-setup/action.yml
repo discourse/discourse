@@ -19,9 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set working directory owner
-      run: chown root:root .
-
     - name: Set PARALLEL_TEST_PROCESSORS for system tests
       if: inputs.build_type == 'system'
       run: |
@@ -35,10 +32,6 @@ runs:
         else
           echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
         fi
-
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
 
     - name: Setup Git
       run: |
