@@ -57,10 +57,10 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get titleClassNames() {
-    const classNames = [this.args.post.title];
+    const classNames = [this.args.post.user_title];
 
-    if (this.args.post.title_is_group) {
-      classNames.push(this.args.post.primaryGroupName);
+    if (this.args.post.title_is_group && this.args.post.primary_group_name) {
+      classNames.push(this.args.post.primary_group_name);
     }
 
     return classNames.map(

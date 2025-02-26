@@ -18,11 +18,14 @@ export default class UserLink extends Component {
   }
 
   get href() {
-    return (
-      this.args.href ||
-      this.args.user?.path ||
-      userPath(this.username.toLowerCase())
-    );
+    const url = this.args.href || this.args.user?.path;
+    if (url) {
+      return url;
+    }
+
+    if (this.username) {
+      return userPath(this.username.toLowerCase());
+    }
   }
 
   get ariaHidden() {
@@ -30,12 +33,19 @@ export default class UserLink extends Component {
   }
 
   get ariaLabel() {
-    return this.args.ariaHidden
-      ? null
-      : this.args.ariaLabel ??
-          i18n("user.profile_possessive", {
-            username: this.username,
-          });
+    if (this.args.ariaHidden) {
+      return;
+    }
+
+    if (this.args.ariaLabel) {
+      return this.args.ariaLabel;
+    }
+
+    if (this.username) {
+      return i18n("user.profile_possessive", {
+        username: this.username,
+      });
+    }
   }
 
   <template>
