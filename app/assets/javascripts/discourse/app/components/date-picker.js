@@ -41,8 +41,8 @@ export default class DatePicker extends Component {
           bound: container === null,
           format: DATE_FORMAT,
           firstDay: 1,
-          minDate: this.minDate || null,
-          maxDate: this.maxDate || null,
+          minDate: this.minDate,
+          maxDate: this.maxDate,
           i18n: {
             previousMonth: i18n("dates.previous_month"),
             nextMonth: i18n("dates.next_month"),
