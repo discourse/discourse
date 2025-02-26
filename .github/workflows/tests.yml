@@ -89,7 +89,7 @@ jobs:
         run: sudo apt-get install -y gh
 
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
-        if: inputs.build_type == 'system'
+        if: matrix.build_type == 'system'
         shell: bash
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV

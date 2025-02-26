@@ -20,6 +20,9 @@ jobs:
       PGUSER: discourse
       PGPASSWORD: discourse
     steps:
+      - name: Debug event data
+        run: echo "${{ toJson(github.event) }}"
+
       - name: Set working directory owner
         run: chown root:root .
 
@@ -33,7 +36,6 @@ jobs:
         run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
-        if: inputs.build_type == 'system'
         shell: bash
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
