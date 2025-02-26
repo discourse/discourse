@@ -18,7 +18,10 @@ inputs:
     description: "Number of cores that we are working with"
   parallel_test_processors:
     required: true
-    description: "BLAH"
+    description: "The number of processors to use"
+  github_token:
+    required: true
+    description: "The GITHUB_TOKEN from secrets"
 runs:
   using: "composite"
   steps:
@@ -116,13 +119,13 @@ runs:
     - name: Fetch app state cache
       shell: bash
       run: |
-        CACHE_KEY="${{ runner.os }}-$(echo '${{ inputs.cpu_cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ inputs.parallel_test_processors }}"
+        CACHE_KEY="${{ runner.os }}-$(echo '${{ inputs.cpu_cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles('github/workflows/tests.yml') }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles('config/environments/test.rb') }}' | sha256sum | cut -d' ' -f1)-${{ inputs.uses_parallel_databases }}-${{ inputs.parallel_test_processors }}"
 
         echo "Attempting to restore cache with key: $CACHE_KEY"
 
         gh cache restore tmp/app-cache --key "$CACHE_KEY" || echo "No cache available"
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ inputs.github_token }}
 
     - name: Restore database from cache
       shell: bash
@@ -174,7 +177,7 @@ runs:
           gh cache restore tmp/turbo_rspec_runtime.log --key "$RESTORE_KEYS" || echo "No cache available"
         fi
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ inputs.github_token }}
 
     - name: Check Zeitwerk reloading
       shell: bash
