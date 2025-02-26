@@ -5,15 +5,12 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, lt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
@@ -21,11 +18,11 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import PostCookedHtml from "./cooked-html";
 import PostEmbedded from "./embedded";
 import PostMenu from "./menu";
 
 export default class PostContents extends Component {
-  @service appEvents;
   @service capabilities;
   @service site;
   @service siteSettings;
@@ -53,24 +50,6 @@ export default class PostContents extends Component {
     return this.filteredRepliesView
       ? this.filteredRepliesShown
       : this.repliesBelow.length > 0;
-  }
-
-  @bind
-  decoratePostContentBeforeAdopt(element, helper) {
-    this.appEvents.trigger(
-      "decorate-post-cooked-element:before-adopt",
-      element,
-      helper
-    );
-  }
-
-  @bind
-  decoratePostContentAfterAdopt(element, helper) {
-    this.appEvents.trigger(
-      "decorate-post-cooked-element:after-adopt",
-      element,
-      helper
-    );
   }
 
   @action
@@ -175,13 +154,7 @@ export default class PostContents extends Component {
   <template>
     <div class={{concatClass "regular" (unless this.repliesShown "contents")}}>
       <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
-        <DecoratedHtml
-          @className="cooked"
-          @decorate={{this.decoratePostContentBeforeAdopt}}
-          @decorateAfterAdopt={{this.decoratePostContentAfterAdopt}}
-          @html={{htmlSafe @post.cooked}}
-          @model={{@post}}
-        />
+        <PostCookedHtml @post={{@post}} />
       </PluginOutlet>
 
       {{#if @post.requestedGroupName}}
