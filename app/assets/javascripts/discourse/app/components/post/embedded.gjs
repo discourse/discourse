@@ -13,17 +13,9 @@ export default class PostEmbedded extends Component {
 
   @bind
   decoratePostContentBeforeAdopt(element, helper) {
+    // TODO (glimmer-post-stream): Should this be considered in stream rendering?
     this.appEvents.trigger(
-      "decorate-post-cooked-element:before-adopt",
-      element,
-      helper
-    );
-  }
-
-  @bind
-  decoratePostContentAfterAdopt(element, helper) {
-    this.appEvents.trigger(
-      "decorate-post-cooked-element:after-adopt",
+      "decorate-non-stream-cooked-element",
       element,
       helper
     );
@@ -56,10 +48,10 @@ export default class PostEmbedded extends Component {
             </div>
           </div>
           <DecoratedHtml
-            @html={{htmlSafe @post.cooked}}
-            @decorate={{this.decoratePostContentBeforeAdopt}}
-            @decorateAfterAdopt={{this.decoratePostContentAfterAdopt}}
             @className="cooked"
+            @decorate={{this.decoratePostContentBeforeAdopt}}
+            @html={{htmlSafe @post.cooked}}
+            @model={{@post}}
           />
         </div>
       </div>

@@ -667,6 +667,7 @@ class PluginApi {
       callback
     );
 
+    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }

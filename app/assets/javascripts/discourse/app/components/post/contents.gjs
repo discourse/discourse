@@ -176,10 +176,11 @@ export default class PostContents extends Component {
     <div class={{concatClass "regular" (unless this.repliesShown "contents")}}>
       <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
         <DecoratedHtml
-          @html={{htmlSafe @post.cooked}}
+          @className="cooked"
           @decorate={{this.decoratePostContentBeforeAdopt}}
           @decorateAfterAdopt={{this.decoratePostContentAfterAdopt}}
-          @className="cooked"
+          @html={{htmlSafe @post.cooked}}
+          @model={{@post}}
         />
       </PluginOutlet>
 
