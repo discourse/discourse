@@ -90,9 +90,13 @@ module Onebox
             html_entities = HTMLEntities.new
             d = { link: link }.merge(raw)
 
-            if d[:title].present?
-              d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
-            end
+            d[:title] = (
+              if d[:title].present?
+                html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
+              else
+                nil
+              end
+            )
 
             d[:description] ||= d[:summary]
             if d[:description].present?
