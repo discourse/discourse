@@ -276,14 +276,10 @@ export default function () {
             path: "/",
           });
         });
-        this.route(
-          "themesAndComponents",
-          { path: "/themes-and-components" },
-          function () {
-            this.route("themes");
-            this.route("components");
-          }
-        );
+        this.route("customize", function () {
+          this.route("themes");
+          this.route("components");
+        });
         this.route(
           "adminPermalinks",
           { path: "/permalinks", resetNamespace: true },

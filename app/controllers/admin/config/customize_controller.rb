@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::Config::ThemesAndComponentsController < Admin::AdminController
+class Admin::Config::CustomizeController < Admin::AdminController
   def themes
   end
 

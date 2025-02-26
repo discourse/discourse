@@ -8,21 +8,31 @@
   <:breadcrumbs>
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
-      @path="/admin/config/themes-and-components"
-      @label={{i18n "admin.config_areas.themes_and_components.title"}}
+      @path="/admin/config/customize"
+      @label={{i18n
+        "admin.config_areas.themes_and_components.breadcrumb_title"
+      }}
     />
   </:breadcrumbs>
 
   <:tabs>
     <NavItem
-      @route="adminConfig.themesAndComponents.themes"
+      @route="adminConfig.customize.themes"
       @label="admin.config_areas.themes_and_components.themes.title"
     />
     <NavItem
-      @route="adminConfig.themesAndComponents.components"
+      @route="adminConfig.customize.components"
       @label="admin.config_areas.themes_and_components.components.title"
     />
   </:tabs>
+
+  <:actions as |actions|>
+    <actions.Primary
+      @label="admin.customize.install"
+      @icon="upload"
+      class="admin-themes-and-components__install-theme"
+    />
+  </:actions>
 </DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">

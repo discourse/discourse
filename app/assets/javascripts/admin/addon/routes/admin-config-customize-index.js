@@ -5,6 +5,6 @@ export default class AdminConfigThemesAndComponentsIndexRoute extends DiscourseR
   @service router;
 
   beforeModel() {
-    this.router.replaceWith("adminConfig.themesAndComponents.themes");
+    this.router.replaceWith("adminConfig.customize.themes");
   }
 }

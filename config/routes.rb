@@ -426,13 +426,13 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
 
-        resources :themes_and_components,
-                  path: "themes-and-components",
+        resources :customize,
+                  path: "customize",
                   constraints: AdminConstraint.new,
                   only: %i[index] do
           collection do
-            get "/themes" => "themes_and_components#themes"
-            get "/components" => "themes_and_components#components"
+            get "/themes" => "customize#themes"
+            get "/components" => "customize#components"
           end
         end
       end

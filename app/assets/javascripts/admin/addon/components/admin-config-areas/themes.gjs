@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -49,23 +48,6 @@ export default class AdminConfigAreasThemes extends Component {
   }
 
   <template>
-    <DPageSubheader
-      @titleLabel={{i18n
-        "admin.config_areas.themes_and_components.themes.title"
-      }}
-      @descriptionLabel={{i18n "admin.customize.theme.themes_intro_new"}}
-      @learnMoreUrl="https://meta.discourse.org/t/93648"
-    >
-      <:actions as |actions|>
-        <actions.Primary
-          @action={{this.installModal}}
-          @label="admin.customize.install"
-          @icon="upload"
-          class="admin-themes-and-components__install-theme"
-        />
-      </:actions>
-    </DPageSubheader>
-
     <div class="admin-detail">
       <ThemesGrid @themes={{@themes}} />
     </div>

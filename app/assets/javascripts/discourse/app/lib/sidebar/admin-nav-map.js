@@ -241,9 +241,9 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_themes_and_components",
-        route: "adminConfig.themesAndComponents.themes",
+        route: "adminConfig.customize.themes",
         currentWhen:
-          "adminConfig.themesAndComponents.themes adminConfig.themesAndComponents.components",
+          "adminConfig.customize.themes adminConfig.customize.components",
         label: "admin.appearance.sidebar_link.themes_and_components.title",
         icon: "paintbrush",
         keywords:
