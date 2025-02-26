@@ -56,9 +56,7 @@ export default class DatePicker extends Component {
         this._picker = new Pikaday(Object.assign(options, this._opts()));
 
         if (this.value) {
-          const parsedDate =
-            this.value instanceof moment ? this.date : moment(this.value);
-          this._picker.setDate(parsedDate.toDate(), true);
+          this._picker.setDate(moment(this.value).toDate(), true);
         } else {
           this._picker.setDate(null);
         }
