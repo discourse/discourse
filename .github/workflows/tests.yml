@@ -37,16 +37,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-      PGUSER: discourse
-      PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
-      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
-      MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
-      CHEAP_SOURCE_MAPS: "1"
-      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     strategy:
       fail-fast: false
@@ -73,188 +64,36 @@ jobs:
             browser: Firefox ESR
 
     steps:
-      - name: Set working directory owner
-        run: chown root:root .
 
-      - name: Set PARALLEL_TEST_PROCESSORS for system tests
-        if: matrix.build_type == 'system'
-        run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
-
-      - name: Set QUNIT_PARALLEL for QUnit tests
-        if: matrix.build_type == 'frontend'
-        run: |
-          if [ "${{ matrix.target }}" = "themes" ]; then
-            echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
-          else
-            echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
-          fi
-
-      - uses: actions/checkout@v4
+      - name: Setup Specs
+        uses: ./.github/actions/test-setup
         with:
-          fetch-depth: 1
+          uses_parallel_databases: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
+          build_type: ${{matrix.build_type}}
+          target: ${{matrix.target}}
 
-      - name: Setup Git
-        run: |
-          git config --global user.email "ci@ci.invalid"
-          git config --global user.name "Discourse CI"
+      - name: Core RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
 
-      - name: Start redis
-        run: |
-          redis-server /etc/redis/redis.conf &
+      - name: Plugin RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
-      - name: Start Postgres
-        run: |
-          chown -R postgres /var/run/postgresql
-          sudo -E -u postgres script/start_test_db.rb
-          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+      - name: Core QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        timeout-minutes: 30
 
-      - name: Symlink vendor/bundle from image
-        run: |
-          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
+        timeout-minutes: 30
 
-      - name: Setup gems
-        run: |
-          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
-          bundle clean
-
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: Checkout official plugins
-        if: matrix.target == 'plugins'
-        run: bin/rake plugin:install_all_official
-
-      - name: Symlinking plugin gems from image
-        if: matrix.target == 'plugins'
-        run: |
-          for dir in /var/www/discourse/plugins/*/gems; do
-            plugin_name=$(basename "$(dirname "$dir")")
-            plugin_dir="plugins/$plugin_name"
-            gem_dir="$plugin_dir/gems"
-
-            if [ ! -d "$plugin_dir" ]; then
-              echo "Skipping $plugin_name: Plugin directory does not exist"
-            elif [ -d "$gem_dir" ]; then
-              echo "Skipping $plugin_name: Source gems directory exists"
-            else
-              echo "Symlinking $dir to $gem_dir"
-              ln -s "$dir" "$gem_dir"
-            fi
-          done
-
-      - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
-        run: bin/rake plugin:pull_compatible_all
-
-      - name: Checkout official themes
-        if: matrix.target == 'themes'
-        run: bin/rake themes:clone_all_official themes:pull_compatible_all
-
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: |
-          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
-
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
-      - name: Fetch app state cache
-        uses: actions/cache@v4
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}-
-            ${{ env.USES_PARALLEL_DATABASES }}-
-            ${{ env.PARALLEL_TEST_PROCESSORS }}-
-
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
-
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
-
-      - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: |
-          bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
-
-      - name: Create and migrate parallel databases
-        if: >-
-          env.USES_PARALLEL_DATABASES == 'true' &&
-          steps.app-cache.outputs.cache-hit != 'true'
-        run: |
-          bin/rake parallel:create
-          script/silence_successful_output bin/rake parallel:migrate
-
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
-
-      - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v4
-        id: test-runtime-cache
-        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-        with:
-          path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
-      - name: Check Zeitwerk reloading
-        if: matrix.build_type == 'backend'
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
-        run: |
-          if ! bin/rails runner 'Rails.application.reloader.reload!'; then
-            echo
-            echo "---------------------------------------------"
-            echo
-            echo "::error::Zeitwerk reload failed - the app will not be able to reload properly in development."
-            echo "To reproduce locally, run \`bin/rails runner 'Rails.application.reloader.reload!'\`."
-            echo
-            exit 1
-          fi
-
-      # - name: Core RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'core'
-      #   run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
-
-      # - name: Plugin RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-      #   run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
-
-      # - name: Core QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'core'
-      #   run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
-      #   timeout-minutes: 30
-
-      # - name: Plugin QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-      #   run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
-      #   timeout-minutes: 30
-
-      # - name: Theme QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-      #   run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
-      #   timeout-minutes: 10
+      - name: Theme QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
+        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
@@ -270,106 +109,55 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
 
-#       - name: Core System Tests
-#         if: matrix.build_type == 'system' && matrix.target == 'core'
-#         env:
-#           CHECKOUT_TIMEOUT: 10
-#         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
-
-      - name: Run System Spec Device Screenshot Capture
+      - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        shell: bash
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: |
-          echo "Extracting screenshot commands from PR body..."
+          GLOBIGNORE="plugins/chat/*";
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        shell: bash
+        timeout-minutes: 30
 
-          SCREENSHOTS=$(echo "${{ github.event.pull_request.body }}" | grep -oP '^screenshot: \K[\w/.\-:]+' || true)
+      - name: Chat System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'chat'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        timeout-minutes: 30
 
-          if [[ -z "$SCREENSHOTS" ]]; then
-          echo "No screenshot commands found."
-          exit 0
+      - name: Theme System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+        shell: bash
+        timeout-minutes: 30
+
+      - name: Check for failed system test screenshots
+        id: check-failed-system-test-screenshots
+        if: always() && matrix.build_type == 'system'
+        run: |
+          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
           fi
+        shell: bash
 
-          echo "Found screenshots:"
-          echo "$SCREENSHOTS"
-
-          while IFS= read -r screenshot; do
-          FILE_PATH=$(echo "$screenshot" | cut -d':' -f1)
-          LINE_NUM=$(echo "$screenshot" | cut -d':' -f2)
-
-          echo "Running test for $FILE_PATH:$LINE_NUM..."
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SYSTEM_SPEC_DRIVER=selenium_chrome bin/rspec "$FILE_PATH:$LINE_NUM"
-          done <<< "$SCREENSHOTS"
-
-
-      # - name: Plugin System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
-      #   env:
-      #     CHECKOUT_TIMEOUT: 10
-      #   run: |
-      #     GLOBIGNORE="plugins/chat/*";
-      #     LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
-      #   shell: bash
-      #   timeout-minutes: 30
-
-      # - name: Chat System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'chat'
-      #   env:
-      #     CHECKOUT_TIMEOUT: 10
-      #   run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
-      #   timeout-minutes: 30
-
-      # - name: Theme System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'themes'
-      #   env:
-      #     CHECKOUT_TIMEOUT: 10
-      #   run: |
-      #     RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
-      #   shell: bash
-      #   timeout-minutes: 30
-
-      # - name: Check for failed system test screenshots
-      #   id: check-failed-system-test-screenshots
-      #   if: always() && matrix.build_type == 'system'
-      #   run: |
-      #     if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
-      #       echo "exists=true" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "exists=false" >> $GITHUB_OUTPUT
-      #     fi
-      #   shell: bash
-
-      # - name: Upload failed system test screenshots
-      #   uses: actions/upload-artifact@v4
-      #   if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
-      #   with:
-      #     name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
-      #     path: tmp/capybara/failures_*.png
-
-      - name: Upload device system test screenshots
+      - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v4
-        if: matrix.build_type == 'system' && matrix.target == 'core'
+        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
-          name: device-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/capybara/device_*.png
-
-      - name: Post Comment with Download Link
-        uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            📸 **Screenshots Captured!**
-
-            You can download the screenshots from the Actions tab:
-
-            [Artifacts - PR_Screenshots](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Post Device Screenshot Comment
-      #   id: post_device_screenshot_comment
-      #   if: env.COMMENT_BODY && matrix.build_type == 'system' && matrix.target == 'core'
-      #   uses: mshick/add-pr-comment@v2
-      #   with:
-      #     message: ${{ env.COMMENT_BODY }}
-      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
+          path: tmp/capybara/failures_*.png
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report

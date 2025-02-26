@@ -1,0 +1,180 @@
+name: "Setup specs"
+description: "Sets up the database and other things for tests"
+env:
+  MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+  MINIO_RUNNER_LOG_LEVEL: DEBUG
+  TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+  TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+  CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+  CHEAP_SOURCE_MAPS: "1"
+  PGUSER: discourse
+  PGPASSWORD: discourse
+inputs:
+  uses_parallel_databases:
+    required: true
+  build_type:
+    required: true
+  target:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set working directory owner
+      run: chown root:root .
+
+    - name: Set PARALLEL_TEST_PROCESSORS for system tests
+      if: inputs.build_type == 'system'
+      run: |
+        echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+
+    - name: Set QUNIT_PARALLEL for QUnit tests
+      if: inputs.build_type == 'frontend'
+      run: |
+        if [ "${{ inputs.target }}" = "themes" ]; then
+          echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
+        else
+          echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
+        fi
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Setup Git
+      run: |
+        git config --global user.email "ci@ci.invalid"
+        git config --global user.name "Discourse CI"
+
+    - name: Start redis
+      run: |
+        redis-server /etc/redis/redis.conf &
+
+    - name: Start Postgres
+      run: |
+        chown -R postgres /var/run/postgresql
+        sudo -E -u postgres script/start_test_db.rb
+        sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+    - name: Symlink vendor/bundle from image
+      run: |
+        ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+    - name: Setup gems
+      run: |
+        gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+        bundle config --local path vendor/bundle
+        bundle config --local deployment true
+        bundle config --local without development
+        bundle install --jobs $(($(nproc) - 1))
+        bundle clean
+
+    - name: pnpm install
+      run: pnpm install --frozen-lockfile
+
+    - name: Checkout official plugins
+      if: inputs.target == 'plugins'
+      run: bin/rake plugin:install_all_official
+
+    - name: Symlinking plugin gems from image
+      if: inputs.target == 'plugins'
+      run: |
+        for dir in /var/www/discourse/plugins/*/gems; do
+          plugin_name=$(basename "$(dirname "$dir")")
+          plugin_dir="plugins/$plugin_name"
+          gem_dir="$plugin_dir/gems"
+
+          if [ ! -d "$plugin_dir" ]; then
+            echo "Skipping $plugin_name: Plugin directory does not exist"
+          elif [ -d "$gem_dir" ]; then
+            echo "Skipping $plugin_name: Source gems directory exists"
+          else
+            echo "Symlinking $dir to $gem_dir"
+            ln -s "$dir" "$gem_dir"
+          fi
+        done
+
+    - name: Pull compatible versions of plugins
+      if: inputs.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+      run: bin/rake plugin:pull_compatible_all
+
+    - name: Checkout official themes
+      if: inputs.target == 'themes'
+      run: bin/rake themes:clone_all_official themes:pull_compatible_all
+
+    - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      if: inputs.build_type == 'system' && inputs.target == 'core'
+      run: |
+        echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+        echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+
+    - name: Get CPU cores
+      id: cpu-info
+      run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
+    - name: Fetch app state cache
+      uses: actions/cache@v4
+      id: app-cache
+      with:
+        path: tmp/app-cache
+        key: >-
+          ${{ runner.os }}-
+          ${{ steps.cpu-info.outputs.cpu-cores }}-
+          ${{ hashFiles('.github/workflows/tests.yml') }}-
+          ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+          ${{ hashFiles('config/environments/test.rb') }}-
+          ${{ inputs.uses_parallel_databases }}-
+          ${{ env.PARALLEL_TEST_PROCESSORS }}-
+
+    - name: Restore database from cache
+      if: steps.app-cache.outputs.cache-hit == 'true'
+      run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+
+    - name: Restore uploads from cache
+      if: steps.app-cache.outputs.cache-hit == 'true'
+      run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
+    - name: Create and migrate database
+      if: steps.app-cache.outputs.cache-hit != 'true'
+      run: |
+        bin/rake db:create
+        script/silence_successful_output bin/rake db:migrate
+
+    - name: Create and migrate parallel databases
+      if: >-
+        inputs.uses_parallel_databases == 'true' &&
+        steps.app-cache.outputs.cache-hit != 'true'
+      run: |
+        bin/rake parallel:create
+        script/silence_successful_output bin/rake parallel:migrate
+
+    - name: Dump database for cache
+      if: steps.app-cache.outputs.cache-hit != 'true'
+      run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+    - name: Dump uploads for cache
+      if: steps.app-cache.outputs.cache-hit != 'true'
+      run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+
+    - name: Fetch turbo_rspec_runtime.log cache
+      uses: actions/cache@v4
+      id: test-runtime-cache
+      if: inputs.build_type == 'backend' || inputs.build_type == 'system'
+      with:
+        path: tmp/turbo_rspec_runtime.log
+        key: rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-${{ github.run_id }}
+        restore-keys: rspec-runtime-${{ inputs.build_type }}-${{ inputs.target }}-
+
+    - name: Check Zeitwerk reloading
+      if: inputs.build_type == 'backend'
+      env:
+        LOAD_PLUGINS: ${{ (inputs.target == 'plugins') && '1' || '0' }}
+      run: |
+        if ! bin/rails runner 'Rails.application.reloader.reload!'; then
+          echo
+          echo "---------------------------------------------"
+          echo
+          echo "::error::Zeitwerk reload failed - the app will not be able to reload properly in development."
+          echo "To reproduce locally, run \`bin/rails runner 'Rails.application.reloader.reload!'\`."
+          echo
+          exit 1
+        fi
