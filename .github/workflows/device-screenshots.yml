@@ -6,7 +6,6 @@ on:
 
 jobs:
   sanitize:
-    if: github.event.comment.user.login != 'dependabot[bot]' && github.event.issue.pull_request != null
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
