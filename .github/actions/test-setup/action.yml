@@ -48,9 +48,6 @@ runs:
 
     - name: Start Postgres
       shell: bash
-      env:
-        PGUSER: discourse
-        PGPASSWORD: discourse
       run: |
         chown -R postgres /var/run/postgresql
         sudo -E -u postgres script/start_test_db.rb

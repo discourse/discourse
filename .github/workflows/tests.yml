@@ -47,6 +47,8 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       CHEAP_SOURCE_MAPS: "1"
       USES_PARALLEL_DATABASES: ${{ toJSON(matrix.build_type == 'backend' || matrix.build_type == 'system') }}
+      PGUSER: discourse
+      PGPASSWORD: discourse
 
     strategy:
       fail-fast: false
