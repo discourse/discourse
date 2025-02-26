@@ -91,6 +91,16 @@ jobs:
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
 
+      - name: Setup Specs
+        uses: ./.github/actions/test-setup
+        with:
+          uses_parallel_databases: ${{env.USES_PARALLEL_DATABASES}}
+          parallel_test_processors: ${{env.PARALLEL_TEST_PROCESSORS}}
+          build_type: ${{matrix.build_type}}
+          target: ${{matrix.target}}
+          browser: ${{matrix.browser}}
+          cpu_cores: '4'
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
@@ -223,6 +233,26 @@ jobs:
             exit 1
           fi
         timeout-minutes: 30
+
+      - name: Save app state cache
+        shell: bash
+        run: |
+          CACHE_KEY="${{ runner.os }}-$(echo '${{ steps.cpu-info.outputs.cpu-cores }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles(".github/workflows/tests.yml") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("db/**/*", "plugins/**/db/**/*") }}' | sha256sum | cut -d' ' -f1)-$(echo '${{ hashFiles("config/environments/test.rb") }}' | sha256sum | cut -d' ' -f1)-${{ env.USES_PARALLEL_DATABASES }}-${{ env.PARALLEL_TEST_PROCESSORS }}"
+
+          echo "Saving cache with key: $CACHE_KEY"
+          gh cache save tmp/app-cache --key "$CACHE_KEY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save turbo_rspec_runtime.log cache
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        shell: bash
+        run: |
+          CACHE_KEY="rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}"
+          echo "Saving cache with key: $CACHE_KEY"
+          gh cache save tmp/turbo_rspec_runtime.log --key "$CACHE_KEY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   merge:
