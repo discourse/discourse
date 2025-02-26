@@ -1,12 +1,3 @@
-const markdownUrlInputRule = ({ schema, markInputRule }) =>
-  markInputRule(
-    /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
-    schema.marks.link,
-    (match) => {
-      return { href: match[2], title: match[3] };
-    }
-  );
-
 /** @type {RichEditorExtension} */
 const extension = {
   markSpec: {
@@ -16,6 +7,7 @@ const extension = {
         title: { default: null },
         autoLink: { default: null },
         attachment: { default: null },
+        "data-orig-href": { default: null },
       },
       inclusive: false,
       parseDOM: [
@@ -26,6 +18,7 @@ const extension = {
               href: dom.getAttribute("href"),
               title: dom.getAttribute("title"),
               attachment: dom.classList.contains("attachment"),
+              "data-orig-href": dom.getAttribute("data-orig-href"),
             };
           },
         },
@@ -37,6 +30,7 @@ const extension = {
             href: node.attrs.href,
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
+            "data-orig-href": node.attrs["data-orig-href"],
           },
           0,
         ];
@@ -59,73 +53,49 @@ const extension = {
           title: tok.attrGet("title") || null,
           autoLink: tok.markup === "autolink",
           attachment,
+          "data-orig-href": tok.attrGet("data-orig-href"),
         };
       },
     },
   },
-  inputRules: [markdownUrlInputRule],
-  plugins: ({
-    pmState: { Plugin },
-    pmModel: { Slice, Fragment },
-    pmTransform: {
-      ReplaceStep,
-      ReplaceAroundStep,
-      AddMarkStep,
-      RemoveMarkStep,
-    },
-    pmHistory: { undoDepth },
-    utils,
-  }) =>
-    new Plugin({
-      // Auto-linkify typed URLs
-      appendTransaction: (transactions, prevState, state) => {
-        const isUndo = undoDepth(prevState) - undoDepth(state) === 1;
-        if (isUndo) {
-          return;
-        }
-
-        const docChanged = transactions.some(
-          (transaction) => transaction.docChanged
-        );
-        if (!docChanged) {
-          return;
-        }
-
-        const composedTransaction = utils.composeSteps(transactions, prevState);
-        const changes = utils.getChangedRanges(
-          composedTransaction,
-          [ReplaceAroundStep, ReplaceStep],
-          [AddMarkStep, ReplaceAroundStep, ReplaceStep, RemoveMarkStep]
-        );
-        const { mapping } = composedTransaction;
-        const { tr, doc } = state;
-
-        for (const { prevFrom, prevTo, from, to } of changes) {
-          utils
-            .findTextBlocksInRange(doc, { from, to })
-            .forEach(({ text, positionStart }) => {
-              const matches = utils.getLinkify().match(text);
-              if (!matches) {
-                return;
-              }
-
-              for (const match of matches) {
-                const { index, lastIndex, raw } = match;
-                const start = positionStart + index;
-                const end = positionStart + lastIndex + 1;
-                const href = raw;
-                // TODO not ready yet
-                // tr.setMeta("autolinking", true).addMark(
-                //   start,
-                //   end,
-                //   state.schema.marks.link.create({ href })
-                // );
-              }
-            });
-        }
-
-        return tr;
+  serializeMark: {
+    // override mark serializer to support "|attachment"
+    link: {
+      open(state, mark, parent, index) {
+        state.inAutolink = isPlainURL(mark, parent, index);
+        return state.inAutolink ? "<" : "[";
       },
+      close(state, mark) {
+        let { inAutolink } = state;
+        state.inAutolink = undefined;
+
+        if (inAutolink) {
+          return ">";
+        }
+
+        const attachment = mark.attrs.attachment ? "|attachment" : "";
+        const href =
+          mark.attrs["data-orig-href"] ??
+          mark.attrs.href.replace(/[()"]/g, "\\$&");
+        const title = mark.attrs.title
+          ? ` "${mark.attrs.title.replace(/"/g, '\\"')}"`
+          : "";
+
+        return `${attachment}](${href}${title})`;
+      },
+      mixable: true,
+    },
+  },
+  inputRules: ({ schema, markInputRule }) =>
+    markInputRule(
+      /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
+      schema.marks.link,
+      (match) => {
+        return { href: match[2], title: match[3] };
+      }
+    ),
+  plugins: ({ pmState: { Plugin }, pmModel: { Slice, Fragment }, utils }) =>
+    new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs
         clipboardTextParser(text, $context, plain, view) {
@@ -185,5 +155,23 @@ const extension = {
       },
     }),
 };
+
+function isPlainURL(link, parent, index) {
+  if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
+    return false;
+  }
+  let content = parent.child(index);
+  if (
+    !content.isText ||
+    content.text !== link.attrs.href ||
+    content.marks[content.marks.length - 1] !== link
+  ) {
+    return false;
+  }
+  return (
+    index === parent.childCount - 1 ||
+    !link.isInSet(parent.child(index + 1).marks)
+  );
+}
 
 export default extension;
