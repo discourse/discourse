@@ -433,6 +433,38 @@ Sets the language of the editor.
 </Form>
 ```
 
+## Calendar
+
+Renders a datepicker and a time input. On mobile the datepicker will be replaced by a date input.
+
+### @includeTime
+
+Displays the time input or not. Defaults to true.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="start" @title="Start" as |field|>
+    <field.Calendar @includeTime={{false}} />
+  </form.Field>
+</Form>
+```
+
+### @expandedDatePickerOnDesktop
+
+Displays date picker expanded on desktop. Defaults to true.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="start" @title="Start" as |field|>
+    <field.Calendar @expandedDatePickerOnDesktop={{false}} />
+  </form.Field>
+</Form>
+```
+
 ## Composer
 
 Renders a `<DEditor />` component.
@@ -1236,6 +1268,26 @@ Checks if the input value is an integer.
 
 ```hbs
 <field.Input @name="age" @validation="integer" />
+```
+
+### dateAfterOrEqual
+
+Checks if the calendar data is after or equal to the specified date. Format must be YYYY-MM-DD.
+
+**Example**
+
+```hbs
+<field.Calendar @name="start" @validation="dateAfterOrEqual:2022-02-01" />
+```
+
+### dateBeforeOrEqual
+
+Checks if the calendar data is before or equal to the specified date. Format must be YYYY-MM-DD.
+
+**Example**
+
+```hbs
+<field.Calendar @name="start" @validation="dateBeforeOrEqual:2022-02-01" />
 ```
 
 ## Combining Rules
