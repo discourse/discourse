@@ -36,6 +36,8 @@ jobs:
     timeout-minutes: 20
 
     env:
+      ACTIONS_RUNNER_DEBUG: true
+      ACTIONS_STEP_DEBUG: true
       RAILS_ENV: test
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
