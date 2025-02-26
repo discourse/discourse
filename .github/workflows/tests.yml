@@ -77,14 +77,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Specs
-        uses: ./.github/actions/test-setup
-        with:
-          uses_parallel_databases: ${{ toJSON(matrix.build_type == 'backend' || matrix.build_type == 'system') }}
-          build_type: ${{matrix.build_type}}
-          target: ${{matrix.target}}
-          browser: ${{matrix.browser}}
-
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
