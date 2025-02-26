@@ -99,7 +99,7 @@ jobs:
           build_type: ${{matrix.build_type}}
           target: ${{matrix.target}}
           browser: ${{matrix.browser}}
-          cpu_cores: '4'
+          cpu_cores: ${{steps.cpu-info.outputs.cpu-cores}}
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
