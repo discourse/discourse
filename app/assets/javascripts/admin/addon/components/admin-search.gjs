@@ -9,12 +9,12 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import { ADMIN_SEARCH_RESULT_TYPES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import AdminSearchFilters from "admin/components/admin-search-filters";
-import { RESULT_TYPES } from "admin/services/admin-search-data-source";
 
 const ADMIN_SEARCH_FILTERS = "admin_search_filters";
 
@@ -185,7 +185,7 @@ export default class AdminSearch extends Component {
       <AdminSearchFilters
         @toggleTypeFilter={{this.toggleTypeFilter}}
         @typeFilters={{this.typeFilters}}
-        @types={{RESULT_TYPES}}
+        @types={{ADMIN_SEARCH_RESULT_TYPES}}
       />
     {{/if}}
 

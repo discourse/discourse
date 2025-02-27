@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::SearchController < Admin::AdminController
+  RESULT_TYPES = %w[page setting theme component report].freeze
+
   def index
     # TODO (martin) Include reports here too, need to refact
     # the reports controller into a reusable lookup service first.
