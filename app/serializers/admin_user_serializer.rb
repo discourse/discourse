@@ -33,13 +33,19 @@ class AdminUserSerializer < AdminUserListSerializer
   end
 
   def ip_address
-    return nil unless scope.can_see_ip?
     object.ip_address.try(:to_s)
   end
 
   def registration_ip_address
-    return nil unless scope.can_see_ip?
     object.registration_ip_address.try(:to_s)
+  end
+
+  def include_ip_address?
+    scope.can_see_ip?
+  end
+
+  def include_registration_ip_address?
+    scope.can_see_ip?
   end
 
   def include_can_be_deleted?
