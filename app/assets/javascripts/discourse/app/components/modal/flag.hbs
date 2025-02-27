@@ -8,6 +8,11 @@
 >
   <:body>
     <p>{{i18n "flagging.review_process_description"}}</p>
+    <PluginOutlet
+      @name="flag-modal-review-process-description"
+      @connectorTagName="div"
+      @outletArgs={{hash post=@model.flagModel}}
+    />
     <form>
       <FlagSelection
         @nameKey={{this.selected.name_key}}
