@@ -38,7 +38,7 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
     Fabricate(
       :direct_message,
       users: attrs[:users] || [Fabricate(:user), Fabricate(:user)],
-      group: attrs[:group] || false,
+      group: attrs[:group] || attrs[:users].length > 2,
     )
   end
   status { :open }

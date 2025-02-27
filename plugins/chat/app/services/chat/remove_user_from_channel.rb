@@ -57,7 +57,11 @@ module Chat
     end
 
     def remove(channel:, target_user:)
-      channel.remove(target_user)
+      if channel.direct_message_channel?
+        channel.leave(target_user)
+      else
+        channel.remove(target_user)
+      end
     end
 
     def recompute_users_count(channel:)
