@@ -138,7 +138,8 @@ GEM
     dry-initializer (3.2.0)
     email_reply_trimmer (0.2.0)
     erubi (1.13.1)
-    excon (1.2.4)
+    excon (1.2.5)
+      logger
     execjs (2.10.0)
     exifr (1.4.1)
     extralite-bundle (2.10)
@@ -845,7 +846,7 @@ CHECKSUMS
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
-  excon (1.2.4) sha256=9f2b97b453cc99ee58cdab5567707409848ad80c533c5fff5484d1f7f8a9a083
+  excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
   extralite-bundle (2.10) sha256=d765b84abe359f8ed8ee1735de016167ab9f7c7760e3f9b49ba7434fa81ff192
