@@ -12,7 +12,7 @@ You can add various pieces of metadata to a theme. Some are stored in the `about
 
 **`component`** (boolean, default `false`): whether the theme should be treated as a component
 
-**`licence_url`** (string, optional): a URL for a license file. A link to this will be displayed in the admin panel. Most themes use this to link to their license file on GitHub
+**`license_url`** (string, optional): a URL for a license file. A link to this will be displayed in the admin panel. Most themes use this to link to their license file on GitHub
 
 **`about_url`** (string, optional): a URL which contains more information about the theme. A link to this will be displayed in the admin panel. Most themes use this to link to their Meta topic
 
