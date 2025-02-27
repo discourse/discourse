@@ -181,9 +181,9 @@ en:
 
           To copy any link, tap and hold on mobile, or right click your pointing device:
 
-           <https://en.wikipedia.org/wiki/Inherently_funny_word>
-           <https://en.wikipedia.org/wiki/Death_by_coconut>
-           <https://en.wikipedia.org/wiki/Calculator_spelling>
+           [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+           [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+           [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Cool! This will work for most <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
@@ -191,7 +191,7 @@ en:
 
           Can you try adding the following link, on its own line, in your next reply?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
 
       images:
         instructions: |-

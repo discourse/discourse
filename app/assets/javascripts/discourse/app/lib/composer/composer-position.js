@@ -49,17 +49,17 @@ function correctScrollPosition() {
   // This pushes the fixed element offscreen
   // Here we detect when the composer's top position is above the window's
   // current scroll offset and correct it
-  later(() => {
-    const el = document.querySelector("#reply-control");
-    const rect = el.getBoundingClientRect();
-
-    if (rect.top < -1) {
-      const scrollAmount = window.scrollY + rect.top;
-
-      window.scrollTo({
-        top: scrollAmount,
-        behavior: "instant",
-      });
-    }
-  }, 150);
+  applyBehaviorTransformer("composer-position:correct-scroll-position", () => {
+    later(() => {
+      const el = document.querySelector("#reply-control");
+      const rect = el.getBoundingClientRect();
+      if (rect.top < -1) {
+        const scrollAmount = window.scrollY + rect.top;
+        window.scrollTo({
+          top: scrollAmount,
+          behavior: "instant",
+        });
+      }
+    }, 150);
+  });
 }

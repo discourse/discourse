@@ -3639,6 +3639,9 @@ ca:
             description: "El color del botó M'agrada"
           selected:
             name: "seleccionat"
+          editor:
+            light: "Clar"
+            dark: "Fosc"
         robots:
           title: "Substitueix el fitxer robots.txt del lloc web:"
           warning: "Això substituirà permanentment qualsevol configuració del lloc web relacionada."

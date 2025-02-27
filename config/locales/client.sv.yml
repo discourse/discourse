@@ -5315,6 +5315,9 @@ sv:
           hover:
             name: "hovra"
             description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
+          editor:
+            light: "Ljust"
+            dark: "Mörkt"
         robots:
           title: "Åsidosätt din sidas robots.txt-fil:"
           warning: "Detta kommer att permanent åsidosätta alla relaterade webbplatsinställningar."

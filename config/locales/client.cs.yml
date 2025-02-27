@@ -6622,6 +6622,9 @@ cs:
           hover:
             name: "přejetí-myší"
             description: "Barva pozadí prvků, jako jsou položky seznamu, když na ně najedete myší nebo když jsou vybrány klávesnicí."
+          editor:
+            light: "Světlý režim"
+            dark: "Tmavý režim"
         robots:
           title: "Přepište soubor robots.txt vašeho webu:"
           warning: "Toto trvale přepíše všechna související nastavení webu."

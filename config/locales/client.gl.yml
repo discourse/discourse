@@ -4131,6 +4131,9 @@ gl:
             description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
+          editor:
+            light: "Claro"
+            dark: "Escuro"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."

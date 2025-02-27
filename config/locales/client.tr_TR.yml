@@ -5980,6 +5980,9 @@ tr_TR:
           hover:
             name: "üzerine gelin"
             description: "Liste ögeleri gibi ögelerin üzerine gelindiğinde veya klavye odağına sahip olduklarında arka plan rengi."
+          editor:
+            light: "Açık"
+            dark: "Koyu"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."

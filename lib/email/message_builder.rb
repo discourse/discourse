@@ -47,7 +47,9 @@ module Email
         else
           if @opts[:only_reply_by_email]
             string = +"user_notifications.only_reply_by_email"
-            string << "_pm" if @opts[:private_reply]
+            if @opts[:private_reply] && @opts[:username] != Discourse.system_user.username
+              string << "_pm"
+            end
           else
             string =
               (
@@ -57,7 +59,9 @@ module Email
                   +@visit_link_to_respond_key
                 end
               )
-            string << "_pm" if @opts[:private_reply]
+            if @opts[:private_reply] && @opts[:username] != Discourse.system_user.username
+              string << "_pm"
+            end
           end
           @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end

@@ -113,7 +113,12 @@ module Jobs
                                         ELSE NULL END
                         )
                     )) :: JSON
-        WHERE data ILIKE '%' || :old_username || '%'
+        WHERE data ILIKE '%' || :old_username || '%' AND (
+          data :: JSONB ->> 'original_username' = :old_username OR
+          data :: JSONB ->> 'display_username' = :old_username OR
+          data :: JSONB ->> 'username' = :old_username OR
+          data :: JSONB ->> 'username2' = :old_username
+        )
       SQL
     end
 

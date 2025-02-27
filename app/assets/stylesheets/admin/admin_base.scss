@@ -1223,6 +1223,22 @@ a.inline-editable-field {
   cursor: pointer;
 }
 
+.desktop-view .emoji-value-list {
+  .value {
+    .shift-up-value-btn,
+    .shift-down-value-btn {
+      display: none;
+    }
+
+    &:hover {
+      .shift-up-value-btn,
+      .shift-down-value-btn {
+        display: block;
+      }
+    }
+  }
+}
+
 // Styles for subtabs in admin
 @import "admin/dashboard";
 @import "admin/sidebar";
@@ -1260,3 +1276,4 @@ a.inline-editable-field {
 @import "admin/schema_theme_setting_editor";
 @import "admin/customize_themes_show_schema";
 @import "admin/admin_bulk_users_delete_modal";
+@import "admin/color-palette-editor";

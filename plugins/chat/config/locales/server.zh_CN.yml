@@ -220,6 +220,10 @@ zh_CN:
       subject:
         private_email:
           other: "[%{site_name}] 新消息"
+        watched_thread:
+          other: "[%{site_name}] %{channel} 中有新对话消息"
+        watched_threads:
+          other: "[%{site_name}] %{channel} 和其他 %{count} 个频道中的新对话消息"
         chat_dm_1:
           other: "[%{site_name}] 来自 %{name} 的新消息"
         chat_dm_2: "[%{site_name}] 来自 %{name_1} 和 %{name_2} 的新消息"

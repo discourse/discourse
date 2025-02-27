@@ -126,6 +126,38 @@ describe "PostCreatedEdited" do
       expect(list[0]["action"].to_s).to eq("edit")
     end
 
+    context "when user group is restricted" do
+      fab!(:group)
+
+      before do
+        automation.upsert_field!(
+          "restricted_user_group",
+          "group",
+          { value: group.id },
+          target: "trigger",
+        )
+      end
+
+      context "when user is member of the group" do
+        before { group.add(user) }
+
+        it "fires the trigger" do
+          list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+      end
+
+      context "when user is not member of the group" do
+        it "doesn’t fire the trigger" do
+          list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+          expect(list).to be_blank
+        end
+      end
+    end
+
     context "when trust_levels are restricted" do
       before do
         automation.upsert_field!(
