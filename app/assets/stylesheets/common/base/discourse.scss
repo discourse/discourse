@@ -224,6 +224,23 @@ input {
     }
   }
 
+  &[type="color"] {
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 0;
+    }
+  }
+
   &[type="time"] {
     max-width: 140px;
   }

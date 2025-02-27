@@ -2860,6 +2860,9 @@ sw:
             description: "Rangi ya kitufe cha upendo."
           selected:
             name: "imechaguliwa"
+          editor:
+            light: "Hafifu"
+            dark: "Nyeusi"
         email_style:
           html: "HTML"
           css: "CSS"

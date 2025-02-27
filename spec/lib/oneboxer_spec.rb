@@ -781,17 +781,10 @@ RSpec.describe Oneboxer do
 
     let(:url) { "https://example.com/fake-url/" }
 
-    it "handles a missing description" do
+    it "handles a missing description, title-only oneboxes are fine" do
       stub_request(:get, url).to_return(body: response("missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include(
         "could not be found: description",
-      )
-    end
-
-    it "handles a missing description and image" do
-      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
-        "could not be found: description, image",
       )
     end
 

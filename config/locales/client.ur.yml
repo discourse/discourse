@@ -4401,6 +4401,9 @@ ur:
             description: "لائیک بٹن کا رنگ۔"
           selected:
             name: "منتخب کیا ہوا"
+          editor:
+            light: "لائٹ"
+            dark: "ڈارک"
         robots:
           title: "آپ کی سائٹ کی robots.txt فائل کی جگہ لے لیتی ہے:"
           warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"

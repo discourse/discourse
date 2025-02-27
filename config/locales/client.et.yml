@@ -3198,6 +3198,9 @@ et:
             description: "Meeldimise nupu värvus."
           selected:
             name: "valitud"
+          editor:
+            light: "Hele"
+            dark: "Tume"
         email_style:
           html: "HTML"
           css: "CSS"

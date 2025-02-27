@@ -368,6 +368,9 @@ uk:
     site_settings:
       invalid_site_setting: "Не існує параметра з назвою «%{name}»"
       invalid_category_id: "Ви вказали розділ, якого не існує"
+      site_settings_are_hidden: "Вам заборонено змінювати приховані налаштування: %{setting_names}"
+      site_settings_are_shadowed_globally: "Ви не можете змінити ці параметри, оскільки вони налаштовані глобально: %{setting_names}"
+      site_settings_are_unconfigurable: "Вам заборонено змінювати параметри, які не можна налаштовувати: %{setting_names}"
       invalid_choice:
         one: "'%{name}' є недійсним вибором."
         few: "'%{name}' є недійсним вибором."

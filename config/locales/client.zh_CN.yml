@@ -5696,6 +5696,9 @@ zh_CN:
           hover:
             name: "悬停"
             description: "元素（例如列表条目）在鼠标悬停或具有键盘焦点时的背景色。"
+          editor:
+            light: "亮"
+            dark: "深色"
         robots:
           title: "替换您的网站的 robots.txt 文件："
           warning: "这将永久替换任何相关的网站设置。"

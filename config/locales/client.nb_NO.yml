@@ -5015,6 +5015,9 @@ nb_NO:
             description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
+          editor:
+            light: "Lys"
+            dark: "Mørk"
         robots:
           title: "Overstyr nettstedets robots.txt fil:"
           warning: "Dette vil permanent overstyre alle relaterte nettstedsinnstillinger."
