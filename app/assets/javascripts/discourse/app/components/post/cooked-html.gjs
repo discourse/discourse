@@ -53,7 +53,6 @@ export default class PostCookedHtml extends Component {
             highlightTerm: this.highlightTerm,
             isIgnored: this.isIgnored,
             ignoredUsers: this.ignoredUsers,
-            owner: getOwner(this),
           },
           createDetachedElement: this.#createDetachedElement,
           currentUser: this.currentUser,
@@ -68,6 +67,7 @@ export default class PostCookedHtml extends Component {
                 ...makeArray(extraDecorators),
               ],
             }),
+          owner: getOwner(this),
           state: this.#decoratorState.get(decorator),
         });
 

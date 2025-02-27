@@ -6,12 +6,23 @@ import {
 } from "discourse/lib/update-user-status-on-mention";
 
 export default function (element, context) {
-  const { post, owner } = context;
+  const {
+    data: { post },
+    owner,
+  } = context;
 
   destroyUserStatusOnMentions();
 
-  _extractMentions(element).forEach(({ mentions, user }) => {
-    _trackMentionedUserStatus(user, post);
+  const _rerenderUsersStatusOnMentions = () => {
+    _extractMentions(element, post).forEach(({ mentions, user }) => {
+      _rerenderUserStatusOnMentions(mentions, user, owner);
+    });
+  };
+
+  _extractMentions(element, post).forEach(({ mentions, user }) => {
+    user.statusManager?.trackStatus?.();
+    user.on?.("status-changed", element, _rerenderUsersStatusOnMentions);
+
     _rerenderUserStatusOnMentions(mentions, user, owner);
 
     const classes = applyValueTransformer("mentions-class", [], {
@@ -25,7 +36,11 @@ export default function (element, context) {
 
   // cleanup code
   return () => {
-    _stopTrackingMentionedUsersStatus(post);
+    post?.mentioned_users?.forEach((user) => {
+      user.statusManager?.stopTrackingStatus?.();
+      user.off?.("status-changed", element, _rerenderUsersStatusOnMentions);
+    });
+
     destroyUserStatusOnMentions();
   };
 }
@@ -33,12 +48,6 @@ export default function (element, context) {
 function _rerenderUserStatusOnMentions(mentions, user, owner) {
   mentions.forEach((mention) => {
     updateUserStatusOnMention(owner, mention, user.status);
-  });
-}
-
-function _rerenderUsersStatusOnMentions() {
-  _extractMentions().forEach(({ mentions, user }) => {
-    _rerenderUserStatusOnMentions(mentions, user);
   });
 }
 
@@ -51,16 +60,4 @@ function _extractMentions(element, post) {
       return { user, mentions };
     }) || []
   );
-}
-
-function _trackMentionedUserStatus(user) {
-  user.statusManager?.trackStatus?.();
-  user.on?.("status-changed", this, _rerenderUsersStatusOnMentions);
-}
-
-function _stopTrackingMentionedUsersStatus(post) {
-  post?.mentioned_users?.forEach((user) => {
-    user.statusManager?.stopTrackingStatus?.();
-    user.off?.("status-changed", this, _rerenderUsersStatusOnMentions);
-  });
 }
