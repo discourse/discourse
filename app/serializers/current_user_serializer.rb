@@ -334,4 +334,8 @@ class CurrentUserSerializer < BasicUserSerializer
   def can_see_ip
     scope.can_see_ip?
   end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
+  end
 end

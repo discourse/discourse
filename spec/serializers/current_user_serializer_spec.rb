@@ -332,13 +332,12 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#can_see_ip" do
-    let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }
 
     context "when user is an admin" do
       let(:user) { Fabricate(:admin) }
 
-      it "returns true" do
+      it "includes can_see_ip as true" do
         expect(payload[:can_see_ip]).to eq(true)
       end
     end
@@ -348,7 +347,7 @@ RSpec.describe CurrentUserSerializer do
 
       before { SiteSetting.moderators_view_ips = true }
 
-      it "returns true" do
+      it "includes can_see_ip as true" do
         expect(payload[:can_see_ip]).to eq(true)
       end
     end
@@ -358,8 +357,8 @@ RSpec.describe CurrentUserSerializer do
 
       before { SiteSetting.moderators_view_ips = false }
 
-      it "returns false" do
-        expect(payload[:can_see_ip]).to eq(false)
+      it "does not include can_see_ip" do
+        expect(payload).not_to have_key(:can_see_ip)
       end
     end
   end
