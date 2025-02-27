@@ -332,7 +332,6 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#can_see_ip" do
-    let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }
 
     context "when user is an admin" do
