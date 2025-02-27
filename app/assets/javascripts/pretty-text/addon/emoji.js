@@ -219,7 +219,7 @@ export function emojiSearch(term, options) {
     }
   }
 
-  if (options.searchAliases) {
+  if (options?.searchAliases) {
     for (const [key, value] of Object.entries(options.searchAliases)) {
       for (const item of value) {
         if (item.startsWith(term)) {

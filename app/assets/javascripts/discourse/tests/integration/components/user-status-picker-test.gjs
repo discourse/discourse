@@ -42,8 +42,8 @@ module("Integration | Component | user-status-picker", function (hooks) {
     await fillIn(".emoji-picker-content .filter-input", "raised");
     await click(".emoji-picker__sections .emoji");
 
-    assert.dom(".emoji").hasAttribute("alt", "raised_hands");
-    assert.strictEqual(status.emoji, "raised_hands");
+    assert.dom(".emoji").hasAttribute("alt", "raised_back_of_hand");
+    assert.strictEqual(status.emoji, "raised_back_of_hand");
   });
 
   test("it sets default emoji when user starts typing a description", async function (assert) {
