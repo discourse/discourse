@@ -14,3 +14,11 @@
     flex-basis: 100%;
   }
 }
+
+.mobile-view .admin-contents table.grid tr.admin-flag-item {
+  grid-template-columns: auto min-content;
+
+  .d-toggle-switch {
+    margin-right: 0;
+  }
+}
