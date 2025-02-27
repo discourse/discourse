@@ -194,6 +194,7 @@ export default class Post extends RestModel {
   @trackedPostProperty cooked;
   @trackedPostProperty cooked_hidden;
   @trackedPostProperty can_see_hidden_post;
+  @trackedPostProperty link_counts;
 
   customShare = null;
 
