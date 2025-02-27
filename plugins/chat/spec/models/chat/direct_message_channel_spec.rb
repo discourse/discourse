@@ -113,12 +113,11 @@ RSpec.describe Chat::DirectMessageChannel do
   describe "#direct_message_group?" do
     it "returns false if the DirectMessage chatable is not for a group DM" do
       channel.chatable.update!(group: false)
-      expect(channel.direct_message_group?).to eq(false)
+      expect(channel).not_to be_direct_message_group
     end
-
     it "returns true if the DirectMessage chatable is for a group DM" do
       channel.chatable.update!(group: true)
-      expect(channel.direct_message_group?).to eq(true)
+      expect(channel).to be_direct_message_group
     end
   end
 end
