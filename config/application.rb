@@ -1,23 +1,11 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-  STDERR.puts "Discourse requires Ruby 3.2 or above"
-  exit 1
-end
-
 require File.expand_path("../boot", __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
 require "sprockets/railtie"
-
-if !Rails.env.production?
-  recommended = File.read(".ruby-version.sample").strip
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
-    STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
-  end
-end
 
 # Plugin related stuff
 require_relative "../lib/plugin"
