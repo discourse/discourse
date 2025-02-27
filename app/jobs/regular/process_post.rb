@@ -56,12 +56,7 @@ module Jobs
               post,
               :inappropriate,
               reason: :watched_word,
-              context:
-                I18n.t(
-                  "reviewables.contexts.watched_word",
-                  words: words.join(", "),
-                  count: words.length,
-                ),
+              context: words.join(","),
             )
           end
         end

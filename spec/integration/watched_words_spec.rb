@@ -267,12 +267,7 @@ RSpec.describe WatchedWord do
         ReviewableScore.where(
           reviewable: reviewable,
           reason: "watched_word",
-          context:
-            I18n.t(
-              "reviewables.contexts.watched_word",
-              words: "#{flag_word.word}, #{another_flag_word.word}",
-              count: 2,
-            ),
+          context: "#{flag_word.word},#{another_flag_word.word}",
         ),
       ).to be_present
     end
