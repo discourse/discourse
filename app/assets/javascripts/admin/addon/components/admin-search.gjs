@@ -25,7 +25,7 @@ export default class AdminSearch extends Component {
 
   @tracked filter = this.args.initialFilter ?? "";
   @tracked searchResults = [];
-  @tracked showFilters = false;
+  @tracked showFilters = true;
   @tracked loading = false;
   typeFilters = new TrackedObject({
     page: true,
@@ -42,7 +42,6 @@ export default class AdminSearch extends Component {
       this.typeFilters = new TrackedObject(
         JSON.parse(this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS))
       );
-      this.showFilters = true;
     }
 
     this.adminSearchDataSource.buildMap().then(() => {
@@ -176,6 +175,7 @@ export default class AdminSearch extends Component {
           {{autoFocus}}
           {{on "input" this.changeSearchTerm}}
           {{on "keydown" this.handleSearchKeyDown}}
+          placeholder={{i18n "admin.search.instructions"}}
         />
       </div>
       <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
@@ -191,14 +191,8 @@ export default class AdminSearch extends Component {
 
     <div class="admin-search__results">
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
-        {{#unless this.searchResults.length}}
-          <div class="admin-search__instructions-placeholder admin-empty-list">
-            {{i18n "admin.search.instructions"}}
-          </div>
-        {{/unless}}
-
         {{#each this.searchResults as |result|}}
-          <div class="admin-search__result">
+          <div class="admin-search__result" data-result-type={{result.type}}>
             <a href={{result.url}} {{on "keydown" this.handleResultKeyDown}}>
               <div class="admin-search__result-name">
                 {{#if result.icon}}

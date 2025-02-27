@@ -1,9 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import { CHAT_PANEL } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
@@ -28,6 +31,7 @@ export default class ChatStateManager extends Service {
   @service router;
   @service site;
   @service chatDrawerRouter;
+  @service modal;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
@@ -74,6 +78,22 @@ export default class ChatStateManager extends Service {
           api.setCombinedSidebarMode();
         }
       }
+
+      api.addKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        this.openQuickChannelSelector,
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
+            definition: {
+              keys1: ["meta", "k"],
+              keysDelimiter: "plus",
+            },
+          },
+        }
+      );
     });
 
     this.isDrawerActive = true;
@@ -110,6 +130,11 @@ export default class ChatStateManager extends Service {
           api.hideSidebarSwitchPanelButtons();
         }
       }
+
+      api.removeKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        this.openQuickChannelSelector
+      );
     });
 
     this.chatDrawerRouter.currentRouteName = null;
@@ -196,5 +221,12 @@ export default class ChatStateManager extends Service {
     };
 
     chatDrawerStateCallbacks.forEach((callback) => callback(state));
+  }
+
+  @bind
+  openQuickChannelSelector(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.modal.show(ChatModalNewMessage);
   }
 }

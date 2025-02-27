@@ -1,10 +1,13 @@
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import {
   CHAT_PANEL,
@@ -17,6 +20,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chatStateManager;
   @service chatDrawerRouter;
   @service currentUser;
+  @service modal;
 
   titleToken() {
     return i18n("chat.title_capitalized");
@@ -67,6 +71,22 @@ export default class ChatRoute extends DiscourseRoute {
       } else {
         api.setSeparatedSidebarMode();
       }
+
+      api.addKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        this.openQuickChannelSelector,
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
+            definition: {
+              keys1: ["meta", "k"],
+              keysDelimiter: "plus",
+            },
+          },
+        }
+      );
     });
 
     this.chatStateManager.storeAppURL();
@@ -82,6 +102,11 @@ export default class ChatRoute extends DiscourseRoute {
   deactivate(transition) {
     withPluginApi("1.8.0", (api) => {
       initSidebarState(api, this.currentUser);
+
+      api.removeKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        this.openQuickChannelSelector
+      );
     });
 
     if (transition) {
@@ -101,5 +126,12 @@ export default class ChatRoute extends DiscourseRoute {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
     });
+  }
+
+  @bind
+  openQuickChannelSelector(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.modal.show(ChatModalNewMessage);
   }
 }

@@ -633,6 +633,13 @@ class PluginApi {
   }
 
   /**
+   * See KeyboardShortcuts.unbind documentation.
+   **/
+  removeKeyboardShortcut(shortcut, callback) {
+    KeyboardShortcuts.unbind({ [shortcut]: callback });
+  }
+
+  /**
    * This function is used to disable a "default" keyboard shortcut. You can pass
    * an array of shortcut bindings as strings to disable them.
    *

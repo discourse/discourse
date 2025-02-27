@@ -9,7 +9,7 @@
 .admin-search {
   &__input-container {
     display: flex;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-1);
   }
 
   &__input-group {
@@ -133,4 +133,8 @@
     width: 100%;
     pointer-events: auto;
   }
+}
+
+.admin-search-modal {
+  --modal-max-width: 700px;
 }
