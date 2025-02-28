@@ -1480,12 +1480,12 @@ class UserStatusManager {
   }
 
   _autoClearStatus() {
-    this.user.set("status", null);
+    this.user.status = null;
   }
 
   _updateStatus(statuses) {
     if (statuses.hasOwnProperty(this.user.id)) {
-      this.user.set("status", statuses[this.user.id]);
+      this.user.status = statuses[this.user.id];
     }
   }
 }

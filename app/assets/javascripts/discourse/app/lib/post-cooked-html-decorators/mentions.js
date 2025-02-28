@@ -11,7 +11,11 @@ export default function (element, context) {
     owner,
   } = context;
 
-  destroyUserStatusOnMentions();
+  const userStatusService = owner.lookup("service:user-status");
+
+  if (userStatusService.isEnabled) {
+    destroyUserStatusOnMentions();
+  }
 
   const _rerenderUsersStatusOnMentions = () => {
     _extractMentions(element, post).forEach(({ mentions, user }) => {
@@ -20,10 +24,12 @@ export default function (element, context) {
   };
 
   _extractMentions(element, post).forEach(({ mentions, user }) => {
-    user.statusManager?.trackStatus?.();
-    user.on?.("status-changed", element, _rerenderUsersStatusOnMentions);
+    if (userStatusService.isEnabled) {
+      user.statusManager?.trackStatus?.();
+      user.on?.("status-changed", element, _rerenderUsersStatusOnMentions);
 
-    _rerenderUserStatusOnMentions(mentions, user, owner);
+      _rerenderUserStatusOnMentions(mentions, user, owner);
+    }
 
     const classes = applyValueTransformer("mentions-class", [], {
       user,
@@ -35,14 +41,16 @@ export default function (element, context) {
   });
 
   // cleanup code
-  return () => {
-    post?.mentioned_users?.forEach((user) => {
-      user.statusManager?.stopTrackingStatus?.();
-      user.off?.("status-changed", element, _rerenderUsersStatusOnMentions);
-    });
+  return userStatusService.isEnabled
+    ? () => {
+        post?.mentioned_users?.forEach((user) => {
+          user.statusManager?.stopTrackingStatus?.();
+          user.off?.("status-changed", element, _rerenderUsersStatusOnMentions);
+        });
 
-    destroyUserStatusOnMentions();
-  };
+        destroyUserStatusOnMentions();
+      }
+    : null;
 }
 
 function _rerenderUserStatusOnMentions(mentions, user, owner) {
