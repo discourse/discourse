@@ -11,6 +11,7 @@ import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
@@ -81,6 +82,7 @@ export default class PostMetaDataPosterName extends Component {
     );
   }
 
+  @bind
   refreshUserStatus() {
     this.#stopTrackingUserStatus();
     this.#trackUserStatus();
