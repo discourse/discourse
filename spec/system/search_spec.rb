@@ -128,35 +128,36 @@ describe "Search", type: :system do
       expect(log.search_type).to eq(SearchLog.search_types[:header])
     end
 
-    it "displays search icon by default" do
-      visit("/")
-      expect(page).to have_css(".d-header #search-button.btn-icon")
+    describe "with search icon in header" do
+      before { SiteSetting.search_experience = "search_icon" }
+
+      it "displays the correct search mode" do
+        visit("/")
+        expect(search_page).to have_search_icon
+        expect(search_page).to have_no_search_field
+      end
     end
 
     describe "with search field in header" do
-      fab!(:user)
+      before { SiteSetting.search_experience = "search_field" }
 
-      before do
-        SiteSetting.search_experience = "search_field"
-        sign_in(user)
-      end
-
-      it "displays correct search mode" do
+      it "displays the correct search mode" do
         visit("/")
-        expect(page).to have_no_css(".d-header #search-button.btn-icon")
-        expect(page).to have_css(".floating-search-input .search-menu")
+        expect(search_page).to have_search_field
+        expect(search_page).to have_no_search_icon
       end
 
       it "switches to search icon when header is minimized" do
         5.times { Fabricate(:post, topic: topic) }
         visit("/t/#{topic.id}")
-        expect(page).to have_no_css(".d-header #search-button.btn-icon")
+
+        expect(search_page).to have_no_search_icon
 
         find(".timeline-date-wrapper:last-child a").click
-        expect(page).to have_css(".d-header #search-button.btn-icon")
+        expect(search_page).to have_search_icon
 
         find(".timeline-date-wrapper:first-child a").click
-        expect(page).to have_no_css(".d-header #search-button.btn-icon")
+        expect(search_page).to have_no_search_icon
       end
     end
   end
