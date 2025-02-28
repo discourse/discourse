@@ -1446,7 +1446,7 @@ class UserStatusManager {
   }
 
   _statusChanged() {
-    this.user.trigger("status-changed");
+    this.user.trigger("status-changed", this.user);
 
     const status = this.user.status;
     if (status && status.ends_at) {

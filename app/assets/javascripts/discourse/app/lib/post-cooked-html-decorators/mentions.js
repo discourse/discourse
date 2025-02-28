@@ -8,8 +8,11 @@ import {
 export default function (element, context) {
   const {
     data: { post },
+    state,
     owner,
   } = context;
+
+  state.extractedMentions = _extractMentions(element, post);
 
   const userStatusService = owner.lookup("service:user-status");
 
@@ -17,18 +20,20 @@ export default function (element, context) {
     destroyUserStatusOnMentions();
   }
 
-  const _rerenderUsersStatusOnMentions = () => {
-    _extractMentions(element, post).forEach(({ mentions, user }) => {
-      _rerenderUserStatusOnMentions(mentions, user, owner);
-    });
+  const _updateUserStatus = (updatedUser) => {
+    state.extractedMentions
+      .filter(({ user }) => updatedUser.id === user?.id)
+      .forEach(({ mentions, user }) => {
+        _renderUserStatusOnMentions(mentions, user, owner);
+      });
   };
 
-  _extractMentions(element, post).forEach(({ mentions, user }) => {
+  state.extractedMentions.forEach(({ mentions, user }) => {
     if (userStatusService.isEnabled) {
       user.statusManager?.trackStatus?.();
-      user.on?.("status-changed", element, _rerenderUsersStatusOnMentions);
+      user.on?.("status-changed", element, _updateUserStatus);
 
-      _rerenderUserStatusOnMentions(mentions, user, owner);
+      _renderUserStatusOnMentions(mentions, user, owner);
     }
 
     const classes = applyValueTransformer("mentions-class", [], {
@@ -41,19 +46,21 @@ export default function (element, context) {
   });
 
   // cleanup code
-  return userStatusService.isEnabled
-    ? () => {
-        post?.mentioned_users?.forEach((user) => {
-          user.statusManager?.stopTrackingStatus?.();
-          user.off?.("status-changed", element, _rerenderUsersStatusOnMentions);
-        });
+  return () => {
+    state.extractedMentions = [];
 
-        destroyUserStatusOnMentions();
-      }
-    : null;
+    if (userStatusService.isEnabled) {
+      post?.mentioned_users?.forEach((user) => {
+        user.statusManager?.stopTrackingStatus?.();
+        user.off?.("status-changed", element, _updateUserStatus);
+      });
+    }
+
+    destroyUserStatusOnMentions();
+  };
 }
 
-function _rerenderUserStatusOnMentions(mentions, user, owner) {
+function _renderUserStatusOnMentions(mentions, user, owner) {
   mentions.forEach((mention) => {
     updateUserStatusOnMention(owner, mention, user.status);
   });
