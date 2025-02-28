@@ -203,9 +203,7 @@ class PostsController < ApplicationController
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
 
-    user =
-      DiscoursePluginRegistry.apply_modifier(:posts_controller_create_user, current_user) ||
-        current_user
+    user = DiscoursePluginRegistry.apply_modifier(:posts_controller_create_user, current_user)
     manager = NewPostManager.new(user, manager_params)
 
     json =
