@@ -311,7 +311,12 @@ RSpec.describe Admin::WebHooksController do
       expect(parsed_event["payload"]).to eq("abc")
 
       expect(JSON.parse(parsed_event["response_headers"])).to eq(
-        { "content-type" => "application/json", "yoo" => "man" },
+        {
+          "content-type" => "application/json",
+          "user-agent" =>
+            "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+          "yoo" => "man",
+        },
       )
       expect(parsed_event["response_body"]).to eq("efg")
     end
