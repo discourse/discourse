@@ -208,6 +208,85 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#remove password" do
+    it "responds forbidden when not logged in" do
+      put "/u/#{user.username}/remove-password.json"
+      expect(response.status).to eq(403)
+    end
+
+    context "logged in, no associated accout, no passkeys" do
+      before { sign_in(user) }
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "fails with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "logged in and has a passkey" do
+      before do
+        SiteSetting.enable_passkeys = true
+        Fabricate(:passkey_with_random_credential, user: user)
+        sign_in(user)
+      end
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "succeeds with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "logged in and has associated accout" do
+      let(:plugin_auth_provider) do
+        authenticator_class =
+          Class.new(Auth::ManagedAuthenticator) do
+            def name
+              "pluginauth"
+            end
+
+            def enabled?
+              true
+            end
+          end
+
+        provider = Auth::AuthProvider.new
+        provider.authenticator = authenticator_class.new
+        provider
+      end
+
+      before do
+        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        user.user_associated_accounts.create!(provider_name: "pluginauth", provider_uid: "foo")
+        sign_in(user)
+      end
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "succeeds with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
+
+      after { DiscoursePluginRegistry.reset! }
+    end
+  end
+
   describe "#password_reset" do
     let(:token) { SecureRandom.hex }
 

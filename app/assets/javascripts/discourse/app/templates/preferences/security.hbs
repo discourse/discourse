@@ -2,7 +2,12 @@
   <div class="control-group pref-password" data-setting-name="user-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
-      <a href {{on "click" this.changePassword}} class="btn btn-default">
+      <a
+        href
+        {{on "click" this.changePassword}}
+        class="btn btn-default"
+        id="change-password-button"
+      >
         {{d-icon "envelope"}}
         {{#if this.model.no_password}}
           {{i18n "user.change_password.set_password"}}
@@ -19,6 +24,7 @@
         {{#if this.canRemovePassword}}
           <div class="controls">
             <DButton
+              id="remove-password-button"
               @action={{this.removePassword}}
               @icon="trash-can"
               @label="user.change_password.remove"
