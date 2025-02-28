@@ -4,7 +4,7 @@
 RSpec.describe "Net::HTTPHeader sets a default user-agent" do
   fab!(:admin)
   fab!(:web_hook)
-  let!(:web_hook_event) { WebHookEvent.create!(web_hook: web_hook) }
+  let!(:web_hook_event) { WebHookEvent.create!(web_hook: web_hook, headers: "{}") }
 
   before do
     sign_in(admin)
