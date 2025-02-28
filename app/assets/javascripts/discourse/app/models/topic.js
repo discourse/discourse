@@ -318,7 +318,10 @@ export default class Topic extends RestModel {
   @and("pinned", "readLastPost") canClearPin;
   @or("details.can_edit", "details.can_edit_tags") canEditTags;
 
-  @tracked _details;
+  @tracked _details = this.store.createRecord("topicDetails", {
+    id: this.id,
+    topic: this,
+  });
 
   @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
@@ -461,10 +464,7 @@ export default class Topic extends RestModel {
   }
 
   get details() {
-    return (this._details ??= this.store.createRecord("topicDetails", {
-      id: this.id,
-      topic: this,
-    }));
+    return this._details;
   }
 
   set details(value) {
