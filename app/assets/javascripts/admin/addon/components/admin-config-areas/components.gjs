@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
+import InstallThemeCard from "admin/components/admin-config-area-cards/install-theme-card";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
 import { COMPONENTS } from "admin/models/theme";
@@ -49,7 +50,14 @@ export default class AdminConfigAreasComponents extends Component {
 
   <template>
     <div class="admin-detail">
-      <ThemesGrid @themes={{@components}} />
+      <ThemesGrid @themes={{@components}}>
+        <:specialCard>
+          <InstallThemeCard
+            @component={{true}}
+            @openModal={{this.installModal}}
+          />
+        </:specialCard>
+      </ThemesGrid>
     </div>
   </template>
 }
