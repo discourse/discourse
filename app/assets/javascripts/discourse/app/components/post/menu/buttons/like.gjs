@@ -65,7 +65,7 @@ export default class PostMenuLikeButton extends Component {
             "toggle-like"
             "btn-icon"
             (if this.isAnimated "heart-animation")
-            (if @post.liked "has-like fade-out" "like")
+            (if @post.liked "has-like" "like")
           }}
           ...attributes
           data-post-id={{@post.id}}

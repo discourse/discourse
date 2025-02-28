@@ -4261,9 +4261,11 @@ te:
             users:
               content: "సభ్యులు"
               title: "సభ్యులందరి జాబితా"
-            my_drafts:
-              content: "నా చిత్తుప్రతులు"
-              title: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
+            my_posts:
+              content: "నా పోస్ట్‌లు"
+              content_drafts: "నా చిత్తుప్రతులు"
+              title: "నా ఇటీవలి విషయం కార్యాచరణ"
+              title_drafts: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
               draft_count:
                 one: "%{count} డ్రాఫ్ట్"
                 other: "%{count} డ్రాఫ్ట్లు"

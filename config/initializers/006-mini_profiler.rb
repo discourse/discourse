@@ -96,32 +96,6 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     end
 
   Rack::MiniProfiler.counter_method(Redis::Client, :call) { "redis" }
-  # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
-  # Rack::MiniProfiler.counter_method(Array, 'uniq')
-  # require "#{Rails.root}/vendor/backports/notification"
-
-  # inst = Class.new
-  # class << inst
-  #   def start(name,id,payload)
-  #     if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
-  #       @prf ||= {}
-  #       @prf[id] ||= []
-  #       @prf[id] << Rack::MiniProfiler.start_step("#{payload[:serializer] if name =~ /serialize.serializer/} #{name}")
-  #     end
-  #   end
-
-  #   def finish(name,id,payload)
-  #     if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
-  #       t = @prf[id].pop
-  #       @prf.delete id unless t
-  #       Rack::MiniProfiler.finish_step t
-  #     end
-  #   end
-  # end
-  # disabling for now cause this slows stuff down too much
-  # ActiveSupport::Notifications.subscribe(/.*/, inst)
-
-  # Rack::MiniProfiler.profile_method ActionView::PathResolver, 'find_templates'
 end
 
 if ENV["PRINT_EXCEPTIONS"]

@@ -3609,6 +3609,8 @@ ur:
               content: "گروپس"
             users:
               content: "صارفین"
+            my_posts:
+              content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
             invite:

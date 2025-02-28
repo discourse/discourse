@@ -311,8 +311,6 @@ RSpec.describe Chat::CreateMessage do
           end
 
           context "when user can join channel" do
-            before { user.groups << Group.find(Group::AUTO_GROUPS[:trust_level_1]) }
-
             context "when user can't create a message in the channel" do
               before { channel.closed!(Discourse.system_user) }
 

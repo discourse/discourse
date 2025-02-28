@@ -295,6 +295,18 @@ sr:
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
+      visitor_count: "Posetioci"
+      eu_visitor_count: "Posetioci iz EU"
+      traffic_info_footer_MF: |
+        U poslednjih 6 meseci, ovaj sajt je prikazivao sadržaj za približno { total_visitors, plural,
+            one {# čovek}
+           few {# čoveka}
+          other {# ljudi}
+        } svakog meseca, od kojih je { eu_visitors, plural,
+            one {# čovek}
+           few {# čoveka}
+          other {# ljudi}
+        } iz EU.
       activities:
         posts:
           one: "%{formatted_number} poruka"
@@ -621,6 +633,8 @@ sr:
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslate iz ulazne pošte grupe poslat će se putem SMTP parametara navedenih ovde umesto servera e-pošte konfigurisanog za druge poruke e-pošte koje šalje vaš forum."
           imap_title: "IMAP"
+          smtp_disable_confirm: "Ukoliko isključite SMTP, sva SMTP i IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
+          imap_mailbox_not_selected: "Morate odabrati Mailbox za ovu IMAP konfiguraciju inače ni jedna odlazna pošta se neće sinhronizovati."
           ssl_modes:
             none: "Ništa"
           credentials:
@@ -638,6 +652,8 @@ sr:
           details: "Detalji"
       permissions:
         title: "Dozvole"
+      empty:
+        topics: "Nema tema od članova ove grupe"
       add: "Dodaj"
       message: "Privatna poruka"
       name: "Ime foruma"
@@ -750,6 +766,7 @@ sr:
           read: "Pročitano"
           unread: "Nepročitano"
         ignore_duration_username: "Korisničko ime"
+        ignore_duration_save: "Ignoriši"
         mute_option: "Utišano"
         normal_option: "Normalno"
       notification_schedule:
@@ -2072,6 +2089,8 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
+            my_posts:
+              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"

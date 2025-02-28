@@ -1800,8 +1800,8 @@ tr_TR:
         after_10_minutes: "10 dakika sonra"
       notification_level_when_replying:
         label: "Gönderi paylaşırken"
-        watch_topic: "Konu izle"
-        track_topic: "Konu takip et"
+        watch_topic: "Konuyu izle"
+        track_topic: "Konuyu takip et"
         do_nothing: "Hiçbir şey yapma"
       topics_unread_when_closed: "Konular kapatıldığında okunmamış olarak kabul edin"
       invited:
@@ -4644,9 +4644,11 @@ tr_TR:
             users:
               content: "Kullanıcılar"
               title: "Tüm kullanıcıların listesi"
-            my_drafts:
-              content: "Taslaklarım"
-              title: "Paylaşılmamış taslaklarım"
+            my_posts:
+              content: "Gönderilerim"
+              content_drafts: "Taslaklarım"
+              title: "Son konu etkinliğim"
+              title_drafts: "Gönderilmemiş taslaklarım"
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
@@ -6187,7 +6189,7 @@ tr_TR:
             create_flag: "bayrak oluştur"
             update_flag: "bayrağı güncelle"
             delete_flag: "bayrağı sil"
-            topic_slow_mode_set: "konu yavaş modunu ayarla"
+            topic_slow_mode_set: "konuyu yavaş moda ayarla"
             topic_slow_mode_removed: "konu yavaş modunu kaldır"
             custom_emoji_create: "özel emoji oluştur"
             custom_emoji_destroy: "özel emoji'yi sil"
@@ -7167,7 +7169,7 @@ tr_TR:
           news: "En son haber ve olayları tartışın."
           site_feedback: "Topluluk hakkındaki düşüncelerinizi paylaşın ve iyileştirmeler önerin."
         category_names:
-          icebreakers: "Kaynaştırma aktiviteleri"
+          icebreakers: "Kaynaştırma soruları"
           news: "Haberler"
           site_feedback: "Site Geri Bildirimi"
         table_headers:

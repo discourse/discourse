@@ -44,5 +44,41 @@ module(
 
       assert.dom(".d-editor-input").hasAttribute("disabled");
     });
+
+    test("@height", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Composer @height={{42}} />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .dom(".form-kit__control-composer")
+        .hasAttribute("style", "height: 42px");
+    });
+
+    test("@preview", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Composer />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-composer.--preview").doesNotExist();
+
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Composer @preview={{true}} />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-composer.--preview").exists();
+    });
   }
 );

@@ -14,29 +14,11 @@ describe "Drafts dropdown", type: :system do
       expect(drafts_dropdown).to be_hidden
     end
 
-    it "does not have a my drafts link in sidebar" do
-      page.visit "/"
-      expect(page).to have_no_css(".sidebar-section-link[data-link-name='my-drafts']")
-    end
-
     it "adds a draft dropdown menu when a draft is available" do
       page.visit "/new-topic"
       composer.fill_content("This is a draft")
 
       expect(drafts_dropdown).to be_visible
-    end
-
-    it "shows a my drafts link in sidebar when a draft is saved" do
-      page.visit "/new-topic"
-
-      composer.fill_content("This is a draft")
-      composer.close
-
-      expect(discard_draft_modal).to be_open
-      discard_draft_modal.click_save
-
-      visit "/"
-      expect(page).to have_css(".sidebar-section-link[data-link-name='my-drafts']")
     end
   end
 

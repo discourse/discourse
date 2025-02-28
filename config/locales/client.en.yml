@@ -4496,6 +4496,7 @@ en:
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
+    invalid_video_url: This video cannot be played because the URL is invalid or unavailable.
 
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4979,9 +4980,11 @@ en:
             users:
               content: "Users"
               title: "List of all users"
-            my_drafts:
-              content: "My Drafts"
-              title: "My unposted drafts"
+            my_posts:
+              content: "My Posts"
+              content_drafts: "My Drafts"
+              title: "My recent topic activity"
+              title_drafts: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
@@ -7228,6 +7231,9 @@ en:
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
+        more_site_setting_results_no_category_sidebar:
+          one: "There is more than %{count} result. Please refine your search."
+          other: "There are more than %{count} results. Please refine your search."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

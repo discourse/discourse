@@ -9,6 +9,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     chat_system_bootstrap(admin, [chat_channel_1])
@@ -148,6 +150,27 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
 
       topic = Topic.find_by(user: current_user, title: topic_title)
       expect(page).to have_current_path(topic.url)
+    end
+
+    context "when quoting from a thread" do
+      fab!(:thread_1) { Fabricate(:chat_thread, channel: chat_channel_1) }
+
+      before { chat_channel_1.update!(threading_enabled: true) }
+
+      context "when in drawer mode" do
+        before { chat_page.prefers_drawer }
+
+        it "correctly quotes the message" do
+          visit("/")
+          chat_page.open_from_header
+          drawer_page.open_channel(thread_1.channel)
+          channel_page.reply_to(message_1)
+          thread_page.messages.select(message_1)
+          thread_page.selection_management.quote
+
+          expect(topic_page).to have_composer_content(generate_transcript(message_1, current_user))
+        end
+      end
     end
 
     context "when on mobile" do
