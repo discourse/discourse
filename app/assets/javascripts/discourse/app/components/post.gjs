@@ -74,7 +74,7 @@ export default class Post extends Component {
         "topic-post"
         "clearfix"
         (if this.staged "staged")
-        (if @post.selected "selected")
+        (if @selected "selected")
         (if @post.topicOwner "topic-owner")
         (if (eq this.currentUser.id @post.user_id) "current-user-post")
         (if @post.group_moderator "category-moderator")
@@ -105,19 +105,28 @@ export default class Post extends Component {
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
+          @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
           @rebakePost={{@rebakePost}}
           @recoverPost={{@recoverPost}}
           @replyToPost={{@replyToPost}}
+          @removeAllowedGroup={{@removeAllowedGroup}}
+          @removeAllowedUser={{@removeAllowedUser}}
+          @selectBelow={{@selectBelow}}
+          @selectReplies={{@selectReplies}}
+          @selected={{@selected}}
           @showFlags={{@showFlags}}
           @showHistory={{@showHistory}}
           @showInvite={{@showInvite}}
           @showLogin={{@showLogin}}
           @showPagePublish={{@showPagePublish}}
+          @showRawEmail={{@showRawEmail}}
           @showReadIndicator={{@showReadIndicator}}
           @toggleLike={{this.toggleLike}}
+          @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
           @toggleReplies={{@toggleReplies}}
+          @toggleReplyAbove={{@toggleReplyAbove}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}
           @unlockPost={{@unlockPost}}

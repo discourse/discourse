@@ -1,10 +1,10 @@
-import { and } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 
 const PostMetaDataSelectPost = <template>
   <div class="select-posts">
-    {{#if (and @selected @post.post_number)}}
-      {{#if @post.replyCount}}
+    {{#if (and (not @selected) (not @post.firstPost))}}
+      {{#if @post.hasReplies}}
         <DButton
           class="btn-flat select-replies"
           @label="topic.multi_select.select_replies.label"

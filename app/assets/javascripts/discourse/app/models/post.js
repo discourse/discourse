@@ -363,12 +363,20 @@ export default class Post extends RestModel {
     return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
+  get canSplitMergeTopic() {
+    return !!this.topic?.details?.can_split_merge_topic;
+  }
+
   get canToggleLike() {
     return !!this.likeAction?.get("canToggle");
   }
 
   get filteredRepliesPostNumber() {
     return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get hasReplies() {
+    return this.reply_count > 0;
   }
 
   get isWhisper() {
