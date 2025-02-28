@@ -5241,8 +5241,11 @@ en:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
         search:
-          title: "Search"
+          title: "Search settings"
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
+        search_everything:
+          title: "Search"
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -5379,7 +5382,6 @@ en:
       search:
         modal_title: "Search anything in admin"
         title: "Search"
-        description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
         result_types:
           page:

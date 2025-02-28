@@ -65,8 +65,13 @@
     cursor: pointer;
     transition: background-color 0.2s;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: var(--primary-low-mid);
+    }
+
+    &:focus {
+      outline: auto;
     }
 
     &.is-active {
@@ -75,6 +80,10 @@
 
       .d-icon {
         color: var(--tertiary-low);
+      }
+
+      &:focus {
+        outline: auto;
       }
     }
 
@@ -132,6 +141,10 @@
     display: inline-block;
     width: 100%;
     pointer-events: auto;
+
+    &:focus {
+      outline: auto;
+    }
   }
 }
 

@@ -131,11 +131,15 @@ export default class AdminSearch extends Component {
   handleSearchKeyDown(event) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      document.querySelector(".admin-search__result a").focus();
+      event.stopPropagation();
+      document
+        .querySelector(".admin-search__result .admin-search__result-link")
+        .focus();
     }
 
     if (event.key === "Enter") {
       event.preventDefault();
+      event.stopPropagation();
       this.router.transitionTo("adminSearch.index", {
         queryParams: { filter: this.filter },
       });
@@ -193,7 +197,12 @@ export default class AdminSearch extends Component {
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
-            <a href={{result.url}} {{on "keydown" this.handleResultKeyDown}}>
+            <a
+              href={{result.url}}
+              {{on "keydown" this.handleResultKeyDown}}
+              class="admin-search__result-link"
+              tabindex="0"
+            >
               <div class="admin-search__result-name">
                 {{#if result.icon}}
                   {{icon result.icon}}
