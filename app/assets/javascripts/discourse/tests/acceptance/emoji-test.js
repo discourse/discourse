@@ -21,12 +21,12 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(".d-editor-input", "a :woman_blond\t");
+    await simulateKeys(".d-editor-input", "a :blonde_woman\t");
 
     assert
       .dom(".d-editor-preview")
       .hasHtml(
-        `<p>a <img src="/images/emoji/twitter/woman_blond_hair.png?v=${v}" title=":woman_blond_hair:" class="emoji" alt=":woman_blond_hair:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>a <img src="/images/emoji/twitter/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       );
   });
 
