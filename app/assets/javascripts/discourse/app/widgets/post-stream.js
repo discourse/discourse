@@ -322,6 +322,7 @@ export default createWidget("post-stream", {
             recoverPost: () => this.sendWidgetAction("recoverPost", post),
             replyToPost: () => this.sendWidgetAction("replyToPost", post),
             showFlags: () => this.sendWidgetAction("showFlags", post),
+            showHistory: () => this.sendWidgetAction("showHistory", post),
             showLogin: () => this.sendWidgetAction("showLogin", post),
             showPagePublish: () =>
               this.sendWidgetAction("showPagePublish", post),

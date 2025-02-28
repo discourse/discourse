@@ -139,6 +139,7 @@ export default class PostArticle extends Component {
           @repliesAbove={{this.repliesAbove}}
           @replyToPost={{@replyToPost}}
           @showFlags={{@showFlags}}
+          @showHistory={{@showHistory}}
           @showLogin={{@showLogin}}
           @showPagePublish={{@showPagePublish}}
           @showReadIndicator={{@showReadIndicator}}

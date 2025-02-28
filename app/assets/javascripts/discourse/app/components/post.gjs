@@ -110,6 +110,7 @@ export default class Post extends Component {
           @recoverPost={{@recoverPost}}
           @replyToPost={{@replyToPost}}
           @showFlags={{@showFlags}}
+          @showHistory={{@showHistory}}
           @showLogin={{@showLogin}}
           @showPagePublish={{@showPagePublish}}
           @showReadIndicator={{@showReadIndicator}}

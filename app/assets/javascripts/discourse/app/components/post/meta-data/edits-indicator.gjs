@@ -41,7 +41,7 @@ export default class PostMetaDataEditsIndicator extends Component {
   onPostEditsIndicatorClick() {
     if (this.args.post.wiki && this.args.post.version === 1) {
       this.args.editPost();
-    } else if (this.args.post.canViewEditHistory) {
+    } else if (this.args.post.can_view_edit_history) {
       this.args.showHistory();
     }
   }

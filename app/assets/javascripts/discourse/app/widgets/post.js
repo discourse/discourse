@@ -1219,6 +1219,7 @@ registerWidgetShim(
       @recoverPost={{@data.recoverPost}}
       @replyToPost={{@data.replyToPost}}
       @showFlags={{@data.showFlags}}
+      @showHistory={{@data.showHistory}}
       @showLogin={{@data.showLogin}}
       @showPagePublish={{@data.showPagePublish}}
       @showReadIndicator={{@data.showReadIndicator}}
