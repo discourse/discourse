@@ -1455,7 +1455,7 @@ var bar = 'bar';
     );
     assert.cooked(
       "8-)",
-      `<p><img src="/images/emoji/twitter/smiling_face_with_sunglasses.png?v=${v}" title=":smiling_face_with_sunglasses:" class="emoji only-emoji" alt=":smiling_face_with_sunglasses:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
     );
   });
 
