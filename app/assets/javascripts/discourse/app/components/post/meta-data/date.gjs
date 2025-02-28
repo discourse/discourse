@@ -8,7 +8,7 @@ import RelativeDate from "discourse/components/relative-date";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 
-export default class PostMetadataDate extends Component {
+export default class PostMetaDataDate extends Component {
   @service modal;
 
   get date() {

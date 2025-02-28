@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -5,7 +6,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class PostEmailMetaDataIndicator {
+export default class PostMetaDataEmailIndicator extends Component {
   @service currentUser;
 
   get canViewRawEmail() {

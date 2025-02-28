@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
-import PostEmailMetaDataIndicator from "./meta-data/email-indicator";
-import PostLockedIndicator from "./meta-data/locked-indicator";
+import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
+import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
-import PostWhisperMetaDataIndicator from "./meta-data/whisper-indicator";
+import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
 
 export default class PostMetaData extends Component {
   get displayPosterName() {
@@ -34,18 +34,18 @@ export default class PostMetaData extends Component {
 
       <div class="post-infos">
         {{#if @post.isWhisper}}
-          <PostWhisperMetaDataIndicator @post={{@post}} />
+          <PostMetaDataWhisperIndicator @post={{@post}} />
         {{/if}}
 
         {{#if @post.via_email}}
-          <PostEmailMetaDataIndicator
+          <PostMetaDataEmailIndicator
             @post={{@post}}
             @showRawEmail={{@showRawEmail}}
           />
         {{/if}}
 
         {{#if @post.locked}}
-          <PostLockedIndicator @post={{@post}} />
+          <PostMetaDataLockedIndicator @post={{@post}} />
         {{/if}}
 
         {{#if this.shouldDisplayEditsIndicator}}

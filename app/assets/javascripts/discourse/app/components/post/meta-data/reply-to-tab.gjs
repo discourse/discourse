@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
@@ -6,7 +7,7 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 
-export default class PostMetaDataReplyToTab {
+export default class PostMetaDataReplyToTab extends Component {
   static shouldRender(args, context, owner) {
     const siteSettings = owner.lookup("service:site-settings");
 
