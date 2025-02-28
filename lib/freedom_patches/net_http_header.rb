@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+module NetHTTPHeaderPatch
+  def initialize_http_header(initheader)
+    # If no user-agent is set, set it to the default
+    initheader ||= {}
+    user_agent_key = initheader.keys.find { |key| key.downcase == "user-agent" } || "User-Agent"
+    initheader[
+      user_agent_key
+    ] ||= "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/"
+
+    super initheader
+  end
+end
+
+Net::HTTPHeader.prepend(NetHTTPHeaderPatch)
