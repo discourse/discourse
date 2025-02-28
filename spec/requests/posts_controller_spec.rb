@@ -1494,6 +1494,29 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      describe "posts_controller_create_user modifier" do
+        fab!(:different_user) { Fabricate(:admin) }
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :posts_controller_create_user }
+        let!(:block) { Proc.new { different_user } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "can alter the user used to create the post" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.user).to eq(different_user)
+        end
+      end
+
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
         it "should return a 400 response code when no custom fields has been permitted" do
           sign_in(user)
