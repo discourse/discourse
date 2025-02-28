@@ -33,14 +33,14 @@ module PageObjects
 
       def has_back_button_to_themes_page?
         has_css?(
-          '.back-to-themes-and-components a[href="/admin/config/themes-and-components/themes"]',
+          '.back-to-themes-and-components a[href="/admin/config/customize/themes"]',
           text: I18n.t("admin_js.admin.config_areas.themes_and_components.themes.back"),
         )
       end
 
       def has_back_button_to_components_page?
         has_css?(
-          '.back-to-themes-and-components a[href="/admin/config/themes-and-components/components"]',
+          '.back-to-themes-and-components a[href="/admin/config/customize/components"]',
           text: I18n.t("admin_js.admin.config_areas.themes_and_components.components.back"),
         )
       end
