@@ -324,6 +324,7 @@ export default createWidget("post-stream", {
             showFlags: () => this.sendWidgetAction("showFlags", post),
             showHistory: () => this.sendWidgetAction("showHistory", post),
             showLogin: () => this.sendWidgetAction("showLogin", post),
+            showInvite: () => this.sendWidgetAction("showInvite", post),
             showPagePublish: () =>
               this.sendWidgetAction("showPagePublish", post),
             showReadIndicator: attrs.showReadIndicator,

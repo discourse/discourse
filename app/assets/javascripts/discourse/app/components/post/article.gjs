@@ -159,7 +159,7 @@ export default class PostArticle extends Component {
             @topicDetails={{@post.topic.details}}
             @postStream={{@post.topic.postStream}}
             @showPMMap={{eq @post.topic.archetype "private_message"}}
-            @showInvite={{this.showInvite}}
+            @showInvite={{@showInvite}}
             @removeAllowedGroup={{@this.removeAllowedGroup}}
             @removeAllowedUser={{@this.removeAllowedUser}}
           />

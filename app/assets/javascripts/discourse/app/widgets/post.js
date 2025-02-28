@@ -1220,6 +1220,7 @@ registerWidgetShim(
       @replyToPost={{@data.replyToPost}}
       @showFlags={{@data.showFlags}}
       @showHistory={{@data.showHistory}}
+      @showInvite={{@data.showInvite}}
       @showLogin={{@data.showLogin}}
       @showPagePublish={{@data.showPagePublish}}
       @showReadIndicator={{@data.showReadIndicator}}

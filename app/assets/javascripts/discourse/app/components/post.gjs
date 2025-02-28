@@ -111,6 +111,7 @@ export default class Post extends Component {
           @replyToPost={{@replyToPost}}
           @showFlags={{@showFlags}}
           @showHistory={{@showHistory}}
+          @showInvite={{@showInvite}}
           @showLogin={{@showLogin}}
           @showPagePublish={{@showPagePublish}}
           @showReadIndicator={{@showReadIndicator}}
