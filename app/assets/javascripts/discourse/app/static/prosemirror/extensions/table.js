@@ -14,7 +14,7 @@
 const extension = {
   nodeSpec: {
     table: {
-      content: "table_head table_body",
+      content: "table_head? table_body",
       group: "block",
       tableRole: "table",
       isolating: true,
@@ -177,6 +177,56 @@ const extension = {
     table_row() {},
     table_header_cell() {},
     table_cell() {},
+  },
+  plugins({ pmState: { Plugin }, pmModel: { Slice } }) {
+    return new Plugin({
+      props: {
+        transformPasted(paste, view) {
+          let updatedPaste = paste;
+          paste.content.descendants((child, tableIndex) => {
+            if (child.type.name === "table") {
+              let tbody, thead;
+              child.descendants((node) => {
+                if (node.type.name === "table_body") {
+                  tbody = node;
+                  return false;
+                }
+
+                if (node.type.name === "table_head") {
+                  thead = node;
+                  return false;
+                }
+              });
+
+              if (!thead && tbody) {
+                thead = view.state.schema.nodes.table_head.create(
+                  {},
+                  tbody.firstChild
+                );
+
+                tbody = view.state.schema.nodes.table_body.create(
+                  {},
+                  tbody.content.content.slice(1)
+                );
+
+                const newTableContent = view.state.schema.nodes.table.create(
+                  {},
+                  [thead, tbody]
+                );
+
+                updatedPaste = new Slice(
+                  paste.content.replaceChild(tableIndex, newTableContent),
+                  paste.openStart,
+                  paste.openEnd
+                );
+              }
+            }
+          });
+
+          return updatedPaste;
+        },
+      },
+    });
   },
 };
 
