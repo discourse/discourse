@@ -671,10 +671,13 @@ a.attachment::before {
 
 .who-liked,
 .who-read {
-  margin-top: 20px;
   margin-bottom: 0;
   width: 100%;
   text-align: right;
+
+  &.--expanded {
+    margin-top: 1.25em;
+  }
 }
 
 span.highlighted {
