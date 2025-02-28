@@ -4611,7 +4611,7 @@ en:
       admin:
         title: "Admin"
         search_prev_next: "%{shortcut} Move selection up and down"
-        search_open: "%{shortcut} Open search everything for the admin interface"
+        search_open: "%{shortcut} Open search for the admin interface"
         search_full_page: "%{shortcut} Open full page admin search"
 
     badges:
@@ -5035,7 +5035,6 @@ en:
         title: "No results"
         description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
         description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
-      admin_search_everything: "Click to search everything in the admin interface, or press %{shortcut}."
       footer:
         interface_color_selector:
           light: "Light"
