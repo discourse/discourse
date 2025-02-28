@@ -303,6 +303,16 @@ export default createWidget("post-stream", {
         // converting this widget to a Glimmer component:
         // canCreatePost, showReadIndicator, prevPost, nextPost
         // result.push(this.attach("post", transformed, { model: post }));
+
+        let multiSelect, selected;
+        if (post.canManage || post.canSplitMergeTopic) {
+          multiSelect = attrs.multiSelect;
+
+          if (multiSelect) {
+            selected = attrs.selectedQuery(post);
+          }
+        }
+
         result.push(
           this.attach("glimmer-post", {
             post,
@@ -316,19 +326,32 @@ export default createWidget("post-stream", {
             editPost: () => this.sendWidgetAction("editPost", post),
             grantBadge: () => this.sendWidgetAction("grantBadge", post),
             lockPost: () => this.sendWidgetAction("lockPost", post),
+            multiSelect,
             permanentlyDeletePost: () =>
               this.sendWidgetAction("permanentlyDeletePost", post),
             rebakePost: () => this.sendWidgetAction("rebakePost", post),
             recoverPost: () => this.sendWidgetAction("recoverPost", post),
+            removeAllowedGroup: () =>
+              this.sendWidgetAction("removeAllowedGroup", post),
+            removeAllowedUser: () =>
+              this.sendWidgetAction("removeAllowedUser", post),
             replyToPost: () => this.sendWidgetAction("replyToPost", post),
+            selectBelow: () => this.sendWidgetAction("selectBelow", post),
+            selectReplies: () => this.sendWidgetAction("selectReplies", post),
+            selected,
             showFlags: () => this.sendWidgetAction("showFlags", post),
             showHistory: () => this.sendWidgetAction("showHistory", post),
-            showLogin: () => this.sendWidgetAction("showLogin", post),
             showInvite: () => this.sendWidgetAction("showInvite", post),
+            showLogin: () => this.sendWidgetAction("showLogin", post),
             showPagePublish: () =>
               this.sendWidgetAction("showPagePublish", post),
+            showRawEmail: () => this.sendWidgetAction("showRawEmail", post),
             showReadIndicator: attrs.showReadIndicator,
+            togglePostSelection: () =>
+              this.sendWidgetAction("togglePostSelection", post),
             togglePostType: () => this.sendWidgetAction("togglePostType", post),
+            toggleReplyAbove: () =>
+              this.sendWidgetAction("toggleReplyAbove", post),
             toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
             unhidePost: () => this.sendWidgetAction("unhidePost", post),
             unlockPost: () => this.sendWidgetAction("unlockPost", post),

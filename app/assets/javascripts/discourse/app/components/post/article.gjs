@@ -133,19 +133,26 @@ export default class PostArticle extends Component {
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
+          @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
           @rebakePost={{@rebakePost}}
           @recoverPost={{@recoverPost}}
           @repliesAbove={{this.repliesAbove}}
           @replyToPost={{@replyToPost}}
+          @selectBelow={{@selectBelow}}
+          @selectReplies={{@selectReplies}}
+          @selected={{@selected}}
           @showFlags={{@showFlags}}
           @showHistory={{@showHistory}}
           @showLogin={{@showLogin}}
           @showPagePublish={{@showPagePublish}}
+          @showRawEmail={{@showRawEmail}}
           @showReadIndicator={{@showReadIndicator}}
           @toggleLike={{@toggleLike}}
+          @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
           @toggleReplies={{@toggleReplies}}
+          @toggleReplyAbove={{@toggleReplyAbove}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}
           @unlockPost={{@unlockPost}}
@@ -160,8 +167,8 @@ export default class PostArticle extends Component {
             @postStream={{@post.topic.postStream}}
             @showPMMap={{eq @post.topic.archetype "private_message"}}
             @showInvite={{@showInvite}}
-            @removeAllowedGroup={{@this.removeAllowedGroup}}
-            @removeAllowedUser={{@this.removeAllowedUser}}
+            @removeAllowedGroup={{@removeAllowedGroup}}
+            @removeAllowedUser={{@removeAllowedUser}}
           />
         </div>
       {{/if}}
