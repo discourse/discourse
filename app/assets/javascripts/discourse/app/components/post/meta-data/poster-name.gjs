@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
@@ -18,9 +19,20 @@ import { i18n } from "discourse-i18n";
 export default class PostMetaDataPosterName extends Component {
   @service currentUser;
   @service siteSettings;
+  @service userStatus;
 
   showNameAndGroup = true;
   showGlyph = true;
+
+  constructor() {
+    super(...arguments);
+    this.#trackUserStatus();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#stopTrackingUserStatus();
+  }
 
   get suppressName() {
     return applyValueTransformer(
@@ -69,6 +81,11 @@ export default class PostMetaDataPosterName extends Component {
     );
   }
 
+  refreshUserStatus() {
+    this.#stopTrackingUserStatus();
+    this.#trackUserStatus();
+  }
+
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
     badge.description = i18n("post.badge_granted_tooltip", {
@@ -85,8 +102,23 @@ export default class PostMetaDataPosterName extends Component {
       : name;
   }
 
+  #trackUserStatus() {
+    if (this.userStatus.isEnabled) {
+      this.user.statusManager.trackStatus();
+    }
+  }
+
+  #stopTrackingUserStatus() {
+    if (this.userStatus.isEnabled) {
+      this.user.statusManager.stopTrackingStatus();
+    }
+  }
+
   <template>
-    <div class="names trigger-user-card">
+    <div
+      class="names trigger-user-card"
+      {{didUpdate this.refreshUserStatus this.user}}
+    >
       <span
         class={{concatClass
           "first"
@@ -154,12 +186,10 @@ export default class PostMetaDataPosterName extends Component {
           </span>
         {{/if}}
 
-        {{#if this.siteSettings.enable_user_status}}
-          {{#if this.user.status}}
-            <span class="user-status-message-wrap">
-              <UserStatusMessage @status={{this.user.status}} />
-            </span>
-          {{/if}}
+        {{#if (and this.userStatus.isEnabled this.user.status)}}
+          <span class="user-status-message-wrap">
+            <UserStatusMessage @status={{this.user.status}} />
+          </span>
         {{/if}}
 
         {{#if @post.badgesGranted}}
