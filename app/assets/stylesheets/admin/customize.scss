@@ -853,6 +853,18 @@
   }
 }
 
+.theme-install-card {
+  &__external-links {
+    display: flex;
+    margin-bottom: 1em;
+    flex-direction: column;
+  }
+
+  &__install-button {
+    width: 100%;
+  }
+}
+
 .add-upload-modal {
   input[type="file"] {
     display: block;

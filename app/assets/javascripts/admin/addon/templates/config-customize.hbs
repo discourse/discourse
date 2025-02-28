@@ -25,16 +25,10 @@
       @label="admin.config_areas.themes_and_components.components.title"
     />
   </:tabs>
-
-  <:actions as |actions|>
-    <actions.Primary
-      @label="admin.customize.install"
-      @icon="upload"
-      class="admin-themes-and-components__install-theme"
-    />
-  </:actions>
 </DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
-  {{outlet}}
+  <PluginOutlet @name="admin-config-customize">
+    {{outlet}}
+  </PluginOutlet>
 </div>
