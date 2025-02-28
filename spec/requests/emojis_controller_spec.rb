@@ -25,13 +25,13 @@ RSpec.describe EmojisController do
         %w[
           smileys_&_emotion
           people_&_body
-          objects
-          travel_&_places
           animals_&_nature
           food_&_drink
+          travel_&_places
           activities
-          flags
+          objects
           symbols
+          flags
           default
         ],
       )

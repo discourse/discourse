@@ -29,7 +29,7 @@ RSpec.describe Emoji do
     end
 
     it "should return the emoji" do
-      expect(Emoji.lookup_unicode("blonde_man")).to eq("👱")
+      expect(Emoji.lookup_unicode("blonde_man")).to eq("👱️‍♂️")
     end
 
     it "should return an aliased emoji" do
