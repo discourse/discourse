@@ -23,4 +23,28 @@ describe "Default Headers", type: :system do
       end
     end
   end
+
+  context "when a rescued exception is raised" do
+    before do
+      @old_logger = Rails.logger
+      @logs = StringIO.new
+      Rails.logger = Logger.new(@logs)
+    end
+
+    after { Rails.logger = @old_logger }
+
+    it "should not raise a 500 (nor should it log a warning) for bad params" do
+      bad_str = (+"d\xDE").force_encoding("utf-8")
+      expect(bad_str.valid_encoding?).to eq(false)
+
+      get "/latest.json", params: { test: bad_str }
+
+      log = @logs.string
+      expect(log).not_to include("exception app middleware")
+
+      expect(response.status).to eq(400)
+      expect(response.headers).to have_key("Cross-Origin-Opener-Policy")
+      expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin-allow-popups")
+    end
+  end
 end
