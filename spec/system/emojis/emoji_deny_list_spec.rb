@@ -65,7 +65,7 @@ describe "Emoji deny list", type: :system do
 
       composer.clear_content
 
-      composer.type_content(":middle") # middle_finger is alias
+      composer.type_content(":reversed_hand_with_middle_finger_extended:") # middle_finger is alias
       expect(composer).to have_no_emoji_suggestion("fu")
     end
 

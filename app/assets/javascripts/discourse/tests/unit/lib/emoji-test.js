@@ -100,7 +100,7 @@ module("Unit | Utility | emoji", function (hooks) {
     );
     testUnescape(
       "Hello 😊 World",
-      `Hello <img width=\"20\" height=\"20\" src='/images/emoji/twitter/smiling_face_with_smiling_eyes.png?v=${v}' title='smiling_face_with_smiling_eyes' alt='smiling_face_with_smiling_eyes' class='emoji'> World`,
+      `Hello <img width=\"20\" height=\"20\" src='/images/emoji/twitter/blush.png?v=${v}' title='blush' alt='blush' class='emoji'> World`,
       "emoji from Unicode emoji"
     );
     testUnescape(
