@@ -302,14 +302,14 @@ describe "Admin | Sidebar Navigation", type: :system do
   end
 
   it "highlights the 'Themes and components' link when the themes page is visited" do
-    visit("/admin/config/themes-and-components/themes")
+    visit("/admin/config/customize/themes")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
   end
 
   it "highlights the 'Themes and components' link when the components page is visited" do
-    visit("/admin/config/themes-and-components/components")
+    visit("/admin/config/customize/components")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
