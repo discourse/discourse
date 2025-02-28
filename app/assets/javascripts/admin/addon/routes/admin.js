@@ -23,7 +23,7 @@ export default class AdminRoute extends DiscourseRoute {
   activate() {
     if (this.currentUser.use_experimental_admin_search) {
       KeyboardShortcuts.addShortcut(
-        `${PLATFORM_KEY_MODIFIER}+k`,
+        `${PLATFORM_KEY_MODIFIER}+/`,
         (event) => this.showAdminSearchModal(event),
         {
           global: true,
@@ -45,7 +45,7 @@ export default class AdminRoute extends DiscourseRoute {
 
     if (this.currentUser.use_experimental_admin_search) {
       KeyboardShortcuts.unbind({
-        [`${PLATFORM_KEY_MODIFIER}+k`]: this.showAdminSearchModal,
+        [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
       });
     }
 

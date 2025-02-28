@@ -1,6 +1,5 @@
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -13,7 +12,6 @@ export default {
 
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
-    const modal = container.lookup("service:modal");
     const chatStateManager = container.lookup("service:chat-state-manager");
     const chatThreadPane = container.lookup("service:chat-thread-pane");
     const chatThreadListPane = container.lookup(
@@ -22,11 +20,6 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
-    const openQuickChannelSelector = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      modal.show(ChatModalNewMessage);
-    };
 
     const handleMoveUpShortcut = (e) => {
       e.preventDefault();
@@ -136,21 +129,12 @@ export default {
     };
 
     withPluginApi("0.12.1", (api) => {
-      api.addKeyboardShortcut(
-        `${PLATFORM_KEY_MODIFIER}+k`,
-        openQuickChannelSelector,
-        {
-          global: true,
-          help: {
-            category: "chat",
-            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
-            definition: {
-              keys1: ["meta", "k"],
-              keysDelimiter: "plus",
-            },
-          },
-        }
-      );
+      // NOTE: Cmd/Ctl+K shortcut for channel selector
+      // is defined in the root chat route, so it can be
+      // unbound when leaving chat.
+      //
+      // Also see ChatStateManager for drawer handling.
+
       api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
         global: true,
         help: {
