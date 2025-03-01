@@ -758,7 +758,7 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? &&
+    user.password = SecureRandom.hex if user.password_required? && user.password.blank? &&
       (authentication.has_authenticator? || associations.present?)
 
     if user.save
