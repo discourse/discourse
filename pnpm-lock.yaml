@@ -1031,8 +1031,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       core-js:
-        specifier: ^3.40.0
-        version: 3.40.0
+        specifier: ^3.41.0
+        version: 3.41.0
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.9)
@@ -3945,8 +3945,8 @@ packages:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
 
-  core-js@3.40.0:
-    resolution: {integrity: sha512-7vsMc/Lty6AGnn7uFpYT56QesI5D2Y/UkgKounk87OP9Z2H9Z8kj6jzcSGAxFmUtDOS0ntK6lbQz+Nsa0Jj6mQ==}
+  core-js@3.41.0:
+    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
 
   core-object@3.1.5:
     resolution: {integrity: sha512-sA2/4+/PZ/KV6CKgjrVrrUVBKCkdDO02CUlQ0YKTQoYUwPYNOtOAcWlbYhd5v/1JqYaA6oZ4sDlOU4ppVw6Wbg==}
@@ -10297,7 +10297,7 @@ snapshots:
 
   '@json-editor/json-editor@2.15.2':
     dependencies:
-      core-js: 3.40.0
+      core-js: 3.41.0
 
   '@jspreadsheet/formula@2.0.2': {}
 
@@ -12215,7 +12215,7 @@ snapshots:
 
   core-js@2.6.12: {}
 
-  core-js@3.40.0: {}
+  core-js@3.41.0: {}
 
   core-object@3.1.5:
     dependencies:
@@ -17581,7 +17581,7 @@ snapshots:
 
   ts-replace-all@1.0.0:
     dependencies:
-      core-js: 3.40.0
+      core-js: 3.41.0
 
   tslib@1.14.1: {}
 
