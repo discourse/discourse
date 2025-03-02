@@ -72,19 +72,13 @@
           }
 
           .searching {
-            display: flex;
-            padding-right: 0.5rem;
+            width: 3em;
+            justify-content: flex-end;
 
             .show-advanced-search,
             a.clear-search {
               display: inline-flex;
               align-items: center;
-            }
-
-            .spinner-holder {
-              display: inline-block;
-              vertical-align: top;
-              margin-left: 4px;
             }
           }
 
