@@ -179,7 +179,7 @@ export function emojiExists(code) {
 
 export function normalizeEmoji(code) {
   code = code.toLowerCase();
-  if (extendedEmojiMap.get(code) || emojis.get(code)) {
+  if (extendedEmojiMap.get(code) || emojis.has(code)) {
     return code;
   }
   return aliasMap.get(code);
