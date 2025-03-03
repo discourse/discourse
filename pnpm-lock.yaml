@@ -499,8 +499,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-plugins
       ember-async-data:
-        specifier: ^1.0.3
-        version: 1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0)))
+        specifier: ^2.0.0
+        version: 2.0.0(@babel/core@7.26.9)(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0)))
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0))
@@ -4212,10 +4212,10 @@ packages:
   electron-to-chromium@1.5.99:
     resolution: {integrity: sha512-77c/+fCyL2U+aOyqfIFi89wYLBeSTCs55xCZL0oFH0KjqsvSvyh6AdQ+UIl1vgpnQQE6g+/KK8hOIupH6VwPtg==}
 
-  ember-async-data@1.0.3:
-    resolution: {integrity: sha512-54OtoQwNi+/ZvPOVuT4t8fcHR9xL8N7kBydzcZSo6BIEsLYeXPi3+jUR8niWjfjXXhKlJ8EWXR0lTeHleTrxbw==}
+  ember-async-data@2.0.0:
+    resolution: {integrity: sha512-3jj3ZO2k4G/RDnoeF4twlHMUF1Av4vOYNqdIno0bzmR/UCK+3T4becw0IaQir9FOhSA+SPdGvyjpp2O7sB24mg==}
     peerDependencies:
-      ember-source: '>=4.8.4'
+      ember-source: '>= 4.8.0'
 
   ember-auto-import@2.10.0:
     resolution: {integrity: sha512-bcBFDYVTFHyqyq8BNvsj6UO3pE6Uqou/cNmee0WaqBgZ+1nQqFz0UE26usrtnFAT+YaFZSkqF2H36QW84k0/cg==}
@@ -12462,12 +12462,15 @@ snapshots:
 
   electron-to-chromium@1.5.99: {}
 
-  ember-async-data@1.0.3(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0))):
+  ember-async-data@2.0.0(@babel/core@7.26.9)(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0))):
     dependencies:
-      '@ember/test-waiters': 3.1.0
+      '@ember/test-waiters': 4.0.0(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/addon-shim': 1.9.0
+      decorator-transforms: 2.3.0(@babel/core@7.26.9)
       ember-source: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.9))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0))
     transitivePeerDependencies:
+      - '@babel/core'
+      - '@glint/template'
       - supports-color
 
   ember-auto-import@2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.98.0(@swc/core@1.11.4)(esbuild@0.25.0)):
