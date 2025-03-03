@@ -251,6 +251,7 @@
     padding: 3px 6px;
     background: var(--primary-low);
     max-width: 25%;
+
     @include ellipsis;
   }
 

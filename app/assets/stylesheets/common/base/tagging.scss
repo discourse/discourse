@@ -59,11 +59,9 @@
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
+
   @include ellipsis;
   vertical-align: middle;
-}
-
-.discourse-tag {
   margin: 0;
   color: var(--primary-medium);
 
@@ -297,6 +295,7 @@ header .discourse-tag {
       display: block;
     }
   }
+
   @include breakpoint(tablet) {
     .select-kit.multi-select {
       width: 100%;

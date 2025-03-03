@@ -487,6 +487,31 @@ RSpec.describe Service::Runner do
       end
     end
 
+    context "when using the on_lock_not_acquired action" do
+      let(:service) { LockService }
+      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { :success }
+            on_lock_not_acquired(:post_id, :user_id) { :lock_not_acquired }
+          end
+      BLOCK
+
+      context "when the service fails" do
+        before { allow(DistributedMutex).to receive(:synchronize) }
+
+        it "runs the provided block" do
+          expect(runner).to eq :lock_not_acquired
+        end
+      end
+
+      context "when the service does not fail" do
+        it "does not run the provided block" do
+          expect(runner).to eq :success
+        end
+      end
+    end
+
     context "when using several actions together" do
       let(:service) { FailureService }
       let(:actions) { <<-BLOCK }
@@ -513,37 +538,6 @@ RSpec.describe Service::Runner do
 
       it "runs properly" do
         expect(runner).to eq :success
-      end
-    end
-
-    context "when aquiring a lock" do
-      let(:service) { LockService }
-      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
-      let(:actions) { <<-BLOCK }
-          proc do
-            on_success { :success }
-            on_failure { :failure }
-          end
-      BLOCK
-
-      it "runs successfully" do
-        expect(runner).to eq :success
-      end
-    end
-
-    context "when failing to acquire a lock" do
-      let(:service) { LockService }
-      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
-      let(:actions) { <<-BLOCK }
-          proc do
-            on_success { :success }
-            on_failure { :failure }
-          end
-      BLOCK
-
-      it "fails the service" do
-        DistributedMutex.stubs(:synchronize).returns
-        expect(runner).to eq :failure
       end
     end
   end

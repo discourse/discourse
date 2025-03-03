@@ -19,7 +19,7 @@ module Chat
     validates :emoji, length: { maximum: 100 }
 
     def url
-      "#{Discourse.base_url}/chat/hooks/#{key}.json"
+      "#{Discourse.base_url}/chat/hooks/#{key}"
     end
   end
 end

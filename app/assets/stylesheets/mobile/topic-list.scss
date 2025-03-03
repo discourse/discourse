@@ -2,6 +2,36 @@
 // Topic lists
 // --------------------------------------------------
 .topic-list {
+  &-body {
+    border-width: 1px;
+  }
+
+  .num.posts-map {
+    font-size: var(--font-up-2);
+    padding: 0;
+
+    > button,
+    > a {
+      padding: 0;
+    }
+  }
+
+  .num.activity a {
+    padding: 0;
+  }
+
+  // so the topic excerpt is full width
+  // as the containing div is 80%
+  .topic-excerpt {
+    display: block;
+    padding-right: 0;
+    width: 120%;
+  }
+
+  .topic-excerpt-more {
+    color: var(--tertiary);
+  }
+
   .right {
     margin-left: 55px;
   }
@@ -65,6 +95,10 @@
     margin-top: 0.5em;
     z-index: z("base");
 
+    span.relative-date {
+      vertical-align: text-top;
+    }
+
     .num.activity {
       margin-left: auto;
       font-size: var(--font-down-1);
@@ -81,12 +115,6 @@
     }
   }
 
-  .topic-item-stats {
-    span.relative-date {
-      vertical-align: text-top;
-    }
-  }
-
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
     max-width: 90%;
@@ -99,6 +127,7 @@
     .badge-category__wrapper {
       vertical-align: bottom;
       margin-right: 0.5em;
+      max-width: 100%;
     }
 
     .badge-wrapper,
@@ -374,38 +403,6 @@ td .main-link {
   a.title {
     padding: 0.33em 0.67em 0.33em 0;
     word-wrap: break-word;
-  }
-}
-
-.topic-list {
-  &-body {
-    border-width: 1px;
-  }
-
-  .num.posts-map {
-    font-size: var(--font-up-2);
-    padding: 0;
-
-    > button,
-    > a {
-      padding: 0;
-    }
-  }
-
-  .num.activity a {
-    padding: 0;
-  }
-
-  // so the topic excerpt is full width
-  // as the containing div is 80%
-  .topic-excerpt {
-    display: block;
-    padding-right: 0;
-    width: 120%;
-  }
-
-  .topic-excerpt-more {
-    color: var(--tertiary);
   }
 }
 

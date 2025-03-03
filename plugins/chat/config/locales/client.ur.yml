@@ -64,6 +64,7 @@ ur:
         tabs:
           members: ممبران
           settings: ترتیبات
+        remove_member: "خارج کریں"
       new_message_modal:
         no_items: "کوئی اشیاء نہیں"
         filter: "فِلٹر"

@@ -97,7 +97,15 @@ class SiteSerializer < ApplicationSerializer
       object
         .groups
         .order(:name)
-        .select(:id, :name, :flair_icon, :flair_upload_id, :flair_bg_color, :flair_color)
+        .select(
+          :id,
+          :name,
+          :flair_icon,
+          :flair_upload_id,
+          :flair_bg_color,
+          :flair_color,
+          :automatic,
+        )
         .map do |g|
           {
             id: g.id,
@@ -105,6 +113,7 @@ class SiteSerializer < ApplicationSerializer
             flair_url: g.flair_url,
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
+            automatic: g.automatic,
           }
         end
         .as_json

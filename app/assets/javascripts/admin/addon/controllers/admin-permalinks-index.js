@@ -49,7 +49,7 @@ export default class AdminPermalinksIndexController extends Controller {
       didConfirm: async () => {
         try {
           await this.store.destroyRecord("permalink", permalink);
-          this.model.allLinks.removeObject(permalink);
+          this.model.removeObject(permalink);
         } catch {
           this.dialog.alert(i18n("generic_error"));
         }

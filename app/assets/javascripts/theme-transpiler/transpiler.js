@@ -31,6 +31,7 @@ import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 globalThis.crypto = { getRandomValues };
+import "./postcss";
 import { browsers } from "../discourse/config/targets";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({

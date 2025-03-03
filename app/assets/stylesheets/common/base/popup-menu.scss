@@ -57,11 +57,12 @@
 
       &:focus,
       &:hover {
+        background: var(--danger-low);
+
         .d-icon,
         .d-button-label {
           color: var(--danger);
         }
-        background: var(--danger-low);
       }
     }
   }

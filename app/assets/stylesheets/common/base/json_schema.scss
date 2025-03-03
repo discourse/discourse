@@ -67,12 +67,11 @@
     }
 
     select {
-      @include appearance-none;
       @include form-item-sizing;
+      appearance: none;
       display: inline-block;
       margin-bottom: var(--space-2);
       color: var(--primary);
-      background-color: var(--secondary);
       border: 1px solid var(--primary-400);
       border-radius: var(--d-input-border-radius);
       background: svg-uri(

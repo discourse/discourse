@@ -338,13 +338,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
     end
 
     describe "onebox tutorial" do
-      before do
-        Oneboxer
-          .stubs(:cached_onebox)
-          .with("https://en.wikipedia.org/wiki/ROT13")
-          .returns("oneboxed Wikipedia")
-        narrative.set_data(user, state: :tutorial_onebox, topic_id: topic.id)
-      end
+      before { narrative.set_data(user, state: :tutorial_onebox, topic_id: topic.id) }
 
       describe "when post is not in the right topic" do
         it "should not do anything" do
@@ -404,7 +398,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           before { SiteSetting.enable_emoji = false }
 
           it "should create the right reply" do
-            post.update!(raw: "https://en.wikipedia.org/wiki/ROT13")
+            post.update!(raw: "https://en.wikipedia.org/wiki/Death_by_coconut")
 
             narrative.input(:reply, user, post: post)
             new_post = Post.last
@@ -427,7 +421,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         end
 
         it "should create the right reply" do
-          post.update!(raw: "https://en.wikipedia.org/wiki/ROT13")
+          post.update!(raw: "https://en.wikipedia.org/wiki/Death_by_coconut")
 
           narrative.expects(:enqueue_timeout_job).with(user)
           narrative.input(:reply, user, post: post)

@@ -60,6 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
+    too_many_urls: "在单个请求中不能输入超过 10 个 Onebox。"
+    concurrency_not_allowed: "不允许并发内嵌请求。请一次发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
@@ -288,9 +290,9 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
-      site_setting_is_hidden: "您无权更改隐藏设置"
-      site_setting_is_shadowed_globally: "您无法更改此设置，因为它在全局级别配置"
-      site_setting_is_unconfigurable: "您无权更改不可配置的设置"
+      site_settings_are_hidden: "你无权更改隐藏设置： %{setting_names}"
+      site_settings_are_shadowed_globally: "你无法更改这些设置，因为它们是全局配置的： %{setting_names}"
+      site_settings_are_unconfigurable: "你无权更改不可配置的设置： %{setting_names}"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
@@ -726,6 +728,9 @@ zh_CN:
           attributes:
             linkable_type:
               invalid: "无效"
+        api_key:
+          base:
+            at_least_one_granular_scope: "必须至少选择一个"
       <<: *errors
   uncategorized_category_name: "未分类"
   general_category_name: "常规"
@@ -2053,7 +2058,6 @@ zh_CN:
     reviewable_default_visibility: "除非满足此优先级，否则不显示可审核条目"
     reviewable_low_priority_threshold: "除非使用 '（任何）' 筛选器，否则优先级筛选器会隐藏不符合此分数的可审核条目。"
     high_trust_flaggers_auto_hide_posts: "新用户帖子在被 TL3+ 用户举报为垃圾信息后会被自动隐藏"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "匿名用户会看到他们必须向管理员发送电子邮件报告非法内容的信息。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
     slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
@@ -2262,9 +2266,7 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     disable_watched_word_checking_in_user_fields: "在用户字段中禁用关注词检查"
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
-    enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
-    enable_quote_copy: "在帖子选择菜单中添加一个按钮，以将选择内容作为 Markdown 引用复制到剪贴板。"
     old_post_notice_days: "帖子通知被视为旧通知的天数。这可以直观地将其与网站上较新的通知区分开来。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"

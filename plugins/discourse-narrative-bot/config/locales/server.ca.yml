@@ -152,21 +152,8 @@ ca:
 
           - Creiem en un [comportament civilitzat de la comunitat](%{base_uri})/guidelines) en tot moment.
       onebox:
-        instructions: |-
-          Ara podeu compartir un d'aquests enllaços amb mi? Responeu amb **un enllaç per línia tot sol**, i s'expandirà automàticament per a incloure un resum molt atractiu.
-
-          Per a copiar qualsevol enllaç, toqueu i manteniu en el mòbil o feu clic amb el botó dret del ratolí:
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Genial! Això funcionarà per a la majoria d'enllaços <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Recordeu: ha d'estar en una línia _tot sol_, res davant ni darrere.
-        not_found: |-
-          Ho sento. No he pogut trobar l'enllaç en la vostra resposta! :cry:
-
-          ¿Podeu provar d'afegir l'enllaç següent, en una sola línia, a la vostra resposta següent?
-
-          <https://ca.wikipedia.org/wiki/Gat_exòtic>
       images:
         instructions: |-
           Vet aquí una imatge d'un unicorn:

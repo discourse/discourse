@@ -314,9 +314,6 @@ fi:
     site_settings:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
-      site_setting_is_hidden: "Et voi muuttaa piilotettuja asetuksia"
-      site_setting_is_shadowed_globally: "Et voi muuttaa tätä asetusta, koska se on määritetty yleisesti"
-      site_setting_is_unconfigurable: "Et voi muuttaa asetuksia, jotka eivät ole määritettävissä"
       invalid_choice:
         one: "\"%{name}\" on virheellinen valinta."
         other: "\"%{name}\" ovat virheellisiä valintoja."
@@ -2127,7 +2124,6 @@ fi:
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
     reviewable_low_priority_threshold: "Prioriteettisuodatin piilottaa käsiteltävät kohteet, jotka eivät täytä tätä pistemäärää, ellei \"(mikä tahansa)\" -suodatin ole käytössä."
     high_trust_flaggers_auto_hide_posts: "Uusien käyttäjien viestit piilotetaan automaattisesti, kun vähintään TL3-tason käyttäjä on liputtaneet ne roskapostiksi"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonyymit käyttäjät näkevät tiedon siitä, että heidän täytyy lähetettää sähköpostiviesti ylläpitäjille laittomasta sisällöstä ilmoittamiseksi."
     email_address_to_report_illegal_content: "Jos tämä jätetään tyhjäksi, käytetään oletusarvoista sivuston ylläpitäjän sähköpostiosoitetta."
     cooldown_hours_until_reflag: "Kuinka kauan käyttäjien on odotettava, kunnes he voivat liputtaa viestin uudelleen"
     slow_mode_prevents_editing: "Estääkö hidas tila muokkauksen editing_grace_periodin jälkeen?"
@@ -2336,9 +2332,7 @@ fi:
     max_allowed_message_recipients: "Kuinka monta vastaanottajaa yksityisviestillä voi olla."
     disable_watched_word_checking_in_user_fields: "poista tarkkailtujen sanojen tarkistus käytöstä käyttäjäkentissä"
     watched_words_regular_expressions: "Sallii säännöllisten lausekkeiden käytön sanojen suodattamiseen. Jos tämä on käytössä, tämä ominaisuus ryhmittelee arkaluontoiset sanat kirjainkoon mukaan. Sen jälkeen se kokoaa kaikki valitut sanat yhdeksi säännölliseksi lausekkeeksi ja lisää sanarajat säännöllisesti tarkkailuille sanoille. Näin ollen tämä regex-pohjainen suodatusmenetelmä lisää ylimääräisen valvontatason sisällön moderointiin tukemalla kehittyneempiä sanamalleja. Asetus mahdollistaa myös alkuperäisen tekstin helposti korvaamisen halutulla korvauksella."
-    enable_diffhtml_preview: "Kokeellinen ominaisuus, joka käyttää diffHTML-tiedostoa esikatselun synkronointiin täydellisen uudelleenhahmontamisen sijaan"
     enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
-    enable_quote_copy: "Lisää painikkeen viestin valintavalikkoon, jolla voi kopioida valinnan markdown-lainauksena."
     old_post_notice_days: "Päivien lukumäärä, jonka jälkeen viesti-ilmoitus katsotaan vanhaksi. Tämä erottaa sen visuaalisesti sivuston uudemmista ilmoituksista."
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."

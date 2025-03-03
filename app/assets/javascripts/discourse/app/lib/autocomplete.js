@@ -18,7 +18,7 @@ import Site from "discourse/models/site";
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 
-const ALLOWED_LETTERS_REGEXP = /[\s[{(/]/;
+const ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
 let _autoCompletePopper, _inputTimeout;
 
 const keys = {

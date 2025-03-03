@@ -362,6 +362,7 @@ sk:
         tabs:
           members: Členovia
           settings: Nastavenia
+        remove_member: "Odstrániť"
       new_message_modal:
         title: Odoslať správu
         add_user_long: <kbd>shift + klik</kbd> alebo <kbd>shift + enter</kbd><span>Pridať @%{username}</span>

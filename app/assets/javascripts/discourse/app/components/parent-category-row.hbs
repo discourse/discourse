@@ -25,6 +25,10 @@
             <th class="main-link">
               <CategoryTitleLink @category={{this.category}} />
             </th>
+            <PluginOutlet
+              @name="category-list-after-title-mobile-section"
+              @outletArgs={{hash category=this.category}}
+            />
           </tr>
           {{#if this.category.description_excerpt}}
             <tr class="category-description">
@@ -165,41 +169,51 @@
         @outletArgs={{hash category=this.category}}
       />
 
-      <td class="topics">
-        <div title={{this.category.statTitle}}>{{html-safe
-            this.category.stat
-          }}</div>
-        <CategoryUnread
-          @category={{this.category}}
-          @tagName="div"
-          @unreadTopicsCount={{this.unreadTopicsCount}}
-          @newTopicsCount={{this.newTopicsCount}}
-          class="unread-new"
-        />
-      </td>
+      <PluginOutlet
+        @name="category-list-topics-wrapper"
+        @outletArgs={{hash category=this.category}}
+      >
+        <td class="topics">
+          <div title={{this.category.statTitle}}>{{html-safe
+              this.category.stat
+            }}</div>
+          <CategoryUnread
+            @category={{this.category}}
+            @tagName="div"
+            @unreadTopicsCount={{this.unreadTopicsCount}}
+            @newTopicsCount={{this.newTopicsCount}}
+            class="unread-new"
+          />
+        </td>
+      </PluginOutlet>
 
       <PluginOutlet
         @name="category-list-after-topics-section"
         @outletArgs={{hash category=this.category}}
       />
 
-      {{#unless this.isMuted}}
-        {{#if this.showTopics}}
-          <td class="latest">
-            {{#each this.category.featuredTopics as |t|}}
-              {{#if this.site.useGlimmerTopicList}}
-                <TopicList::FeaturedTopic @topic={{t}} />
-              {{else}}
-                <FeaturedTopic @topic={{t}} />
-              {{/if}}
-            {{/each}}
-          </td>
-          <PluginOutlet
-            @name="category-list-after-latest-section"
-            @outletArgs={{hash category=this.category}}
-          />
-        {{/if}}
-      {{/unless}}
+      <PluginOutlet
+        @name="category-list-latest-wrapper"
+        @outletArgs={{hash category=this.category showTopics=this.showTopics}}
+      >
+        {{#unless this.isMuted}}
+          {{#if this.showTopics}}
+            <td class="latest">
+              {{#each this.category.featuredTopics as |t|}}
+                {{#if this.site.useGlimmerTopicList}}
+                  <TopicList::FeaturedTopic @topic={{t}} />
+                {{else}}
+                  <FeaturedTopic @topic={{t}} />
+                {{/if}}
+              {{/each}}
+            </td>
+            <PluginOutlet
+              @name="category-list-after-latest-section"
+              @outletArgs={{hash category=this.category}}
+            />
+          {{/if}}
+        {{/unless}}
+      </PluginOutlet>
     </tr>
   {{/if}}
 {{/unless}}
