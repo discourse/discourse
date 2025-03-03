@@ -8,13 +8,6 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigAreaCardSection extends Component {
   @tracked collapsed = this.args.collapsed;
 
-  get computedHeading() {
-    if (this.args.heading) {
-      return i18n(this.args.heading);
-    }
-    return this.args.translatedHeading;
-  }
-
   get headerCaretIcon() {
     return this.collapsed ? "plus" : "minus";
   }
@@ -27,9 +20,7 @@ export default class AdminConfigAreaCardSection extends Component {
   <template>
     <section class="admin-config-area-card-section" ...attributes>
       <div class="admin-config-area-card-section__header-wrapper">
-        <h4
-          class="admin-config-area-card-section__title"
-        >{{this.computedHeading}}</h4>
+        <h4 class="admin-config-area-card-section__title">{{@heading}}</h4>
         {{#if @collapsable}}
           <DButton
             @title="sidebar.toggle_section"

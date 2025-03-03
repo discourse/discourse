@@ -10,8 +10,7 @@ class XSummaryLargeImageBasedOnDeprecatedSetting < ActiveRecord::Migration[7.2]
     if old_setting.present?
       DB.exec(
         "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
-        VALUES('x_summary_large_image', :setting, '18', NOW(), NOW())
-        ON CONFLICT DO NOTHING",
+        VALUES('x_summary_large_image', :setting, '18', NOW(), NOW())",
         setting: old_setting,
       )
     end
@@ -27,7 +26,7 @@ class XSummaryLargeImageBasedOnDeprecatedSetting < ActiveRecord::Migration[7.2]
       DB.exec(
         "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
         VALUES('twitter_summary_large_image', :setting, '18', NOW(), NOW())
-        ON CONFLICT DO NOTHING",
+        ON CONFLICT DO UPDATE",
         setting: old_setting,
       )
     end

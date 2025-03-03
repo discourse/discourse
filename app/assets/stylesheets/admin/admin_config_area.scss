@@ -129,6 +129,7 @@
   gap: var(--space-4);
   flex-direction: column;
   width: 100%;
+  border: 1px solid var(--primary-low);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -138,6 +139,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-left: 0.5em;
   }
 
   &__title {
@@ -146,6 +148,17 @@
 
   &__content {
     margin-top: 0.5rem;
-    padding-right: 15px;
+    padding-right: 1em;
+    padding-left: 0.5em;
+    padding-bottom: 1em;
+    gap: 1.5em;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.admin-logo-form {
+  .form-kit__section {
+    padding-left: 2em;
   }
 }

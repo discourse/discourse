@@ -6,6 +6,10 @@ module PageObjects
       def visit
         page.visit("/admin/config/branding")
       end
+
+      def logo_form
+        @logo_form ||= PageObjects::Components::AdminBrandingLogoForm.new
+      end
     end
   end
 end

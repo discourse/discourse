@@ -82,7 +82,12 @@ export default class AdminBrandingLogoForm extends Component {
         },
       });
     } catch (err) {
-      popupAjaxError(err);
+      this.toasts.error({
+        duration: 3000,
+        data: {
+          message: err.jqXHR.responseJSON.errors[0],
+        },
+      });
     }
   }
 
@@ -143,17 +148,19 @@ export default class AdminBrandingLogoForm extends Component {
           <field.Toggle />
         </form.Field>
         {{#if transientData.logo_dark_required}}
-          <form.Field
-            @name="logo_dark"
-            @title={{i18n "admin.config.branding.logo.form.logo_dark.title"}}
-            @helpText={{i18n
-              "admin.config.branding.logo.form.logo_dark.help_text"
-            }}
-            @onSet={{fn this.handleUpload "logo_dark"}}
-            as |field|
-          >
-            <field.Image @type="branding" />
-          </form.Field>
+          <form.Section>
+            <form.Field
+              @name="logo_dark"
+              @title={{i18n "admin.config.branding.logo.form.logo_dark.title"}}
+              @helpText={{i18n
+                "admin.config.branding.logo.form.logo_dark.help_text"
+              }}
+              @onSet={{fn this.handleUpload "logo_dark"}}
+              as |field|
+            >
+              <field.Image @type="branding" />
+            </form.Field>
+          </form.Section>
         {{/if}}
         <form.Field
           @name="large_icon"
@@ -207,23 +214,25 @@ export default class AdminBrandingLogoForm extends Component {
           <field.Toggle />
         </form.Field>
         {{#if transientData.logo_small_dark_required}}
-          <form.Field
-            @name="logo_small_dark"
-            @title={{i18n
-              "admin.config.branding.logo.form.logo_small_dark.title"
-            }}
-            @helpText={{i18n
-              "admin.config.branding.logo.form.logo_small_dark.help_text"
-            }}
-            @onSet={{fn this.handleUpload "logo_small_dark"}}
-            as |field|
-          >
-            <field.Image @type="branding" />
-          </form.Field>
+          <form.Section>
+            <form.Field
+              @name="logo_small_dark"
+              @title={{i18n
+                "admin.config.branding.logo.form.logo_small_dark.title"
+              }}
+              @helpText={{i18n
+                "admin.config.branding.logo.form.logo_small_dark.help_text"
+              }}
+              @onSet={{fn this.handleUpload "logo_small_dark"}}
+              as |field|
+            >
+              <field.Image @type="branding" />
+            </form.Field>
+          </form.Section>
         {{/if}}
 
         <AdminConfigAreaCardSection
-          @heading="admin.config.branding.logo.form.mobile"
+          @heading={{i18n "admin.config.branding.logo.form.mobile"}}
           class="admin-logo-form__mobile-section"
           @collapsable={{true}}
           @collapsed={{true}}
@@ -257,19 +266,21 @@ export default class AdminBrandingLogoForm extends Component {
               <field.Toggle />
             </form.Field>
             {{#if transientData.mobile_logo_dark_required}}
-              <form.Field
-                @name="mobile_logo_dark"
-                @title={{i18n
-                  "admin.config.branding.logo.form.mobile_logo_dark.title"
-                }}
-                @helpText={{i18n
-                  "admin.config.branding.logo.form.mobile_logo_dark.help_text"
-                }}
-                @onSet={{fn this.handleUpload "mobile_logo_dark"}}
-                as |field|
-              >
-                <field.Image @type="branding" />
-              </form.Field>
+              <form.Section>
+                <form.Field
+                  @name="mobile_logo_dark"
+                  @title={{i18n
+                    "admin.config.branding.logo.form.mobile_logo_dark.title"
+                  }}
+                  @helpText={{i18n
+                    "admin.config.branding.logo.form.mobile_logo_dark.help_text"
+                  }}
+                  @onSet={{fn this.handleUpload "mobile_logo_dark"}}
+                  as |field|
+                >
+                  <field.Image @type="branding" />
+                </form.Field>
+              </form.Section>
             {{/if}}
             <form.Field
               @name="manifest_icon"
@@ -328,7 +339,7 @@ export default class AdminBrandingLogoForm extends Component {
           </:content>
         </AdminConfigAreaCardSection>
         <AdminConfigAreaCardSection
-          @heading="admin.config.branding.logo.form.email"
+          @heading={{i18n "admin.config.branding.logo.form.email"}}
           class="admin-logo-form__email-section"
           @collapsable={{true}}
           @collapsed={{true}}
@@ -357,7 +368,7 @@ export default class AdminBrandingLogoForm extends Component {
           </:content>
         </AdminConfigAreaCardSection>
         <AdminConfigAreaCardSection
-          @heading="admin.config.branding.logo.form.social_media"
+          @heading={{i18n "admin.config.branding.logo.form.social_media"}}
           class="admin-logo-form__social-media-section"
           @collapsable={{true}}
           @collapsed={{true}}

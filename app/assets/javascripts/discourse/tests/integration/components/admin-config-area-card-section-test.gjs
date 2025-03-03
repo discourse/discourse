@@ -10,11 +10,13 @@ module(
 
     test("renders admin config area card section without toggle button", async function (assert) {
       await render(<template>
-        <AdminConfigAreaCardSection @translatedHeading="test heading"><:content
+        <AdminConfigAreaCardSection @heading="test heading"><:content
           >test</:content></AdminConfigAreaCardSection>
       </template>);
 
-      assert.dom(".admin-config-area-card-section__title").exists();
+      assert
+        .dom(".admin-config-area-card-section__title")
+        .hasText("test heading");
       assert.dom(".admin-config-area-card-section__content").exists();
       assert
         .dom(".admin-config-area-card-section__toggle-button")
@@ -24,13 +26,15 @@ module(
     test("renders admin config area card section with toggle button", async function (assert) {
       await render(<template>
         <AdminConfigAreaCardSection
-          @translatedHeading="test heading"
+          @heading="test heading"
           @collapsable={{true}}
         ><:content>test</:content></AdminConfigAreaCardSection>
       </template>);
 
-      assert.dom(".admin-config-area-card-section__title").exists();
-      assert.dom(".admin-config-area-card-section__content").exists();
+      assert
+        .dom(".admin-config-area-card-section__title")
+        .hasText("test heading");
+      assert.dom(".admin-config-area-card-section__content").hasText("test");
       assert.dom(".admin-config-area-card-section__toggle-button").exists();
 
       await click(".admin-config-area-card-section__toggle-button");
@@ -43,7 +47,7 @@ module(
     test("renders admin config area card section with toggle button and collapsed by default", async function (assert) {
       await render(<template>
         <AdminConfigAreaCardSection
-          @translatedHeading="test heading"
+          @heading="test heading"
           @collapsable={{true}}
           @collapsed={{true}}
         ><:content>test</:content></AdminConfigAreaCardSection>
