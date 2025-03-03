@@ -42,7 +42,13 @@ class NotificationsTrackingTrigger extends Component {
   }
 
   <template>
-    <button class="btn btn-icon-text btn-default" ...attributes>
+    <button
+      class={{concatClass
+        "btn btn-default"
+        (if this.showFullTitle "btn-icon-text" "no-text")
+      }}
+      ...attributes
+    >
       {{icon @selectedLevel.icon}}
 
       {{#if this.showFullTitle}}
