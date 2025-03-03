@@ -11,33 +11,43 @@ module(
       image: [
         [
           "![alt text](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" data-thumbnail="false" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image.jpg" alt="alt text" contenteditable="false" draggable="true"></p>',
           "![alt text](https://example.com/image.jpg)",
         ],
         [
           "![alt text](https://example.com/image.jpg 'title')",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" data-thumbnail="false" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" contenteditable="false" draggable="true"></p>',
           '![alt text](https://example.com/image.jpg "title")',
         ],
         [
           '![alt text|100x200](https://example.com/image.jpg "title")',
-          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" width="100" height="200" data-thumbnail="false" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" width="100" height="200" contenteditable="false" draggable="true"></p>',
           '![alt text|100x200](https://example.com/image.jpg "title")',
         ],
         [
           "![alt text|100x200, 50%](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-thumbnail="false" data-scale="50" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-scale="50" contenteditable="false" draggable="true"></p>',
           "![alt text|100x200, 50%](https://example.com/image.jpg)",
         ],
         [
           "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-thumbnail="true" data-scale="50" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-scale="50" data-thumbnail="true" contenteditable="false" draggable="true"></p>',
           "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
         ],
         [
           "![alt text](https://example.com/image(1).jpg)",
-          '<p><img src="https://example.com/image(1).jpg" alt="alt text" data-thumbnail="false" contenteditable="false" draggable="true"></p>',
+          '<p><img src="https://example.com/image(1).jpg" alt="alt text" contenteditable="false" draggable="true"></p>',
           "![alt text](https://example.com/image\\(1\\).jpg)",
+        ],
+        [
+          "![alt text|video](uploads://hash)",
+          '<p><div class="onebox-placeholder-container" contenteditable="false" draggable="true"><span class="placeholder-icon video"></span></div></p>',
+          "![alt text|video](uploads://hash)",
+        ],
+        [
+          "![alt text|audio](upload://hash)",
+          '<p><audio preload="metadata" controls="false" contenteditable="false" draggable="true"><source data-orig-src="upload://hash"></audio></p>',
+          "![alt text|audio](upload://hash)",
         ],
       ],
     };
