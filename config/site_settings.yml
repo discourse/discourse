@@ -2850,6 +2850,11 @@ search:
     client: true
     type: enum
     enum: "SearchSortOrderSiteSetting"
+  search_experience:
+    default: search_icon
+    client: true
+    type: enum
+    enum: "SearchExperienceSiteSetting"
 
 uncategorized:
   version_checks:
