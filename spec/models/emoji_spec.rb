@@ -100,9 +100,10 @@ RSpec.describe Emoji do
     end
 
     it "finds aliases" do
-      expect(Emoji.exists?(Emoji.aliases_db.values[0][0])).to be(true)
-      expect(Emoji.exists?(Emoji.aliases_db.values[1][0])).to be(true)
-      expect(Emoji.exists?(Emoji.aliases_db.values[2][0])).to be(true)
+      aliases_list = Emoji.aliases_db.values
+      expect(Emoji.exists?(aliases_list[0][0])).to be(true)
+      expect(Emoji.exists?(aliases_list[1][0])).to be(true)
+      expect(Emoji.exists?(aliases_list[2][0])).to be(true)
     end
   end
 
