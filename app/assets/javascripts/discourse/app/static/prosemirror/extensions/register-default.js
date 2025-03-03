@@ -10,3 +10,5 @@ import hashtag from "./hashtag";
 const defaultExtensions = [hashtag];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+
+export default defaultExtensions;
