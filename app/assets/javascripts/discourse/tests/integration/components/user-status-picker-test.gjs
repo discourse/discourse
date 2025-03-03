@@ -9,7 +9,7 @@ module("Integration | Component | user-status-picker", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    pretender.get("/emojis/search-aliases.json", () => response([]));
+    pretender.get("/emojis/search-aliases", () => response([]));
   });
 
   test("it renders current status", async function (assert) {
