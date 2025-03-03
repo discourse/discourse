@@ -55,7 +55,12 @@ export default class ApiKey extends RestModel {
   }
 
   createProperties() {
-    return this.getProperties("description", "username", "scopes");
+    return this.getProperties(
+      "description",
+      "username",
+      "scopes",
+      "scope_mode"
+    );
   }
 
   @discourseComputed()

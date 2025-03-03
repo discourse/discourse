@@ -463,7 +463,6 @@ pt_BR:
       dropdown:
         title: "Abrir menu de rascunhos mais recentes"
         untitled: "Rascunho sem título"
-        view_all: "visualizar tudo"
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
@@ -4673,6 +4672,10 @@ pt_BR:
       no_results:
         title: "Nenhum resultado"
         description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
+      footer:
+        interface_color_selector:
+          light: "Claro"
+          dark: "Escuro"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -4791,15 +4794,39 @@ pt_BR:
         meta_doc: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
-        sidebar_link:
-          all: "Todos os relatórios"
+      config_sections:
+        account:
+          title: "Conta"
+        reports:
+          title: "Relatórios"
+        community:
+          title: "Comunidade"
+        appearance:
+          title: "Aparência"
+        email:
+          title: "E-mail"
+        security:
+          title: "Segurança"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Avançado"
       config:
+        about:
+          title: "Sobre seu site"
+          header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
           header_description: "Configurações do(a) desenvolvedor(a) para controlar limites de frequência, multiplicadores e cálculos, modo de segurança e outros recursos avançados"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"
+        emojis:
+          title: "Emoji"
+          header_description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Selecione vários arquivos para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo"
+        flags:
+          title: "Moderação"
+          header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
         font_style:
           title: "Estilo de fonte"
           header_description: "Personalize os estilos de fonte usados pelos seus temas"
@@ -4848,6 +4875,107 @@ pt_BR:
         group_permissions:
           title: "Permissões de grupo"
           header_description: "Todas as permissões de aplicativo baseadas em grupo são gerenciadas aqui, controlando o acesso a vários recursos no Discourse"
+        dashboard:
+          title: "Painel de controle"
+        users:
+          title: "Usuários(as)"
+        groups:
+          title: "Grupos"
+        site_settings:
+          title: "Todas as configurações do site"
+        whats_new:
+          title: "Novidades?"
+          keywords: "registro de alterações|recurso|lançamento"
+        backups:
+          title: "Backups"
+          header_description: "Os arquivos de cópia de segurança do Discourse incluem todo o banco de dados do site. Nele, estão contidos todo o conteúdo do site: tópicos, postagens, usuários(as), grupos, configurações, temas etc. Dependendo de como o arquivo de cópia de segurança for criado, envios podem estar inclusos."
+          sub_pages:
+            logs:
+              title: "Registros"
+        reports:
+          title: "Relatórios"
+          header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
+        badges:
+          title: "Emblemas"
+          header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
+        permalinks:
+          title: "Links permanentes"
+          header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
+        user_fields:
+          title: "Campos de usuário(a)"
+          header_description: "Crie campos personalizados de usuário(a) para coletar dados extras sobre os membros da comunidade. Escolha quais informações serão necessárias durante a criação da conta, o que mostrar nos perfis e o que os(as) usuários(as) poderão atualizar."
+        watched_words:
+          title: "Palavras em acompanhamento"
+          header_description: "Palavras em acompanhamento são ferramentas de moderação que realizam várias ações diferentes, inclusive bloquear, censurar, vincular ou sinalizar postagens que contenham certas palavras"
+        color_palettes:
+          title: "Paletas de cores"
+        emoji:
+          title: "Emoji"
+          header_description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Selecione vários arquivos para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo."
+        themes:
+          title: "Temas"
+          header_description: "Temas são personalizações que podem ser estendidas e alteram vários elementos do estilo do design do fórum, incluindo muitas vezes recursos adicionais de front-end"
+        components:
+          title: "Componentes"
+          header_description: "Componentes são personalizações secundárias que podem ser adicionadas aos temas para alterar elementos específicos do estilo de design do seu fórum"
+        site_texts:
+          title: "Textos do site"
+        email:
+          title: "Registros e configurações do servidor"
+          keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
+          sub_pages:
+            preview_summary:
+              title: "Pré-visualizar resumo"
+            advanced_test:
+              title: "Teste avançado"
+            templates:
+              title: "Modelos"
+            sent:
+              title: "Enviado(a)"
+            skipped:
+              title: "Ignorado(a)"
+            bounced:
+              title: "Devolvido(a)"
+            received:
+              title: "Recebido(a)"
+            rejected:
+              title: "Rejeitado(a)"
+        email_appearance:
+          title: "Aparência"
+          header_description: "Personalize o modelo no qual todos os e-mails em HTML são renderizados e estilize usando CSS"
+        staff_action_logs:
+          title: "Filtros e registros"
+          keywords: "registros de erros|ação da equipe|e-mails filtrados|ips filtrados|urls filtradas|registros de pesquisa"
+          sub_pages:
+            screened_emails:
+              title: "E-mails filtrados"
+              header_description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada"
+            screened_ips:
+              title: "IPs filtrados"
+            screened_urls:
+              title: "URLs filtradas"
+              header_description: "As URLs listadas aqui foram usadas em postagens de usuários(as) que foram identificados como remetentes de spam"
+            search_logs:
+              title: "Registros de pesquisa"
+        plugins:
+          title: "Plugins instalados"
+          header_description: "Plugins do Discourse instalados ou que já vêm pré-instalados com a hospedagem do Discourse serão mostrados nesta lista"
+        api_keys:
+          title: "Chaves de API"
+          header_description: "Com o recurso de chaves de API, você pode integrar o Discourse com sistemas externos e automatizar ações de forma segura. Os(as) administradores(as) podem criar chaves com escopos específicos para controlar o acesso a recursos e dados confidenciais. Com o escopo, essa funcionalidade é limitada, melhorando a segurança."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incorporar"
+          header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temas"
+          component:
+            one: "Componente"
+            other: "Componentes"
       new_features:
         title: "Novidades?"
         check_for_updates: "Verificar atualizações"
@@ -5320,72 +5448,8 @@ pt_BR:
             failed: "Falha"
       home:
         title: "Início"
-      account:
-        title: "Conta"
-        sidebar_link:
-          backups: "Backups"
-          whats_new:
-            title: "Novidades?"
-            keywords: "registro de alterações|recurso|lançamento"
-      community:
-        title: "Comunidade"
-        sidebar_link:
-          about_your_site: "Sobre seu site"
-          badges: "Emblemas"
-          login_and_authentication: "Acesso e autenticação"
-          notifications: "Notificações"
-          permalinks: "Links permanentes"
-          trust_levels: "Níveis de confiança"
-          group_permissions: "Permissões de grupo"
-          users: "Usuários(as)"
-          groups: "Grupos"
-          user_fields: "Campos de usuário(a)"
-          watched_words: "Palavras em acompanhamento"
-          legal: "Jurídico"
-          moderation_flags:
-            title: "Moderação"
-            keywords: "sinalizar|revisar"
-      appearance:
-        title: "Aparência"
-        sidebar_link:
-          font_style: "Estilo de fonte"
-          site_logo: "Logotipo do site"
-          color_schemes: "Paletas de cores"
-          emoji: "Emoji"
-          navigation: "Navegação"
-          themes: "Temas"
-          components:
-            title: "Componentes"
-            keywords: "tema|extensão"
-          site_texts: "Textos do site"
-      email_settings:
-        title: "Configurações de e-mail"
-        sidebar_link:
-          appearance: "Aparência"
-          server_setup:
-            title: "Registros e configurações do servidor"
-            keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
-      security:
-        title: "Segurança"
-        sidebar_link:
-          security: "Configurações de segurança"
-          spam: "Configurações de spam"
-          staff_action_logs:
-            title: "Filtros e registros"
-            keywords: "registros de erros|ação da equipe|e-mails filtrados|ips filtrados|urls filtradas|registros de pesquisa"
-      section_landing_pages:
-        account:
-          title: "Conta"
-          backups:
-            title: "Backups"
-            description: "Faça cópia de segurança dos dados do seu site"
-          whats_new:
-            title: "Novidades?"
-            description: "Descubra melhorias e lançamentos novos no Discourse"
       config_areas:
         about:
-          header: "Sobre seu site"
-          description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
           general_settings: "Configurações gerais"
           community_name: "Nome da comunidade"
           community_name_placeholder: "Comunidade de exemplo"
@@ -5394,8 +5458,6 @@ pt_BR:
           community_title: "Título da comunidade"
           community_title_help: "Descrição curta mostrada na aba do navegador, para páginas importantes, como categorias e listas de tópicos."
           banner_image: "Imagem do banner"
-          banner_image_help: |
-            Será usado na sua página Sobre. Tamanho recomendado: 1100x300px. Tipos aceitos: JPG, PNG e SVG de até 10 MB.
           contact_information: "Informações de contato"
           community_owner: "Proprietário(a) da Comunidade"
           community_owner_placeholder: "Johnny Smith"
@@ -5437,9 +5499,7 @@ pt_BR:
             your_organization_saved: "Sua organização salva"
           saved: "salvou!"
         flags:
-          header: "Moderação"
           edit_header: "Editar sinalização"
-          subheader: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           description: "Descrição"
           enabled: "Ativado(a)?"
           add: "Adicionar sinalização"
@@ -5482,8 +5542,6 @@ pt_BR:
           more_options:
             title: "Mais opções"
         look_and_feel:
-          title: "Aspecto e estilo"
-          description: "Personalize sua marca no site do Discourse com um estilo especial."
           themes:
             title: "Temas"
             themes_intro: "Instale um novo tema para começar, ou crie um do zero usando estes recursos."
@@ -5505,8 +5563,6 @@ pt_BR:
           save_successful: "Campo de usuário(a) salvo."
       plugins:
         title: "Plugins"
-        installed: "Plugins instalados"
-        description: "Plugins do Discourse instalados ou que já vêm pré-instalados com a hospedagem do Discourse serão mostrados nesta lista."
         name: "Nome"
         none_installed: "Você não tem nenhum plugin instalado."
         version: "Versão"
@@ -5521,25 +5577,6 @@ pt_BR:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Saiba mais"
-        sidebar_link:
-          installed: "Instalado(a)"
-      advanced:
-        title: "Avançado"
-        sidebar_link:
-          api_keys:
-            title: "Chaves de API"
-            keywords: "token"
-          webhooks: "Webhooks"
-          developer: "Desenvolvedor"
-          embedding: "Incorporar"
-          rate_limits: "Limites de frequência"
-          user_api: "API de usuário(a)"
-          onebox: "Onebox"
-          files: "Arquivos"
-          other_options: "Outros(as)"
-          search: "Pesquisar"
-          experimental: "Experimental"
-          all_site_settings: "Todas as configurações do site"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
@@ -5547,7 +5584,6 @@ pt_BR:
       backups:
         title: "Backups"
         files_title: "Arquivos de cópia de segurança"
-        description: "Os arquivos de cópia de segurança do Discourse incluem todo o banco de dados do site. Nele, estão contidos todo o conteúdo do site: tópicos, postagens, usuários(as), grupos, configurações, temas etc. Dependendo de como o arquivo de cópia de segurança for criado, envios podem estar inclusos."
         menu:
           backups: "Backups"
           backup_files: "Arquivos de cópia de segurança"
@@ -5691,16 +5727,11 @@ pt_BR:
           common: "Comum"
           desktop: "Desktop"
           mobile: "Móvel"
-          settings: "Configurações"
-          translations: "Traduções"
-          extra_scss: "SCSS Extra"
           extra_files: "Arquivos extras"
           extra_files_upload: "Exporte o tema para visualizar estes arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
           settings_editor: "Editor de configurações"
-          show_advanced: "Exibir campos avançados"
-          hide_advanced: "Ocultar campos avançados"
           hide_unused_fields: "Ocultar campos não usados"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
@@ -5947,6 +5978,9 @@ pt_BR:
           hover:
             name: "focalizar"
             description: "A cor de fundo de elementos como os itens da lista quando passa o mouse ou têm o foco do teclado."
+          editor:
+            light: "Claro"
+            dark: "Escuro"
         robots:
           title: "Substituir o arquivo robots.txt do seu site:"
           warning: "Isso vai substituir permanentemente qualquer configuração relacionada do site."
@@ -6625,8 +6659,6 @@ pt_BR:
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
         delete_confirm_title: "Você tem certeza de que deseja excluir este usuário(a)? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os(as) usuários(as) em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
-        delete_and_block: "Excluir e <b>bloquear</b> este e-mail e endereço IP"
-        delete_dont_block: "Excluir apenas"
         deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."
         delete_failed: "Houve um erro ao excluir o(a) usuário(a). Verifique se todas as suas postagens foram excluídas antes de tentar excluí-lo(a)."

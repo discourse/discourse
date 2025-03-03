@@ -122,4 +122,31 @@ RSpec.describe Service do
       end
     end
   end
+
+  describe "Thread safety" do
+    context "when services are run concurrently" do
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          policy :limit_reached
+          step :update
+
+          def limit_reached
+            $redis.get("my_counter").to_i < 3
+          end
+
+          def update
+            $redis.incr("my_counter")
+          end
+        end
+      end
+
+      it "works properly" do
+        # When not thread-safe, a failed service can hold the wrong context,
+        # which raises an exception
+        expect { 10.times.map { Thread.new { service.call } }.map(&:join) }.not_to raise_error
+      end
+    end
+  end
 end

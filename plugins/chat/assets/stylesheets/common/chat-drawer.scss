@@ -94,7 +94,6 @@ html.rtl {
 }
 
 .chat-drawer-content {
-  @include chat-scrollbar;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -103,6 +102,8 @@ html.rtl {
   position: relative;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  @include chat-scrollbar;
 
   .c-channel-settings {
     flex-grow: 1;

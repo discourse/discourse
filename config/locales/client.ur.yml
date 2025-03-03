@@ -334,8 +334,6 @@ ur:
       abandon:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
-      dropdown:
-        view_all: "سب دیکھیں"
     topic_count_all:
       one: "%{count} نیا ٹاپک دیکھیں۔"
       other: "%{count} نئے ٹاپک دیکھیں۔"
@@ -3616,6 +3614,10 @@ ur:
             invite:
               content: "دعوت دیں"
       filter: "فِلٹر..."
+      footer:
+        interface_color_selector:
+          light: "لائٹ"
+          dark: "ڈارک"
     until: "جب تک:"
     form_templates:
       upload_field:
@@ -3652,11 +3654,28 @@ ur:
       reports:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
-        sidebar_link:
-          all: "تمام رپورٹیں"
+      config_sections:
+        account:
+          title: "اکاؤنٹ"
+        reports:
+          title: "رپورٹیں"
+        community:
+          title: "کمیونٹی"
+        appearance:
+          title: "ظاہری شکل"
+        email:
+          title: "اِیمیل"
+        security:
+          title: "سیکورٹی"
+        plugins:
+          title: "پلَگ اِنز"
       config:
         developer:
           title: "ڈیولپر"
+        emojis:
+          title: "اِیمَوجی"
+        flags:
+          title: "ماڈریٹر کا کام"
         files:
           title: "فائلیں"
         legal:
@@ -3677,6 +3696,64 @@ ur:
           title: "سپَیم"
         user_api:
           title: "یُوزَر API"
+        dashboard:
+          title: "ڈَیش بورڈ"
+        users:
+          title: "صارفین"
+        groups:
+          title: "گروپس"
+        backups:
+          title: "بیک اَپس"
+          sub_pages:
+            logs:
+              title: "لاگز"
+        reports:
+          title: "رپورٹیں"
+        badges:
+          title: "بَیج"
+        permalinks:
+          title: "دائمی لِنکس"
+        emoji:
+          title: "اِیمَوجی"
+        themes:
+          title: "تِھیمز"
+        components:
+          title: "اجزاء"
+        email:
+          sub_pages:
+            templates:
+              title: "ٹَیمپلیٹ"
+            sent:
+              title: "بھیجا جا چکا"
+            skipped:
+              title: "چھوڑا گیا"
+            bounced:
+              title: "لوٹا دی گئی"
+            received:
+              title: "موصول ہو گئی"
+            rejected:
+              title: "مسترد کر دی گئی"
+        email_appearance:
+          title: "ظاہری شکل"
+        staff_action_logs:
+          sub_pages:
+            screened_ips:
+              title: "سکرین کیے گئے IP"
+            screened_urls:
+              title: "سکرین کیے گئے یو.آر.ایل."
+              header_description: "یہاں درج کردہ URLs، صارفین جو سپیمرز کے طور پر شناخت کیے گئے ہیں کی طرف سے، پوسٹس میں استعمال کیے گئے تھے"
+        webhooks:
+          title: "وَیب ھُوک٘س٘"
+        embedding:
+          title: "اَیمبَیڈ کرنا"
+      search:
+        result_types:
+          theme:
+            one: "تھیم"
+            other: "تِھیمز"
+          component:
+            one: "جزو"
+            other: "اجزاء"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -3971,39 +4048,6 @@ ur:
             failed: "ناکامی"
       home:
         title: "ہَوم"
-      account:
-        title: "اکاؤنٹ"
-        sidebar_link:
-          backups: "بیک اَپس"
-      community:
-        title: "کمیونٹی"
-        sidebar_link:
-          badges: "بَیج"
-          notifications: "اطلاعات"
-          permalinks: "دائمی لِنکس"
-          users: "صارفین"
-          groups: "گروپس"
-          legal: "قانونی"
-          moderation_flags:
-            title: "ماڈریٹر کا کام"
-      appearance:
-        title: "ظاہری شکل"
-        sidebar_link:
-          emoji: "اِیمَوجی"
-          navigation: "نیویگیشن"
-          themes: "تِھیمز"
-          components:
-            title: "اجزاء"
-      email_settings:
-        sidebar_link:
-          appearance: "ظاہری شکل"
-      security:
-        title: "سیکورٹی"
-      section_landing_pages:
-        account:
-          title: "اکاؤنٹ"
-          backups:
-            title: "بیک اَپس"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4012,7 +4056,6 @@ ur:
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
         flags:
-          header: "ماڈریٹر کا کام"
           description: "تفصیل"
           enabled: "فعال؟"
           edit: "ترمیم کریں"
@@ -4050,18 +4093,6 @@ ur:
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         author: "%{author} کی طرف سے"
         learn_more: "مزید جانیں"
-        sidebar_link:
-          installed: "انسٹال کیا ہوا"
-      advanced:
-        sidebar_link:
-          webhooks: "وَیب ھُوک٘س٘"
-          developer: "ڈیولپر"
-          embedding: "اَیمبَیڈ کرنا"
-          user_api: "یُوزَر API"
-          onebox: "وَن باکس"
-          files: "فائلیں"
-          other_options: "دیگر"
-          search: "تلاش کریں"
       backups:
         title: "بیک اَپس"
         menu:
@@ -4174,15 +4205,10 @@ ur:
           common: "عام"
           desktop: "ڈیسک ٹاپ"
           mobile: "موبائل"
-          settings: "ترتیبات"
-          translations: "ترجمہ"
-          extra_scss: "اضافی SCSS"
           extra_files: "اضافی فائلیں"
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
-          show_advanced: "اَیڈوانسڈ شعبہ دکھائیں"
-          hide_advanced: "اَیڈوانسڈ شعبہ چھپائیں"
           hide_unused_fields: "اَیڈوانسڈ غیر استعمال شدہ چھپائیں"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
@@ -4375,6 +4401,9 @@ ur:
             description: "لائیک بٹن کا رنگ۔"
           selected:
             name: "منتخب کیا ہوا"
+          editor:
+            light: "لائٹ"
+            dark: "ڈارک"
         robots:
           title: "آپ کی سائٹ کی robots.txt فائل کی جگہ لے لیتی ہے:"
           warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"
@@ -4856,8 +4885,6 @@ ur:
         cant_delete_all_too_many_posts:
           one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
           other: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
-        delete_and_block: "اِس اِیمیل اور IP ایڈریس کو حذف اور <b>بلاک</b> کریں"
-        delete_dont_block: "صرف مٹائیں"
         deleted: "صارف حذف کر دیا گیا تھا۔"
         delete_failed: "اُس صارف کو حذف کرنے میں ایک مسئلہ پیش آیا۔ صارف کو حذف کرنے سے پہلے اس بات کا یقین کرلیں کہ تمام پوسٹس حذف کر دی گئی ہیں۔"
         send_activation_email: "ایکٹیویشن اِیمیل بھیجییں"

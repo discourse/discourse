@@ -1,4 +1,4 @@
-.discourse-automation {
+.admin-plugins.automation {
   .automations {
     .relative-date {
       font-size: $font-down-1;
@@ -11,6 +11,10 @@
     &__name {
       word-break: break-word;
     }
+  }
+
+  .discourse-automations-table {
+    margin-top: 1em;
   }
 
   .d-admin-table.automations {
@@ -49,6 +53,18 @@
     .d-admin-row__detail.automations__updated-by {
       @include breakpoint("tablet") {
         order: 5;
+      }
+    }
+
+    .d-admin-row__controls.automations__controls {
+      text-align: right;
+      display: flex;
+      flex-direction: row;
+      gap: 0.5em;
+      justify-content: flex-end;
+
+      @include breakpoint("tablet") {
+        order: 6;
       }
     }
   }

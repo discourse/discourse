@@ -34,7 +34,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       end
     end
 
-    context "when channel is channel" do
+    context "when channel is a category channel" do
       context "when current user can't write in channel" do
         fab!(:private_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
         fab!(:readonly_group_1) { Fabricate(:group) }

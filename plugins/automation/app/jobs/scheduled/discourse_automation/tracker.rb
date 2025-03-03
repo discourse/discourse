@@ -13,13 +13,21 @@ module Jobs
         .includes(:automation)
         .limit(BATCH_LIMIT)
         .where("execute_at < ?", Time.now)
-        .find_each { |pending_automation| run_pending_automation(pending_automation) }
+        .find_each do |pending_automation|
+          run_pending_automation(pending_automation)
+        rescue => e
+          Rails.logger.error("Error running automation #{pending_automation.automation.name}: #{e}")
+        end
 
       ::DiscourseAutomation::PendingPm
         .includes(:automation)
         .limit(BATCH_LIMIT)
         .where("execute_at < ?", Time.now)
-        .find_each { |pending_pm| send_pending_pm(pending_pm) }
+        .find_each do |pending_pm|
+          send_pending_pm(pending_pm)
+        rescue => e
+          Rails.logger.error("Error sending PM for #{pending_pm.automation.name}: #{e}")
+        end
     end
 
     def send_pending_pm(pending_pm)

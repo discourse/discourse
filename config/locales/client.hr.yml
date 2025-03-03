@@ -474,8 +474,6 @@ hr:
         confirm: "Već imate nacrt u tijeku. Što biste željeli učiniti s njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
-      dropdown:
-        view_all: "pregledaj sve"
     topic_count_all:
       one: "Pregledajte %{count} nepročitanu temu."
       few: "Pregledajte %{count} nove teme."
@@ -4464,11 +4462,28 @@ hr:
       reports:
         title: "Popis dostupnih izvještaja"
         sidebar_title: "Izvještaji"
-        sidebar_link:
-          all: "Sva izvješća"
+      config_sections:
+        account:
+          title: "Račun"
+        reports:
+          title: "Izvještaji"
+        community:
+          title: "Zajednica"
+        appearance:
+          title: "Izgled"
+        email:
+          title: "E-mail"
+        security:
+          title: "Sigurnost"
+        plugins:
+          title: "Dodaci"
       config:
         developer:
           title: "Programer"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderiranje"
         files:
           title: "Datoteke"
         legal:
@@ -4489,6 +4504,73 @@ hr:
           title: "Nepoželjno"
         user_api:
           title: "Korisnički API"
+        dashboard:
+          title: "Nadzorna ploča"
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Grupe"
+        whats_new:
+          title: "Što je novo?"
+        backups:
+          title: "Sigurnosne kopije"
+          sub_pages:
+            logs:
+              title: "Zapisi"
+        reports:
+          title: "Izvještaji"
+        badges:
+          title: "Značke"
+        permalinks:
+          title: "Poveznice"
+          header_description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Teme"
+        components:
+          title: "Komponente"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Pregledajte sadržaj e-mail poruka sa sažetkom poslanih neaktivnim korisnicima"
+            templates:
+              title: "Predlošci"
+            sent:
+              title: "Poslano"
+            skipped:
+              title: "Preskočeno"
+            bounced:
+              title: "Vraćeno"
+            received:
+              title: "Primljeno"
+            rejected:
+              title: "Odbijeno"
+        email_appearance:
+          title: "Izgled"
+          header_description: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kad netko pokuša stvoriti račun, slijedeće email adrese će biti provjerene i registracija će biti blokirana ili će neke druge akcije biti poduzete"
+            screened_ips:
+              title: "Provjereni IP-pvi"
+            screened_urls:
+              title: "Provjereni URL-ovi"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Ugrađivanje"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            few: "Teme"
+            other: "Teme"
+          component:
+            one: "Komponenta"
+            few: "Komponente"
+            other: "Komponente"
       new_features:
         title: "Što je novo?"
       dashboard:
@@ -4805,44 +4887,6 @@ hr:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
-      account:
-        title: "Račun"
-        sidebar_link:
-          backups: "Sigurnosne kopije"
-          whats_new:
-            title: "Što je novo?"
-      community:
-        title: "Zajednica"
-        sidebar_link:
-          badges: "Značke"
-          notifications: "Obavijest"
-          permalinks: "Poveznice"
-          users: "Korisnika"
-          groups: "Grupe"
-          legal: "Legalno"
-          moderation_flags:
-            title: "Moderiranje"
-      appearance:
-        title: "Izgled"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navigacija"
-          themes: "Teme"
-          components:
-            title: "Komponente"
-      email_settings:
-        title: "E-mail postavke"
-        sidebar_link:
-          appearance: "Izgled"
-      security:
-        title: "Sigurnost"
-      section_landing_pages:
-        account:
-          title: "Račun"
-          backups:
-            title: "Sigurnosne kopije"
-          whats_new:
-            title: "Što je novo?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4851,7 +4895,6 @@ hr:
           update: "Ažuriraj"
           saved: "spremljeno!"
         flags:
-          header: "Moderiranje"
           description: "Opis"
           enabled: "Omogućeno?"
           edit: "Uredi"
@@ -4892,18 +4935,6 @@ hr:
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
         author: "Od %{author}"
         learn_more: "Saznajte više"
-        sidebar_link:
-          installed: "Instalirano"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Programer"
-          embedding: "Ugrađivanje"
-          user_api: "Korisnički API"
-          onebox: "Onebox"
-          files: "Datoteke"
-          other_options: "Ostalo"
-          search: "Pretraživanje"
       navigation_menu:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"
@@ -5025,15 +5056,10 @@ hr:
           common: "Uobičajen"
           desktop: "Desktop"
           mobile: "Mobilni"
-          settings: "Postavke"
-          translations: "Prijevodi"
-          extra_scss: "Dodatni SCSS"
           extra_files: "Dodatne datoteke"
           extra_files_upload: "Izvezite temu za pregled ovih datoteka."
           extra_files_remote: "Izvezite temu ili provjerite git spremište za pregled ovih datoteka."
           preview: "Pregled"
-          show_advanced: "Prikaži napredna polja"
-          hide_advanced: "Sakrij napredna polja"
           hide_unused_fields: "Sakrij neiskorištena polja"
           is_default: "Tema je omogućena prema zadanim postavkama"
           user_selectable: "Temu mogu odabrati korisnici"
@@ -5747,8 +5773,6 @@ hr:
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
         delete_confirm: "Općenito je bolje anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava."
-        delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
-        delete_dont_block: "Samo obriši"
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Provjerite da li ste obrisali sve njegove objave prije nego ga ponovo pokušate brisati."
         send_activation_email: "Pošalji aktivacijski email"

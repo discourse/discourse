@@ -117,3 +117,5 @@ export const REPORT_MODES = {
   inline_table: "inline_table",
   storage_stats: "storage_stats",
 };
+
+export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";

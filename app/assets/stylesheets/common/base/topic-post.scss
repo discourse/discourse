@@ -22,9 +22,6 @@
   overflow: hidden;
 
   &::before {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: placeHolderShimmer 4s linear infinite forwards;
-    }
     position: absolute;
     left: 0;
     content: "";
@@ -36,6 +33,10 @@
     );
     height: 45px;
     width: 700px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
   }
 }
 
@@ -65,6 +66,7 @@
     font-size: var(--font-0);
     margin-right: 0.33em;
     display: inline-block;
+
     @include ellipsis;
     vertical-align: middle;
 
@@ -96,6 +98,29 @@
 .d-editor-preview {
   word-wrap: break-word;
   line-height: 1.5;
+
+  video {
+    max-width: 100%;
+  }
+
+  sup sup {
+    top: 0;
+  }
+
+  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+    max-width: 100%;
+    height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
+  }
+
+  svg {
+    max-height: 2000px;
+  }
 
   > *:first-child {
     margin-top: 0;
@@ -176,6 +201,7 @@
 
   mark {
     text-decoration: none;
+    background-color: var(--highlight);
   }
 
   ins {
@@ -186,10 +212,6 @@
   del {
     background-color: var(--danger-low);
     text-decoration: line-through;
-  }
-
-  mark {
-    background-color: var(--highlight);
   }
 
   // Prevents users from breaking posts with tag nesting
@@ -215,32 +237,6 @@
 
   sup sup sup {
     top: 0;
-  }
-}
-
-.cooked,
-.d-editor-preview {
-  video {
-    max-width: 100%;
-  }
-
-  sup sup {
-    top: 0;
-  }
-
-  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
-    max-width: 100%;
-    height: auto;
-    display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
-  }
-
-  svg {
-    max-height: 2000px;
   }
 }
 
@@ -333,8 +329,7 @@ nav.post-controls {
   align-items: center;
   justify-content: space-between;
   color: var(--d-post-control-text-color);
-
-  @include user-select(none);
+  user-select: none;
 
   .actions {
     display: inline-flex;
@@ -406,20 +401,28 @@ nav.post-controls {
 
         &.button-count {
           // Like count button
-          .discourse-no-touch & {
-            &.d-hover,
-            &:hover {
-              color: var(--primary);
-            }
+          &:not(.my-likes) {
+            padding-right: 0;
           }
 
           + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+
             // Like button when like count is present
             .discourse-no-touch & {
               &.d-hover,
               &:hover {
                 background: var(--primary-low);
               }
+            }
+          }
+
+          // Like count button
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              color: var(--primary);
             }
           }
         }
@@ -438,18 +441,6 @@ nav.post-controls {
           // Disabled like button
           cursor: not-allowed;
           opacity: 1;
-        }
-
-        &.button-count {
-          // Like count button
-          &:not(.my-likes) {
-            padding-right: 0;
-          }
-
-          + .toggle-like {
-            // Like button when like count is present
-            padding-left: 0.45em;
-          }
         }
       }
     }
@@ -484,18 +475,8 @@ nav.post-controls {
           background: var(--d-post-control-background--hover);
           color: var(--d-post-control-text-color--hover);
         }
-      }
 
-      &.hidden {
-        display: none;
-      }
-
-      &.admin {
-        position: relative;
-      }
-
-      // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
-      .discourse-no-touch & {
+        // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
         &.delete.d-hover,
         &.delete:hover,
         &.delete:active,
@@ -507,6 +488,14 @@ nav.post-controls {
             color: var(--secondary);
           }
         }
+      }
+
+      &.hidden {
+        display: none;
+      }
+
+      &.admin {
+        position: relative;
       }
 
       &.bookmarked .d-icon {
@@ -647,9 +636,11 @@ aside.quote {
   margin-bottom: 1em;
 
   .title {
-    @include post-aside;
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
+
+    @include post-aside;
+    @include unselectable;
 
     // blockquote is underneath this and has top margin
     .avatar {
@@ -659,8 +650,6 @@ aside.quote {
     img {
       margin-top: -0.26em;
     }
-
-    @include unselectable;
   }
 
   // blockquote is docked within aside for content
@@ -669,6 +658,7 @@ aside.quote {
 
     .expanded-quote {
       overflow: hidden;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: slideout 1s ease-in-out;
       }
@@ -690,6 +680,14 @@ aside.quote {
 }
 
 .quote-controls {
+  float: right;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: 0.3em;
+  }
+
   .quote-toggle {
     padding: 0;
   }
@@ -746,16 +744,6 @@ aside.quote {
   opacity: 0.4;
 }
 
-.quote-controls {
-  float: right;
-  display: flex;
-  align-items: center;
-
-  a {
-    margin-left: 0.3em;
-  }
-}
-
 .quote-button {
   flex-direction: column;
 
@@ -766,6 +754,7 @@ aside.quote {
   .buttons {
     display: flex;
     flex-wrap: wrap;
+
     @media screen and (max-width: 420px) {
       flex-direction: column;
       align-items: flex-start;
@@ -1285,7 +1274,7 @@ a.mention-group {
   @include mention;
 
   .user-status-message {
-    @include user-select(none);
+    user-select: none;
   }
 }
 
@@ -1349,14 +1338,15 @@ span.mention {
 
 .broken-image,
 .blocked-hotlinked-placeholder {
-  &:not(a) {
-    color: var(--primary-low-mid-or-secondary-high);
-  }
   display: inline-flex;
   flex-direction: column;
   border: 1px solid var(--primary-low);
   align-items: center;
   justify-content: center;
+
+  &:not(a) {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
 
   .d-icon {
     margin: 16px;
@@ -1439,6 +1429,7 @@ span.mention {
   max-width: calc(var(--topic-body-width) + 4.5em);
   padding: 3em 5em 2em
     calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
+
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1472,6 +1463,7 @@ span.mention {
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;
+
         @include hover {
           background: var(--primary-medium);
         }

@@ -13,7 +13,8 @@ module("Unit | Component | create-account", function (hooks) {
         .factoryFor("component:modal/create-account")
         .create({ model: { accountUsername: username } });
 
-      const validation = component.basicUsernameValidation(username);
+      const validation =
+        component.usernameValidationHelper.basicUsernameValidation(username);
       assert.true(validation.failed, `username should be invalid: ${username}`);
       assert.strictEqual(
         validation.reason,
@@ -34,7 +35,8 @@ module("Unit | Component | create-account", function (hooks) {
       .create({ model: { accountUsername: "porkchops" } });
     component.set("prefilledUsername", "porkchops");
 
-    const validation = component.basicUsernameValidation("porkchops");
+    const validation =
+      component.usernameValidationHelper.basicUsernameValidation("porkchops");
     assert.true(validation.ok, "Prefilled username is valid");
     assert.strictEqual(
       validation.reason,

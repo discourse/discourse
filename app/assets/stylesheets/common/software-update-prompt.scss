@@ -4,18 +4,18 @@
   right: 0;
   left: 0;
   top: var(--header-offset, 60px);
-
-  .static-login &,
-  .wizard &,
-  .invite-page & {
-    top: 0;
-  }
   background-color: var(--tertiary-low);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s;
   box-shadow: var(--shadow-header);
   z-index: z("header") - 10;
+
+  .static-login &,
+  .wizard &,
+  .invite-page & {
+    top: 0;
+  }
 
   .update-prompt-main-content {
     display: flex;

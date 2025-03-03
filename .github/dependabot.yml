@@ -51,6 +51,9 @@ updates:
           - "activesupport"
           - "railties"
           - "sprockets-rails"
+      sass:
+        patterns:
+          - "sass*"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:

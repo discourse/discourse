@@ -4,7 +4,7 @@ import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
@@ -28,7 +28,9 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
@@ -106,7 +108,11 @@ export default class ComposerService extends Service {
   @service siteSettings;
   @service store;
 
-  @tracked showPreview = true;
+  @tracked
+  showPreview = this.site.mobileView
+    ? false
+    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
+
   @tracked allowPreview = true;
   checkedMessages = false;
   messageCount = null;
@@ -151,14 +157,6 @@ export default class ComposerService extends Service {
 
   get privateMessageDraftKey() {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
-  }
-
-  @on("init")
-  _setupPreview() {
-    const val = this.site.mobileView
-      ? false
-      : this.keyValueStore.get("composer.showPreview") || "true";
-    this.set("showPreview", val === "true");
   }
 
   @computed(
@@ -847,6 +845,45 @@ export default class ComposerService extends Service {
     return false;
   }
 
+  // Import a quote from the post
+  @action
+  async importQuote(toolbarEvent) {
+    const postStream = this.get("topic.postStream");
+    let postId = this.get("model.post.id");
+
+    // If there is no current post, use the first post id from the stream
+    if (!postId && postStream) {
+      postId = postStream.get("stream.firstObject");
+    }
+
+    // If we're editing a post, fetch the reply when importing a quote
+    if (this.get("model.editingPost")) {
+      const replyToPostNumber = this.get("model.post.reply_to_post_number");
+      if (replyToPostNumber) {
+        const replyPost = postStream.posts.findBy(
+          "post_number",
+          replyToPostNumber
+        );
+
+        if (replyPost) {
+          postId = replyPost.id;
+        }
+      }
+    }
+
+    if (!postId) {
+      return;
+    }
+
+    this.set("model.loading", true);
+
+    const post = await this.store.find("post", postId);
+    const quote = buildQuote(post, post.raw, { full: true });
+
+    toolbarEvent.addText(quote);
+    this.set("model.loading", false);
+  }
+
   @action
   saveAction(ignore, event) {
     this.save(false, {
@@ -1008,13 +1045,21 @@ export default class ComposerService extends Service {
     }
 
     const composer = this.model;
+    const cantSubmitPost = applyValueTransformer(
+      "composer-service-cannot-submit-post",
+      composer?.cantSubmitPost,
+      { model: composer }
+    );
 
-    if (composer?.cantSubmitPost) {
+    if (cantSubmitPost) {
       if (composer?.viewFullscreen) {
         this.toggleFullscreen();
       }
 
       this.set("lastValidatedAt", Date.now());
+      this.appEvents.trigger("composer-service:last-validated-at-updated", {
+        model: composer,
+      });
       return;
     }
 
@@ -1752,6 +1797,7 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+    this.appEvents.trigger("composer-service:last-validated-at-cleared");
   }
 }
 

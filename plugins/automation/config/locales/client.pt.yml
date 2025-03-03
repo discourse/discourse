@@ -7,8 +7,8 @@
 pt:
   js:
     discourse_automation:
-      create: Criar
-      update: Atualização
+      back: Retroceder
+      edit: Editar
       fields:
         user:
           label: Utilizador

@@ -1,6 +1,9 @@
-<p>
-  {{i18n "admin.logs.screened_urls.description"}}
-</p>
+<DPageSubheader
+  @descriptionLabel={{i18n
+    "admin.config.staff_action_logs.sub_pages.screened_urls.header_description"
+  }}
+/>
+
 <DButton
   @action={{this.exportScreenedUrlList}}
   @title="admin.export_csv.button_title.screened_url"

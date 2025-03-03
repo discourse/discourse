@@ -3,11 +3,12 @@
 RSpec.describe Auth::DiscordAuthenticator do
   let(:hash) do
     OmniAuth::AuthHash.new(
-      provider: "facebook",
+      provider: "discord",
       extra: {
         raw_info: {
           id: "100",
           username: "bobbob",
+          global_name: "The Bob",
           guilds: [
             {
               id: "80351110224678912",
@@ -21,7 +22,8 @@ RSpec.describe Auth::DiscordAuthenticator do
       },
       info: {
         email: "bob@bob.com",
-        name: "bobbob",
+        name: "The Bob",
+        nickname: "bobbob",
       },
       uid: "100",
     )
@@ -34,7 +36,8 @@ RSpec.describe Auth::DiscordAuthenticator do
       result = authenticator.after_authenticate(hash)
       expect(result.user).to eq(nil)
       expect(result.failed).to eq(false)
-      expect(result.name).to eq("bobbob")
+      expect(result.name).to eq("The Bob")
+      expect(result.username).to eq("bobbob")
       expect(result.email).to eq("bob@bob.com")
     end
 
@@ -51,7 +54,8 @@ RSpec.describe Auth::DiscordAuthenticator do
       result = authenticator.after_authenticate(hash)
       expect(result.user).to eq(nil)
       expect(result.failed).to eq(false)
-      expect(result.name).to eq("bobbob")
+      expect(result.name).to eq("The Bob")
+      expect(result.username).to eq("bobbob")
       expect(result.email).to eq("bob@bob.com")
     end
   end

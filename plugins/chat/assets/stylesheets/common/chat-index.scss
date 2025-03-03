@@ -29,13 +29,10 @@
 .channels-list,
 .channels-list-container {
   position: relative;
-  @include chat-scrollbar;
   height: 100%;
   padding-bottom: 1rem;
 
-  @include breakpoint(mobile-large) {
-    @include chat-scrollbar;
-  }
+  @include chat-scrollbar;
 
   .open-browse-page-btn,
   .open-draft-channel-page-btn,
