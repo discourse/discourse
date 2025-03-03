@@ -6,9 +6,7 @@ module NetHTTPHeaderPatch
     initheader ||= {}
     user_agent_key =
       initheader.keys.find { |key| key.to_s.downcase == "user-agent" } || "User-Agent".to_sym
-    initheader[
-      user_agent_key
-    ] ||= "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/"
+    initheader[user_agent_key] ||= Discourse.user_agent
 
     super initheader
   end

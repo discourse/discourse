@@ -313,8 +313,7 @@ RSpec.describe Admin::WebHooksController do
       expect(JSON.parse(parsed_event["response_headers"])).to eq(
         {
           "content-type" => "application/json",
-          "user-agent" =>
-            "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+          "user-agent" => Discourse.user_agent,
           "yoo" => "man",
         },
       )

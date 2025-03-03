@@ -1728,6 +1728,7 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
+      get "/test_net_http_headers" => "test_requests#test_net_http_headers"
     end
   end
 end
