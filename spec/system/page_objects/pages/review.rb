@@ -79,6 +79,39 @@ module PageObjects
         page.has_no_css?("dialog-container .dialog-content")
       end
 
+      def click_ignore_all_unknown_reviewables
+        find(".unknown-reviewables__options button").click
+        find(".dialog-footer .btn-danger").click
+      end
+
+      def has_information_about_unknown_reviewables_visible?
+        page.has_css?(".unknown-reviewables")
+      end
+
+      def has_no_information_about_unknown_reviewables_visible?
+        page.has_no_css?(".unknown-reviewables")
+      end
+
+      def has_listing_for_unknown_reviewables_plugin?(reviewable_type, plugin_name)
+        page.has_css?(
+          ".unknown-reviewables ul li",
+          text:
+            I18n.t(
+              "js.review.unknown.reviewable_known_source",
+              reviewableType: reviewable_type,
+              pluginName: plugin_name,
+            ),
+        )
+      end
+
+      def has_listing_for_unknown_reviewables_unknown_source?(reviewable_type)
+        page.has_css?(
+          ".unknown-reviewables ul li",
+          text:
+            I18n.t("js.review.unknown.reviewable_unknown_source", reviewableType: reviewable_type),
+        )
+      end
+
       private
 
       def reviewable_action_dropdown

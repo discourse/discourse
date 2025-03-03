@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 
 export default class SearchTextField extends TextField {
   autocomplete = "off";
+  enterkeyhint = "search";
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {

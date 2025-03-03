@@ -1,6 +1,8 @@
-<p>
-  {{i18n "admin.logs.screened_emails.description"}}
-</p>
+<DPageSubheader
+  @descriptionLabel={{i18n
+    "admin.config.staff_action_logs.sub_pages.screened_emails.header_description"
+  }}
+/>
 
 <DButton
   @action={{this.exportScreenedEmailList}}

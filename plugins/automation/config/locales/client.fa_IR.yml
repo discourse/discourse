@@ -8,8 +8,8 @@ fa_IR:
   js:
     discourse_automation:
       title: اتوماسیون
-      create: ایجاد
-      update: به روز رسانی
+      back: بازگشت
+      edit: ویرایش
       destroy_automation:
         confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
       fields:

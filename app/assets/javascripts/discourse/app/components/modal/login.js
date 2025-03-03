@@ -137,6 +137,8 @@ export default class Login extends Component {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
+          } else if (this.args.model.referrerUrl) {
+            window.location.assign(this.args.model.referrerUrl);
           } else {
             window.location.reload();
           }
@@ -288,6 +290,8 @@ export default class Login extends Component {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
+        } else if (this.args.model.referrerUrl) {
+          applyHiddenFormInputValue(this.args.model.referrerUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }

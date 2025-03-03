@@ -70,6 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
+    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
+    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
@@ -339,9 +341,9 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
-      site_setting_is_hidden: "You are not allowed to change hidden settings"
-      site_setting_is_shadowed_globally: "You cannot change this setting because it is globally configured"
-      site_setting_is_unconfigurable: "You are not allowed to change unconfigurable settings"
+      site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
+      site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
+      site_settings_are_unconfigurable: "You are not allowed to change unconfigurable settings: %{setting_names}"
       invalid_choice:
         one: "'%{name}' is an invalid choice."
         other: "'%{name}' are invalid choices."
@@ -845,6 +847,9 @@ en:
           attributes:
             linkable_type:
               invalid: "is not valid"
+        api_key:
+          base:
+            at_least_one_granular_scope: "at least one must be selected"
 
   uncategorized_category_name: "Uncategorized"
 
@@ -1741,6 +1746,7 @@ en:
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions"
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    prevent_uploads_only_posts: "Don't count upload markdown code when checking for min post length"
     min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Allows users to associate a feature link with their topics. When turned on, topics can have a highlighted link attached, which is publicly visible and can be edited if the user has sufficient permissions. The feature link can enhance a topic's comprehensibility by providing related additional content."
@@ -1986,6 +1992,7 @@ en:
 
     auth_skip_create_confirm: When signing up via external auth, skip the create account popup. Best used alongside auth_overrides_email, auth_overrides_username and auth_overrides_name.
     auth_immediately: "Automatically redirect to the external login system without user interaction. This only takes effect when login_required is true, and there is only one external authentication method"
+    auth_require_interaction: "Require user interaction before redirecting to an external login system via `/auth/*`. This is defense-in-depth against 'Login CSRF' attacks. Only disable this setting if you fully trust all enabled auth methods are protected against login CSRF."
 
     enable_discourse_connect: "Enable sign on via DiscourseConnect (formerly 'Discourse SSO') (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_discourse_connect_logging: "Log verbose DiscourseConnect related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2312,7 +2319,7 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content."
+    allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over 'flag post allowed groups'."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
@@ -2529,6 +2536,7 @@ en:
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_requirement: "Make the full name field a required, optional, or optional but hidden field in the signup form."
+    interface_color_selector: "Configure where the light/dark mode selector for the interface color is available."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
@@ -2588,10 +2596,7 @@ en:
     disable_watched_word_checking_in_user_fields: "disable watched word checking in user fields"
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
-    enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    enable_quote_copy: "Adds a button to post selection menu to copy the selection to clipboard as a markdown quote."
-
     old_post_notice_days: "The number of days after which a post notice is considered old. This visually differentiates it from newer notices on the site."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
@@ -2749,7 +2754,7 @@ en:
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
-
+    experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2797,8 +2802,10 @@ en:
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
+      min_group_name_length_exists: "You cannot set the minimum username length above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
+      max_group_name_length_exists: "You cannot set the maximum username length below the longest group name (%{group_name})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."

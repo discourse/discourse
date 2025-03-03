@@ -289,6 +289,7 @@ hu:
         tabs:
           members: Tagok
           settings: Beállítások
+        remove_member: "Eltávolítás"
       new_message_modal:
         title: Üzenet küldése
         add_user_long: <kbd>shift + kattintás</kbd> vagy <kbd>shift + enter </kbd><span>@%{username} hozzáadása</span>

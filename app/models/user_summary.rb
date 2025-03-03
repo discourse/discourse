@@ -33,7 +33,7 @@ class UserSummary
   def links
     TopicLink
       .joins(:topic, :post)
-      .where(posts: { user_id: @user.id })
+      .where(posts: { user_id: @user.id, hidden: false })
       .includes(:topic, :post)
       .where("posts.post_type IN (?)", Topic.visible_post_types(@guardian && @guardian.user))
       .merge(Topic.listable_topics.visible.secured(@guardian))

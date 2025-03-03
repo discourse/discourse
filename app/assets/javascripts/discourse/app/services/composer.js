@@ -1,9 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
@@ -29,6 +30,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
@@ -106,6 +108,12 @@ export default class ComposerService extends Service {
   @service siteSettings;
   @service store;
 
+  @tracked
+  showPreview = this.site.mobileView
+    ? false
+    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
+
+  @tracked allowPreview = true;
   checkedMessages = false;
   messageCount = null;
   showEditReason = false;
@@ -119,7 +127,7 @@ export default class ComposerService extends Service {
   uploadProgress;
   topic = null;
   linkLookup = null;
-  showPreview = true;
+
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
@@ -135,6 +143,10 @@ export default class ComposerService extends Service {
     return getOwnerWithFallback(this).lookup("controller:topic");
   }
 
+  get isPreviewVisible() {
+    return this.showPreview && this.allowPreview;
+  }
+
   get isOpen() {
     return this.model?.composeState === Composer.OPEN;
   }
@@ -145,14 +157,6 @@ export default class ComposerService extends Service {
 
   get privateMessageDraftKey() {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
-  }
-
-  @on("init")
-  _setupPreview() {
-    const val = this.site.mobileView
-      ? false
-      : this.keyValueStore.get("composer.showPreview") || "true";
-    this.set("showPreview", val === "true");
   }
 
   @computed(
@@ -1041,13 +1045,21 @@ export default class ComposerService extends Service {
     }
 
     const composer = this.model;
+    const cantSubmitPost = applyValueTransformer(
+      "composer-service-cannot-submit-post",
+      composer?.cantSubmitPost,
+      { model: composer }
+    );
 
-    if (composer?.cantSubmitPost) {
+    if (cantSubmitPost) {
       if (composer?.viewFullscreen) {
         this.toggleFullscreen();
       }
 
       this.set("lastValidatedAt", Date.now());
+      this.appEvents.trigger("composer-service:last-validated-at-updated", {
+        model: composer,
+      });
       return;
     }
 
@@ -1785,6 +1797,7 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+    this.appEvents.trigger("composer-service:last-validated-at-cleared");
   }
 }
 

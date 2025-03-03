@@ -15,6 +15,7 @@ RSpec.describe DiscoursePluginRegistry do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
+        attr_accessor :name
         def enabled?
           @enabled
         end
@@ -51,6 +52,20 @@ RSpec.describe DiscoursePluginRegistry do
 
         plugin.enabled = false
         expect(fresh_registry.test_things.length).to eq(0)
+      end
+
+      it "runs the callback block" do
+        fresh_registry.define_filtered_register(:test_other_things) do |singleton|
+          singleton.define_singleton_method(:my_fun_method) { true }
+        end
+
+        fresh_registry.register_test_other_thing("mything", plugin)
+
+        plugin.enabled = true
+        expect(fresh_registry.test_other_things).to contain_exactly("mything")
+
+        expect(fresh_registry.methods.include?(:my_fun_method)).to eq(true)
+        expect(fresh_registry.my_fun_method).to eq(true)
       end
     end
   end

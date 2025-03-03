@@ -20,7 +20,9 @@ export default class DNavigation extends Component {
 
   @setting("fixed_category_positions") fixedCategoryPositions;
 
-  createTopicLabel = "topic.create";
+  get createTopicLabel() {
+    return this.site.desktopView ? "topic.create" : "";
+  }
 
   @dependentKeyCompat
   get filterType() {

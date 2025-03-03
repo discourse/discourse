@@ -295,25 +295,13 @@ module PrettyText
       JS
   end
 
-  def self.cook(text, opts = {})
+  def self.cook(raw, opts = {})
     options = opts.dup
-    working_text = text.dup
+    working_text = raw.dup
 
-    sanitized = markdown(working_text, options)
+    html = markdown(working_text, options)
 
-    doc = Nokogiri::HTML5.fragment(sanitized)
-
-    add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-    add_rel_attributes_to_user_content(doc, add_nofollow)
-    strip_hidden_unicode_bidirectional_characters(doc)
-    sanitize_hotlinked_media(doc)
-    add_video_placeholder_image(doc)
-
-    add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
-
-    scrubber = Loofah::Scrubber.new { |node| node.remove if node.name == "script" }
-    loofah_fragment = Loofah.html5_fragment(doc.to_html)
-    loofah_fragment.scrub!(scrubber).to_html
+    cleanup(html, opts)
   end
 
   def self.strip_hidden_unicode_bidirectional_characters(doc)
@@ -690,6 +678,22 @@ module PrettyText
     rval = nil
     @mutex.synchronize { rval = yield }
     rval
+  end
+
+  def self.cleanup(html, opts = {})
+    doc = Nokogiri::HTML5.fragment(html)
+
+    add_nofollow = !opts[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    add_rel_attributes_to_user_content(doc, add_nofollow)
+    strip_hidden_unicode_bidirectional_characters(doc)
+    sanitize_hotlinked_media(doc)
+    add_video_placeholder_image(doc)
+
+    add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
+
+    scrubber = Loofah::Scrubber.new { |node| node.remove if node.name == "script" }
+    loofah_fragment = Loofah.html5_fragment(doc.to_html)
+    loofah_fragment.scrub!(scrubber).to_html
   end
 
   private

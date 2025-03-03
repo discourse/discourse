@@ -78,6 +78,7 @@ lt:
         tabs:
           members: Nariai
           settings: Nustatymai
+        remove_member: "Pašalinti"
       new_message_modal:
         no_items: "Nėra elementų"
         filter: "Filtruoti"

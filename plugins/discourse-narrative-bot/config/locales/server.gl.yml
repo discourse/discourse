@@ -156,22 +156,8 @@ gl:
 
           - Confiamos no [comportamento de comunidade civilizada] (%{base_uri}/guidelines) en todo momento.
       onebox:
-        instructions: |-
-          A seguir, pode compartir algunha destas ligazóns comigo? Responda con **unha ligazón por liña** que se expandirá automaticamente para incluír un oportuno resumo.
-
-          Para copiar calquera ligazón, toque e manteña premido no móbil ou prema o botón dereito do seu dispositivo apuntador:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Estupendo! Isto funcionará coa maioría de ligazóns <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Lembre, debe estar unha por liña, sen nada antes nin despois.
-        not_found: |-
-          Desculpe, non se puido atopar a ligazón na súa resposta! :cry:
-
-          Pode tentar engadir a seguinte ligazón, nunha liña propia, na súa seguinte resposta?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Aquí ten unha foto dun unicornio:

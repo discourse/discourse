@@ -15,33 +15,11 @@ a.loading-onebox {
 }
 
 .onebox-result {
-  @include post-aside;
   margin-top: 15px;
   padding: 12px;
   font-size: var(--font-0);
 
-  > .source {
-    margin-bottom: 12px;
-    margin-right: 10px;
-    display: block;
-    color: var(--primary);
-    position: relative;
-    height: 20px;
-
-    .info {
-      a {
-        color: black;
-        text-decoration: none;
-        padding-right: 10px;
-      }
-      position: absolute;
-      font-size: var(--font-0);
-
-      img.favicon {
-        margin-right: 3px;
-      }
-    }
-  }
+  @include post-aside;
 
   .onebox-result-body {
     padding-top: 5px;
@@ -72,21 +50,42 @@ a.loading-onebox {
         float: left;
       }
     }
-  }
-}
 
-// RottenTomatoes Onebox
-.onebox-result {
-  .onebox-result-body {
+    // RottenTomatoes Onebox
     img.verdict {
       float: none;
       margin-right: 7px;
     }
 
+    // RottenTomatoes Onebox
     img.popcorn {
       float: none;
       margin-left: 20px;
       margin-right: 5px;
+    }
+  }
+
+  > .source {
+    margin-bottom: 12px;
+    margin-right: 10px;
+    display: block;
+    color: var(--primary);
+    position: relative;
+    height: 20px;
+
+    .info {
+      position: absolute;
+      font-size: var(--font-0);
+
+      a {
+        color: black;
+        text-decoration: none;
+        padding-right: 10px;
+      }
+
+      img.favicon {
+        margin-right: 3px;
+      }
     }
   }
 }
@@ -154,12 +153,13 @@ aside.onebox {
     img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
-      @media all and (max-width: 600px) {
-        max-width: 35%;
-      }
       height: auto;
       float: left;
       margin-right: 1em;
+
+      @media all and (max-width: 600px) {
+        max-width: 35%;
+      }
 
       &.onebox-full-image {
         max-height: none;
@@ -299,6 +299,10 @@ aside.onebox {
     }
 
     .video-icon {
+      bottom: 15px;
+      right: 10px;
+      position: absolute;
+
       &::before {
         opacity: 0.8;
 
@@ -307,9 +311,6 @@ aside.onebox {
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
         );
       }
-      bottom: 15px;
-      right: 10px;
-      position: absolute;
     }
   }
 }
@@ -327,6 +328,7 @@ aside.onebox {
   width: 60px;
   height: 50px;
   float: left;
+
   @include gdocs-logo("docs");
   @include gdocs-logo("forms");
   @include gdocs-logo("sheets");
@@ -417,6 +419,7 @@ pre.onebox code ol {
 
 pre.onebox code {
   background-color: var(--primary-very-low);
+  white-space: normal;
 }
 
 pre.onebox code li {
@@ -434,7 +437,7 @@ pre.onebox code ol.lines li {
   padding-left: 0.5em;
   margin-left: 0;
   border-left: 1px solid var(--primary-300);
-  min-height: 1.5em; //show empty li lines
+  min-height: 1.5em; // show empty li lines
   white-space: pre;
   width: max-content;
 }
@@ -442,10 +445,6 @@ pre.onebox code ol.lines li {
 pre.onebox code ol.lines li.selected {
   background-color: var(--highlight-bg);
   border-left-color: rgba(var(--primary-rgb), 0.2);
-}
-
-pre.onebox code {
-  white-space: normal;
 }
 
 .onebox-warning-message {
@@ -641,7 +640,7 @@ pre.onebox code {
   }
 }
 
-//Onebox - Github - Pull request
+// Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
   border-radius: 5px;
@@ -676,7 +675,7 @@ pre.onebox code {
   background-color: #bd2c00;
 }
 
-//Onebox - Twitter - Status
+// Onebox - Twitter - Status
 aside.onebox.twitterstatus .onebox-body {
   h4 {
     margin-bottom: 0;
@@ -770,6 +769,7 @@ aside.onebox.twitterstatus .onebox-body {
     font-size: var(--font-down-1);
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
+
     @include ellipsis;
     max-width: 100%;
     padding: 5px 0;
@@ -778,6 +778,7 @@ aside.onebox.twitterstatus .onebox-body {
       padding-left: 10px;
       padding-right: 10px;
       overflow: hidden;
+
       @include ellipsis;
 
       .album-title {
@@ -857,12 +858,23 @@ aside.onebox.xkcd .onebox-body img {
     padding-left: calc(1em - 5px);
     margin-left: 5px;
   }
+
+  .badge-category-bg {
+    display: inline-block;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
 }
 
 .onebox.discoursetopic {
   h3 {
     width: 100%;
     margin-bottom: 0.2rem !important;
+  }
+
+  .topic-category {
+    color: var(--primary-high);
+    line-height: var(--line-height-medium);
   }
 
   .discourse-tags {
@@ -962,6 +974,7 @@ aside.onebox.mixcloud-preview {
     .mixcloud-text {
       padding-left: 170px;
       font-family: sans-serif;
+      color: gray;
 
       h3 {
         font-size: 13px;
@@ -975,7 +988,6 @@ aside.onebox.mixcloud-preview {
         font-size: 12px;
         font-weight: 200;
       }
-      color: gray;
     }
   }
 }
@@ -1071,6 +1083,7 @@ iframe.loom-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }

@@ -16,6 +16,7 @@
 
   &.timeline-fullscreen.show {
     max-height: 700px;
+
     @media (prefers-reduced-motion: no-preference) {
       transition: max-height 0.4s ease-out;
     }
@@ -39,9 +40,6 @@
   }
 
   &.timeline-fullscreen {
-    @media (prefers-reduced-motion: no-preference) {
-      transition: max-height 0.3s ease-in;
-    }
     max-height: 0;
     position: fixed;
     margin-left: 0;
@@ -53,6 +51,11 @@
     box-shadow: var(--shadow-composer);
     padding: 20px 0;
     z-index: z("fullscreen");
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: max-height 0.3s ease-in;
+    }
+
     @media screen and (max-height: 425px) {
       padding-top: 10px;
     }
@@ -77,7 +80,9 @@
         max-width: 650px;
         line-height: var(--line-height-large);
         display: block;
+
         @include line-clamp(8);
+
         @media screen and (max-height: 425px) {
           @include line-clamp(5);
         }
@@ -101,6 +106,7 @@
           display: block;
           line-height: var(--line-height-medium);
           font-size: var(--font-up-2);
+
           @include line-clamp(4);
         }
 
@@ -201,12 +207,13 @@
       // above the topic-footer-controls
       position: absolute;
       margin-top: 1em;
-      @media (prefers-reduced-motion: no-preference) {
-        transition: opacity 0.2s ease-in;
-      }
       display: flex;
       gap: 0.5em;
       flex-wrap: wrap;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity 0.2s ease-in;
+      }
 
       button:last-child {
         margin-right: 0;
@@ -292,13 +299,13 @@
     .timeline-last-read {
       position: absolute;
       margin-left: -0.35em;
+      z-index: z("base") + 2; // above timeline-handle
 
       .progress {
         font-size: 0.8em;
         color: var(--tertiary);
         margin-right: 1em;
       }
-      z-index: z("base") + 2; // above timeline-handle
     }
 
     .back-button {

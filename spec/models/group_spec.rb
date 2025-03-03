@@ -121,14 +121,12 @@ RSpec.describe Group do
 
   describe "#builtin" do
     context "when verifying enum sequence" do
-      before { @builtin = Group.builtin }
-
       it "'moderators' should be at 1st position" do
-        expect(@builtin[:moderators]).to eq(1)
+        expect(described_class.builtin[:moderators]).to eq(1)
       end
 
       it "'trust_level_2' should be at 4th position" do
-        expect(@builtin[:trust_level_2]).to eq(4)
+        expect(described_class.builtin[:trust_level_2]).to eq(4)
       end
     end
   end
@@ -417,6 +415,19 @@ RSpec.describe Group do
 
       expect(group.name).to_not eq("staff")
       expect(group.name).to eq(I18n.t("groups.default_names.staff", locale: "de"))
+    end
+
+    it "can save groups" do
+      # Update all short usernames to ensure that the future minimum username
+      # length is met for all existing usernames
+      User.find_each { |u| u.update!(username: u.username * 2) }
+
+      # This a corner case when a group has a short name that is technically no
+      # longer allowed by `min_username_length`
+      Group.find(Group::AUTO_GROUPS[:everyone]).update!(name: "all")
+      SiteSetting.min_username_length = 10
+
+      expect { Group.refresh_automatic_groups! }.not_to raise_error
     end
   end
 
@@ -1189,17 +1200,18 @@ RSpec.describe Group do
 
   describe "IMAP" do
     let(:group) { Fabricate(:group) }
+    let(:mocked_imap_provider) do
+      MockedImapProvider.new(
+        group.imap_server,
+        port: group.imap_port,
+        ssl: group.imap_ssl,
+        username: group.email_username,
+        password: group.email_password,
+      )
+    end
 
     def mock_imap
-      @mocked_imap_provider =
-        MockedImapProvider.new(
-          group.imap_server,
-          port: group.imap_port,
-          ssl: group.imap_ssl,
-          username: group.email_username,
-          password: group.email_password,
-        )
-      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(@mocked_imap_provider)
+      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(mocked_imap_provider)
     end
 
     def configure_imap
@@ -1215,12 +1227,12 @@ RSpec.describe Group do
 
     def enable_imap
       SiteSetting.enable_imap = true
-      @mocked_imap_provider.stubs(:connect!)
-      @mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns(
+      mocked_imap_provider.stubs(:connect!)
+      mocked_imap_provider.stubs(:list_mailboxes_with_attributes).returns(
         [stub(attr: [], name: "Inbox")],
       )
-      @mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
-      @mocked_imap_provider.stubs(:disconnect!)
+      mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
+      mocked_imap_provider.stubs(:disconnect!)
     end
 
     before { Discourse.redis.del("group_imap_mailboxes_#{group.id}") }
@@ -1240,7 +1252,7 @@ RSpec.describe Group do
         configure_imap
         mock_imap
         SiteSetting.enable_imap = true
-        @mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
+        mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
         group.imap_mailboxes
         expect(group.reload.imap_last_error).not_to eq(nil)
       end

@@ -173,17 +173,8 @@ ar:
 
           - إننا نؤمن [بالسلوك المتحضر للمجتمع](%{base_uri}/guidelines) في جميع الأوقات.
       onebox:
-        instructions: |-
-          بعد ذلك، هل يمكنك مشاركة أحد هذه الروابط معي؟ قم بالرد **برابط في سطر بمفرده**، وسيتم توسيعه تلقائيًا ليشمل ملخصًا أنيقًا.
-
-          لنسخ أي رابط، انقر مع الاستمرار على الهاتف الجوَّال، أو انقر بزر الماوس الأيمن:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           رائع! سيعمل ذلك مع معظم <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> الروابط. تذكَّر أنه يجب أن يكون في سطر _بمفرده_ دون أي شيء آخر أمامه أو خلفه.
-        not_found: "عذرًا، لم أتمكن من العثور على الرابط في ردك! :cry:\n\nهل يمكنك محاولة إضافة الرابط التالي، في السطر الخاص به، في ردك التالي؟\n \n<https://en.wikipedia.org/wiki/Exotic_Shorthair>"
       images:
         instructions: |-
           هذه صورة لأحادي القرن:

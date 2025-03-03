@@ -362,6 +362,7 @@ he:
         tabs:
           members: חברים
           settings: הגדרות
+        remove_member: "הסרה"
       new_message_modal:
         title: שליחת הודעה
         add_user_long: <kbd>shift + לחיצת עכבר</kbd> או <kbd>shift + enter</kbd><span>מוסיפים ‎@%{username}</span>

@@ -7,8 +7,8 @@
 th:
   js:
     discourse_automation:
-      create: สร้าง
-      update: อัปเดต
+      back: กลับ
+      edit: แก้ไข
       fields:
         user:
           label: ผู้ใช้

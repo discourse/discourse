@@ -12,8 +12,12 @@ ro:
           actions:
             delete_automation: șterge automatizarea
     discourse_automation:
-      create: Creează
-      no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.
+      table_title: Automatizări
+      create: Adaugă automatizare
+      update: Actualizează automatizare
+      back: Înapoi
+      edit: Editează
+      no_automation_yet: Momentan nu este nicio automatizare configurată.
       filter_placeholder: Filtrează după nume sau descriere...
       fields:
         user:

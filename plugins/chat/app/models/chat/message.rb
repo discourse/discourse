@@ -168,6 +168,10 @@ module Chat
       Emoji.gsub_emoji_to_unicode(message).truncate(400)
     end
 
+    def only_uploads?
+      self.message.blank? && self.uploads.present?
+    end
+
     def to_markdown
       upload_markdown =
         self

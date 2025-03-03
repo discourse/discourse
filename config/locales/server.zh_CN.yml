@@ -60,6 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
+    too_many_urls: "在单个请求中不能输入超过 10 个 Onebox。"
+    concurrency_not_allowed: "不允许并发内嵌请求。请一次发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
@@ -288,9 +290,9 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
-      site_setting_is_hidden: "您无权更改隐藏设置"
-      site_setting_is_shadowed_globally: "您无法更改此设置，因为它在全局级别配置"
-      site_setting_is_unconfigurable: "您无权更改不可配置的设置"
+      site_settings_are_hidden: "你无权更改隐藏设置： %{setting_names}"
+      site_settings_are_shadowed_globally: "你无法更改这些设置，因为它们是全局配置的： %{setting_names}"
+      site_settings_are_unconfigurable: "你无权更改不可配置的设置： %{setting_names}"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
@@ -726,6 +728,9 @@ zh_CN:
           attributes:
             linkable_type:
               invalid: "无效"
+        api_key:
+          base:
+            at_least_one_granular_scope: "必须至少选择一个"
       <<: *errors
   uncategorized_category_name: "未分类"
   general_category_name: "常规"
@@ -1556,8 +1561,10 @@ zh_CN:
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此 Discourse 实例的默认语言。您可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本</a>中替换系统生成的类别和话题的文本。"
     allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
+    set_locale_from_accept_language_header: "通过匿名用户浏览器的语言标头为其设置界面语言"
     set_locale_from_cookie: "允许通过 'locale' 浏览器 Cookie 设置匿名用户的区域设置"
     set_locale_from_param: "允许通过 'lang' URL 参数（例如 ?lang=es）设置匿名用户的区域设置"
+    support_mixed_text_direction: "支持从左到右和从右到左混合的文本方向"
     min_post_length: "允许的帖子的最小长度，以字符为单位（不包括个人消息）"
     min_first_post_length: "允许的第一个帖子（即话题正文）的最小长度（不包括个人消息）"
     min_personal_message_post_length: "消息的最小允许帖子长度（包括第一个帖子和回复），以字符为单位"
@@ -1626,6 +1633,7 @@ zh_CN:
     block_onebox_on_redirect: "防止为重定向 URL 创建 onebox。此配置可以停止为任何重定向到不同目的地的 URL 创建视觉卡 (onebox)，确保直接、非重定向 URL 优先获得 onebox。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
     enable_inline_onebox_on_all_domains: "忽略 allowed_inline_onebox_domains 网站设置并在所有域上允许内联 Onebox。"
+    onebox_locale: "发送给 onebox 提供商的语言环境。如果留空，将使用默认语言环境"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
     max_oneboxes_per_post: "设置单个帖子中可以包含的最大 onebox 数量。onebox 提供了帖子中链接内容的预览。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
@@ -1774,6 +1782,8 @@ zh_CN:
     login_required: "需要进行身份验证才能阅读此网站上的内容，禁止匿名访问。"
     min_username_length: "最小用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值短，您的网站将无法正常工作！"
     max_username_length: "最大用户名长度（以字符为单位）。警告：如果任何现有用户或群组名称的长度比此数值长，您的网站将无法正常工作！"
+    unicode_usernames: "允许用户名和组名包含 Unicode 字母和数字"
+    allowed_unicode_username_characters: "仅在用户名中允许某些 Unicode 字符的正则表达式。ASCII 字符和数字将始终被允许，不需要包含在白名单中。"
     reserved_usernames: "不允许注册的用户名。通配符 * 可用于匹配任何字符零次或多次。"
     min_password_length: "定义网站上用户密码所需的最少字符数。过低的值可能会让未经授权的人员更容易猜到密码，从而影响安全性；而过高的值则可能会让用户更难记住密码。"
     min_admin_password_length: "指定管理员用户密码的最小长度。它可以确保所有管理员密码都满足一定的长度要求，以增强安全性。此设置对于保护管理员帐户免受潜在的未经授权访问至关重要。"
@@ -2048,7 +2058,6 @@ zh_CN:
     reviewable_default_visibility: "除非满足此优先级，否则不显示可审核条目"
     reviewable_low_priority_threshold: "除非使用 '（任何）' 筛选器，否则优先级筛选器会隐藏不符合此分数的可审核条目。"
     high_trust_flaggers_auto_hide_posts: "新用户帖子在被 TL3+ 用户举报为垃圾信息后会被自动隐藏"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "匿名用户会看到他们必须向管理员发送电子邮件报告非法内容的信息。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
     slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
@@ -2257,9 +2266,7 @@ zh_CN:
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     disable_watched_word_checking_in_user_fields: "在用户字段中禁用关注词检查"
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
-    enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
-    enable_quote_copy: "在帖子选择菜单中添加一个按钮，以将选择内容作为 Markdown 引用复制到剪贴板。"
     old_post_notice_days: "帖子通知被视为旧通知的天数。这可以直观地将其与网站上较新的通知区分开来。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"

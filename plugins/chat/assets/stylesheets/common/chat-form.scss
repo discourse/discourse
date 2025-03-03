@@ -3,12 +3,6 @@
   flex-direction: column;
 }
 
-.chat-form__row {
-  &.-separator {
-    border-bottom: 1px solid var(--primary-low);
-  }
-}
-
 .chat-form__section {
   display: flex;
   flex-direction: column;
@@ -39,6 +33,10 @@
   // background: green;
   flex-direction: column;
   justify-content: center;
+
+  &.-separator {
+    border-bottom: 1px solid var(--primary-low);
+  }
 
   label,
   .d-toggle-switch__checkbox-slider {

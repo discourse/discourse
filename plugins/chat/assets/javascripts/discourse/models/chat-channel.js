@@ -160,6 +160,10 @@ export default class ChatChannel {
     return this.meta.can_moderate;
   }
 
+  get canRemoveMembers() {
+    return this.meta.can_remove_members;
+  }
+
   get escapedTitle() {
     return escapeExpression(this.title);
   }

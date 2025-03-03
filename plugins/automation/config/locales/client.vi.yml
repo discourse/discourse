@@ -7,8 +7,8 @@
 vi:
   js:
     discourse_automation:
-      create: Tạo
-      update: Cập nhật
+      back: Quay lại
+      edit: Sửa
       fields:
         user:
           label: Người dùng

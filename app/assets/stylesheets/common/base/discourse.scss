@@ -92,8 +92,9 @@ small {
 }
 
 blockquote {
-  @include post-aside;
   clear: both;
+
+  @include post-aside;
 }
 
 h1,
@@ -193,9 +194,7 @@ input {
     float: left;
     margin-left: -18px;
   }
-}
 
-input {
   &[type="text"],
   &[type="password"],
   &[type="datetime"],
@@ -210,8 +209,8 @@ input {
   &[type="search"],
   &[type="tel"],
   &[type="color"] {
-    @include appearance-none;
     @include form-item-sizing;
+    appearance: none;
     display: inline-block;
     margin-bottom: 9px;
     color: var(--d-input-text-color);
@@ -222,6 +221,23 @@ input {
 
     &:focus {
       @include default-focus;
+    }
+  }
+
+  &[type="color"] {
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 0;
     }
   }
 
@@ -306,6 +322,8 @@ textarea {
 // Common Classes
 .sortable {
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
 
   .discourse-no-touch & {
     &:hover,
@@ -317,8 +335,6 @@ textarea {
   .d-icon {
     margin-left: 0.25em;
   }
-  @include unselectable;
-  cursor: pointer;
 
   button {
     background: none;
