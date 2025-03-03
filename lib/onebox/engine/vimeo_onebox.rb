@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(www\.)?vimeo\.com/\d+(/\w+)?/?})
+      matches_domain("vimeo.com", "www.vimeo.com")
       requires_iframe_origins "https://player.vimeo.com"
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/\d+(/\w+)?/?$})
+      end
 
       def placeholder_html
         ::Onebox::Helpers.video_placeholder_html

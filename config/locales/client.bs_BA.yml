@@ -3096,6 +3096,8 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
+            my_posts:
+              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
@@ -3135,11 +3137,28 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
-        sidebar_link:
-          all: "Svi izvještaji"
+      config_sections:
+        account:
+          title: "Račun"
+        reports:
+          title: "Izvještaji"
+        community:
+          title: "Zajednica"
+        appearance:
+          title: "Izgled"
+        email:
+          title: "Email"
+        security:
+          title: "Security"
+        plugins:
+          title: "Pluginovi"
       config:
         developer:
           title: "Developer"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderacija"
         files:
           title: "Files"
         legal:
@@ -3160,6 +3179,70 @@ bs_BA:
           title: "Spam"
         user_api:
           title: "Korisnički API"
+        dashboard:
+          title: "Dashboard"
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Groups"
+        backups:
+          title: "Backups"
+          sub_pages:
+            logs:
+              title: "Logs"
+        reports:
+          title: "Izvještaji"
+        badges:
+          title: "Bedž"
+        permalinks:
+          title: "Permalink-ovi"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Teme"
+        components:
+          title: "Komponenti"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
+            templates:
+              title: "Predlošci"
+            sent:
+              title: "Poslano"
+            skipped:
+              title: "Skipped"
+            bounced:
+              title: "Vraćeni"
+            received:
+              title: "Primljeno"
+            rejected:
+              title: "Odbijeni"
+        email_appearance:
+          title: "Izgled"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Embedding"
+      search:
+        result_types:
+          theme:
+            one: "Izgled"
+            few: "Teme"
+            other: "Teme"
+          component:
+            one: "Komponenta"
+            few: "Komponenti"
+            other: "Komponenti"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3399,39 +3482,6 @@ bs_BA:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
-      account:
-        title: "Račun"
-        sidebar_link:
-          backups: "Backups"
-      community:
-        title: "Zajednica"
-        sidebar_link:
-          badges: "Bedž"
-          notifications: "Obavijest"
-          permalinks: "Permalink-ovi"
-          users: "Korisnici"
-          groups: "Groups"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderacija"
-      appearance:
-        title: "Izgled"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navigacija"
-          themes: "Teme"
-          components:
-            title: "Komponenti"
-      email_settings:
-        sidebar_link:
-          appearance: "Izgled"
-      security:
-        title: "Security"
-      section_landing_pages:
-        account:
-          title: "Račun"
-          backups:
-            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3439,7 +3489,6 @@ bs_BA:
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
-          header: "Moderacija"
           description: "Opis"
           enabled: "Omogućen?"
           edit: "Edit"
@@ -3477,18 +3526,6 @@ bs_BA:
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
         learn_more: "Saznaj više"
-        sidebar_link:
-          installed: "Installed"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          user_api: "Korisnički API"
-          onebox: "Onebox"
-          files: "Files"
-          other_options: "Other"
-          search: "Pretraži"
       backups:
         title: "Backups"
         menu:
@@ -3603,12 +3640,7 @@ bs_BA:
           common: "Nerijetko"
           desktop: "Desktop"
           mobile: "Mobilno"
-          settings: "Postavke"
-          translations: "Prevodi"
-          extra_scss: "Extra SCSS"
           preview: "Pregled"
-          show_advanced: "Prikaži napredna polja"
-          hide_advanced: "Sakrij napredna polja"
           hide_unused_fields: "Sakrij neiskorišćena polja"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
@@ -4143,8 +4175,6 @@ bs_BA:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"
           other: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{count} dana ne mogu biti obrisane.)"
-        delete_and_block: "Delete and <b>block</b> this email and IP address"
-        delete_dont_block: "Delete only"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"

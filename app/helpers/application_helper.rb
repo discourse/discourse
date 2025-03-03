@@ -636,13 +636,17 @@ module ApplicationHelper
 
   def discourse_preload_color_scheme_stylesheets
     result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, "all")
+
+    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
+      scheme_id,
+      fallback_to_base: true,
+    )
 
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        "(prefers-color-scheme: dark)",
         dark: SiteSetting.use_overhauled_theme_color_palette,
+        fallback_to_base: false,
       )
     end
 
@@ -650,22 +654,37 @@ module ApplicationHelper
   end
 
   def discourse_color_scheme_stylesheets
-    result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_link_tag(
-      scheme_id,
-      "all",
-      self.method(:add_resource_preload_list),
-    )
+    light_href =
+      stylesheet_manager.color_scheme_stylesheet_link_tag_href(scheme_id, fallback_to_base: true)
+    add_resource_preload_list(light_href, "style")
 
+    dark_href = nil
     if dark_scheme_id != -1
-      result << stylesheet_manager.color_scheme_stylesheet_link_tag(
-        dark_scheme_id,
-        "(prefers-color-scheme: dark)",
-        self.method(:add_resource_preload_list),
-        dark: SiteSetting.use_overhauled_theme_color_palette,
-      )
+      dark_href =
+        stylesheet_manager.color_scheme_stylesheet_link_tag_href(
+          dark_scheme_id,
+          dark: SiteSetting.use_overhauled_theme_color_palette,
+          fallback_to_base: false,
+        )
     end
 
+    result = +""
+    if dark_href && dark_href != light_href
+      add_resource_preload_list(dark_href, "style")
+
+      result << color_scheme_stylesheet_link_tag(
+        light_href,
+        light_elements_media_query,
+        "light-scheme",
+      )
+      result << color_scheme_stylesheet_link_tag(
+        dark_href,
+        dark_elements_media_query,
+        "dark-scheme",
+      )
+    else
+      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme")
+    end
     result.html_safe
   end
 
@@ -673,12 +692,12 @@ module ApplicationHelper
     result = +""
     if dark_scheme_id != -1
       result << <<~HTML
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name("header_background", dark_scheme_id, dark: SiteSetting.use_overhauled_theme_color_palette)}">
+        <meta name="theme-color" media="#{light_elements_media_query}" content="##{light_color_hex_for_name("header_background")}">
+        <meta name="theme-color" media="#{dark_elements_media_query}" content="##{dark_color_hex_for_name("header_background")}">
       HTML
     else
       result << <<~HTML
-        <meta name="theme-color" media="all" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
+        <meta name="theme-color" media="all" content="##{light_color_hex_for_name("header_background")}">
       HTML
     end
     result.html_safe
@@ -703,9 +722,55 @@ module ApplicationHelper
     ColorScheme.find_by_id(scheme_id)&.is_dark?
   end
 
+  def forced_light_mode?
+    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "light" &&
+      !dark_color_scheme?
+  end
+
+  def forced_dark_mode?
+    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
+      dark_scheme_id != -1
+  end
+
+  def light_color_hex_for_name(name)
+    ColorScheme.hex_for_name(name, scheme_id)
+  end
+
+  def dark_color_hex_for_name(name)
+    ColorScheme.hex_for_name(
+      name,
+      dark_scheme_id,
+      dark: SiteSetting.use_overhauled_theme_color_palette,
+    )
+  end
+
+  def dark_elements_media_query
+    if forced_light_mode?
+      "none"
+    elsif forced_dark_mode?
+      "all"
+    else
+      "(prefers-color-scheme: dark)"
+    end
+  end
+
+  def light_elements_media_query
+    if forced_light_mode?
+      "all"
+    elsif forced_dark_mode?
+      "none"
+    else
+      "(prefers-color-scheme: light)"
+    end
+  end
+
   def preloaded_json
-    return "{}" if @preloaded.blank?
-    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
+    return "{}" if !@application_layout_preloader
+
+    @application_layout_preloader
+      .preloaded_data
+      .transform_values { |value| escape_unicode(value) }
+      .to_json
   end
 
   def client_side_setup_data
@@ -792,5 +857,9 @@ module ApplicationHelper
         cookies.delete(:authentication_data, path: Discourse.base_path("/")) if value
         current_user ? nil : value
       end
+  end
+
+  def color_scheme_stylesheet_link_tag(href, media, css_class)
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>]
   end
 end

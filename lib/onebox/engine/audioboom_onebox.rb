@@ -6,8 +6,12 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://audioboom\.com/posts/\d+})
       always_https
+      matches_domain("audioboom.com")
+
+      def self.matches_path(path)
+        path.match?(%r{^/posts/\d+$})
+      end
 
       def placeholder_html
         oembed = get_oembed

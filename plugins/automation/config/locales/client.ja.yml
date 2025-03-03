@@ -13,13 +13,12 @@ ja:
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
-      create: 作成
-      update: 更新
+      back: 戻る
+      edit: 編集
       select_script: スクリプトを選択
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
-      no_automation_yet: 自動化をまだ作成していません。以下のオプションを選択して開始してください。
       filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:

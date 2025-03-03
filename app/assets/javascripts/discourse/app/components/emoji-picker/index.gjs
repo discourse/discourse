@@ -14,7 +14,7 @@ export default class EmojiPicker extends Component {
   }
 
   get icon() {
-    return this.args.icon ?? "face-smile";
+    return this.args.icon ?? "far-face-smile";
   }
 
   get context() {

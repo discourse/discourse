@@ -89,23 +89,9 @@ RSpec.describe TopicEmbed do
       HTML
 
       parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+      expected = "<div><div> article content cats cats </div></div>"
 
-      expected = <<-HTML
-        <div><div>
-  
-    article content
-    
-      
-        
-          cats
-          cats
-        
-      
-    
-  
-</div></div>
-      HTML
-      expect(parsed.body.strip).to eq(expected.strip)
+      expect(parsed.body.squish).to eq(expected.squish)
     end
 
     context "when creating a post" do
@@ -559,31 +545,31 @@ RSpec.describe TopicEmbed do
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
       end
+      let(:response) { TopicEmbed.find_remote(url) }
 
       before do
         SiteSetting.allowed_embed_classnames = "emoji, foo"
         stub_request(:get, url).to_return(status: 200, body: contents)
-        @response = TopicEmbed.find_remote(url)
       end
 
       it "has no author tag" do
-        expect(@response.author).to be_blank
+        expect(response.author).to be_blank
       end
 
       it "img node has emoji class" do
-        expect(@response.body).to have_tag("img", with: { class: "emoji" })
+        expect(response.body).to have_tag("img", with: { class: "emoji" })
       end
 
       it "img node has foo class" do
-        expect(@response.body).to have_tag("img", with: { class: "foo" })
+        expect(response.body).to have_tag("img", with: { class: "foo" })
       end
 
       it "p node has foo class" do
-        expect(@response.body).to have_tag("p", with: { class: "foo" })
+        expect(response.body).to have_tag("p", with: { class: "foo" })
       end
 
       it "nodes removes classes other than emoji" do
-        expect(@response.body).to have_tag("img", without: { class: "other" })
+        expect(response.body).to have_tag("img", without: { class: "other" })
       end
     end
 
@@ -609,27 +595,27 @@ RSpec.describe TopicEmbed do
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
       end
+      let(:response) { TopicEmbed.find_remote(url) }
 
       before(:each) do
         SiteSetting.allowed_embed_classnames = ""
         stub_request(:get, url).to_return(status: 200, body: contents)
-        @response = TopicEmbed.find_remote(url)
       end
 
       it 'img node doesn\'t have emoji class' do
-        expect(@response.body).to have_tag("img", without: { class: "emoji" })
+        expect(response.body).to have_tag("img", without: { class: "emoji" })
       end
 
       it 'img node doesn\'t have foo class' do
-        expect(@response.body).to have_tag("img", without: { class: "foo" })
+        expect(response.body).to have_tag("img", without: { class: "foo" })
       end
 
       it 'p node doesn\'t foo class' do
-        expect(@response.body).to have_tag("p", without: { class: "foo" })
+        expect(response.body).to have_tag("p", without: { class: "foo" })
       end
 
       it 'img node doesn\'t have other class' do
-        expect(@response.body).to have_tag("img", without: { class: "other" })
+        expect(response.body).to have_tag("img", without: { class: "other" })
       end
     end
 

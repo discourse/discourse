@@ -554,6 +554,7 @@ sk:
       remove_confirmation: "Ste si istí, že chcete tento návrh vymazať?"
       new_topic: "Nová téma"
       new_private_message: "Nový návrh osobnej správy"
+      edit_topic: "Upraviť koncept témy"
       abandon:
         confirm: "Už máte rozpracovaný návrh. Čo by ste s ním chceli urobiť?"
         yes_value: "Zahodiť"
@@ -561,7 +562,7 @@ sk:
       dropdown:
         title: "Otvorenie ponuky najnovších návrhov"
         untitled: "Návrh bez názvu"
-        view_all: "zobraziť všetko"
+        view_all: "zobraziť všetky koncepty"
         other_drafts:
           one: "+%{count} ďalší návrh"
           few: "+%{count} ďalších návrhov"
@@ -640,6 +641,19 @@ sk:
       date_filter: "Uverejnené medzi"
       in_reply_to: "v odpovedi na"
       filtered_flagged_by: "Označené používateľom"
+      unknown:
+        title:
+          one: "Máte nespracované kontroly zo zakázaného doplnku:"
+          few: "Máte nespracované kontroly zo zakázaných doplnkov:"
+          many: "Máte nespracované kontroly zo zakázaných doplnkov:"
+          other: "Máte nespracované kontroly zo zakázaných doplnkov:"
+        instruction: "Nie je možné ich správne zobraziť, kým nepovolíte príslušný zásuvný modul. Povoľte zásuvný modul a obnovte stránku. Prípadne ich môžete ignorovať. <a href='%{url}' target='_blank'>Ďalšie informácie...</a>"
+        reviewable_unknown_source: "%{reviewableType} (neznámy doplnok)"
+        reviewable_known_source: "%{reviewableType} (z doplnku '%{pluginName}')"
+        ignore_all: "Ignorovať všetko"
+        enable_plugins: "Povoliť doplnky"
+        delete_confirm: "Ste si istí, že chcete odstrániť všetky recenzie vytvorené vypnutými zásuvnými modulmi?"
+        ignore_success: "Všetky recenzie vytvorené vypnutými zásuvnými modulmi boli odstránené."
       explain:
         why: "vysvetlite, prečo sa táto položka skončila vo fronte"
         title: "Kontrolovateľné bodovanie"
@@ -2623,6 +2637,10 @@ sk:
       required_at_signup: "Povinné"
       optional_at_signup: "Nepovinné"
       hidden_at_signup: "Voliteľné, skryté pri registrácii"
+    interface_color_selector:
+      disabled: "Nezobrazovať"
+      sidebar_footer: "Zobraziť v päte bočného panela"
+      header: "Zobraziť v hlavičke"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4363,6 +4381,7 @@ sk:
       description: "Ak chcete nahlásiť nezákonný obsah, kontaktujte <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
+      review_process_description: "Moderátori dostanú všetky príznaky a čo najskôr ich preskúmajú."
       action: "Označ príspevok"
       take_action: "Akcia…"
       take_action_options:
@@ -4653,6 +4672,7 @@ sk:
       content_load_error: '<a href="%url%">Obsah</a> sa nepodarilo načítať.'
       image_load_error: '<a href="%url%">Obrázok</a> sa nepodarilo načítať.'
     cannot_render_video: Toto video nemožno zobraziť, pretože váš prehliadač nepodporuje tento kodek.
+    invalid_video_url: Toto video nemožno prehrať, pretože adresa URL je neplatná alebo nedostupná.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -5154,13 +5174,15 @@ sk:
             users:
               content: "Používatelia"
               title: "Zoznam všetkých používateľov"
-            my_drafts:
-              content: "Moje koncepty"
-              title: "Moje nezverejnené koncepty"
+            my_posts:
+              content: "Moje príspevky"
+              content_drafts: "Moje koncepty"
+              title: "Moja nedávna aktivita na túto tému"
+              title_drafts: "Moje nezverejnené koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} konceptov"
-                many: "%{count} koncepty"
+                many: "%{count} konceptov"
                 other: "%{count} koncepty"
             review:
               content: "Recenzia"
@@ -5185,6 +5207,11 @@ sk:
       no_results:
         title: "Žiadne výsledky"
         description: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Chceli ste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prehľadávať nastavenia stránky</a> alebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">zoznam používateľov administrátora?</a>'
+      footer:
+        interface_color_selector:
+          light: "Svetlá"
+          dark: "Tmavá"
+          auto: "Auto"
     welcome_topic_banner:
       title: "Vytvorenie uvítacej témy"
       description: "Vaša uvítacia téma je prvá vec, ktorú si noví členovia prečítajú. Považujte ju za svoj \"výťah\" alebo \"poslanie\". Dajte všetkým vedieť, pre koho je táto komunita určená, čo tu môžu očakávať a čo by ste chceli, aby urobili ako prvé."
@@ -5311,15 +5338,40 @@ sk:
         meta_doc: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
         sidebar_title: "Hlásenia"
         back: "Späť na všetky správy"
-        sidebar_link:
-          all: "Všetky hlásenia"
+      config_sections:
+        account:
+          title: "Účet"
+        reports:
+          title: "Hlásenia"
+        community:
+          title: "Komunita"
+        appearance:
+          title: "Vzhľad"
+        email:
+          title: "Email"
+        security:
+          title: "Bezpečnosť"
+        plugins:
+          title: "Pluginy"
+        advanced:
+          title: "Pokročilé"
       config:
+        about:
+          title: "O vašej stránke"
+          header_description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
         developer:
           title: "Vývojár"
           header_description: "Nastavenia vývojára na ovládanie limitov rýchlosti, násobiteľov a výpočtov, bezpečného režimu a ďalších pokročilých funkcií"
         experimental:
           title: "Experimentálne"
           header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."
+        emojis:
+          title: "Emoji"
+          header_description: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Vyberte viacero súborov a vytvorte emotikony pomocou ich názvov. Vybraná skupina sa použije pre všetky súčasne pridané súbory"
+        flags:
+          title: "Moderovanie"
+          header_description: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
+          keywords: "príznak|recenzia|spam|nelegálne"
         font_style:
           title: "Štýl písma"
           header_description: "Prispôsobenie štýlov písma používaných v témach"
@@ -5329,6 +5381,10 @@ sk:
         legal:
           title: "Právne záležitosti"
           header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
+        localization:
+          title: "Lokalizácia"
+          header_description: "Konfigurácia jazyka rozhrania vašej komunity a ďalších možností lokalizácie pre vašich členov"
+          keywords: "locale|language|timezone|unicode|ltr"
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
@@ -5368,6 +5424,151 @@ sk:
         group_permissions:
           title: "Oprávnenia skupiny"
           header_description: "Tu sa spravujú všetky oprávnenia aplikácií založené na skupine, ktoré riadia prístup k rôznym funkciám v rámci Discourse."
+        dashboard:
+          title: "Ovládací panel"
+          header_description: "Informačný panel poskytuje prehľad o stave vašej komunity vrátane návštevnosti, aktivity používateľov a ďalších kľúčových ukazovateľov."
+        users:
+          title: "Používatelia"
+          header_description: "Zobrazenie a správa používateľov, odosielanie pozvánok a export údajov používateľov"
+        groups:
+          title: "Skupiny"
+          header_description: "Vytváranie a správa skupín, nastavovanie oprávnení skupín a zobrazovanie aktivít skupín a doručených správ"
+        site_settings:
+          title: "Všetky nastavenia stránky"
+          header_description: "Konfigurácia všetkých nastavení stránky Discourse na prispôsobenie jej vzhľadu, funkčnosti a používateľského prostredia"
+        whats_new:
+          title: "Čo je nové?"
+          header_description: "Získajte aktuálne informácie o najnovších funkciách a vylepšeniach v aplikácii Discourse"
+          keywords: "changelog|feature|release"
+        backups:
+          title: "Zálohy"
+          header_description: "Zálohy Discourse obsahujú celú databázu webu, ktorá obsahuje všetko na webe: témy, príspevky, používateľov, skupiny, nastavenia, témy atď. V závislosti od spôsobu vytvorenia záložného súboru môže, ale nemusí obsahovať odoslané súbory."
+          sub_pages:
+            logs:
+              title: "Logy"
+              header_description: "Zobrazenie a správa protokolov pre zálohovanie, obnovenie a odosielanie"
+        reports:
+          title: "Hlásenia"
+          header_description: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
+        badges:
+          title: "Odznaky"
+          header_description: "Odznaky odmeňujú používateľov za ich aktivity, príspevky a úspechy s cieľom uznať, potvrdiť a podporiť pozitívne správanie a angažovanosť v rámci komunity"
+        permalinks:
+          title: "Trvalé odkazy"
+          header_description: "Presmerovanie na adresy URL, ktoré fórum nepozná"
+        user_fields:
+          title: "Používateľské polia"
+          header_description: "Vytvorte si vlastné používateľské polia na zhromažďovanie ďalších podrobností o členoch komunity. Môžete si vybrať, aké informácie sa vyžadujú pri registrácii, čo sa zobrazí v profiloch a čo môžu používatelia aktualizovať."
+        watched_words:
+          title: "Sledované slová"
+          header_description: "Sledované slová sú moderátorské nástroje, ktoré môžu vykonávať viacero rôznych činností vrátane blokovania, cenzurovania, odkazovania alebo označovania príspevkov obsahujúcich určité slová."
+        color_palettes:
+          title: "Palety farieb"
+          header_description: "Palety farieb definujú základné farby používané v rozhraní webu, zatiaľ čo témy môžu poskytovať ďalšie štýly, rozloženia a komponenty. Obe môžu spolupracovať na vytvorení jedinečného vzhľadu vášho webu a obe môžu byť k dispozícii používateľom, aby si mohli vybrať svoje preferencie"
+        emoji:
+          title: "Emoji"
+          header_description: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Vyberte viacero súborov a vytvorte emotikony pomocou ich názvov. Vybraná skupina sa použije pre všetky súčasne pridané súbory."
+        themes:
+          title: "Témy"
+          header_description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca"
+        components:
+          title: "Komponenty"
+          header_description: "Komponenty sú menšie úpravy, ktoré možno pridať do tém s cieľom zmeniť konkrétne prvky štýlu dizajnu fóra"
+          keywords: "téma|komponent|rozšírenie"
+        site_texts:
+          title: "Texty stránok"
+          header_description: "Prispôsobenie akéhokoľvek textu používaného v Discourse tak, aby zodpovedal hlasu a tónu vašej komunity"
+        email:
+          title: "Nastavenie servera a protokoly"
+          header_description: "Prispôsobte si šablóny používané na vytváranie e-mailov, zobrazte si náhľad súhrnných e-mailov, ktoré budú odoslané, a zobrazte protokoly e-mailov"
+          keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
+          sub_pages:
+            preview_summary:
+              title: "Súhrn ukážky"
+              header_description: "Náhľad obsahu súhrnných emailov zaslaných neaktívnym používateľom"
+            advanced_test:
+              title: "Pokročilý test"
+              header_description: "Pozrite sa, ako Discourse spracováva prijaté e-maily"
+            templates:
+              title: "Šablóny"
+              header_description: "Prispôsobenie šablón používaných na vytváranie e-mailov"
+            sent:
+              title: "Odoslané"
+              header_description: "Zobrazenie denníka odoslaných e-mailov"
+            skipped:
+              title: "Preskočené"
+              header_description: "Zobrazenie denníka vynechaných e-mailov"
+            bounced:
+              title: "Odskočený"
+              header_description: "Zobrazenie denníka e-mailov, ktoré sa vrátili"
+            received:
+              title: "Obdržané"
+              header_description: "Zobrazenie denníka prijatých e-mailov"
+            rejected:
+              title: "Zamietnuté"
+              header_description: "Zobrazenie denníka odmietnutých e-mailov"
+        email_appearance:
+          title: "Vzhľad"
+          header_description: "Prispôsobte šablónu, v ktorej sa vykresľujú všetky e-maily vo formáte HTML, a upravte štýl pomocou CSS"
+        staff_action_logs:
+          title: "Protokoly a skríning"
+          header_description: "Protokoly a skríning vám umožňujú monitorovať a spravovať vašu komunitu, čím zaisťujú jej bezpečnosť a rešpekt. Môžete si zobraziť denníky všetkých akcií vykonaných zamestnancami, denníky vyhľadávania a konfiguráciu kontroly používateľov"
+          keywords: "protokoly o chybách|akcie zamestnancov|prehľadané e-maily|prehľadané IP adresy|prehľadané URL adresy|denníky vyhľadávania"
+          sub_pages:
+            screened_emails:
+              title: "Preverené e-maily"
+              header_description: "Keď sa niekto pokúsi vytvoriť nové konto, skontrolujú sa nasledujúce e-mailové adresy a registrácia sa zablokuje alebo sa vykoná iná akcia."
+            screened_ips:
+              title: "Kontrolované IP adresy"
+              header_description: "IP adresy, ktoré sú sledované. Jednotlivé IP adresy môžu byť uvedené na zozname povolených."
+            screened_urls:
+              title: "Kontrolované URL adresy"
+              header_description: "URL adresy v tomto zozname boli použité v príspevkoch používateľov, ktorí boli identifikovaní ako spameri"
+            search_logs:
+              title: "Hľadanie denníkov"
+              header_description: "Zobrazenie denníka vykonaných vyhľadávaní"
+        plugins:
+          title: "Nainštalované doplnky"
+          header_description: "V tomto zozname sa zobrazia všetky nainštalované zásuvné moduly Discourse alebo zásuvné moduly, ktoré sú predinštalované v rámci hostingu Discourse"
+        api_keys:
+          title: "Kľúče API"
+          header_description: "Funkcia kľúčov API umožňuje bezpečne integrovať Discourse s externými systémami a automatizovať akcie. Správcovia môžu vytvárať kľúče so špecifickým rozsahom na kontrolu prístupu k zdrojom a citlivým údajom. Rozsahy obmedzujú funkčnosť, čím zabezpečujú zvýšenú bezpečnosť."
+          keywords: "token|scope"
+        webhooks:
+          title: "Webhooky"
+          header_description: "Webhooky umožňujú službe Discourse oznamovať externým službám, keď sa na vašom webe vyskytnú určité udalosti. Po spustení webhooku sa na zadané adresy URL odošle požiadavka POST."
+          keywords: "udalosť|platba|url"
+        embedding:
+          title: "Vkladám"
+          header_description: "Discourse má možnosť vložiť komentáre z témy na vzdialenú stránku pomocou rozhrania API pre Javascript, ktoré vytvorí okno IFRAME"
+      search:
+        modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
+        result_types:
+          page:
+            one: "Stránka"
+            few: "Stránok"
+            many: "Stránok"
+            other: "Stránky"
+          report:
+            one: "Hlásenie"
+            few: "Hlásení"
+            many: "Hlásení"
+            other: "Hlásenia"
+          setting:
+            one: "Nastavenie"
+            few: "Nastavení"
+            many: "Nastavení"
+            other: "Nastavenia"
+          theme:
+            one: "Téma"
+            few: "Témy"
+            many: "Témy"
+            other: "Témy"
+          component:
+            one: "Komponent"
+            few: "Komponenty"
+            many: "Komponenty"
+            other: "Komponenty"
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
@@ -5393,6 +5594,7 @@ sk:
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
           experimental: "Experimentálne"
+          only_experiments: "Zobraziť len experimentálne funkcie"
           experiment_enabled: "Povolili ste experimentálnu funkciu."
           experiment_disabled: "Experimentálnu funkciu ste zakázali."
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
@@ -5637,6 +5839,7 @@ sk:
             Pri používaní rozsahov môžete obmedziť kľúč API na konkrétnu sadu koncových bodov.
             Môžete tiež definovať, ktoré parametre budú povolené. Na oddelenie viacerých hodnôt použite čiarky.
           title: Rozsahy
+          one_or_more: Musí byť vybraný aspoň jeden rozsah.
           granular: Granulovaný
           read_only: Len na čítanie
           global: Globálne
@@ -5860,72 +6063,8 @@ sk:
             failed: "Nepodarilo sa"
       home:
         title: "Domov"
-      account:
-        title: "Účet"
-        sidebar_link:
-          backups: "Zálohy"
-          whats_new:
-            title: "Čo je nové?"
-            keywords: "changelog|feature|release"
-      community:
-        title: "Komunita"
-        sidebar_link:
-          about_your_site: "O vašej stránke"
-          badges: "Odznaky"
-          login_and_authentication: "Prihlásenie a overovanie"
-          notifications: "Upozornenia"
-          permalinks: "Trvalé odkazy"
-          trust_levels: "Úrovne dôvery"
-          group_permissions: "Oprávnenia skupiny"
-          users: "Používatelia"
-          groups: "Skupiny"
-          user_fields: "Používateľské polia"
-          watched_words: "Sledované slová"
-          legal: "Právne záležitosti"
-          moderation_flags:
-            title: "Moderovanie"
-            keywords: "vlajka|recenzia"
-      appearance:
-        title: "Vzhľad"
-        sidebar_link:
-          font_style: "Štýl písma"
-          site_logo: "Logo stránky"
-          color_schemes: "Palety farieb"
-          emoji: "Emoji"
-          navigation: "Navigácia"
-          themes: "Témy"
-          components:
-            title: "Komponenty"
-            keywords: "téma|rozšírenie"
-          site_texts: "Texty stránok"
-      email_settings:
-        title: "Nastavenia e-mailu"
-        sidebar_link:
-          appearance: "Vzhľad"
-          server_setup:
-            title: "Nastavenie servera a protokoly"
-            keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
-      security:
-        title: "Bezpečnosť"
-        sidebar_link:
-          security: "Nastavenia zabezpečenia"
-          spam: "Nastavenia spamu"
-          staff_action_logs:
-            title: "Protokoly a skríning"
-            keywords: "protokoly o chybách|akcie zamestnancov|prehľadané e-maily|prehľadané IP adresy|prehľadané URL adresy|denníky vyhľadávania"
-      section_landing_pages:
-        account:
-          title: "Účet"
-          backups:
-            title: "Zálohy"
-            description: "Urobte si zálohu údajov svojej stránky"
-          whats_new:
-            title: "Čo je nové?"
-            description: "Objavte nové verzie a vylepšenia Discourse"
       config_areas:
         about:
-          header: "O vašej stránke"
-          description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
           general_settings: "Všeobecné nastavenia"
           community_name: "Názov komunity"
           community_name_placeholder: "Príklad Spoločenstva"
@@ -5935,7 +6074,7 @@ sk:
           community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
           banner_image_help: |
-            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
+            Odporúčame: 1100x300px. Formáty: JPG, PNG, SVG (max. 10MB).
           contact_information: "Kontaktné informácie"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Johnny Smith"
@@ -5977,9 +6116,7 @@ sk:
             your_organization_saved: "Vaša organizácia uložená"
           saved: "uložené!"
         flags:
-          header: "Moderovanie"
           edit_header: "Upraviť príznak"
-          subheader: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
           description: "Popis"
           enabled: "Povolené?"
           add: "Pridať príznak"
@@ -6022,8 +6159,6 @@ sk:
           more_options:
             title: "Ďalšie možnosti"
         look_and_feel:
-          title: "Pozri a cíť"
-          description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
           themes:
             title: "Témy"
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
@@ -6045,8 +6180,6 @@ sk:
           save_successful: "Používateľské pole uložené."
       plugins:
         title: "Pluginy"
-        installed: "Nainštalované doplnky"
-        description: "V tomto zozname sa zobrazia všetky nainštalované zásuvné moduly Discourse alebo zásuvné moduly, ktoré sú predinštalované v rámci hostingu Discourse."
         name: "Meno"
         none_installed: "Nemáte nainštalované žiadne pluginy."
         version: "Verzia"
@@ -6061,25 +6194,6 @@ sk:
         author: "Od %{author}"
         experimental_badge: "experimentálne"
         learn_more: "Zistite viac"
-        sidebar_link:
-          installed: "Nainštalované"
-      advanced:
-        title: "Pokročilé"
-        sidebar_link:
-          api_keys:
-            title: "Kľúče API"
-            keywords: "token"
-          webhooks: "Webhooky"
-          developer: "Vývojár"
-          embedding: "Vkladám"
-          rate_limits: "Limity sadzieb"
-          user_api: "Používateľské rozhranie API"
-          onebox: "Onebox"
-          files: "Súbory"
-          other_options: "Ostatné"
-          search: "Hľadať"
-          experimental: "Experimentálne"
-          all_site_settings: "Všetky nastavenia stránky"
       navigation_menu:
         sidebar: "Bočný panel"
         header_dropdown: "Rozbaľovacia ponuka hlavičky"
@@ -6087,7 +6201,6 @@ sk:
       backups:
         title: "Zálohy"
         files_title: "Súbory zálohy"
-        description: "Zálohy Discourse obsahujú celú databázu webu, ktorá obsahuje všetko na webe: témy, príspevky, používateľov, skupiny, nastavenia, témy atď. V závislosti od spôsobu vytvorenia záložného súboru môže, ale nemusí obsahovať odoslané súbory."
         menu:
           backups: "Zálohy"
           backup_files: "Záloha sa nepodarila"
@@ -6231,16 +6344,11 @@ sk:
           common: "Spoločné"
           desktop: "Desktop"
           mobile: "Mobil"
-          settings: "Nastavenia"
-          translations: "Preklady"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra súbory"
           extra_files_upload: "Téma exportu na zobrazenie týchto súborov."
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
           settings_editor: "Editor nastavení"
-          show_advanced: "Zobraziť rozšírené polia"
-          hide_advanced: "Skryť rozšírené polia"
           hide_unused_fields: "Skryť nepoužívané polia"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
@@ -6401,6 +6509,9 @@ sk:
           yaml:
             text: "YAML"
             title: "Definovanie nastavení témy vo formáte YAML"
+          js:
+            text: "JS"
+            title: "Definovanie inicializátora JavaScript"
           scss_color_variables_warning: 'Používanie základných farebných premenných SCSS v témach je zastarané. Namiesto toho používajte vlastné vlastnosti CSS. Viac informácií nájdete v <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tejto príručke</a>.'
           scss_warning_inline: "Používanie základných farebných premenných SCSS v témach je zastarané."
           all_filter: "Všetky"
@@ -6501,6 +6612,9 @@ sk:
           hover:
             name: "hover"
             description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď na ne umiestnite kurzor myši alebo je na ne aktívna klávesnica."
+          editor:
+            light: "Svetlá"
+            dark: "Tmavá"
         robots:
           title: "Prepíšte súbor robots.txt na svojom webe:"
           warning: "Toto natrvalo prepíše všetky súvisiace nastavenia lokality."
@@ -7203,8 +7317,8 @@ sk:
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
-        delete_and_block: "Zazať a <b>zablokovať</b> tento email a IP adresu"
-        delete_dont_block: "Iba vymazať"
+        delete_and_block: "Odstrániť používateľa a zablokovať jeho e-mail a IP adresu"
+        delete_dont_block: "Odstránenie používateľa"
         deleting_user: "Odstránenie používateľa…"
         deleted: "Používateľ bol vymazaný."
         delete_failed: "Počas vymazávania používateľa nastala chyba. Pred vymazaním používateľa sa uistite, že všetky jeho príspevky sú zmazané."

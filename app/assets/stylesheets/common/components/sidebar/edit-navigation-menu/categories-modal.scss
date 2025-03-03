@@ -59,6 +59,7 @@
     .category-name {
       color: var(--primary);
       font-size: var(--font-up-1);
+
       @include ellipsis;
     }
   }

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
+import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
@@ -15,6 +16,7 @@ function resetHeaderIcons() {
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
+  headerIcons.add("interface-color-selector", undefined, { before: "search" });
 }
 
 export function headerIconsDAG() {
@@ -32,6 +34,7 @@ export default class Icons extends Component {
   @service sidebarState;
   @service header;
   @service search;
+  @service interfaceColor;
 
   get showHamburger() {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
@@ -97,6 +100,12 @@ export default class Icons extends Component {
               @active={{this.header.userVisible}}
               @toggleUserMenu={{@toggleUserMenu}}
             />
+          {{/if}}
+        {{else if (eq entry.key "interface-color-selector")}}
+          {{#if this.interfaceColor.selectorAvailableInHeader}}
+            <li class="header-dropdown-toggle header-color-scheme-toggle">
+              <InterfaceColorSelector />
+            </li>
           {{/if}}
         {{else if entry.value}}
           <entry.value />

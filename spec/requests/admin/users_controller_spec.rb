@@ -109,6 +109,22 @@ RSpec.describe Admin::UsersController do
         end
       end
 
+      it "returns silence reason when user is silenced" do
+        silencer =
+          UserSilencer.new(
+            user,
+            admin,
+            message: :too_many_spam_flags,
+            reason: "because I said so",
+            keep_posts: true,
+          )
+        silencer.silence
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+      end
+
       context "with a non-existing user" do
         it "returns 404 error" do
           get "/admin/users/0.json"

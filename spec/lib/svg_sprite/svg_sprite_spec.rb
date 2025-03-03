@@ -6,6 +6,7 @@ RSpec.describe SvgSprite do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     SvgSprite.expire_cache
+    allow(Rails.env).to receive(:test?).and_return(false)
   end
 
   it "can generate a bundle" do
@@ -44,7 +45,7 @@ RSpec.describe SvgSprite do
 
   it "version string changes" do
     version1 = SvgSprite.version
-    Fabricate(:badge, name: "Custom Icon Badge", icon: "fa-gamepad")
+    Fabricate(:badge, name: "Custom Icon Badge", icon: "gamepad")
     version2 = SvgSprite.version
 
     expect(version1).not_to eq(version2)
@@ -94,6 +95,11 @@ RSpec.describe SvgSprite do
   it "includes Font Awesome 5 icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
     expect(SvgSprite.all_icons).to include("far-building")
+  end
+
+  it "raises an error in test for deprecated icons" do
+    allow(Rails.env).to receive(:test?).and_return(true)
+    expect { SvgSprite.search("fa-gamepad") }.to raise_error(Discourse::Deprecation)
   end
 
   it "includes icons defined in theme settings" do

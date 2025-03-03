@@ -16,14 +16,18 @@
         display: flex;
         align-items: center;
 
-        // popup-menu doesnt use description text atm
+        // popup-menu doesn't use description text atm
         // it's just easier to align the icon with text then
         .icons {
           align-self: center;
         }
 
         .shortcut {
-          margin-left: 1em;
+          border: none;
+          background: var(--primary-200);
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
+          margin-left: 1.8rem;
         }
 
         &:last-child {
@@ -43,14 +47,6 @@
 
         .d-icon {
           color: var(--primary-medium);
-        }
-
-        .shortcut {
-          border: none;
-          background: var(--primary-200);
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
-          margin-left: 1.8rem;
         }
 
         &.is-highlighted,
