@@ -1289,6 +1289,24 @@ span.mention {
   color: var(--primary-high);
 }
 
+.hex-color {
+  font-family: var(--d-font-family--monospace);
+  font-size: 0.9375em;
+  padding-left: 0.125em;
+  padding-right: 0.05em;
+  &__swatch::before {
+    display: inline-block;
+    content: "";
+    margin-right: 0.1em;
+    vertical-align: -1px;
+    width: 0.8em;
+    height: 0.8em;
+    border: 1px solid var(--primary-900);
+    border-radius: 2px;
+    background-color: var(--swatch-color);
+  }
+}
+
 .suggested-topics {
   .topics {
     padding-bottom: 15px;
