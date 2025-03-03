@@ -159,6 +159,9 @@
 
 .admin-logo-form {
   .form-kit__section {
-    padding-left: 2em;
+    .form-kit__container {
+      padding-left: 1em;
+      width: calc(100% - 1em) !important;
+    }
   }
 }
