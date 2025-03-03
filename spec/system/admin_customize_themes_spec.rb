@@ -7,7 +7,10 @@ describe "Admin Customize Themes", type: :system do
 
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
-  before { sign_in(admin) }
+  before do
+    SiteSetting.admin_sidebar_enabled_groups = ""
+    sign_in(admin)
+  end
 
   describe "when visiting the page to customize themes" do
     fab!(:theme_2) { Fabricate(:theme, name: "Cool theme 2") }
@@ -211,6 +214,34 @@ describe "Admin Customize Themes", type: :system do
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
       expect(theme_translations_picker.component.text).to eq("English (US)")
+    end
+  end
+
+  describe "when using the admin sidebar" do
+    fab!(:group) { Fabricate(:group, users: [admin]) }
+
+    before { SiteSetting.admin_sidebar_enabled_groups = group.id.to_s }
+
+    it "hides the themes/components inner sidebar and the page header" do
+      visit("/admin/customize/themes")
+      expect(admin_customize_themes_page).to have_no_themes_list
+      expect(admin_customize_themes_page).to have_no_page_header
+    end
+
+    context "when visting a theme's page" do
+      it "has a link to the themes page" do
+        visit("/admin/customize/themes/#{theme.id}")
+        expect(admin_customize_themes_page).to have_back_button_to_themes_page
+      end
+    end
+
+    context "when visting a component's page" do
+      fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
+
+      it "has a link to the components page" do
+        visit("/admin/customize/themes/#{component.id}")
+        expect(admin_customize_themes_page).to have_back_button_to_components_page
+      end
     end
   end
 end
