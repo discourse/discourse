@@ -1477,11 +1477,16 @@ be:
               content: "Групы"
             users:
               content: "карыстальнікаў"
-            my_drafts:
-              content: "Мае чарнавікі"
+            my_posts:
+              content: "мае паведамленні"
+              content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
       filter: "Filter..."
+      footer:
+        interface_color_selector:
+          light: "святло"
+          dark: "цёмна"
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -1508,9 +1513,26 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+      config_sections:
+        account:
+          title: "Аккаўнт"
+        reports:
+          title: "Справаздачы"
+        community:
+          title: "супольнасць"
+        email:
+          title: "Электронная пошта"
+        security:
+          title: "Бяспека"
+        plugins:
+          title: "Плагіны"
       config:
         developer:
           title: "для распрацоўшчыкаў"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Мадэрацыя"
         files:
           title: "файлы"
         legal:
@@ -1527,6 +1549,48 @@ be:
           title: "Бяспека"
         spam:
           title: "Спам"
+        dashboard:
+          title: "Галоўная панэль"
+        users:
+          title: "карыстальнікаў"
+        groups:
+          title: "групы"
+        backups:
+          title: "Бэкапы"
+          sub_pages:
+            logs:
+              title: "Логі"
+        reports:
+          title: "Справаздачы"
+        badges:
+          title: "значкі"
+        permalinks:
+          title: "Сталыя спасылкі"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "шаблоны"
+            sent:
+              title: "Sent"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Атрымана"
+            rejected:
+              title: "адхілена"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў"
+        embedding:
+          title: "узаемадзеянне"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1652,38 +1716,11 @@ be:
             failed: "памылка"
       home:
         title: "дома"
-      account:
-        title: "Аккаўнт"
-        sidebar_link:
-          backups: "Бэкапы"
-      community:
-        title: "супольнасць"
-        sidebar_link:
-          badges: "значкі"
-          notifications: "Натыфікацыі"
-          permalinks: "Сталыя спасылкі"
-          users: "карыстальнікаў"
-          groups: "групы"
-          legal: "Legal"
-          moderation_flags:
-            title: "Мадэрацыя"
-      appearance:
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "рух"
-      security:
-        title: "Бяспека"
-      section_landing_pages:
-        account:
-          title: "Аккаўнт"
-          backups:
-            title: "Бэкапы"
       config_areas:
         about:
           company_name: "імя"
           saved: "захавана!"
         flags:
-          header: "Мадэрацыя"
           description: "Апісанне"
           edit: "рэдагаваць"
           delete: "Выдаліць"
@@ -1709,15 +1746,6 @@ be:
         name: "Назва"
         version: "версія"
         change_settings_short: "Налады"
-        sidebar_link:
-          installed: "устаноўленая"
-      advanced:
-        sidebar_link:
-          developer: "для распрацоўшчыкаў"
-          embedding: "узаемадзеянне"
-          files: "файлы"
-          other_options: "іншае"
-          search: "Пошук"
       backups:
         title: "Бэкапы"
         menu:
@@ -1788,7 +1816,6 @@ be:
           save: "захаваць"
           edit: "рэдагаваць"
           mobile: "Мабільны"
-          settings: "Налады"
           preview: "папярэдні прагляд"
           cancel: "адмяніць"
           uploads: "Загрузкі"
@@ -1834,6 +1861,9 @@ be:
           love:
             name: "каханне"
             description: "Колер кнопкі \"Падабаецца\"."
+          editor:
+            light: "святло"
+            dark: "цёмна"
       email:
         title: "Емейлы"
         settings: "Налады"
@@ -2082,7 +2112,6 @@ be:
           confirmation:
             cancel: "адмяніць"
         delete_forbidden_because_staff: "Адмінаў і мадэратараў выдаляць нельга."
-        delete_dont_block: "толькі выдаленне"
         deleted: "Карыстальніка быў выдалены."
         delete_failed: "Пры выдаленні карыстальніка адбылася памылка. Пераканайцеся, што ўсе паведамленні карыстальніка выдалены перад тым, як выдаляць самога карыстальніка."
         send_activation_email: "Адправіць ліст для актывацыі"

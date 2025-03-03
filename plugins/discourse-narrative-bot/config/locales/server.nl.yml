@@ -169,22 +169,8 @@ nl:
 
           - Wij geloven te allen tijde in [beschaafd communitygedrag](%{base_uri}/guidelines).
       onebox:
-        instructions: |-
-          Kun je nu een van deze links met mij delen? Reageer met **een link op een afzonderlijke regel**, dan wordt deze automatisch uitgebreid met een handige samenvatting.
-
-          Om een link te kopiëren, tik je op de link op je mobiel en houd je deze ingedrukt, of rechtsklik met je aanwijsapparaat:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Cool! Dit werkt voor de meeste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Vergeet niet dat de link op een _afzonderlijke regel_ moet staan, met niets anders ervoor of erachter.
-        not_found: |-
-          Sorry, ik kon de link niet vinden in je antwoord! :cry:
-
-          Kun je proberen de volgende link toe te voegen, op een afzonderlijke regel, in je volgende antwoord?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Hier is een foto van een eenhoorn:

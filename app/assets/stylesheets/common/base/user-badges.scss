@@ -99,6 +99,7 @@
   text-align: left;
   display: block;
   margin: 20px 0;
+  width: 800px;
 
   .badge-info {
     display: none;
@@ -116,7 +117,6 @@
     margin: 0;
     padding: 0;
   }
-  width: 800px;
 
   &::after {
     content: "";
@@ -231,6 +231,7 @@
       h3 {
         margin-bottom: 0.25em;
         font-size: var(--font-up-1);
+
         @media screen and (min-width: 900px) {
           font-size: var(--font-up-2);
         }

@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
+      matches_domain("store.steampowered.com")
       always_https
-      matches_regexp(%r{^https?://store\.steampowered\.com/app/\d+})
       requires_iframe_origins "https://store.steampowered.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/app/\d+$})
+      end
 
       def placeholder_html
         og = get_opengraph

@@ -149,7 +149,6 @@ class Setup {
 
     discourse.limitedSiteSettings = {
       secureUploads: siteSettings.secure_uploads,
-      enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
       traditionalMarkdownLinebreaks:
         siteSettings.traditional_markdown_linebreaks,
       enableMarkdownLinkify: siteSettings.enable_markdown_linkify,

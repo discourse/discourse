@@ -53,6 +53,7 @@ $pd-font-family: arial, sans-serif !default;
 
 // clear child float (pika-lendar), using the famous micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
+/* stylelint-disable-next-line no-duplicate-selectors */
 .pika-single {
     &::before,
     &::after {

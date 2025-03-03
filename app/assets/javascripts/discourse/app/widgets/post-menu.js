@@ -166,9 +166,7 @@ registerButton(
       return likeCount(attrs);
     }
 
-    const className = attrs.liked
-      ? "toggle-like has-like fade-out"
-      : "toggle-like like";
+    const className = attrs.liked ? "toggle-like has-like" : "toggle-like like";
 
     const button = {
       action: "like",
@@ -217,8 +215,7 @@ registerButton(
     if (
       attrs.reviewableId ||
       (attrs.canFlag && !attrs.hidden) ||
-      (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
-        !currentUser)
+      (siteSettings.allow_all_users_to_flag_illegal_content && !currentUser)
     ) {
       const button = {
         action: "showFlags",

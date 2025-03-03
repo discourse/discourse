@@ -24,19 +24,28 @@
 
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
-      .discourse-no-touch & {
-        transition: all 0.25s;
-        opacity: 0;
-
-        &:focus {
-          opacity: 1;
-        }
-      }
       background: transparent;
       border: none;
       margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
       padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
         calc(var(--d-sidebar-row-horizontal-padding) / 3);
+
+      .discourse-no-touch & {
+        transition: all 0.25s;
+        opacity: 0;
+
+        &:hover {
+          background: var(--d-sidebar-highlight-hover-background);
+
+          .d-icon {
+            color: var(--d-sidebar-highlight-hover-icon);
+          }
+        }
+
+        &:focus {
+          opacity: 1;
+        }
+      }
 
       .d-icon {
         font-size: var(--font-down-1);
@@ -50,16 +59,6 @@
 
         .d-icon {
           color: var(--d-sidebar-highlight-hover-icon);
-        }
-      }
-
-      .discourse-no-touch & {
-        &:hover {
-          background: var(--d-sidebar-highlight-hover-background);
-
-          .d-icon {
-            color: var(--d-sidebar-highlight-hover-icon);
-          }
         }
       }
     }
@@ -96,6 +95,7 @@
   .sidebar-section-header-text {
     line-height: normal;
     margin-right: 0.25em;
+
     @include ellipsis;
   }
 

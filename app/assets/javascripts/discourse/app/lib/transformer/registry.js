@@ -1,14 +1,18 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
+  "post-menu-toggle-like-action",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "category-available-views",
   "category-description-text",
   "category-display-name",
+  "composer-service-cannot-submit-post",
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",

@@ -86,6 +86,8 @@ export default class PostList extends Component {
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
             @showUserInfo={{@showUserInfo}}
+            @resumeDraft={{@resumeDraft}}
+            @removeDraft={{@removeDraft}}
           >
             <:abovePostItemHeader>
               {{yield post to="abovePostItemHeader"}}

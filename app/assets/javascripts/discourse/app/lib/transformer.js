@@ -104,17 +104,20 @@ function _normalizeTransformerName(name, type) {
  * @param {string} transformerType the type of the transformer being added
  */
 export function _addTransformerName(name, transformerType) {
-  const prefix = `${consolePrefix()} api.add${capitalize(
-    transformerType.toLowerCase()
-  )}TransformerName`.trim();
+  const prefix = () =>
+    `${consolePrefix()} api.add${capitalize(
+      transformerType.toLowerCase()
+    )}TransformerName`.trim();
 
   if (name !== name.toLowerCase()) {
-    throw new Error(`${prefix}: transformer name "${name}" must be lowercase.`);
+    throw new Error(
+      `${prefix()}: transformer name "${name}" must be lowercase.`
+    );
   }
 
   if (registryOpened) {
     throw new Error(
-      `${prefix} was called when the system is no longer accepting new names to be added. ` +
+      `${prefix()} was called when the system is no longer accepting new names to be added. ` +
         `Move your code to a pre-initializer that runs before "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -133,14 +136,16 @@ export function _addTransformerName(name, transformerType) {
   if (existingInfo.source === CORE_TRANSFORMER) {
     // eslint-disable-next-line no-console
     console.warn(
-      `${prefix}: transformer "${name}" matches existing core transformer "${existingInfo.name}" and shouldn't be re-registered using the the API.`
+      `${prefix()}: transformer "${name}" matches existing core transformer "${
+        existingInfo.name
+      }" and shouldn't be re-registered using the the API.`
     );
     return;
   }
 
   // eslint-disable-next-line no-console
   console.warn(
-    `${prefix}: transformer "${existingInfo.name}" is already registered`
+    `${prefix()}: transformer "${existingInfo.name}" is already registered`
   );
 }
 
@@ -162,13 +167,14 @@ export function _registerTransformer(
   if (!transformerTypes[transformerType]) {
     throw new Error(`Invalid transformer type: ${transformerType}`);
   }
-  const prefix = `${consolePrefix()} api.register${capitalize(
-    transformerType.toLowerCase()
-  )}Transformer`.trim();
+  const prefix = () =>
+    `${consolePrefix()} api.register${capitalize(
+      transformerType.toLowerCase()
+    )}Transformer`.trim();
 
   if (!registryOpened) {
     throw new Error(
-      `${prefix} was called while the system was still accepting new transformer names to be added.\n` +
+      `${prefix()} was called while the system was still accepting new transformer names to be added.\n` +
         `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -181,7 +187,7 @@ export function _registerTransformer(
   if (!transformerNameExists(normalizedTransformerName)) {
     // eslint-disable-next-line no-console
     console.warn(
-      `${prefix}: transformer "${transformerName}" is unknown and will be ignored. ` +
+      `${prefix()}: transformer "${transformerName}" is unknown and will be ignored. ` +
         "Is the name correct? Are you using the correct API for the transformer type?"
     );
 
@@ -190,7 +196,7 @@ export function _registerTransformer(
 
   if (typeof callback !== "function") {
     throw new Error(
-      `${prefix} requires the callback argument to be a function`
+      `${prefix()} requires the callback argument to be a function`
     );
   }
 
@@ -214,11 +220,11 @@ export function applyBehaviorTransformer(
     transformerTypes.BEHAVIOR
   );
 
-  const prefix = `${consolePrefix()} applyBehaviorTransformer`.trim();
+  const prefix = () => `${consolePrefix()} applyBehaviorTransformer`.trim();
 
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `${prefix}: transformer name "${transformerName}" does not exist. ` +
+      `${prefix()}: transformer name "${transformerName}" does not exist. ` +
         "Was the transformer name properly added? Is the transformer name correct? Is the type equals BEHAVIOR? " +
         "applyBehaviorTransformer can only be used with BEHAVIOR transformers."
     );
@@ -226,7 +232,7 @@ export function applyBehaviorTransformer(
 
   if (typeof defaultCallback !== "function") {
     throw new Error(
-      `${prefix} requires the callback argument to be a function`
+      `${prefix()} requires the callback argument to be a function`
     );
   }
 
@@ -234,7 +240,7 @@ export function applyBehaviorTransformer(
     typeof (context ?? undefined) !== "undefined" &&
     !(typeof context === "object" && context.constructor === Object)
   ) {
-    throw `${prefix}("${transformerName}", ...): context must be a simple JS object or nullish.`;
+    throw `${prefix()}("${transformerName}", ...): context must be a simple JS object or nullish.`;
   }
 
   const transformers = transformersRegistry.get(normalizedTransformerName);
@@ -305,11 +311,11 @@ export function applyValueTransformer(
     transformerTypes.VALUE
   );
 
-  const prefix = `${consolePrefix()} applyValueTransformer`.trim();
+  const prefix = () => `${consolePrefix()} applyValueTransformer`.trim();
 
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `${prefix}: transformer name "${transformerName}" does not exist. ` +
+      `${prefix()}: transformer name "${transformerName}" does not exist. ` +
         "Was the transformer name properly added? Is the transformer name correct? Is the type equals VALUE? " +
         "applyValueTransformer can only be used with VALUE transformers."
     );
@@ -323,7 +329,7 @@ export function applyValueTransformer(
     )
   ) {
     throw (
-      `${prefix}("${transformerName}", ...): context must be a simple JS object/an Ember hash or nullish.\n` +
+      `${prefix()}("${transformerName}", ...): context must be a simple JS object/an Ember hash or nullish.\n` +
       "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
       "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
       "and mutating the context directly. Inevitably, this leads to fragile integrations."
@@ -345,11 +351,6 @@ export function applyValueTransformer(
 
     try {
       const value = valueCallback({ value: newValue, context });
-      if (mutable && typeof value !== "undefined") {
-        throw new Error(
-          `${prefix}: transformer "${transformerName}" expects the value to be mutated instead of returned. Remove the return value in your transformer.`
-        );
-      }
 
       if (!mutable) {
         newValue = value;

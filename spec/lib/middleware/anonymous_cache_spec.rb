@@ -169,6 +169,45 @@ RSpec.describe Middleware::AnonymousCache do
         expect(helper.cached).to eq(nil)
       end
 
+      it "includes the forced color mode in the cache key" do
+        dark_helper =
+          new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=dark")
+        dark_helper.cache([200, { "HELLO" => "WORLD" }, ["dark mode"]])
+
+        light_helper =
+          new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=light")
+        expect(light_helper.cached).to eq(nil)
+
+        light_helper.cache([200, { "HELLO" => "WORLD" }, ["light mode"]])
+
+        auto_helper = new_helper("ANON_CACHE_DURATION" => 10)
+        expect(auto_helper.cached).to eq(nil)
+
+        auto_helper.cache([200, { "HELLO" => "WORLD" }, ["auto color mode"]])
+
+        unknown_helper =
+          new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=blada")
+        expect(unknown_helper.cached).to eq(
+          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["auto color mode"]],
+        )
+
+        dark_helper =
+          new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=dark")
+        light_helper =
+          new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=light")
+        auto_helper = new_helper("ANON_CACHE_DURATION" => 10)
+
+        expect(dark_helper.cached).to eq(
+          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["dark mode"]],
+        )
+        expect(light_helper.cached).to eq(
+          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["light mode"]],
+        )
+        expect(auto_helper.cached).to eq(
+          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["auto color mode"]],
+        )
+      end
+
       it "returns cached data for cached requests" do
         helper.is_mobile = true
         expect(helper.cached).to eq(nil)

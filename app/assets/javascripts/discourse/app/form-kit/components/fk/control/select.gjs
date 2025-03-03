@@ -21,7 +21,9 @@ export default class FKControlSelect extends Component {
       return true;
     }
 
-    return !this.args.field.validation?.includes("required");
+    return (
+      this.args.includeNone ?? !this.args.field.validation?.includes("required")
+    );
   }
 
   <template>

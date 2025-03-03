@@ -463,7 +463,6 @@ fr:
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
-        view_all: "tout voir"
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
@@ -1410,7 +1409,7 @@ fr:
         all_tags: "Toutes les étiquettes"
         warnings: "Avertissements officiels"
         read_more_in_group: "Vous voulez en savoir plus ? Parcourez les autres messages dans %{groupLink}."
-        read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
+        read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages privés</a>."
         read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
@@ -1449,20 +1448,20 @@ fr:
               }
               { NEW, plural,
                    =0 {}
-                  one { et <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other { et <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one { et <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other { et <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
-                other {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages privés</a>}
               }
             }
             other {}
@@ -1773,7 +1772,7 @@ fr:
         always: "toujours"
         only_when_away: "seulement en cas d'absence"
         never: "jamais"
-      email_messages_level: "Envoyez-moi un e-mail lorsque je reçois un message personnel"
+      email_messages_level: "Envoyez-moi un e-mail lorsque je reçois un message privé"
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par e-mail"
       email_in_reply_to: "En plus du message notifié par e-mail, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
@@ -2877,7 +2876,7 @@ fr:
       sr_menu_tabs: "Onglets du menu utilisateur"
       view_all_notifications: "afficher toutes les notifications"
       view_all_bookmarks: "voir tous les signets"
-      view_all_messages: "voir tous les messages personnels"
+      view_all_messages: "voir tous les messages privés"
       tabs:
         all_notifications: "Toutes les notifications"
         replies: "Réponses"
@@ -3335,7 +3334,7 @@ fr:
         help: "Ouvrir une version de ce sujet adaptée à l'impression"
       flag_topic:
         title: "Signaler"
-        help: "signaler ce sujet en privé pour attirer l'attention ou envoyer un message direct à son propos"
+        help: "signaler ce sujet en privé pour attirer l'attention ou envoyer un message privé à son propos"
         success_message: "Vous avez signalé ce sujet avec succès."
       make_public:
         title: "Convertir en sujet public"
@@ -3617,7 +3616,7 @@ fr:
         edit_action: "Modifier"
         edit_anonymous: "Nous sommes désolés, mais vous devez être connecté(e) pour modifier ce message."
         flag_action: "Signaler"
-        flag: "signaler cette publication en privé pour attirer l'attention ou envoyer un message direct à son propos"
+        flag: "signaler cette publication en privé pour attirer l'attention ou envoyer un message privé à son propos"
         anonymous_flag: "envoyer un e-mail au personnel pour signaler cette publication"
         delete_action: "Supprimer la publication"
         delete: "supprimer ce message"
@@ -4491,7 +4490,7 @@ fr:
       no_replies_title_others: "%{username} n'a encore répondu à aucun sujet"
       no_replies_body: "Lorsque vous <a href='%{searchUrl}'>découvrez</a> une conversation intéressante à laquelle vous souhaitez contribuer, appuyez sur le bouton <kbd>Répondre</kbd> directement sous n'importe quel message pour répondre au message. Ou, si vous préférez répondre au sujet général plutôt qu'à un message individuel ou à une personne, recherchez le bouton <kbd>Répondre</kbd> tout en bas du sujet, ou sous la chronologie du sujet."
       no_drafts_title: "Vous n'avez enregistré aucun brouillon"
-      no_drafts_body: "Vous n'êtes pas tout à fait prêt(e) à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message personnel. Sélectionnez le bouton Annuler pour supprimer ou enregistrez votre brouillon pour continuer plus tard."
+      no_drafts_body: "Vous n'êtes pas tout à fait prêt(e) à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message privé. Sélectionnez le bouton Annuler pour supprimer ou enregistrez votre brouillon pour continuer plus tard."
       no_likes_title: "Vous n'avez encore aimé aucun sujet"
       no_likes_title_others: "%{username} n'a encore aimé aucun sujet"
       no_likes_body: "Pour commencer à intervenir et à contribuer, il est judicieux de lire les conversations qui ont déjà eu lieu et de sélectionner le %{heartIcon} sur les messages que vous aimez !"
@@ -4644,9 +4643,11 @@ fr:
             users:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
-            my_drafts:
-              content: "Mes brouillons"
-              title: "Mes brouillons non publiés"
+            my_posts:
+              content: "Mes messages"
+              content_drafts: "Mes brouillons"
+              title: "Mon activité récente sur le sujet"
+              title_drafts: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
@@ -4671,6 +4672,10 @@ fr:
       no_results:
         title: "Aucun résultat"
         description: 'Nous n''avons rien trouvé correspondant à « %{filter} ».<br><br>Vouliez-vous <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">rechercher dans les paramètres du site</a> ou dans la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">liste des utilisateurs administrateurs ?</a>'
+      footer:
+        interface_color_selector:
+          light: "Clair"
+          dark: "Sombre"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
@@ -4789,15 +4794,39 @@ fr:
         meta_doc: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
-        sidebar_link:
-          all: "Tous les rapports"
+      config_sections:
+        account:
+          title: "Compte"
+        reports:
+          title: "Rapports"
+        community:
+          title: "Communauté"
+        appearance:
+          title: "Apparence"
+        email:
+          title: "E-mail"
+        security:
+          title: "Sécurité"
+        plugins:
+          title: "Extensions"
+        advanced:
+          title: "Avancé"
       config:
+        about:
+          title: "À propos de votre site"
+          header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
         developer:
           title: "Développeur"
           header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
+        emojis:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps"
+        flags:
+          title: "Modération"
+          header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
         font_style:
           title: "Style de police"
           header_description: "Personnalisez les styles de police utilisés par vos thèmes"
@@ -4846,6 +4875,110 @@ fr:
         group_permissions:
           title: "Autorisations de groupe"
           header_description: "Toutes les autorisations des applications basées sur les groupes sont gérées ici, ce qui permet de contrôler l'accès aux différentes fonctionnalités de Discourse"
+        dashboard:
+          title: "Tableau de bord"
+        users:
+          title: "Utilisateurs"
+        groups:
+          title: "Groupes"
+        site_settings:
+          title: "Tous les paramètres du site"
+        whats_new:
+          title: "Quoi de neuf ?"
+          keywords: "journal des modifications|fonctionnalité|version"
+        backups:
+          title: "Sauvegardes"
+          header_description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
+          sub_pages:
+            logs:
+              title: "Journaux"
+        reports:
+          title: "Rapports"
+          header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
+        badges:
+          title: "Badges"
+          header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et interactions positives au sein de la communauté"
+        permalinks:
+          title: "Permaliens"
+          header_description: "Redirections à appliquer pour les URL non connues par le forum"
+        user_fields:
+          title: "Champs utilisateur"
+          header_description: "Créez des champs utilisateur personnalisés pour recueillir des informations supplémentaires concernant les membres de votre communauté. Vous pouvez choisir les informations requises lors de l'inscription, celles qui apparaissent sur les profils et les informations que les utilisateurs peuvent mettre à jour."
+        watched_words:
+          title: "Mots surveillés"
+          header_description: "Les mots surveillés sont des outils de modération qui peuvent effectuer de multiples actions, notamment le blocage, la censure, la création de liens ou le signalement de publications contenant certains mots"
+        color_palettes:
+          title: "Palettes de couleurs"
+        emoji:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps."
+        themes:
+          title: "Thèmes"
+          header_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires"
+        components:
+          title: "Composants"
+          header_description: "Les composants sont de petites personnalisations qui peuvent être ajoutées aux thèmes afin de modifier des éléments spécifiques du style de conception de votre forum"
+        site_texts:
+          title: "Textes du site"
+        email:
+          title: "Configuration du serveur et journaux"
+          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
+          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
+          sub_pages:
+            preview_summary:
+              title: "Prévisualiser le résumé"
+              header_description: "Prévisualiser le contenu des résumés par e-mail envoyés aux utilisateurs inactifs"
+            advanced_test:
+              title: "Test avancé"
+            templates:
+              title: "Modèles"
+            sent:
+              title: "Envoyés"
+            skipped:
+              title: "Ignorés"
+            bounced:
+              title: "Non délivrés"
+            received:
+              title: "Reçus"
+            rejected:
+              title: "Rejetés"
+        email_appearance:
+          title: "Apparence"
+          header_description: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS"
+        staff_action_logs:
+          title: "Journaux et filtrage"
+          header_description: "Les journaux et le filtrage vous permettent de surveiller et de gérer votre communauté, en veillant à ce qu'elle reste sûre et respectueuse. Vous pouvez consulter les journaux de toutes les actions entreprises par les membres du personnel, les journaux de recherche et la configuration du filtrage des utilisateurs"
+          keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
+          sub_pages:
+            screened_emails:
+              title: "E-mails filtrés"
+              header_description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses e-mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée"
+            screened_ips:
+              title: "IP sous surveillance"
+            screened_urls:
+              title: "URL sous surveillance"
+              header_description: "Les URL listées ici ont été utilisées dans des messages publiés par des utilisateurs ayant été identifiés comme spammeurs"
+            search_logs:
+              title: "Journaux de recherche"
+        plugins:
+          title: "Extensions installées"
+          header_description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste"
+        api_keys:
+          title: "Clés d'API"
+          header_description: "La fonctionnalité des clés d'API vous permet d'intégrer Discourse à des systèmes externes en toute sécurité et d'automatiser les actions. Les administrateurs peuvent créer des clés avec des autorisations spécifiques pour contrôler l'accès aux ressources et aux données sensibles. Les autorisations limitent les fonctionnalités et garantissent ainsi une sécurité accrue."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Intégration"
+          header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+      search:
+        result_types:
+          theme:
+            one: "Thème"
+            other: "Thèmes"
+          component:
+            one: "Composant"
+            other: "Composants"
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
@@ -5318,72 +5451,8 @@ fr:
             failed: "Échec"
       home:
         title: "Accueil"
-      account:
-        title: "Compte"
-        sidebar_link:
-          backups: "Sauvegardes"
-          whats_new:
-            title: "Quoi de neuf ?"
-            keywords: "journal des modifications|fonctionnalité|version"
-      community:
-        title: "Communauté"
-        sidebar_link:
-          about_your_site: "À propos de votre site"
-          badges: "Badges"
-          login_and_authentication: "Connexion et authentification"
-          notifications: "Notifications"
-          permalinks: "Permaliens"
-          trust_levels: "Niveaux de confiance"
-          group_permissions: "Autorisations de groupe"
-          users: "Utilisateurs"
-          groups: "Groupes"
-          user_fields: "Champs utilisateur"
-          watched_words: "Mots surveillés"
-          legal: "Mentions légales"
-          moderation_flags:
-            title: "Modération"
-            keywords: "signaler|examiner"
-      appearance:
-        title: "Apparence"
-        sidebar_link:
-          font_style: "Style de police"
-          site_logo: "Logo du site"
-          color_schemes: "Palettes de couleurs"
-          emoji: "Émoji"
-          navigation: "Navigation"
-          themes: "Thèmes"
-          components:
-            title: "Composants"
-            keywords: "thème|extension"
-          site_texts: "Textes du site"
-      email_settings:
-        title: "Paramètres de messagerie"
-        sidebar_link:
-          appearance: "Apparence"
-          server_setup:
-            title: "Configuration du serveur et journaux"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
-      security:
-        title: "Sécurité"
-        sidebar_link:
-          security: "Paramètres de sécurité"
-          spam: "Paramètres anti-spam"
-          staff_action_logs:
-            title: "Journaux et filtrage"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
-      section_landing_pages:
-        account:
-          title: "Compte"
-          backups:
-            title: "Sauvegardes"
-            description: "Effectuez une sauvegarde des données de votre site"
-          whats_new:
-            title: "Quoi de neuf ?"
-            description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
-          header: "À propos de votre site"
-          description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
           general_settings: "Paramètres généraux"
           community_name: "Nom de la communauté"
           community_name_placeholder: "Exemple de communauté"
@@ -5392,8 +5461,6 @@ fr:
           community_title: "Titre de la communauté"
           community_title_help: "Brève description, affichée dans l'onglet du navigateur, pour les pages clés telles que les catégories et les listes de sujets."
           banner_image: "Image de bannière"
-          banner_image_help: |
-            Ce fichier sera utilisé sur votre page À propos. Taille recommandée : 1 100 x 300 px. Types acceptés : JPG, PNG et SVG jusqu'à 10 Mo.
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
           community_owner_placeholder: "Johnny Smith"
@@ -5435,9 +5502,7 @@ fr:
             your_organization_saved: "Votre organisation enregistrée"
           saved: "enregistré !"
         flags:
-          header: "Modération"
           edit_header: "Modifier le signalement"
-          subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
           enabled: "Activé ?"
           add: "Ajouter un signalement"
@@ -5480,8 +5545,6 @@ fr:
           more_options:
             title: "Plus d'options"
         look_and_feel:
-          title: "Apparence"
-          description: "Personnalisez et marquez votre site Discourse en lui donnant un style distinctif."
           themes:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
@@ -5503,8 +5566,6 @@ fr:
           save_successful: "Champ utilisateur enregistré."
       plugins:
         title: "Extensions"
-        installed: "Extensions installées"
-        description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste."
         name: "Nom"
         none_installed: "Vous n'avez aucune extension installée."
         version: "Version"
@@ -5519,25 +5580,6 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
-        sidebar_link:
-          installed: "Installé"
-      advanced:
-        title: "Avancé"
-        sidebar_link:
-          api_keys:
-            title: "Clés d'API"
-            keywords: "jeton"
-          webhooks: "Webhooks"
-          developer: "Développeur"
-          embedding: "Intégration"
-          rate_limits: "Limites d'utilisation"
-          user_api: "API utilisateur"
-          onebox: "Onebox"
-          files: "Fichiers"
-          other_options: "Autre"
-          search: "Recherche"
-          experimental: "Expérimental"
-          all_site_settings: "Tous les paramètres du site"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -5545,7 +5587,6 @@ fr:
       backups:
         title: "Sauvegardes"
         files_title: "Fichiers de sauvegarde"
-        description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
         menu:
           backups: "Sauvegardes"
           backup_files: "Fichiers de sauvegarde"
@@ -5689,16 +5730,11 @@ fr:
           common: "Général"
           desktop: "Bureau"
           mobile: "Mobile"
-          settings: "Paramètres"
-          translations: "Traductions"
-          extra_scss: "Extra SCSS"
           extra_files: "Fichiers supplémentaires"
           extra_files_upload: "Exportez le thème pour voir ces fichiers."
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
           settings_editor: "Éditeur de paramètres"
-          show_advanced: "Afficher les champs avancés"
-          hide_advanced: "Masquer les champs avancés"
           hide_unused_fields: "Masquer les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
@@ -5945,6 +5981,9 @@ fr:
           hover:
             name: "survol"
             description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
+          editor:
+            light: "Clair"
+            dark: "Sombre"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."
@@ -5964,7 +6003,7 @@ fr:
         settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
-        preview_digest: "Aperçu du résumé"
+        preview_digest: "Prévisualiser le résumé"
         advanced_test:
           title: "Test avancé"
           desc: "Vérifiez comment Discourse gère les e-mails reçus. Pour que l'e-mail soit géré correctement, veuillez coller ci-dessous la totalité de l'e-mail original."
@@ -5999,7 +6038,7 @@ fr:
         html: "html"
         text: "texte"
         html_preview: "Aperçu du contenu de l'e-mail"
-        last_seen_user: "Dernier utilisateur vu :"
+        last_seen_user: "Dernière visite de l'utilisateur :"
         no_result: "Aucun résultat trouvé pour le résumé."
         reply_key: "Clé de réponse"
         post_link_with_smtp: "Détails de la publication et SMTP"
@@ -6623,8 +6662,6 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer et <b>bloquer</b> cette adresse e-mail et adresse IP."
-        delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Une erreur s'est produite lors de la suppression de cet utilisateur. Assurez-vous que tous les messages sont supprimés avant d'essayer de supprimer l'utilisateur."
@@ -6999,7 +7036,7 @@ fr:
         add: "Ajouter un émoji"
         delete: "Supprimer"
         back: "Retour aux émojis"
-        choose_files: "Choisissez des fichiers"
+        choose_files: "Choisir des fichiers"
         uploading: "Téléversement…"
         name: "Nom"
         group: "Groupe"

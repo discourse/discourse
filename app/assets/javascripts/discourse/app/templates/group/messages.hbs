@@ -1,5 +1,5 @@
 <section class="user-secondary-navigation">
-  <MobileNav @desktopClass="nav-stacked action-list" class="messages-nav">
+  <HorizontalOverflowNav class="messages-nav">
     <li>
       <LinkTo @route="group.messages.inbox" @model={{this.model.name}}>
         {{i18n "user.messages.inbox"}}
@@ -10,7 +10,7 @@
         {{i18n "user.messages.archive"}}
       </LinkTo>
     </li>
-  </MobileNav>
+  </HorizontalOverflowNav>
 </section>
 <section class="user-content" id="user-content">
   {{outlet}}

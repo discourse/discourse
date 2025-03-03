@@ -374,6 +374,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+        remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>

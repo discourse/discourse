@@ -166,7 +166,9 @@ class ChatSetupInit {
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       if (this.chatService.userCanChat) {
-        api.headerIcons.add("chat", ChatHeaderIcon);
+        api.headerIcons.add("chat", ChatHeaderIcon, {
+          before: "interface-color-selector",
+        });
       }
 
       api.addStyleguideSection?.({

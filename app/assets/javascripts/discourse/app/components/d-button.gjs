@@ -231,8 +231,10 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
           {{~/if~}}
         </span>
       {{~else if (or @icon @isLoading)~}}
-        &#8203;
-        {{! Zero-width space character, so icon-only button height = regular button height }}
+        <span aria-hidden="true">
+          &#8203;
+          {{! Zero-width space character, so icon-only button height = regular button height }}
+        </span>
       {{~/if~}}
 
       {{yield}}

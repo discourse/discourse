@@ -6,8 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/slides\.com\/[\p{Alnum}_\-]+\/[\p{Alnum}_\-]+$/)
+      matches_domain("slides.com")
+      always_https
       requires_iframe_origins "https://slides.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/[\p{Alnum}_\-]+/[\p{Alnum}_\-]+$})
+      end
 
       def to_html
         <<-HTML

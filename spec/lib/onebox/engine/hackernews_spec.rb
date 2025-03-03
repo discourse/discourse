@@ -57,4 +57,31 @@ RSpec.describe Onebox::Engine::HackernewsOnebox do
       expect(html).to include("2013")
     end
   end
+
+  describe ".===" do
+    it "matches valid Hacker News item URL" do
+      valid_url = URI("https://news.ycombinator.com/item?id=12345")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match URL with valid domain as part of another domain" do
+      malicious_url = URI("https://news.ycombinator.com.malicious.com/item?id=12345")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match unrelated domain" do
+      unrelated_url = URI("https://example.com/item?id=12345")
+      expect(described_class === unrelated_url).to eq(false)
+    end
+
+    it "does not match invalid path" do
+      invalid_path_url = URI("https://news.ycombinator.com/itemx?id=12345")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+
+    it "does not match invalid query string" do
+      invalid_query_url = URI("https://news.ycombinator.com/item?foo=bar")
+      expect(described_class === invalid_query_url).to eq(false)
+    end
+  end
 end

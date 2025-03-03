@@ -460,7 +460,6 @@ sq:
         no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
-        view_all: "shikoni të gjitha"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -3949,6 +3948,11 @@ sq:
               content: "Grupet"
             users:
               content: "Users"
+            my_posts:
+              content: "Postimet e mia"
+              content_drafts: "Draftet e mia"
+              title: "Aktiviteti im i fundit për temën"
+              title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
     form_templates:
@@ -3977,9 +3981,22 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      config_sections:
+        account:
+          title: "Llogaria"
+        community:
+          title: "Komuniteti"
+        email:
+          title: "Email"
+        security:
+          title: "Siguria"
+        plugins:
+          title: "Pluginet"
       config:
         developer:
           title: "Developer"
+        emojis:
+          title: "Emoji"
         files:
           title: "Skedarë"
         legal:
@@ -4000,6 +4017,52 @@ sq:
           title: "Spam"
         user_api:
           title: "API e përdoruesit"
+        dashboard:
+          title: "Paneli i kontrollit"
+        users:
+          title: "Users"
+        groups:
+          title: "Grupet"
+        whats_new:
+          title: "Çfarë ka të re?"
+        backups:
+          title: "Rezervat"
+          sub_pages:
+            logs:
+              title: "Ditari"
+        badges:
+          title: "Stemat"
+        permalinks:
+          title: "Permalinks"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "Shabllonet"
+            sent:
+              title: "Dërguar"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Marrë"
+            rejected:
+              title: "Rejected"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Kontroll IP-sh"
+            screened_urls:
+              title: "Kontroll URL-sh"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+        api_keys:
+          title: "Çelësat API"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Embedding"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -4120,30 +4183,6 @@ sq:
             failed: "Dështoi"
       home:
         title: "Kryefaqja"
-      account:
-        title: "Llogaria"
-        sidebar_link:
-          backups: "Rezervat"
-      community:
-        title: "Komuniteti"
-        sidebar_link:
-          badges: "Stemat"
-          notifications: "Njoftimet"
-          permalinks: "Permalinks"
-          users: "Users"
-          groups: "Grupet"
-          legal: "Legale"
-      appearance:
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Shfletimi"
-      security:
-        title: "Siguria"
-      section_landing_pages:
-        account:
-          title: "Llogaria"
-          backups:
-            title: "Rezervat"
       config_areas:
         about:
           your_organization: "Organizata juaj"
@@ -4185,18 +4224,6 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
-        sidebar_link:
-          installed: "Instaluar"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          user_api: "API e përdoruesit"
-          onebox: "Onebox"
-          files: "Skedarë"
-          other_options: "Të tjerë"
-          search: "Kërko"
       backups:
         title: "Rezervat"
         menu:
@@ -4281,7 +4308,6 @@ sq:
           save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
-          settings: "Rregullimet"
           preview: "Parashikimi"
           cancel: "Anulo"
           upload: "Ngarko"
@@ -4611,8 +4637,6 @@ sq:
             cancel: "Anulo"
         delete_forbidden_because_staff: "Administratorët dhe moderatorët nuk fshihen dot. "
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
-        delete_and_block: "Fshijeni dhe <b>bllokoni</b> këtë email dhe adresë IP"
-        delete_dont_block: "Vetëm fshijeni"
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Dërgo Emailin e Aktivizimit"

@@ -345,8 +345,6 @@ da:
       abandon:
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
-      dropdown:
-        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -3772,9 +3770,10 @@ da:
               content: "Grupper"
             users:
               content: "Brugere"
-            my_drafts:
-              content: "Mine Kladder"
-              title: "Mine uopslåede kladder"
+            my_posts:
+              content: "Mine indlæg"
+              content_drafts: "Mine Kladder"
+              title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
             invite:
@@ -3785,6 +3784,10 @@ da:
       filter: "Filter..."
       no_results:
         title: "Ingen resultater"
+      footer:
+        interface_color_selector:
+          light: "Lys"
+          dark: "Mørk"
     until: "Indtil:"
     form_templates:
       upload_field:
@@ -3833,11 +3836,30 @@ da:
       reports:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
-        sidebar_link:
-          all: "Alle rapporter"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Rapporter"
+        community:
+          title: "Fællesskab"
+        appearance:
+          title: "Udseende"
+        email:
+          title: "E-mail"
+        security:
+          title: "Sikkerhed"
+        plugins:
+          title: "Udvidelser"
+        advanced:
+          title: "Avanceret"
       config:
         developer:
           title: "Udvikler"
+        emojis:
+          title: "Humørikon"
+        flags:
+          title: "Moderation"
         files:
           title: "Filer"
         legal:
@@ -3858,6 +3880,70 @@ da:
           title: "Spam"
         user_api:
           title: "Bruger API"
+        dashboard:
+          title: "Dashboard"
+        users:
+          title: "Brugere"
+        groups:
+          title: "Grupper"
+        whats_new:
+          title: "Hvad er nyt?"
+        backups:
+          title: "Backups"
+          sub_pages:
+            logs:
+              title: "Logs"
+        reports:
+          title: "Rapporter"
+        badges:
+          title: "Emblemer"
+        permalinks:
+          title: "Permalinks"
+          header_description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet"
+        emoji:
+          title: "Humørikon"
+        themes:
+          title: "Temaer"
+        components:
+          title: "komponenter"
+        email:
+          sub_pages:
+            templates:
+              title: "Skabeloner"
+            sent:
+              title: "Sendt"
+            skipped:
+              title: "Droppet"
+            bounced:
+              title: "Bounced"
+            received:
+              title: "Modtaget"
+            rejected:
+              title: "Afvist"
+        email_appearance:
+          title: "Udseende"
+          header_description: "Tilpas skabelonen, hvorfra alle html-mails dannes, og formater med CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling"
+            screened_ips:
+              title: "Blokerede IPer"
+            screened_urls:
+              title: "Blokerede URLer"
+              header_description: "URLerne nedenfor er blevet brugt i indlæg af brugere, som er blevet identificeret som spammere"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Indlejring"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temaer"
+          component:
+            one: "Komponent"
+            other: "komponenter"
       new_features:
         title: "Hvad er nyt?"
       dashboard:
@@ -4151,43 +4237,6 @@ da:
             failed: "Fejlet"
       home:
         title: "Hjem"
-      account:
-        title: "Konto"
-        sidebar_link:
-          backups: "Backups"
-          whats_new:
-            title: "Hvad er nyt?"
-      community:
-        title: "Fællesskab"
-        sidebar_link:
-          badges: "Emblemer"
-          notifications: "Notifikationer"
-          permalinks: "Permalinks"
-          users: "Brugere"
-          groups: "Grupper"
-          legal: "Jura"
-          moderation_flags:
-            title: "Moderation"
-      appearance:
-        title: "Udseende"
-        sidebar_link:
-          emoji: "Humørikon"
-          navigation: "Navigation"
-          themes: "Temaer"
-          components:
-            title: "komponenter"
-      email_settings:
-        sidebar_link:
-          appearance: "Udseende"
-      security:
-        title: "Sikkerhed"
-      section_landing_pages:
-        account:
-          title: "Konto"
-          backups:
-            title: "Backups"
-          whats_new:
-            title: "Hvad er nyt?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4196,7 +4245,6 @@ da:
           update: "Opdater"
           saved: "gemt!"
         flags:
-          header: "Moderation"
           description: "Beskrivelse"
           enabled: "Aktiveret?"
           edit: "Rediger"
@@ -4240,19 +4288,6 @@ da:
         howto: "Hvordan installerer jeg plugins?"
         author: "Af %{author}"
         learn_more: "Lær mere"
-        sidebar_link:
-          installed: "Installeret"
-      advanced:
-        title: "Avanceret"
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Udvikler"
-          embedding: "Indlejring"
-          user_api: "Bruger API"
-          onebox: "Onebox"
-          files: "Filer"
-          other_options: "Andre"
-          search: "Søg"
       navigation_menu:
         sidebar: "Sidebjælke"
       backups:
@@ -4375,15 +4410,10 @@ da:
           common: "Normal"
           desktop: "Desktop"
           mobile: "Mobil"
-          settings: "Indstillinger"
-          translations: "Oversættelser"
-          extra_scss: "Ekstra SCSS"
           extra_files: "Ekstra filer"
           extra_files_upload: "Eksporter tema for at se disse filer."
           extra_files_remote: "Eksporter tema eller tjek git-arkivet for at se disse filer."
           preview: "Forhåndsvisning"
-          show_advanced: "Vis avancerede felter"
-          hide_advanced: "Skjul avancerede felter"
           hide_unused_fields: "Skjul ubrugte felter"
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
@@ -4583,6 +4613,9 @@ da:
             description: "Like knappens farve."
           selected:
             name: "valgte"
+          editor:
+            light: "Lys"
+            dark: "Mørk"
         robots:
           title: "Tilsidesæt dit websteds robots.txt-fil:"
           warning: "Dette vil tilsidesætte alle relaterede sideindstillinger permanent."
@@ -5097,8 +5130,6 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
-        delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
-        delete_dont_block: "Slet kun"
         deleting_user: "Sletter bruger…"
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."

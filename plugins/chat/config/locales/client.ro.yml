@@ -104,6 +104,7 @@ ro:
         tabs:
           members: Membri
           settings: Setări
+        remove_member: "Elimină"
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
         create_group_placeholder: "Nume grup discuție (opțional)"
@@ -126,7 +127,7 @@ ro:
         type: "Tip"
         types:
           category: "Categorie"
-          topic: "Discuție"
+          topic: "Subiect"
       reactions:
         only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
         you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
@@ -209,9 +210,9 @@ ro:
           regular:
             title: "Normal"
           tracking:
-            title: "Urmărire"
+            title: "Monitorizare"
           watching:
-            title: "Urmărind activ"
+            title: "Urmărire"
       threads:
         list: "Fire"
       draft_channel_screen:
@@ -220,10 +221,10 @@ ro:
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       titles:
-        chat_mention: "Menționat în conversație"
-        chat_invitation: "Invitat în canalul de conversație"
-        chat_quoted: "Mesaj de conversație citat"
-        chat_watched_thread: "Fir de discuție urmărit"
+        chat_mention: "Menționat în discuție"
+        chat_invitation: "Invitat în canalul de discuție"
+        chat_quoted: "Mesaj discuție citat"
+        chat_watched_thread: "Fir discuție urmărit"
     discourse_automation:
       scriptables:
         send_chat_message:

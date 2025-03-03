@@ -128,10 +128,11 @@
         rgba(var(--chat-skeleton-animation-rgb), 0.3) 50%,
         rgba(var(--chat-skeleton-animation-rgb), 0.5) 100%
       );
+      content: "";
+
       @media (prefers-reduced-motion: no-preference) {
         animation: shimmer 1.25s infinite;
       }
-      content: "";
     }
 
     @keyframes shimmer {
