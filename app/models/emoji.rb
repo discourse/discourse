@@ -62,7 +62,7 @@ class Emoji
   end
 
   def self.exists?(name)
-    Emoji[name].present?
+    Emoji[name].present? || Emoji.aliases_values.include?(name)
   end
 
   def self.[](name)
@@ -176,6 +176,10 @@ class Emoji
 
   def self.aliases_db
     @aliases_db ||= Emoji.parse_emoji_file(aliases_db_file)
+  end
+
+  def self.aliases_values
+    @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
   end
 
   def self.search_aliases_db_file
