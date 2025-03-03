@@ -219,7 +219,7 @@ RSpec.describe Onebox::Helpers do
       it "has the default Discourse user agent" do
         stub_request(:get, "http://example.com/some-resource").with(
           headers: {
-            "user-agent" => /Discourse Forum Onebox/,
+            "user-agent" => Discourse.user_agent,
           },
         ).to_return(status: 200, body: "test")
 

@@ -850,6 +850,14 @@ module Discourse
     GitUtils.try_git(git_cmd, default_value)
   end
 
+  def self.user_agent
+    if git_version.present?
+      @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
+    else
+      @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+    end
+  end
+
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user =
