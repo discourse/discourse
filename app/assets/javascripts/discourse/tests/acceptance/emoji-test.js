@@ -12,7 +12,7 @@ acceptance("Emoji", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.get("/emojis/search-aliases", () => {
+    server.get("/emojis/search-aliases.json", () => {
       return helper.response([]);
     });
   });

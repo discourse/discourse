@@ -28,7 +28,7 @@ module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    pretender.get("/emojis/search-aliases", () => {
+    pretender.get("/emojis/search-aliases.json", () => {
       return response([]);
     });
   });
