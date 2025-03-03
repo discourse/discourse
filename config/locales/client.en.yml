@@ -6180,7 +6180,7 @@ en:
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           settings_editor: "Settings Editor"
-          hide_unused_fields: "Hide unused fields"
+          show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme_user_selectable: "Color palette can be selected by users"
@@ -6234,9 +6234,9 @@ en:
           unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
           stay: "Stay"
-          css_html: "Custom CSS/HTML"
-          edit_css_html: "Edit CSS/HTML"
-          edit_css_html_help: "You have not edited any CSS or HTML"
+          css_html: "Custom Code"
+          edit_css_html: "Edit Code"
+          edit_css_html_help: "You have not edited any code yet."
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           component_on_themes: "Include component on these themes"
           included_components: "Included components"
@@ -6297,22 +6297,22 @@ en:
           imported_from_archive: "This theme was imported from a .zip file"
           scss:
             text: "CSS"
-            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+            title: "Custom CSS rules with support for SCSS syntax"
           header:
-            text: "Header"
-            title: "Enter HTML to display above site header"
+            text: "Before Header"
+            title: "Basic HTML to be rendered above the Discourse header"
           after_header:
             text: "After Header"
-            title: "Enter HTML to display on all pages after header"
+            title: "Basic HTML to be rendered below the Discourse header"
           footer:
             text: "Footer"
-            title: "Enter HTML to display on page footer"
+            title: "Basic HTML to be rendered at the bottom of the page"
           embedded_scss:
             text: "Embedded CSS"
-            title: "Enter custom CSS to deliver with embedded version of comments"
+            title: "CSS to be included when Discourse comments are embedded in another site"
           embedded_header:
             text: "Embedded Header"
-            title: "Enter HTML to display above the embedded version of comments"
+            title: "Basic HTML which will be rendered above the Discourse comments when embedded in another site"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
@@ -6326,17 +6326,14 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "Head"
-            title: "HTML that will be inserted before the head tag"
+            text: "<head>"
+            title: "HTML to insert at the end of the <head>, with support for script tags"
           body_tag:
-            text: "Body"
-            title: "HTML that will be inserted before the body tag"
-          yaml:
-            text: "YAML"
-            title: "Define theme settings in YAML format"
+            text: "<body>"
+            title: "HTML to insert at the end of the <body>, with support for script tags"
           js:
             text: "JS"
-            title: "Define a JavaScript initializer"
+            title: "JavaScript initializer with support for Ember's 'template tag' syntax"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
           all_filter: "All"
