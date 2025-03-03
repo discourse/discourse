@@ -70,7 +70,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
   test("When filtering emojis", async function (assert) {
     await render(hbs`<EmojiPicker::Content />`);
-    await fillIn(".filter-input", "grinning");
+    await fillIn(".filter-input", "grin");
 
     assert
       .dom(".emoji-picker__section.filtered > img")
