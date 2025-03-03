@@ -70,7 +70,7 @@ module Migrations::Converters::Base
     end
 
     def create_step(step_class)
-      default_args = { settings: settings }
+      default_args = { settings: }
 
       args = default_args.merge(step_args(step_class))
       step_class.new(StepTracker.new, args)
