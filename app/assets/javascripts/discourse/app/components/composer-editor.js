@@ -194,17 +194,29 @@ export default class ComposerEditor extends Component {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.textManipulation = textManipulation;
+    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
 
     const input = this.element.querySelector(".d-editor-input");
 
     input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
-    // Focus on the body unless we have a title
-    if (!this.get("composer.model.canEditTitle")) {
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
+    if (
+      // Focus on the editor unless we have a title
+      !this.get("composer.model.canEditTitle") ||
+      // Or focus is in the body (e.g. when the editor is destroyed)
+      document.activeElement.tagName === "BODY"
+    ) {
       this.textManipulation.putCursorAtEnd();
     }
 
@@ -444,8 +456,8 @@ export default class ComposerEditor extends Component {
     $preview.scrollTop(desired + 50);
   }
 
-  _renderMentions(preview, unseen) {
-    unseen ||= linkSeenMentions(preview, this.siteSettings);
+  _renderMentions(preview) {
+    const unseen = linkSeenMentions(preview, this.siteSettings);
     if (unseen.length > 0) {
       this._renderUnseenMentions(preview, unseen);
     } else {
@@ -468,9 +480,9 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  _renderHashtags(preview, unseen) {
+  _renderHashtags(preview) {
     const context = this.site.hashtag_configurations["topic-composer"];
-    unseen ||= linkSeenHashtagsInContext(context, preview);
+    const unseen = linkSeenHashtagsInContext(context, preview);
     if (unseen.length > 0) {
       this._renderUnseenHashtags(preview, unseen, context);
     }
@@ -507,8 +519,12 @@ export default class ComposerEditor extends Component {
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
 
-  _decorateCookedElement(preview) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+  _decorateCookedElement(preview, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      preview,
+      helper
+    );
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -893,15 +909,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, unseenMentions, unseenHashtags) {
-    this._renderMentions(preview, unseenMentions);
-    this._renderHashtags(preview, unseenHashtags);
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      this._decorateCookedElement(preview);
-    }
+    this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
   }

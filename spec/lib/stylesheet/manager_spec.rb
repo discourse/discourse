@@ -609,25 +609,25 @@ RSpec.describe Stylesheet::Manager do
 
   describe "color_scheme_stylesheets" do
     it "returns something by default" do
-      link = manager.color_scheme_stylesheet_link_tag
-      expect(link).to include("color_definitions_base")
+      href = manager.color_scheme_stylesheet_link_tag_href
+      expect(href).to include("color_definitions_base")
     end
 
     it "does not crash when no default theme is set" do
       SiteSetting.default_theme_id = -1
-      link = manager.color_scheme_stylesheet_link_tag
+      href = manager.color_scheme_stylesheet_link_tag_href
 
-      expect(link).to include("color_definitions_base")
+      expect(href).to include("color_definitions_base")
     end
 
     it "loads base scheme when defined scheme id is missing" do
-      link = manager.color_scheme_stylesheet_link_tag(125)
-      expect(link).to include("color_definitions_base")
+      href = manager.color_scheme_stylesheet_link_tag_href(125)
+      expect(href).to include("color_definitions_base")
     end
 
-    it "loads nothing when defined dark scheme id is missing" do
-      link = manager.color_scheme_stylesheet_link_tag(125, "(prefers-color-scheme: dark)")
-      expect(link).to eq("")
+    it "loads nothing when fallback_to_base is false" do
+      href = manager.color_scheme_stylesheet_link_tag_href(125, fallback_to_base: false)
+      expect(href).to eq(nil)
     end
 
     it "uses the correct color scheme from the default site theme" do
@@ -635,8 +635,8 @@ RSpec.describe Stylesheet::Manager do
       theme = Fabricate(:theme, color_scheme_id: cs.id)
       SiteSetting.default_theme_id = theme.id
 
-      link = manager.color_scheme_stylesheet_link_tag()
-      expect(link).to include("/stylesheets/color_definitions_funky_#{cs.id}_")
+      href = manager.color_scheme_stylesheet_link_tag_href
+      expect(href).to include("/stylesheets/color_definitions_funky_#{cs.id}_")
     end
 
     it "uses the correct color scheme when a non-default theme is selected and it uses the base 'Light' scheme" do
@@ -647,8 +647,9 @@ RSpec.describe Stylesheet::Manager do
 
       user_theme = Fabricate(:theme, color_scheme_id: nil)
 
-      link = manager(user_theme.id).color_scheme_stylesheet_link_tag(nil, "all")
-      expect(link).to include("/stylesheets/color_definitions_base_")
+      href =
+        manager(user_theme.id).color_scheme_stylesheet_link_tag_href(nil, fallback_to_base: true)
+      expect(href).to include("/stylesheets/color_definitions_base_")
 
       stylesheet =
         Stylesheet::Manager::Builder.new(
@@ -662,9 +663,9 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
-      link = manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
+      href = manager.color_scheme_stylesheet_link_tag_href(ColorScheme.first.id)
       slug = Slug.for(ColorScheme.first.name) + "_" + ColorScheme.first.id.to_s
-      expect(link).to include("/stylesheets/color_definitions_#{slug}_")
+      expect(href).to include("/stylesheets/color_definitions_#{slug}_")
     end
 
     it "does not fail with a color scheme name containing spaces and special characters" do
@@ -672,8 +673,8 @@ RSpec.describe Stylesheet::Manager do
       theme = Fabricate(:theme, color_scheme_id: cs.id)
       SiteSetting.default_theme_id = theme.id
 
-      link = manager.color_scheme_stylesheet_link_tag
-      expect(link).to include("/stylesheets/color_definitions_funky-bunch_#{cs.id}_")
+      href = manager.color_scheme_stylesheet_link_tag_href
+      expect(href).to include("/stylesheets/color_definitions_funky-bunch_#{cs.id}_")
     end
 
     it "generates the dark mode of a color scheme when the dark option is specified" do
@@ -774,23 +775,12 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "includes updated font definitions" do
-      details1 = manager.color_scheme_stylesheet_details(nil, "all")
+      details1 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
 
       SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
 
-      details2 = manager.color_scheme_stylesheet_details(nil, "all")
+      details2 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
       expect(details1[:new_href]).not_to eq(details2[:new_href])
-    end
-
-    it "calls the preload callback when set" do
-      preload_list = []
-      cs = Fabricate(:color_scheme, name: "Funky")
-      theme = Fabricate(:theme, color_scheme_id: cs.id)
-      preload_callback = ->(href, type) { preload_list << [href, type] }
-
-      expect {
-        manager.color_scheme_stylesheet_link_tag(theme.id, "all", preload_callback)
-      }.to change(preload_list, :size).by(1)
     end
 
     context "with theme colors" do
@@ -913,10 +903,10 @@ RSpec.describe Stylesheet::Manager do
         cs = Fabricate(:color_scheme, name: "Grün")
         cs2 = Fabricate(:color_scheme, name: "어두운")
 
-        link = manager.color_scheme_stylesheet_link_tag(cs.id)
-        expect(link).to include("/stylesheets/color_definitions_grun_#{cs.id}_")
-        link2 = manager.color_scheme_stylesheet_link_tag(cs2.id)
-        expect(link2).to include("/stylesheets/color_definitions_scheme_#{cs2.id}_")
+        href = manager.color_scheme_stylesheet_link_tag_href(cs.id)
+        expect(href).to include("/stylesheets/color_definitions_grun_#{cs.id}_")
+        href2 = manager.color_scheme_stylesheet_link_tag_href(cs2.id)
+        expect(href2).to include("/stylesheets/color_definitions_scheme_#{cs2.id}_")
       end
     end
   end

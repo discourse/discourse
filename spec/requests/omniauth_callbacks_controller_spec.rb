@@ -159,6 +159,13 @@ RSpec.describe Users::OmniauthCallbacksController do
           get "/auth/google_oauth2"
           expect(response.status).to eq(302)
         end
+
+        it "should not be CSRF protected if the setting has been disabled" do
+          SiteSetting.auth_require_interaction = false
+          SiteSetting.enable_local_logins = true
+          get "/auth/google_oauth2"
+          expect(response.status).to eq(302)
+        end
       end
     end
 

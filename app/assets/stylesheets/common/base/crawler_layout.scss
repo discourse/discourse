@@ -69,12 +69,18 @@ body > noscript {
     padding: 10px;
 
     div.post {
+      overflow: auto;
+      max-width: 100%;
       word-break: break-word;
 
       img {
         max-width: 100%;
         height: auto;
       }
+    }
+
+    .topic-body {
+      float: unset;
     }
   }
 
@@ -205,24 +211,6 @@ body > noscript {
     margin-top: 0.25em;
   }
 
-  // topics
-  div#main-outlet {
-    div.post {
-      word-break: break-word;
-      overflow: auto;
-      max-width: 100%;
-
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-    }
-
-    .topic-body {
-      float: unset;
-    }
-  }
-
   .crawler-post {
     margin-top: 1em;
     margin-bottom: 2em;
@@ -239,6 +227,7 @@ body > noscript {
       a {
         font-weight: bold;
       }
+
       @include breakpoint(tablet) {
         display: inline-block;
         margin-bottom: 0.25em;
@@ -249,6 +238,7 @@ body > noscript {
   .crawler-post-infos {
     color: #666;
     display: inline-block;
+
     @include breakpoint(tablet, min-width) {
       float: right;
     }
@@ -360,6 +350,7 @@ body > noscript {
   color: #e25600;
   text-decoration: underline;
 }
+
 @media print {
   .buorg {
     display: none !important;

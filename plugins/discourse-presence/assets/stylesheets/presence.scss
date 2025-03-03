@@ -30,6 +30,7 @@
 
     .dot {
       display: inline-block;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: wave 1.8s linear infinite;
       }

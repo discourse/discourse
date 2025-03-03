@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import DEditor from "discourse/components/d-editor";
+import concatClass from "discourse/helpers/concat-class";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlComposer extends Component {
@@ -13,7 +14,7 @@ export default class FKControlComposer extends Component {
   }
 
   get style() {
-    if (this.args.height) {
+    if (!this.args.height) {
       return;
     }
 
@@ -25,7 +26,10 @@ export default class FKControlComposer extends Component {
       @value={{readonly @field.value}}
       @change={{this.handleInput}}
       @disabled={{@field.disabled}}
-      class="form-kit__control-composer"
+      class={{concatClass
+        "form-kit__control-composer"
+        (if @preview "--preview")
+      }}
       style={{this.style}}
       @textAreaId={{@field.id}}
     />

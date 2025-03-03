@@ -51,7 +51,7 @@ module Jobs
         translation_key =
           (
             if @is_direct_message_channel
-              if @chat_channel.chatable.group
+              if @chat_channel.direct_message_group?
                 "discourse_push_notifications.popup.new_chat_message"
               else
                 "discourse_push_notifications.popup.new_direct_chat_message"
@@ -63,7 +63,7 @@ module Jobs
 
         translation_args = { username: @creator.username }
         translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel &&
-          !@chat_channel.chatable.group
+          !@chat_channel.direct_message_group?
         translation_args =
           DiscoursePluginRegistry.apply_modifier(
             :chat_notification_translation_args,

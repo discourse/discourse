@@ -33,6 +33,19 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "includes unobfuscated email when email_token present" do
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(invite.email)
+
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
+        expect(invite_info["email"]).to eq(invite.email)
+      end
+    end
+
     context "when email data is present in authentication data" do
       let(:store) { ActionDispatch::Session::CookieStore.new({}) }
       let(:session_stub) do
@@ -88,6 +101,24 @@ RSpec.describe InvitesController do
       fab!(:group)
 
       before { sign_in(user) }
+
+      it "automatically redirects to the topic if the user can access it" do
+        invite.update!(topics: [Fabricate(:topic)])
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(302)
+        expect(response.location).to eq(invite.topics.first.url)
+      end
+
+      it "doesn't automatically redirect to the topic if the user can't access it" do
+        secret_group = Fabricate(:group)
+        invite.update!(
+          topics: [Fabricate(:topic, category: Fabricate(:private_category, group: secret_group))],
+        )
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+      end
 
       it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
@@ -579,14 +610,16 @@ RSpec.describe InvitesController do
       expect(json["successful_invitations"].length).to eq(2)
     end
 
-    it "creates many invite codes with one request" do #change to
+    it "creates many invite codes with one request" do
       sign_in(admin)
-      num_emails = 5 # increase manually for load testing
+
+      num_emails = 5
+
       post "/invites/create-multiple.json",
            params: {
              email: 1.upto(num_emails).map { |i| "test#{i}@example.com" },
-             #email: %w[test+1@example.com test1@example.com]
            }
+
       expect(response.status).to eq(200)
       json = JSON(response.body)
       expect(json["failed_invitations"].length).to eq(0)

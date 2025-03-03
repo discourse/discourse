@@ -84,7 +84,7 @@ summary::-webkit-details-marker {
     padding: 0;
 
     &:not([open]) {
-      //specificity needed to overrule non-elided
+      // specificity needed to overrule non-elided
       &:hover,
       &:focus,
       &:focus-within {

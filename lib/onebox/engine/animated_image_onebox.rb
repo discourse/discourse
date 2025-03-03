@@ -6,8 +6,8 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://.*(giphy\.com|gph\.is|tenor\.com)/})
       always_https
+      matches_domain("giphy.com", "gph.is", "tenor.com")
 
       def to_html
         og = get_opengraph

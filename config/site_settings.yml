@@ -488,6 +488,10 @@ basic:
     default: false
     hidden: true
     client: true
+  interface_color_selector:
+    client: true
+    enum: "InterfaceColorSelectorSetting"
+    default: "disabled"
 
 login:
   invite_only:
@@ -596,12 +600,14 @@ login:
     client: true
   auth_immediately:
     default: true
+    client: true
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_require_interaction: true
   enable_discourse_connect:
     client: true
     default: false
@@ -916,6 +922,9 @@ posting:
       ja: 8
       zh_CN: 8
       zh_TW: 8
+  prevent_uploads_only_posts:
+    client: true
+    default: false
   min_personal_message_post_length:
     client: true
     min: 1
@@ -1301,14 +1310,7 @@ posting:
   watched_words_regular_expressions:
     client: true
     default: false
-  enable_diffhtml_preview:
-    hidden: true
-    default: false
-    client: true
   enable_fast_edit:
-    default: true
-    client: true
-  enable_quote_copy:
     default: true
     client: true
   old_post_notice_days:
@@ -1960,7 +1962,7 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  allow_tl0_and_anonymous_users_to_flag_illegal_content:
+  allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
     client: true
@@ -2231,14 +2233,17 @@ security:
     type: list
     default: ""
     list_type: compact
+    requires_confirmation: "simple"
   blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_user_agents:
     type: list
     default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_rate: 60
   content_security_policy:
     default: true
@@ -3505,6 +3510,9 @@ dashboard:
     client: true
 
 experimental:
+  experimental_auto_grid_images:
+    default: false
+    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -3524,6 +3532,15 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
+  experimental_admin_search_enabled_groups:
+    hidden: true
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
   glimmer_topic_list_mode:
     client: true
     type: enum
@@ -3539,7 +3556,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
   enable_rich_text_paste:
     client: true
     default: true
@@ -3552,5 +3569,9 @@ experimental:
     list_type: compact
     area: "group_permissions"
   use_overhauled_theme_color_palette:
+    default: false
+    hidden: true
+  rich_editor:
+    client: true
     default: false
     hidden: true

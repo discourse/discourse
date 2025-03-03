@@ -7,15 +7,15 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(<template>
   <PluginOutlet @name="admin-api-keys">
     <DPageHeader
-      @titleLabel={{i18n "admin.api_keys.title"}}
-      @descriptionLabel={{i18n "admin.api_keys.description"}}
+      @titleLabel={{i18n "admin.config.api_keys.title"}}
+      @descriptionLabel={{i18n "admin.config.api_keys.header_description"}}
       @hideTabs={{true}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
           @path="/admin/api/keys"
-          @label={{i18n "admin.api_keys.title"}}
+          @label={{i18n "admin.config.api_keys.title"}}
         />
       </:breadcrumbs>
       <:actions as |actions|>

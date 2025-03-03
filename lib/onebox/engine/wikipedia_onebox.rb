@@ -7,8 +7,12 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp(%r{^https?://.*\.wikipedia\.(com|org)})
+      matches_domain("wikipedia.com", "wikipedia.org", allow_subdomains: true)
       always_https
+
+      def self.matches_path(path)
+        true # Matches any path under the specified domains
+      end
 
       private
 
@@ -26,14 +30,18 @@ module Onebox
         if m_url_hash.nil? # no hash found in url
           paras = raw.search("p") # default get all the paras
         else
-          section_header_title = raw.xpath("//span[@id='#{CGI.unescape(m_url_hash_name)}']")
+          section_header_title =
+            raw.xpath(
+              "//*[@id=\"#{CGI.unescape(m_url_hash_name)}\"][self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]",
+            )
 
           if section_header_title.empty?
             paras = raw.search("p") # default get all the paras
           else
             section_title_text = section_header_title.inner_text
-            section_header = section_header_title[0].parent # parent element of the section span element should be an <h3> node
-            cur_element = section_header
+
+            # Get .mw-heading which wraps the h* element
+            cur_element = section_header_title[0].parent
 
             # p|text|div covers the general case. We assume presence of at least 1 P node. if section has no P node we may end up with a P node from the next section.
             # div tag is commonly used as an assets wraper in an article section. often as the first element holding an image.
@@ -91,7 +99,7 @@ module Onebox
           description: text,
         }
 
-        img = raw.css(".image img")
+        img = raw.css(".infobox-image img")
 
         if img && img.size > 0
           img.each do |i|

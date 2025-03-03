@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -15,7 +16,6 @@ export default class AdminAreaSettings extends Component {
   @service siteSettings;
   @service router;
   @tracked settings = [];
-  @tracked filter = "";
   @tracked loading = false;
   @tracked showBreadcrumb = this.args.showBreadcrumb ?? true;
 
@@ -28,10 +28,14 @@ export default class AdminAreaSettings extends Component {
     return !this.loading && this.settings.length > 0;
   }
 
+  @action
+  async reloadSettings() {
+    await this.#loadSettings();
+  }
+
   @bind
   async #loadSettings() {
     this.loading = true;
-    this.filter = this.args.filter;
     try {
       const result = await ajax("/admin/config/site_settings.json", {
         data: {
@@ -57,6 +61,10 @@ export default class AdminAreaSettings extends Component {
     }
   }
 
+  get filter() {
+    return this.args.filter ?? "";
+  }
+
   @action
   adminSettingsFilterChangedCallback(filterData) {
     this.args.adminSettingsFilterChangedCallback(filterData.filter);
@@ -69,6 +77,7 @@ export default class AdminAreaSettings extends Component {
 
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"
+      {{didUpdate this.reloadSettings @plugin}}
     >
       {{#if this.showSettings}}
         <AdminFilteredSiteSettings

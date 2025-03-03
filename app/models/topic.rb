@@ -419,7 +419,7 @@ class Topic < ActiveRecord::Base
     banner = "banner"
 
     if archetype_before_last_save == banner || archetype == banner
-      ApplicationController.banner_json_cache.clear
+      ApplicationLayoutPreloader.banner_json_cache.clear
     end
 
     if tags_changed || saved_change_to_attribute?(:category_id) ||
@@ -1872,7 +1872,7 @@ class Topic < ActiveRecord::Base
 
   def update_excerpt(excerpt)
     update_column(:excerpt, excerpt)
-    ApplicationController.banner_json_cache.clear if archetype == "banner"
+    ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
 
   def pm_with_non_human_user?
@@ -2030,14 +2030,14 @@ class Topic < ActiveRecord::Base
       invited_by,
       "topic-invitations-per-day",
       SiteSetting.max_topic_invitations_per_day,
-      1.day.to_i,
+      1.day,
     ).performed!
 
     RateLimiter.new(
       invited_by,
       "topic-invitations-per-minute",
       SiteSetting.max_topic_invitations_per_minute,
-      1.day.to_i,
+      1.minute,
     ).performed!
   end
 

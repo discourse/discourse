@@ -7,8 +7,8 @@
 cs:
   js:
     discourse_automation:
-      create: Vytvoř
-      update: Aktualizovat
+      back: Zpět
+      edit: Upravit
       destroy_automation:
         confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
       fields:

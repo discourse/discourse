@@ -28,16 +28,22 @@ module Jobs
 
       result = Upload.by_users
       Upload.unused_callbacks&.each { |handler| result = handler.call(result) }
+
+      # 1. Exclude uploads that have retain_hours set and are still within that retention period.
+      # 2. Exclude uploads created in the grace period.
+      # 3. Exclude secure uploads that have an access_control_post_id.
+      # 4. Exclude uploads that are link to an upload reference.
+      # 5. Exclude uploads that are linked to anything but a Post via UploadReference.
       result =
         result
           .where(
             "uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours",
           )
-          .where("uploads.created_at < ?", grace_period.hour.ago) # Don't remove any secure uploads.
-          .where("uploads.access_control_post_id IS NULL")
-          .joins(
-            "LEFT JOIN upload_references ON upload_references.upload_id = uploads.id",
-          ) # Don't remove any uploads linked to an UploadReference.
+          .where("uploads.created_at < ?", grace_period.hour.ago)
+          .where(
+            "((uploads.access_control_post_id IS NULL) OR (uploads.access_control_post_id IS NOT NULL AND NOT uploads.secure))",
+          )
+          .joins("LEFT JOIN upload_references ON upload_references.upload_id = uploads.id")
           .where("upload_references.upload_id IS NULL")
           .with_no_non_post_relations
 

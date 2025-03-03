@@ -6,6 +6,7 @@
 
 uk:
   site_settings:
+    discourse_local_dates_enabled: "Увімкнути функцію локальних дат. Це додасть підтримку дат з урахуванням місцевого часового поясу у дописах з елементом [date]."
     discourse_local_dates_default_formats: "Найчастіші формати дати, див .: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>формат рядка momentjs</a>"
     discourse_local_dates_default_timezones: "Список часових поясів за замовчуванням повинен бути дійсним <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
     discourse_local_dates_email_format: "Формат, який використовується для відображення дати в електронних листах"

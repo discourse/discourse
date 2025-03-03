@@ -84,6 +84,9 @@ module Jobs
           bcc_addresses: bcc_addresses,
         )
 
+      # Idempotency check – if the EmailLog already exists, do not send again.
+      return if EmailLog.exists?(message_id: message.message_id)
+
       begin
         Email::Sender.new(message, :group_smtp, recipient_user).send
       rescue Net::ReadTimeout => err
@@ -95,6 +98,7 @@ module Jobs
           message: "Got SMTP read timeout when sending group SMTP email",
           env: args,
         )
+        raise err # Re-raise the error so Sidekiq's retry mechanism kicks in.
       end
 
       # Create an incoming email record to avoid importing again from IMAP

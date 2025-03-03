@@ -35,10 +35,11 @@ end
 Fabricator(:direct_message_channel, from: :chat_channel) do
   transient :users, :group, following: true, with_membership: true
   chatable do |attrs|
+    users = attrs[:users]
     Fabricate(
       :direct_message,
-      users: attrs[:users] || [Fabricate(:user), Fabricate(:user)],
-      group: attrs[:group] || false,
+      users: users || [Fabricate(:user), Fabricate(:user)],
+      group: attrs[:group] || (users ? users.length > 2 : false),
     )
   end
   status { :open }
@@ -95,6 +96,10 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     user = transients[:user] || Fabricate(:user)
     Group.refresh_automatic_groups!
     channel.add(user)
+
+    if !transients[:user] && channel.direct_message_channel?
+      channel.chatable.direct_message_users.find_or_create_by!(user: user)
+    end
 
     result =
       resolved_class.call(
@@ -261,6 +266,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
           transients[:with_replies],
           :chat_message,
           thread: thread,
+          chat_channel_id: thread.channel_id,
           use_service: transients[:use_service],
         )
         .each { |message| thread.add(message.user) }

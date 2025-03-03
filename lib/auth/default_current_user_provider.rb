@@ -123,7 +123,7 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token
-      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN, 60)
+      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN, 1.minute)
 
       if limiter.can_perform?
         @env[USER_TOKEN_KEY] = @user_token =
@@ -435,7 +435,7 @@ class Auth::DefaultCurrentUserProvider
       limit = [GlobalSetting.max_admin_api_reqs_per_key_per_minute.to_i, limit].max
     end
     @admin_api_key_limiter =
-      RateLimiter.new(nil, "admin_api_min", limit, 60, error_code: "admin_api_key_rate_limit")
+      RateLimiter.new(nil, "admin_api_min", limit, 1.minute, error_code: "admin_api_key_rate_limit")
   end
 
   def user_api_key_limiter_60_secs
@@ -444,7 +444,7 @@ class Auth::DefaultCurrentUserProvider
         nil,
         "user_api_min_#{@hashed_user_api_key}",
         GlobalSetting.max_user_api_reqs_per_minute,
-        60,
+        1.minute,
         error_code: "user_api_key_limiter_60_secs",
       )
   end
@@ -455,7 +455,7 @@ class Auth::DefaultCurrentUserProvider
         nil,
         "user_api_day_#{@hashed_user_api_key}",
         GlobalSetting.max_user_api_reqs_per_day,
-        86_400,
+        1.day,
         error_code: "user_api_key_limiter_1_day",
       )
   end

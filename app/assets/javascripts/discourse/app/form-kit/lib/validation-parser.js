@@ -18,6 +18,18 @@ export default class ValidationParser {
     return rules;
   }
 
+  dateBeforeOrEqualRule(input) {
+    return {
+      date: new Date(input),
+    };
+  }
+
+  dateAfterOrEqualRule(input) {
+    return {
+      date: new Date(input),
+    };
+  }
+
   requiredRule(args = "") {
     const [option] = args.split(",");
     return {

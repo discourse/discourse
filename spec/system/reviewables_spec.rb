@@ -7,6 +7,7 @@ describe "Reviewables", type: :system do
   fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:moderator) { Fabricate(:moderator) }
 
   before { sign_in(admin) }
 
@@ -210,6 +211,35 @@ describe "Reviewables", type: :system do
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
+    end
+  end
+
+  describe "when there is an unknown plugin reviewable" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable2) { Fabricate(:reviewable) }
+
+    before do
+      reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
+      reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
+    end
+
+    it "informs admin and allows to delete them" do
+      visit("/review")
+      expect(review_page).to have_information_about_unknown_reviewables_visible
+      expect(review_page).to have_listing_for_unknown_reviewables_plugin(
+        reviewable.type,
+        reviewable.type_source,
+      )
+      expect(review_page).to have_listing_for_unknown_reviewables_unknown_source(reviewable2.type)
+      review_page.click_ignore_all_unknown_reviewables
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
+    end
+
+    it "does not inform moderator about them" do
+      sign_in(moderator)
+
+      visit("/review")
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
 end

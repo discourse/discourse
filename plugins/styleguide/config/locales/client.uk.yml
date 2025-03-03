@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Керівництво по стилю Discourse"
   js:
     styleguide:
       title: "Styleguide"

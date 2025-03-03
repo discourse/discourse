@@ -29,6 +29,7 @@ Discourse::Application.routes.draw do
 
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
+      get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -386,9 +387,11 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
+
+      get "search/all" => "search#index"
+
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
-
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"
@@ -449,13 +452,18 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+
+      delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"
     get "email/unsubscribed" => "email#unsubscribed", :as => "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", :as => "email_perform_unsubscribe"
 
-    get "extra-locales/:bundle" => "extra_locales#show"
+    get "extra-locales/:digest/:locale/:bundle" => "extra_locales#show",
+        :constraints => {
+          format: :js,
+        }
 
     resources :session, id: RouteFormat.username, only: %i[create destroy become] do
       get "become" if !Rails.env.production?
@@ -597,11 +605,17 @@ Discourse::Application.routes.draw do
             format: "json",
           }
       put "#{root_path}/password-reset/:token" => "users#password_reset_update"
-      get "#{root_path}/activate-account/:token" => "users#activate_account"
+      get "#{root_path}/activate-account/:token" => "users#activate_account",
+          :constraints => {
+            token: /[0-9a-f]+/,
+          }
       put(
-        { "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(
-          index == 1 ? { as: "perform_activate_account" } : {},
-        ),
+        {
+          "#{root_path}/activate-account/:token" => "users#perform_account_activation",
+          :constraints => {
+            token: /[0-9a-f]+/,
+          },
+        }.merge(index == 1 ? { as: "perform_activate_account" } : {}),
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"

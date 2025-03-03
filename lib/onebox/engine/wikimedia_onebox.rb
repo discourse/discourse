@@ -7,8 +7,12 @@ module Onebox
       include LayoutSupport
       include JSON
 
-      matches_regexp(%r{^https?://commons\.wikimedia\.org/wiki/(File:.+)})
+      matches_domain("commons.wikimedia.org")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/wiki/File:.+})
+      end
 
       def self.priority
         # Wikimedia links end in an image extension.

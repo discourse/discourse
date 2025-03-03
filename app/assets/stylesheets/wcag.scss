@@ -218,77 +218,8 @@ html {
   }
 
   nav.post-controls {
-    .actions {
-      button.create,
-      button.create .d-icon {
-        color: var(--primary-high-or-secondary-low);
-      }
-
-      button {
-        &.d-hover,
-        &:hover,
-        &:focus,
-        &:active {
-          background: var(--primary-medium);
-          color: var(--secondary);
-
-          .d-icon {
-            color: var(--secondary);
-          }
-        }
-
-        &.delete.d-hover,
-        &.delete:hover,
-        &.delete:focus {
-          background: var(--danger);
-          color: var(--secondary);
-
-          .d-icon {
-            color: var(--secondary);
-          }
-        }
-
-        &.bookmark {
-          &.bookmarked {
-            .d-icon {
-              color: var(--tertiary);
-            }
-
-            &.d-hover,
-            &:hover {
-              .d-icon {
-                color: var(--tertiary-medium);
-              }
-            }
-          }
-        }
-      }
-
-      .double-button .button-count {
-        color: var(--primary-medium);
-      }
-
-      .double-button:hover {
-        button,
-        .d-icon,
-        button.has-like .d-icon {
-          color: var(--love);
-        }
-      }
-    }
-
-    .show-replies {
-      color: var(--primary-medium);
-
-      &:hover,
-      &:focus {
-        color: var(--secondary);
-        background: var(--primary-medium);
-
-        .d-icon {
-          color: var(--secondary);
-        }
-      }
+    .btn.btn-flat {
+      --d-post-control-icon-color: var(--primary-high);
     }
   }
 

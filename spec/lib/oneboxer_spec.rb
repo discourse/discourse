@@ -286,10 +286,65 @@ RSpec.describe Oneboxer do
         "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
       )
     end
+
+    context "when URL contains non-ASCII characters" do
+      let(:html) { <<~HTML }
+        <html>
+        <head>
+          <meta property="og:title" content="Cats">
+          <meta property="og:description" content="Meow">
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
+
+      context "when response is not a redirect" do
+        let(:url) { "https://its.me/héhé" }
+
+        before do
+          stub_request(:get, url).to_return(status: 200, body: html, headers: {})
+          stub_request(:head, url).to_return(status: 200, body: "", headers: {})
+        end
+
+        it "does not break" do
+          expect(described_class.onebox_raw(url)[:onebox]).to be_present
+        end
+      end
+
+      context "when response is a redirect" do
+        let(:url) { "https://its.me" }
+        let(:non_ascii_url) { "#{url}/h%C3%A9h%C3%A9" }
+
+        before do
+          stub_request(:get, url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => non_ascii_url,
+            },
+          )
+          stub_request(:head, url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => non_ascii_url,
+            },
+          )
+          stub_request(:get, non_ascii_url).to_return(status: 200, body: html, headers: {})
+          stub_request(:head, non_ascii_url).to_return(status: 200, body: "", headers: {})
+        end
+
+        it "does not break" do
+          expect(described_class.onebox_raw(url)[:onebox]).to be_present
+        end
+      end
+    end
   end
 
   describe ".external_onebox" do
-    html = <<~HTML
+    let(:html) { <<~HTML }
       <html>
       <head>
         <meta property="og:title" content="Cats">
@@ -726,17 +781,10 @@ RSpec.describe Oneboxer do
 
     let(:url) { "https://example.com/fake-url/" }
 
-    it "handles a missing description" do
+    it "handles a missing description, title-only oneboxes are fine" do
       stub_request(:get, url).to_return(body: response("missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include(
         "could not be found: description",
-      )
-    end
-
-    it "handles a missing description and image" do
-      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
-        "could not be found: description, image",
       )
     end
 

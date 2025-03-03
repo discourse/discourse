@@ -25,8 +25,8 @@ describe "Post selection | Copy quote", type: :system do
     QUOTE
     end
 
-    it "does not show the copy quote button if it has been disabled" do
-      SiteSetting.enable_quote_copy = false
+    it "does not show the copy quote button if quoting has been disabled by the user" do
+      current_user.user_option.update!(enable_quoting: false)
       topic_page.visit_topic(topic)
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)

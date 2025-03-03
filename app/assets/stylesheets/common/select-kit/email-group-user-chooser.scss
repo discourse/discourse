@@ -18,6 +18,7 @@
     .name {
       color: var(--primary-high);
       font-size: var(--font-down-1);
+
       @include ellipsis;
     }
 

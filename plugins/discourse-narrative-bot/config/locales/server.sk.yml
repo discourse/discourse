@@ -171,22 +171,8 @@ sk:
 
           - Za každých okolností veríme v [civilizované správanie komunity](%{base_uri}/guidelines).
       onebox:
-        instructions: |-
-          Ďalej, môžete sa so mnou podeliť o jeden z týchto odkazov? Odpovedzte **odkazom na riadok samotným** a automaticky sa rozbalí a bude obsahovať šikovné zhrnutie.
-
-          Ak chcete skopírovať akýkoľvek odkaz, klepnite a podržte na mobile alebo kliknite pravým tlačidlom myši na ukazovacie zariadenie:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Super! To bude fungovať pre väčšinu odkazov <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> . Pamätajte, že musí byť na riadku _všetko sámo_, bez ničím iným vpredu alebo vzadu.
-        not_found: |-
-          Prepáčte, nenašiel som odkaz vo vašej odpovedi! :cry:
-
-          Môžete skúsiť pridať nasledujúci odkaz do samostatného riadku vo svojej ďalšej odpovedi?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Tu je obrázok jednorožca:

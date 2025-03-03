@@ -70,12 +70,6 @@ nav.post-controls {
       &.expand-post {
         margin: var(--control-space) 0 var(--control-space) 0;
       }
-
-      &.has-like {
-        .d-icon {
-          color: var(--love);
-        }
-      }
     }
   }
 
@@ -99,12 +93,6 @@ nav.post-controls {
 
       .d-icon {
         color: var(--primary-high);
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--primary);
-        background: var(--primary-300);
       }
     }
   }
@@ -138,6 +126,7 @@ nav.post-controls button.reply .d-icon {
 .post-admin-menu {
   bottom: -50px;
   left: 135px;
+
   @media screen and (max-width: 374px) {
     left: 50px;
   }
@@ -170,7 +159,7 @@ nav.post-controls button.reply .d-icon {
     }
 
     .topic-avatar {
-      @include sticky;
+      position: sticky;
       top: calc(var(--header-offset) + 0.5em);
       margin-right: 15px;
     }
@@ -256,10 +245,6 @@ nav.post-controls button.reply .d-icon {
     transform: translate(-50%, 150%);
     padding: 0.35em 0.5em;
   }
-}
-
-.post-actions {
-  /* overriding display: here was causing hidden element to take up space */
 }
 
 .post-action {
@@ -444,7 +429,7 @@ span.highlighted {
 
 .posts-filtered-notice {
   padding-right: 8.5em;
-  padding-bottom: unquote("max(1em, env(safe-area-inset-bottom))");
+  padding-bottom: max(1em, env(safe-area-inset-bottom));
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 1em -9px;

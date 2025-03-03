@@ -6,6 +6,8 @@
   .nav-pills {
     overflow: auto;
     min-width: 0;
+    margin: 0;
+    height: 100%;
     position: relative;
 
     // avoids auto-scroll on initial load if active nav item is overflowed

@@ -61,4 +61,29 @@ describe "User preferences | Interface", type: :system do
       expect(dropdown).to have_no_option_value(UserOption::HOMEPAGES.key("new"))
     end
   end
+
+  describe "Color palette" do
+    context "when there's only 1 dark color palette" do
+      before do
+        dark = ColorScheme.find_by(base_scheme_id: "Dark")
+        ColorScheme.where.not(id: dark.id).destroy_all
+        user.user_option.update!(dark_scheme_id: dark.id, theme_ids: [SiteSetting.default_theme_id])
+      end
+
+      it "displays a checkbox for activating/deactivating the dark palette" do
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(true)
+
+        user_preferences_interface_page.dark_mode_checkbox.click
+        user_preferences_interface_page.save_changes
+
+        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
+
+        page.refresh
+
+        expect(user_preferences_interface_page.dark_mode_checkbox.checked?).to eq(false)
+      end
+    end
+  end
 end

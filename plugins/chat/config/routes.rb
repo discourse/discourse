@@ -27,6 +27,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
+    delete "/channels/:channel_id/memberships/:user_id" => "channels_memberships#destroy"
     delete "/channels/:channel_id/memberships/me/follows" =>
              "channels_current_user_membership_follows#destroy"
     put "/channels/:channel_id/memberships/me" => "channels_current_user_membership#update"
@@ -68,10 +69,22 @@ Chat::Engine.routes.draw do
   get "/direct_messages" => "direct_messages#index"
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key" => "incoming_webhooks#create_message"
+  post "/hooks/:key" => "incoming_webhooks#create_message",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible"
+  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # chat_controller routes
   get "/" => "chat#respond"
