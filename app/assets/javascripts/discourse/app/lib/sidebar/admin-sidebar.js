@@ -269,7 +269,9 @@ function pluginAdminRouteLinks(router) {
 
       let pluginNavLinks = [];
       if (pluginConfigNav) {
-        pluginNavLinks = [...pluginConfigNav.links];
+        if (Array.isArray(pluginConfigNav.links)) {
+          pluginNavLinks = [...pluginConfigNav.links];
+        }
 
         if (pluginNavLinks.length) {
           pluginNavLinks = pluginNavLinks
