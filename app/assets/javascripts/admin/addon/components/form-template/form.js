@@ -20,30 +20,13 @@ export default class FormTemplateForm extends Component {
 
   isEditing = this.args.model?.id ? true : false;
   quickInsertFields = [
-    {
-      type: "checkbox",
-      icon: "square-check",
-    },
-    {
-      type: "input",
-      icon: "grip-lines",
-    },
-    {
-      type: "textarea",
-      icon: "align-left",
-    },
-    {
-      type: "dropdown",
-      icon: "circle-chevron-down",
-    },
-    {
-      type: "upload",
-      icon: "cloud-arrow-up",
-    },
-    {
-      type: "multiselect",
-      icon: "bullseye",
-    },
+    { type: "checkbox", icon: "square-check" },
+    { type: "input", icon: "grip-lines" },
+    { type: "textarea", icon: "align-left" },
+    { type: "dropdown", icon: "circle-chevron-down" },
+    { type: "upload", icon: "cloud-arrow-up" },
+    { type: "multiselect", icon: "bullseye" },
+    { type: "composer", icon: "align-left" },
   ];
 
   get disablePreviewButton() {
