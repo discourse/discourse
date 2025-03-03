@@ -98,6 +98,12 @@ RSpec.describe Emoji do
       expect(Emoji.exists?("blonde_woman:t0")).to be(false)
       expect(Emoji.exists?("blonde_woman:t")).to be(false)
     end
+
+    it "finds aliases" do
+      expect(Emoji.exists?(":lower_left_crayon:")).to be(true)
+      expect(Emoji.exists?(":island:")).to be(true)
+      expect(Emoji.exists?(":snow_capped_mountain:")).to be(true)
+    end
   end
 
   describe ".codes_to_img" do
