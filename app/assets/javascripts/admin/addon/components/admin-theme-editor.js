@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -24,6 +25,8 @@ const ADVANCED_FIELDS = [
 ];
 
 export default class AdminThemeEditor extends Component {
+  @service router;
+
   @tracked showAdvanced;
   @tracked onlyOverridden;
   @tracked currentTargetName;
@@ -134,5 +137,21 @@ export default class AdminThemeEditor extends Component {
   @action
   setWarning(message) {
     this.set("warning", message);
+  }
+
+  @action
+  toggleShowAdvanced() {
+    this.showAdvanced = !this.showAdvanced;
+    if (
+      !this.visibleTargets.some((t) => t.name === this.currentTargetName) ||
+      !this.visibleFields.some((f) => f.name === this.fieldName)
+    ) {
+      this.router.replaceWith(
+        this.editRouteName,
+        this.theme.id,
+        this.visibleTargets[0].name,
+        this.visibleFields[0].name
+      );
+    }
   }
 }
