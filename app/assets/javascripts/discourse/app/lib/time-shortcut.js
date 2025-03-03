@@ -87,7 +87,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.ONE_HOUR,
         icon: "angle-right",
         label: "time_shortcut.in_one_hour",
-        time: oneHour(timezone),
+        timeFn: () => oneHour(timezone),
         timeFormatKey: "dates.time",
       };
     },
@@ -96,7 +96,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.TWO_HOURS,
         icon: "angle-right",
         label: "time_shortcut.in_two_hours",
-        time: twoHours(timezone),
+        timeFn: () => twoHours(timezone),
         timeFormatKey: "dates.time",
       };
     },
@@ -105,7 +105,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.LATER_TODAY,
         icon: "angle-right",
         label: "time_shortcut.later_today",
-        time: laterToday(timezone),
+        timeFn: () => laterToday(timezone),
         timeFormatKey: "dates.time",
       };
     },
@@ -114,7 +114,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.TOMORROW,
         icon: "far-sun",
         label: "time_shortcut.tomorrow",
-        time: tomorrow(timezone),
+        timeFn: () => tomorrow(timezone),
         timeFormatKey: "dates.time_short_day",
       };
     },
@@ -123,7 +123,7 @@ export function timeShortcuts(timezone) {
         id: "two_days",
         icon: "angle-right",
         label: "time_shortcut.two_days",
-        time: twoDays(timezone),
+        timeFn: () => twoDays(timezone),
         timeFormatKey: "dates.time_short_day",
       };
     },
@@ -132,7 +132,7 @@ export function timeShortcuts(timezone) {
         id: "three_days",
         icon: "angle-right",
         label: "time_shortcut.three_days",
-        time: inNDays(timezone, 3),
+        timeFn: () => inNDays(timezone, 3),
         timeFormatKey: "dates.time_short_day",
       };
     },
@@ -141,7 +141,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
         icon: "angles-right",
         label: "time_shortcut.later_this_week",
-        time: laterThisWeek(timezone),
+        timeFn: () => laterThisWeek(timezone),
         timeFormatKey: "dates.time_short_day",
       };
     },
@@ -150,7 +150,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.THIS_WEEKEND,
         icon: "bed",
         label: "time_shortcut.this_weekend",
-        time: thisWeekend(timezone),
+        timeFn: () => thisWeekend(timezone),
         timeFormatKey: "dates.time_short_day",
       };
     },
@@ -163,7 +163,7 @@ export function timeShortcuts(timezone) {
           now(timezone).day() === MOMENT_SUNDAY
             ? "time_shortcut.start_of_next_business_week_alt"
             : "time_shortcut.start_of_next_business_week",
-        time: nextBusinessWeekStart(timezone),
+        timeFn: () => nextBusinessWeekStart(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -172,7 +172,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.NEXT_MONTH,
         icon: "far-calendar-plus",
         label: "time_shortcut.next_month",
-        time: nextMonth(timezone),
+        timeFn: () => nextMonth(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -181,7 +181,7 @@ export function timeShortcuts(timezone) {
         id: "two_weeks",
         icon: "far-clock",
         label: "time_shortcut.two_weeks",
-        time: twoWeeks(timezone),
+        timeFn: () => twoWeeks(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -190,7 +190,7 @@ export function timeShortcuts(timezone) {
         id: "two_months",
         icon: "far-calendar-plus",
         label: "time_shortcut.two_months",
-        time: twoMonths(timezone),
+        timeFn: () => twoMonths(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -199,7 +199,7 @@ export function timeShortcuts(timezone) {
         icon: "far-calendar-plus",
         id: "three_months",
         label: "time_shortcut.three_months",
-        time: threeMonths(timezone),
+        timeFn: () => threeMonths(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -208,7 +208,7 @@ export function timeShortcuts(timezone) {
         id: "four_months",
         icon: "far-calendar-plus",
         label: "time_shortcut.four_months",
-        time: fourMonths(timezone),
+        timeFn: () => fourMonths(timezone),
         timeFormatKey: "dates.long_no_year",
       };
     },
@@ -217,7 +217,7 @@ export function timeShortcuts(timezone) {
         id: "six_months",
         icon: "far-calendar-plus",
         label: "time_shortcut.six_months",
-        time: sixMonths(timezone),
+        timeFn: () => sixMonths(timezone),
         timeFormatKey: "dates.long_with_year",
       };
     },
@@ -226,7 +226,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.ONE_YEAR,
         icon: "far-calendar-plus",
         label: "time_shortcut.one_year",
-        time: oneYear(timezone),
+        timeFn: () => oneYear(timezone),
         timeFormatKey: "dates.long_with_year",
       };
     },
@@ -235,7 +235,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.FOREVER,
         icon: "gavel",
         label: "time_shortcut.forever",
-        time: thousandYears(timezone),
+        timeFn: () => thousandYears(timezone),
         timeFormatKey: "dates.long_with_year",
       };
     },
@@ -244,7 +244,7 @@ export function timeShortcuts(timezone) {
         icon: "calendar-days",
         id: TIME_SHORTCUT_TYPES.CUSTOM,
         label: "time_shortcut.custom",
-        time: null,
+        timeFn: () => null,
         isCustomTimeShortcut: true,
       };
     },
@@ -253,7 +253,7 @@ export function timeShortcuts(timezone) {
         icon: "arrow-rotate-left",
         id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
         label: "time_shortcut.last_custom",
-        time: null,
+        timeFn: () => null,
         hidden: true,
       };
     },
@@ -262,7 +262,7 @@ export function timeShortcuts(timezone) {
         icon: "ban",
         id: TIME_SHORTCUT_TYPES.NONE,
         label: "time_shortcut.none",
-        time: null,
+        timeFn: () => null,
       };
     },
     now() {
@@ -270,7 +270,7 @@ export function timeShortcuts(timezone) {
         id: TIME_SHORTCUT_TYPES.NOW,
         icon: "wand-magic",
         label: "time_shortcut.now",
-        time: now(timezone),
+        timeFn: () => now(timezone),
       };
     },
   };
@@ -303,10 +303,10 @@ export function hideDynamicTimeShortcuts(
   return shortcuts.filter((s) => !shortcutsToHide.has(s.id));
 }
 
-export function formatTime(shortcut) {
-  if (!shortcut.time || !shortcut.timeFormatKey) {
+export function formatTime({ timeFn, timeFormatKey }) {
+  if (!timeFn?.() || !timeFormatKey) {
     return null;
   }
 
-  return shortcut.time.format(i18n(shortcut.timeFormatKey));
+  return timeFn().format(i18n(timeFormatKey));
 }
