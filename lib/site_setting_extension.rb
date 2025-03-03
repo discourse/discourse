@@ -596,6 +596,29 @@ module SiteSettingExtension
       value
     end
 
+    # Any group_list setting, e.g. personal_message_enabled_groups, will have
+    # a getter defined with _map on the end, e.g. personal_message_enabled_groups_map,
+    # to avoid having to manually split and convert to integer for these settings.
+    if type_supervisor.get_type(name) == :group_list
+      split_value = value.to_s.split("|").map(&:to_i)
+      define_singleton_method("#{clean_name}_map") do
+        split_value
+      end
+    end
+
+    # Same logic as above for other list type settings, with the caveat that normal
+    # list settings are not necessarily integers, so we just want to handle the splitting.
+    if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
+      list_type = type_supervisor.get_list_type(name)
+
+      if %w[simple compact].include?(list_type) || list_type.nil?
+        split_value = value.to_s.split("|")
+        define_singleton_method("#{clean_name}_map") do
+          split_value
+        end
+      end
+    end
+
     define_singleton_method "#{clean_name}=" do |val|
       if value != val
         Rails.logger.warn(
