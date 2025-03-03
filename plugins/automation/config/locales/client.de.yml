@@ -391,6 +391,7 @@ de:
               label: PN
             sender:
               label: PN-Absender
+              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PNs an den Empfänger zu senden."
         close_topic:
           fields:
             topic:

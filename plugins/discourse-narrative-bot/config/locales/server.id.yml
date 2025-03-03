@@ -168,22 +168,8 @@ id:
 
           - Kami percaya pada [perilaku komunitas yang beradab](%{base_uri}/guidelines) setiap saat.
       onebox:
-        instructions: |-
-          Selanjutnya, dapatkah Anda membagikan salah satu tautan ini kepada saya? Balas dengan **tautan pada satu baris saja**, dan itu akan secara otomatis diperluas untuk menyertakan ringkasan yang bagus.
-
-          Untuk menyalin tautan apa pun, ketuk dan tahan di ponsel, atau klik kanan perangkat penunjuk Anda:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Keren! Ini akan bekerja untuk sebagian besar tautan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> . Ingat, tautan harus berada pada satu baris _sendirian_, tanpa ada yang lain di depan atau di belakangnya.
-        not_found: |-
-          Maaf, saya tidak dapat menemukan tautan dalam balasan Anda! :cry:
-
-          Bisakah Anda mencoba menambahkan tautan berikut, di barisnya sendiri, di balasan Anda berikutnya?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Ini gambar unicorn:

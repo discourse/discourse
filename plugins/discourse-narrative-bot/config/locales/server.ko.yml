@@ -166,16 +166,8 @@ ko:
 
           - 항상 [올바른 커뮤니티 활동](%{base_uri}/지침) 을 해 줄것을 당부 드립니다.
       onebox:
-        instructions: |-
-          다음으로이 링크 중 하나를 나와 공유 할 수 있습니까? ** 한 줄에 링크 **로 답장하면 자동으로 확장되어 멋진 요약을 포함합니다. 링크를 복사하려면 모바일을 길게 누르거나 포인팅 장치를 마우스 오른쪽 버튼으로 클릭하십시오. <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
-        not_found: |-
-          미안. 답글에서 링크를 찾지 못했어! :cry:
-
-          아래 링크 한 줄을 복사해서 다음 답글에 넣어볼래?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           유니콘 사진이야.

@@ -4225,6 +4225,9 @@ ro:
             description: "Culoarea butonului de apreciere."
           selected:
             name: "selectat"
+          editor:
+            light: "Luminos"
+            dark: "Întunecat"
         email_style:
           heading: "Personalizează stilul de email"
           html: "HTML"

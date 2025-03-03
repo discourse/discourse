@@ -4189,6 +4189,9 @@ zh_TW:
             description: "按讚按鈕的顏色"
           selected:
             name: "已選取"
+          editor:
+            light: "輕亮"
+            dark: "黑暗"
         email_style:
           html: "HTML"
           css: "CSS"

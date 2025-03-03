@@ -90,9 +90,13 @@ module Onebox
             html_entities = HTMLEntities.new
             d = { link: link }.merge(raw)
 
-            if d[:title].present?
-              d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
-            end
+            d[:title] = (
+              if d[:title].present?
+                html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
+              else
+                nil
+              end
+            )
 
             d[:description] ||= d[:summary]
             if d[:description].present?
@@ -156,7 +160,7 @@ module Onebox
               )
             end
 
-            skip_missing_tags = [:video]
+            skip_missing_tags = %i[video description]
             d.each do |k, v|
               next if skip_missing_tags.include?(k)
               if v == nil || v == ""
@@ -199,7 +203,7 @@ module Onebox
       end
 
       def has_text?
-        has_title? && data[:description].present?
+        has_title?
       end
 
       def has_title?
@@ -219,7 +223,8 @@ module Onebox
       end
 
       def is_video?
-        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && data[:video].present? # Many sites include 'videos' with text/html types (i.e. iframes)
+        # Many sites include 'videos' with text/html types (i.e. iframes)
+        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && data[:video].present?
       end
 
       def is_embedded?

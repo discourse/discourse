@@ -2237,6 +2237,8 @@ en:
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         required: "Required"
+        date_before_or_equal: "Must be before or equal to %{date}"
+        date_after_or_equal: "Must be after or equal to %{date}"
         invalid_url: "Must be a valid URL"
         not_an_integer: "Must be a whole number"
         not_accepted: "Must be accepted"
@@ -3015,6 +3017,10 @@ en:
       browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
+
+      experience:
+        search_field: "Search field in site header"
+        search_icon: "Search icon near profile avatar"
 
       type:
         default: "Topics/posts"
@@ -3847,11 +3853,11 @@ en:
         other: "you and %{count} other people liked this post"
 
       sr_post_like_count_button:
-        one: "%{count} person liked this post. Click to view"
-        other: "%{count} people liked this post. Click to view"
+        one: "%{count} person liked this post."
+        other: "%{count} people liked this post."
       sr_post_read_count_button:
-        one: "%{count} person read this post. Click to view"
-        other: "%{count} people read this post. Click to view"
+        one: "%{count} person read this post."
+        other: "%{count} people read this post."
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3978,8 +3984,6 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
-          sr_post_likers_list_description: "users who liked this post"
-          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"

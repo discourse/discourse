@@ -126,22 +126,8 @@ hy:
       hello:
         title: "Ողջույն!"
       onebox:
-        instructions: |-
-          Հաջորդը, կարո՞ղ եք կիսվել այս հղումներից մեկով ինձ հետ: Պատասխանեք **տողի վրա միակ հղումով**, և այն ավտոմատ կերպով կընդլայնվի՝ ներառելով հրաշալի ամփոփում:
-
-          Ցանկացած հղում կրկնօրինակելու համար սեղմեք և պահեք հեռախոսով, կամ սեղմեք Ձեր մկնիկի աջ կոճակը:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Ընտիր է! Սա կաշխատի <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> հղումների մեծամասնության համար: Հիշեք, այն պետք է լինի _all by itself_ տողում, ոչինչ չունենալոց առջևում կամ ետևում:
-        not_found: |-
-          Ներողություն, ես չկարողացա գտնել հղումը Ձեր պատասխանում! :cry:
-
-          Կարո՞ղ եք փորձել Ձեր հաջորդ պատասխանում ավելացնել հետևյալ հղումը իր տողում:
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Ահա միաեղջյուրի նկար.

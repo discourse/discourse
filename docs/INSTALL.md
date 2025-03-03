@@ -1,7 +1,6 @@
-> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
-> 
-> 👉 [Learn more about Discourse hosting](https://discourse.org/pricing)
+To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
 
+👉 [Learn more about Discourse hosting](https://discourse.org/pricing)
 
 # How Do I Install Discourse?
 

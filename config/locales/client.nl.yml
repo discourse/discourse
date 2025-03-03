@@ -5981,6 +5981,9 @@ nl:
           hover:
             name: "zweven"
             description: "De achtergrondkleur van elementen zoals lijstitems als de muisaanwijzer erop wordt geplaatst of als ze de toetsenbordfocus hebben."
+          editor:
+            light: "Licht"
+            dark: "Donker"
         robots:
           title: "Bestand robots.txt van je website negeren:"
           warning: "Gerelateerde website-instellingen worden hierdoor blijvend genegeerd."

@@ -69,10 +69,22 @@ Chat::Engine.routes.draw do
   get "/direct_messages" => "direct_messages#index"
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key" => "incoming_webhooks#create_message"
+  post "/hooks/:key" => "incoming_webhooks#create_message",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible"
+  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # chat_controller routes
   get "/" => "chat#respond"

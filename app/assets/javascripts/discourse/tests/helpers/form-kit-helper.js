@@ -91,6 +91,24 @@ class Field {
     );
   }
 
+  async setDay(day) {
+    if (this.controlType !== "calendar") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+
+    await click(
+      this.element.querySelector(`.pika-day[data-pika-day="${day}"]`)
+    );
+  }
+
+  async setTime(time) {
+    if (this.controlType !== "calendar") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+
+    await fillIn(this.element.querySelector("input[type='time']"), time);
+  }
+
   async select(value) {
     switch (this.element.dataset.controlType) {
       case "icon":
