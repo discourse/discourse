@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "Default Headers", type: :system do
+RSpec.describe Middleware::DefaultHeaders do
   context "when a public exception(like RoutingError) is raised" do
     context "when requesting an HTML page" do
       let(:html_path) { "/nonexistent" }
