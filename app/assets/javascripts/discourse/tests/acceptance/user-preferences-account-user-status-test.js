@@ -29,7 +29,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
   needs.user({ username, status });
 
   needs.pretender((server, helper) => {
-    server.get("/emojis/search-aliases", () => {
+    server.get("/emojis/search-aliases.json", () => {
       return helper.response([]);
     });
   });

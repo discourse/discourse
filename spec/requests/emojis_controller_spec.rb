@@ -37,4 +37,15 @@ RSpec.describe EmojisController do
       )
     end
   end
+
+  describe "#search_aliases" do
+    it "returns the search aliases list" do
+      get "/emojis/search-aliases.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["grinning_face"]).to eq(
+        %w[cheerful cheery face grin grinning happy laugh nice smile smiling teeth],
+      )
+    end
+  end
 end
