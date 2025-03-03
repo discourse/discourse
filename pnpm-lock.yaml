@@ -4336,10 +4336,6 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  ember-compatibility-helpers@1.2.6:
-    resolution: {integrity: sha512-2UBUa5SAuPg8/kRVaiOfTwlXdeVweal1zdNPibwItrhR0IvPrXpaqwJDlEZnWKEoB+h33V0JIfiWleSG6hGkkA==}
-    engines: {node: 10.* || >= 12.*}
-
   ember-compatibility-helpers@1.2.7:
     resolution: {integrity: sha512-BtkjulweiXo9c3yVWrtexw2dTmBrvavD/xixNC6TKOBdrixUwU+6nuOO9dufDWsMxoid7MvtmDpzc9+mE8PdaA==}
     engines: {node: 10.* || >= 12.*}
@@ -9999,7 +9995,7 @@ snapshots:
       ember-cli-string-utils: 1.1.0
       ember-cli-typescript: 3.0.0(@babel/core@7.26.9)
       ember-cli-version-checker: 3.1.3
-      ember-compatibility-helpers: 1.2.6(@babel/core@7.26.9)
+      ember-compatibility-helpers: 1.2.7(@babel/core@7.26.9)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -12523,7 +12519,7 @@ snapshots:
   ember-buffered-proxy@2.1.1(@babel/core@7.26.9):
     dependencies:
       ember-cli-babel: 7.26.11
-      ember-compatibility-helpers: 1.2.6(@babel/core@7.26.9)
+      ember-compatibility-helpers: 1.2.7(@babel/core@7.26.9)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -12532,7 +12528,7 @@ snapshots:
     dependencies:
       ember-cli-babel: 7.26.11
       ember-cli-version-checker: 5.1.2
-      ember-compatibility-helpers: 1.2.6(@babel/core@7.26.9)
+      ember-compatibility-helpers: 1.2.7(@babel/core@7.26.9)
       silent-error: 1.1.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -12937,17 +12933,6 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
-
-  ember-compatibility-helpers@1.2.6(@babel/core@7.26.9):
-    dependencies:
-      babel-plugin-debug-macros: 0.2.0(@babel/core@7.26.9)
-      ember-cli-version-checker: 5.1.2
-      find-up: 5.0.0
-      fs-extra: 9.1.0
-      semver: 5.7.2
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
 
   ember-compatibility-helpers@1.2.7(@babel/core@7.26.9):
     dependencies:
