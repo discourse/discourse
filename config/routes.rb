@@ -1725,6 +1725,7 @@ Discourse::Application.routes.draw do
     get "/form-templates" => "form_templates#index"
 
     get "/emojis" => "emojis#index"
+    get "/emojis/search-aliases" => "emojis#search_aliases"
 
     if Rails.env.test?
       # Routes that are only used for testing

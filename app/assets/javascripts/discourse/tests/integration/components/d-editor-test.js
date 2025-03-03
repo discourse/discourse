@@ -14,6 +14,7 @@ import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import { paste, queryAll } from "discourse/tests/helpers/qunit-helpers";
@@ -25,6 +26,12 @@ import { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/emojis/search-aliases", () => {
+      return response([]);
+    });
+  });
 
   test("preview updates with markdown", async function (assert) {
     await render(hbs`<DEditor @value={{this.value}} />`);
@@ -729,11 +736,11 @@ third line`
     jumpEnd("textarea.d-editor-input");
     await triggerKeyEvent(".d-editor-input", "keyup", "Backspace"); //simplest way to trigger more menu here
     await click(".ac-emoji li:last-child a");
-    await picker.select("womans_clothes");
+    await picker.select("woman_genie");
 
     assert.strictEqual(
       this.value,
-      "starting to type an emoji like :womans_clothes:",
+      "starting to type an emoji like :woman_genie:",
       "it works when there is a partial emoji"
     );
   });
