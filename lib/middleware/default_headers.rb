@@ -10,7 +10,9 @@ module Middleware
       status, headers, body = @app.call(env)
       headers[
         "Cross-Origin-Opener-Policy"
-      ] = SiteSetting.cross_origin_opener_policy_header if html_response?(headers)
+      ] = SiteSetting.cross_origin_opener_policy_header if html_response?(headers) &&
+        headers["Cross-Origin-Opener-Policy"].nil?
+
       [status, headers, body]
     end
 
