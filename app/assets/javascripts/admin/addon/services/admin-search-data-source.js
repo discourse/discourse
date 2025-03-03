@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { ajax } from "discourse/lib/ajax";
+import { ADMIN_SEARCH_RESULT_TYPES } from "discourse/lib/constants";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
@@ -9,8 +10,6 @@ import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import I18n, { i18n } from "discourse-i18n";
 
-// TODO (martin) Move this to javascript.rake constants, use on server too
-export const RESULT_TYPES = ["page", "setting", "theme", "component", "report"];
 const SEPARATOR = ">";
 const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
@@ -71,6 +70,7 @@ export default class AdminSearchDataSource extends Service {
     // into a service.
     const reportItems = await ajax("/admin/reports.json");
     this.#processReports(reportItems.reports);
+    await Promise.resolve();
 
     this._mapCached = true;
   }
@@ -80,7 +80,7 @@ export default class AdminSearchDataSource extends Service {
       return [];
     }
 
-    opts.types = opts.types || RESULT_TYPES;
+    opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
 
     const filteredResults = [];
     const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
