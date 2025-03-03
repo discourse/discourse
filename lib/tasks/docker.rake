@@ -300,10 +300,7 @@ task "docker:test" do
 
       unless ENV["RUBY_ONLY"]
         unless ENV["SKIP_CORE"]
-          @good &&=
-            run_or_fail(
-              "cd app/assets/javascripts/discourse && CI=1 pnpm ember exam --load-balance --parallel=#{qunit_concurrency} --random",
-            )
+          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/rake qunit:test")
         end
 
         unless ENV["SKIP_PLUGINS"]

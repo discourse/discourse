@@ -414,7 +414,6 @@ ja:
       dropdown:
         title: "最新の下書きメニューを開く"
         untitled: "無題の下書き"
-        view_all: "すべて表示"
         other_drafts:
           other: "他 %{count} 件の下書き"
     topic_count_all:
@@ -4419,6 +4418,10 @@ ja:
       no_results:
         title: "結果がありません"
         description: '‘%{filter}’ に一致するものは見つかりませんでした。<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">サイト設定</a>または<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理者ユーザーリストを検索</a>しますか？'
+      footer:
+        interface_color_selector:
+          light: "ライト"
+          dark: "ダーク"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
@@ -4533,15 +4536,38 @@ ja:
         meta_doc: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
         sidebar_title: "レポート"
         back: "すべてのレポートに戻る"
-        sidebar_link:
-          all: "すべてのレポート"
+      config_sections:
+        account:
+          title: "アカウント"
+        reports:
+          title: "レポート"
+        community:
+          title: "コミュニティー"
+        appearance:
+          title: "外観"
+        email:
+          title: "メール"
+        security:
+          title: "セキュリティ"
+        plugins:
+          title: "プラグイン"
+        advanced:
+          title: "高度"
       config:
+        about:
+          title: "サイトについて"
+          header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
           header_description: "レート制限、乗数と計算、セーフモード、およびその他の高度な機能を制御するための開発者設定"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
+        emojis:
+          title: "絵文字"
+        flags:
+          title: "モデレーション"
+          header_description: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
         font_style:
           title: "フォントスタイル"
           header_description: "テーマで使用するフォントスタイルをカスタマイズする"
@@ -4590,6 +4616,101 @@ ja:
         group_permissions:
           title: "グループ権限"
           header_description: "グループで使用するアプリの権限はすべてここで管理されます。Discourse 内の様々な機能へのアクセスを制御できます。"
+        dashboard:
+          title: "ダッシュボード"
+        users:
+          title: "ユーザー"
+        groups:
+          title: "グループ"
+        site_settings:
+          title: "すべてのサイト設定"
+        whats_new:
+          title: "新機能"
+          keywords: "変更ログ|機能|リリース"
+        backups:
+          title: "バックアップ"
+          header_description: "Discourse のバックアップには、トピック、投稿、ユーザー、グループ、設定、テーマなど、サイトのすべてを含むサイトの完全なデータベースが含まれます。バックアップファイルの作成方法に応じて、アップロードが含まれる場合や含まれない場合があります。"
+          sub_pages:
+            logs:
+              title: "ログ"
+        reports:
+          title: "レポート"
+          header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
+        badges:
+          title: "バッジ"
+        permalinks:
+          title: "パーマリンク"
+        user_fields:
+          title: "ユーザーフィールド"
+          header_description: "カスタムユーザーフィールドを作成すると、コミュニティーメンバーに関する追加の詳細情報を収集できます。登録時に必要な情報、プロファイルに表示される内容、ユーザーが更新できる情報を選択できます。"
+        watched_words:
+          title: "ウォッチ中の語"
+          header_description: "ウォッチ中の語は、特定の語を含む投稿のブロック、検閲、リンク、通報など、複数の様々な操作を実行できるモデレーションツールです。"
+        color_palettes:
+          title: "色パレット"
+        emoji:
+          title: "絵文字"
+          header_description: "誰でも使用できる新しい絵文字を作成します。複数のファイルを選択すると、そのファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。"
+        themes:
+          title: "テーマ"
+        components:
+          title: "コンポーネント"
+        site_texts:
+          title: "サイトのテキスト"
+        email:
+          title: "サーバーのセットアップとログ"
+          keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
+          sub_pages:
+            preview_summary:
+              title: "要約をプレビュー"
+            advanced_test:
+              title: "高度なテスト"
+            templates:
+              title: "テンプレート"
+            sent:
+              title: "送信"
+            skipped:
+              title: "スキップ"
+            bounced:
+              title: "バウンス"
+            received:
+              title: "受け取った"
+            rejected:
+              title: "拒否"
+        email_appearance:
+          title: "外観"
+        staff_action_logs:
+          title: "ログとスクリーニング"
+          keywords: "エラーログ|スタッフの操作|スクリーン対象メール|スクリーン対象 IP|スクリーン対象 URL|検索ログ"
+          sub_pages:
+            screened_emails:
+              title: "スクリーン対象メール"
+            screened_ips:
+              title: "スクリーン対象 IP"
+            screened_urls:
+              title: "スクリーン対象 URL"
+            search_logs:
+              title: "検索ログ"
+        plugins:
+          title: "インストール済みのプラグイン"
+        api_keys:
+          title: "API キー"
+          header_description: "API キー機能を使用すると、Discourse を外部のシステムと安全に統合し、操作を自動化できます。管理者はリソースと機密データへのアクセスを制御するために、特定の範囲でキーを作成できます。機能は範囲によって制限されるため、セキュリティが強化されます。"
+        webhooks:
+          title: "Webhook"
+        embedding:
+          title: "埋め込み"
+          header_description: "Discourse には、IFRAME を作成する JavaScript API を使用して、リモートサイトのトピックのコメントを埋め込む機能があります。"
+      search:
+        result_types:
+          report:
+            other: "レポート"
+          setting:
+            other: "設定"
+          theme:
+            other: "テーマ"
+          component:
+            other: "コンポーネント"
       new_features:
         title: "新機能"
         check_for_updates: "アップデートを確認"
@@ -5052,72 +5173,8 @@ ja:
             failed: "失敗しました"
       home:
         title: "ホーム"
-      account:
-        title: "アカウント"
-        sidebar_link:
-          backups: "バックアップ"
-          whats_new:
-            title: "新着情報"
-            keywords: "変更ログ|機能|リリース"
-      community:
-        title: "コミュニティー"
-        sidebar_link:
-          about_your_site: "サイトについて"
-          badges: "バッジ"
-          login_and_authentication: "ログインと認証"
-          notifications: "通知"
-          permalinks: "パーマリンク"
-          trust_levels: "信頼レベル"
-          group_permissions: "グループ権限"
-          users: "ユーザー"
-          groups: "グループ"
-          user_fields: "ユーザーフィールド"
-          watched_words: "ウォッチ中の語"
-          legal: "法関連"
-          moderation_flags:
-            title: "モデレーション"
-            keywords: "通報|レビュー"
-      appearance:
-        title: "外観"
-        sidebar_link:
-          font_style: "フォントスタイル"
-          site_logo: "サイトのロゴ"
-          color_schemes: "色パレット"
-          emoji: "絵文字"
-          navigation: "ナビゲーション"
-          themes: "テーマ"
-          components:
-            title: "コンポーネント"
-            keywords: "テーマ|拡張機能"
-          site_texts: "サイトのテキスト"
-      email_settings:
-        title: "メールの設定"
-        sidebar_link:
-          appearance: "外観"
-          server_setup:
-            title: "サーバーのセットアップとログ"
-            keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
-      security:
-        title: "セキュリティ"
-        sidebar_link:
-          security: "セキュリティの設定"
-          spam: "迷惑行為の設定"
-          staff_action_logs:
-            title: "ログとスクリーニング"
-            keywords: "エラーログ|スタッフの操作|スクリーン対象メール|スクリーン対象 IP|スクリーン対象 URL|検索ログ"
-      section_landing_pages:
-        account:
-          title: "アカウント"
-          backups:
-            title: "バックアップ"
-            description: "サイトのデータのバックアップを作成します"
-          whats_new:
-            title: "新着情報"
-            description: "Discourse の新しいリリースと改善点をご覧ください"
       config_areas:
         about:
-          header: "サイトについて"
-          description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
           general_settings: "一般設定"
           community_name: "コミュニティー名"
           community_name_placeholder: "サンプルコミュニティー"
@@ -5126,8 +5183,6 @@ ja:
           community_title: "コミュニティーのタイトル"
           community_title_help: "ブラウザのタブに表示される、カテゴリやトピックリストなどの主要ページの短い説明です。"
           banner_image: "バナー画像"
-          banner_image_help: |
-            これは情報ページで使用されます。推奨サイズ: 1100x300px。許容される形式: 10MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
@@ -5169,9 +5224,7 @@ ja:
             your_organization_saved: "組織が保存されました"
           saved: "保存しました！"
         flags:
-          header: "モデレーション"
           edit_header: "通報を編集"
-          subheader: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
           description: "説明"
           enabled: "有効化？"
           add: "通報を追加"
@@ -5214,8 +5267,6 @@ ja:
           more_options:
             title: "その他のオプション"
         look_and_feel:
-          title: "外観と使い心地"
-          description: "Discourse サイトをカスタマイズしてブランド化することで、個性的なスタイルを持たせます。"
           themes:
             title: "テーマ"
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
@@ -5237,8 +5288,6 @@ ja:
           save_successful: "ユーザーフィールドは保存されました。"
       plugins:
         title: "プラグイン"
-        installed: "インストール済みのプラグイン"
-        description: "このリストには、インストールした Discourse プラグイン、または Discourse ホスティングにあらかじめインストールされているプラグインが表示されます。"
         name: "名前"
         none_installed: "インストール済みのプラグインはありません。"
         version: "バージョン"
@@ -5253,25 +5302,6 @@ ja:
         author: "作成者: %{author}"
         experimental_badge: "実験的"
         learn_more: "もっと詳しく"
-        sidebar_link:
-          installed: "インストール済み"
-      advanced:
-        title: "高度"
-        sidebar_link:
-          api_keys:
-            title: "API キー"
-            keywords: "トークン"
-          webhooks: "Webhook"
-          developer: "開発者"
-          embedding: "埋め込み"
-          rate_limits: "レート制限"
-          user_api: "ユーザー API"
-          onebox: "ワンボックス"
-          files: "ファイル"
-          other_options: "その他"
-          search: "検索"
-          experimental: "実験的"
-          all_site_settings: "すべてのサイト設定"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -5279,7 +5309,6 @@ ja:
       backups:
         title: "バックアップ"
         files_title: "バックアップファイル"
-        description: "Discourse のバックアップには、トピック、投稿、ユーザー、グループ、設定、テーマなど、サイトのすべてを含むサイトの完全なデータベースが含まれます。バックアップファイルの作成方法に応じて、アップロードが含まれる場合や含まれない場合があります。"
         menu:
           backups: "バックアップ"
           backup_files: "バックアップファイル"
@@ -5423,16 +5452,11 @@ ja:
           common: "共通"
           desktop: "デスクトップ"
           mobile: "モバイル"
-          settings: "設定"
-          translations: "翻訳"
-          extra_scss: "追加 SCSS"
           extra_files: "追加ファイル"
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
           settings_editor: "設定エディター"
-          show_advanced: "高度なフィールドを表示"
-          hide_advanced: "高度なフィールドを非表示"
           hide_unused_fields: "未使用のフィールドを非表示"
           is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
@@ -5672,6 +5696,9 @@ ja:
           hover:
             name: "ホバー"
             description: "リスト項目などの要素がホバーされているかキーボードフォーカスにある場合の背景色。"
+          editor:
+            light: "ライト"
+            dark: "ダーク"
         robots:
           title: "サイトの robots.txt ファイルをオーバーライド:"
           warning: "これにより、関連するすべてのサイト設定が永久にオーバーライドされます。"
@@ -5730,7 +5757,7 @@ ja:
         no_result: "要約の結果は見つかりませんでした。"
         reply_key: "返信キー"
         post_link_with_smtp: "投稿と SMTP の詳細"
-        skipped_reason: "スキップの理由"
+        skipped_reason: "理由をスキップ"
         incoming_emails:
           from_address: "送信者"
           to_addresses: "宛先"
@@ -6341,8 +6368,6 @@ ja:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
         delete_confirm_title: "このユーザーを削除してもよろしいですか？永久に削除されます！"
         delete_confirm: "一般に、ユーザーを削除するのではなく、匿名化して既存のディスカッションからコンテンツを削除しないようにするのが推奨されます。"
-        delete_and_block: "このメールと IP アドレスを削除して<b>ブロック</b>する"
-        delete_dont_block: "削除のみ"
         deleting_user: "ユーザーを削除中…"
         deleted: "ユーザーが削除されました。"
         delete_failed: "ユーザーを削除中にエラーが発生しました。このユーザーのすべての投稿を削除したことを確認してから、ユーザーを削除してください。"

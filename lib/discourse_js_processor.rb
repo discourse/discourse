@@ -185,5 +185,15 @@ class DiscourseJsProcessor
     def terser(tree, opts)
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
     end
+
+    def post_css(css:, map:, source_map_file:)
+      self.class.v8_call(
+        "postCss",
+        css,
+        map,
+        source_map_file,
+        fetch_result_call: "getPostCssResult",
+      )
+    end
   end
 end

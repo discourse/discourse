@@ -1,0 +1,124 @@
+.admin-config-area-card {
+  padding: 20px 5px 20px 20px;
+  border: 1px solid var(--primary-low);
+  border-radius: 2px;
+  background-color: var(--secondary);
+  margin-bottom: 1em;
+
+  &__label-optional {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 5px;
+  }
+
+  &__additional-help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__warning-banner {
+    color: var(--primary-high);
+    background-color: var(--danger-low);
+    font-size: var(--font-down-1);
+    padding: 10px 10px;
+  }
+
+  &__control-group-horizontal {
+    display: flex;
+    margin-bottom: 18px;
+
+    label {
+      margin-right: 1em;
+    }
+  }
+
+  &__title {
+    flex: 2;
+    margin-bottom: 0;
+  }
+
+  &__header-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  &__content {
+    margin-top: 0.5rem;
+    padding-right: 15px;
+  }
+}
+
+.admin-config-page {
+  &__main-area {
+    .admin-detail {
+      padding-top: 15px;
+      border-left: 0;
+      padding-left: 0;
+      width: 100%;
+    }
+  }
+}
+
+.admin-config-area {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+  }
+
+  &__full-width {
+    flex: 1 0 100%;
+  }
+
+  &__primary-content {
+    flex: 0 1 70%;
+
+    @media (max-width: $mobile-breakpoint) {
+      flex: 0 1 auto;
+    }
+  }
+
+  &__aside {
+    /* use for help inset */
+    flex: 0 1 30%;
+    padding: var(--space-2);
+
+    @media (max-width: $mobile-breakpoint) {
+      flex: 0 1 auto;
+    }
+  }
+
+  &__settings {
+    .setting-label {
+      margin-left: 18px;
+    }
+  }
+
+  .btn-back {
+    margin-bottom: 1em;
+  }
+}
+
+.admin-site-settings-filter-controls {
+  background: var(--primary-very-low);
+  margin-bottom: 1em;
+
+  .controls,
+  .search.controls {
+    background: var(--primary-very-low);
+  }
+}
+
+.admin-config-area-empty-list {
+  padding: 1em;
+  border: 1px solid var(--primary-low);
+
+  &__cta-button {
+    display: flex;
+    margin-top: 1em;
+  }
+}

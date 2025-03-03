@@ -288,6 +288,11 @@
                 "string",
                 "null"
               ]
+            },
+            "automatic": {
+              "type": [
+                "boolean"
+              ]
             }
           },
           "required": [
@@ -295,7 +300,8 @@
             "name",
             "flair_url",
             "flair_bg_color",
-            "flair_color"
+            "flair_color",
+            "automatic"
           ]
         }
     },

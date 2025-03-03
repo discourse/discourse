@@ -4,6 +4,8 @@ class ApiKey < ActiveRecord::Base
   class KeyAccessError < StandardError
   end
 
+  attr_accessor :scope_mode
+
   has_many :api_key_scopes
   belongs_to :user
   belongs_to :created_by, class_name: "User"
@@ -18,6 +20,7 @@ class ApiKey < ActiveRecord::Base
         end
 
   validates :description, length: { maximum: 255 }
+  validate :at_least_one_granular_scope
 
   after_initialize :generate_key
 
@@ -113,6 +116,17 @@ class ApiKey < ActiveRecord::Base
 
     # using update_column to avoid the AR transaction
     update_column(:last_used_at, now)
+  end
+
+  private
+
+  def at_least_one_granular_scope
+    if scope_mode == "granular" && api_key_scopes.empty?
+      errors.add(
+        :api_key_scopes,
+        I18n.t("activerecord.errors.models.api_key.base.at_least_one_granular_scope"),
+      )
+    end
   end
 end
 

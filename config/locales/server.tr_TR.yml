@@ -314,9 +314,6 @@ tr_TR:
     site_settings:
       invalid_site_setting: "\"%{name}\" adlı bir ayar mevcut değil"
       invalid_category_id: "Mevcut olmayan bir kategori belirttiniz"
-      site_setting_is_hidden: "Gizli ayarları değiştirmenize izin verilmiyor"
-      site_setting_is_shadowed_globally: "Global olarak yapılandırıldığından bu ayarı değiştiremezsiniz"
-      site_setting_is_unconfigurable: "Yapılandırılamayan ayarları değiştirmenize izin verilmiyor"
       invalid_choice:
         one: "\"%{name}\", geçersiz bir seçim."
         other: "\"%{name}\", geçersiz bir seçim."
@@ -2120,7 +2117,6 @@ tr_TR:
     reviewable_default_visibility: "Bu önceliği karşılamadıkları sürece incelenebilir ögeleri göstermeyin"
     reviewable_low_priority_threshold: "Öncelik filtresi, \"(herhangi)\" filtresi kullanılmadığı sürece bu puanı karşılamayan incelenebilir ögeleri gizler."
     high_trust_flaggers_auto_hide_posts: "Yeni kullanıcı gönderileri, bir GS3+ kullanıcı tarafından spam olarak işaretlendikten sonra otomatik olarak gizlenir"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonim kullanıcılar, yasa dışı içeriği bildirmek için yöneticilere e-posta göndermeleri gereken bilgileri görür."
     email_address_to_report_illegal_content: "Boş bırakılırsa varsayılan site yöneticisi e-postası kullanılır."
     cooldown_hours_until_reflag: "Kullanıcıların bir gönderiye yeniden bayrak ekleyebilmeleri için ne kadar süre beklemeleri gerektiği"
     slow_mode_prevents_editing: "\"Yavaş Mod\" editing_grace_period sonrasında düzenlemeyi engeller mi?"
@@ -2329,9 +2325,7 @@ tr_TR:
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı sayısı."
     disable_watched_word_checking_in_user_fields: "kullanıcı alanlarında izlenen kelime kontrolünü devre dışı bırak"
     watched_words_regular_expressions: "Kelimeleri filtrelemek için düzenli ifadelerin kullanılmasına izin verir. Etkinleştirilirse bu özellik hassas sözcükleri büyük/küçük harf duyarlılıklarına göre gruplar. Ardından, seçilen tüm kelimeleri tek bir düzenli ifadede derler ve düzenli olarak izlenen kelimeler için kelime sınırları ekler. Sonuç olarak, bu regex tabanlı filtreleme yöntemi, daha karmaşık kelime kalıplarını destekleyerek içerik denetimi üzerinde ekstra bir kontrol katmanı ekler. Bu ayar aynı zamanda orijinal metnin yerine tercih edilen metnin kolayca yerleştirilmesine de olanak tanır."
-    enable_diffhtml_preview: "Tam yeniden oluşturma yerine ön izlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
     enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
-    enable_quote_copy: "Seçimi bir markdown alıntısı olarak panoya kopyalamak için yazı seçimi menüsüne bir düğme ekler."
     old_post_notice_days: "Bir gönderi bildiriminin kaç gün sonra eski sayılacağı. Bu, onu sitedeki daha yeni bildirimlerden görsel olarak ayırır."
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."

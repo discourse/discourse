@@ -96,6 +96,7 @@
     border-bottom: 1px solid var(--primary-low);
     padding-bottom: 0.25em;
     display: flex;
+    margin-bottom: 0.5em;
 
     .name {
       width: 8em;
@@ -109,7 +110,6 @@
       ); // subtracting width of name and margin-right
       word-wrap: break-word;
     }
-    margin-bottom: 0.5em;
   }
 }
 
@@ -121,6 +121,15 @@
   background-color: var(--primary-very-low);
   padding: 1em;
   margin-bottom: 1em;
+
+  .topic-filter .btn {
+    display: flex;
+    width: auto;
+  }
+
+  .score-filter {
+    width: 5em;
+  }
 
   .reviewable-filter {
     display: flex;
@@ -189,17 +198,6 @@
   }
 }
 
-.reviewable-filters {
-  .topic-filter .btn {
-    display: flex;
-    width: auto;
-  }
-
-  .score-filter {
-    width: 5em;
-  }
-}
-
 .user-flag-percentage {
   display: flex;
   align-items: center;
@@ -237,229 +235,8 @@
 .reviewable-item {
   background: var(--primary-very-low);
   padding: 1.5rem;
-
-  .topic-statuses {
-    font-size: var(--font-up-2);
-  }
-
-  .reviewable-meta-data {
-    color: var(--primary-med-or-secondary-med);
-    display: flex;
-    width: 100%;
-    margin-bottom: 0.5em;
-    font-size: var(--font-down-1);
-    align-items: baseline;
-
-    .reviewable-type {
-      margin-right: 0.25em;
-      padding: 0.25em 0.5em;
-      text-transform: uppercase;
-      font-size: var(--font-down-2);
-      color: var(--secondary);
-      border-radius: 8px;
-      background-color: var(--secondary-high);
-
-      &.-flagged-post,
-      &.-flagged-chat-message {
-        background-color: var(--danger);
-      }
-
-      &.-queued-post,
-      &.-queued-topic,
-      &.-user {
-        background-color: var(--tertiary);
-      }
-    }
-
-    .reply-count {
-      margin-left: 1em;
-    }
-
-    .created-at {
-      margin-left: 1em;
-      margin-right: auto;
-
-      a {
-        color: var(--primary-med-or-secondary-med);
-      }
-    }
-
-    .score {
-      font-size: var(--font-down-1);
-    }
-  }
-
-  .reviewable-contents {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1.5rem 0 1rem;
-    background: var(--secondary);
-    padding: 1rem;
-  }
-
-  .reviewable-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    width: 100%;
-
-    button {
-      white-space: nowrap;
-    }
-
-    .approve-post,
-    .approve-post > summary {
-      background-color: var(--success);
-      color: var(--secondary);
-    }
-
-    .reject-post,
-    .reject-post > summary {
-      background-color: var(--danger);
-      color: var(--secondary);
-    }
-
-    .reviewable-action,
-    .reviewable-action-dropdown {
-      margin-right: 0.5em;
-    }
-  }
-  padding-bottom: 1em;
-}
-
-.reviewable-stale {
-  opacity: 0.7;
-}
-
-.reviewable-deleted {
-  .reviewable-contents .post-contents .post-body {
-    background-color: var(--danger-low-mid);
-    padding: 0.5em;
-  }
-}
-
-.blur-images {
-  img:not(.avatar, .emoji) {
-    filter: blur(10px);
-    transition: 0.2s ease-in-out;
-
-    &:hover {
-      filter: blur(0);
-      transition: 0.2s ease-in-out;
-    }
-  }
-}
-
-.reviewable-histories {
-  margin-top: 1em;
-}
-
-.reviewable-scores {
-  margin-top: 1rem;
-  min-width: 50%;
-  color: var(--primary-high);
-
-  &__table-wrapper {
-    overflow-x: scroll;
-  }
-
-  th {
-    white-space: nowrap;
-  }
-
-  .reviewed-by {
-    .date {
-      margin-left: 0.5em;
-    }
-  }
-
-  .user,
-  .reviewed-by {
-    display: flex;
-    align-items: center;
-  }
-
-  .user-flag-percentage {
-    margin-left: 0.5em;
-  }
-
-  .d-icon {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-  }
-
-  .badge-notification {
-    line-height: var(--line-height-medium);
-    vertical-align: text-top;
-  }
-
-  .approved,
-  .approved svg {
-    color: var(--success);
-  }
-
-  .rejected,
-  .rejected svg {
-    color: var(--danger);
-  }
-
-  tbody {
-    border-width: 1px;
-
-    td {
-      white-space: nowrap;
-      vertical-align: baseline;
-
-      &.user a,
-      &.reviewed-by a {
-        max-width: 150px;
-        @include ellipsis;
-      }
-    }
-
-    > tr > th {
-      text-align: left;
-    }
-
-    > tr > th,
-    > tr > td {
-      &:not(:empty) {
-        padding: 0.5em;
-      }
-      @include breakpoint("mobile-large") {
-        @include ellipsis;
-        padding-right: 0.5em;
-      }
-    }
-  }
-}
-
-.reviewable-score-reason {
-  margin: 0.5em 0;
-  max-width: var(--topic-body-width);
-  margin-bottom: 0.5em;
-}
-
-.reviewable-conversation {
-  margin: 0.5em 0;
-
-  .reviewable-conversation-post {
-    max-width: var(--topic-body-width);
-    margin-bottom: 0.5em;
-
-    .username {
-      font-weight: bold;
-      margin-right: 0.25em;
-    }
-  }
-
-  .controls {
-    margin-top: 0.25em;
-  }
-}
-
-.reviewable-item {
   margin-block: 3rem;
+  padding-bottom: 1em;
 
   .show-raw-email {
     color: var(--primary-medium);
@@ -473,6 +250,7 @@
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
+
     @include breakpoint("mobile-large") {
       float: left;
       margin-bottom: 1em;
@@ -488,6 +266,7 @@
     margin-top: 1em;
     min-width: 275px;
     word-break: break-word;
+
     @include breakpoint("mobile-large", min-width) {
       display: flex;
     }
@@ -609,20 +388,243 @@
   &__context-question {
     margin-block: 1rem;
   }
+
+  .topic-statuses {
+    font-size: var(--font-up-2);
+  }
+
+  .reviewable-meta-data {
+    color: var(--primary-med-or-secondary-med);
+    display: flex;
+    width: 100%;
+    margin-bottom: 0.5em;
+    font-size: var(--font-down-1);
+    align-items: baseline;
+
+    .reviewable-type {
+      margin-right: 0.25em;
+      padding: 0.25em 0.5em;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      color: var(--secondary);
+      border-radius: 8px;
+      background-color: var(--secondary-high);
+
+      &.-flagged-post,
+      &.-flagged-chat-message {
+        background-color: var(--danger);
+      }
+
+      &.-queued-post,
+      &.-queued-topic,
+      &.-user {
+        background-color: var(--tertiary);
+      }
+    }
+
+    .reply-count {
+      margin-left: 1em;
+    }
+
+    .created-at {
+      margin-left: 1em;
+      margin-right: auto;
+
+      a {
+        color: var(--primary-med-or-secondary-med);
+      }
+    }
+
+    .score {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .reviewable-contents {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 1rem;
+    background: var(--secondary);
+    padding: 1rem;
+  }
+
+  .reviewable-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+
+    button {
+      white-space: nowrap;
+    }
+
+    .approve-post,
+    .approve-post > summary {
+      background-color: var(--success);
+      color: var(--secondary);
+    }
+
+    .reject-post,
+    .reject-post > summary {
+      background-color: var(--danger);
+      color: var(--secondary);
+    }
+
+    .reviewable-action,
+    .reviewable-action-dropdown {
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.reviewable-stale {
+  opacity: 0.7;
+}
+
+.reviewable-deleted {
+  .reviewable-contents .post-contents .post-body {
+    background-color: var(--danger-low-mid);
+    padding: 0.5em;
+  }
+}
+
+.blur-images {
+  img:not(.avatar, .emoji) {
+    filter: blur(10px);
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+      filter: blur(0);
+      transition: 0.2s ease-in-out;
+    }
+  }
+}
+
+.reviewable-histories {
+  margin-top: 1em;
+}
+
+.reviewable-scores {
+  margin-top: 1rem;
+  min-width: 50%;
+  color: var(--primary-high);
+
+  &__table-wrapper {
+    overflow-x: scroll;
+  }
+
+  th {
+    white-space: nowrap;
+  }
+
+  .reviewed-by {
+    .date {
+      margin-left: 0.5em;
+    }
+  }
+
+  .user,
+  .reviewed-by {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-flag-percentage {
+    margin-left: 0.5em;
+  }
+
+  .d-icon {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  .badge-notification {
+    line-height: var(--line-height-medium);
+    vertical-align: text-top;
+  }
+
+  .approved,
+  .approved svg {
+    color: var(--success);
+  }
+
+  .rejected,
+  .rejected svg {
+    color: var(--danger);
+  }
+
+  tbody {
+    border-width: 1px;
+
+    td {
+      white-space: nowrap;
+      vertical-align: baseline;
+
+      &.user a,
+      &.reviewed-by a {
+        max-width: 150px;
+
+        @include ellipsis;
+      }
+    }
+
+    > tr > th {
+      text-align: left;
+    }
+
+    > tr > th,
+    > tr > td {
+      &:not(:empty) {
+        padding: 0.5em;
+      }
+
+      @include breakpoint("mobile-large") {
+        @include ellipsis;
+        padding-right: 0.5em;
+      }
+    }
+  }
+}
+
+.reviewable-score-reason {
+  margin: 0.5em 0;
+  max-width: var(--topic-body-width);
+  margin-bottom: 0.5em;
+}
+
+.reviewable-conversation {
+  margin: 0.5em 0;
+
+  .reviewable-conversation-post {
+    max-width: var(--topic-body-width);
+    margin-bottom: 0.5em;
+
+    .username {
+      font-weight: bold;
+      margin-right: 0.25em;
+    }
+  }
+
+  .controls {
+    margin-top: 0.25em;
+  }
 }
 
 .editable-fields {
+  width: 100%;
+
   .editable-created-by {
     display: flex;
+    margin-bottom: 0.5em;
 
     .avatar {
       margin-right: 0.25em;
     }
-    margin-bottom: 0.5em;
   }
-  width: 100%;
 
   .editable-field {
+    margin-bottom: 0.5em;
+
     .mini-tag-chooser {
       margin: 0;
     }
@@ -636,6 +638,9 @@
       width: 100%;
       height: 10em;
     }
-    margin-bottom: 0.5em;
   }
+}
+
+.unknown-reviewables__options {
+  margin-top: 1em;
 }

@@ -342,6 +342,7 @@ nl:
         tabs:
           members: Leden
           settings: Instellingen
+        remove_member: "Verwijderen"
       new_message_modal:
         title: Bericht sturen
         add_user_long: <kbd>shift + klik</kbd> of <kbd>shift + enter</kbd><span>@%{username} toevoegen</span>

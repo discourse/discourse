@@ -84,9 +84,8 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     // for the plugin ID has its own nested routes defined in the plugin.
     if (this.router.currentRoute.name === "adminPlugins.show.settings") {
       if (
-        this.adminSidebarNavLink.route?.includes(
-          this.router.currentRoute.parent.params.plugin_id
-        )
+        this.adminSidebarNavLink.route?.split(".").last ===
+        this.router.currentRoute.parent.params.plugin_id
       ) {
         return this.router.currentRoute.name;
       }
@@ -184,53 +183,6 @@ function defineAdminSection(
 }
 
 export function useAdminNavConfig(navMap) {
-  const adminNavSections = [
-    {
-      text: "",
-      name: "root",
-      hideSectionHeader: true,
-      links: [
-        {
-          name: "admin_home",
-          route: "admin.dashboard.general",
-          label: "admin.dashboard.title",
-          icon: "house",
-          moderator: true,
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.community.sidebar_link.users",
-          icon: "users",
-          moderator: true,
-        },
-        {
-          name: "admin_groups",
-          route: "groups",
-          label: "admin.community.sidebar_link.groups",
-          icon: "user-group",
-          moderator: true,
-        },
-        {
-          name: "admin_all_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "gear",
-        },
-        {
-          name: "admin_whats_new",
-          route: "admin.whatsNew",
-          label: "admin.account.sidebar_link.whats_new.title",
-          icon: "gift",
-          keywords: "admin.account.sidebar_link.whats_new.keywords",
-          moderator: true,
-        },
-      ],
-    },
-  ];
-
-  navMap = adminNavSections.concat(navMap);
-
   for (const [sectionName, additionalLinks] of Object.entries(
     additionalAdminSidebarSectionLinks
   )) {
@@ -320,6 +272,7 @@ function pluginAdminRouteLinks(router) {
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
         icon: "gear",
+        description: plugin.description,
       };
     });
 }

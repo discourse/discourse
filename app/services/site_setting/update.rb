@@ -3,43 +3,49 @@
 class SiteSetting::Update
   include Service::Base
 
-  options { attribute :allow_changing_hidden, :boolean, default: false }
+  options { attribute :allow_changing_hidden, :array, default: [] }
 
   policy :current_user_is_admin
 
   params do
-    attribute :setting_name
-    attribute :new_value
+    attribute :settings
 
     before_validation do
-      self.setting_name = setting_name&.to_sym
-      self.new_value = new_value.to_s.strip
+      self.settings = self.settings.to_a.map { |key, value| [key.to_sym, value.to_s.strip] }.to_h
     end
 
-    validates :setting_name, presence: true
+    validates :settings, presence: true
 
     after_validation do
-      next if setting_name.blank?
-      self.new_value =
-        case SiteSetting.type_supervisor.get_type(setting_name)
-        when :integer
-          new_value.tr("^-0-9", "").to_i
-        when :file_size_restriction
-          new_value.tr("^0-9", "").to_i
-        when :uploaded_image_list
-          new_value.blank? ? "" : Upload.get_from_urls(new_value.split("|")).to_a
-        when :upload
-          Upload.get_from_url(new_value) || ""
-        else
-          new_value
-        end
+      self.settings =
+        self
+          .settings
+          .map do |setting_name, value|
+            value =
+              case SiteSetting.type_supervisor.get_type(setting_name)
+              when :integer
+                value.tr("^-0-9", "").to_i
+              when :file_size_restriction
+                value.tr("^0-9", "").to_i
+              when :uploaded_image_list
+                value.blank? ? "" : Upload.get_from_urls(value.split("|")).to_a
+              when :upload
+                Upload.get_from_url(value) || ""
+              else
+                value
+              end
+            [setting_name, value]
+          end
+          .to_h
     end
   end
 
-  policy :setting_is_shadowed_globally
-  policy :setting_is_visible
-  policy :setting_is_configurable
-  step :save
+  policy :settings_are_unshadowed_globally,
+         class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
+  policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
+  policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
+  policy :values_are_valid, class_name: SiteSetting::Policy::ValuesAreValid
+  transaction { step :save }
 
   private
 
@@ -47,21 +53,9 @@ class SiteSetting::Update
     guardian.is_admin?
   end
 
-  def setting_is_shadowed_globally(params:)
-    !SiteSetting.shadowed_settings.include?(params.setting_name)
-  end
-
-  def setting_is_visible(params:, options:)
-    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(params.setting_name)
-  end
-
-  def setting_is_configurable(params:)
-    return true if !SiteSetting.plugins[params.setting_name]
-
-    Discourse.plugins_by_name[SiteSetting.plugins[params.setting_name]].configurable?
-  end
-
   def save(params:, guardian:)
-    SiteSetting.set_and_log(params.setting_name, params.new_value, guardian.user)
+    params.settings.each do |setting_name, value|
+      SiteSetting.set_and_log(setting_name, value, guardian.user)
+    end
   end
 end

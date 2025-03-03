@@ -4,6 +4,7 @@ import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import {
+  EDIT_TOPIC_KEY,
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
@@ -42,6 +43,8 @@ export default class UserDraft extends RestModel {
       return i18n("drafts.new_topic");
     } else if (draftKey.startsWith(NEW_PRIVATE_MESSAGE_KEY)) {
       return i18n("drafts.new_private_message");
+    } else if (draftKey.startsWith(EDIT_TOPIC_KEY)) {
+      return i18n("drafts.edit_topic");
     }
     return false;
   }

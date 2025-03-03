@@ -93,11 +93,11 @@ export default class TextareaTextManipulation {
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
-    this.textarea?.focus();
+    this.textarea?.focus({ preventScroll: true });
   }
 
   focus() {
-    this.textarea.focus();
+    this.textarea.focus({ preventScroll: true });
   }
 
   insertBlock(text) {

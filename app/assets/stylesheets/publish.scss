@@ -43,6 +43,7 @@
       font-size: var(--font-up-5);
       margin: 0;
       line-height: var(--line-height-medium);
+
       @include breakpoint(mobile-extra-large) {
         font-size: var(--font-up-3);
       }

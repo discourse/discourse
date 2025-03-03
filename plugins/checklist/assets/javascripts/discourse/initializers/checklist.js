@@ -55,14 +55,10 @@ export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
-  if (!postDecorator) {
-    return;
-  }
+  const postWidget = postDecorator?.widget;
+  const postModel = postDecorator?.getModel();
 
-  const postWidget = postDecorator.widget;
-  const postModel = postDecorator.getModel();
-
-  if (!postModel.can_edit) {
+  if (!postModel?.can_edit) {
     return;
   }
 

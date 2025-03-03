@@ -169,22 +169,8 @@ sv:
 
           - Vi tror på ett [civiliserat beteende i forumet](%{base_uri}/guidelines) i alla hänseenden.
       onebox:
-        instructions: |-
-          Nästa uppgift, kan du dela en av dessa länkar med mig? Svara med **en enda länk på en rad**, och den kommer automatiskt att expanderas till att visa en kort summering.
-
-          För att kopiera en länk, tryck och håll på mobilen, eller högerklicka med musen:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Coolt! Detta fungerar för de flesta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-länkar. Kom ihåg att den måste vara på en egen rad, _för sig själv_, utan något annat före eller efter den.
-        not_found: |-
-          Tyvärr, Jag kunde inte hitta länken i ditt svar! :cry:
-
-          Kan du försöka lägga till följande länk, på en egen rad, i ditt nästa svar?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Här är en bild på en enhörning:

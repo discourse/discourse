@@ -169,22 +169,8 @@ hu:
 
           - Mindig hiszünk a [civilizált közösségi viselkedésben](%{base_uri}/guidelines).
       onebox:
-        instructions: |-
-          Következőként meg tudná osztani velem az egyik hivatkozást? Válaszoljon egy olyan **sorral, mely az egyik hivatkozást** tartalmazza, és az automatikusan le fog nyílni, és egy összefoglalót fog tartalmazni.
-
-          Bármelyik hivatkozás másolásához csak érintse meg és tartsa hosszan lenyomva mobilon, vagy kattintson rá a jobb egérgombbal:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Menő! Ez a legtöbb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> hivatkozás esetén működik. Ne feledje, hogy egy vonalon kell lennie _önmagában_, semmi más ne legyen előtte vagy utána.
-        not_found: |-
-          Sajnálom, de nem találtam a hivatkozást a válaszában! :cry:
-
-          Megpróbálná hozzáadni a következő hivatkozást, külön sorban, a következő válaszához?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Itt egy kép egy egyszarvúról:
@@ -286,18 +272,18 @@ hu:
           (És igen, _disco_ van a nevemben, mint a 70-es évekbeli táncőrület. Tényleg [imádom az éjszakai életet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Mi a barátságos vitákat részesítjük előnyben, és az Ön segítségére is szükségünk van, hogy a légkör civilizált maradjon(%{guidelines_url}). Ha problémát észlel, kérjük, jelezze, hogy a szerző vagy segítőkész csapatunk (%{about_url}) tudomást szerezzen róla. Sokféle okból jelezhet egy bejegyzést, kezdve egy ártalmatlan témafelosztási javaslattól egészen a közösségi irányelvek egyértelmű megsértéséig. Ha az Egyéb lehetőséget választja, személyes üzenetben indíthat megbeszélést a moderátorokkal, ahol további kérdéseket tehet fel.
+          Mi a barátságos beszélgetéseket részesítjük előnyben, és az Ön segítségére is szükségünk van, hogy [civilizált legyen a légkör](%{guidelines_url}). Ha problémát észlel, jelentse, hogy a szerző vagy a [segítőkész stábunk](%{about_url}) tudomást szerezzen róla. Sokféle okból jelenthet egy bejegyzést, kezdve egy ártalmatlan témafelosztási javaslattól egészen a közösségi irányelvek egyértelmű megsértéséig. Ha az **Egyéb** lehetőséget választja, személyes üzenetben indíthat megbeszélést a moderátorokkal, ahol további kérdéseket tehet fel.
 
           :imp: Ide valami csúnya dolgot írtam
 
-          Továbbá, nyugodtan jelölje meg ezt a bejegyzést <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">, és válassza az Ez nem megfelelő indokot!
+          Továbbá, nyugodtan jelölje meg ezt a bejegyzést <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">, és válassza az **Ez nem megfelelő** indokot!
         reply: |-
           A csapatunk (%{group_url}) privát értesítést kap az Ön jelzéséről. Ha elegendő közösségi tag jelöl meg egy bejegyzést, az óvintézkedésként automatikusan el lesz rejtve. (Mivel valójában nem írtam csúnya bejegyzést :angel:, most eltávolítottam a jelzést.)
         not_found: |-
-          Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledje, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítése a további műveleteket a bejegyzéseknél.
+          Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledje, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítse a további műveleteket a bejegyzéseknél.
       search:
         instructions: |-
-          _psszt_… Elrejtettem egy meglepetést a témában. Ha készen áll a kihívásra, akkor **válassza a keresés ikont** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> jobbra fent &#8599;, majd válassza az 'ebben a témában'  és keressen rá.
+          _psszt_… Elrejtettem egy meglepetést a témában. Ha készen áll a kihívásra, akkor **válassza a keresés ikont** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> jobbra fent &#8599;, majd válassza az „ebben a témában” lehetőséget, és keressen rá.
 
           Próbáljon a „kapi&#8203;bara" kifejezésre keresni a témában.
         hidden_message: |-
@@ -311,7 +297,7 @@ hu:
 
           - A részletesebb kereséshez ugorjon a [teljes keresés oldalra](%{search_url}).
 
-          - Hogy bárhova odaugorjon egy hosszú beszélgetésben, próbálja ki a téma idővonalvezérlőjét a jobb oldalon (vagy lent, ha telefont használ).
+          - Hogy bárhova odaugorjon egy hosszú beszélgetésben, próbálja ki a téma idővonal-vezérlőjét a jobb oldalon (vagy lent, ha telefont használ).
 
           - Ha van fizikai :keyboard:, nyomja meg a <kbd>?</kbd> gombot, hogy megtekintse a hasznos gyorsbillentyűket.
         not_found: |-
@@ -342,7 +328,7 @@ hu:
 
           Elkezdené azzal, hogy **megpróbálja szerkeszteni** a bejegyzést, amelyet épp most hoztam létre Önnek?
         not_found: |-
-          Úgy tűnik, hogy még nem szerkesztette a [bejegyzést](%{url}), amit Önnek hoztam létre. Megpróbálná újra?
+          Úgy tűnik, hogy még nem szerkesztette a [bejegyzést](%{url}), melyet Önnek hoztam létre. Megpróbálná újra?
 
           Használja a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> ikont, hogy előhozza a szerkesztőt.
         reply: |-
@@ -351,7 +337,7 @@ hu:
           Ne feledje, hogy az 5 perc elteltével végrehajtott szerkesztések nyilvános szerkesztési verzióként jelennek meg, és a jobb felső sarokban egy kis ceruza ikon jelenik meg a változatok számával.
       delete:
         instructions: |-
-          Ha vissza szeretne vonni egy bejegyzését, akkor törölheti azt.
+          Ha visszavonna egy bejegyzését, akkor törölheti azt.
 
           Menjen, és **törölje** bármelyik fenti bejegyzését a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **törlés** művelettel. De ne törölje a legelső bejegyzést!
         not_found: |-
@@ -387,11 +373,11 @@ hu:
           Kiváló! Ne feledje, hogy ez a kategóriákkal _és_ címkékkel is működik, ha a címkék engedélyezettek.
       change_topic_notification_level:
         instructions: |-
-          Minden témának van egy értesítési szintje. Ez a "normál" szinten kezdődik, ami azt jelenti, hogy általában csak akkor kap értesítést, ha valaki közvetlenül Önhöz beszél.
+          Minden témának van egy értesítési szintje. Ez a „normál” szinten kezdődik, ami azt jelenti, hogy általában csak akkor kap értesítést, ha valaki közvetlenül Önhöz beszél.
 
-          Alapértelmezés szerint a személyes üzenetek értesítési szintje a legmagasabb, "figyelés" szintre van állítva, ami azt jelenti, hogy minden új válaszról értesítést kap. De felülbírálhatja az értesítési szintet _minden_ téma esetében "figyelésre", "követésre" vagy "némításra".
+          Alapértelmezés szerint a személyes üzenetek értesítési szintje a legmagasabb, „figyelés” szintre van állítva, ami azt jelenti, hogy minden új válaszról értesítést kap. De felülbírálhatja az értesítési szintet _minden_ téma esetében „figyelésre”, „követésre” vagy „némításra”.
 
-          Próbáljuk meg megváltoztatni ennek a témának az értesítési szintjét. A téma alján találsz van egy gomb, amely azt mutatja, hogy **figyeled** ezt a témát. Meg tudodja változtatni az értesítési szintet **követésre**?
+          Próbáljuk meg megváltoztatni ennek a témának az értesítési szintjét. A téma alján talál egy gombot, amely azt mutatja, hogy **figyeli** ezt a témát. **Követésre** tudja változtatni az értesítési szintet?
         not_found: |-
           Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."

@@ -197,7 +197,8 @@ RSpec.describe "tasks/uploads" do
       UploadReference.create(target: post_1, upload: upload_1)
       UploadReference.create(target: post_1, upload: upload_2)
       UploadReference.create(target: post_2, upload: upload_3)
-      UploadReference.create(target: post_2, upload: upload4)
+      UploadReference.create(target: post_2, upload: upload_4)
+      UploadReference.create(target: draft, upload: upload_6)
     end
 
     after do
@@ -206,14 +207,16 @@ RSpec.describe "tasks/uploads" do
       end
     end
 
-    let!(:uploads) { [upload_1, upload_2, upload_3, upload4, upload5] }
+    let!(:uploads) { [upload_1, upload_2, upload_3, upload_4, upload_5] }
     let(:post_1) { Fabricate(:post) }
     let(:post_2) { Fabricate(:post) }
+    let(:draft) { Fabricate(:draft) }
     let(:upload_1) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }
     let(:upload_2) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }
     let(:upload_3) { Fabricate(:upload_s3, secure: true, access_control_post: post_2) }
-    let(:upload4) { Fabricate(:upload_s3, secure: true, access_control_post: post_2) }
-    let(:upload5) { Fabricate(:upload_s3, secure: false) }
+    let(:upload_4) { Fabricate(:upload_s3, secure: true, access_control_post: post_2) }
+    let(:upload_5) { Fabricate(:upload_s3, secure: false) }
+    let(:upload_6) { Fabricate(:upload_s3, secure: true) }
 
     it "disables the secure upload setting" do
       invoke_task
@@ -222,7 +225,9 @@ RSpec.describe "tasks/uploads" do
 
     it "updates all secure uploads to secure: false" do
       invoke_task
-      [upload_1, upload_2, upload_3, upload4].each { |upl| expect(upl.reload.secure).to eq(false) }
+      [upload_1, upload_2, upload_3, upload_4, upload_6].each do |upl|
+        expect(upl.reload.secure).to eq(false)
+      end
     end
 
     it "sets the baked_version to NULL for affected posts" do
@@ -244,7 +249,7 @@ RSpec.describe "tasks/uploads" do
     it "updates the affected ACLs via the SyncAclsForUploads job" do
       invoke_task
       expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
-        [upload_1.id, upload_2.id, upload_3.id, upload4.id],
+        [upload_1.id, upload_2.id, upload_3.id, upload_4.id, upload_6.id],
       )
     end
   end
