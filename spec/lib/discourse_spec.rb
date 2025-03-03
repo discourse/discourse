@@ -196,11 +196,9 @@ RSpec.describe Discourse do
 
   describe "#user_agent" do
     it "returns a user agent string" do
-      stub_const(Discourse::VERSION, :STRING, "1.2.3") do
-        Discourse.stubs(:git_version).returns("123456")
-
-        expect(Discourse.user_agent).to eq("Discourse/1.2.3-123456; +https://www.discourse.org/")
-      end
+      expect(Discourse.user_agent).to eq(
+        "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+      )
     end
   end
 
