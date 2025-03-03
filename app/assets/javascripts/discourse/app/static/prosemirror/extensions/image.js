@@ -22,8 +22,8 @@ const extension = {
         // Overriding ProseMirror's default node to support these attrs
         width: { default: null },
         height: { default: null },
-        "data-orig-src": { default: null },
-        "data-thumbnail": { default: false },
+        originalSrc: { default: null },
+        extras: { default: null },
         "data-scale": { default: null },
         "data-placeholder": { default: null },
       },
@@ -39,11 +39,19 @@ const extension = {
               alt: dom.getAttribute("alt"),
               width: dom.getAttribute("width"),
               height: dom.getAttribute("height"),
-              "data-orig-src": dom.getAttribute("data-orig-src"),
-              "data-thumbnail": dom.hasAttribute("data-thumbnail"),
+              originalSrc:
+                dom.getAttribute("data-orig-src") ??
+                dom.getAttribute("data-video-src"),
+              extras: dom.hasAttribute("data-thumbnail")
+                ? "thumbnail"
+                : dom.getAttribute("data-video-src")
+                ? "video"
+                : null,
             };
           },
         },
+        // TODO audio
+        // TODO video
       ],
       toDOM(node) {
         const width = node.attrs.width
@@ -52,6 +60,25 @@ const extension = {
         const height = node.attrs.height
           ? (node.attrs.height * (node.attrs["data-scale"] || 100)) / 100
           : undefined;
+
+        if (node.attrs.extras === "audio") {
+          return [
+            "audio",
+            { preload: "metadata", controls: false },
+            ["source", { "data-orig-src": node.attrs.originalSrc }],
+          ];
+        }
+
+        if (node.attrs.extras === "video") {
+          return [
+            "div",
+            {
+              class: "onebox-placeholder-container",
+              "data-orig-src": node.attrs.originalSrc,
+            },
+            ["span", { class: "placeholder-icon video" }],
+          ];
+        }
 
         return ["img", { ...node.attrs, width, height }];
       },
@@ -71,12 +98,12 @@ const extension = {
           src: token.attrGet("src"),
           title: token.attrGet("title"),
           alt: altText,
-          "data-orig-src": token.attrGet("data-orig-src"),
+          originalSrc: token.attrGet("data-orig-src"),
           width,
           height,
           "data-scale":
             percent && isNumeric(percent) ? parseInt(percent, 10) : undefined,
-          "data-thumbnail": extras === "thumbnail",
+          extras,
         };
       },
     },
@@ -96,14 +123,14 @@ const extension = {
         node.attrs.width && node.attrs.height
           ? `|${node.attrs.width}x${node.attrs.height}${scale}`
           : "";
-      const thumbnail = node.attrs["data-thumbnail"] ? "|thumbnail" : "";
-      const src = node.attrs["data-orig-src"] ?? node.attrs.src ?? "";
+      const extras = node.attrs.extras ? `|${node.attrs.extras}` : "";
+      const src = node.attrs.originalSrc ?? node.attrs.src ?? "";
       const escapedSrc = src.replace(/[\(\)]/g, "\\$&");
       const title = node.attrs.title
         ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'
         : "";
 
-      state.write(`![${alt}${dimensions}${thumbnail}](${escapedSrc}${title})`);
+      state.write(`![${alt}${dimensions}${extras}](${escapedSrc}${title})`);
     },
   },
 
@@ -118,12 +145,12 @@ const extension = {
 
           // we should only track the changes
           tr.doc.descendants((node, pos) => {
-            if (node.type.name === "image" && node.attrs["data-orig-src"]) {
+            if (node.type.name === "image" && node.attrs.originalSrc) {
               if (node.attrs.src.endsWith(PLACEHOLDER_IMG)) {
-                updated.push({ pos, src: node.attrs["data-orig-src"] });
+                updated.push({ pos, src: node.attrs.originalSrc });
               } else {
                 updated = updated.filter(
-                  (u) => u.src !== node.attrs["data-orig-src"]
+                  (u) => u.src !== node.attrs.originalSrc
                 );
               }
             }
