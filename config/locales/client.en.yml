@@ -4117,6 +4117,7 @@ en:
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
+      logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
       badge_colors: "Badge colors"
