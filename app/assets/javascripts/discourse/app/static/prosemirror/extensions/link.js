@@ -5,7 +5,9 @@ const extension = {
       attrs: {
         href: {},
         title: { default: null },
-        autoLink: { default: null },
+        // same value from the markdown-it token
+        // null for [link](...), "autolink" for <...>, and "linkify" for plain URLs
+        markup: { default: null },
         attachment: { default: null },
         "data-orig-href": { default: null },
       },
@@ -48,10 +50,11 @@ const extension = {
             ""
           );
         }
+
         return {
           href: tok.attrGet("href"),
           title: tok.attrGet("title") || null,
-          autoLink: tok.markup === "autolink",
+          markup: tok.markup,
           attachment,
           "data-orig-href": tok.attrGet("data-orig-href"),
         };
@@ -62,15 +65,30 @@ const extension = {
     // override mark serializer to support "|attachment"
     link: {
       open(state, mark, parent, index) {
-        state.inAutolink = isPlainURL(mark, parent, index);
-        return state.inAutolink ? "<" : "[";
+        state.linkMarkup =
+          mark.attrs.markup ??
+          (isPlainURL(mark, parent, index) ? "autolink" : null);
+
+        if (state.linkMarkup === "autolink") {
+          return "<";
+        }
+
+        if (state.linkMarkup === "linkify") {
+          return "";
+        }
+
+        return "[";
       },
       close(state, mark) {
-        let { inAutolink } = state;
-        state.inAutolink = undefined;
+        let { linkMarkup } = state;
+        state.linkMarkup = undefined;
 
-        if (inAutolink) {
+        if (linkMarkup === "autolink") {
           return ">";
+        }
+
+        if (linkMarkup === "linkify") {
+          return "";
         }
 
         const attachment = mark.attrs.attachment ? "|attachment" : "";

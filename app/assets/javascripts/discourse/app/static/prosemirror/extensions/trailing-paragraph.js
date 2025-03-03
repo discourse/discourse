@@ -10,10 +10,12 @@ const extension = {
           return;
         }
 
-        return state.tr.insert(
-          state.doc.content.size,
-          state.schema.nodes.paragraph.create()
-        );
+        return state.tr
+          .setMeta("addToHistory", false)
+          .insert(
+            state.doc.content.size,
+            state.schema.nodes.paragraph.create()
+          );
       },
       state: {
         init(_, state) {

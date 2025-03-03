@@ -91,137 +91,269 @@ const extension = {
     },
   },
 
-  plugins({ pmState: { Plugin }, getContext }) {
+  plugins({
+    pmState: { Plugin },
+    pmView: { Decoration, DecorationSet },
+    getContext,
+  }) {
+    let updatedView;
+    const failedUrls = { full: new Set(), inline: new Set() };
+
     const plugin = new Plugin({
-      // appendTransaction(transactions, prevState, state) {
-      //   const tr = state.tr;
-      //
-      //   for (const transaction of transactions) {
-      //     const replaceSteps = transaction.steps.filter(
-      //       (step) => step instanceof ReplaceStep
-      //     );
-      //
-      //     for (const [index, step] of replaceSteps.entries()) {
-      //       const map = transaction.mapping.maps[index];
-      //       const [start, oldSize, newSize] = map.ranges;
-      //
-      //       // if any onebox_inline moved position to be close to a text node
-      //     }
-      //   }
-      //
-      //   // Return the transaction if any changes were made
-      //   return tr.docChanged ? tr : null;
-      // },
       state: {
         init() {
-          return { full: {}, inline: {} };
+          return DecorationSet.empty;
         },
-        apply(tr) {
-          const updated = { full: [], inline: [] };
+        apply(tr, set) {
+          const meta = tr.getMeta(plugin);
+          if (meta?.removeDecorations) {
+            set = set.remove(meta.removeDecorations);
+          }
 
-          // we shouldn't check all descendants, but only the ones that have changed
-          // it's a problem in other plugins too where we need to optimize
+          set = set.map(tr.mapping, tr.doc);
+
+          if (!tr.docChanged) {
+            const inlineOneboxes = meta?.loadInlineOneboxes;
+            if (inlineOneboxes) {
+              const decosToUpdate = set.find(
+                undefined,
+                undefined,
+                (spec) =>
+                  spec.oneboxType === "inline" &&
+                  spec.oneboxUrl &&
+                  inlineOneboxes.hasOwnProperty(spec.oneboxUrl)
+              );
+
+              const newDecorations = decosToUpdate.map((dec) =>
+                Decoration.inline(
+                  dec.from,
+                  dec.to,
+                  { class: "onebox-loading", nodeName: "span" },
+                  {
+                    oneboxUrl: dec.spec.oneboxUrl,
+                    oneboxType: dec.spec.oneboxType,
+                    oneboxTitle: inlineOneboxes[dec.spec.oneboxUrl],
+                    oneboxDataLoaded: true,
+                    inclusiveStart: true,
+                    inclusiveEnd: true,
+                  }
+                )
+              );
+
+              set = set.remove(decosToUpdate).add(tr.doc, newDecorations);
+            }
+
+            const oneboxContent = meta?.loadOneboxContent;
+            if (oneboxContent) {
+              const { url, html } = oneboxContent;
+
+              const decosToUpdate = set.find(
+                undefined,
+                undefined,
+                (spec) => spec.oneboxType === "full" && spec.oneboxUrl === url
+              );
+
+              const newDecorations = decosToUpdate.map((dec) => {
+                return Decoration.inline(
+                  dec.from,
+                  dec.to,
+                  { class: "onebox-loading", nodeName: "span" },
+                  {
+                    oneboxUrl: dec.spec.oneboxUrl,
+                    oneboxType: dec.spec.oneboxType,
+                    oneboxDataLoaded: true,
+                    oneboxHtml: html,
+                    inclusiveStart: true,
+                    inclusiveEnd: true,
+                  }
+                );
+              });
+
+              set = set.remove(decosToUpdate).add(tr.doc, newDecorations);
+            }
+
+            return set;
+          }
+
+          const decorations = [];
           tr.doc.descendants((node, pos) => {
-            // if node has the link mark
             const link = node.marks.find((mark) => mark.type.name === "link");
             if (
-              !tr.getMeta("autolinking") &&
-              !link?.attrs.autoLink &&
-              link?.attrs.href === node.textContent
+              link?.attrs.markup === "linkify" &&
+              link?.attrs.href === node.textContent &&
+              set.find(pos, pos + node.nodeSize).length === 0
             ) {
               const resolvedPos = tr.doc.resolve(pos);
-
               const isAtRoot = resolvedPos.depth === 1;
-
               const parent = resolvedPos.parent;
               const index = resolvedPos.index();
               const prev = index > 0 ? parent.child(index - 1) : null;
               const next =
                 index < parent.childCount - 1 ? parent.child(index + 1) : null;
-
               const isAlone =
                 (!prev || prev.type.name === "hard_break") &&
                 (!next || next.type.name === "hard_break");
-
               const isInline = !isAtRoot || !isAlone;
 
-              const obj = isInline ? updated.inline : updated.full;
+              const oneboxType = isInline ? "inline" : "full";
 
-              obj[node.textContent] ??= [];
-              obj[node.textContent].push({
-                pos,
-                addToHistory: tr.getMeta("addToHistory"),
-              });
+              if (!failedUrls[oneboxType].has(node.textContent)) {
+                decorations.push(
+                  Decoration.inline(
+                    pos,
+                    pos + node.nodeSize,
+                    { class: "onebox-loading", nodeName: "span" },
+                    {
+                      oneboxUrl: node.textContent,
+                      oneboxType,
+                      inclusiveStart: true,
+                      inclusiveEnd: true,
+                    }
+                  )
+                );
+
+                if (!isInline) {
+                  processOnebox(node.textContent, getContext()).then((html) => {
+                    if (updatedView) {
+                      updatedView.dispatch(
+                        updatedView.state.tr.setMeta(plugin, {
+                          loadOneboxContent: { url: node.textContent, html },
+                        })
+                      );
+                    }
+                  });
+                }
+              }
             }
           });
 
-          return updated;
+          const urlsToLoad = decorations
+            .filter((dec) => dec.spec.oneboxType === "inline")
+            .map((dec) => dec.spec.oneboxUrl);
+
+          if (urlsToLoad.length) {
+            loadInlineOneboxes(urlsToLoad, getContext()).then((allOneboxes) => {
+              if (!Object.keys(allOneboxes).length || !updatedView) {
+                return;
+              }
+              updatedView.dispatch(
+                updatedView.state.tr.setMeta(plugin, {
+                  loadInlineOneboxes: allOneboxes,
+                })
+              );
+            });
+          }
+
+          return set.add(tr.doc, decorations);
+        },
+      },
+
+      props: {
+        decorations(state) {
+          return plugin.getState(state);
         },
       },
 
       view() {
         return {
-          async update(view, prevState) {
-            if (prevState.doc.eq(view.state.doc)) {
+          update(view) {
+            updatedView = view;
+
+            const decorations = plugin.getState(view.state);
+
+            const loadedDecos = decorations.find(
+              undefined,
+              undefined,
+              (spec) => spec.oneboxDataLoaded
+            );
+
+            if (loadedDecos.length === 0) {
               return;
             }
 
-            const { full, inline } = plugin.getState(view.state);
+            const tr = view.state.tr;
+            const decosToRemove = [];
 
-            for (const [url, list] of Object.entries(full)) {
-              const html = await loadFullOnebox(url, getContext());
+            const sortedDecos = [...loadedDecos].sort(
+              (a, b) => b.from - a.from
+            );
 
-              // naive check that this is not a <a href="url">url</a> onebox response
+            for (const dec of sortedDecos) {
               if (
-                new RegExp(
-                  `<a href=["']${escapeRegExp(url)}["'].*>${escapeRegExp(
-                    url
-                  )}</a>`
-                ).test(html)
+                dec.from >= view.state.doc.content.size ||
+                dec.to > view.state.doc.content.size ||
+                dec.from < 0
               ) {
                 continue;
               }
 
-              for (const { pos, addToHistory } of list.sort(
-                (a, b) => b.pos - a.pos
-              )) {
-                const tr = view.state.tr;
-                // console.log("replacing", pos, url);
-                const node = tr.doc.nodeAt(pos);
-                tr.replaceWith(
-                  pos - 1,
-                  pos + node.nodeSize,
-                  view.state.schema.nodes.onebox.create({ url, html })
-                );
-                tr.setMeta("addToHistory", addToHistory);
-                view.dispatch(tr);
+              const nodeAtPos = view.state.doc.nodeAt(dec.from);
+
+              if (!nodeAtPos || !nodeAtPos.isText || !nodeAtPos.marks?.length) {
+                continue;
               }
-            }
 
-            const inlineOneboxes = await loadInlineOneboxes(
-              Object.keys(inline),
-              getContext()
-            );
+              const linkMark = nodeAtPos.marks.find(
+                (mark) =>
+                  mark.type.name === "link" &&
+                  mark.attrs.href === dec.spec.oneboxUrl
+              );
 
-            const tr = view.state.tr;
-            for (const [url, onebox] of Object.entries(inlineOneboxes)) {
-              for (const { pos, addToHistory } of inline[url]) {
-                const newPos = tr.mapping.map(pos);
-                const node = tr.doc.nodeAt(newPos);
-                tr.replaceWith(
-                  newPos,
-                  newPos + node.nodeSize,
-                  view.state.schema.nodes.onebox_inline.create({
-                    url,
-                    title: onebox.title,
-                  })
-                );
-                if (addToHistory !== undefined) {
-                  tr.setMeta("addToHistory", addToHistory);
+              if (!linkMark) {
+                continue;
+              }
+
+              const textEnd = dec.from + nodeAtPos.nodeSize;
+
+              if (textEnd !== dec.to) {
+                continue;
+              }
+
+              if (!dec.spec.oneboxDataLoaded) {
+                continue;
+              }
+
+              if (dec.spec.oneboxType === "inline") {
+                if (dec.spec.oneboxTitle) {
+                  const oneboxNode =
+                    view.state.schema.nodes.onebox_inline.create({
+                      url: dec.spec.oneboxUrl,
+                      title: dec.spec.oneboxTitle,
+                    });
+
+                  tr.replaceWith(dec.from, dec.to, oneboxNode);
+                } else {
+                  failedUrls.inline.add(dec.spec.oneboxUrl);
                 }
+
+                decosToRemove.push(dec);
+              } else if (dec.spec.oneboxType === "full") {
+                if (dec.spec.oneboxHtml) {
+                  const oneboxNode = view.state.schema.nodes.onebox.create({
+                    url: dec.spec.oneboxUrl,
+                    html: dec.spec.oneboxHtml,
+                  });
+
+                  const $pos = view.state.doc.resolve(dec.from);
+                  const paragraph = $pos.parent;
+                  if (
+                    paragraph.type.name === "paragraph" &&
+                    paragraph.childCount === 1
+                  ) {
+                    tr.replaceWith($pos.before(), $pos.after(), oneboxNode);
+                  } else {
+                    tr.replaceWith(dec.from, dec.to, oneboxNode);
+                  }
+                } else {
+                  failedUrls.full.add(dec.spec.oneboxUrl);
+                }
+
+                decosToRemove.push(dec);
               }
             }
-            if (tr.docChanged) {
+
+            if (decosToRemove.length || tr.docChanged) {
+              tr.setMeta(plugin, { removeDecorations: decosToRemove });
               view.dispatch(tr);
             }
           },
@@ -240,7 +372,7 @@ async function loadInlineOneboxes(urls, { categoryId, topicId }) {
   for (const url of urls) {
     const cached = cachedInlineOnebox(url);
     if (cached) {
-      allOneboxes[url] = cached;
+      allOneboxes[url] = cached.title;
     } else {
       uncachedUrls.push(url);
     }
@@ -255,10 +387,8 @@ async function loadInlineOneboxes(urls, { categoryId, topicId }) {
   });
 
   oneboxes.forEach((onebox) => {
-    if (onebox.title) {
-      applyCachedInlineOnebox(onebox.url, onebox);
-      allOneboxes[onebox.url] = onebox;
-    }
+    applyCachedInlineOnebox(onebox.url, onebox);
+    allOneboxes[onebox.url] = onebox.title;
   });
 
   return allOneboxes;
@@ -274,6 +404,21 @@ async function loadFullOnebox(url, { categoryId, topicId }) {
     addToLoadingQueue({ url, categoryId, topicId, onResolve });
     loadNext(ajax);
   });
+}
+
+async function processOnebox(url, context) {
+  const html = await loadFullOnebox(url, context);
+
+  // naive check that this is not a <a href="url">url</a> onebox response
+  if (
+    new RegExp(
+      `<a href=["']${escapeRegExp(url)}["'].*>${escapeRegExp(url)}</a>`
+    ).test(html)
+  ) {
+    return;
+  }
+
+  return html;
 }
 
 export default extension;
