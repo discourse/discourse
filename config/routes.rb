@@ -101,6 +101,7 @@ Discourse::Application.routes.draw do
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "search" => "search#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
