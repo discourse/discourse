@@ -1,5 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
@@ -11,7 +13,8 @@ import LoadMore from "discourse/mixins/load-more";
 export default class DiscoveryTopicsList extends Component.extend(LoadMore) {
   @service appEvents;
   @service documentTitle;
-  eyelineSelector = ".topic-list-item";
+  @tracked observer;
+  eyelineSelector = ".topic-list-item:last-of-type";
 
   @on("didInsertElement")
   _monitorTrackingState() {
@@ -20,10 +23,48 @@ export default class DiscoveryTopicsList extends Component.extend(LoadMore) {
     );
   }
 
+  @on("didInsertElement")
+  _setupIntersectionObserver() {
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const bcr = entry.boundingClientRect;
+          const isBottomVisible = bcr.bottom < window.innerHeight && bcr.bottom;
+          if (isBottomVisible) {
+            this.loadMore();
+            scheduleOnce("afterRender", this, this._observeLastTopic);
+          }
+        });
+      },
+      {
+        root: document.querySelector("#main-outlet"),
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+
+    scheduleOnce("afterRender", this, this._observeLastTopic);
+  }
+
   @on("willDestroyElement")
   _removeTrackingStateChangeMonitor() {
     if (this.stateChangeCallbackId) {
       this.topicTrackingState.offStateChange(this.stateChangeCallbackId);
+    }
+  }
+
+  @on("willDestroyElement")
+  _cleanupIntersectionObserver() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  _observeLastTopic() {
+    const lastTopic = this.element.querySelector(this.eyelineSelector);
+
+    if (lastTopic) {
+      this.observer.observe(lastTopic);
     }
   }
 
