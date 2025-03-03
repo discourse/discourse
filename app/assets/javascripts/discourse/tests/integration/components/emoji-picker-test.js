@@ -14,7 +14,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       response(emojisFixtures["/emojis.json"])
     );
 
-    pretender.get("/emojis/search-aliases", () => {
+    pretender.get("/emojis/search-aliases.json", () => {
       return response([]);
     });
 

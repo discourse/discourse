@@ -46,7 +46,7 @@ acceptance("User Status", function (needs) {
     server.delete("/do-not-disturb.json", () =>
       helper.response({ success: true })
     );
-    server.get("/emojis/search-aliases", () => {
+    server.get("/emojis/search-aliases.json", () => {
       return helper.response([]);
     });
   });
@@ -340,7 +340,9 @@ acceptance(
       server.delete("/do-not-disturb.json", () =>
         helper.response({ success: true })
       );
-      server.get("/emoji/search-aliases", () => helper.response([]));
+      server.get("/emojis/search-aliases.json", () => {
+        return helper.response([]);
+      });
     });
 
     test("shows the pause notifications control group", async function (assert) {
