@@ -37,7 +37,7 @@ describe "Default Headers", type: :system do
       bad_str = (+"d\xDE").force_encoding("utf-8")
       expect(bad_str.valid_encoding?).to eq(false)
 
-      get "/latest.json", params: { test: bad_str }
+      get "/latest", params: { test: bad_str }
 
       log = @logs.string
       expect(log).not_to include("exception app middleware")

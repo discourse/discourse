@@ -80,6 +80,7 @@ module Discourse
         super
       end
     end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -168,6 +169,9 @@ module Discourse
       require "middleware/enforce_hostname"
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
+
+    require "middleware/default_headers"
+    config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
 
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,

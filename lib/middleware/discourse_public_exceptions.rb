@@ -7,7 +7,6 @@ module Middleware
     require "middleware/default_headers"
     # These middlewares will be re-run when the exception response is generated
     EXCEPTION_RESPONSE_MIDDLEWARES = [
-      Middleware::DefaultHeaders,
       ContentSecurityPolicy::Middleware,
       Middleware::CspScriptNonceInjector,
     ]
