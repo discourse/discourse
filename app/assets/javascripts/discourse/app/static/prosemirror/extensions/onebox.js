@@ -113,15 +113,14 @@ const extension = {
           set = set.map(tr.mapping, tr.doc);
 
           if (!tr.docChanged) {
-            const inlineOneboxes = meta?.loadInlineOneboxes;
-            if (inlineOneboxes) {
+            if (meta?.inlineOneboxes) {
               const decosToUpdate = set.find(
                 undefined,
                 undefined,
                 (spec) =>
                   spec.oneboxType === "inline" &&
                   spec.oneboxUrl &&
-                  inlineOneboxes.hasOwnProperty(spec.oneboxUrl)
+                  meta.inlineOneboxes.hasOwnProperty(spec.oneboxUrl)
               );
 
               const newDecorations = decosToUpdate.map((dec) =>
@@ -132,10 +131,8 @@ const extension = {
                   {
                     oneboxUrl: dec.spec.oneboxUrl,
                     oneboxType: dec.spec.oneboxType,
-                    oneboxTitle: inlineOneboxes[dec.spec.oneboxUrl],
+                    oneboxTitle: meta.inlineOneboxes[dec.spec.oneboxUrl],
                     oneboxDataLoaded: true,
-                    inclusiveStart: true,
-                    inclusiveEnd: true,
                   }
                 )
               );
@@ -143,9 +140,8 @@ const extension = {
               set = set.remove(decosToUpdate).add(tr.doc, newDecorations);
             }
 
-            const oneboxContent = meta?.loadOneboxContent;
-            if (oneboxContent) {
-              const { url, html } = oneboxContent;
+            if (meta?.oneboxContent) {
+              const { url, html } = meta.oneboxContent;
 
               const decosToUpdate = set.find(
                 undefined,
@@ -163,8 +159,6 @@ const extension = {
                     oneboxType: dec.spec.oneboxType,
                     oneboxDataLoaded: true,
                     oneboxHtml: html,
-                    inclusiveStart: true,
-                    inclusiveEnd: true,
                   }
                 );
               });
@@ -206,21 +200,17 @@ const extension = {
                     {
                       oneboxUrl: node.textContent,
                       oneboxType,
-                      inclusiveStart: true,
-                      inclusiveEnd: true,
                     }
                   )
                 );
 
                 if (!isInline) {
                   processOnebox(node.textContent, getContext()).then((html) => {
-                    if (updatedView) {
-                      updatedView.dispatch(
-                        updatedView.state.tr.setMeta(plugin, {
-                          loadOneboxContent: { url: node.textContent, html },
-                        })
-                      );
-                    }
+                    updatedView?.dispatch(
+                      updatedView.state.tr.setMeta(plugin, {
+                        oneboxContent: { url: node.textContent, html },
+                      })
+                    );
                   });
                 }
               }
@@ -232,16 +222,16 @@ const extension = {
             .map((dec) => dec.spec.oneboxUrl);
 
           if (urlsToLoad.length) {
-            loadInlineOneboxes(urlsToLoad, getContext()).then((allOneboxes) => {
-              if (!Object.keys(allOneboxes).length || !updatedView) {
-                return;
+            loadInlineOneboxes(urlsToLoad, getContext()).then(
+              (inlineOneboxes) => {
+                if (!Object.keys(inlineOneboxes).length) {
+                  return;
+                }
+                updatedView?.dispatch(
+                  updatedView.state.tr.setMeta(plugin, { inlineOneboxes })
+                );
               }
-              updatedView.dispatch(
-                updatedView.state.tr.setMeta(plugin, {
-                  loadInlineOneboxes: allOneboxes,
-                })
-              );
-            });
+            );
           }
 
           return set.add(tr.doc, decorations);
