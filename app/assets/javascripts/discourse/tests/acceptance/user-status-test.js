@@ -340,6 +340,7 @@ acceptance(
       server.delete("/do-not-disturb.json", () =>
         helper.response({ success: true })
       );
+      server.get("/emoi/search-aliases", () => helper.response([]));
     });
 
     test("shows the pause notifications control group", async function (assert) {
