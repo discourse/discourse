@@ -3553,7 +3553,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
   glimmer_post_menu_mode:
     client: true
     type: enum
