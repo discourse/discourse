@@ -61,11 +61,12 @@ describe "Emoji deny list", type: :system do
       topic_page.visit_topic_and_open_composer(topic)
 
       composer.type_content(":poop") # shows no results
-      expect(composer).to have_no_emoji_autocomplete
+      expect(emoji_picker).to have_no_emoji("poo")
+      expect(emoji_picker).to have_no_emoji("poop")
 
       composer.clear_content
 
-      composer.type_content(":reversed_hand_with_middle_finger_extended:") # middle_finger is alias
+      composer.type_content(":middle") # middle_finger is alias
       expect(composer).to have_no_emoji_suggestion("fu")
     end
 
