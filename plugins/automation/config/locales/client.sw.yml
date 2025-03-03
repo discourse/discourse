@@ -7,7 +7,8 @@
 sw:
   js:
     discourse_automation:
-      create: Tengeneza
+      back: Iliyopita
+      edit: Hariri
       fields:
         user:
           label: Mtumiaji

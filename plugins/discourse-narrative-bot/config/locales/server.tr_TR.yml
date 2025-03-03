@@ -169,22 +169,8 @@ tr_TR:
 
           - Her zaman [medeni topluluk davranışına](%{base_uri}/guidelines) inanıyoruz.
       onebox:
-        instructions: |-
-          Ardından, bu bağlantılardan birini benimle paylaşabilir misiniz? **Tek başına bir satırda bir bağlantı** ile yanıt verin, otomatik olarak şık bir özet içerecek şekilde genişleyecektir.
-
-          Herhangi bir bağlantıyı kopyalamak için mobil cihazınızda üzerine dokunup basılı tutun veya işaretleme cihazınıza sağ tıklayın:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Harika! Bu, çoğu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> bağlantısı için çalışacaktır. Unutmayın, önünde veya arkasında başka hiçbir şey olmadan _tek başına_ bir satırda olmalı.
-        not_found: |-
-          Üzgünüm, yanıtınızdaki bağlantıyı bulamadım! :cry:
-
-          Bir sonraki yanıtınızda aşağıdaki bağlantıyı kendi satırına eklemeyi deneyebilir misiniz?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           İşte bir tek boynuzlu at resmi:

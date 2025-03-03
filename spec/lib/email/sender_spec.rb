@@ -247,6 +247,7 @@ RSpec.describe Email::Sender do
       it "should remove the right headers" do
         email_sender.send
         expect(message.header["X-Discourse-Topic-Id"]).not_to be_present
+        expect(message.header["X-Discourse-Topic-Ids"]).not_to be_present
         expect(message.header["X-Discourse-Post-Id"]).not_to be_present
         expect(message.header["X-Discourse-Reply-Key"]).not_to be_present
       end
@@ -700,9 +701,18 @@ RSpec.describe Email::Sender do
 
           Jobs::PullHotlinkedImages.any_instance.expects(:execute)
 
+          # Crafted so that the second image is not in the excerpt.
           raw = <<~MD
             IMAGE #1
             #{UploadMarkdown.new(@secure_image).image_markdown}
+
+            > 11:15, restate my assumptions:
+            >
+            >   1. Mathematics is the language of nature.
+            >   2. Everything around us can be represented and understood through numbers.
+            >   3. If you graph these numbers, patterns emerge.
+            >
+            > Therefore: There are patterns everywhere in nature.
             
             IMAGE #2
             #{UploadMarkdown.new(@secure_image_2).image_markdown}
@@ -738,13 +748,13 @@ RSpec.describe Email::Sender do
             "multipart/mixed; boundary=\"#{summary.body.boundary}\"",
           )
           expect(summary.attachments.map(&:filename)).to contain_exactly(
-            *[@secure_image, @secure_image_2, @secure_image_3].map(&:original_filename),
+            *[@secure_image, @secure_image_3].map(&:original_filename),
           )
-          expect(summary.attachments.size).to eq(3)
+          expect(summary.attachments.size).to eq(2)
           expect(summary.to_s.scan("Content-Type: text/html;").length).to eq(1)
           expect(summary.to_s.scan("Content-Type: text/plain;").length).to eq(1)
-          expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(3)
-          expect(summary.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(3)
+          expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(2)
+          expect(summary.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
         end
 
         it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do

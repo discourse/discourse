@@ -6,3 +6,7 @@
 # though they're not git-tracked
 !/.vscode/settings.json
 !/.vscode/tasks.json
+
+# Hide non-en locales from IDE search. They are managed in crowdin
+**/config/locales/*.yml
+!**/config/locales/*.en.yml

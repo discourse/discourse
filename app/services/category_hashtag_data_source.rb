@@ -18,7 +18,14 @@ class CategoryHashtagDataSource
 
   def self.category_to_hashtag_item(category)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
-      item.text = category.name
+      item.text =
+        (
+          if category.parent_category
+            "#{category.parent_category.name} > #{category.name}"
+          else
+            category.name
+          end
+        )
       item.slug = category.slug
       item.description = category.description_text
       item.icon = icon

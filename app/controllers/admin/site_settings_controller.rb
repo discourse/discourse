@@ -39,23 +39,26 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
-    SiteSetting::Update.call(params: { setting_name: id, new_value: value }, guardian:) do
+    SiteSetting::Update.call(params: { settings: { id => value } }, guardian:) do
       on_success do |params:|
         if update_existing_users
-          SiteSettingUpdateExistingUsers.call(id, params.new_value, previous_value)
+          params.settings.to_a.each do |setting_name, setting_value|
+            SiteSettingUpdateExistingUsers.call(setting_name.to_s, setting_value, previous_value)
+          end
         end
         render body: nil
       end
-      on_failed_policy(:setting_is_visible) do
-        raise Discourse::InvalidParameters, I18n.t("errors.site_settings.site_setting_is_hidden")
+      on_failed_policy(:settings_are_visible) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
       end
-      on_failed_policy(:setting_is_shadowed_globally) do
-        raise Discourse::InvalidParameters,
-              I18n.t("errors.site_settings.site_setting_is_shadowed_globally")
+      on_failed_policy(:settings_are_unshadowed_globally) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
       end
-      on_failed_policy(:setting_is_configurable) do
-        raise Discourse::InvalidParameters,
-              I18n.t("errors.site_settings.site_setting_is_unconfigurable")
+      on_failed_policy(:settings_are_configurable) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
+      on_failed_policy(:values_are_valid) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
       end
     end
   end

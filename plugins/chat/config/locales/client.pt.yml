@@ -127,6 +127,7 @@ pt:
         tabs:
           members: Membros
           settings: Configurações
+        remove_member: "Remover"
       new_message_modal:
         no_items: "Sem itens"
         filter: "Filtrar"

@@ -49,7 +49,7 @@ class Stylesheet::Manager::Builder
           load_paths: load_paths,
           dark: @dark,
         )
-      rescue SassC::SyntaxError, SassC::NotRenderedError => e
+      rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
           # no special errors for theme, handled in theme editor
           ["", nil]

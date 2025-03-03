@@ -235,16 +235,17 @@ RSpec.describe TopicConverter do
     end
 
     context "when topic has replies" do
+      let(:replied_user) { Fabricate(:coding_horror) }
+
       before do
-        @replied_user = Fabricate(:coding_horror)
-        create_post(topic: topic, user: @replied_user)
+        create_post(topic: topic, user: replied_user)
         topic.reload
       end
 
       it "adds users who replied to topic in Private Message" do
         topic.convert_to_private_message(admin)
 
-        expect(topic.reload.topic_allowed_users.where(user_id: @replied_user.id).count).to eq(1)
+        expect(topic.reload.topic_allowed_users.where(user_id: replied_user.id).count).to eq(1)
         expect(topic.reload.user.user_stat.post_count).to eq(0)
       end
     end

@@ -12,25 +12,24 @@ html.composer-open {
   bottom: 0;
   right: 0;
   left: 0;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
   max-width: $reply-area-max-width;
   width: 100%;
   height: 0;
   min-height: 0;
-
-  &.hide-preview {
-    max-width: 740px;
-  }
-
-  @media screen and (max-width: 1200px) {
-    min-width: 0;
-  }
   z-index: z("composer", "content");
   transition: height 0.2s, max-width 0.2s, padding-bottom 0.2s, top 0.2s,
     transform 0.2s, min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
+
+  @media screen and (max-width: 1200px) {
+    min-width: 0;
+  }
+
+  &.hide-preview {
+    max-width: 740px;
+  }
 
   .reply-area {
     display: flex;
@@ -108,6 +107,7 @@ html.composer-open {
 
     .draft-text {
       display: block;
+
       @include ellipsis;
     }
 
@@ -157,6 +157,7 @@ html.composer-open {
         .user-link,
         .post-link {
           margin-right: 8px;
+
           @include ellipsis;
         }
       }
@@ -164,7 +165,9 @@ html.composer-open {
       .username {
         margin-right: 5px;
         max-width: 100px;
+
         @include ellipsis;
+
         @media screen and (max-width: 500px) {
           display: none;
         }
@@ -387,15 +390,21 @@ html.composer-open {
     .cancel {
       align-items: center;
       display: flex;
-      margin-left: 1.25em;
+      margin-left: 1em;
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
+      padding: 0;
 
       &:hover,
       &:focus {
         outline: none;
         color: var(--danger);
+      }
+
+      &:active {
+        background-color: transparent;
+        background-image: none;
       }
     }
 

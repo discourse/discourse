@@ -14,29 +14,11 @@ describe "Drafts dropdown", type: :system do
       expect(drafts_dropdown).to be_hidden
     end
 
-    it "does not have a my drafts link in sidebar" do
-      page.visit "/"
-      expect(page).to have_no_css(".sidebar-section-link[data-link-name='my-drafts']")
-    end
-
     it "adds a draft dropdown menu when a draft is available" do
       page.visit "/new-topic"
       composer.fill_content("This is a draft")
 
       expect(drafts_dropdown).to be_visible
-    end
-
-    it "shows a my drafts link in sidebar when a draft is saved" do
-      page.visit "/new-topic"
-
-      composer.fill_content("This is a draft")
-      composer.close
-
-      expect(discard_draft_modal).to be_open
-      discard_draft_modal.click_save
-
-      visit "/"
-      expect(page).to have_css(".sidebar-section-link[data-link-name='my-drafts']")
     end
   end
 
@@ -81,6 +63,58 @@ describe "Drafts dropdown", type: :system do
 
       expect(drafts_dropdown.draft_item_count).to eq(4)
       expect(drafts_dropdown.other_drafts_count).to eq(1)
+    end
+
+    it "shows the view all drafts when there are other drafts to display" do
+      page.visit "/"
+      drafts_dropdown.open
+
+      expect(drafts_dropdown).to be_open
+      expect(drafts_dropdown).to have_view_all_link
+    end
+
+    it "does not show the view all drafts link when all drafts are displayed" do
+      Draft.where(user_id: user.id).order("created_at DESC").limit(2).destroy_all
+
+      page.visit "/"
+      drafts_dropdown.open
+
+      expect(drafts_dropdown).to be_open
+      expect(drafts_dropdown).to have_no_view_all_link
+    end
+  end
+
+  describe "with private category" do
+    fab!(:group)
+    fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }
+    fab!(:category) { Fabricate(:private_category, group: group, permission_type: 3) }
+    fab!(:subcategory) do
+      Fabricate(
+        :private_category,
+        parent_category_id: category.id,
+        group: group,
+        permission_type: 1,
+      )
+    end
+
+    let(:category_page) { PageObjects::Pages::Category.new }
+
+    before do
+      SiteSetting.default_subcategory_on_read_only_category = false
+
+      Draft.set(
+        user,
+        Draft::NEW_TOPIC,
+        0,
+        { title: "This is a test topic", reply: "Lorem ipsum dolor sit amet" }.to_json,
+      )
+    end
+
+    it "disables the drafts dropdown menu when new topic button is disabled" do
+      category_page.visit(category)
+
+      expect(category_page).to have_button("New Topic", disabled: true)
+      expect(drafts_dropdown).to be_disabled
     end
   end
 end

@@ -60,10 +60,17 @@ RSpec.describe UsersController do
 
     before { UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false) }
 
-    context "with invalid token" do
-      it "return success" do
-        put "/u/activate-account/invalid-token"
+    context "with inexistent token" do
+      it "return 404" do
+        put "/u/activate-account/123abc"
         expect(response.status).to eq(422)
+      end
+    end
+
+    context "with invalid token" do
+      it "return 404" do
+        put "/u/activate-account/123%2f%252e"
+        expect(response.status).to eq(404)
       end
     end
 
@@ -156,6 +163,16 @@ RSpec.describe UsersController do
           }
 
           expect(response.status).to eq(200)
+        end
+      end
+
+      context "when user is already logged in" do
+        it "returns 404" do
+          sign_in(user1)
+
+          get "/u/activate-account/some-token"
+
+          expect(response.status).to eq(404)
         end
       end
     end
@@ -4332,6 +4349,42 @@ RSpec.describe UsersController do
 
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(1)
+    end
+
+    context "when user has hidden posts with links" do
+      fab!(:user) { Fabricate(:user, trust_level: 4) }
+      fab!(:topic) { Fabricate(:topic, user:) }
+      fab!(:visible_post) do
+        create_post(topic:, user:, raw: "Check out [this link](https://visible-link.com)")
+      end
+      fab!(:another_visible_post) do
+        create_post(topic:, user:, raw: "And [another link](https://another-visible-link.com)")
+      end
+      fab!(:hidden_post) do
+        create_post(topic:, user:, raw: "This has a [hidden link](https://hidden-link.com)")
+      end
+      fab!(:deleted_post) do
+        create_post(topic:, user:, raw: "This has a [deleted link](https://deleted-link.com)")
+      end
+
+      before do
+        deleted_post.trash!
+        hidden_post.hide!(PostActionType.types[:off_topic])
+        sign_in(user)
+      end
+
+      it "doesn't include links from hidden or deleted posts" do
+        get "/u/#{user.username}/summary.json"
+
+        expect(response.status).to eq(200)
+
+        links = response.parsed_body["user_summary"]["links"]
+
+        expect(links.map { _1["url"] }).to contain_exactly(
+          "https://visible-link.com",
+          "https://another-visible-link.com",
+        )
+      end
     end
 
     context "when `hide_user_profiles_from_public` site setting is enabled" do

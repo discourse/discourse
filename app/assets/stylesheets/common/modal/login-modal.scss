@@ -1,9 +1,9 @@
-/*
-* shared styles
-*/
-
 .d-modal.login-modal,
 .d-modal.create-account {
+  &:not(:has(.login-right-side)) .d-modal__container {
+    max-width: 500px;
+  }
+
   &.awaiting-approval {
     display: none;
   }
@@ -209,14 +209,6 @@
 .invites-show {
   #account-email-validation:not(:has(*)) {
     display: none;
-  }
-}
-
-/* end shared styles */
-.d-modal.create-account,
-.d-modal.login-modal {
-  &:not(:has(.login-right-side)) .d-modal__container {
-    max-width: 500px;
   }
 }
 

@@ -136,7 +136,7 @@ export default class TopicCell extends Component {
 
       <PluginOutlet
         @name="topic-list-main-link-bottom"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{hash topic=@topic expandPinned=@expandPinned}}
       />
     </td>
   </template>

@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://cl\.ly})
+      matches_domain("cl.ly")
       always_https
 
       def to_html

@@ -90,6 +90,7 @@ ug:
       actor_muting_target_user: "سىز %{username} ئۈنسىزلەۋاتىسىز، شۇڭا ئۇلارغا ئۇچۇر يوللىيالمايسىز."
       actor_disallowed_dms: "ئىشلەتكۈچىنىڭ سىزگە شەخسىي ياكى بىۋاستىدە ئۇچۇر يوللىشىنى چەكلەشنى تاللىغان، شۇڭلاشقا يېڭىدىن بىۋاسىتە ئۇچۇر قۇرالمايسىز."
       actor_preventing_target_user_from_dm: "%{username} ىنىڭ سىزگە شەخسىي ياكى بىۋاستىدە ئۇچۇر يوللىشىنى چەكلەشنى تاللىغان، شۇڭلاشقا ئۇلارغا يېڭىدىن بىۋاسىتە ئۇچۇر قۇرالمايسىز."
+      not_reachable: "كەچۈرۈڭ، %{username} سۆھبەت ئىشلەتمەيۋاتىدۇ."
       user_cannot_send_direct_messages: "كەچۈرۈڭ، بىۋاسىتە ئۇچۇر يوللىيالمايسىز."
       over_chat_max_direct_message_users_allow_self: "سىز پەقەت ئۆزىڭىزگە بىۋاسىتە ئۇچۇر قۇرالايسىز."
       over_chat_max_direct_message_users:
@@ -185,6 +186,8 @@ ug:
       inline_to_message: "%{username} – #%{chat_channel} نىڭ #%{message_id} ئۇچۇرى"
       inline_to_channel: "#%{chat_channel} سۆھبەت"
       inline_to_topic_channel: "%{topic_title} تېمىنىڭ سۆھبىتى"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "#%{chat_channel} دىكى ئۇچۇر تىزىقى"
       thread_title_connector: "ئورنى:"
       x_members:
         one: "%{count} ئەزا"

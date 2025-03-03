@@ -12,8 +12,12 @@ module Onebox
       include Onebox::Mixins::GithubBody
       include Onebox::Mixins::GithubAuthHeader
 
-      matches_regexp(%r{^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/pull})
+      matches_domain("github.com", "www.github.com")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{.*/pull})
+      end
 
       def url
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/#{match[:number]}"
@@ -36,7 +40,8 @@ module Onebox
         result["created_at_time"] = created_at.strftime("%T")
 
         ulink = URI(link)
-        result["domain"] = "#{ulink.host}/#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}"
+        _, org, repo = ulink.path.split("/")
+        result["domain"] = "#{ulink.host}/#{org}/#{repo}"
 
         result["body"], result["excerpt"] = compute_body(result["body"])
 
@@ -50,6 +55,7 @@ module Onebox
         else
           result["pr"] = true
         end
+
         result["i18n"] = i18n
         result["i18n"]["pr_summary"] = I18n.t(
           "onebox.github.pr_summary",
@@ -61,6 +67,9 @@ module Onebox
           },
         )
         result["is_private"] = result.dig("base", "repo", "private")
+
+        result["base"]["label"].sub!(/\A#{org}:/, "")
+        result["head"]["label"].sub!(/\A#{org}:/, "")
 
         result
       end

@@ -3,6 +3,11 @@
 class UserExportSerializer < ApplicationSerializer
   attributes :id, :filename, :uri, :filesize, :extension, :retain_hours, :human_filesize
 
+  def serializable_hash(adapter_options = nil, options = {})
+    return {} unless object.upload
+    super()
+  end
+
   def filename
     object.upload.original_filename
   end

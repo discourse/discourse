@@ -291,54 +291,40 @@ RSpec.describe Category do
   end
 
   describe "non-english characters" do
+    let(:category) { Fabricate(:category_with_definition, name: "测试") }
+
     context "when using ascii slug generator" do
-      before do
-        SiteSetting.slug_generation_method = "ascii"
-        @category = Fabricate(:category_with_definition, name: "测试")
-      end
-      after { @category.destroy }
+      before { SiteSetting.slug_generation_method = "ascii" }
 
       it "creates a blank slug" do
-        expect(@category.slug).to be_blank
-        expect(@category.slug_for_url).to eq("#{@category.id}-category")
+        expect(category.slug).to be_blank
+        expect(category.slug_for_url).to eq("#{category.id}-category")
       end
     end
 
     context "when using none slug generator" do
-      before do
-        SiteSetting.slug_generation_method = "none"
-        @category = Fabricate(:category_with_definition, name: "测试")
-      end
-      after do
-        SiteSetting.slug_generation_method = "ascii"
-        @category.destroy
-      end
+      before { SiteSetting.slug_generation_method = "none" }
+      after { SiteSetting.slug_generation_method = "ascii" }
 
       it "creates a blank slug" do
-        expect(@category.slug).to be_blank
-        expect(@category.slug_for_url).to eq("#{@category.id}-category")
+        expect(category.slug).to be_blank
+        expect(category.slug_for_url).to eq("#{category.id}-category")
       end
     end
 
     context "when using encoded slug generator" do
-      before do
-        SiteSetting.slug_generation_method = "encoded"
-        @category = Fabricate(:category_with_definition, name: "测试")
-      end
-      after do
-        SiteSetting.slug_generation_method = "ascii"
-        @category.destroy
-      end
+      before { SiteSetting.slug_generation_method = "encoded" }
+      after { SiteSetting.slug_generation_method = "ascii" }
 
       it "creates a slug" do
-        expect(@category.slug).to eq("%E6%B5%8B%E8%AF%95")
-        expect(@category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
+        expect(category.slug).to eq("%E6%B5%8B%E8%AF%95")
+        expect(category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
       end
 
       it "keeps the encoded slug after saving" do
-        @category.save
-        expect(@category.slug).to eq("%E6%B5%8B%E8%AF%95")
-        expect(@category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
+        category.save
+        expect(category.slug).to eq("%E6%B5%8B%E8%AF%95")
+        expect(category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
       end
     end
   end
@@ -353,25 +339,25 @@ RSpec.describe Category do
   end
 
   describe "custom slug can be provided" do
-    it "can be sanitized" do
-      @c = Fabricate(:category_with_definition, name: "Fun Cats", slug: "fun-cats")
-      @cat = Fabricate(:category_with_definition, name: "love cats", slug: "love-cats")
+    let(:category_1) { Fabricate(:category_with_definition, name: "Fun Cats", slug: "fun-cats") }
+    let!(:category_2) { Fabricate(:category_with_definition, name: "love cats", slug: "love-cats") }
 
-      @c.slug = "  invalid slug"
-      @c.save
-      expect(@c.slug).to eq("invalid-slug")
+    it "can be sanitized" do
+      category_1.slug = "  invalid slug"
+      category_1.save
+      expect(category_1.slug).to eq("invalid-slug")
 
       c = Fabricate.build(:category, name: "More Fun Cats", slug: "love-cats")
       expect(c).not_to be_valid
       expect(c.errors[:slug]).to be_present
 
-      @cat.slug = "#{@c.id}-category"
-      expect(@cat).not_to be_valid
-      expect(@cat.errors[:slug]).to be_present
+      category_2.slug = "#{category_1.id}-category"
+      expect(category_2).not_to be_valid
+      expect(category_2.errors[:slug]).to be_present
 
-      @cat.slug = "#{@cat.id}-category"
-      expect(@cat).to be_valid
-      expect(@cat.errors[:slug]).not_to be_present
+      category_2.slug = "#{category_2.id}-category"
+      expect(category_2).to be_valid
+      expect(category_2.errors[:slug]).not_to be_present
     end
 
     context "if SiteSettings.slug_generation_method = ascii" do
@@ -396,40 +382,38 @@ RSpec.describe Category do
   end
 
   describe "after create" do
-    before do
-      @category = Fabricate(:category_with_definition, name: "Amazing Category")
-      @topic = @category.topic
-    end
+    fab!(:category) { Fabricate(:category_with_definition, name: "Amazing Category") }
+    let(:topic) { category.topic }
 
     it "is created correctly" do
-      expect(@category.slug).to eq("amazing-category")
-      expect(@category.slug_for_url).to eq(@category.slug)
+      expect(category.slug).to eq("amazing-category")
+      expect(category.slug_for_url).to eq(category.slug)
 
-      expect(@category.description).to be_blank
+      expect(category.description).to be_blank
 
-      expect(Topic.where(category_id: @category).count).to eq(1)
+      expect(Topic.where(category_id: category).count).to eq(1)
 
-      expect(@topic).to be_present
+      expect(topic).to be_present
 
-      expect(@topic.category).to eq(@category)
+      expect(topic.category).to eq(category)
 
-      expect(@topic).to be_visible
+      expect(topic).to be_visible
 
-      expect(@topic.pinned_at).to be_present
+      expect(topic.pinned_at).to be_present
 
-      expect(Guardian.new(@category.user).can_delete?(@topic)).to be false
+      expect(Guardian.new(category.user).can_delete?(topic)).to be false
 
-      expect(@topic.posts.count).to eq(1)
+      expect(topic.posts.count).to eq(1)
 
-      expect(@category.topic_url).to be_present
+      expect(category.topic_url).to be_present
 
-      expect(@category.posts_week).to eq(0)
-      expect(@category.posts_month).to eq(0)
-      expect(@category.posts_year).to eq(0)
+      expect(category.posts_week).to eq(0)
+      expect(category.posts_month).to eq(0)
+      expect(category.posts_year).to eq(0)
 
-      expect(@category.topics_week).to eq(0)
-      expect(@category.topics_month).to eq(0)
-      expect(@category.topics_year).to eq(0)
+      expect(category.topics_week).to eq(0)
+      expect(category.topics_month).to eq(0)
+      expect(category.topics_year).to eq(0)
     end
 
     it "cooks the definition" do
@@ -444,31 +428,31 @@ RSpec.describe Category do
     end
 
     it "renames the definition when renamed" do
-      @category.update(name: "Troutfishing")
-      @topic.reload
-      expect(@topic.title).to match(/Troutfishing/)
-      expect(@topic.fancy_title).to match(/Troutfishing/)
+      category.update(name: "Troutfishing")
+      topic.reload
+      expect(topic.title).to match(/Troutfishing/)
+      expect(topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
-      expect { @category.update(name: "Troutfishing", topic_id: nil) }.to_not raise_error
+      expect { category.update(name: "Troutfishing", topic_id: nil) }.to_not raise_error
     end
 
     it "creates permalink when category slug is changed" do
-      @category.update(slug: "new-category")
+      category.update(slug: "new-category")
       expect(Permalink.count).to eq(1)
     end
 
     it "reuses existing permalink when category slug is changed" do
-      permalink = Permalink.create!(url: "c/#{@category.slug}/#{@category.id}", category_id: 42)
+      permalink = Permalink.create!(url: "c/#{category.slug}/#{category.id}", category_id: 42)
 
-      expect { @category.update(slug: "new-slug") }.to_not change { Permalink.count }
-      expect(permalink.reload.category_id).to eq(@category.id)
+      expect { category.update(slug: "new-slug") }.to_not change { Permalink.count }
+      expect(permalink.reload.category_id).to eq(category.id)
     end
 
     it "creates permalink when sub category slug is changed" do
       sub_category =
-        Fabricate(:category_with_definition, slug: "sub-category", parent_category_id: @category.id)
+        Fabricate(:category_with_definition, slug: "sub-category", parent_category_id: category.id)
       sub_category.update(slug: "new-sub-category")
       expect(Permalink.count).to eq(1)
     end
@@ -492,8 +476,8 @@ RSpec.describe Category do
 
     it "correctly creates permalink when category slug is changed in subfolder install" do
       set_subfolder "/forum"
-      old_url = @category.url
-      @category.update(slug: "new-category")
+      old_url = category.url
+      category.update(slug: "new-category")
       permalink = Permalink.last
       expect(permalink.url).to eq(old_url[1..-1])
     end
@@ -524,17 +508,19 @@ RSpec.describe Category do
     end
 
     describe "trying to change the category topic's category" do
+      let(:new_category) do
+        Fabricate(:category_with_definition, name: "2nd Category", user: category.user)
+      end
       before do
-        @new_cat = Fabricate(:category_with_definition, name: "2nd Category", user: @category.user)
-        @topic.change_category_to_id(@new_cat.id)
-        @topic.reload
-        @category.reload
+        topic.change_category_to_id(new_category.id)
+        topic.reload
+        category.reload
       end
 
       it "does not cause changes" do
-        expect(@category.topic_count).to eq(0)
-        expect(@topic.category).to eq(@category)
-        expect(@category.topic).to eq(@topic)
+        expect(category.topic_count).to eq(0)
+        expect(topic.category).to eq(category)
+        expect(category.topic).to eq(topic)
       end
     end
   end
@@ -561,31 +547,30 @@ RSpec.describe Category do
   end
 
   describe "destroy" do
-    before do
-      @category = Fabricate(:category_with_definition)
-      @category_id = @category.id
-      @topic_id = @category.topic_id
-      SiteSetting.shared_drafts_category = @category.id.to_s
-    end
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:category_id) { category.id }
+    let(:topic_id) { category.topic_id }
+
+    before { SiteSetting.shared_drafts_category = category.id.to_s }
 
     it "is deleted correctly" do
-      @category.destroy
-      expect(Category.exists?(id: @category_id)).to be false
-      expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: @topic_id)).to be true
+      category.destroy
+      expect(Category.exists?(id: category_id)).to be false
+      expect(Topic.with_deleted.where.not(deleted_at: nil).exists?(id: topic_id)).to be true
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
     it "deletes related embeddable host" do
-      embeddable_host = Fabricate(:embeddable_host, category: @category)
-      @category.destroy!
+      embeddable_host = Fabricate(:embeddable_host, category:)
+      category.destroy!
       expect { embeddable_host.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
+      event = DiscourseEvent.track(:category_destroyed) { category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
-      expect(event[:params].first).to eq(@category)
+      expect(event[:params].first).to eq(category)
     end
   end
 
@@ -616,101 +601,101 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before do
-      @category =
-        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    let(:category) do
+      Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
     end
 
     context "with regular topics" do
       before do
-        create_post(user: @category.user, category: @category.id)
+        create_post(user: category.user, category:)
         Category.update_stats
-        @category.reload
+        category.reload
       end
 
       it "updates topic stats" do
-        expect(@category.topics_week).to eq(1)
-        expect(@category.topics_month).to eq(1)
-        expect(@category.topics_year).to eq(1)
-        expect(@category.topic_count).to eq(1)
-        expect(@category.post_count).to eq(1)
-        expect(@category.posts_year).to eq(1)
-        expect(@category.posts_month).to eq(1)
-        expect(@category.posts_week).to eq(1)
+        expect(category.topics_week).to eq(1)
+        expect(category.topics_month).to eq(1)
+        expect(category.topics_year).to eq(1)
+        expect(category.topic_count).to eq(1)
+        expect(category.post_count).to eq(1)
+        expect(category.posts_year).to eq(1)
+        expect(category.posts_month).to eq(1)
+        expect(category.posts_week).to eq(1)
       end
     end
 
     context "with deleted topics" do
       before do
-        @category.topics << Fabricate(:deleted_topic, user: @category.user)
+        category.topics << Fabricate(:deleted_topic, user: category.user)
         Category.update_stats
-        @category.reload
+        category.reload
       end
 
       it "does not count deleted topics" do
-        expect(@category.topics_week).to eq(0)
-        expect(@category.topic_count).to eq(0)
-        expect(@category.topics_month).to eq(0)
-        expect(@category.topics_year).to eq(0)
-        expect(@category.post_count).to eq(0)
-        expect(@category.posts_year).to eq(0)
-        expect(@category.posts_month).to eq(0)
-        expect(@category.posts_week).to eq(0)
+        expect(category.topics_week).to eq(0)
+        expect(category.topic_count).to eq(0)
+        expect(category.topics_month).to eq(0)
+        expect(category.topics_year).to eq(0)
+        expect(category.post_count).to eq(0)
+        expect(category.posts_year).to eq(0)
+        expect(category.posts_month).to eq(0)
+        expect(category.posts_week).to eq(0)
       end
     end
 
     context "with revised post" do
       before do
-        post = create_post(user: @category.user, category: @category.id)
+        post = create_post(user: category.user, category:)
 
         SiteSetting.editing_grace_period = 1.minute
         post.revise(post.user, { raw: "updated body" }, revised_at: post.updated_at + 2.minutes)
 
         Category.update_stats
-        @category.reload
+        category.reload
       end
 
       it "doesn't count each version of a post" do
-        expect(@category.post_count).to eq(1)
-        expect(@category.posts_year).to eq(1)
-        expect(@category.posts_month).to eq(1)
-        expect(@category.posts_week).to eq(1)
+        expect(category.post_count).to eq(1)
+        expect(category.posts_year).to eq(1)
+        expect(category.posts_month).to eq(1)
+        expect(category.posts_week).to eq(1)
       end
     end
 
     context "for uncategorized category" do
+      let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
+
       before do
-        @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: uncategorized)
         Category.update_stats
-        @uncategorized.reload
+        uncategorized.reload
       end
 
       it "updates topic stats" do
-        expect(@uncategorized.topics_week).to eq(1)
-        expect(@uncategorized.topics_month).to eq(1)
-        expect(@uncategorized.topics_year).to eq(1)
-        expect(@uncategorized.topic_count).to eq(1)
-        expect(@uncategorized.post_count).to eq(1)
-        expect(@uncategorized.posts_year).to eq(1)
-        expect(@uncategorized.posts_month).to eq(1)
-        expect(@uncategorized.posts_week).to eq(1)
+        expect(uncategorized.topics_week).to eq(1)
+        expect(uncategorized.topics_month).to eq(1)
+        expect(uncategorized.topics_year).to eq(1)
+        expect(uncategorized.topic_count).to eq(1)
+        expect(uncategorized.post_count).to eq(1)
+        expect(uncategorized.posts_year).to eq(1)
+        expect(uncategorized.posts_month).to eq(1)
+        expect(uncategorized.posts_week).to eq(1)
       end
     end
 
     context "when there are no topics left" do
-      let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
+      let!(:topic) { create_post(user: category.user, category:).reload.topic }
 
       it "can update the topic count to zero" do
-        @category.reload
-        expect(@category.topic_count).to eq(1)
-        expect(@category.topics.count).to eq(2)
+        category.reload
+        expect(category.topic_count).to eq(1)
+        expect(category.topics.count).to eq(2)
         topic.delete # Delete so the post trash/destroy hook doesn't fire
 
         Category.update_stats
-        @category.reload
-        expect(@category.topics.count).to eq(1)
-        expect(@category.topic_count).to eq(0)
+        category.reload
+        expect(category.topics.count).to eq(1)
+        expect(category.topic_count).to eq(0)
       end
     end
   end

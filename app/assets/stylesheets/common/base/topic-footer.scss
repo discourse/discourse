@@ -1,13 +1,13 @@
 #topic-footer-buttons {
   display: flex;
-
-  html.anon & {
-    justify-content: end;
-  }
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
       var(--topic-body-width-padding) * 2
   );
+
+  html.anon & {
+    justify-content: end;
+  }
 
   .topic-footer-main-buttons {
     display: flex;
@@ -43,27 +43,26 @@
   position: sticky;
   bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
   z-index: z("timeline");
+  pointer-events: none; // the wrapper can block mobile controls
+
+  > * {
+    pointer-events: auto; // this unsets the above rule so the child elements are interactive
+  }
 }
 
 #topic-progress-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+
   &.docked {
     .toggle-admin-menu {
       display: none;
     }
   }
-  display: flex;
-  justify-content: flex-end;
-  overflow: hidden;
 
   .btn {
     border: 0;
-  }
-
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      right: calc(50%); // right side of composer
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
   }
 
   #topic-progress {

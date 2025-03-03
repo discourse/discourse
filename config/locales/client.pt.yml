@@ -3567,6 +3567,8 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
+            my_posts:
+              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -3607,11 +3609,28 @@ pt:
       reports:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
-        sidebar_link:
-          all: "Todos os relatórios"
+      config_sections:
+        account:
+          title: "Conta"
+        reports:
+          title: "Relatórios"
+        community:
+          title: "Comunidade"
+        appearance:
+          title: "Aparência"
+        email:
+          title: "Email"
+        security:
+          title: "Segurança"
+        plugins:
+          title: "Plugins"
       config:
         developer:
           title: "Desenvolvedor"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderação"
         files:
           title: "Ficheiros"
         legal:
@@ -3632,6 +3651,68 @@ pt:
           title: "Spam"
         user_api:
           title: "API de Utlizador"
+        dashboard:
+          title: "Painel de Administração"
+        users:
+          title: "Utilizadores"
+        groups:
+          title: "Grupos"
+        backups:
+          title: "Fazer Cópias de Segurança"
+          sub_pages:
+            logs:
+              title: "Logs"
+        reports:
+          title: "Relatórios"
+        badges:
+          title: "Crachás"
+        permalinks:
+          title: "Hiperligações Permanentes"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temas"
+        components:
+          title: "Componentes"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos"
+            templates:
+              title: "Templates"
+            sent:
+              title: "Enviado"
+            skipped:
+              title: "Ignorado"
+            bounced:
+              title: "Redirecionado"
+            received:
+              title: "Recebido"
+            rejected:
+              title: "Rejeitado"
+        email_appearance:
+          title: "Aparência"
+          header_description: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de e-mail serão verificados e o registo será bloqueado, ou outra ação executada"
+            screened_ips:
+              title: "IPs Filtrados"
+            screened_urls:
+              title: "URLs Filtrados"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incorporação"
+      search:
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temas"
+          component:
+            one: "Componente"
+            other: "Componentes"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3891,39 +3972,6 @@ pt:
             failed: "Falhado"
       home:
         title: "Início"
-      account:
-        title: "Conta"
-        sidebar_link:
-          backups: "Fazer Cópias de Segurança"
-      community:
-        title: "Comunidade"
-        sidebar_link:
-          badges: "Crachás"
-          notifications: "Notificações"
-          permalinks: "Hiperligações Permanentes"
-          users: "Utilizadores"
-          groups: "Grupos"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderação"
-      appearance:
-        title: "Aparência"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "Navegação"
-          themes: "Temas"
-          components:
-            title: "Componentes"
-      email_settings:
-        sidebar_link:
-          appearance: "Aparência"
-      security:
-        title: "Segurança"
-      section_landing_pages:
-        account:
-          title: "Conta"
-          backups:
-            title: "Fazer Cópias de Segurança"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3932,7 +3980,6 @@ pt:
           update: "Atualização"
           saved: "guardado!"
         flags:
-          header: "Moderação"
           description: "Descrição"
           enabled: "Ativado?"
           edit: "Editar"
@@ -3970,18 +4017,6 @@ pt:
         howto: "Como instalo plugins?"
         author: "Por %{author}"
         learn_more: "Saiba mais"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Desenvolvedor"
-          embedding: "Incorporação"
-          user_api: "API de Utlizador"
-          onebox: "Caixa Única"
-          files: "Ficheiros"
-          other_options: "Outro"
-          search: "Pesquisar"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:
@@ -4099,15 +4134,10 @@ pt:
           common: "Comum"
           desktop: "Desktop"
           mobile: "Móvel"
-          settings: "Configurações"
-          translations: "Traduções"
-          extra_scss: "SCSS extra"
           extra_files: "Arquivos extras"
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
-          show_advanced: "Mostrar campos avançados"
-          hide_advanced: "Ocultar campos avançados"
           hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
@@ -4589,8 +4619,6 @@ pt:
         cant_delete_all_too_many_posts:
           one: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagem. (delete_all_posts_max)"
           other: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagens. (delete_all_posts_max)"
-        delete_and_block: "Eliminar e <b>bloquear<b> este e-mail e endereço de IP"
-        delete_dont_block: "Apenas eliminar"
         deleted: "O utilizador foi eliminado."
         delete_failed: "Ocorreu um erro ao eliminar o utilizador. Certifique-se de que todas as suas mensagens foram eliminadas antes de tentar eliminar o utilizador."
         send_activation_email: "Enviar Email de Ativação"

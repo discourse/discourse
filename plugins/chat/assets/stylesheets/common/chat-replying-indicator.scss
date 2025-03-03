@@ -24,6 +24,7 @@
 
     .chat-replying-indicator__dot {
       display: inline-block;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: chat-replying-indicator__wave 1.8s linear infinite;
       }
