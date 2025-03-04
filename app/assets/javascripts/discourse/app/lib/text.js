@@ -56,7 +56,7 @@ export async function parseMentions(markdown, options) {
   return await withEngine("parseMentions", markdown, options);
 }
 
-function emojiOptions() {
+export function emojiOptions() {
   let siteSettings = helperContext().siteSettings;
   let context = helperContext();
   if (!siteSettings.enable_emoji) {
