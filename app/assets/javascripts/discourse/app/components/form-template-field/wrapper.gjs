@@ -5,6 +5,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import Yaml from "js-yaml";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
+import ComposerField from "./composer";
 import DropdownField from "./dropdown";
 import InputField from "./input";
 import MultiSelectField from "./multi-select";
@@ -34,6 +35,7 @@ export default class FormTemplateFieldWrapper extends Component {
     "multi-select": MultiSelectField,
     textarea: TextareaField,
     upload: UploadField,
+    composer: ComposerField,
   };
 
   constructor() {
