@@ -1861,6 +1861,8 @@ RSpec.describe PostsController do
             DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
 
             expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
           end
         end
       end
