@@ -7,6 +7,7 @@ import link from "./link";
 import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
+import table from "./table";
 import underline from "./underline";
 
 /**
@@ -25,6 +26,7 @@ const defaultExtensions = [
   mention,
   strikethrough,
   underline,
+  table,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
