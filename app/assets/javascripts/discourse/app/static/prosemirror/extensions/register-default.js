@@ -6,6 +6,7 @@ import image from "./image";
 import link from "./link";
 import mention from "./mention";
 import quote from "./quote";
+import strikethrough from "./strikethrough";
 import underline from "./underline";
 
 /**
@@ -22,6 +23,7 @@ const defaultExtensions = [
   quote,
   hashtag,
   mention,
+  strikethrough,
   underline,
 ];
 
