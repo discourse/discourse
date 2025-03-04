@@ -48,7 +48,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get href() {
-    return this.adminSidebarNavLink.href;
+    if (this.adminSidebarNavLink.href) {
+      return getURL(this.adminSidebarNavLink.href);
+    }
   }
 
   get query() {
