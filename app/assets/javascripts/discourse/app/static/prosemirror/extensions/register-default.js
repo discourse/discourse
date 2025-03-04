@@ -1,7 +1,7 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import emoji from "./emoji";
-import heading from "./heading";
 import hashtag from "./hashtag";
+import heading from "./heading";
 import mention from "./mention";
 import underline from "./underline";
 
