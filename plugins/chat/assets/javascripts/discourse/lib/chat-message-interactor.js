@@ -64,8 +64,7 @@ export default class ChatemojiReactions {
       .split("|")
       .filter(Boolean);
 
-    return this.emojiStore
-      .favoritesForContext(`channel_${this.message.channel.id}`)
+    return this.emojiStore.favorites
       .concat(defaultReactions)
       .slice(0, 3)
       .map(
