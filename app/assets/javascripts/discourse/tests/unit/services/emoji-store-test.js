@@ -21,15 +21,13 @@ module("Unit | Service | emoji-store", function (hooks) {
     this.emojiStore.reset();
   });
 
-  test(".trackEmojiForContext", function (assert) {
-    this.emojiStore.trackEmojiForContext("grinning", "topic");
+  test(".trackEmoji", function (assert) {
+    this.emojiStore.trackEmoji("grinning");
     const storedEmojis = new KeyValueStore(STORE_NAMESPACE).getObject(
-      `topic_${USER_EMOJIS_STORE_KEY}`
+      USER_EMOJIS_STORE_KEY
     );
 
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
-      "grinning",
-    ]);
+    assert.deepEqual(this.emojiStore.favorites, ["grinning"]);
     assert.deepEqual(
       storedEmojis,
       ["grinning"],
@@ -40,7 +38,7 @@ module("Unit | Service | emoji-store", function (hooks) {
   test("limits the maximum number of tracked emojis", function (assert) {
     let trackedEmojis;
     Array.from({ length: 45 }).forEach(() => {
-      trackedEmojis = this.emojiStore.trackEmojiForContext("grinning", "topic");
+      trackedEmojis = this.emojiStore.trackEmoji("grinning");
     });
 
     assert.strictEqual(trackedEmojis.length, MAX_TRACKED_EMOJIS);
@@ -48,33 +46,18 @@ module("Unit | Service | emoji-store", function (hooks) {
 
   test("limits the maximum number of favorites emojis", function (assert) {
     Array.from({ length: 25 }).forEach((_, i) => {
-      this.emojiStore.trackEmojiForContext(`emoji_${i}`, "topic");
+      this.emojiStore.trackEmoji(`emoji_${i}`);
     });
 
-    assert.strictEqual(
-      this.emojiStore.favoritesForContext("topic").length,
-      MAX_DISPLAYED_EMOJIS
-    );
+    assert.strictEqual(this.emojiStore.favorites.length, MAX_DISPLAYED_EMOJIS);
   });
 
-  test("support for multiple contexts", function (assert) {
-    this.emojiStore.trackEmojiForContext("grinning", "topic");
+  test(".reset()", function (assert) {
+    this.emojiStore.trackEmoji("grinning");
 
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
-      "grinning",
-    ]);
+    this.emojiStore.reset();
 
-    this.emojiStore.trackEmojiForContext("cat", "chat");
-
-    assert.deepEqual(this.emojiStore.favoritesForContext("chat"), ["cat"]);
-  });
-
-  test(".resetContext", function (assert) {
-    this.emojiStore.trackEmojiForContext("grinning", "topic");
-
-    this.emojiStore.resetContext("topic");
-
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), []);
+    assert.deepEqual(this.emojiStore.favorites, []);
   });
 
   test(".diversity", function (assert) {
@@ -91,18 +74,24 @@ module("Unit | Service | emoji-store", function (hooks) {
     assert.deepEqual(storedDiversity, 2, "it persists the diversity value");
   });
 
-  test("sort emojis by frequency", function (assert) {
-    this.emojiStore.trackEmojiForContext("grinning", "topic");
-    this.emojiStore.trackEmojiForContext("cat", "topic");
-    this.emojiStore.trackEmojiForContext("cat", "topic");
-    this.emojiStore.trackEmojiForContext("cat", "topic");
-    this.emojiStore.trackEmojiForContext("dog", "topic");
-    this.emojiStore.trackEmojiForContext("dog", "topic");
+  test("favorites excludes denied emojis", function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    site.set("denied_emojis", ["poo"]);
 
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
-      "cat",
-      "dog",
-      "grinning",
-    ]);
+    this.emojiStore.trackEmoji("grinning");
+    this.emojiStore.trackEmoji("poo");
+
+    assert.deepEqual(this.emojiStore.favorites, ["grinning"]);
+  });
+
+  test("sort emojis by frequency", function (assert) {
+    this.emojiStore.trackEmoji("grinning");
+    this.emojiStore.trackEmoji("cat");
+    this.emojiStore.trackEmoji("cat");
+    this.emojiStore.trackEmoji("cat");
+    this.emojiStore.trackEmoji("dog");
+    this.emojiStore.trackEmoji("dog");
+
+    assert.deepEqual(this.emojiStore.favorites, ["cat", "dog", "grinning"]);
   });
 });

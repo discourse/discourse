@@ -1,28 +1,43 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const SKIN_TONE_STORE_KEY = "emojiSelectedDiversity";
 export const STORE_NAMESPACE = "discourse_emoji_reaction_";
-export const USER_EMOJIS_STORE_KEY = "emojiUsage";
+export const LEGACY_USER_EMOJIS_STORE_KEY = "topic_emojiUsage";
+export const USER_EMOJIS_STORE_KEY = "emoji_usage";
 export const MAX_DISPLAYED_EMOJIS = 20;
 export const MAX_TRACKED_EMOJIS = MAX_DISPLAYED_EMOJIS * 2;
 export const DEFAULT_DIVERSITY = 1;
 
 export default class EmojiStore extends Service {
+  @service site;
   @service siteSettings;
 
   @tracked list;
 
   store = new KeyValueStore(STORE_NAMESPACE);
 
-  contexts = new TrackedObject();
-
   @tracked _diversity;
+  @tracked _favorites;
+
+  constructor() {
+    super(...arguments);
+
+    // TODO (joffrey): remove in 2026
+    const legacy = this.store.getObject(LEGACY_USER_EMOJIS_STORE_KEY);
+    if (legacy) {
+      this.store.setObject({ key: USER_EMOJIS_STORE_KEY, value: legacy });
+      this.store.remove(LEGACY_USER_EMOJIS_STORE_KEY);
+    }
+  }
 
   get diversity() {
-    return this._diversity ?? this.store.getObject(SKIN_TONE_STORE_KEY) ?? 1;
+    return (
+      this._diversity ??
+      this.store.getObject(SKIN_TONE_STORE_KEY) ??
+      DEFAULT_DIVERSITY
+    );
   }
 
   set diversity(value) {
@@ -30,57 +45,45 @@ export default class EmojiStore extends Service {
     this.store.setObject({ key: SKIN_TONE_STORE_KEY, value });
   }
 
-  trackEmojiForContext(emoji, context) {
-    const recentEmojis = this.#addEmojiToContext(emoji, context);
-    this.contexts[context] = new TrackedArray(recentEmojis);
-    this.#persistRecentEmojisForContext(recentEmojis, context);
+  trackEmoji(emoji) {
+    const recentEmojis = this.#addEmoji(emoji);
+    this.favorites = recentEmojis;
     return recentEmojis;
   }
 
-  favoritesForContext(context) {
-    return this.#sortEmojisByFrequency(
-      this.#recentEmojisForContext(context)
-    ).slice(0, MAX_DISPLAYED_EMOJIS);
+  get favorites() {
+    return this.#sortEmojisByFrequency(this.#recentEmojis)
+      .filter((f) => !this.site.denied_emojis?.includes(f))
+      .slice(0, MAX_DISPLAYED_EMOJIS);
+  }
+
+  set favorites(value) {
+    this._favorites = value;
+    this.#persistEmojis(value);
   }
 
   reset() {
-    Object.keys(this.contexts).forEach((context) => {
-      this.resetContext(context);
-    });
     this.diversity = DEFAULT_DIVERSITY;
+    this.favorites = [];
   }
 
-  resetContext(context) {
-    this.contexts[context] = [];
-    this.#persistRecentEmojisForContext([], context);
+  get #recentEmojis() {
+    return this._favorites ?? this.store.getObject(USER_EMOJIS_STORE_KEY) ?? [];
   }
 
-  #recentEmojisForContext(context) {
-    return (
-      this.contexts[context] ??
-      this.store.getObject(this.#emojisStorekeyForContext(context)) ??
-      []
-    );
-  }
-
-  #addEmojiToContext(emoji, context) {
-    const recentEmojis = this.#recentEmojisForContext(context);
+  #addEmoji(emoji) {
+    const recentEmojis = this.#recentEmojis;
     recentEmojis.unshift(this.#normalizeEmojiCode(emoji));
     recentEmojis.length = Math.min(recentEmojis.length, MAX_TRACKED_EMOJIS);
     return recentEmojis;
   }
 
-  #persistRecentEmojisForContext(recentEmojis, context) {
-    const key = this.#emojisStorekeyForContext(context);
-    this.store.setObject({ key, value: recentEmojis });
+  #persistEmojis(value) {
+    this.store.setObject({ key: USER_EMOJIS_STORE_KEY, value });
   }
 
   #normalizeEmojiCode(code) {
     return code.replace(/(^:)|(:$)/g, "");
-  }
-
-  #emojisStorekeyForContext(context) {
-    return `${context}_${USER_EMOJIS_STORE_KEY}`;
   }
 
   #sortEmojisByFrequency(emojis = []) {
