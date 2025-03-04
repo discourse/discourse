@@ -5,6 +5,7 @@ import heading from "./heading";
 import image from "./image";
 import link from "./link";
 import mention from "./mention";
+import quote from "./quote";
 import underline from "./underline";
 
 /**
@@ -18,6 +19,7 @@ const defaultExtensions = [
   image,
   link,
   heading,
+  quote,
   hashtag,
   mention,
   underline,
