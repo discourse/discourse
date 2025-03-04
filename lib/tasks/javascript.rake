@@ -171,6 +171,10 @@ task "javascript:update_constants" => :environment do
     export const REPORT_MODES = #{Report::MODES.to_json};
 
     export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
+
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -182,10 +186,9 @@ task "javascript:update_constants" => :environment do
   JS
 
   write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
-    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
+    export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
     export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
     export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
     export const replacements = #{Emoji.unicode_replacements_json};
   JS

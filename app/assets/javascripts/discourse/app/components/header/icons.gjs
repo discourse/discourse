@@ -54,8 +54,16 @@ export default class Icons extends Component {
     return !this.args.sidebarEnabled || this.site.mobileView;
   }
 
-  get hideSearchButton() {
-    return this.header.headerButtonsHidden.includes("search");
+  get showSearchButton() {
+    if (this.header.headerButtonsHidden.includes("search")) {
+      return false;
+    }
+
+    return (
+      this.site.mobileView ||
+      this.siteSettings.search_experience === "search_icon" ||
+      this.args.topicInfoVisible
+    );
   }
 
   @action
@@ -71,7 +79,7 @@ export default class Icons extends Component {
     <ul class="icons d-header-icons">
       {{#each (headerIcons.resolve) as |entry|}}
         {{#if (eq entry.key "search")}}
-          {{#unless this.hideSearchButton}}
+          {{#if this.showSearchButton}}
             <Dropdown
               @title="search.title"
               @icon="magnifying-glass"
@@ -82,7 +90,7 @@ export default class Icons extends Component {
               @className="search-dropdown"
               @targetSelector=".search-menu-panel"
             />
-          {{/unless}}
+          {{/if}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
             <Dropdown

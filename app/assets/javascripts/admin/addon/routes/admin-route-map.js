@@ -316,6 +316,7 @@ export default function () {
         this.route("logo", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("branding");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -358,6 +359,14 @@ export default function () {
       { path: "/section", resetNamespace: true },
       function () {
         this.route("account");
+      }
+    );
+
+    this.route(
+      "adminSearch",
+      { path: "/search", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
       }
     );
   });

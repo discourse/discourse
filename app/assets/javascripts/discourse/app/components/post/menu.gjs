@@ -631,46 +631,38 @@ export default class PostMenu extends Component {
           {{/each}}
         </div>
       </nav>
-      {{#if this.isWhoReadVisible}}
-        <SmallUserList
-          class="who-read"
-          @addSelf={{false}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_readers_list_description"
-          }}
-          @count={{if
-            this.remainingReaders
-            this.remainingReaders
-            this.totalReaders
-          }}
-          @description={{if
-            this.remainingReaders
-            "post.actions.people.read_capped"
-            "post.actions.people.read"
-          }}
-          @users={{this.readers}}
-        />
-      {{/if}}
-      {{#if this.isWhoLikedVisible}}
-        <SmallUserList
-          class="who-liked"
-          @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_likers_list_description"
-          }}
-          @count={{if
-            this.remainingLikedUsers
-            this.remainingLikedUsers
-            this.totalLikedUsers
-          }}
-          @description={{if
-            this.remainingLikedUsers
-            "post.actions.people.like_capped"
-            "post.actions.people.like"
-          }}
-          @users={{this.likedUsers}}
-        />
-      {{/if}}
+      <SmallUserList
+        class="who-read"
+        @addSelf={{false}}
+        @isVisible={{this.isWhoReadVisible}}
+        @count={{if
+          this.remainingReaders
+          this.remainingReaders
+          this.totalReaders
+        }}
+        @description={{if
+          this.remainingReaders
+          "post.actions.people.read_capped"
+          "post.actions.people.read"
+        }}
+        @users={{this.readers}}
+      />
+      <SmallUserList
+        class="who-liked"
+        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+        @isVisible={{this.isWhoLikedVisible}}
+        @count={{if
+          this.remainingLikedUsers
+          this.remainingLikedUsers
+          this.totalLikedUsers
+        }}
+        @description={{if
+          this.remainingLikedUsers
+          "post.actions.people.like_capped"
+          "post.actions.people.like"
+        }}
+        @users={{this.likedUsers}}
+      />
       {{#if
         (this.showMoreButton.shouldRender
           (hash post=this.post state=this.state)
