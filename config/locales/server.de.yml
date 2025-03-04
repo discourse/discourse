@@ -60,6 +60,8 @@ de:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
+    too_many_urls: "Onebox kann nicht mehr als 10 URLs in einer einzigen Anfrage einbinden."
+    concurrency_not_allowed: "Gleichzeitige Inline-Oneboxing-Anfragen sind nicht erlaubt. Bitte sende nur eine Anfrage auf einmal."
   components:
     enabled_filter: "Aktiviert"
     disabled_filter: "Deaktiviert"
@@ -314,9 +316,9 @@ de:
     site_settings:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
-      site_setting_is_hidden: "Du darfst versteckte Einstellungen nicht ändern"
-      site_setting_is_shadowed_globally: "Du kannst diese Einstellung nicht ändern, da sie global konfiguriert ist"
-      site_setting_is_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern"
+      site_settings_are_hidden: "Du darfst keine versteckten Einstellungen ändern: %{setting_names}"
+      site_settings_are_shadowed_globally: "Du kannst diese Einstellungen nicht ändern, da sie global konfiguriert sind: %{setting_names}"
+      site_settings_are_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern: %{setting_names}"
       invalid_choice:
         one: "„%{name}“ ist eine ungültige Option."
         other: "„%{name}“ sind ungültige Optionen."
@@ -774,6 +776,9 @@ de:
           attributes:
             linkable_type:
               invalid: "ist nicht gültig"
+        api_key:
+          base:
+            at_least_one_granular_scope: "mindestens eine muss ausgewählt sein"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
   general_category_name: "Allgemein"
@@ -1637,6 +1642,7 @@ de:
     support_mixed_text_direction: "Unterstütze die Vermischung von rechtsläufigem und linksläufigem Text"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen (ohne persönliche Nachrichten)"
     min_first_post_length: "Zulässige Mindestlänge des ersten Beitrags (Thementext) (ohne persönliche Nachrichten)"
+    prevent_uploads_only_posts: "Markdown-Code von Uploads bei der Prüfung der Mindestlänge des Beitrags nicht berücksichtigen"
     min_personal_message_post_length: "Minimal zulässige Beitragslänge in Zeichen für Nachrichten (sowohl erster Beitrag als auch Antworten)"
     max_post_length: "Maximal zulässige Beitragslänge in Zeichen."
     topic_featured_link_enabled: "Ermöglicht es Benutzern, ihren Themen einen Feature-Link zuzuweisen. Wenn diese Funktion aktiviert ist, können Themen mit einem hervorgehobenen Link versehen werden, der öffentlich sichtbar ist und bearbeitet werden kann, wenn der Benutzer über ausreichende Berechtigungen verfügt. Der Feature-Link kann die Verständlichkeit eines Themas verbessern, indem er zusätzliche Inhalte bereitstellt."
@@ -1861,6 +1867,7 @@ de:
     block_common_passwords: "Erlaube keine Passwörter, die zu den 10.000 häufigsten Passwörtern zählen."
     auth_skip_create_confirm: Überspringe bei der Registrierung über externe Authentifizierung das „Konto erstellen“-Pop-up. Am besten verwendet neben auth_overrides_email, auth_overrides_username und auth_overrides_name.
     auth_immediately: "Automatische Weiterleitung zum externen Anmeldesystem ohne Benutzerinteraktion. Nur aktiv, wenn login_required auf „true“ gestellt ist und es nur eine externe Authentifizierungsmethode gibt"
+    auth_require_interaction: "Verlangt eine Benutzerinteraktion, bevor ihr über `/auth/*` zu einem externen Anmeldesystem weitergeleitet werdet. Dies ist ein umfassender Schutz gegen \"Login CSRF\"-Angriffe. Deaktiviere diese Einstellung nur, wenn du davon überzeugt bist, dass alle aktivierten Anmeldemethoden gegen CSRF-Angriffe geschützt sind."
     enable_discourse_connect: "Aktiviere die Anmeldung über DiscourseConnect (ehemals „Discourse SSO“) (WARNUNG: E-MAIL-ADRESSEN DER BENUTZER *MÜSSEN* VON DER EXTERNEN WEBSITE VALIDIERT WERDEN!)"
     verbose_discourse_connect_logging: "Protokolliere ausführliche DiscourseConnect-bezogene Diagnose in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementiere das DiscourseConnect-Anbieter-Protokoll (früher „Discourse SSO“) am Endpunkt /session/sso_provider; discourse_connect_provider_secrets muss festgelegt sein"
@@ -2128,7 +2135,7 @@ de:
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
     reviewable_low_priority_threshold: "Der Prioritätsfilter blendet überprüfbare Elemente aus, die diesem Score nicht entsprechen, es sei denn, der Filter „(any)“ wird verwendet."
     high_trust_flaggers_auto_hide_posts: "Beiträge von neuen Benutzern werden automatisch ausgeblendet, nachdem sie von einem Benutzer mit VS3+ als Spam gemeldet wurden"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonyme Benutzer sehen den Hinweis, dass sie den Administratoren eine E-Mail senden müssen, um illegale Inhalte zu melden."
+    allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor „flag post allowed groups“."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
     slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach editing_grace_period?"
@@ -2287,6 +2294,7 @@ de:
     svg_icon_subset: "Füge zusätzliche FontAwesome-Symbole hinzu, die du in deine Assets aufnehmen möchtest. Verwende das Präfix „fa-“ für ausgefüllte Icons, „far-“ für normale Icons und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_requirement: "Mache das Feld mit dem vollständigen Namen zu einem erforderlichen, optionalen oder optionalen, aber ausgeblendeten Feld im Registrierungsformular."
+    interface_color_selector: "Lege fest, wo der Hell-/Dunkelmodus-Wahlschalter für die Schnittstellenfarbe verfügbar ist."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
@@ -2337,9 +2345,7 @@ de:
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Erlaubt die Verwendung von regulären Ausdrücken zum Filtern von Wörtern. Wenn diese Funktion aktiviert ist, gruppiert sie sensible Wörter nach ihrer Groß- und Kleinschreibung. Anschließend werden alle ausgewählten Wörter in einem einzigen regulären Ausdruck zusammengefasst, wobei Wortgrenzen für regulär überwachte Wörter hinzugefügt werden. Diese Regex-basierte Filtermethode fügt also eine zusätzliche Kontrollebene für die Inhaltsmoderation hinzu, indem sie komplexere Wortmuster unterstützt. Die Einstellung ermöglicht es außerdem, den ursprünglichen Text einfach durch die Ersetzung deiner Wahl zu ersetzen."
-    enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
-    enable_quote_copy: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um die Auswahl als Markdown-Zitat in die Zwischenablage zu kopieren."
     old_post_notice_days: "Die Anzahl der Tage, nach denen eine Beitragsbenachrichtigung als alt gilt. Dies unterscheidet sie visuell von neueren Meldungen auf der Website."
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
@@ -2470,6 +2476,7 @@ de:
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
@@ -2517,8 +2524,10 @@ de:
       discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
       min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
+      min_group_name_length_exists: "Du kannst die minimale Länge von Benutzernamen nicht länger als den kürzesten Gruppennamen (%{group_name}) setzen."
       min_username_length_range: "Du kannst das Minimum nicht über das Maximum setzen."
       max_username_length_exists: "Du kannst die maximale Länge von Benutzernamen nicht unter den längsten Benutzernamen (%{username}) setzen."
+      max_group_name_length_exists: "Du kannst die maximale Länge von Benutzernamen nicht kürzer als längsten Gruppennamen (%{group_name}) setzen."
       max_username_length_range: "Du kannst das Maximum nicht unter das Minimum setzen."
       invalid_hex_value: "Farbwerte müssen als 6-stellige Hexadezimalcodes angegeben werden."
       empty_selectable_avatars: "Du musst zunächst mindestens zwei auswählbare Avatare hochladen, bevor du diese Einstellung aktivieren kannst."

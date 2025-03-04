@@ -24,10 +24,7 @@ body:not(.archetype-private_message) {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-
-    &:has(.topic-map__additional-contents *) {
-      column-gap: 0.75em;
-    }
+    column-gap: 0.75em;
   }
 }
 
@@ -136,6 +133,7 @@ body:not(.archetype-private_message) {
           font-size: var(--font-down-1);
           color: var(--primary-medium);
           width: 100%;
+
           @include ellipsis;
         }
       }
@@ -279,7 +277,7 @@ body:not(.archetype-private_message) {
 // DMenu popups
 .fk-d-menu,
 .fk-d-menu-modal {
-  //shared
+  // shared
   &__inner-content {
     .topic-map__likes-content &,
     .topic-map__links-content &,
@@ -316,7 +314,7 @@ body:not(.archetype-private_message) {
     }
   }
 
-  //per type
+  // per type
   &.topic-map__likes-content {
     li > a {
       display: grid;
@@ -380,7 +378,7 @@ body:not(.archetype-private_message) {
       grid-template-columns: auto 1fr;
       grid-template-areas:
         "counter link"
-        ". domain";
+        "counter domain";
       padding: 0.75em 1rem;
       gap: 0.25em;
 
@@ -396,11 +394,18 @@ body:not(.archetype-private_message) {
     }
 
     .topic-link {
-      grid-area: link;
+      display: contents;
+
+      .content {
+        grid-area: link;
+      }
     }
 
     .topic-link[data-clicks]::before {
       @include click-counter-badge;
+      grid-area: counter;
+      align-self: start;
+      margin-top: 0.35em;
     }
 
     .topic-link[data-clicks]::after {

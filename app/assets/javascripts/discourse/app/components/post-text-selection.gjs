@@ -285,10 +285,7 @@ export default class PostTextSelection extends Component {
   }
 
   get canCopyQuote() {
-    return (
-      this.siteSettings.enable_quote_copy &&
-      this.currentUser?.get("user_option.enable_quoting")
-    );
+    return this.currentUser?.get("user_option.enable_quoting");
   }
 
   // on Desktop, shows the bar at the beginning of the selection

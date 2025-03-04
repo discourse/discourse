@@ -1056,4 +1056,135 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
+
+  describe "logging Site Settings via the Rails Console" do
+    around do |example|
+      # Ensure Rails::Console is defined for the duration of each example.
+      if !Rails.const_defined?(:Console)
+        Rails.const_set("Console", Module.new)
+        example.run
+        Rails.send(:remove_const, "Console")
+      else
+        example.run
+      end
+    end
+
+    before do
+      settings.setting(:log_test, "initial")
+      settings.refresh!
+    end
+
+    context "when using the direct setter" do
+      it "logs the change exactly once" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.log_test = "changed"
+        expect(settings.log_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :log_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console" },
+        ).once
+      end
+    end
+
+    context "when using set_and_log" do
+      it "logs the change exactly once without double logging" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.set_and_log("log_test", "changed", Discourse.system_user)
+        expect(settings.log_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :log_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console" },
+        ).once
+      end
+    end
+
+    context "for secret settings" do
+      before do
+        settings.setting(:secret_test, "old_secret", secret: true)
+        settings.refresh!
+      end
+
+      it "logs filtered values" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.secret_test = "new_secret"
+        expect(settings.secret_test).to eq("new_secret")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :secret_test,
+          "[FILTERED]",
+          "[FILTERED]",
+          { details: "Updated via Rails console" },
+        ).once
+      end
+    end
+
+    context "for hidden settings" do
+      before do
+        settings.setting(:hidden_test, "old_hidden", hidden: true)
+        settings.refresh!
+      end
+
+      it "does not log the change" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.hidden_test = "changed"
+        expect(settings.hidden_test).to eq("changed")
+        expect(logger_spy).not_to have_received(:log_site_setting_change)
+      end
+    end
+
+    context "with plugin modifiers for log details" do
+      before do
+        settings.setting(:plugin_test, "initial")
+        settings.refresh!
+      end
+
+      it "uses the default log details when no plugin modifiers exist" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.plugin_test = "changed"
+        expect(settings.plugin_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :plugin_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console" },
+        ).once
+      end
+
+      it "applies plugin modifiers to log details" do
+        # Allow all apply_modifier calls to pass through normally
+        allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_call_original
+
+        # But specifically mock our target call
+        allow(DiscoursePluginRegistry).to receive(:apply_modifier).with(
+          :site_setting_log_details,
+          "Updated via Rails console",
+        ).and_return("Updated via Rails console via test plugin")
+
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.plugin_test = "changed"
+        expect(settings.plugin_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :plugin_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console via test plugin" },
+        ).once
+      end
+    end
+  end
 end

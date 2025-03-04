@@ -87,7 +87,7 @@ after_initialize do
     Plugin::Instance.prepend DiscourseAutomation::PluginInstanceExtension
   end
 
-  add_admin_route "discourse_automation.title", "discourse-automation"
+  add_admin_route "discourse_automation.title", "automation", use_new_show_route: true
 
   add_api_key_scope(
     :automations_trigger,

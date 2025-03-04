@@ -8,6 +8,8 @@ import { i18n } from "discourse-i18n";
 
 export default class Filter extends Component {
   @service sidebarState;
+  @service router;
+  @service currentUser;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -47,11 +49,29 @@ export default class Filter extends Component {
   }
 
   get showShortcutCombo() {
-    return !this.displayClearFilter;
+    // Very specific to admin pages, but we don't hook this shortcut
+    // anywhere else, so it's not right to show it in other places.
+    if (!this.router.currentRouteName.startsWith("admin")) {
+      return false;
+    }
+    return (
+      !this.displayClearFilter &&
+      !this.currentUser?.use_experimental_admin_search
+    );
   }
 
   get sidebarShortcutCombo() {
     return `${translateModKey("Meta")}+/`;
+  }
+
+  get filterPlaceholder() {
+    if (
+      this.currentUser?.staff &&
+      this.currentUser?.use_experimental_admin_search
+    ) {
+      return i18n("sidebar.filter_links");
+    }
+    return i18n("sidebar.filter");
   }
 
   <template>
@@ -62,7 +82,7 @@ export default class Filter extends Component {
             {{on "input" this.setFilter}}
             {{on "keydown" this.handleEscape}}
             value={{this.sidebarState.filter}}
-            placeholder={{i18n "sidebar.filter"}}
+            placeholder={{this.filterPlaceholder}}
             type="text"
             enterkeyhint="done"
             class="sidebar-filter__input"

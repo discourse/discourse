@@ -314,9 +314,6 @@ nl:
     site_settings:
       invalid_site_setting: "Er bestaat geen instelling met de naam '%{name}'"
       invalid_category_id: "Je hebt een categorie opgegeven die niet bestaat"
-      site_setting_is_hidden: "Je mag verborgen instellingen niet wijzigen"
-      site_setting_is_shadowed_globally: "Je kunt deze instelling niet wijzigen omdat deze globaal is geconfigureerd"
-      site_setting_is_unconfigurable: "Je mag niet-configureerbare instellingen niet wijzigen"
       invalid_choice:
         one: "'%{name}' is een ongeldige keuze."
         other: "'%{name}' zijn ongeldige keuzes."
@@ -2127,7 +2124,6 @@ nl:
     reviewable_default_visibility: "Geen beoordeelbare items weergeven, tenzij ze aan deze prioriteit voldoen"
     reviewable_low_priority_threshold: "Het prioriteitsfilter verbergt beoordeelbare items die niet aan deze score voldoen, tenzij het filter '(alles)' wordt gebruikt."
     high_trust_flaggers_auto_hide_posts: "Berichten van nieuwe gebruikers worden automatisch verborgen nadat ze door een TL3+-gebruiker als spam zijn gemarkeerd"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonieme gebruikers krijgen informatie te zien dat ze een e-mail moeten sturen naar beheerders om illegale content te melden."
     email_address_to_report_illegal_content: "Als dit leeg wordt gelaten, wordt het e-mailadres van de standaard sitebeheerder gebruikt."
     cooldown_hours_until_reflag: "De tijd dat gebruikers moeten wachten voordat ze een bericht opnieuw kunnen markeren"
     slow_mode_prevents_editing: "Verhindert de 'Langzame modus' bewerking na editing_grace_period?"
@@ -2336,9 +2332,7 @@ nl:
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
     disable_watched_word_checking_in_user_fields: "Schakel de controle van geobserveerde woorden uit in gebruikersvelden"
     watched_words_regular_expressions: "Staat het gebruik van reguliere expressies toe voor het filteren van woorden. Als deze functie is ingeschakeld, groepeert hij gevoelige woorden op basis van hun hoofdlettergevoeligheid. Vervolgens worden alle geselecteerde woorden samengevoegd tot een enkele reguliere expressie, waarbij woordgrenzen worden toegevoegd voor regelmatig geobserveerde woorden. Deze op regex gebaseerde filtermethode voegt dus een extra laag toe aan de controle over contentmoderatie door verfijndere woordpatronen te ondersteunen. De instelling maakt het ook mogelijk om eenvoudig de originele tekst te vervangen door de gewenste vervanging."
-    enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
     enable_fast_edit: "Voegt een knop toe aan het berichtselectiemenu om een kleine selectie inline te bewerken."
-    enable_quote_copy: "Voegt een knop toe aan het berichtselectiemenu om de selectie naar het klembord te kopiëren als een markdowncitaat."
     old_post_notice_days: "Het aantal dagen waarna een berichtmelding als oud wordt beschouwd. Dit onderscheidt het visueel van nieuwere berichten op de site."
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."

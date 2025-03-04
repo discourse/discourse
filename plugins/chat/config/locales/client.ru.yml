@@ -374,6 +374,7 @@ ru:
         tabs:
           members: Участники
           settings: Настройки
+        remove_member: "Отозвать"
       new_message_modal:
         title: Отправка сообщения
         add_user_long: <kbd>Shift + щелчок</kbd> или <kbd>Shift + Ввод</kbd><span>Добавить пользователя @%{username}</span>

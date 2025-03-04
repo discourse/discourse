@@ -13,13 +13,12 @@ tr_TR:
             delete_automation: otomasyonu sil
     discourse_automation:
       title: Otomasyon
-      create: Oluştur
-      update: Güncelle
+      back: Geri
+      edit: Düzenle
       select_script: Komut dosyası seçin
       select_trigger: Tetikleyici seçin
       confirm_automation_reset: Bu eylem komut dosyası ve tetikleyici seçeneklerini sıfırlar, yeni durum kaydedilir, devam etmek istiyor musunuz?
       confirm_automation_trigger: Bu eylem otomasyonu tetikler, devam etmek istiyor musunuz?
-      no_automation_yet: Henüz herhangi bir otomasyon oluşturmadınız. Başlamak için aşağıdan bir seçenek belirleyin.
       filter_placeholder: Ada veya açıklamaya göre filtreleyin...
       edit_automation:
         trigger_section:

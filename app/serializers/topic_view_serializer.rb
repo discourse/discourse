@@ -317,4 +317,10 @@ class TopicViewSerializer < ApplicationSerializer
   def include_visibility_reason_id?
     object.topic.visibility_reason_id.present?
   end
+
+  def fancy_title
+    f = object.topic.fancy_title
+    modified = DiscoursePluginRegistry.apply_modifier(:topic_view_serializer_fancy_title, f, self)
+    modified || f
+  end
 end

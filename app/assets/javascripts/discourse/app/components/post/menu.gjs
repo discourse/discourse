@@ -15,7 +15,10 @@ import SmallUserList, {
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyMutableValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -442,26 +445,35 @@ export default class PostMenu extends Component {
 
   @action
   async toggleLike() {
-    if (!this.currentUser) {
-      this.keyValueStore &&
-        this.keyValueStore.set({
-          key: "likedPostId",
-          value: this.args.post.id,
-        });
+    await applyBehaviorTransformer(
+      "post-menu-toggle-like-action",
+      async () => {
+        if (!this.currentUser) {
+          this.keyValueStore &&
+            this.keyValueStore.set({
+              key: "likedPostId",
+              value: this.args.post.id,
+            });
 
-      this.args.showLogin();
-      return;
-    }
+          this.args.showLogin();
+          return;
+        }
 
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(VIBRATE_DURATION);
-    }
+        if (
+          this.capabilities.userHasBeenActive &&
+          this.capabilities.canVibrate
+        ) {
+          navigator.vibrate(VIBRATE_DURATION);
+        }
 
-    await this.args.toggleLike();
+        await this.args.toggleLike();
 
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
+        if (!this.collapsed) {
+          await this.#fetchWhoLiked();
+        }
+      },
+      this.staticMethodsArgs
+    );
   }
 
   @action
@@ -619,46 +631,38 @@ export default class PostMenu extends Component {
           {{/each}}
         </div>
       </nav>
-      {{#if this.isWhoReadVisible}}
-        <SmallUserList
-          class="who-read"
-          @addSelf={{false}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_readers_list_description"
-          }}
-          @count={{if
-            this.remainingReaders
-            this.remainingReaders
-            this.totalReaders
-          }}
-          @description={{if
-            this.remainingReaders
-            "post.actions.people.read_capped"
-            "post.actions.people.read"
-          }}
-          @users={{this.readers}}
-        />
-      {{/if}}
-      {{#if this.isWhoLikedVisible}}
-        <SmallUserList
-          class="who-liked"
-          @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_likers_list_description"
-          }}
-          @count={{if
-            this.remainingLikedUsers
-            this.remainingLikedUsers
-            this.totalLikedUsers
-          }}
-          @description={{if
-            this.remainingLikedUsers
-            "post.actions.people.like_capped"
-            "post.actions.people.like"
-          }}
-          @users={{this.likedUsers}}
-        />
-      {{/if}}
+      <SmallUserList
+        class="who-read"
+        @addSelf={{false}}
+        @isVisible={{this.isWhoReadVisible}}
+        @count={{if
+          this.remainingReaders
+          this.remainingReaders
+          this.totalReaders
+        }}
+        @description={{if
+          this.remainingReaders
+          "post.actions.people.read_capped"
+          "post.actions.people.read"
+        }}
+        @users={{this.readers}}
+      />
+      <SmallUserList
+        class="who-liked"
+        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+        @isVisible={{this.isWhoLikedVisible}}
+        @count={{if
+          this.remainingLikedUsers
+          this.remainingLikedUsers
+          this.totalLikedUsers
+        }}
+        @description={{if
+          this.remainingLikedUsers
+          "post.actions.people.like_capped"
+          "post.actions.people.like"
+        }}
+        @users={{this.likedUsers}}
+      />
       {{#if
         (this.showMoreButton.shouldRender
           (hash post=this.post state=this.state)

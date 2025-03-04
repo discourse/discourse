@@ -1,4 +1,10 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import emoji from "./emoji";
+import hashtag from "./hashtag";
+import heading from "./heading";
+import image from "./image";
+import mention from "./mention";
+import underline from "./underline";
 import link from "./link";
 
 /**
@@ -7,6 +13,8 @@ import link from "./link";
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions = [link];
+const defaultExtensions = [emoji, image, link, heading, hashtag, mention, underline];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+
+export default defaultExtensions;

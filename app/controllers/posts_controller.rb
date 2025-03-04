@@ -203,7 +203,13 @@ class PostsController < ApplicationController
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
 
-    manager = NewPostManager.new(current_user, manager_params)
+    user =
+      DiscoursePluginRegistry.apply_modifier(
+        :posts_controller_create_user,
+        current_user,
+        create_params,
+      )
+    manager = NewPostManager.new(user, manager_params)
 
     json =
       if is_api?
@@ -229,7 +235,7 @@ class PostsController < ApplicationController
 
     raise Discourse::NotFound if post.blank?
 
-    post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
+    post.image_sizes = params[:image_sizes].permit!.to_h if params[:image_sizes].present?
 
     if !guardian.public_send("can_edit?", post) && post.user_id == current_user.id &&
          post.edit_time_limit_expired?(current_user)

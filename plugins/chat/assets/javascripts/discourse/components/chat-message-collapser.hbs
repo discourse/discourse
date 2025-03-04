@@ -1,9 +1,13 @@
 <div class="chat-message-collapser">
   {{#if this.hasUploads}}
-    {{html-safe @cooked}}
+    <DecoratedHtml
+      @html={{html-safe @cooked}}
+      @decorate={{@decorate}}
+      @className="chat-cooked"
+    />
 
     <Collapser @header={{this.uploadsHeader}} @onToggle={{@onToggleCollapse}}>
-      <div class="chat-uploads">
+      <div class="chat-uploads" {{this.lightbox}}>
         {{#each @uploads as |upload|}}
           <ChatUpload @upload={{upload}} />
         {{/each}}
@@ -18,11 +22,19 @@
               <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
             </div>
           {{else}}
-            {{cooked.body}}
+            <DecoratedHtml
+              @html={{html-safe cooked.body}}
+              @decorate={{@decorate}}
+              @className="chat-cooked"
+            />
           {{/if}}
         </Collapser>
       {{else}}
-        {{cooked.body}}
+        <DecoratedHtml
+          @html={{html-safe cooked.body}}
+          @decorate={{@decorate}}
+          @className="chat-cooked"
+        />
       {{/if}}
     {{/each}}
   {{/if}}

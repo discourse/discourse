@@ -824,6 +824,10 @@ export default class TopicController extends Controller.extend(
 
   @action
   deletePostWithConfirmation(post, opts) {
+    if (!post.can_delete) {
+      return;
+    }
+
     this.dialog.yesNoConfirm({
       message: i18n("post.confirm_delete"),
       didConfirm: () => this.send("deletePost", post, opts),

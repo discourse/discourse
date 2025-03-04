@@ -11,6 +11,7 @@ class Wizard
       @step = step
       @refresh_required = false
       @fields = fields
+      @settings_changed = Set.new
     end
 
     def update
@@ -30,6 +31,10 @@ class Wizard
       @refresh_required
     end
 
+    def setting_changed?(id)
+      @settings_changed.include?(id)
+    end
+
     def update_setting(id, value)
       value = value.strip if value.is_a?(String)
 
@@ -37,7 +42,10 @@ class Wizard
         value = Upload.get_from_url(value) || ""
       end
 
-      SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.get(id) != value
+      if SiteSetting.get(id) != value
+        SiteSetting.set_and_log(id, value, @current_user)
+        @settings_changed << id
+      end
     end
 
     def apply_setting(id)

@@ -5,18 +5,9 @@ import Category from "discourse/models/category";
 import RestModel from "discourse/models/rest";
 
 export default class Permalink extends RestModel {
-  static findAll(filter) {
-    return ajax("/admin/permalinks.json").then(function (permalinks) {
-      let allLinks = permalinks.map((p) => Permalink.create(p));
-
-      let filteredLinks = filter
-        ? allLinks.filter(
-            (p) => p.url.includes(filter) || p.external_url?.includes(filter)
-          )
-        : allLinks;
-
-      return { allLinks, filteredLinks };
-    });
+  static async findAll(filter) {
+    const data = await ajax("/admin/permalinks.json", { data: { filter } });
+    return data.map((p) => Permalink.create(p));
   }
 
   @discourseComputed("category_id")

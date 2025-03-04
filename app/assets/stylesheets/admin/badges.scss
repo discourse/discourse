@@ -1,0 +1,252 @@
+// Styles for admin/badges
+.admin-badges {
+  // flex page layout
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .badges-header {
+      display: flex;
+      align-items: center;
+      flex: 1 0 100%;
+
+      .create-new-badge {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+    }
+
+    .content-list {
+      flex: 0 0 27%;
+    }
+  }
+
+  .content-list {
+    .admin-badge-list {
+      height: 70vh;
+      overflow-y: scroll;
+      border-right: 1px solid var(--primary-low);
+      border-left: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--primary-low);
+
+      .admin-badge-list-item {
+        &:first-child {
+          border-top: none;
+        }
+
+        &:last-child {
+          border-top: none;
+        }
+      }
+
+      .list-badge {
+        float: right;
+        font-size: var(--font-down-1);
+        font-weight: normal;
+        padding: 0 6px;
+        color: var(--secondary);
+        background-color: var(--tertiary-medium);
+        border-radius: 3px;
+      }
+    }
+
+    .user-badge {
+      border: none;
+      background-color: unset;
+    }
+  }
+
+  .current-badge-header {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    font-size: var(--font-up-2-rem);
+
+    img {
+      border-radius: var(--d-border-radius-large);
+      max-width: 36px;
+    }
+
+    .d-icon {
+      font-size: var(--font-up-2-rem);
+    }
+
+    .badge-display-name {
+      font-size: var(--font-up-1);
+      font-weight: bold;
+      word-break: break-word;
+    }
+  }
+
+  .current-badge {
+    margin: 20px;
+
+    .form-kit__field-question {
+      .form-kit__control-radio-label {
+        text-transform: capitalize;
+      }
+    }
+
+    .readonly-field {
+      color: var(--primary-high);
+    }
+
+    .badge-preview {
+      min-height: 110px;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      background-color: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      padding: 0 10px 0 10px;
+
+      img,
+      svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      .badge-display-name {
+        margin-left: 5px;
+      }
+    }
+
+    .badge-required {
+      font-weight: bold;
+    }
+  }
+
+  .current-badge-actions {
+    margin: 10px;
+    padding: 10px;
+    border-top: 1px solid var(--primary-low);
+  }
+}
+
+.award-badge {
+  float: left;
+  max-width: 70%;
+
+  &.d-page-action-button {
+    margin-top: 0;
+
+    @media (max-width: $mobile-breakpoint) {
+      max-width: 100%;
+    }
+  }
+
+  .bulk-award-status-icon {
+    margin-right: 3px;
+
+    &.success {
+      color: var(--success);
+    }
+
+    &.failure {
+      color: var(--danger);
+    }
+  }
+}
+
+// badge-grouping modal
+.badge-groupings-modal {
+  .badge-groupings {
+    margin-bottom: 10px;
+  }
+
+  .badge-groupings-list {
+    list-style: none;
+    margin: 0;
+
+    .badge-grouping-item {
+      border-bottom: 1px solid var(--primary-low);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+
+    .badge-grouping {
+      .badge-grouping-name-input {
+        margin: 0;
+      }
+    }
+  }
+}
+
+// badge preview modal
+.badge-query-preview {
+  .badge-query-plan {
+    overflow-x: auto;
+  }
+
+  .badge-errors,
+  .badge-query-plan {
+    padding: 5px;
+    background-color: var(--primary-low);
+    white-space: pre-wrap;
+  }
+
+  .count-warning {
+    background-color: var(--danger-low);
+    margin-bottom: 5px;
+    padding: 10px;
+
+    p {
+      margin: 0;
+    }
+
+    .heading {
+      color: var(--danger);
+      font-weight: bold;
+    }
+  }
+}
+
+.mobile-view {
+  .admin-badges {
+    .badges {
+      margin: 0 0.25em;
+
+      .content-list {
+        flex: 0 0 100%;
+        width: 100%;
+
+        .admin-badge-list {
+          max-height: 40vh;
+          margin-right: 0;
+        }
+      }
+    }
+
+    .badge-intro {
+      flex: 0 1 75%;
+    }
+
+    .current-badge {
+      margin: 20px 0;
+      width: 100%;
+
+      textarea {
+        width: 100%;
+      }
+    }
+
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+
+  .badges-header .create-new-badge .btn-default {
+    .d-button-label {
+      display: none;
+    }
+
+    .d-icon {
+      margin-right: 0;
+    }
+  }
+}

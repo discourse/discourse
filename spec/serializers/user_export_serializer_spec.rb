@@ -28,4 +28,24 @@ RSpec.describe UserExportSerializer do
     expect(json_data["retain_hours"]).to eql user_export.retain_hours
     expect(json_data["human_filesize"]).to eql user_export.upload.human_filesize
   end
+
+  context "when upload is nil" do
+    fab!(:user_export) do
+      user = Fabricate(:user)
+      topic = Fabricate(:topic, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic)
+      UserExport.create!(
+        file_name: "test",
+        user: user,
+        upload_id: nil,
+        topic_id: topic.id,
+        created_at: 1.day.ago,
+      )
+    end
+
+    it "returns an empty hash" do
+      json_data = JSON.parse(serializer.to_json)
+      expect(json_data).to eq({})
+    end
+  end
 end

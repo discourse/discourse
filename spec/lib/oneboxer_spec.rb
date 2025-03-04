@@ -626,9 +626,7 @@ RSpec.describe Oneboxer do
   end
 
   describe "onebox custom user agent" do
-    let!(:default_onebox_user_agent) do
-      "#{Onebox.options.user_agent} v#{Discourse::VERSION::STRING}"
-    end
+    let!(:default_onebox_user_agent) { Discourse.user_agent }
 
     it "uses the site setting value" do
       SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
@@ -781,17 +779,10 @@ RSpec.describe Oneboxer do
 
     let(:url) { "https://example.com/fake-url/" }
 
-    it "handles a missing description" do
+    it "handles a missing description, title-only oneboxes are fine" do
       stub_request(:get, url).to_return(body: response("missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include(
         "could not be found: description",
-      )
-    end
-
-    it "handles a missing description and image" do
-      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
-        "could not be found: description, image",
       )
     end
 

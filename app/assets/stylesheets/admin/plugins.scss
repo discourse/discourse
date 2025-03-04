@@ -1,0 +1,139 @@
+// Styles for /admin/plugins
+.admin-contents.admin-plugins {
+  .controls {
+    .settings-button {
+      margin-left: auto;
+    }
+  }
+
+  .d-admin-table.admin-plugins-list {
+    .admin-plugins-list__version {
+      width: 14%;
+
+      @include breakpoint("tablet") {
+        text-align: right;
+        width: auto;
+      }
+    }
+
+    .d-admin-row__controls {
+      width: 10%;
+
+      @include breakpoint("tablet") {
+        width: auto;
+      }
+    }
+
+    .admin-plugins-list__row-admin-search-filtered {
+      background-color: var(--primary-low);
+    }
+  }
+
+  .admin-plugins-list {
+    &__name-with-badges {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .badges {
+      margin-left: var(--space-1);
+    }
+
+    &__badge {
+      --d-border-radius: var(--space-4);
+      font-weight: 400;
+      font-size: var(--font-down-2);
+      background-color: var(--primary-low);
+      color: var(--primary-high);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--d-border-radius);
+
+      & + .admin-plugins-list__badge {
+        margin-left: var(--space-1);
+      }
+
+      &:last-of-type {
+        margin-right: var(--space-1);
+      }
+    }
+  }
+}
+
+.admin-plugin-config-page {
+  &__main-area {
+    .admin-detail {
+      padding-top: 15px;
+    }
+
+    &.-without-inner-sidebar {
+      .admin-detail {
+        border-left: 0;
+        padding-left: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  &__metadata {
+    margin-bottom: var(--space-6);
+  }
+
+  .d-nav-submenu {
+    background: transparent;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      background: transparent;
+
+      &::before {
+        display: none;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    .admin-plugin-config-page__top-nav {
+      width: auto;
+      margin: 0;
+
+      a {
+        font-size: var(--font-down-0);
+        padding: var(--space-2) var(--space-3) var(--space-3);
+
+        &:hover {
+          color: var(--tertiary);
+          background-color: transparent;
+        }
+
+        &.active {
+          color: var(--tertiary);
+          background-color: transparent;
+        }
+      }
+
+      .has-sidebar-page & {
+        @include breakpoint(large) {
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.admin-plugins .admin-container {
+  margin-top: 0;
+
+  &.-no-header {
+    margin-top: 1em;
+  }
+}
+
+.admin-plugin-filtered-site-settings {
+  &__filter {
+    width: 100%;
+  }
+}

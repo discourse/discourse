@@ -7,6 +7,12 @@
   {{on "keydown" this.onKeydown}}
 >
   <:body>
+    <p>{{html-safe (i18n "flagging.review_process_description")}}</p>
+    <PluginOutlet
+      @name="after-flag-modal-review-process-description"
+      @connectorTagName="div"
+      @outletArgs={{hash post=@model.flagModel}}
+    />
     <form>
       <FlagSelection
         @nameKey={{this.selected.name_key}}

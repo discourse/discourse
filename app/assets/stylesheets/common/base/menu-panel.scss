@@ -1,7 +1,13 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
-  box-shadow: var(--shadow-header);
+  top: 0;
+  box-sizing: border-box;
+
+  // ensure there's always space to click outside on tiny devices
+  max-width: 90vw;
+  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
+  height: 100dvh;
 
   .panel-body {
     width: 100%;
@@ -9,7 +15,14 @@
 }
 
 .header-cloak {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
   display: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 .menu-panel.drop-down {
@@ -34,244 +47,6 @@
   flex-direction: column;
   box-sizing: border-box;
 
-  hr {
-    margin: 3px 0;
-  }
-
-  .panel-header {
-    position: absolute;
-    right: 20px;
-  }
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .panel-body {
-    display: flex;
-    touch-action: pan-y pinch-zoom;
-    overflow: hidden;
-    height: 100%;
-  }
-
-  .panel-body-contents {
-    max-height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .panel-body-bottom {
-    display: flex;
-    flex: 1 0 0%; // safari height fix
-    margin-top: 0.5em;
-    flex-wrap: wrap;
-
-    .show-all {
-      display: flex;
-      flex: 1 1 auto;
-
-      button {
-        width: 100%;
-      }
-    }
-
-    .notifications-dismiss {
-      margin-left: 0.5em;
-    }
-
-    .btn {
-      background-color: var(--primary-very-low);
-      color: var(--primary-high);
-
-      &:hover,
-      &:focus-visible {
-        background: var(--primary-low);
-        color: var(--primary);
-      }
-    }
-  }
-
-  .badge-notification {
-    vertical-align: text-bottom;
-  }
-
-  .sidebar-filter {
-    width: 100%;
-  }
-}
-
-.search-menu .menu-panel {
-  width: 500px;
-}
-
-.user-menu.revamped {
-  right: 0;
-  width: 320px;
-  padding: 0;
-  border-top-right-radius: 0;
-
-  .panel-body-bottom {
-    flex: 0;
-  }
-
-  .menu-tabs-container {
-    display: flex;
-    flex-direction: column;
-    border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .tabs-list {
-    display: flex;
-    flex-direction: column;
-
-    .btn {
-      display: flex;
-      position: relative;
-      border-radius: 0;
-      padding: 0.857em;
-      @media screen and (max-height: 400px) {
-        // helps with 400% zoom level
-        font-size: var(--font-down-1);
-        padding: 0.5em 0.875em;
-      }
-
-      .d-icon {
-        color: var(--primary-medium);
-      }
-
-      .badge-notification {
-        background-color: var(--tertiary-med-or-tertiary);
-        position: absolute;
-        right: 6px;
-        top: 6px;
-        font-size: var(--font-down-3);
-        @media screen and (max-height: 400px) {
-          // helps with 400% zoom level
-          right: 0;
-          top: 0;
-        }
-      }
-
-      &.active {
-        background-color: var(--d-selected);
-      }
-
-      &:hover {
-        background-color: var(--d-hover);
-      }
-    }
-  }
-
-  .bottom-tabs {
-    border-top: 1px solid var(--primary-low);
-  }
-
-  .panel-body-contents {
-    display: flex;
-    flex-direction: row-reverse;
-  }
-
-  .quick-access-panel {
-    width: 320px;
-    padding: 0.75em;
-    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
-    justify-content: space-between;
-    box-sizing: border-box;
-    min-width: 0; // makes sure menu tabs don't go off screen
-  }
-
-  #quick-access-profile {
-    display: inline;
-    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
-
-    ul {
-      flex-wrap: nowrap;
-      height: 100%;
-      align-items: center;
-      overflow-y: auto; // really short viewports
-    }
-
-    li {
-      flex: 1 1 auto;
-      max-height: 3em; // prevent buttons from getting too tall
-
-      > * {
-        // button, a, and everything else
-        height: 100%;
-        align-items: center;
-        margin: 0;
-        padding: 0 0.5em;
-      }
-
-      img.emoji {
-        height: 1em;
-        width: 1em;
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
-
-      .d-icon {
-        padding-top: 0;
-      }
-
-      &.enabled .d-icon {
-        color: var(--tertiary);
-      }
-    }
-
-    .set-user-status {
-      .emoji {
-        padding-top: 0;
-      }
-    }
-
-    .profile-tab-btn {
-      .relative-date {
-        font-size: var(--font-down-3);
-        color: var(--primary-medium);
-      }
-      justify-content: unset;
-      line-height: var(--line-height-large);
-      width: 100%;
-
-      .d-icon {
-        padding: 0;
-      }
-    }
-
-    .do-not-disturb {
-      .d-icon-toggle-on {
-        color: var(--tertiary);
-      }
-    }
-
-    hr {
-      border-top: 1px solid var(--primary-low);
-      width: 100%;
-    }
-  }
-}
-
-.hamburger-panel {
-  .panel-body {
-    overflow-y: auto;
-  }
-}
-
-.menu-links.columned {
-  li {
-    width: 50%;
-    float: left;
-  }
-}
-
-.menu-panel {
   // remove once glimmer search menu in place
   .widget-link,
   .categories-link {
@@ -390,6 +165,245 @@
       }
     }
   }
+
+  hr {
+    margin: 3px 0;
+  }
+
+  .panel-header {
+    position: absolute;
+    right: 20px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .panel-body {
+    display: flex;
+    touch-action: pan-y pinch-zoom;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .panel-body-contents {
+    max-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-body-bottom {
+    display: flex;
+    flex: 1 0 0%; // safari height fix
+    margin-top: 0.5em;
+    flex-wrap: wrap;
+
+    .show-all {
+      display: flex;
+      flex: 1 1 auto;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .notifications-dismiss {
+      margin-left: 0.5em;
+    }
+
+    .btn {
+      background-color: var(--primary-very-low);
+      color: var(--primary-high);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--primary-low);
+        color: var(--primary);
+      }
+    }
+  }
+
+  .badge-notification {
+    vertical-align: text-bottom;
+  }
+
+  .sidebar-filter {
+    width: 100%;
+  }
+}
+
+.search-menu .menu-panel {
+  width: 500px;
+}
+
+.user-menu.revamped {
+  right: 0;
+  width: 320px;
+  padding: 0;
+  border-top-right-radius: 0;
+
+  .panel-body-bottom {
+    flex: 0;
+  }
+
+  .menu-tabs-container {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--primary-low);
+    padding: 0.75em 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-direction: column;
+
+    .btn {
+      display: flex;
+      position: relative;
+      border-radius: 0;
+      padding: 0.857em;
+
+      @media screen and (max-height: 400px) {
+        // helps with 400% zoom level
+        font-size: var(--font-down-1);
+        padding: 0.5em 0.875em;
+      }
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
+      .badge-notification {
+        background-color: var(--tertiary-med-or-tertiary);
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        font-size: var(--font-down-3);
+
+        @media screen and (max-height: 400px) {
+          // helps with 400% zoom level
+          right: 0;
+          top: 0;
+        }
+      }
+
+      &.active {
+        background-color: var(--d-selected);
+      }
+
+      &:hover {
+        background-color: var(--d-hover);
+      }
+    }
+  }
+
+  .bottom-tabs {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .panel-body-contents {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .quick-access-panel {
+    width: 320px;
+    padding: 0.75em;
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-width: 0; // makes sure menu tabs don't go off screen
+  }
+
+  #quick-access-profile {
+    display: inline;
+    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
+
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      overflow-y: auto; // really short viewports
+    }
+
+    li {
+      flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
+
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
+      }
+
+      .d-icon {
+        padding-top: 0;
+      }
+
+      &.enabled .d-icon {
+        color: var(--tertiary);
+      }
+    }
+
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+    }
+
+    .profile-tab-btn {
+      justify-content: unset;
+      line-height: var(--line-height-large);
+      width: 100%;
+
+      .relative-date {
+        font-size: var(--font-down-3);
+        color: var(--primary-medium);
+      }
+
+      .d-icon {
+        padding: 0;
+      }
+    }
+
+    .do-not-disturb {
+      .d-icon-toggle-on {
+        color: var(--tertiary);
+      }
+    }
+
+    hr {
+      border-top: 1px solid var(--primary-low);
+      width: 100%;
+    }
+  }
+}
+
+.hamburger-panel {
+  .panel-body {
+    overflow-y: auto;
+  }
+}
+
+.menu-links.columned {
+  li {
+    width: 50%;
+    float: left;
+  }
 }
 
 // Panel / user-notification-list styles. **not** menu panel sizing styles
@@ -403,6 +417,9 @@
   border-top: 1px solid var(--primary-low);
   padding-top: 0.75em;
   margin-top: -1px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
 
   &:focus {
     outline: none;
@@ -470,6 +487,11 @@
         // we don't need the link focus because we're styling the parent
         outline: 0;
       }
+
+      .btn-flat:focus {
+        // undo default btn-flat style
+        background: transparent;
+      }
     }
 
     // This is until other languages remove the HTML from within
@@ -511,25 +533,6 @@
       }
     }
 
-    &:hover {
-      background-color: var(--d-hover);
-      outline: none;
-    }
-
-    &:focus-within {
-      background: var(--d-hover);
-
-      a {
-        // we don't need the link focus because we're styling the parent
-        outline: 0;
-      }
-
-      .btn-flat:focus {
-        // undo default btn-flat style
-        background: transparent;
-      }
-    }
-
     a,
     .profile-tab-btn {
       display: flex;
@@ -546,9 +549,6 @@
       > div {
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: anywhere;
-        @supports not (overflow-wrap: anywhere) {
-          word-break: break-word;
-        }
 
         // Truncate items with more than 2 lines.
         @include line-clamp(2);
@@ -611,9 +611,6 @@
       background: var(--primary-low);
     }
   }
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
 }
 
 // Styles to have user avatar positioned and sized correctly
@@ -640,7 +637,6 @@
         display: flex;
         position: relative;
         overflow: visible;
-        margin-right: 0.5em;
         flex-shrink: 0;
         width: 2em;
         height: 2em;
@@ -699,30 +695,4 @@
     max-height: unset;
     min-height: 100%;
   }
-}
-
-.header-cloak {
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
-  top: 0;
-  left: 0;
-  display: none;
-  touch-action: pan-y pinch-zoom;
-}
-
-.menu-panel.slide-in {
-  top: 0;
-  box-sizing: border-box;
-
-  // ensure there's always space to click outside on tiny devices
-  max-width: 90vw;
-
-  --100dvh: 100%;
-  @supports (height: 100dvh) {
-    --100dvh: 100dvh;
-  }
-  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
-  height: var(--100dvh);
 }

@@ -215,8 +215,7 @@ registerButton(
     if (
       attrs.reviewableId ||
       (attrs.canFlag && !attrs.hidden) ||
-      (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
-        !currentUser)
+      (siteSettings.allow_all_users_to_flag_illegal_content && !currentUser)
     ) {
       const button = {
         action: "showFlags",
@@ -784,9 +783,7 @@ export default createWidget("post-menu", {
           listClassName: "who-read",
           description,
           count,
-          ariaLabel: i18n(
-            "post.actions.people.sr_post_readers_list_description"
-          ),
+          isVisible: true,
         })
       );
     }
@@ -806,9 +803,7 @@ export default createWidget("post-menu", {
           listClassName: "who-liked",
           description,
           count,
-          ariaLabel: i18n(
-            "post.actions.people.sr_post_likers_list_description"
-          ),
+          isVisible: true,
         })
       );
     }

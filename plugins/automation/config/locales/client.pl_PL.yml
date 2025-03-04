@@ -8,13 +8,12 @@ pl_PL:
   js:
     discourse_automation:
       title: Automatyzacja
-      create: Utwórz
-      update: Aktualizuj
+      back: Poprzednia
+      edit: Edytuj
       select_script: Wybierz skrypt
       select_trigger: Wybierz wyzwalacz
       confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
       confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
-      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji. Wybierz opcję poniżej, aby rozpocząć.
       filter_placeholder: Filtruj według nazwy lub opisu...
       edit_automation:
         trigger_section:

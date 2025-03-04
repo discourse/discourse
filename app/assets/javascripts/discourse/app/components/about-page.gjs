@@ -37,6 +37,7 @@ export default class AboutPage extends Component {
       {
         class: "members",
         icon: "users",
+        display: true,
         text: i18n("about.member_count", {
           count: this.args.model.stats.users_count,
           formatted_number: I18n.toNumber(this.args.model.stats.users_count, {
@@ -47,6 +48,7 @@ export default class AboutPage extends Component {
       {
         class: "admins",
         icon: "shield-halved",
+        display: this.adminsCount > 0,
         text: i18n("about.admin_count", {
           count: this.adminsCount,
           formatted_number: I18n.toNumber(this.adminsCount, { precision: 0 }),
@@ -55,6 +57,7 @@ export default class AboutPage extends Component {
       {
         class: "moderators",
         icon: "shield-halved",
+        display: this.moderatorsCount > 0,
         text: i18n("about.moderator_count", {
           count: this.moderatorsCount,
           formatted_number: I18n.toNumber(this.moderatorsCount, {
@@ -65,6 +68,7 @@ export default class AboutPage extends Component {
       {
         class: "site-creation-date",
         icon: "calendar-days",
+        display: true,
         text: this.siteAgeString,
       },
     ];
@@ -253,10 +257,12 @@ export default class AboutPage extends Component {
       <div class="about__left-side">
         <div class="about__stats">
           {{#each this.stats as |stat|}}
-            <span class="about__stats-item {{stat.class}}">
-              {{icon stat.icon}}
-              <span>{{stat.text}}</span>
-            </span>
+            {{#if stat.display}}
+              <span class="about__stats-item {{stat.class}}">
+                {{icon stat.icon}}
+                <span>{{stat.text}}</span>
+              </span>
+            {{/if}}
           {{/each}}
         </div>
 

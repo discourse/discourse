@@ -231,5 +231,33 @@ RSpec.describe Stylesheet::Compiler do
       css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
       expect(css).to eq("a{left:1px}")
     end
+
+    it "runs through postcss" do
+      css, map = Stylesheet::Compiler.compile(<<~SCSS, "test.scss")
+        @media (min-resolution: 2dppx) {
+          body {
+            background-color: light-dark(white, black);
+          }
+        }
+      SCSS
+
+      expect(css).to include("-webkit-min-device-pixel-ratio")
+      expect(css).to include("csstools-light-dark-toggle")
+      expect(map.size).to be > 10
+    end
+
+    it "handles errors gracefully" do
+      bad_css = <<~SCSS
+        $foo: unquote("https://notacolor.example.com");
+        .example {
+          color: $foo;
+        }
+      SCSS
+
+      expect { Stylesheet::Compiler.compile(bad_css, "test.scss") }.to raise_error(
+        DiscourseJsProcessor::TranspileError,
+        /Missed semicolon/,
+      )
+    end
   end
 end
