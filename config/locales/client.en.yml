@@ -220,11 +220,8 @@ en:
 
     welcome_banner:
       header:
-        logged_in_members: "Blah"
-        anonymous_members: "Blah"
-      subheader:
-        logged_in_members: "Blah"
-        anonymous_members: "Blah"
+        logged_in_members: "Welcome back, %{username}!"
+        anonymous_members: "Welcome to %{site_name}!"
       search: "Search"
 
     themes:

@@ -18,6 +18,7 @@ export const UNSCROLLED = Symbol("unscrolled"),
 export default class ScrollDirection extends Service {
   @service router;
   @tracked lastScrollDirection = UNSCROLLED;
+  @tracked distanceToTop = 0;
 
   #lastScroll = null;
   #bottomHit = 0;
@@ -101,6 +102,8 @@ export default class ScrollDirection extends Service {
     const distanceToBottom = Math.floor(
       document.body.clientHeight - offset - window.innerHeight
     );
+
+    this.distanceToTop = offset;
 
     // Handle Safari top overscroll first
     if (offset < 0) {

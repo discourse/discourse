@@ -3206,6 +3206,10 @@ uncategorized:
     client: true
     default: true
 
+  show_welcome_banner:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
