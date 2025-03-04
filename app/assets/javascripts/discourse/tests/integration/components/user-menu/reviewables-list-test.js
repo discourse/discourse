@@ -10,10 +10,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::ReviewablesList/>`;
-
     test("show all button for reviewable notifications", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::ReviewablesList/>`);
       assert
         .dom(".panel-body-bottom .show-all")
         .hasAttribute(
@@ -24,7 +22,7 @@ module(
     });
 
     test("renders a list of reviewables", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::ReviewablesList/>`);
       const reviewables = queryAll("ul li");
       assert.strictEqual(reviewables.length, 8);
     });
