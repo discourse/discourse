@@ -313,6 +313,7 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
+          this.appEvents.trigger("search:search_result_view");
         });
     }
   }
