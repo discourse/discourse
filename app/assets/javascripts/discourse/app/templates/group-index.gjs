@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import BulkGroupMemberDropdown from "discourse/components/bulk-group-member-dropdown";
@@ -51,7 +51,10 @@ export default RouteTemplate(<template>
                 @bulkSelection={{@controller.bulkSelection}}
                 @canAdminGroup={{@controller.model.can_admin_group}}
                 @canEditGroup={{@controller.model.can_edit_group}}
-                @onChange={{action "actOnSelection" @controller.bulkSelection}}
+                @onChange={{fn
+                  @controller.actOnSelection
+                  @controller.bulkSelection
+                }}
               />
 
               <DButton
@@ -262,7 +265,7 @@ export default RouteTemplate(<template>
                       @member={{m}}
                       @canAdminGroup={{@controller.model.can_admin_group}}
                       @canEditGroup={{@controller.model.can_edit_group}}
-                      @onChange={{action "actOnGroup" m}}
+                      @onChange={{fn @controller.actOnGroup m}}
                     />
                     {{! group parameter is used by plugins }}
                   </div>

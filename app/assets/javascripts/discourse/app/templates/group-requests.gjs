@@ -84,19 +84,19 @@ export default RouteTemplate(<template>
                   {{else if m.request_accepted}}
                     {{iN "groups.requests.accepted"}}
                     <DButton
-                      @action={{fn (action "undoAcceptRequest") m}}
+                      @action={{fn @controller.undoAcceptRequest m}}
                       @label="groups.requests.undo"
                     />
                   {{else if m.request_denied}}
                     {{iN "groups.requests.denied"}}
                   {{else}}
                     <DButton
-                      @action={{fn (action "acceptRequest") m}}
+                      @action={{fn @controller.acceptRequest m}}
                       @label="groups.requests.accept"
                       class="btn-primary"
                     />
                     <DButton
-                      @action={{fn (action "denyRequest") m}}
+                      @action={{fn @controller.denyRequest m}}
                       @label="groups.requests.deny"
                       class="btn-danger"
                     />

@@ -143,7 +143,7 @@ export default RouteTemplate(<template>
     <PluginOutlet
       @name="user-preferences-security"
       @connectorTagName="div"
-      @outletArgs={{hash model=@controller.model save=(action "save")}}
+      @outletArgs={{hash model=@controller.model save=(@controller.save)}}
     />
   </span>
 

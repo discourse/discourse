@@ -1,4 +1,4 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -37,7 +37,7 @@ export default RouteTemplate(<template>
             @isFavorite={{ub.is_favorite}}
             @username={{@controller.username}}
             @canFavoriteMoreBadges={{@controller.canFavoriteMoreBadges}}
-            @onFavoriteClick={{action "favorite" ub}}
+            @onFavoriteClick={{fn @controller.favorite ub}}
             @filterUser="true"
           />
         {{/each}}
