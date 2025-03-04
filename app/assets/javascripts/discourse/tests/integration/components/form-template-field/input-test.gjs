@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import Input from "discourse/components/form-template-field/input";
+import FormInput from "discourse/components/form-template-field/input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
@@ -9,7 +9,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders a text input", async function (assert) {
-      await render(<template><Input /></template>);
+      await render(<template><FormInput /></template>);
 
       assert
         .dom(".form-template-field[data-field-type='input'] input[type='text']")
@@ -26,7 +26,7 @@ module(
       this.set("attributes", attributes);
 
       await render(<template>
-        <Input @attributes={{self.attributes}} />
+        <FormInput @attributes={{self.attributes}} />
       </template>);
 
       assert
@@ -48,7 +48,7 @@ module(
       this.set("attributes", attributes);
 
       await render(<template>
-        <Input @attributes={{self.attributes}} />
+        <FormInput @attributes={{self.attributes}} />
       </template>);
 
       assert.dom(".form-template-field__label").doesNotExist();
@@ -63,7 +63,7 @@ module(
       this.set("attributes", attributes);
 
       await render(<template>
-        <Input @attributes={{self.attributes}} />
+        <FormInput @attributes={{self.attributes}} />
       </template>);
 
       assert.dom(".form-template-field__description").hasText("Your full name");
