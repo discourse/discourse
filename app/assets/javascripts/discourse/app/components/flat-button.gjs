@@ -15,6 +15,7 @@ export default class FlatButton extends Component {
   <template>
     {{dIcon this.icon}}
   </template>
+
   @discourseComputed("title", "translatedTitle")
   resolvedTitle(title, translatedTitle) {
     if (title) {

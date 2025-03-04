@@ -1,11 +1,11 @@
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import BookmarksList from "discourse/components/user-menu/bookmarks-list";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import BookmarksList from "discourse/components/user-menu/bookmarks-list";
 
 module(
   "Integration | Component | user-menu | bookmarks-list",

@@ -1,10 +1,10 @@
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Menu from "discourse/components/user-menu/menu";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import Menu from "discourse/components/user-menu/menu";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);

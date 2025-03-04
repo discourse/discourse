@@ -1,5 +1,6 @@
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MenuItem from "discourse/components/user-menu/menu-item";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
@@ -12,7 +13,6 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import MenuItem from "discourse/components/user-menu/menu-item";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {
   const notification = Notification.create(
@@ -52,7 +52,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {const self = this;
+    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -74,7 +75,8 @@ module(
         .doesNotExist("the item re-renders when the read property is updated");
     });
 
-    test("pushes the notification type name to the classList", async function (assert) {const self = this;
+    test("pushes the notification type name to the classList", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -96,7 +98,8 @@ module(
         .exists("replaces underscores in type name with dashes");
     });
 
-    test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {const self = this;
+    test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -108,7 +111,8 @@ module(
       assert.dom("li.is-warning").exists();
     });
 
-    test("doesn't push is-warning to the classList if the notification doesn't originate from a warning PM", async function (assert) {const self = this;
+    test("doesn't push is-warning to the classList if the notification doesn't originate from a warning PM", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -119,7 +123,8 @@ module(
       assert.dom("li").exists();
     });
 
-    test("the item's href links to the topic that the notification originates from", async function (assert) {const self = this;
+    test("the item's href links to the topic that the notification originates from", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -129,7 +134,8 @@ module(
       assert.dom("li a").hasAttribute("href", "/t/this-is-fancy-title/449/113");
     });
 
-    test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {const self = this;
+    test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -148,7 +154,8 @@ module(
       assert.dom("li a").hasAttribute("href", "/u/ossaama/messages/grouperss");
     });
 
-    test("the item's link has a title for accessibility", async function (assert) {const self = this;
+    test("the item's link has a title for accessibility", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -161,7 +168,8 @@ module(
         .hasAttribute("title", i18n("notifications.titles.mentioned"));
     });
 
-    test("has elements for label and description", async function (assert) {const self = this;
+    test("has elements for label and description", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -181,7 +189,8 @@ module(
         );
     });
 
-    test("the description falls back to topic_title from data if fancy_title is absent", async function (assert) {const self = this;
+    test("the description falls back to topic_title from data if fancy_title is absent", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -199,7 +208,8 @@ module(
         );
     });
 
-    test("fancy_title is emoji-unescaped", async function (assert) {const self = this;
+    test("fancy_title is emoji-unescaped", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -215,7 +225,8 @@ module(
         );
     });
 
-    test("topic_title from data is emoji-unescaped safely", async function (assert) {const self = this;
+    test("topic_title from data is emoji-unescaped safely", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -239,7 +250,8 @@ module(
         .exists("emoji is rendered correctly");
     });
 
-    test("various aspects can be customized according to the notification's render director", async function (assert) {const self = this;
+    test("various aspects can be customized according to the notification's render director", async function (assert) {
+      const self = this;
 
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
@@ -329,7 +341,8 @@ module(
         );
     });
 
-    test("description can be omitted", async function (assert) {const self = this;
+    test("description can be omitted", async function (assert) {
+      const self = this;
 
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
@@ -364,7 +377,8 @@ module(
         .hasText("notification label", "only label content is displayed");
     });
 
-    test("label can be omitted", async function (assert) {const self = this;
+    test("label can be omitted", async function (assert) {
+      const self = this;
 
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
@@ -419,7 +433,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("item description is the fancy title of the message", async function (assert) {const self = this;
+    test("item description is the fancy title of the message", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -490,7 +505,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("uses bookmarkable_url for the href", async function (assert) {const self = this;
+    test("uses bookmarkable_url for the href", async function (assert) {
+      const self = this;
 
       this.set("item", getBookmark({}, this.siteSettings, this.site));
       await render(<template><MenuItem @item={{self.item}} /></template>);
@@ -499,7 +515,8 @@ module(
         .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
     });
 
-    test("item label is the bookmarked post author", async function (assert) {const self = this;
+    test("item label is the bookmarked post author", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -513,7 +530,8 @@ module(
       assert.dom("li.bookmark .item-label").hasText("bookmarkPostAuthor");
     });
 
-    test("item description is the bookmark title", async function (assert) {const self = this;
+    test("item description is the bookmark title", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -559,7 +577,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {const self = this;
+    test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -572,7 +591,8 @@ module(
       assert.dom("li").exists();
     });
 
-    test("pushes `reviewed` to the classList if the reviewable isn't pending", async function (assert) {const self = this;
+    test("pushes `reviewed` to the classList if the reviewable isn't pending", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -584,7 +604,8 @@ module(
       assert.dom("li.reviewed").exists();
     });
 
-    test("has elements for label and description", async function (assert) {const self = this;
+    test("has elements for label and description", async function (assert) {
+      const self = this;
 
       this.set(
         "item",
@@ -603,7 +624,8 @@ module(
       );
     });
 
-    test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {const self = this;
+    test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {
+      const self = this;
 
       this.set(
         "item",

@@ -15,6 +15,7 @@ export default class GroupSelector extends Component {
       name="groups"
     />
   </template>
+
   @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? i18n(placeholderKey) : "";

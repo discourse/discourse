@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ReviewablesList from "discourse/components/user-menu/reviewables-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import ReviewablesList from "discourse/components/user-menu/reviewables-list";
 
 module(
   "Integration | Component | user-menu | reviewables-list",

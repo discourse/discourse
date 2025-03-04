@@ -9,6 +9,7 @@ export default class DiscourseLinkedText extends Component {
   <template>
     {{htmlSafe this.translatedText}}
   </template>
+
   @discourseComputed("text", "textParams")
   translatedText(text) {
     if (text) {

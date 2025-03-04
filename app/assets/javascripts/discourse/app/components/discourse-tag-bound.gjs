@@ -14,6 +14,7 @@ export default class DiscourseTagBound extends Component {
   <template>
     {{this.tagRecord.id}}
   </template>
+
   @discourseComputed("tagRecord.id")
   tagClass(tagRecordId) {
     return "tag-" + tagRecordId;
