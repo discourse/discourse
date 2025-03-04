@@ -2,9 +2,9 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
+import image from "./image";
 import mention from "./mention";
 import underline from "./underline";
-import image from "./image";
 
 /**
  * List of default extensions
