@@ -1,7 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import Input from "discourse/components/form-template-field/input";
-import Textarea from "discourse/components/form-template-field/textarea";
+import FormTextarea from "discourse/components/form-template-field/textarea";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
@@ -10,7 +9,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders a textarea input", async function (assert) {
-      await render(<template><Textarea /></template>);
+      await render(<template><FormTextarea /></template>);
 
       assert
         .dom(".form-template-field__textarea")
@@ -27,7 +26,7 @@ module(
       this.set("attributes", attributes);
 
       await render(<template>
-        <Textarea @attributes={{self.attributes}} />
+        <FormTextarea @attributes={{self.attributes}} />
       </template>);
 
       assert
@@ -49,7 +48,7 @@ module(
       this.set("attributes", attributes);
 
       await render(<template>
-        <Textarea @attributes={{self.attributes}} />
+        <FormTextarea @attributes={{self.attributes}} />
       </template>);
 
       assert.dom(".form-template-field__label").doesNotExist();
