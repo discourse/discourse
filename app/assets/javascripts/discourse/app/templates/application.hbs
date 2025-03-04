@@ -53,6 +53,9 @@
 
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+
+      <WelcomeBanner />
+
       <div class="container" id="main-container">
         {{#if this.showTop}}
           <CustomHtml @name="top" />
