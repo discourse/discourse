@@ -52,15 +52,13 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::MenuItem @item={{this.item}}/>`;
-
     test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       this.item.notification.read = false;
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.read").doesNotExist();
       assert.dom("li.unread").exists();
 
@@ -80,7 +78,7 @@ module(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li").hasClass("mentioned");
 
       this.set(
@@ -103,7 +101,7 @@ module(
           is_warning: true,
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.is-warning").exists();
     });
 
@@ -112,7 +110,7 @@ module(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.is-warning").doesNotExist();
       assert.dom("li").exists();
     });
@@ -122,7 +120,7 @@ module(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li a").hasAttribute("href", "/t/this-is-fancy-title/449/113");
     });
 
@@ -140,7 +138,7 @@ module(
           },
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li a").hasAttribute("href", "/u/ossaama/messages/grouperss");
     });
 
@@ -149,7 +147,7 @@ module(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li a")
@@ -161,7 +159,7 @@ module(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li a .item-label")
@@ -182,7 +180,7 @@ module(
           fancy_title: null,
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li a .item-description")
@@ -199,7 +197,7 @@ module(
           fancy_title: "title with emoji :phone:",
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li a .item-description img.emoji")
         .exists(
@@ -217,7 +215,7 @@ module(
           },
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li a .item-description")
@@ -279,7 +277,7 @@ module(
         })
       );
 
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li.additional.classes")
@@ -344,7 +342,7 @@ module(
         })
       );
 
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom(".item-description")
         .doesNotExist("description is not rendered");
@@ -378,7 +376,7 @@ module(
         })
       );
 
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li")
         .hasText(
@@ -407,8 +405,6 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::MenuItem @item={{this.item}}/>`;
-
     test("item description is the fancy title of the message", async function (assert) {
       this.set(
         "item",
@@ -418,7 +414,7 @@ module(
           this.site
         )
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li.message .item-description")
         .hasText("This is a safe title!");
@@ -479,11 +475,9 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::MenuItem @item={{this.item}}/>`;
-
     test("uses bookmarkable_url for the href", async function (assert) {
       this.set("item", getBookmark({}, this.siteSettings, this.site));
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li.bookmark a")
         .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
@@ -498,7 +492,7 @@ module(
           this.site
         )
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.bookmark .item-label").hasText("bookmarkPostAuthor");
     });
 
@@ -511,7 +505,7 @@ module(
           this.site
         )
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li.bookmark .item-description")
         .hasText("Custom bookmark title");
@@ -547,8 +541,6 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`<UserMenu::MenuItem @item={{this.item}}/>`;
-
     test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {
       this.set(
         "item",
@@ -556,7 +548,7 @@ module(
           pending: true,
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.reviewed").doesNotExist();
       assert.dom("li").exists();
     });
@@ -568,7 +560,7 @@ module(
           pending: false,
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert.dom("li.reviewed").exists();
     });
 
@@ -577,7 +569,7 @@ module(
         "item",
         getReviewable(this.currentUser, this.siteSettings, this.site)
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
 
       assert
         .dom("li .item-label")
@@ -597,7 +589,7 @@ module(
           flagger_username: null,
         })
       );
-      await render(template);
+      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
       assert
         .dom("li .item-label")
         .hasText(i18n("user_menu.reviewable.deleted_user"));
