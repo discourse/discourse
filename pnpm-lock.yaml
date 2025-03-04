@@ -3089,10 +3089,6 @@ packages:
     resolution: {integrity: sha512-3qBQWRjzP9NreSH/YrOEU1Lj5F60+pWSLP0kIdCWxjFHH7pX2YPHIxQ67el4gnMNfYoDxSDGcT0zpVlZ+gVtQA==}
     engines: {node: '>= 12.*'}
 
-  babel-import-util@3.0.0:
-    resolution: {integrity: sha512-4YNPkuVsxAW5lnSTa6cn4Wk49RX6GAB6vX+M6LqEtN0YePqoFczv1/x0EyLK/o+4E1j9jEuYj5Su7IEPab5JHQ==}
-    engines: {node: '>= 12.*'}
-
   babel-import-util@3.0.1:
     resolution: {integrity: sha512-2copPaWQFUrzooJVIVZA/Oppx/S/KOoZ4Uhr+XWEQDMZ8Rvq/0SNQpbdIyMBJ8IELWt10dewuJw+tX4XjOo7Rg==}
     engines: {node: '>= 12.*'}
@@ -11207,8 +11203,6 @@ snapshots:
 
   babel-import-util@2.1.1: {}
 
-  babel-import-util@3.0.0: {}
-
   babel-import-util@3.0.1: {}
 
   babel-loader@8.4.1(@babel/core@7.26.9)(webpack@5.98.0(@swc/core@1.11.5)(esbuild@0.25.0)):
@@ -11248,7 +11242,7 @@ snapshots:
   babel-plugin-ember-template-compilation@2.3.0:
     dependencies:
       '@glimmer/syntax': 0.84.3
-      babel-import-util: 3.0.0
+      babel-import-util: 3.0.1
 
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     dependencies:
@@ -12358,7 +12352,7 @@ snapshots:
   decorator-transforms@2.3.0(@babel/core@7.26.9):
     dependencies:
       '@babel/plugin-syntax-decorators': 7.25.9(@babel/core@7.26.9)
-      babel-import-util: 3.0.0
+      babel-import-util: 3.0.1
     transitivePeerDependencies:
       - '@babel/core'
 
