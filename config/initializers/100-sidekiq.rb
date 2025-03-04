@@ -84,7 +84,7 @@ Rails.application.config.to_prepare do
   Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") { |f| require(f) } if Rails.env.development?
 
   MiniScheduler.configure do |config|
-    config.redis = Discourse.redis
+    config.redis = DiscourseRedis.new(Discourse.sidekiq_redis_config)
 
     config.job_exception_handler { |ex, context| Discourse.handle_job_exception(ex, context) }
 
