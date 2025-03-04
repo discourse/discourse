@@ -53,7 +53,7 @@ export async function testMarkdown(
     .replace('<img class="ProseMirror-separator" alt="">', "")
     .replace('<br class="ProseMirror-trailingBreak">', "")
     // or artifacts
-    .replace('class=""', "");
+    .replace(' class=""', "");
 
   assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
