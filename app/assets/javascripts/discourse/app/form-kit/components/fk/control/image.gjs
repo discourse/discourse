@@ -28,6 +28,7 @@ export default class FKControlImage extends Component {
       @onUploadDeleted={{this.removeImage}}
       @type={{@type}}
       @disabled={{@field.disabled}}
+      @placeholderUrl={{@field.args.placeholderUrl}}
       class="form-kit__control-image no-repeat contain-image"
     />
   </template>

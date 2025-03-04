@@ -1,4 +1,13 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import emoji from "./emoji";
+import hashtag from "./hashtag";
+import heading from "./heading";
+import image from "./image";
+import link from "./link";
+import mention from "./mention";
+import quote from "./quote";
+import strikethrough from "./strikethrough";
+import underline from "./underline";
 import table from "./table";
 
 /**
@@ -7,6 +16,19 @@ import table from "./table";
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions = [table];
+const defaultExtensions = [
+  emoji,
+  image,
+  link,
+  heading,
+  quote,
+  hashtag,
+  mention,
+  strikethrough,
+  underline,
+  table,
+];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+
+export default defaultExtensions;

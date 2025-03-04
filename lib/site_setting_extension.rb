@@ -462,6 +462,7 @@ module SiteSettingExtension
 
     if defined?(Rails::Console)
       details = "Updated via Rails console"
+      details = DiscoursePluginRegistry.apply_modifier(:site_setting_log_details, details)
       log(name, val, old_val, Discourse.system_user, details)
     end
 

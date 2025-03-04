@@ -1,6 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -47,7 +48,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get href() {
-    return this.adminSidebarNavLink.href;
+    if (this.adminSidebarNavLink.href) {
+      return getURL(this.adminSidebarNavLink.href);
+    }
   }
 
   get query() {
@@ -261,11 +264,34 @@ function pluginAdminRouteLinks(router) {
       }
     })
     .map((plugin) => {
+      const pluginAdminRoute = plugin.admin_route.use_new_show_route
+        ? `adminPlugins.show`
+        : `adminPlugins.${plugin.admin_route.location}`;
+      const pluginConfigNav = configNavForPlugin(plugin.name);
+
+      let pluginNavLinks = [];
+      if (pluginConfigNav) {
+        if (Array.isArray(pluginConfigNav.links)) {
+          pluginNavLinks = [...pluginConfigNav.links];
+        }
+
+        if (pluginNavLinks.length) {
+          pluginNavLinks = pluginNavLinks
+            .map((link) => {
+              if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
+                link.routeModels = [plugin.name];
+                return link;
+              } else {
+                return;
+              }
+            })
+            .compact();
+        }
+      }
+
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
-        route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show`
-          : `adminPlugins.${plugin.admin_route.location}`,
+        route: pluginAdminRoute,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
           : [],
@@ -273,6 +299,7 @@ function pluginAdminRouteLinks(router) {
         text: plugin.humanized_name,
         icon: "gear",
         description: plugin.description,
+        links: pluginNavLinks,
       };
     });
 }
@@ -385,8 +412,14 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   filterNoResultsDescription(filter) {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+
+    const escapedFilter = escapeExpression(filter);
+
     const params = {
-      filter: escapeExpression(filter),
+      filter: escapedFilter,
       settings_filter_url: getURL(
         `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
           filter
@@ -396,6 +429,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         `/admin/users/list/active?username=${encodeURIComponent(filter)}`
       ),
     };
+
+    if (currentUser?.use_experimental_admin_search) {
+      return htmlSafe(
+        i18n("sidebar.no_results.description_admin_search", {
+          filter: escapedFilter,
+          admin_search_url: getURL(
+            `/admin/search?filter=${encodeURIComponent(filter)}`
+          ),
+        })
+      );
+    }
 
     return htmlSafe(i18n("sidebar.no_results.description", params));
   }
