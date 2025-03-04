@@ -8,10 +8,7 @@ import underline from "./underline";
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions =
-  hashtag,
-  underline,
-];
+const defaultExtensions = [hashtag, underline];
 
 defaultExtensions.forEach(registerRichEditorExtension);
 
