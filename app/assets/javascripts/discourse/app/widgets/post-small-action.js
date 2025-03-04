@@ -12,10 +12,11 @@ import { createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
-  const dt = new Date(createdAt);
-  const when = autoUpdatingRelativeAge(dt, {
-    format: "medium-with-ago-and-on",
-  });
+  const when = createdAt
+    ? autoUpdatingRelativeAge(new Date(createdAt), {
+        format: "medium-with-ago-and-on",
+      })
+    : "";
 
   let who = "";
   if (username) {

@@ -2030,14 +2030,14 @@ class Topic < ActiveRecord::Base
       invited_by,
       "topic-invitations-per-day",
       SiteSetting.max_topic_invitations_per_day,
-      1.day.to_i,
+      1.day,
     ).performed!
 
     RateLimiter.new(
       invited_by,
       "topic-invitations-per-minute",
       SiteSetting.max_topic_invitations_per_minute,
-      1.day.to_i,
+      1.minute,
     ).performed!
   end
 

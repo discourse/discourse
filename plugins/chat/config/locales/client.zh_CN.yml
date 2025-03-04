@@ -326,6 +326,7 @@ zh_CN:
         tabs:
           members: 成员
           settings: 设置
+        remove_member: "移除"
       new_message_modal:
         title: 发送消息
         add_user_long: <kbd>shift + 点击</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>

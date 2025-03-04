@@ -104,8 +104,6 @@ module Chat
       to_notify
     end
 
-    private
-
     def list_users_to_notify
       skip_notifications = @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
@@ -126,6 +124,8 @@ module Chat
 
       [to_notify, inaccessible, all_mentioned_user_ids]
     end
+
+    private
 
     def expand_global_mention(to_notify, already_covered_ids)
       has_all_mention = @parsed_mentions.has_global_mention
@@ -172,8 +172,8 @@ module Chat
 
       {
         members: members || [],
-        welcome_to_join: welcome_to_join || [],
-        unreachable: unreachable || [],
+        welcome_to_join: (welcome_to_join || []).select(&:human?),
+        unreachable: (unreachable || []).select(&:human?),
       }
     end
 

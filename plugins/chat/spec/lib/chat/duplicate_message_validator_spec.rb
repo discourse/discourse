@@ -6,8 +6,8 @@ describe Chat::DuplicateMessageValidator do
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
   fab!(:user)
 
-  def message_blocked?(message:, chat_channel:, user:)
-    chat_message = Fabricate.build(:chat_message, user:, message:, chat_channel:)
+  def message_blocked?(message:, chat_channel:, user:, upload_ids: nil)
+    chat_message = Fabricate.build(:chat_message, user:, message:, chat_channel:, upload_ids:)
     described_class.new(chat_message).validate
     chat_message.errors.full_messages.include?(I18n.t("chat.errors.duplicate_message"))
   end
@@ -104,5 +104,21 @@ describe Chat::DuplicateMessageValidator do
     Fabricate(:chat_message, created_at: 1.second.ago, user:, message:, chat_channel: dm_channel)
 
     expect(message_blocked?(message:, user:, chat_channel: dm_channel)).to eq(false)
+  end
+
+  it "doesn't block a message if both are uploads only" do
+    upload = Fabricate(:upload)
+    Fabricate(
+      :chat_message,
+      created_at: 1.second.ago,
+      user:,
+      message: "",
+      chat_channel: category_channel,
+      upload_ids: [upload.id],
+    )
+
+    expect(
+      message_blocked?(message: "", user:, chat_channel: category_channel, upload_ids: [upload.id]),
+    ).to eq(false)
   end
 end

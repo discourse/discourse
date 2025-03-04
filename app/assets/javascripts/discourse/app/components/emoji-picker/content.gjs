@@ -11,6 +11,7 @@ import { emojiSearch } from "pretty-text/emoji";
 import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -25,6 +26,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
@@ -118,16 +120,6 @@ export default class EmojiPicker extends Component {
     };
   }
 
-  get flatEmojis() {
-    if (!this.emojiStore.list) {
-      return [];
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    let { favorites, ...rest } = this.emojiStore.list;
-    return Object.values(rest).flat();
-  }
-
   @action
   registerFilterInput(element) {
     this.filterInput = element;
@@ -179,19 +171,26 @@ export default class EmojiPicker extends Component {
   debouncedDidInputFilter(filter = "") {
     filter = filter.toLowerCase();
 
-    const results = emojiSearch(filter, {
-      exclude: this.site.denied_emojis,
-    }).slice(0, 50);
+    loadEmojiSearchAliases().then((searchAliases) => {
+      const results = emojiSearch(filter, {
+        exclude: this.site.denied_emojis,
+        searchAliases,
+      }).slice(0, 50);
 
-    this.filteredEmojis =
-      this.flatEmojis.filter((emoji) => results.includes(emoji.name)) ?? [];
+      this.filteredEmojis = results.map((emoji) => {
+        return {
+          name: emoji,
+          url: emojiUrlFor(emoji),
+        };
+      });
 
-    this.isFiltering = false;
+      this.isFiltering = false;
 
-    schedule("afterRender", () => {
-      if (this.scrollableNode) {
-        this.scrollableNode.scrollTop = 0;
-      }
+      schedule("afterRender", () => {
+        if (this.scrollableNode) {
+          this.scrollableNode.scrollTop = 0;
+        }
+      });
     });
   }
 
@@ -449,25 +448,37 @@ export default class EmojiPicker extends Component {
       ...attributes
     >
       <div class="emoji-picker__filter-container">
-        <FilterInput
-          {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
-          {{didInsert this.registerFilterInput}}
-          @value={{this.term}}
-          @filterAction={{withEventValue this.didInputFilter}}
-          @icons={{hash right="magnifying-glass"}}
-          @containerClass="emoji-picker__filter"
-          placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
-        />
-
-        <DiversityMenu />
-
-        {{#if this.site.mobileView}}
-          <DButton
-            @icon="xmark"
-            @action={{@close}}
-            class="btn-transparent emoji-picker__close-btn"
+        <PluginOutlet
+          @name="emoji-picker-filter-container"
+          @outletArgs={{hash
+            term=this.term
+            focusFilter=this.focusFilter
+            registerFilterInput=this.registerFilterInput
+            didInputFilter=this.didInputFilter
+            context=@context
+            close=@close
+          }}
+        >
+          <FilterInput
+            {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
+            {{didInsert this.registerFilterInput}}
+            @value={{this.term}}
+            @filterAction={{withEventValue this.didInputFilter}}
+            @icons={{hash right="magnifying-glass"}}
+            @containerClass="emoji-picker__filter"
+            placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
           />
-        {{/if}}
+
+          <DiversityMenu />
+
+          {{#if this.site.mobileView}}
+            <DButton
+              @icon="xmark"
+              @action={{@close}}
+              class="btn-transparent emoji-picker__close-btn"
+            />
+          {{/if}}
+        </PluginOutlet>
       </div>
 
       <div class="emoji-picker__content">

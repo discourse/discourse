@@ -2668,7 +2668,6 @@ lt:
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."
       links:
-        watched_word: žiūrimų žodžių sąrašas
         category: kategorijos nustatymai
     actions:
       agree:

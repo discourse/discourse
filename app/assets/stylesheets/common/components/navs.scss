@@ -89,6 +89,7 @@
     line-height: var(--line-height-small);
     cursor: pointer;
     color: var(--primary);
+
     @include ellipsis;
 
     &:hover {

@@ -117,3 +117,15 @@ export const REPORT_MODES = {
   inline_table: "inline_table",
   storage_stats: "storage_stats",
 };
+
+export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";
+
+export const ADMIN_SEARCH_RESULT_TYPES = [
+  "page",
+  "setting",
+  "theme",
+  "component",
+  "report",
+];
+
+export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];

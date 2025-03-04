@@ -314,9 +314,6 @@ fi:
     site_settings:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
-      site_setting_is_hidden: "Et voi muuttaa piilotettuja asetuksia"
-      site_setting_is_shadowed_globally: "Et voi muuttaa tätä asetusta, koska se on määritetty yleisesti"
-      site_setting_is_unconfigurable: "Et voi muuttaa asetuksia, jotka eivät ole määritettävissä"
       invalid_choice:
         one: "\"%{name}\" on virheellinen valinta."
         other: "\"%{name}\" ovat virheellisiä valintoja."
@@ -338,7 +335,7 @@ fi:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien pyyntöjen virheellisen rajoittamisen välttämiseksi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Et voi lisätä asetukseen mitään seuraavista arvoista: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
-      twitter_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
+      x_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
       tl0_and_anonymous_flag: "Joko \"site contact email\" tai \"email address to report illegal content\" täytyy antaa anonyymeille käyttäjille."
     conflicting_google_user_id: 'Tämän tilin Google-tilitunnus on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1720,7 +1717,7 @@ fi:
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
     apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Läpinäkyvää taustaa ei suositella. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
-    twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
+    x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2127,7 +2124,6 @@ fi:
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
     reviewable_low_priority_threshold: "Prioriteettisuodatin piilottaa käsiteltävät kohteet, jotka eivät täytä tätä pistemäärää, ellei \"(mikä tahansa)\" -suodatin ole käytössä."
     high_trust_flaggers_auto_hide_posts: "Uusien käyttäjien viestit piilotetaan automaattisesti, kun vähintään TL3-tason käyttäjä on liputtaneet ne roskapostiksi"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonyymit käyttäjät näkevät tiedon siitä, että heidän täytyy lähetettää sähköpostiviesti ylläpitäjille laittomasta sisällöstä ilmoittamiseksi."
     email_address_to_report_illegal_content: "Jos tämä jätetään tyhjäksi, käytetään oletusarvoista sivuston ylläpitäjän sähköpostiosoitetta."
     cooldown_hours_until_reflag: "Kuinka kauan käyttäjien on odotettava, kunnes he voivat liputtaa viestin uudelleen"
     slow_mode_prevents_editing: "Estääkö hidas tila muokkauksen editing_grace_periodin jälkeen?"
@@ -2336,9 +2332,7 @@ fi:
     max_allowed_message_recipients: "Kuinka monta vastaanottajaa yksityisviestillä voi olla."
     disable_watched_word_checking_in_user_fields: "poista tarkkailtujen sanojen tarkistus käytöstä käyttäjäkentissä"
     watched_words_regular_expressions: "Sallii säännöllisten lausekkeiden käytön sanojen suodattamiseen. Jos tämä on käytössä, tämä ominaisuus ryhmittelee arkaluontoiset sanat kirjainkoon mukaan. Sen jälkeen se kokoaa kaikki valitut sanat yhdeksi säännölliseksi lausekkeeksi ja lisää sanarajat säännöllisesti tarkkailuille sanoille. Näin ollen tämä regex-pohjainen suodatusmenetelmä lisää ylimääräisen valvontatason sisällön moderointiin tukemalla kehittyneempiä sanamalleja. Asetus mahdollistaa myös alkuperäisen tekstin helposti korvaamisen halutulla korvauksella."
-    enable_diffhtml_preview: "Kokeellinen ominaisuus, joka käyttää diffHTML-tiedostoa esikatselun synkronointiin täydellisen uudelleenhahmontamisen sijaan"
     enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
-    enable_quote_copy: "Lisää painikkeen viestin valintavalikkoon, jolla voi kopioida valinnan markdown-lainauksena."
     old_post_notice_days: "Päivien lukumäärä, jonka jälkeen viesti-ilmoitus katsotaan vanhaksi. Tämä erottaa sen visuaalisesti sivuston uudemmista ilmoituksista."
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."
@@ -4988,7 +4982,6 @@ fi:
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien ketjut tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso %{link}."
       auto_silence_regex: "Uusi käyttäjä, jonka ensimmäinen viesti vastaa %{link}-asetusta."
-      watched_word: "Tämä viesti sisälsi tarkkaillun sanan. Katso %{link}."
       staged: "Henkilökunnan täytyy hyväksyä esikäyttäjien uudet ketjut ja viestit. Katso %{link}."
       category: "Tämän alueen viestit vaativat henkilökunnan hyväksyntää. Katso %{link}."
       must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet käyttäjät. Katso %{link}."
@@ -4999,7 +4992,6 @@ fi:
       contains_media: "Tämä viesti sisältää upotettua mediasisältöä. Katso %{link}."
       queued_by_staff: "Henkilökunnan jäsen kokee, että tämä viesti on tarkistettava. Se pysyy piilotettuna, kunnes se on tarkastettu."
       links:
-        watched_word: tarkkailtujen sanojen luettelo
         category: alueen asetukset
     actions:
       agree:

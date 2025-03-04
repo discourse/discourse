@@ -43,28 +43,28 @@ RSpec.describe TopicUser do
 
   describe "#notification_levels" do
     context "when verifying enum sequence" do
-      before { @notification_levels = TopicUser.notification_levels }
+      let(:notification_levels) { TopicUser.notification_levels }
 
       it "'muted' should be at 0 position" do
-        expect(@notification_levels[:muted]).to eq(0)
+        expect(notification_levels[:muted]).to eq(0)
       end
 
       it "'watching' should be at 3rd position" do
-        expect(@notification_levels[:watching]).to eq(3)
+        expect(notification_levels[:watching]).to eq(3)
       end
     end
   end
 
   describe "#notification_reasons" do
     context "when verifying enum sequence" do
-      before { @notification_reasons = TopicUser.notification_reasons }
+      let(:notification_reasons) { TopicUser.notification_reasons }
 
       it "'created_topic' should be at 1st position" do
-        expect(@notification_reasons[:created_topic]).to eq(1)
+        expect(notification_reasons[:created_topic]).to eq(1)
       end
 
       it "'plugin_changed' should be at 9th position" do
-        expect(@notification_reasons[:plugin_changed]).to eq(9)
+        expect(notification_reasons[:plugin_changed]).to eq(9)
       end
     end
   end

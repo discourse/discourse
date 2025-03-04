@@ -93,8 +93,16 @@ export function registerRichEditorExtension(extension) {
   registeredExtensions.push(extension);
 }
 
-export function resetRichEditorExtensions() {
+export function clearRichEditorExtensions() {
   registeredExtensions.length = 0;
+}
+
+export async function resetRichEditorExtensions() {
+  const { default: extensions } = await import(
+    "discourse/static/prosemirror/extensions/register-default"
+  );
+  clearRichEditorExtensions();
+  extensions.forEach(registerRichEditorExtension);
 }
 
 /**

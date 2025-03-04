@@ -59,6 +59,7 @@ uk:
     deleted_chat_username: видалено
     errors:
       users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
+      user_cant_be_removed_from_channel: "Користувач не може бути видалений з цього каналу"
       channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"
@@ -94,6 +95,7 @@ uk:
       actor_muting_target_user: "Ви відключили сповіщення від %{username}, тому ви не можете надсилати їм повідомлення."
       actor_disallowed_dms: "Ви вирішили заборонити користувачам надсилати вам особисті та прямі повідомлення, тому ви не можете створювати нові прямі повідомлення."
       actor_preventing_target_user_from_dm: "Ви вирішили заборонити %{username} надсилати вам особисті та прямі повідомлення, тому ви не можете створювати нові прямі повідомлення для них."
+      not_reachable: "На жаль, %{username} не використовує чат."
       user_cannot_send_direct_messages: "На жаль, ви не можете надсилати прямі повідомлення."
       over_chat_max_direct_message_users_allow_self: "Ви можете створити пряме повідомлення тільки з самим собою."
       over_chat_max_direct_message_users:
@@ -264,6 +266,16 @@ uk:
           few: "[%{site_name}] Нові повідомлення"
           many: "[%{site_name}] Нові повідомлення"
           other: "[%{site_name}] Нові повідомлення"
+        watched_thread:
+          one: "[%{site_name}] Нове повідомлення в темі %{channel}"
+          few: "[%{site_name}] Нові повідомлення в темі %{channel}"
+          many: "[%{site_name}] Нові повідомлення в темі %{channel}"
+          other: "[%{site_name}] Нові повідомлення в темі %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інше"
+          few: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
+          many: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
+          other: "[%{site_name}] Нові повідомлення теми в %{channel} і %{count} інших"
         chat_dm_1:
           one: "[%{site_name}] Нове повідомлення від %{name}"
           few: "[%{site_name}] Нове повідомлення від %{name}"

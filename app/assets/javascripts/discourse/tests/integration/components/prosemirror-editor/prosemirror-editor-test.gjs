@@ -1,6 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { resetRichEditorExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  clearRichEditorExtensions,
+  resetRichEditorExtensions,
+} from "discourse/lib/composer/rich-editor-extensions";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -8,6 +11,10 @@ import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module("Integration | Component | prosemirror-editor", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    clearRichEditorExtensions();
+  });
 
   hooks.afterEach(function () {
     resetRichEditorExtensions();

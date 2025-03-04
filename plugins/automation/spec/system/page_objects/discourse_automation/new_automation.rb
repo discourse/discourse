@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class NewAutomation < PageObjects::Pages::Base
       def visit
-        super("/admin/plugins/discourse-automation/new")
+        super("/admin/plugins/automation/automation/new")
         self
       end
 

@@ -127,6 +127,39 @@ describe "Search", type: :system do
       expect(log.search_result_id).to eq(topic.first_post.id)
       expect(log.search_type).to eq(SearchLog.search_types[:header])
     end
+
+    describe "with search icon in header" do
+      before { SiteSetting.search_experience = "search_icon" }
+
+      it "displays the correct search mode" do
+        visit("/")
+        expect(search_page).to have_search_icon
+        expect(search_page).to have_no_search_field
+      end
+    end
+
+    describe "with search field in header" do
+      before { SiteSetting.search_experience = "search_field" }
+
+      it "displays the correct search mode" do
+        visit("/")
+        expect(search_page).to have_search_field
+        expect(search_page).to have_no_search_icon
+      end
+
+      it "switches to search icon when header is minimized" do
+        5.times { Fabricate(:post, topic: topic) }
+        visit("/t/#{topic.id}")
+
+        expect(search_page).to have_no_search_icon
+
+        find(".timeline-date-wrapper:last-child a").click
+        expect(search_page).to have_search_icon
+
+        find(".timeline-date-wrapper:first-child a").click
+        expect(search_page).to have_no_search_icon
+      end
+    end
   end
 
   describe "bulk actions" do

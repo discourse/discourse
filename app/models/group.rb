@@ -273,10 +273,16 @@ class Group < ActiveRecord::Base
 
   scope :mentionable,
         lambda { |user, include_public: true|
-          where(
-            self.mentionable_sql_clause(include_public: include_public),
-            levels: alias_levels(user),
-            user_id: user&.id,
+          groups =
+            where(
+              self.mentionable_sql_clause(include_public: include_public),
+              levels: alias_levels(user),
+              user_id: user&.id,
+            )
+          DiscoursePluginRegistry.apply_modifier(
+            :mentionable_groups,
+            groups,
+            { user: user, include_public: include_public },
           )
         }
 
@@ -503,7 +509,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.can_use_name?(name, group)
-    UsernameValidator.new(name).valid_format? &&
+    UsernameValidator.new(name, skip_length_validation: group.automatic).valid_format? &&
       (group.name == name || !User.username_exists?(name))
   end
 
@@ -1123,7 +1129,7 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, "name") ||
+    UsernameValidator.perform_validation(self, "name", skip_length_validation: automatic) ||
       begin
         normalized_name = User.normalize_username(self.name)
 

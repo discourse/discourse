@@ -7,8 +7,8 @@
 cs:
   js:
     discourse_automation:
-      create: Vytvoř
-      update: Aktualizovat
+      back: Zpět
+      edit: Upravit
       destroy_automation:
         confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
       fields:
@@ -70,10 +70,6 @@ cs:
               label: Štítky
             restricted_category:
               label: Kategorie
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupiny
           created: Vytvořený
         category_created_edited:
           fields:

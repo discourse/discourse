@@ -67,7 +67,8 @@ class About
   def moderators
     @moderators ||=
       apply_excluded_groups(
-        User.where(moderator: true, admin: false).human_users.order(last_seen_at: :desc),
+        User.where(moderator: true).human_users.order(last_seen_at: :desc),
+        ignore_groups: [Group::AUTO_GROUPS[:admins]],
       )
   end
 
@@ -75,7 +76,10 @@ class About
     @admins ||=
       DiscoursePluginRegistry.apply_modifier(
         :about_admins,
-        apply_excluded_groups(User.where(admin: true).human_users.order(last_seen_at: :desc)),
+        apply_excluded_groups(
+          User.where(admin: true).human_users.order(last_seen_at: :desc),
+          ignore_groups: [Group::AUTO_GROUPS[:moderators]],
+        ),
       )
   end
 
@@ -139,8 +143,8 @@ class About
 
   private
 
-  def apply_excluded_groups(query)
-    group_ids = SiteSetting.about_page_hidden_groups_map
+  def apply_excluded_groups(query, ignore_groups: [])
+    group_ids = SiteSetting.about_page_hidden_groups_map - ignore_groups
     return query if group_ids.blank?
 
     query.joins(

@@ -60,6 +60,8 @@ he:
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
+    too_many_urls: "אי אפשר להכניס יותר מ־10 קישורים לתיבה תוחמת בבקשה אחת."
+    concurrency_not_allowed: "אי אפשר לשלוח בקשות להטמעת תיבות תוחמות במקביל. נא לשלוח בקשה אחת כל פעם."
   components:
     enabled_filter: "פעיל"
     disabled_filter: "כבוי"
@@ -366,9 +368,8 @@ he:
     site_settings:
       invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
-      site_setting_is_hidden: "אסור לך לשנות הגדרות נסתרות"
-      site_setting_is_shadowed_globally: "לא ניתן לשנות את ההגדרה הזאת מכיוון שהיא מוגדרת באופן כללי"
-      site_setting_is_unconfigurable: "אסור לך לשנות הגדרות שחסומות להגדרה"
+      site_settings_are_hidden: "אסור לך לשנות הגדרות נסתרות: %{setting_names}"
+      site_settings_are_unconfigurable: "אסור לך לשנות הגדרות שלא ניתן להגדיר: %{setting_names}"
       invalid_choice:
         one: "‚%{name}’ היא בחירה שגויה."
         two: "‚%{name}’ הן בחירות שגויות."
@@ -392,7 +393,8 @@ he:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלה בשוגג של כמות פניות ממשתמשים תקפים."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
-      twitter_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
+      x_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
+      tl0_and_anonymous_flag: "יש לספק ‚דוא״ל קשר עם האתר’ או ‚כתובת דוא״ל לדיווח על תוכן לא חוקי’ למשתמשים אלמוניים."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -869,6 +871,9 @@ he:
           attributes:
             linkable_type:
               invalid: "לא תקף"
+        api_key:
+          base:
+            at_least_one_granular_scope: "יש לבחור לפחות אחד"
       <<: *errors
   uncategorized_category_name: "מחוץ לקטגוריה"
   general_category_name: "כללי"
@@ -1779,9 +1784,13 @@ he:
     delete_old_hidden_posts: "מחיקה אוטומטית של פוסטים מוסתרים כלשהם שנשארו מוסתרים למעלה מ־30 ימים."
     default_locale: "שפת בררת המחדל של עותק ה־Discourse הזה. ניתן להחליף את השם של קטגוריות ונושאים שנוצרו על ידי המערכת דרך <a href='%{base_path}/admin/customize/site_texts' target='_blank'>התאמה / טקסט</a>."
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
+    set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
+    set_locale_from_cookie: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך עוגיית הדפדפן ‚locale’"
+    set_locale_from_param: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך המשתנה ‚lang’ בכתובת, למשל: ‎?lang=he"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת"
     min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
     min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
+    prevent_uploads_only_posts: "לא לספור העלאת קוד Markdown בעת בדיקת אורך פוסט מזערי"
     min_personal_message_post_length: "אורך פוסט מזערי מותר בתווים עבור הודעות (הן פוסט ראשון והן תשובות)"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
     topic_featured_link_enabled: "מאפשר למשתמשים לשייך קישור מוביל לנושאים שלהם. כשהאפשרות פעילה, לנושאים יכולים להיות קישור מודגש מוצמד, שגלוי לכלל ואפשר לערוך אותו בהנחה שלמשתמש יש הרשאות לזה. הקישור המוביל יכול לחדד את הבהירות של הנושא על ידי אספקת תוכן קשור נוסף."
@@ -1801,6 +1810,7 @@ he:
     search_query_log_max_retention_days: "הזמן המרבי לשמירת שאילתות חיפוש, בימים."
     search_ignore_accents: "סימנים דיאקריטיים (הטעמה) בשאילתות חיפוש זוכות להתעלמות אם ההגדרה פעילה, מה שמאפשר למשתמשים למצוא תוצאות אפילו אם לא הקלידו את סימני ההטעמה הנכונים."
     search_default_sort_order: "סדר מיון כברירת מחדל לחיפוש עמוד מלא"
+    search_experience: "מקום ואופן הופעת החיפוש כברירת מחדל בתצוגה למחשבים"
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
     default_composer_category: "הקטגוריה המשמשת לאכלוס מראש של רשימת הקטגוריות הנפתחת בעת יצירת נושא חדש."
@@ -1866,7 +1876,7 @@ he:
     favicon: "סמל האתר שלך, לפרטים <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://he.wikipedia.org/wiki/Favicon</a>. כדי שהסמל יפעל כראוי גם דרך CDN עליו להיות מסוג png. גודל הסמל ישתנה לכדי 32×32. בהעדר בחירה, ייעשה שימוש ב־large_icon."
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. רקע שקוף לא מומלץ. הגודל ישתנה ל־180x180. אם יישאר ריק, ייעשה שימוש ב־large_icon (סמל גדול) במקום."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-    twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
+    x_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2006,6 +2016,7 @@ he:
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד auth_overrides_email (דריסת דוא״ל מאימות חיצוני), auth_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־auth_overrides_name (דריסת שם מאימות חיצוני).
     auth_immediately: "להפנות למערכת הכניסה החיצונית ללא מעורבות המשתמש. מתרחש רק כאשר login_required (נדרשת כניסה) הוא true (אמת) ויש לפחות שיטת אימות חיצונית אחת."
+    auth_require_interaction: "לדרוש את מעורבות המשתמש בטרם העברה למערכת כניסה חיצונית דרך `‎/auth/*‎`. זאת הגנה לעומק כנגד תקיפות ‚CSRF לכניסה’. יש להשבית את ההגדרה הזאת רק אם כל שיטות האימות הפעילות אמינות בעיניך מבחינת הגנה כנגד CSRF לכניסה."
     enable_discourse_connect: "הפעלת כניסה דרך DiscourseConnect (לשעבר ‚הכניסה האחודה של Discourse’) (אזהרה: *חובה* לאמת את כתובות הדוא״ל של המשתמשים על ידי האתר החיצוני!)"
     verbose_discourse_connect_logging: "תיעוד ניתוח נרחב בכל מה שקשור ב־DiscourseConnect אל <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "הטמעת פרוטוקול ספק DiscourseConnect ‏(‚Discourse SSO’ לשעבר) בנקודת הגישה ‎/session/sso_provider, דורשת את ההגדרה discourse_connect_provider_secrets (סודות ספק השירות)"
@@ -2263,6 +2274,8 @@ he:
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "הפעלת תגובה אוטומטית עם הסרת דגל."
     min_first_post_typing_time: "הזמן המזערי במילישניות שעל משתמש להקליד במהלך הפוסט הראשון, אם לא הגיע לסף הפוסט ייכנס אוטומטית לתור ההמתנה לאישור. 0 להשבתה (לא מומלץ)"
+    fast_typing_threshold: "כמות הזמן המזערית במילישניות שעל משתמש להקליד לפני פרסום הפוסט הראשון שלו. אם הסף לא הושג, הפוסט ייכנס אוטומטית לתור לסקירה. נמוך זה שנייה אחת, רגיל זה 3 שניות, גבוה זה 5 שניות."
+    auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־`fast typing threshold` (סף הקלדה מהירה)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
     auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד. השימוש בזה הופסק: נא להשתמש בהשתקת מילים מושגחות במקום."
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
@@ -2270,7 +2283,7 @@ he:
     reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
     reviewable_low_priority_threshold: "מסנן העדיפות מסתיר פריטים לסקירה שלא תואמים לציון אלא אם כן נעשה שימוש במסנן ‚(כלשהו)’"
     high_trust_flaggers_auto_hide_posts: "פוסטים של משתמש חדש מוסתרים אוטומטים לאחר שסומנו כספאם על ידי משתמש בדרגת אמון 3 ומעלה"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "משתמשים אלמוניים יראו פרטים שעליהם לשלוח בדוא״ל להנהלה כדי לדווח על תוכן לא חוקי."
+    allow_all_users_to_flag_illegal_content: "משתמשים אלמוניים יראו מידע שיהיה עליהם לשלוח בדוא״ל להנהלה כדי לדווח על תוכן לא חוקי. ההגדרה הזאת קודמת ל־‚flag post allowed groups’ (קבוצות מורשות לסימון פוסטים)."
     email_address_to_report_illegal_content: "אם השדה יישאר ריק ייעשה שימוש בכתובת דוא״ל ברירת המחדל של הניהול."
     cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
     slow_mode_prevents_editing: "האם ‚מצב אטי’ מונע עריכה לאחר editing_grace_period (תקופת חסד לעריכה)?"
@@ -2429,6 +2442,7 @@ he:
     svg_icon_subset: "הוספת סמלים נוספים מתוך FontAwesome אותם לכלול בין המשאבים שלך. יש להשתמש בקידומת ‚fa-‎’ לסמלים אחידים, ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים."
     max_prints_per_hour_per_user: "מספר החשיפות המרבי לדף ‎/print (0 להשבתת הדפסה)"
     full_name_requirement: "להפוך את שדה השם המלא לשדה חובה, רשות או רשות אך מוסתר בטופס ההרשמה."
+    interface_color_selector: "להגדיר היכן בורר מצב בהיר/כהה לצבע המנשק זמין."
     enable_names: "הצגת השם המלא של המשתמש בפרופיל, כרטיס המשתמש והודעות הדוא״ל של המשתמש. ניתן להשבית כדי להסתיר את השם המלא בכל מקום."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
@@ -2479,9 +2493,7 @@ he:
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     disable_watched_word_checking_in_user_fields: "השבתת בדיקת מילים במעקב בשדות המשתמשים"
     watched_words_regular_expressions: "מאפשר שימוש בביטויים רגולריים לסינון מילים. אם מופעלת, תכונה זו מקבצת מילים רגישות. לאחר מכן יאספו כל המילים שנבחרו לביטוי רגולרי יחיד, ומוסיף גבולות מילים עבור מילים נצפות רגילות. כתוצאה מכך, שיטת סינון זו מבוססת regex מוסיפה שכבה נוספת של שליטה על ניהול תוכן על ידי תמיכה בדפוסי מילים מתוחכמים יותר. ההגדרה גם מאפשרת להחליף בקלות את הטקסט המקורי בתחליף לבחירה."
-    enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
     enable_fast_edit: "מוסיף כפתור לתפריט בחירת הפוסט כדי לערוך בחירה קטנה כחלק מהשורה."
-    enable_quote_copy: "מוסיף כפתור לתפריט בחירת הפוסט כדי להעתיק את הבחירה ללוח הגזירים כציטוט Markdown."
     old_post_notice_days: "מספר הימים שלאחריו התראת פוסט נחשבת ישנה. זה מבדל אותה חזותית מהתראות חדשות יותר באתר."
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -2596,6 +2608,7 @@ he:
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
     create_revision_on_bulk_topic_moves: "יצירת מהדורה לפוסטים הראשונים כאשר הנושאים מועברים לקטגוריה חדשה במרוכז."
     allow_changing_staged_user_tracking: "לאפשר שינוי העדפות של קטגוריית המשתמשים המבוימים ותגיות על ידי ההנהלה."
+    use_email_for_username_and_name_suggestions: "להשתמש בחלק הראשון של כתובות הדוא״ל כהצעות לשמות משתמשים ושמות. אזהרה: זה עלול להקל על גורמים זדוניים לגלות את כתובות הדוא״ל של החברים שלך (כיוון שאנשים רבים משתמשים בספקי דוא״ל נפוצים כגון `gmail.com`)."
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     show_bottom_topic_map: "הצגת מפת הנושאים בתחתית הנושא כשיש 10 תגובות ומעלה."
@@ -2611,6 +2624,7 @@ he:
     experimental_form_templates: "יש להפעיל את יכולת תבניות הטפסים. אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     admin_sidebar_enabled_groups: "הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
     lazy_load_categories_groups: "לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
+    experimental_auto_grid_images: "עוטף תמונות אוטומטית בתגיות [grid] כאשר 3 תמונות או יותר מועלות במחבר ההודעות."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
     about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
@@ -2662,8 +2676,10 @@ he:
       discourse_connect_url_is_empty: "עליך להגדיר ‚כתובת discourse connect’ בטרם הפעלת הגדרה זו."
       enable_local_logins_disabled: "עליך תחילה להפעיל את ‚הפעלת כניסה מקומית’ בטרם הפעלת הגדרה זו."
       min_username_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש לפחות תווים מאשר שם המשתמש הקצר ביותר במערכת (%{username})."
+      min_group_name_length_exists: "לא ניתן להגדיר את האורך המזערי לשם המשתמש ליותר תווים מאשר שם הקבוצה הקצר ביותר (%{group_name})."
       min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
       max_username_length_exists: "לא ניתן להגדיר את האורך המרבי לשם המשתמש ליותר תווים מאשר שם המשתמש הארוך ביותר במערכת (%{username})."
+      max_group_name_length_exists: "לא ניתן להגדיר את האורך המרבי לשם המשתמש לפחות תווים מאשר שם הקבוצה הארוך ביותר (%{group_name})."
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       invalid_hex_value: "ערכי הצבעים חייבים להיות קודים הקסדצימליים באורך 6 תווים."
       empty_selectable_avatars: "עליך להעלות שתי תמונות ייצוגיות לפחות כדי לבחור ביניהן לפני הפעלת האפשרות הזאת."
@@ -5144,6 +5160,8 @@ he:
             label: "ערכת צבעים"
           body_font:
             label: "גופן גוף"
+          site_font:
+            label: "גופן"
           heading_font:
             label: "גופן כותרת"
           styling_preview:
@@ -5284,7 +5302,6 @@ he:
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
-      watched_word: "פוסט זה כולל מילים במעקב. מומלץ לצפות ב%{link} שלך."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. מידע נוסף תחת %{link}."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. מידע נוסף ב־%{link}."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. למידע נוסף: %{link}."
@@ -5295,7 +5312,6 @@ he:
       contains_media: "פוסט זה כולל מדיה מוטמעת. מידע נוסף תחת %{link}."
       queued_by_staff: "אחד מחברי הסגל חושב שהפוסט הזה דורש סקירה. עד אז הוא יישאר מוסתר."
       links:
-        watched_word: רשימת מילים במעקב
         category: הגדרות קטגוריה
     actions:
       agree:

@@ -44,6 +44,7 @@ describe "Flagging post", type: :system do
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:illegal)
 
+      expect(flag_modal).to have_css(".illegal .description")
       expect(flag_modal).to have_css(".flag-confirmation")
 
       flag_modal.fill_message("This looks totally illegal to me.")
@@ -64,10 +65,13 @@ describe "Flagging post", type: :system do
       expect(topic_page).to have_no_flag_button
     end
 
-    it "allows to mark posts as illegal when allow_tl0_and_anonymous_users_to_flag_illegal_content setting is enabled" do
+    it "allows to mark posts as illegal when allow_all_users_to_flag_illegal_content setting is enabled" do
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
-      SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
       topic_page.visit_topic(topic).open_flag_topic_modal
+      expect(flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
+      )
       expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
     end
   end
@@ -80,13 +84,16 @@ describe "Flagging post", type: :system do
       expect(topic_page).to have_no_post_more_actions(post_to_flag)
     end
 
-    it "allows to mark posts as illegal when allow_tl0_and_anonymous_users_to_flag_illegal_content setting is enabled" do
+    it "allows to mark posts as illegal when allow_all_users_to_flag_illegal_content setting is enabled" do
       SiteSetting.contact_email = "contact@example.com"
-      SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
 
       topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
+      expect(anonymous_flag_modal.body).to have_content(
+        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
+      )
       expect(anonymous_flag_modal.body).to have_content(
         ActionView::Base.full_sanitizer.sanitize(
           I18n.t(

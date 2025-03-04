@@ -6,7 +6,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { eq } from "truth-helpers";
+import { and, eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
@@ -229,6 +229,7 @@ export default class Item extends Component {
         (if (eq @topic @lastVisitedTopic) "last-visit")
         (if @topic.visited "visited")
         (if @topic.hasExcerpt "has-excerpt")
+        (if (and this.expandPinned @topic.hasExcerpt) "excerpt-expanded")
         (if @topic.unseen "unseen-topic")
         (if @topic.unread_posts "unread-posts")
         (if @topic.liked "liked")
@@ -335,7 +336,10 @@ export default class Item extends Component {
                 {{~/if~}}
                 <PluginOutlet
                   @name="topic-list-main-link-bottom"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{hash
+                    topic=@topic
+                    expandPinned=this.expandPinned
+                  }}
                 />
               </div>
               {{~! no whitespace ~}}

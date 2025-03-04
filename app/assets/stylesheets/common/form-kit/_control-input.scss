@@ -1,8 +1,9 @@
 .form-kit__control-input {
-  @include default-input;
   z-index: 1;
-  margin: 0 !important;
   min-width: auto !important;
+  max-width: 100% !important;
+
+  @include default-input;
 
   .form-kit__field.has-error & {
     border-color: var(--danger);

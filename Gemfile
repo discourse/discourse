@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ruby "~> 3.3"
+
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
@@ -52,6 +54,7 @@ gem "active_model_serializers", "~> 0.8.3"
 gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
+gem "discourse-emojis", require: "discourse_emojis"
 
 gem "message_bus"
 
@@ -94,12 +97,11 @@ gem "rake"
 
 gem "thor", require: false
 gem "diffy", require: false
-gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.17.pre13"
+gem "mini_racer", "0.18.pre1"
 
 gem "highline", require: false
 
@@ -157,7 +159,6 @@ group :test, :development do
   gem "annotate"
 
   gem "syntax_tree"
-  gem "syntax_tree-disable_ternary"
 
   gem "rspec-multi-mock"
 end
@@ -173,11 +174,11 @@ end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem "discourse_dev_assets"
-  gem "faker", "~> 2.16"
+  gem "faker"
 else
   group :development, :test do
     gem "discourse_dev_assets"
-    gem "faker", "~> 2.16"
+    gem "faker"
   end
 end
 

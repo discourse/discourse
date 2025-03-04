@@ -1619,13 +1619,6 @@ lv:
       password_label: "Parole"
     password_reset:
       continue: "Turpināt %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tikai sadaļas"
       categories_with_featured_topics: "Sadaļas un to labākās tēmas"
@@ -2239,6 +2232,10 @@ lv:
         zero: "jums patika šis ieraksts"
         one: "jums un %{count} citam cilvēkam patika šis ieraksts"
         other: "jums un %{count} citiem cilvēkiem patika šis ieraksts"
+      sr_post_like_count_button:
+        zero: "%{count} cilvēkiem patika šis ieraksts."
+        one: "%{count} cilvēkam patika šis ieraksts."
+        other: "%{count} cilvēkiem patika šis ieraksts."
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2651,6 +2648,8 @@ lv:
         mark_tracking: "%{shortcut} Sekot tēmai"
         mark_watching: "%{shortcut} Novērot tēmu"
         print: "%{shortcut} Drukāt tēmu"
+      admin:
+        title: "Administrators"
     badges:
       earned_n_times:
         zero: "Nopelnīja šo žetonu %{count} reizes"
@@ -2844,13 +2843,31 @@ lv:
         remove_muted_tags_from_latest:
           always: "vienmēr"
           never: "nekad"
+      config_sections:
+        account:
+          title: "Konts"
+        community:
+          title: "Kopiena"
+        email:
+          title: "E-pasts"
+        security:
+          title: "Drošība"
+        plugins:
+          title: "Spraudņi"
       config:
         developer:
           title: "Izstrādātājs"
+        emojis:
+          title: "Smaidiņi"
         files:
           title: "Faili"
         legal:
           title: "Jurid."
+        branding:
+          logo:
+            form:
+              mobile: "Mobilais"
+              email: "E-pasts"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -2859,7 +2876,7 @@ lv:
           title: "Onebox"
         other:
           title: "Citi"
-        search:
+        search_everything:
           title: "Meklēt"
         security:
           title: "Drošība"
@@ -2867,6 +2884,59 @@ lv:
           title: "Spams"
         user_api:
           title: "Lietotāja API"
+        dashboard:
+          title: "Administrācijas panelis"
+        users:
+          title: "Lietotāji"
+        groups:
+          title: "Grupas"
+        backups:
+          title: "Dublējums (Backups)"
+          sub_pages:
+            logs:
+              title: "Žurnāls"
+        badges:
+          title: "Žetoni"
+        permalinks:
+          title: "Patstāvīgā saite"
+        emoji:
+          title: "Smaidiņi"
+        themes:
+          title: "Dizaini"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem"
+            templates:
+              title: "Veidnes"
+            sent:
+              title: "Nosūtne"
+            skipped:
+              title: "Izlaists"
+            bounced:
+              title: "Pārsūtīts"
+            received:
+              title: "Saņemts"
+            rejected:
+              title: "Noraidīts"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kad kāds mēģina izveidot jaunu kontu sekojošās e-pasta adreses tiks pārbaudītas, un reģistrācija tiks apturēta, vai kāda cita darbība tiks veikta"
+            screened_ips:
+              title: "Pārbaudītās IP"
+            screened_urls:
+              title: "Pārbaudītie URL"
+              header_description: "URL kas ir šajā sarakstā tika publicēti no lietotājiem, kas ir identificēti kā spameri"
+        embedding:
+          title: "Ieguldīšana"
+      search:
+        title: "Meklēt"
+        result_types:
+          theme:
+            zero: "Dizaini"
+            one: "Tēma"
+            other: "Dizaini"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
@@ -3023,31 +3093,6 @@ lv:
             failed: "Neizdevies"
       home:
         title: "Mājas"
-      account:
-        title: "Konts"
-        sidebar_link:
-          backups: "Dublējums (Backups)"
-      community:
-        title: "Kopiena"
-        sidebar_link:
-          badges: "Žetoni"
-          notifications: "Paziņojumi"
-          permalinks: "Patstāvīgā saite"
-          users: "Lietotāji"
-          groups: "Grupas"
-          legal: "Jurid."
-      appearance:
-        sidebar_link:
-          emoji: "Smaidiņi"
-          navigation: "Pārvietošanās"
-          themes: "Dizaini"
-      security:
-        title: "Drošība"
-      section_landing_pages:
-        account:
-          title: "Konts"
-          backups:
-            title: "Dublējums (Backups)"
       config_areas:
         about:
           company_name: "Vārds"
@@ -3089,17 +3134,6 @@ lv:
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
         learn_more: "Uzzināt vairāk"
-        sidebar_link:
-          installed: "Uzinstalēts"
-      advanced:
-        sidebar_link:
-          developer: "Izstrādātājs"
-          embedding: "Ieguldīšana"
-          user_api: "Lietotāja API"
-          onebox: "Onebox"
-          files: "Faili"
-          other_options: "Citi"
-          search: "Meklēt"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -3190,7 +3224,6 @@ lv:
           edit_confirm: "Šis ir attālināts dizains; ja jūs mainīsiet CSS/HTML, jūsu veiktās izmaiņas tiks izdzēsta nākošajā atjaunināšanas reizē."
           desktop: "Personālais dators"
           mobile: "Mobilais"
-          settings: "Iestatījumi"
           preview: "Priekšskatījums"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
@@ -3204,9 +3237,6 @@ lv:
           add_upload: "Pievienot augšupielādējamu resursu"
           upload: "Augšupielādēt"
           discard: "Izmest"
-          css_html: "Specifisks CSS/HTML"
-          edit_css_html: "Labot CSS/HTML"
-          edit_css_html_help: "Jūs neesat izmainījis nekādus CSS vai HTML failus"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
           installed: "Uzinstalēts"
@@ -3222,8 +3252,6 @@ lv:
           add: "Pievienot"
           scss:
             text: "CSS"
-          body_tag:
-            text: "Ķermenis"
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
@@ -3539,8 +3567,6 @@ lv:
           zero: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā 1 ieraksts. (delete_all_posts_max)"
           one: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā %{count} ieraksts. (delete_all_posts_max)"
           other: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā %{count} ieraksti. (delete_all_posts_max)"
-        delete_and_block: "Dzēst un <b>bloķēt</b> e-pastu un IP adresi"
-        delete_dont_block: "Tikai Dzēst"
         deleted: "Lietotājs tika dzēsts."
         delete_failed: "Radās kļūda dzēšot šo lietotāju. Pārbaudi vai visi ieraksti un tēmas no šī lietotāja ir dzēstas."
         send_activation_email: "Nosūtīt aktivizēšanas e-pastu."

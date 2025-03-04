@@ -13,8 +13,8 @@ el:
             delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός
-      create: Δημιουργία
-      update: Ενημέρωση
+      back: Πίσω
+      edit: Επεξεργασία
       edit_automation:
         trigger_section:
           title: Πότε/Τι...
@@ -77,10 +77,6 @@ el:
               label: Ετικέτες
             restricted_category:
               label: Κατηγορία
-            restricted_group:
-              label: Ομάδα
-            restricted_groups:
-              label: Ομάδες
           created: Δημιουργήθηκε
         category_created_edited:
           fields:

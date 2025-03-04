@@ -13,13 +13,12 @@ nl:
             delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
-      create: Maken
-      update: Bijwerken
+      back: Vorige
+      edit: Bewerken
       select_script: Selecteer een script
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
-      no_automation_yet: Je hebt nog geen automatiseringen gemaakt. Kies hieronder een optie om te beginnen.
       filter_placeholder: Filter op naam of beschrijving...
       edit_automation:
         trigger_section:
@@ -165,11 +164,7 @@ nl:
             restricted_category:
               label: Categorie
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
-            restricted_group:
-              label: Groep
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in de inbox van deze groep'
             restricted_groups:
-              label: Groepen
               description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
             ignore_group_members:
               label: Groepsleden negeren

@@ -1,16 +1,23 @@
-source_db_path: "/path/to/your/db.sqlite3"
-output_db_path: "/path/to/your/uploads.sqlite3"
+# Path configurations for IntermediateDB and UploadsDB that the import script generates.
+# When running inside a Docker container, these files should be located in the
+# /shared/import directory to ensure proper functioning.
+source_db_path: "/shared/import/intermediate.db"
+output_db_path: "/shared/import/uploads.db"
 
+# Defines the directories the import script searches for uploaded files.
+# For most cases, a single path is sufficient. However, if uploads are
+# spread across multiple directories that cannot or should not be merged,
+# list all those directories here as multiple paths.
 root_paths:
-  - "/path/to/your/files"
-  - "/path/to/more/files"
+  - "/shared/import/files"
 
-# Files that are downloaded from URLs are cached in this directory.
-download_cache_path: "/path/to/downloaded/files"
+# Directory where files downloaded from URLs are cached for processing.
+download_cache_path: "/shared/import/downloaded_files"
 
-# The number of threads to use for processing uploads is calculated as:
-#   thread_count = [number of cores] * [thread_count_factor]
-# The thread count will be doubled if uploads are stored on S3 because there's a higher latency.
+# The number of threads used for processing uploads is determined as:
+#   thread_count = [number of CPU cores] * [thread_count_factor]
+# If uploads are stored on Amazon S3, the thread count is automatically
+# doubled to mitigate higher network latencies typically associated with S3.
 thread_count_factor: 1.5
 
 # Delete uploads from the output database that are not found in the source database.
@@ -20,7 +27,7 @@ delete_surplus_uploads: false
 delete_missing_uploads: false
 
 # Check if files are missing in the upload store and update the database accordingly.
-# Set to false and re-run the script afterwards if you want to create new uploads for missing files.
+# Set to false and re-run the script afterward if you want to create new uploads for missing files.
 fix_missing: false
 
 # Create optimized images for post uploads and avatars.
@@ -46,5 +53,5 @@ site_settings:
 # be applied to the path to try and find the file. The first transformation that results in a file
 # being found will be used.
 path_replacements:
-#  - ["/foo/", "/bar"]
+#  - ["/foo/", "/bar/"]
 #  - ["/foo/", "/bar/baz/"]
