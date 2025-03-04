@@ -1184,9 +1184,6 @@ export default class ComposerService extends Service {
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10),
           });
-          if (result.responseJson.post.post_number === 1) {
-            this.appEvents.trigger("header:update-topic", composer.topic);
-          }
         } else {
           this.appEvents.trigger("post-stream:refresh");
         }

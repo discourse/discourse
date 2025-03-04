@@ -1,5 +1,5 @@
 import { action, get } from "@ember/object";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import AddPmParticipants from "discourse/components/modal/add-pm-participants";
@@ -415,9 +415,5 @@ export default class TopicRoute extends DiscourseRoute {
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get("id"), controller);
-
-    schedule("afterRender", () =>
-      this.appEvents.trigger("header:update-topic", model)
-    );
   }
 }
