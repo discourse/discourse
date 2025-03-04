@@ -7,8 +7,8 @@ import link from "./link";
 import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
-import underline from "./underline";
 import table from "./table";
+import underline from "./underline";
 
 /**
  * List of default extensions
