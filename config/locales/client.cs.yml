@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 cs:
   js:
     number:
@@ -2615,13 +2609,6 @@ cs:
       password_label: "Heslo"
     password_reset:
       continue: "Pokračovat na %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Mezinárodní"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Pouze kategorie"
       categories_with_featured_topics: "Kategorie a vybrané příspěvky"
@@ -3990,15 +3977,10 @@ cs:
         many: "vám a %{count} dalším lidem se tento příspěvek líbí"
         other: "vám a %{count} dalším lidem se tento příspěvek líbí"
       sr_post_like_count_button:
-        one: "%{count} osobě se tento příspěvek líbil. Klikněte pro zobrazení"
-        few: "%{count} osobám se tento příspěvek líbil. Klikněte pro zobrazení"
-        many: "%{count} osobě se tento příspěvek líbil. Klikněte pro zobrazení"
-        other: "%{count} osobě se tento příspěvek líbil. Klikněte pro zobrazení"
-      sr_post_read_count_button:
-        one: "%{count} osobě se tento příspěvek líbil. Klikněte pro zobrazení"
-        few: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
-        many: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
-        other: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
+        one: "%{count} člověku se líbí tento příspěvek."
+        few: "%{count} lidem se líbí tento příspěvek."
+        many: "%{count} lidem se líbí tento příspěvek."
+        other: "%{count} lidem se líbí tento příspěvek."
       filtered_replies_hint:
         one: "Zobrazit tento příspěvek a jeho odpověď"
         few: "Zobrazit tento příspěvek a jeho %{count} odpovědi"
@@ -4135,8 +4117,6 @@ cs:
             few: "a %{count} další přečetli"
             many: "a %{count} dalších přečetlo"
             other: "a %{count} dalších přečetlo"
-          sr_post_likers_list_description: "uživatelé, kterým se líbil tento příspěvek"
-          sr_post_readers_list_description: "uživatelé, kteří si přečetli tento příspěvek"
         by_you:
           off_topic: "Označili jste tento příspěvek jako mimo téma"
           spam: "Označili jste tento příspěvek jako spam"
@@ -4774,6 +4754,9 @@ cs:
         prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
         insert_url: "%{shortcut} Vložit výběr do otevřeného editoru"
         full_page_search: "%{shortcut} Spustí celostránkové vyhledávání"
+      admin:
+        title: "Administrace"
+        search_prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
     badges:
       earned_n_times:
         one: "Získal/a tento odznak %{count} krát"
@@ -5401,6 +5384,16 @@ cs:
         logo:
           title: "Logo webu"
           header_description: "Přizpůsobte varianty loga vašeho webu"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Primární logo"
+              mobile: "Mobilní verze"
+              email: "Emaily"
+              manifest_screenshots:
+                description: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
         navigation:
           title: "Navigace"
           header_description: "Nastavte odkazy na navigaci a položky nabídky pro váš web. To zahrnuje umístění a chování primárního navigačního menu, rychlé odkazy v horní části domovské stránky, stejně jako správcovský postranní panel"
@@ -5417,8 +5410,9 @@ cs:
           title: "Limity"
           header_description: "Nakonfigurujte, jak často mohou uživatelé provádět určité akce, jako je vytváření témat, odesílání zpráv a odesílání odpovědí"
         search:
-          title: "Vyhledat"
           header_description: "Nakonfigurujte nastavení vyhledávání včetně protokolování a tokenizace pro čínštinu a japonštinu"
+        search_everything:
+          title: "Vyhledávání"
         security:
           title: "Zabezpečení"
           header_description: "Nakonfigurujte nastavení zabezpečení, včetně dvoufaktorového ověřování, oprávnění moderátorů a zásad zabezpečení obsahu"
@@ -5553,6 +5547,7 @@ cs:
           header_description: "Diskuse má schopnost vložit komentáře z tématu na vzdálený web pomocí Javascript API, které vytváří IFRAME"
       search:
         modal_title: "Vyhledejte cokoliv v administraci"
+        title: "Vyhledat"
         result_types:
           page:
             one: "Stránka"
@@ -6359,7 +6354,6 @@ cs:
           extra_files_remote: "Chcete-li tyto soubory zobrazit, exportujte motiv nebo zkontrolujte úložiště git."
           preview: "Náhled"
           settings_editor: "Editor nastavení"
-          hide_unused_fields: "Skrýt nepoužívaná pole"
           is_default: "Výchozí motiv"
           user_selectable: "Motiv může být zvolen uživatelem"
           color_scheme_user_selectable: "Uživatelé si mohou tuto paletu vybrat"
@@ -6417,9 +6411,6 @@ cs:
           unsaved_parent_themes: "Nepřiřadili jste komponentu k žádným motivům, chcete pokračovat?"
           discard: "Zahodit"
           stay: "Stay"
-          css_html: "Vlastní CSS/HTML"
-          edit_css_html: "Upravit CSS/HTML"
-          edit_css_html_help: "Neupravili jste žádné CSS nebo HTML"
           delete_upload_confirm: "Smazat toto nahrávání? (Motiv CSS by mohl přestat fungovat!)"
           component_on_themes: "Zahrnout komponentu do těchto motivů"
           included_components: "Zahrnuté komponenty"
@@ -6482,22 +6473,14 @@ cs:
           imported_from_archive: "Tento motiv byl importován ze souboru .zip"
           scss:
             text: "CSS"
-            title: "Vložit vlastní CSS, akceptujeme všechny platné CSS a SCSS styly."
-          header:
-            text: "Hlavička"
-            title: "Vložit HTML k zobrazení v záhlaví stránky"
           after_header:
             text: "Za hlavičkou"
-            title: "vlož HTML k zobrazení všech stránek po záhlaví"
           footer:
             text: "Patička"
-            title: "Zadejte kód HTML, který se má zobrazit v zápatí stránky"
           embedded_scss:
             text: "Vložené CSS"
-            title: "Zadejte vlastní CSS pro doručení s vloženou verzí komentářů"
           embedded_header:
             text: "Vložené záhlaví"
-            title: "Zadejte HTML pro zobrazení nad embedded verzí komentářů"
           color_definitions:
             text: "Definice barev"
             title: "Zadejte vlastní definice barev (pouze pokročilí uživatelé)"
@@ -6510,18 +6493,8 @@ cs:
               %{example}
 
               Důrazně se doporučuje umístit před názvy vlastností předpony, aby se předešlo konfliktům s pluginy a/nebo jádrem.
-          head_tag:
-            text: "Head"
-            title: "HTML, který bude vložen před značku head"
-          body_tag:
-            text: "Tělo"
-            title: "HTML, který bude vložen před značku body"
-          yaml:
-            text: "YAML"
-            title: "Definovat nastavení motivu ve formátu YAML"
           js:
             text: "JS"
-            title: "Definujte inicializátor JavaScriptu"
           scss_color_variables_warning: 'Použití základních barevných proměnných SCSS v motivech je zastaralé. Místo toho použijte custom properties CSS. Další podrobnosti najdete v <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">této příručce</a> .'
           scss_warning_inline: "Používání základních barevných proměnných SCSS v motivech je zastaralé."
           all_filter: "Vše"

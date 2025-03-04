@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-pl_PL:
+pl:
   js:
     discourse_automation:
       title: Automatyzacja
@@ -159,10 +153,6 @@ pl_PL:
             restricted_category:
               label: Kategoria
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupy
             ignore_group_members:
               label: Ignoruj członków grupy
               description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.

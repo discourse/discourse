@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 th:
   js:
     discourse_automation:
@@ -46,10 +40,6 @@ th:
               label: ป้าย
             restricted_category:
               label: หมวดหมู่
-            restricted_group:
-              label: กลุ่ม
-            restricted_groups:
-              label: กลุ่ม
           created: สร้างเมื่อ
         pm_created:
           fields:

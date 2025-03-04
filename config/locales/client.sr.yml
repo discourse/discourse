@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sr:
   js:
     number:
@@ -1717,10 +1711,6 @@ sr:
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
       password_label: "Šifra"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
     category_page_style:
       categories_with_featured_topics: "Kategorije sa istaknutim temama"
       categories_and_latest_topics: "Kategorije i najnovije teme"
@@ -2440,6 +2430,8 @@ sr:
         mark_muted: "%{shortcut} Utišaj poruku"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Posmatraj temu"
+      admin:
+        title: "Admin"
     badges:
       title: Značke
       more_badges:
@@ -2627,6 +2619,10 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        branding:
+          logo:
+            form:
+              email: "Email"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2635,7 +2631,7 @@ sr:
           title: "Onebox"
         other:
           title: "Ostalo"
-        search:
+        search_everything:
           title: "Pretraži"
         security:
           title: "Sigurnost"
@@ -2677,6 +2673,8 @@ sr:
               header_description: "URL-ovi s ove liste su korišteni u porukama korisnika koji su identifikovani kao nepoželjni"
         embedding:
           title: "Ugrađivanje"
+      search:
+        title: "Pretraži"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
@@ -2905,8 +2903,6 @@ sr:
           add: "Dodaj"
           scss:
             text: "CSS"
-          header:
-            text: "Header"
           footer:
             text: "Footer"
           all_filter: "sve"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 uk:
   js:
     admin:
@@ -170,11 +164,11 @@ uk:
             restricted_category:
               label: Розділ
               description: Необов’язково, запускатиметься, лише якщо тема допису належить до цієї категорії
-            restricted_group:
-              label: Група
-              description: Необов’язково, активуватиметься, лише якщо темою публікації є особисте повідомлення в папці «Вхідні» цієї групи
+            restricted_user_group:
+              label: Обмежена група користувачів
+              description: Необов’язково, активується, лише якщо користувач допису входить до цієї групи
             restricted_groups:
-              label: Групи
+              label: Групи з обмеженням вхідних
               description: Необов’язково, спрацьовує, лише якщо темою публікації є особисте повідомлення в одній із папок «Вхідні» групи
             ignore_group_members:
               label: Ігнорувати учасників групи

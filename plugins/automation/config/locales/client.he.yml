@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 he:
   js:
     admin:
@@ -170,11 +164,11 @@ he:
             restricted_category:
               label: קטגוריה
               description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
-            restricted_group:
-              label: קבוצה
-              description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית בתיבת הדואר הנכנס של הקבוצה הזאת
+            restricted_user_group:
+              label: קבוצת משתמשים מוגבלת
+              description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא בקבוצה הזאת
             restricted_groups:
-              label: קבוצות
+              label: קבוצת תיבות דואר נכנס מוגבלות
               description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית באחת מתיבות הדוא״ל הנכנס הקבוצתיות
             ignore_group_members:
               label: התעלמות מחברי הקבוצה
@@ -393,6 +387,7 @@ he:
               label: הודעות פרטיות
             sender:
               label: מוען או מוענת הודעה פרטית
+              description: "נא לוודא שלמי ששלח יש את ההרשאות המתאימות לשליחת הודעות פרטיות למוען"
         close_topic:
           fields:
             topic:

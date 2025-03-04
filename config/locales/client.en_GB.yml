@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-en_GB:
+en-GB:
   js:
     number:
       format:
@@ -146,8 +140,6 @@ en_GB:
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
-          header:
-            text: "Header"
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"

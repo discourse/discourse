@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-nb_NO:
+nb:
   site_settings:
     discourse_narrative_bot_enabled: "Aktiver Discourse Narrative Bot (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Deaktiver velkomst innlegg fra Discourse Fortellerbot"

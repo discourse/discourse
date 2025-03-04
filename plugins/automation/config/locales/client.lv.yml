@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 lv:
   js:
     discourse_automation:
@@ -58,10 +52,6 @@ lv:
               label: Birkas
             restricted_category:
               label: Sadaļa
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupas
           created: Radīts
         category_created_edited:
           fields:

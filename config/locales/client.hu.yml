@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 hu:
   js:
     number:
@@ -456,6 +450,7 @@ hu:
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
+      edit_topic: "Témavázlat szerkesztése"
       abandon:
         confirm: "Már van egy folyamatban lévő piszkozata. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
@@ -2084,6 +2079,8 @@ hu:
       dirty_form: "A változások nem lettek mentve! Biztos hogy el akarja hagyni a területet?"
       errors:
         required: "Kötelező"
+        date_before_or_equal: "%{date} előttinek vagy azzal megegyezőnek kell lennie"
+        date_after_or_equal: "%{date} utáninak vagy azzal megegyezőnek kell lennie"
         invalid_url: "Érvényes webcímnek kell lennie"
         not_an_integer: "Egész számnak kell lennie"
         not_accepted: "Elfogadottnak kell lennie"
@@ -2357,13 +2354,6 @@ hu:
       password_label: "Jelszó"
     password_reset:
       continue: "Tovább a(z) %{site_name} oldalra"
-    emoji_set:
-      apple_international: "Apple/nemzetközi"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Csak kategóriák szerint"
       categories_with_featured_topics: "Kategóriák funkciók szerint"
@@ -2800,6 +2790,9 @@ hu:
       browser_tip_description: "újra a böngésző natív keresőjének használata"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
+      experience:
+        search_field: "Keresőmező a webhely fejlécében"
+        search_icon: "Keresés ikon a profil avatar közelében"
       type:
         default: "Témák/bejegyzések"
         users: "Felhasználók"
@@ -3578,11 +3571,11 @@ hu:
         one: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
         other: "Önön kívül még %{count} embernek tetszett ez a bejegyzés"
       sr_post_like_count_button:
-        one: "%{count} felhasználónak tetszett ez a bejegyzés. Kattintson a megtekintéshez"
-        other: "%{count} felhasználónak tetszett ez a bejegyzés. Kattintson a megtekintéshez"
+        one: "%{count} embernek tetszett ez a bejegyzés."
+        other: "%{count} embernek tetszett ez a bejegyzés."
       sr_post_read_count_button:
-        one: "%{count} felhasználó elolvasta ezt a bejegyzést. Kattintson a megtekintéshez"
-        other: "%{count} felhasználó elolvasta ezt a bejegyzést. Kattintson a megtekintéshez"
+        one: "%{count} személy olvasta ezt a bejegyzést."
+        other: "%{count} személy olvasta ezt a bejegyzést."
       filtered_replies_hint:
         one: "Felhasználó tekintette meg a bejegyzést és válaszait"
         other: "Felhasználó tekintette meg a bejegyzés és %{count} válaszát"
@@ -3699,8 +3692,6 @@ hu:
           read_capped:
             one: "és %{count} másik ember olvasta ezt"
             other: "és %{count} másik ember olvasta ezt"
-          sr_post_likers_list_description: "felhasználók, akiknek tetszett ez a bejegyzés"
-          sr_post_readers_list_description: "felhasználók, akik elolvasták ezt a bejegyzést"
         by_you:
           off_topic: "Megjelölte nem a témához tartozóként"
           spam: "Megjelölte kéretlenként"
@@ -4298,6 +4289,9 @@ hu:
         prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
         insert_url: "%{shortcut} Kijelölés beillesztése a nyitott alkotóba"
         full_page_search: "%{shortcut} Teljes oldalas keresés indítása"
+      admin:
+        title: "Adminisztrátor"
+        search_prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
     badges:
       earned_n_times:
         one: "Nyerte ezt a jelvényt %{count} idővel"
@@ -4853,6 +4847,7 @@ hu:
         flags:
           title: "Moderálás"
           header_description: "A Discourse jelölési rendszere segít Önnek és moderátori csapatának a tartalom és a felhasználói viselkedés kezelésében, hogy a közösség tisztelettudó és egészséges maradjon. Az alapértelmezett beállítások a legtöbb közösség számára megfelelőek, és nem kell megváltoztatnia őket. Ha azonban webhelyének különleges követelményei vannak, letilthatja a nem szükséges megjelöléseket, és saját megjelöléseket adhat hozzá."
+          keywords: "megjelölés|vélemény|spam|illegális"
         font_style:
           title: "Betűstílus"
           header_description: "Szabja testre a témák által használt betűstílusokat"
@@ -4872,6 +4867,16 @@ hu:
         logo:
           title: "Webhely logó"
           header_description: "Szabja testre webhelye logójának változatait"
+        branding:
+          title: "Logó"
+          logo:
+            form:
+              logo:
+                title: "Elsődleges logó"
+              mobile: "Mobil"
+              email: "E-mail:"
+              manifest_screenshots:
+                description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -4888,8 +4893,9 @@ hu:
           title: "Korlátozások"
           header_description: "Állítsa be, hogy a felhasználók milyen gyakran hajthatnak végre bizonyos műveleteket, például témákat hozhatnak létre, üzeneteket küldhetnek és válaszokat küldhetnek"
         search:
-          title: "Keresés"
           header_description: "Konfigurálja a keresési beállításokat, beleértve a naplózást és a tokenizálást kínai és japán nyelvekhez"
+        search_everything:
+          title: "Keresés"
         security:
           title: "Biztonság"
           header_description: "Konfigurálja a biztonsági beállításokat, beleértve a kétfaktoros hitelesítést, a moderátorjogokat és a tartalombiztonsági házirendeket"
@@ -4907,14 +4913,19 @@ hu:
           header_description: "Itt kezelik az összes csoportalapú alkalmazásengedélyt, amelyek szabályozzák a Discourse különféle funkcióihoz való hozzáférést"
         dashboard:
           title: "Vezérlőpult"
+          header_description: "Az irányítópult pillanatképet nyújt a közösség állapotáról, beleértve a forgalmat, a felhasználói aktivitást és más kulcsfontosságú mutatókat"
         users:
           title: "Felhasználók"
+          header_description: "Felhasználók megtekintése és kezelése, meghívók küldése és felhasználói adatok exportálása"
         groups:
           title: "Csoportok"
+          header_description: "Csoportokat hozhat létre és kezelhet, csoportengedélyeket állíthat be, valamint megtekintheti a csoporttevékenységeket és a beérkezett üzeneteket"
         site_settings:
           title: "Minden oldalbeállítás"
+          header_description: "Konfigurálja a Discourse webhely összes beállítását a megjelenés, a funkcionalitás és a felhasználói élmény testreszabása érdekében"
         whats_new:
           title: "Újdonságok"
+          header_description: "Legyen naprakész a Discourse legújabb funkcióival és fejlesztéseivel"
           keywords: "változásjegyzék|funkció|kiadás"
         backups:
           title: "Biztonsági mentések"
@@ -4922,6 +4933,7 @@ hu:
           sub_pages:
             logs:
               title: "Naplók"
+              header_description: "Megtekintheti és kezelheti a biztonsági mentések, visszaállítások és feltöltések naplóit"
         reports:
           title: "Jelentések"
           header_description: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
@@ -4939,6 +4951,7 @@ hu:
           header_description: "A megfigyelt szavak olyan moderációs eszközök, amelyek többféle műveletet is végrehajthatnak, beleértve bizonyos szavakat tartalmazó bejegyzések blokkolását, cenzúrázását, linkelését vagy megjelölését."
         color_palettes:
           title: "Színpaletták"
+          header_description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak. Mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettőt elérhetővé teheti a felhasználók számára, hogy kiválaszthassák preferenciáikat"
         emoji:
           title: "Hangulatjel"
           header_description: "Adjon hozzá új hangulatjeleket, amelyek mindenki számára elérhetőek lesznek. Válasszon ki több fájlt hangulatjelek létrehozásához a fájlnevük alapján. A kiválasztott csoport az összes egyidejűleg hozzáadott fájlhoz használható lesz."
@@ -4948,8 +4961,10 @@ hu:
         components:
           title: "Összetevők"
           header_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát"
+          keywords: "téma|összetevő|bővítmény"
         site_texts:
           title: "Oldal szövegei"
+          header_description: "A Discourse-ban használt szövegek testreszabása a közösség hangjának és hangnemének megfelelően"
         email:
           title: "Szerverbeállítások és naplók"
           header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat, megtekintheti a kiküldött összefoglaló e-maileket, és megtekintheti az e-mail naplókat"
@@ -4960,18 +4975,25 @@ hu:
               header_description: "Inaktív felhasználóknak küldött összefoglaló e-mailek tartalmának áttekintése"
             advanced_test:
               title: "Haladó teszt"
+              header_description: "Tekintse meg, hogyan dolgozza fel a Discourse a kapott e-maileket"
             templates:
               title: "Sablonok"
+              header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat"
             sent:
               title: "Elküldött"
+              header_description: "Az elküldött e-mailek naplójának megtekintése"
             skipped:
               title: "Kihagyva"
+              header_description: "Az átugrott e-mailek naplójának megtekintése"
             bounced:
               title: "Visszapattant"
+              header_description: "Tekintse meg a visszapattanó e-mailek naplóját"
             received:
               title: "Kapott"
+              header_description: "A beérkezett e-mailek naplójának megtekintése"
             rejected:
               title: "Elutasított"
+              header_description: "Az elutasított e-mailek naplójának megtekintése"
         email_appearance:
           title: "Megjelenés"
           header_description: "Testreszabhatja azt a sablont, amelyben az összes html e-mail megjelenik, és stílust adjon a CSS használatával"
@@ -4985,24 +5007,40 @@ hu:
               header_description: "Amikor valaki új fiókot próbál létrehozni, a következő e-mail címeket ellenőrzi, és a regisztrációt blokkolja, vagy más műveletet hajt végre"
             screened_ips:
               title: "Szkennelt IP-k"
+              header_description: "A megfigyelt IP-címek. Az egyes IP-címek engedélyezhetőek."
             screened_urls:
               title: "Ellenőrzött URL-ek"
               header_description: "Az itt felsorolt URL-címeket olyan felhasználók használták a hozzászólásokban, akiket spammerekként azonosítottak"
             search_logs:
               title: "Keresési naplók"
+              header_description: "Az elvégzett keresések naplójának megtekintése"
         plugins:
           title: "Telepített bővítmények"
           header_description: "Ebben a listában megjelenik minden olyan Discourse bővítmény, amelyet telepített, vagy amely a Discourse tárhelyen előre telepítve van"
         api_keys:
           title: "API kulcsok"
           header_description: "Az API-kulcsok funkció lehetővé teszi a Discourse külső rendszerekkel való biztonságos integrálását és a műveletek automatizálását. A rendszergazdák meghatározott hatókörű kulcsokat hozhatnak létre az erőforrásokhoz és az érzékeny adatokhoz való hozzáférés szabályozására. A hatókör korlátozza a funkcionalitást, és fokozott biztonságot biztosít."
+          keywords: "token|hatókör"
         webhooks:
           title: "Webhooks"
+          header_description: "A Webhooks lehetővé teszi a Discourse számára, hogy értesítse a külső szolgáltatásokat, ha bizonyos események történnek az Ön webhelyén. Amikor a webhook aktiválódik, a rendszer egy POST-kérést küld a megadott URL-ekre."
+          keywords: "esemnény|payload|url"
         embedding:
           title: "Beágyazás"
           header_description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
       search:
+        modal_title: "Keresés adminban"
+        title: "Keresés"
         result_types:
+          page:
+            one: "Oldal"
+            other: "Oldalak"
+          report:
+            one: "Jelentés"
+            other: "Jelentések"
+          setting:
+            one: "Beállítás"
+            other: "Beállítások"
           theme:
             one: "Téma"
             other: "Témák"
@@ -5769,7 +5807,6 @@ hu:
           extra_files_remote: "A fájlok megtekintéséhez exportálja a témát, vagy ellenőrizze a git-tárat."
           preview: "Előnézet"
           settings_editor: "Beállítások szerkesztő"
-          hide_unused_fields: "Nem használt mezők elrejtése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
           color_scheme_user_selectable: "A színpalettát a felhasználók választhatják ki"
@@ -5823,9 +5860,6 @@ hu:
           unsaved_parent_themes: "Nem rendelted hozzá a komponenseket a témákhoz, szeretnél továbblépni?"
           discard: "Elvetés"
           stay: "Marad"
-          css_html: "Egyedi CSS/HTML"
-          edit_css_html: "CSS/HTML szerkesztése"
-          edit_css_html_help: "Nem szerkesztettél semmilyen CSS vagy HTML formátumot"
           delete_upload_confirm: "Töröljük ezt a feltöltést? (A témához tartozó CSS működésképtelenné válhat!)"
           component_on_themes: "Összetevő társítása ezekhez a témákhoz"
           included_components: "Összetevő társítva"
@@ -5886,22 +5920,14 @@ hu:
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
           scss:
             text: "CSS"
-            title: "Adja meg az egyéni CSS-t. Az összes érvényes CSS és SCSS stílus használható"
-          header:
-            text: "Fejléc"
-            title: "Írja be a HTML kódot a webhely fejléce feletti megjelenítéséhez"
           after_header:
             text: "Fejléc után"
-            title: "Adj meg a fejléc után az összes oldalon megjelenítendő HTML-t"
           footer:
             text: "Lábléc"
-            title: "Adj meg az oldal láblécében megjelenítendő HTML-t"
           embedded_scss:
             text: "Ágyazott CSS"
-            title: "Adj meg egyéni CSS-t a megjegyzések beágyazott változatának átadásához"
           embedded_header:
             text: "Beágyazott fejléc"
-            title: "Írd be a HTML kódot, hogy megjelenjen a megjegyzések beágyazott verziója felett"
           color_definitions:
             text: "Színmeghatározások"
             title: "Egyéni színdefiníciók megadása (csak haladó felhasználóknak)"
@@ -5914,15 +5940,8 @@ hu:
               %{example}
 
               A tulajdonságnevek előtagozása erősen ajánlott a bővítményekkel és/vagy a maggal való konfliktusok elkerülése érdekében.
-          head_tag:
-            text: "Fej"
-            title: "A „head” címke előtt beillesztendő HTML"
-          body_tag:
-            text: "Törzs"
-            title: "A „body” címke előtt beillesztendő HTML"
-          yaml:
-            text: "YAML"
-            title: "Téma beállításainak megadása YAML formátumban"
+          js:
+            text: "JS"
           scss_color_variables_warning: 'Az alapvető SCSS színváltozók használata a témákban elavult. Használd helyette a CSS egyéni tulajdonságait. További részletekért lásd <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ezt az útmutatót</a>.'
           scss_warning_inline: "Az alapvető SCSS színváltozók használata a témákban elavult."
           all_filter: "Összes"

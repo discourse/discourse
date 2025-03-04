@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sv:
   js:
     number:
@@ -2079,13 +2073,6 @@ sv:
       password_label: "Lösenord"
     password_reset:
       continue: "Fortsätt till %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Endast kategorier"
       categories_with_featured_topics: "Kategorier med utvalda ämnen"
@@ -3243,11 +3230,8 @@ sv:
         one: "du och %{count} annan person gillade det här inlägget"
         other: "du och %{count} andra personer gillade det här inlägget"
       sr_post_like_count_button:
-        one: "%{count} person gillade det här inlägget. Klicka för att se"
-        other: "%{count} personer gillade det här inlägget. Klicka för att se"
-      sr_post_read_count_button:
-        one: "%{count} person läste det här inlägget. Klicka för att se"
-        other: "%{count} personer läste det här inlägget. Klicka för att se"
+        one: "%{count} person gillade detta inlägg."
+        other: "%{count} personer gillade detta inlägg."
       filtered_replies_hint:
         one: "Visa detta inlägg och dess svar"
         other: "Visa detta inlägg och dess %{count} svar"
@@ -3356,8 +3340,6 @@ sv:
           read_capped:
             one: "och %{count} annan läste detta"
             other: "och %{count} andra läste detta"
-          sr_post_likers_list_description: "användare som gillade detta inlägg"
-          sr_post_readers_list_description: "användare som läste detta inlägg"
         by_you:
           off_topic: "Du flaggade detta som irrelevant"
           spam: "Du flaggade detta som skräppost"
@@ -3899,6 +3881,9 @@ sv:
         prev_next: "%{shortcut} Flytta markering upp eller ner"
         insert_url: "%{shortcut} Infoga urval i öppen redigerare"
         full_page_search: "%{shortcut} Startar helsidessökning"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Flytta markering upp eller ner"
     badges:
       earned_n_times:
         one: "Förtjänade den här utmärkelsen %{count} gång"
@@ -4420,6 +4405,16 @@ sv:
           title: "Juridik"
         logo:
           title: "Webbplatsens logotyp"
+        branding:
+          title: "Varumärke"
+          logo:
+            form:
+              logo:
+                title: "Primär logotyp"
+              mobile: "Mobil"
+              email: "E-postadress"
+              manifest_screenshots:
+                description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
         navigation:
           title: "Navigering"
         notifications:
@@ -4428,7 +4423,7 @@ sv:
           title: "Onebox"
         other:
           title: "Övrigt"
-        search:
+        search_everything:
           title: "Sök"
         security:
           title: "Säkerhet"
@@ -4493,6 +4488,7 @@ sv:
         embedding:
           title: "Inbäddning"
       search:
+        title: "Sök"
         result_types:
           theme:
             one: "Tema"
@@ -5102,7 +5098,6 @@ sv:
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
           settings_editor: "Inställningar för redigerare"
-          hide_unused_fields: "Dölj oanvända fält"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
           auto_update: "Uppdatera automatiskt när Discourse uppdateras"
@@ -5150,9 +5145,6 @@ sv:
           unsaved_parent_themes: "Du har inte tilldelat komponenter till teman, vill du fortsätta?"
           discard: "Förkasta"
           stay: "Stanna"
-          css_html: "Anpassa CSS/HTML"
-          edit_css_html: "Redigera CSS/HTML"
-          edit_css_html_help: "Du har inte redigerat någon CSS eller HTML"
           delete_upload_confirm: "Radera denna uppladdning? (Temats CSS kan sluta fungera!)"
           component_on_themes: "Inkludera komponent i dessa teman"
           included_components: "Inkluderade komponenter"
@@ -5209,22 +5201,14 @@ sv:
           imported_from_archive: "Detta tema importerades från en .zip-fil"
           scss:
             text: "CSS"
-            title: "Ange anpassad CSS, vi godtar alla giltiga CSS- och SCSS-typer"
-          header:
-            text: "Sidhuvud"
-            title: "Ange HTML att visa ovanför sidans rubrik"
           after_header:
             text: "Efter rubrik"
-            title: "Ange HTML att visa på alla sidor efter rubriken"
           footer:
             text: "Sidfot"
-            title: "Ange HTML att visa i sidfoten"
           embedded_scss:
             text: "Inbäddad CSS"
-            title: "Ange anpassad CSS som ska levereras med inbäddad version av kommentarer"
           embedded_header:
             text: "Inbäddad rubrik"
-            title: "Ange HTML som ska visas ovanför den inbäddade versionen av kommentarerna"
           color_definitions:
             text: "Färgdefinitioner"
             title: "Ange anpassade färgdefinitioner (endast avancerade användare)"
@@ -5237,15 +5221,6 @@ sv:
               %{example}
 
               Användning av prefix för egenskapsnamnen rekommenderas starkt för att undvika konflikter mellan tillägg och/eller grundläggande program.
-          head_tag:
-            text: "Huvud"
-            title: "HTML som kommer att infogas före huvudtaggen"
-          body_tag:
-            text: "Huvuddel"
-            title: "HTML som kommer att infogas innan kroppstaggen"
-          yaml:
-            text: "YAML"
-            title: "Definiera temainställningar i YAML-format"
           scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
           scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
           all_filter: "Alla"

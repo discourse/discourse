@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ru:
   dates:
     short_date_no_year: "D MMM"
@@ -389,7 +383,7 @@ ru:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Значение User agent должно содержать не менее 3 символов, чтобы избежать случайного ограничения скорости для полномочных пользователей."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Не допускается использование следующих значений: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "В не можете отключить удаление метаданных из изображения, пока включена оптимизация загружаемых файлов изображений на стороне клиента. Отключите параметр «composer media optimization image enabled» перед отключением параметра «strip image metadata»."
-      twitter_summary_large_image_no_svg: "Изображения сводной карточки Twitter, используемые для метаданных twitter:image, не могут быть в формате «svg»."
+      x_summary_large_image_no_svg: "Изображения сводной карточки Twitter, используемые для метаданных twitter:image, не могут быть в формате «svg»."
       tl0_and_anonymous_flag: "Для анонимных пользователей необходимо указать 'site contact email' или 'email address to report illegal content'."
     conflicting_google_user_id: 'Идентификатор аккаунта Google для этого аккаунта изменился. По соображениям безопасности требуется вмешательство персонала. Свяжитесь с персоналом и укажите <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1867,7 +1861,7 @@ ru:
     favicon: "Значок сайта, см. <a href='https://ru.wikipedia.org/wiki/Favicon' target='_blank'>https://ru.wikipedia.org/wiki/Favicon</a>. Для корректного отображения должен быть в формате PNG. Размер будет автоматически изменён до 32x32. Если оставить поле пустым, будет использоваться «large_icon»."
     apple_touch_icon: "Значок, используемый на сенсорных устройствах Apple. Использовать прозрачный фон не рекомендуется. Размер будет автоматически изменен до 180x180. Если оставить поле пустым, будет использоваться «large_icon»."
     opengraph_image: "Стандартное изображение opengraph, используемое, если на странице нет другого подходящего изображения. Если оставить поле пустым, будет использоваться «large_icon»."
-    twitter_summary_large_image: "Сводная карточка Twitter с большим изображением (должна быть не менее 280 пикселей в ширину, не менее 150 пикселей в высоту и не может быть в формате «svg»). Если оставить поле пустым, обычные метаданные карточки генерируются с использованием «opengraph_image» (если исходное изображение также не в формате «svg»)."
+    x_summary_large_image: "Сводная карточка Twitter с большим изображением (должна быть не менее 280 пикселей в ширину, не менее 150 пикселей в высоту и не может быть в формате «svg»). Если оставить поле пустым, обычные метаданные карточки генерируются с использованием «opengraph_image» (если исходное изображение также не в формате «svg»)."
     notification_email: "Отправитель: эл. почта, используемая при отправке всех системных писем. Для успешной отправки писем указанный здесь домен должен иметь правильно настроенные SPF, DKIM и reverse PTR."
     email_custom_headers: "Разделённый вертикальной чертой список дополнительных заголовков в почтовых сообщениях"
     email_subject: "Настраиваемый формат темы для стандартных писем. См. тему <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>."
@@ -5317,7 +5311,6 @@ ru:
       new_topics_unless_trust_level: "Пользователи с низким уровнем доверия должны иметь темы, одобренные персоналом. См. %{link}."
       fast_typer: "Сообщение было набрано подозрительно быстро — похоже на поведение бота или спамера. См. %{link}."
       auto_silence_regex: "Новый пользователь, первое сообщение которого соответствует параметру %{link}."
-      watched_word: "Это сообщение содержит контролируемое слово. См. %{link}."
       staged: "Новые темы и сообщения для сымитированных пользователей должны быть одобрены персоналом. См. %{link}."
       category: "Сообщения в этой категории требуют предварительного одобрения персоналом. См. %{link}."
       must_approve_users: "Все новые пользователи должны быть одобрены персоналом. См. %{link}."
@@ -5328,7 +5321,6 @@ ru:
       contains_media: "Это сообщение содержит медиаконтент. См. %{link}."
       queued_by_staff: "Сотрудник считает, что это сообщение нуждается в проверке. До завершения проверки оно будет скрыто."
       links:
-        watched_word: перечень контролируемых слов
         category: настройки категории
     actions:
       agree:

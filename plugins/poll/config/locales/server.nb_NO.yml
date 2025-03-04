@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-nb_NO:
+nb:
   site_settings:
     poll_enabled: "Tillat avstemninger?"
     poll_maximum_options: "Maksimalt antall alternativer som tillates i en avstemning."

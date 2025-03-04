@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 be:
   js:
     number:
@@ -841,9 +835,6 @@ be:
       password_label: "Пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
-    emoji_set:
-      google: "Google"
-      twitter: "Twitter"
     category_page_style:
       categories_only: "Толькі катэгорыі"
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
@@ -1364,6 +1355,8 @@ be:
         delete: "<B> d <"
         mark_muted: "%{shortcut}Прыглушыць тэму"
         mark_tracking: "%{shortcut}Сачыць за тэмай"
+      admin:
+        title: "адміністратар"
     badges:
       title: значкі
       select_badge_for_title: Выберыце значок, будзе вашым званнем
@@ -1537,13 +1530,20 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
+        branding:
+          logo:
+            form:
+              mobile: "Мабільны"
+              email: "Электронная пошта"
+              opengraph_image:
+                description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
         navigation:
           title: "рух"
         notifications:
           title: "Натыфікацыі"
         other:
           title: "іншае"
-        search:
+        search_everything:
           title: "Пошук"
         security:
           title: "Бяспека"
@@ -1591,6 +1591,8 @@ be:
               header_description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў"
         embedding:
           title: "узаемадзеянне"
+      search:
+        title: "Пошук"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1827,10 +1829,6 @@ be:
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
-          header:
-            text: "Header"
-          body_tag:
-            text: "цела"
           all_filter: "Усё"
           active_filter: "актыўныя"
           schema:

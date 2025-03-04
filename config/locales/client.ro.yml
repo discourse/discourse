@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ro:
   js:
     number:
@@ -1742,6 +1736,8 @@ ro:
       optional: opțional
       errors:
         required: "Necesare"
+        date_before_or_equal: "Trebuie să fie înainte sau egală cu %{date}"
+        date_after_or_equal: "Trebuie să fie după sau egală cu %{date}"
         invalid_url: "Trebuie să fie un URL valid"
     close: "Închide"
     logout: "Aţi fost deconectat."
@@ -1899,13 +1895,6 @@ ro:
       password_label: "Parolă"
     password_reset:
       continue: "Continuă la %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google clasic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Numai categorii"
       categories_with_featured_topics: "Categorii cu subiecte promovate"
@@ -2147,6 +2136,9 @@ ro:
       in_posts_by: "în postări de la %{username}"
       recent: "Căutări recente"
       clear_recent: "Șterge căutările recente"
+      experience:
+        search_field: "Câmp de căutare în antetul site-ului"
+        search_icon: "Pictogramă de căutare lângă avatar profil"
       type:
         default: "Subiecte/postări"
         users: "Utilizatori"
@@ -2659,6 +2651,14 @@ ro:
         one: "Ai apreciat această postare împreună cu un alt utilizator."
         few: "Ai apreciat această postare împreună cu alți %{count} utilizatori."
         other: "Ai apreciat această postare împreună cu alți %{count} de utilizatori."
+      sr_post_like_count_button:
+        one: "O persoană a apreciat această postare."
+        few: "%{count} persoane au apreciat această postare."
+        other: "%{count} de persoane au apreciat această postare."
+      sr_post_read_count_button:
+        one: "O persoană a citit această postare."
+        few: "%{count} persoane au citit această postare."
+        other: "%{count} de persoane au citit această postare."
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
@@ -3172,6 +3172,10 @@ ro:
         defer: "%{shortcut} Marchează subiect ca necitit"
       search_menu:
         full_page_search: "%{shortcut} Lansează căutarea pe întreaga pagină"
+      admin:
+        title: "Administrator"
+        search_prev_next: "%{shortcut} Mută selecția în sus și în jos"
+        search_open: "%{shortcut} Deschide căutarea pentru interfața de administrare"
     badges:
       earned_n_times:
         one: "A primit acest ecuson o dată"
@@ -3392,6 +3396,7 @@ ro:
       collapse_all_sections: "Restrânge toate secțiunile"
       expand_all_sections: "Extinde toate secțiunile"
       filter: "Filtru..."
+      filter_links: "Filtrează legături..."
       clear_filter: "Elimină filtrul"
       no_results:
         title: "Fără rezultate"
@@ -3529,6 +3534,11 @@ ro:
         logo:
           title: "Logo site"
           header_description: "Personalizează variațiile logo-ului site-ului tău"
+        branding:
+          logo:
+            form:
+              mobile: "Mobil"
+              email: "E-mail"
         navigation:
           title: "Navigare"
           header_description: "Configurează legăturile de navigare și elementele de meniu pentru site-ul tău. Aceasta include locația și comportamentul meniului principal de navigare, legăturile rapide din partea de sus a paginii de pornire, precum și bara laterală de administrare."
@@ -3544,8 +3554,10 @@ ro:
         rate_limits:
           title: "Limite de rată"
         search:
-          title: "Caută"
+          title: "Setări de căutare"
           header_description: "Configurează setările de căutare, inclusiv înregistrarea în jurnal și tokenizarea pentru limbile chineză și japoneză"
+        search_everything:
+          title: "Căutare"
         security:
           title: "Securitate"
           header_description: "Configurează setările de securitate, inclusiv autentificarea cu doi factori, privilegiile de moderator și politicile de securitate a conținutului"
@@ -3641,6 +3653,7 @@ ro:
           title: "Înglobare"
       search:
         modal_title: "Caută orice în admin"
+        title: "Caută"
         result_types:
           page:
             one: "Pagină"
@@ -4115,9 +4128,6 @@ ro:
           variable_name: "Numele variabilei SCSS:"
           upload: "Urcă"
           discard: "Renunță"
-          css_html: "CSS/HTML personalizat"
-          edit_css_html: "Modifică CSS/HTML"
-          edit_css_html_help: "Nu ai modificat CSS sau HTML"
           installed: "Instalată"
           install_popular: "Populare"
           installing_message: "Se configurează noua ta temă…"
@@ -4135,19 +4145,14 @@ ro:
           edit_objects_theme_setting: "Editor de setări ale obiectelor"
           scss:
             text: "CSS"
-          header:
-            text: "Antet"
           after_header:
             text: "După antet"
           footer:
             text: "Subsol"
           embedded_scss:
             text: "CSS încorporat"
-          body_tag:
-            text: "Corp"
           js:
             text: "JS"
-            title: "Definește un inițializator JavaScript"
           all_filter: "Toate"
           active_filter: "Activi"
           inactive_filter: "Inactivă"

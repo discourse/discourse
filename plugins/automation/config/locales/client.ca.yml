@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ca:
   js:
     discourse_automation:
@@ -58,10 +52,6 @@ ca:
               label: Etiquetes
             restricted_category:
               label: Categoria
-            restricted_group:
-              label: Grup
-            restricted_groups:
-              label: Grups
           created: Creat
         category_created_edited:
           fields:

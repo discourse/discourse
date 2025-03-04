@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 lt:
   dates:
     short_date_no_year: "D MMM"
@@ -2668,7 +2662,6 @@ lt:
       contains_media: "Šis įrašas apima įterptąją laikmeną. Žr. %{link}."
       queued_by_staff: "Darbuotojas mano, kad šį įrašą reikia peržiūrėti. Iki tol jis bus paslėptas."
       links:
-        watched_word: žiūrimų žodžių sąrašas
         category: kategorijos nustatymai
     actions:
       agree:

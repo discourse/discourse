@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 el:
   js:
     number:
@@ -2006,13 +2000,6 @@ el:
       password_label: "Κωδικός Πρόσβασης"
     password_reset:
       continue: "Συνεχίστε στην %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Διεθνής"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Μόνο Κατηγορίες"
       categories_with_featured_topics: "Κατηγορίες με Προτεινόμενα Θέματα"
@@ -3024,6 +3011,9 @@ el:
       has_likes_title_you:
         one: "εσύ και %{count} άλλο άτομο πάτησε \"Μου αρέσει\" στη δημοσίευση"
         other: "εσύ και %{count} ακόμα άτομα πατήσατε \"Μου αρέσει\" στην ανάρτηση"
+      sr_post_like_count_button:
+        one: "%{count} άτομο πάτησε \"μου αρέσει\" στη δημοσίευση."
+        other: "%{count} άτομα πάτησαν \"Μου αρέσει\" στην ανάρτηση."
       errors:
         create: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την δημιουργία της ανάρτησης. Προσπάθησε πάλι."
         edit: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την επεξεργασία της ανάρτησης. Προσπάθησε πάλι."
@@ -3584,6 +3574,9 @@ el:
         title: "Μενού αναζήτησης"
         prev_next: "%{shortcut} Μετακίνηση επιλογής προς τα πάνω και προς τα κάτω"
         insert_url: "%{shortcut} Εισαγωγή επιλογής σε ανοιχτό επεξεργαστή κειμένου"
+      admin:
+        title: "Διαχειριστής"
+        search_prev_next: "%{shortcut} Μετακίνηση επιλογής προς τα πάνω και προς τα κάτω"
     badges:
       earned_n_times:
         one: "Κέρδισε αυτό το παράσημο %{count} φορά"
@@ -3979,6 +3972,12 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
+        branding:
+          title: "Επωνυμία"
+          logo:
+            form:
+              mobile: "Mobile"
+              email: "Email"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -3987,7 +3986,7 @@ el:
           title: "Onebox"
         other:
           title: "Άλλα"
-        search:
+        search_everything:
           title: "Αναζήτηση"
         security:
           title: "Ασφάλεια"
@@ -4054,6 +4053,7 @@ el:
         embedding:
           title: "Ενσωμάτωση"
       search:
+        title: "Αναζήτηση"
         result_types:
           theme:
             one: "Θέμα"
@@ -4500,7 +4500,6 @@ el:
           extra_files_remote: "Εξαγωγή θέματος ή ελέγξτε το αποθετήριο git για να δείτε αυτά τα αρχεία."
           preview: "Προεπισκόπηση"
           settings_editor: "Επεξεργαστής ρυθμίσεων"
-          hide_unused_fields: "Απόκρυψη αχρησιμοποίητων πεδίων"
           is_default: "Το θέμα είναι ενεργό εξ ορισμού"
           user_selectable: "Το θέμα μπορεί να επιλεχθεί από τους χρήστες"
           auto_update: "Αυτόματη ενημέρωση όταν ενημερώνεται το Discourse"
@@ -4544,9 +4543,6 @@ el:
           unsaved_parent_themes: "Δεν έχετε ορίσει το συστατικό σε θέματα, θέλετε να προχωρήσετε;"
           discard: "Απόρριψη"
           stay: "Παραμονή"
-          css_html: "Custom CSS/HTML"
-          edit_css_html: "Edit CSS/HTML"
-          edit_css_html_help: "Δεν επεξεργαστήκατε το CSS ή το HTML"
           delete_upload_confirm: "Διαγραφή αυτής της μεταφόρτωσης; (Το CSS του θέματος ενδέχεται να σταματήσει να λειτουργεί!)"
           component_on_themes: "Συμπερίληψη συστατικού σε αυτά τα θέματα"
           included_components: "Συστατικά που περιλαμβάνονται"
@@ -4594,27 +4590,15 @@ el:
           imported_from_archive: "Αυτό το θέμα εισήχθη από ένα αρχείο .zip"
           scss:
             text: "CSS"
-            title: "Καταχώρησε custom CSS, γίνονται δεκτά όλα τα valid CSS και SCSS styles"
-          header:
-            text: "Header"
-            title: "Καταχώρησε HTML το οποίο θα εμφανίζεται πάνω από το header της ιστοσελίδας"
           after_header:
             text: "Μετά το Header"
-            title: "Καταχώρησε HTML το οποίο θα εμφανίζεται σε όλες τις σελίδες μετά το header"
           footer:
             text: "Footer"
-            title: "Καταχώρησε HTML το οποίο θα εμφανίζεται στο footer"
           embedded_scss:
             text: "Embedded CSS"
-            title: "Καταχώρησε custom CSS to deliver with embedded version of comments"
           color_definitions:
             text: "Ορισμοί χρωμάτων"
             title: "Εισαγωγή προσαρμοσμένων ορισμών χρωμάτων (μόνο για προχωρημένους χρήστες)"
-          body_tag:
-            text: "Body"
-          yaml:
-            text: "YAML"
-            title: "Ορισμός ρυθμίσεων θέματος σε μορφή YAML"
           all_filter: "Όλα"
           active_filter: "Ενεργοί"
           inactive_filter: "Ανενεργό"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 he:
   site_settings:
     discourse_local_dates_enabled: "הפעלת תכונת התאריכים המקומיים ב־Discourse. הגדרה זו תוסיף תמיכה בתארוך שמודע לאזור הזמן המקומי בעת שימוש ברכיב [date]"

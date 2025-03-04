@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ca:
   site_settings:
     presence_enabled: "¿S'han de mostrar els usuaris que en aquests moments responen al tema actual o editen l'entrada actual?"

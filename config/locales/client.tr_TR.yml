@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-tr_TR:
+tr:
   js:
     number:
       format:
@@ -2344,13 +2338,6 @@ tr_TR:
       password_label: "Şifre"
     password_reset:
       continue: "%{site_name} adresine devam edin"
-    emoji_set:
-      apple_international: "Apple/Uluslararası"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Öne Çıkan Konuları içeren Kategoriler"
@@ -3561,11 +3548,8 @@ tr_TR:
         one: "siz ve %{count} kişi daha bu gönderiyi beğendi"
         other: "siz ve %{count} kişi daha bu gönderiyi beğendi"
       sr_post_like_count_button:
-        one: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
-        other: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
-      sr_post_read_count_button:
-        one: "%{count} kişi bu gönderiyi okudu. Görüntülemek için tıklayın"
-        other: "%{count} kişi bu gönderiyi okudu. Görüntülemek için tıklayın"
+        one: "%{count} kişi bu gönderiyi beğendi."
+        other: "%{count} kişi bu gönderiyi beğendi."
       filtered_replies_hint:
         one: "Bu gönderiyi ve yanıtını görüntüleyin"
         other: "Bu gönderiyi ve %{count} yanıtını görüntüleyin"
@@ -3682,8 +3666,6 @@ tr_TR:
           read_capped:
             one: "ve %{count} kişi daha bunu okudu"
             other: "ve %{count} kişi daha bunu okudu"
-          sr_post_likers_list_description: "bu gönderiyi beğenen kullanıcılar"
-          sr_post_readers_list_description: "bu gönderiyi okuyan kullanıcılar"
         by_you:
           off_topic: "Buna konu dışı bayrağı eklediniz"
           spam: "Buna spam bayrağı eklediniz"
@@ -4273,6 +4255,9 @@ tr_TR:
         prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
         insert_url: "%{shortcut} Seçimi açık besteciye ekle"
         full_page_search: "%{shortcut} Tam sayfa aramayı başlatır"
+      admin:
+        title: "Yönetici"
+        search_prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
     badges:
       earned_n_times:
         one: "Bu rozeti %{count} kez kazandı"
@@ -4842,6 +4827,18 @@ tr_TR:
         logo:
           title: "Site logosu"
           header_description: "Site logonuzun varyasyonlarını özelleştirin"
+        branding:
+          title: "Markalaşma"
+          logo:
+            form:
+              logo:
+                title: "Birincil logo"
+              mobile: "Mobil"
+              email: "E-posta"
+              manifest_screenshots:
+                description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
+              opengraph_image:
+                description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -4858,8 +4855,9 @@ tr_TR:
           title: "Oran limitleri"
           header_description: "Kullanıcıların konu oluşturma, mesaj gönderme ve yanıt paylaşma gibi belirli eylemleri ne sıklıkta gerçekleştirebileceğini yapılandırma"
         search:
-          title: "Ara"
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
+        search_everything:
+          title: "Ara"
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -4971,6 +4969,7 @@ tr_TR:
           title: "Gömme"
           header_description: "Discourse, IFRAME oluşturan bir Javascript API'si kullanarak bir konudaki yorumları uzak bir siteye yerleştirme yeteneğine sahiptir"
       search:
+        title: "Ara"
         result_types:
           theme:
             one: "Tema"
@@ -5734,7 +5733,6 @@ tr_TR:
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
           settings_editor: "Ayar Düzenleyici"
-          hide_unused_fields: "Kullanılmayan alanları gizle"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
           color_scheme_user_selectable: "Renk paleti, kullanıcılar tarafından seçilebilir"
@@ -5788,9 +5786,6 @@ tr_TR:
           unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "Kapat"
           stay: "Kal"
-          css_html: "Özel CSS/HTML"
-          edit_css_html: "CSS/HTML'yi düzenle"
-          edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemediniz"
           delete_upload_confirm: "Bu yükleme silinsin mi? (Tema CSS çalışmayı durdurabilir!)"
           component_on_themes: "Bu temalara bileşen ekle"
           included_components: "Dahil edilen bileşenler"
@@ -5851,22 +5846,14 @@ tr_TR:
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
           scss:
             text: "CSS"
-            title: "Özel CSS girin, tüm geçerli CSS ve SCSS stillerini kabul ediyoruz"
-          header:
-            text: "Başlık"
-            title: "Site başlığının üstünde görüntülenecek HTML'yi girin"
           after_header:
             text: "Başlıktan Sonra"
-            title: "Üstbilgiden sonra tüm sayfalarda görüntülenecek HTML'yi girin"
           footer:
             text: "Altbilgi"
-            title: "Sayfa altbilgisinde görüntülenecek HTML'yi girin"
           embedded_scss:
             text: "Gömülü CSS"
-            title: "Yorumların gömülü sürümü ile teslim etmek için özel CSS girin"
           embedded_header:
             text: "Gömülü Başlık"
-            title: "Yorumların gömülü sürümünün üzerinde gösterilecek HTML'yi girin"
           color_definitions:
             text: "Renk Tanımları"
             title: "Özel renk tanımları girin (yalnızca ileri seviye kullanıcılar)"
@@ -5879,15 +5866,6 @@ tr_TR:
               %{example}
 
               Eklentiler ve/veya çekirdek ile çakışmaları önlemek için özellik adlarının önüne eklenmesi önemle tavsiye edilir.
-          head_tag:
-            text: "Kafa"
-            title: "Kafa etiketinden önce eklenecek HTML"
-          body_tag:
-            text: "Gövde"
-            title: "Gövde etiketinden önce eklenecek HTML"
-          yaml:
-            text: "YAML"
-            title: "Tema ayarlarını YAML biçiminde tanımlayın"
           scss_color_variables_warning: 'Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir. Lütfen bunun yerine CSS özel özelliklerini kullanın. Daha fazla ayrıntı için <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">bu kılavuza</a> bakın.'
           scss_warning_inline: "Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir."
           all_filter: "Tümü"

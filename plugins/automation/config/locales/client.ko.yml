@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ko:
   js:
     discourse_automation:
@@ -72,10 +66,6 @@ ko:
               label: 태그
             restricted_category:
               label: 카테고리
-            restricted_group:
-              label: 그룹
-            restricted_groups:
-              label: 그룹
           created: 생성됨
         category_created_edited:
           fields:

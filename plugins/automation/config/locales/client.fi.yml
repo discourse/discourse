@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 fi:
   js:
     admin:
@@ -164,11 +158,7 @@ fi:
             restricted_category:
               label: Alue
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
-            restricted_group:
-              label: Ryhmä
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti tämän ryhmän postilaatikossa
             restricted_groups:
-              label: Ryhmät
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
             ignore_group_members:
               label: Ohita ryhmän jäsenet

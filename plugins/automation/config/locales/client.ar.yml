@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ar:
   js:
     admin:
@@ -168,11 +162,7 @@ ar:
             restricted_category:
               label: الفئة
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة ضمن هذه الفئة
-            restricted_group:
-              label: المجموعة
-              description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في البريد الوارد لهذه المجموعة
             restricted_groups:
-              label: المجموعات
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في أحد صناديق البريد الوارد للمجموعة
             ignore_group_members:
               label: تجاهل أعضاء المجموعة

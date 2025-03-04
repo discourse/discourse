@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 be:
   js:
     discourse_automation:
@@ -45,10 +39,6 @@ be:
               label: тэгі
             restricted_category:
               label: катэгорыя
-            restricted_group:
-              label: група
-            restricted_groups:
-              label: групы
           created: створаны
         category_created_edited:
           fields:

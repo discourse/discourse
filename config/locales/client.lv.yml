@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 lv:
   js:
     number:
@@ -1619,13 +1613,6 @@ lv:
       password_label: "Parole"
     password_reset:
       continue: "Turpināt %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tikai sadaļas"
       categories_with_featured_topics: "Sadaļas un to labākās tēmas"
@@ -2239,6 +2226,10 @@ lv:
         zero: "jums patika šis ieraksts"
         one: "jums un %{count} citam cilvēkam patika šis ieraksts"
         other: "jums un %{count} citiem cilvēkiem patika šis ieraksts"
+      sr_post_like_count_button:
+        zero: "%{count} cilvēkiem patika šis ieraksts."
+        one: "%{count} cilvēkam patika šis ieraksts."
+        other: "%{count} cilvēkiem patika šis ieraksts."
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2651,6 +2642,8 @@ lv:
         mark_tracking: "%{shortcut} Sekot tēmai"
         mark_watching: "%{shortcut} Novērot tēmu"
         print: "%{shortcut} Drukāt tēmu"
+      admin:
+        title: "Administrators"
     badges:
       earned_n_times:
         zero: "Nopelnīja šo žetonu %{count} reizes"
@@ -2864,6 +2857,11 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
+        branding:
+          logo:
+            form:
+              mobile: "Mobilais"
+              email: "E-pasts"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -2872,7 +2870,7 @@ lv:
           title: "Onebox"
         other:
           title: "Citi"
-        search:
+        search_everything:
           title: "Meklēt"
         security:
           title: "Drošība"
@@ -2927,6 +2925,7 @@ lv:
         embedding:
           title: "Ieguldīšana"
       search:
+        title: "Meklēt"
         result_types:
           theme:
             zero: "Dizaini"
@@ -3232,9 +3231,6 @@ lv:
           add_upload: "Pievienot augšupielādējamu resursu"
           upload: "Augšupielādēt"
           discard: "Izmest"
-          css_html: "Specifisks CSS/HTML"
-          edit_css_html: "Labot CSS/HTML"
-          edit_css_html_help: "Jūs neesat izmainījis nekādus CSS vai HTML failus"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
           installed: "Uzinstalēts"
@@ -3250,8 +3246,6 @@ lv:
           add: "Pievienot"
           scss:
             text: "CSS"
-          body_tag:
-            text: "Ķermenis"
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sq:
   js:
     number:
@@ -2338,13 +2332,6 @@ sq:
       password_label: "Fjalëkalimi"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vetëm kategoritë"
       categories_with_featured_topics: "Kategoritë dhe temat e zgjedhura"
@@ -3429,6 +3416,9 @@ sq:
       has_likes_title_you:
         one: "ju dhe %{count} person tjetër pëlqyet këtë postim"
         other: "ju dhe %{count} të tjerë pëlqyen këtë postim"
+      sr_post_like_count_button:
+        one: "%{count} person pëlqeu këtë postim."
+        other: "%{count} vetë pëlqyen këtë postim."
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3800,6 +3790,8 @@ sq:
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
+      admin:
+        title: "Admin"
     badges:
       earned_n_times:
         one: "Kjo stemë është fituar %{count} herë"
@@ -4001,6 +3993,11 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
+        branding:
+          logo:
+            form:
+              mobile: "Mobile"
+              email: "Email"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -4009,7 +4006,7 @@ sq:
           title: "Onebox"
         other:
           title: "Të tjerë"
-        search:
+        search_everything:
           title: "Kërko"
         security:
           title: "Siguria"
@@ -4063,6 +4060,8 @@ sq:
           title: "Webhooks"
         embedding:
           title: "Embedding"
+      search:
+        title: "Kërko"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -4320,14 +4319,10 @@ sq:
           add: "Shto"
           scss:
             text: "CSS"
-          header:
-            text: "Ballina"
           footer:
             text: "Fundi i faqes"
           embedded_scss:
             text: "CSS e ngjitur"
-          body_tag:
-            text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
           schema:

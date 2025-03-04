@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 gl:
   js:
     discourse_automation:
@@ -64,10 +58,6 @@ gl:
               label: Etiquetas
             restricted_category:
               label: Categoría
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
           created: Creado
         category_created_edited:
           fields:

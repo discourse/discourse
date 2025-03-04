@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ur:
   js:
     number:
@@ -1785,13 +1779,6 @@ ur:
       password_label: "پاسورڈ"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "گُوگَل کلاسِک"
-      facebook_messenger: "فَیس بُک مَیسنجر"
     category_page_style:
       categories_only: "صرف زمرہ جات"
       categories_with_featured_topics: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
@@ -2744,6 +2731,9 @@ ur:
       has_likes_title_you:
         one: "آپ اور %{count} دوسرے شخص نے اِس پوسٹ کو لائیک کیا"
         other: "آپ اور %{count} دوسرے لوگوں نے اِس پوسٹ کو لائیک کیا"
+      sr_post_like_count_button:
+        one: "%{count} شخص نے اِس پوسٹ کو لائیک کیا."
+        other: "%{count} لوگوں نے اِس پوسٹ کو لائیک کیا."
       filtered_replies_hint:
         one: "یہ پوسٹ اور اس کا جواب دیکھیں"
         other: "یہ پوسٹ اور اس کے %{count} جوابات دیکھیں"
@@ -3341,6 +3331,9 @@ ur:
         prev_next: "%{shortcut} انتخاب کو اوپر اور نیچے منتقل کریں"
         insert_url: "%{shortcut} کھلے کمپوزر میں انتخاب داخل کریں"
         full_page_search: "%{shortcut} پورے صفحہ کی تلاش"
+      admin:
+        title: "منتظم"
+        search_prev_next: "%{shortcut} انتخاب کو اوپر اور نیچے منتقل کریں"
     badges:
       earned_n_times:
         one: "یہ بَیج %{count} دفعہ حاصل کیا"
@@ -3680,6 +3673,14 @@ ur:
           title: "فائلیں"
         legal:
           title: "قانونی"
+        branding:
+          title: "برانڈنگ"
+          logo:
+            form:
+              mobile: "موبائل"
+              email: "اِیمیل"
+              manifest_screenshots:
+                description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
         navigation:
           title: "نیویگیشن"
         notifications:
@@ -3688,7 +3689,7 @@ ur:
           title: "وَن باکس"
         other:
           title: "دیگر"
-        search:
+        search_everything:
           title: "تلاش کریں"
         security:
           title: "سیکورٹی"
@@ -3747,6 +3748,7 @@ ur:
         embedding:
           title: "اَیمبَیڈ کرنا"
       search:
+        title: "تلاش کریں"
         result_types:
           theme:
             one: "تھیم"
@@ -4209,7 +4211,6 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
-          hide_unused_fields: "اَیڈوانسڈ غیر استعمال شدہ چھپائیں"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
           auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
@@ -4251,9 +4252,6 @@ ur:
           unsaved_parent_themes: "آپ نے تھیمز کے لیے جزو تفویض نہیں کیا ہے، کیا آپ آگے بڑھنا چاہتے ہیں؟"
           discard: "منسوخ"
           stay: "ادھر رہیں"
-          css_html: "اپنی مرضی کے مطابق CSS/HTML"
-          edit_css_html: "CSS/HTML ترمیم کریں"
-          edit_css_html_help: "آپ نے کوئی بھی CSS یا HTML ترمیم نہیں کیا ہے"
           delete_upload_confirm: "اِس اَپ لوڈ کومٹائیں؟ (تِھیم CSS کام کرنا بند کر سکتی ہے!)"
           component_on_themes: "ان تھیمز پر جزو شامل کریں"
           included_components: "شامل اجزاء"
@@ -4303,19 +4301,12 @@ ur:
           imported_from_archive: "یہ تھیم زپ فائل سے درآمد کی گئی تھی۔"
           scss:
             text: "CSS"
-            title: "اپنی مرضی کے مطابق CSS درج کریں، ہم تمام درست CSS اور SCSS سٹائلز قبول کرتے ہیں"
-          header:
-            text: "ہَیڈر"
-            title: "سائٹ ہَیڈر کے اوپر ظاہر کرنے کے لئے HTML درج کریں"
           after_header:
             text: "ہَیڈر کے بعد"
-            title: "تمام صفحات پر ہَیڈر کے بعد ظاہر کرنے کے لئے HTML درج کریں"
           footer:
             text: "فوٹر"
-            title: "صفحہ کے فوٹر پر ظاہر کرنے کے لئے HTML درج کریں"
           embedded_scss:
             text: "اَیمبَیڈ کیا ہوا CSS"
-            title: "تبصرے کے اَیمبَیڈ شدہ ورژن کے ساتھ فراہم کیے جانے والا اپنی مرضی کا CSS درج کریں"
           color_definitions:
             text: "رنگین تعریفیں"
             title: "اپنی مرضی کے مطابق رنگ تعریف درج کریں (صرف اعلی درجے کی صارفین)"
@@ -4328,15 +4319,6 @@ ur:
               %{example}
 
               پلگ انز اور/یا کور کے ساتھ تنازعات سے بچنے کے لیے پراپرٹی کے ناموں کا سابقہ لگانے کی انتہائی سفارش کی جاتی ہے۔
-          head_tag:
-            text: "ہیڈ"
-            title: "HTML جو ہیڈ ٹیگ سے پہلے داخل کیا جائے گا۔"
-          body_tag:
-            text: "متن"
-            title: "HTML جو باڈی ٹیگ سے پہلے داخل کیا جائے گا۔"
-          yaml:
-            text: "YAML"
-            title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"
           scss_color_variables_warning: 'تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔ براہ کرم اس کے بجائے CSS حسب ضرورت خصوصیات استعمال کریں۔ مزید تفصیلات کے لیے <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">یہ گائیڈ</a> دیکھیں۔'
           scss_warning_inline: "تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔"
           all_filter: "تمام"

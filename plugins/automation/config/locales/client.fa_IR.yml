@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-fa_IR:
+fa:
   js:
     discourse_automation:
       title: اتوماسیون
@@ -93,10 +87,6 @@ fa_IR:
               label: برچسب‌ها
             restricted_category:
               label: دسته‌بندی
-            restricted_group:
-              label: گروه
-            restricted_groups:
-              label: گروه‌ها
           created: ساخته شده
           edited: ویرایش شده
         category_created_edited:

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 fr:
   js:
     number:
@@ -2344,13 +2338,6 @@ fr:
       password_label: "Mot de passe"
     password_reset:
       continue: "Continuer vers %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Classique Google"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Catégories seules"
       categories_with_featured_topics: "Catégories avec sujets à la une"
@@ -3561,11 +3548,8 @@ fr:
         one: "vous et %{count} autre personne avez aimé ce message"
         other: "vous et %{count} autres personnes avez aimé ce message"
       sr_post_like_count_button:
-        one: "%{count} personne a aimé ce message. Cliquez pour voir"
-        other: "%{count} personnes ont aimé ce message. Cliquez pour voir"
-      sr_post_read_count_button:
-        one: "%{count} personne a lu ce message. Cliquez pour voir"
-        other: "%{count} personnes ont lu ce message. Cliquez pour voir"
+        one: "%{count} personne a aimé ce message."
+        other: "%{count} personnes ont aimé ce message."
       filtered_replies_hint:
         one: "Voir ce message et sa réponse"
         other: "Voir ce message et ses %{count} réponses"
@@ -3682,8 +3666,6 @@ fr:
           read_capped:
             one: "et %{count} autre a lu ceci"
             other: "et %{count} autres ont lu ceci"
-          sr_post_likers_list_description: "utilisateurs ayant aimé ce message"
-          sr_post_readers_list_description: "utilisateurs ayant lu ce message"
         by_you:
           off_topic: "Vous avez signalé ceci comme étant hors-sujet"
           spam: "Vous avez signalé ceci comme étant du spam"
@@ -4273,6 +4255,9 @@ fr:
         prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
         insert_url: "%{shortcut} Insérer la sélection dans l'éditeur ouvert"
         full_page_search: "%{shortcut} Lance la recherche pleine page"
+      admin:
+        title: "Administrateur"
+        search_prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -4842,6 +4827,18 @@ fr:
         logo:
           title: "Logo du site"
           header_description: "Personnalisez les variantes du logo de votre site"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Logo principal"
+              mobile: "Mobile"
+              email: "E-mail"
+              manifest_screenshots:
+                description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+              opengraph_image:
+                description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -4858,8 +4855,9 @@ fr:
           title: "Limites d'utilisation"
           header_description: "Configurez la fréquence à laquelle les utilisateurs peuvent effectuer certaines actions, telles que créer des sujets, envoyer des messages et publier des réponses"
         search:
-          title: "Recherche"
           header_description: "Configurer les paramètres de recherche, y compris la journalisation et la tokenisation pour les langues chinoise et japonaise"
+        search_everything:
+          title: "Recherche"
         security:
           title: "Sécurité"
           header_description: "Configurez les paramètres de sécurité, notamment l'authentification à deux facteurs, les privilèges de modérateur et les politiques de sécurité du contenu"
@@ -4972,6 +4970,7 @@ fr:
           title: "Intégration"
           header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
       search:
+        title: "Recherche"
         result_types:
           theme:
             one: "Thème"
@@ -5735,7 +5734,6 @@ fr:
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
           settings_editor: "Éditeur de paramètres"
-          hide_unused_fields: "Masquer les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
           color_scheme_user_selectable: "La palette de couleurs peut être sélectionnée par les utilisateurs"
@@ -5789,9 +5787,6 @@ fr:
           unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
           stay: "Rester"
-          css_html: "CSS/HTML personnalisé"
-          edit_css_html: "Modifier le CSS/HTML"
-          edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer ce fichier envoyé ? (Le thème CSS pourrait ne plus fonctionner !)"
           component_on_themes: "Inclure ce composant dans ces thèmes"
           included_components: "Composants inclus"
@@ -5852,22 +5847,14 @@ fr:
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
           scss:
             text: "CSS"
-            title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
-          header:
-            text: "En-tête"
-            title: "Saisissez du code HTML à afficher au-dessus de l'en-tête du site"
           after_header:
             text: "Après l'en-tête"
-            title: "Saisissez du code HTML à afficher sur toutes les pages après l'en-tête"
           footer:
             text: "Pied de page"
-            title: "Saisissez du code HTML à afficher dans le pied de page"
           embedded_scss:
             text: "CSS intégré"
-            title: "Entrez du CSS personnalisé pour la version intégrée des commentaires"
           embedded_header:
             text: "En-tête intégré"
-            title: "Saisissez le code HTML pour afficher au-dessus de la version intégrée des commentaires"
           color_definitions:
             text: "Définitions de couleur"
             title: "Entrez des définitions de couleurs personnalisées (utilisateurs avancés uniquement)"
@@ -5880,15 +5867,6 @@ fr:
               %{example}
 
               Il est fortement recommandé de préfixer les noms des propriétés CSS pour éviter tout conflit avec Discourse ou ses extensions.
-          head_tag:
-            text: "Tête"
-            title: "HTML qui sera inséré avant la balise <head>"
-          body_tag:
-            text: "Corps"
-            title: "HTML qui sera inséré avant la balise <body>"
-          yaml:
-            text: "YAML"
-            title: "Définir les paramètres du thème au format YAML"
           scss_color_variables_warning: 'L''utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans les versions ultérieures. Pour obtenir davantage d''informations, nous vous invitons à consulter <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ce guide</a> (en anglais).'
           scss_warning_inline: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée."
           all_filter: "Tout"

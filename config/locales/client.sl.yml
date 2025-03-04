@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sl:
   js:
     number:
@@ -1896,13 +1890,6 @@ sl:
       password_label: "Geslo"
     password_reset:
       continue: "Nadaljujte na %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Samo kategorije"
       categories_with_featured_topics: "Kategorije z izpostavljenimi temami"
@@ -2799,6 +2786,11 @@ sl:
         two: "vam in %{count} drugima uporabnikoma je prispevek všeč"
         few: "vam in %{count} drugim uporabnikom je prispevek všeč"
         other: "vam in %{count} drugim uporabnikom je prispevek všeč"
+      sr_post_like_count_button:
+        one: "%{count} uporabniku je prispevek všeč."
+        two: "%{count} uporabnikoma je prispevek všeč."
+        few: "%{count} uporabnikom je prispevek všeč."
+        other: "%{count} uporabnikom je prispevek všeč."
       filtered_replies_hint:
         one: "Oglejte si to objavo in njen odgovor"
         two: "Oglejte si to objavo in njena %{count} odgovora"
@@ -3386,6 +3378,9 @@ sl:
         title: "Iskalni meni"
         prev_next: "%{shortcut} Prestavi izbor gor in dol"
         insert_url: "%{shortcut} Vstavi izbor v odprti urejevalnik"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Prestavi izbor gor in dol"
     badges:
       earned_n_times:
         one: "Prislužili to značko %{count} krat"
@@ -3733,6 +3728,11 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
+        branding:
+          logo:
+            form:
+              mobile: "Mobilno"
+              email: "E-naslov"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3741,7 +3741,7 @@ sl:
           title: "Onebox"
         other:
           title: "Drugo"
-        search:
+        search_everything:
           title: "Išči"
         security:
           title: "Varnost"
@@ -3794,6 +3794,7 @@ sl:
         embedding:
           title: "Vdelovanje"
       search:
+        title: "Išči"
         result_types:
           theme:
             one: "Videz"
@@ -4136,9 +4137,6 @@ sl:
           upload: "Prenesi"
           unsaved_changes_alert: "Niste shranili sprememb - ali jih želite zavreči in nadaljevati?"
           discard: "Zavrzi"
-          css_html: "CSS/HTML po meri"
-          edit_css_html: "Uredi CSS/HTML"
-          edit_css_html_help: "Niste uredili še nobenega CSS ali HTML."
           direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"
@@ -4152,8 +4150,6 @@ sl:
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
           scss:
             text: "CSS"
-          header:
-            text: "Glava"
           all_filter: "Vse"
           active_filter: "Aktivni"
           inactive_filter: "Nedejaven"

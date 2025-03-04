@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ko:
   js:
     number:
@@ -1857,13 +1851,6 @@ ko:
       password_label: "비밀번호"
     password_reset:
       continue: "%{site_name}에서 계속하기"
-    emoji_set:
-      apple_international: "애플/인터내셔널"
-      google: "구글"
-      twitter: "트위터"
-      win10: "윈10"
-      google_classic: "구글 클래식"
-      facebook_messenger: "페이스북 메신저"
     category_page_style:
       categories_only: "카테고리만"
       categories_with_featured_topics: "추천 주제가 있는 카테고리"
@@ -2795,6 +2782,8 @@ ko:
       has_likes_title_only_you: "내가 이 게시물을 좋아합니다"
       has_likes_title_you:
         other: "나와 %{count}명이 이 게시물을 좋아합니다"
+      sr_post_like_count_button:
+        other: "%{count}명이 이 글을 좋아합니다."
       filtered_replies_hint:
         other: "이 게시물과 %{count}개의 댓글 보기"
       filtered_replies_viewing:
@@ -2883,8 +2872,6 @@ ko:
             other: "그리고 %{count}명의 사용자가 좋아합니다"
           read_capped:
             other: "그리고 %{count}명의 사용자가 읽었습니다"
-          sr_post_likers_list_description: "이 게시물을 좋아하는 사용자"
-          sr_post_readers_list_description: "이 글을 읽는 사용자"
         by_you:
           off_topic: "이 항목이 주제에서 벗어났다고 신고했습니다"
           spam: "이 항목을 스팸으로 신고했습니다"
@@ -3374,6 +3361,9 @@ ko:
         prev_next: "%{shortcut} 선택 항목 위아래로 이동"
         insert_url: "%{shortcut} 열린 작성기에 선택 항목 삽입"
         full_page_search: "%{shortcut} 전체 페이지 검색 시작"
+      admin:
+        title: "관리자"
+        search_prev_next: "%{shortcut} 선택을 위아래로 이동"
     badges:
       earned_n_times:
         other: "이 배지를 %{count}번 획득했습니다"
@@ -3717,6 +3707,16 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
+        branding:
+          title: "브랜딩"
+          logo:
+            form:
+              mobile: "모바일"
+              email: "이메일"
+              manifest_screenshots:
+                description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
+              opengraph_image:
+                description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
         navigation:
           title: "내비게이션"
         notifications:
@@ -3725,7 +3725,7 @@ ko:
           title: "Onebox"
         other:
           title: "기타"
-        search:
+        search_everything:
           title: "검색"
         security:
           title: "보안"
@@ -3789,6 +3789,7 @@ ko:
         embedding:
           title: "삽입(Embedding)"
       search:
+        title: "검색"
         result_types:
           report:
             other: "보고서"
@@ -4258,7 +4259,6 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
-          hide_unused_fields: "사용하지 않는 필드 숨기기"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
@@ -4299,9 +4299,6 @@ ko:
           unsaved_parent_themes: "구성 요소를 테마에 할당하지 않았습니다. 계속할까요?"
           discard: "버리기"
           stay: "유지"
-          css_html: "커스텀 CSS/HTML"
-          edit_css_html: "CSS/HTML 편집하기"
-          edit_css_html_help: "편집한 CSS나 HTML이 없습니다."
           delete_upload_confirm: "이 업로드를 삭제할까요? (테마 CSS가 작동 중지될 수 있습니다!)"
           component_on_themes: "이 테마에 구성 요소 포함"
           included_components: "포함된 구성 요소"
@@ -4351,19 +4348,12 @@ ko:
           imported_from_archive: "이 테마는 .zip 파일에서 임포트했습니다."
           scss:
             text: "CSS"
-            title: "커스텀 CSS를 입력하세요. 모든 유효한 CSS 및 SCSS 스타일을 지원합니다."
-          header:
-            text: "Header"
-            title: "위 사이트 헤더에 표시할 HTML을 입력하세요"
           after_header:
             text: "헤더 다음"
-            title: "전체 페이지에서 헤더 다음에 표시할 HTML을 입력하세요"
           footer:
             text: "Footer"
-            title: "페이지 바닥글에 표시할 HTML을 입력하세요"
           embedded_scss:
             text: "임베디드 CSS"
-            title: "임베디드 버전 코멘트와 함께 전달하기 위해 사용자 지정 CSS를 입력하세요"
           color_definitions:
             text: "색상 정의"
             title: "사용자 지정 색상 정의 입력(고급 사용자용)"
@@ -4376,15 +4366,6 @@ ko:
               %{example}
 
               플러그인 및/또는 코어와의 충돌을 피하기 위해 프로퍼티 이름 앞에 붙이는 것이 좋습니다.
-          head_tag:
-            text: "헤드"
-            title: "헤드 태그 앞에 삽입될 HTML"
-          body_tag:
-            text: "본문"
-            title: "본문 태그 앞에 삽입될 HTML"
-          yaml:
-            text: "YAML"
-            title: "YAML 포맷으로 테마 설정 정의"
           scss_color_variables_warning: '테마에서 핵심 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다. 대신 CSS 사용자 지정 프로퍼티를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">이 가이드</a>를 참조하세요.'
           scss_warning_inline: "테마에서 코어 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다."
           all_filter: "전체"

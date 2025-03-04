@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 pt:
   site_settings:
     chat_channel_retention_days: "As mensagens de bate-papo em canais regulares serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."

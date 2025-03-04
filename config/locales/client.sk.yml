@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sk:
   js:
     number:
@@ -2312,6 +2306,8 @@ sk:
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         required: "Povinné"
+        date_before_or_equal: "Musí byť pred alebo rovná %{date}"
+        date_after_or_equal: "Musí byť po alebo rovná %{date}"
         invalid_url: "Musí byť platná adresa URL"
         not_an_integer: "Musí to byť celé číslo"
         not_accepted: "Musí byť prijaté"
@@ -2617,13 +2613,6 @@ sk:
       password_label: "Heslo"
     password_reset:
       continue: "Pokračujte na %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Medzinárodné"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Iba kategórie"
       categories_with_featured_topics: "Kategórie s odporúčanými témami"
@@ -3118,6 +3107,9 @@ sk:
       browser_tip_description: "znova použiť natívne vyhľadávanie v prehliadači"
       recent: "Nedávne vyhľadávania"
       clear_recent: "Vymazať nedávne vyhľadávania"
+      experience:
+        search_field: "Vyhľadávacie pole v záhlaví stránky"
+        search_icon: "Ikona vyhľadávania pri avatare profilu"
       type:
         default: "Témy/príspevky"
         users: "Používatelia"
@@ -3984,15 +3976,15 @@ sk:
         many: "Tento príspevok sa páčil Vám a ďalším %{count} ľuďom"
         other: "Tento príspevok sa páčil Vám a ďalším %{count} ľuďom"
       sr_post_like_count_button:
-        one: "%{count} osobe sa páčil tento príspevok. Kliknutím zobrazíte"
-        few: "%{count} ľuďom sa páčil tento príspevok. Kliknutím zobrazíte"
-        many: "%{count} ľuďom sa páčil tento príspevok. Kliknutím zobrazíte"
-        other: "%{count} ľuďom sa páčil tento príspevok. Kliknutím zobrazíte"
+        one: "%{count} osobe sa páčil tento príspevok."
+        few: "Tento príspevok sa páčil %{count} ľuďom."
+        many: "Tento príspevok sa páčil %{count} ľuďom."
+        other: "Tento príspevok sa páčil %{count} ľuďom."
       sr_post_read_count_button:
-        one: "%{count} osoba si prečítala tento príspevok. Kliknutím zobrazíte"
-        few: "%{count} ľudí si prečítalo tento príspevok. Kliknutím zobrazíte"
-        many: "%{count} ľudí si prečítalo tento príspevok. Kliknutím zobrazíte"
-        other: "%{count} ľudia si prečítali tento príspevok. Kliknutím zobrazíte"
+        one: "%{count} osoba prečítala tento príspevok."
+        few: "Tento príspevok si prečítalo %{count} ľudí."
+        many: "Tento príspevok si prečítalo %{count} ľudí."
+        other: "Tento príspevok si prečítalo %{count} ľudí."
       filtered_replies_hint:
         one: "Zobraziť tento príspevok a jeho odpoveď"
         few: "Pozrite si tento príspevok a jeho %{count} odpovedí"
@@ -4129,8 +4121,6 @@ sk:
             few: "a %{count} ďalší toto čítajú"
             many: "a %{count} ďalší toto čítajú"
             other: "a %{count} ďalší toto čítajú"
-          sr_post_likers_list_description: "užívatelia, ktorým sa tento príspevok páčil"
-          sr_post_readers_list_description: "používatelia, ktorí čítajú tento príspevok"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
@@ -4764,6 +4754,9 @@ sk:
         prev_next: "%{shortcut} Presun výberu nahor a nadol"
         insert_url: "%{shortcut} Vložiť výber do otvoreného editora"
         full_page_search: "%{shortcut} Spustí vyhľadávanie na celej stránke"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Presun výberu nahor a nadol"
     badges:
       earned_n_times:
         one: "Získal tento odkaz %{count}-krát"
@@ -5391,6 +5384,18 @@ sk:
         logo:
           title: "Logo stránky"
           header_description: "Prispôsobenie variantov loga vášho webu"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Primárne logo"
+              mobile: "Mobil"
+              email: "Email"
+              manifest_screenshots:
+                description: "Snímky obrazovky, ktoré prezentujú vlastnosti a funkcie vašej inštancie na stránke s výzvou na inštaláciu. Všetky obrázky by mali byť nahrané lokálne a mali by mať rovnaké rozmery."
+              opengraph_image:
+                description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
         navigation:
           title: "Navigácia"
           header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
@@ -5407,8 +5412,9 @@ sk:
           title: "Limity sadzieb"
           header_description: "Konfigurácia toho, ako často môžu používatelia vykonávať určité činnosti, napríklad vytvárať témy, posielať správy a odosielať odpovede."
         search:
-          title: "Hľadať"
           header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
+        search_everything:
+          title: "Hľadať"
         security:
           title: "Bezpečnosť"
           header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
@@ -5543,6 +5549,7 @@ sk:
           header_description: "Discourse má možnosť vložiť komentáre z témy na vzdialenú stránku pomocou rozhrania API pre Javascript, ktoré vytvorí okno IFRAME"
       search:
         modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
+        title: "Hľadať"
         result_types:
           page:
             one: "Stránka"
@@ -6349,7 +6356,6 @@ sk:
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
           settings_editor: "Editor nastavení"
-          hide_unused_fields: "Skryť nepoužívané polia"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
           color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
@@ -6407,9 +6413,6 @@ sk:
           unsaved_parent_themes: "Komponent ste nepriradili k témam, chcete pokračovať?"
           discard: "Zahodiť"
           stay: "Ponechať"
-          css_html: "Vlastné CSS/HTML"
-          edit_css_html: "Upraviť CSS/HTML"
-          edit_css_html_help: "Neupravili ste žiadne CSS ani HTML"
           delete_upload_confirm: "Odstrániť toto nahrávanie? (Téma CSS môže prestať fungovať!)"
           component_on_themes: "Zahrnúť komponent do týchto tém"
           included_components: "Zahrnuté komponenty"
@@ -6472,22 +6475,14 @@ sk:
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
           scss:
             text: "CSS"
-            title: "Zadajte vlastné CSS, akceptujeme všetky platné štýly CSS a SCSS"
-          header:
-            text: "Hlavička"
-            title: "Zadajte HTML pre zobrazenie nad hlavičkou lokality"
           after_header:
             text: "Po hlavičke"
-            title: "Zadajte HTML na zobrazenie na všetkých stránkach po hlavičke"
           footer:
             text: "Päta"
-            title: "Zadajte kód HTML, ktorý sa zobrazí v päte stránky"
           embedded_scss:
             text: "Vnorené CSS"
-            title: "Zadajte vlastný CSS, ktorý vám poskytne vloženú verziu komentárov"
           embedded_header:
             text: "Vložená hlavička"
-            title: "Zadajte HTML, ktorý sa zobrazí nad vloženou verziou komentárov"
           color_definitions:
             text: "Definície farieb"
             title: "Zadávanie vlastných definícií farieb (len pre pokročilých používateľov)"
@@ -6500,18 +6495,8 @@ sk:
               %{example}
 
               Pred názvami vlastností sa dôrazne odporúča, aby sa predišlo konfliktom s pluginmi a/alebo jadrom.
-          head_tag:
-            text: "Hlavička"
-            title: "HTML, ktoré sa vloží pred značku head"
-          body_tag:
-            text: "Telo"
-            title: "HTML, ktoré sa vloží pred značku body"
-          yaml:
-            text: "YAML"
-            title: "Definovanie nastavení témy vo formáte YAML"
           js:
             text: "JS"
-            title: "Definovanie inicializátora JavaScript"
           scss_color_variables_warning: 'Používanie základných farebných premenných SCSS v témach je zastarané. Namiesto toho používajte vlastné vlastnosti CSS. Viac informácií nájdete v <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tejto príručke</a>.'
           scss_warning_inline: "Používanie základných farebných premenných SCSS v témach je zastarané."
           all_filter: "Všetky"

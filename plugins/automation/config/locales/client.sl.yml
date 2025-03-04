@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sl:
   js:
     discourse_automation:
@@ -60,10 +54,6 @@ sl:
               label: Oznake
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupine
           created: Ustvarjeno
         category_created_edited:
           fields:

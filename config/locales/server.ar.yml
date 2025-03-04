@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ar:
   dates:
     short_date_no_year: "D ‏MMMM"
@@ -443,7 +437,7 @@ ar:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "يجب ألا يقل طول وكلاء المستخدمين عن 3 أحرف لتجنُّب تقييد معدل المستخدمين القانونيين من غير قصد."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "لا يمكنك إضافة أيٍّ من القيم التالية إلى الإعداد: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "لا يمكنك إيقاف إزالة البيانات الوصفية للصورة إذا كان 'composer media optimization image enabled' مفعلًا. أوقف 'composer media optimization image enabled' قبل إيقاف إزالة البيانات الوصفية للصورة."
-      twitter_summary_large_image_no_svg: "لا يمكن أن تكون صور ملخص Twitter المُستخدَمة في البيانات الوصفية لـ twitter:image بتنسيق svg."
+      x_summary_large_image_no_svg: "لا يمكن أن تكون صور ملخص Twitter المُستخدَمة في البيانات الوصفية لـ twitter:image بتنسيق svg."
       tl0_and_anonymous_flag: "يجب إدخال 'site contact email' أو 'email address to report illegal content' للمستخدمين المجهولين."
     conflicting_google_user_id: 'تم تغيير معرِّف حساب Google لهذا الحساب؛ مطلوب تدخُّل فريق العمل لأسباب أمنية. يُرجى التواصل مع فريق العمل وتوجيهه إلى <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -2017,7 +2011,7 @@ ar:
     favicon: "الرمز المفضَّل لموقعك، راجع <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> للعمل بشكلٍٍ صحيح على شبكة توصيل المحتوى، يجب أن تكون الصورة بتنسيق png. سيتم تغيير حجمها إلى 32 × 32. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     apple_touch_icon: "الشعار المُستخدَم على أجهزة Apple اللمسية. سيتم تغيير حجمها تلقائيًا إلى 512 × 512. وإذا تركتها فارغة، فسيتم استخدام large_icon."
     opengraph_image: "صورة opengraph افتراضية، يتم استخدامها عندما لا تحتوي الصفحة على صورة أخرى مناسبة. وإذا تركتها فارغة، فسيتم استخدام large_icon."
-    twitter_summary_large_image: "بطاقة Twitter 'summary large image' (ينبغي ألا يقل عرضها عن 280، وارتفاعها عن 150، وألا تكون بتنسيق .svg). في حال تركها فارغة، يتم إنشاء البيانات الوصفية التقليدية باستخدام opengraph_image ما دامت هي أيضًا ليست بتنسيق .svg"
+    x_summary_large_image: "بطاقة Twitter 'summary large image' (ينبغي ألا يقل عرضها عن 280، وارتفاعها عن 150، وألا تكون بتنسيق .svg). في حال تركها فارغة، يتم إنشاء البيانات الوصفية التقليدية باستخدام opengraph_image ما دامت هي أيضًا ليست بتنسيق .svg"
     notification_email: "عنوان البريد الإلكتروني المُستخدَم في حقل \"من:\" عند إرسال جميع رسائل النظام الأساسية. يجب تعيين سجلات SPF وDKIM وreverse PTR للنطاق المحدَّد هنا بشكلٍٍ صحيح لتصل الرسالة الإلكترونية."
     email_custom_headers: "قائمة مفصولة بشرائط عمودية لرؤوس البريد الإلكتروني المخصَّصة"
     email_subject: "تنسيق موضوع قابل للتخصيص للرسائل الإلكترونية القياسية. راجع <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -5510,7 +5504,6 @@ ar:
       new_topics_unless_trust_level: "يجب أن تتم الموافقة على موضوعات المستخدمين من مستويات الثقة المنخفضة من قِبل فريق العمل. راجع %{link}."
       fast_typer: "كتب مستخدم جديد أول منشور له بسرعة كبيرة بشكلٍٍ مريب، ويُشتبَه في أن يكون روبوتًا أو صاحب سلوك غير مرغوب فيه. راجع %{link}."
       auto_silence_regex: "مستخدم جديد يتطابق منشوره الأول مع الإعداد %{link}."
-      watched_word: "تضمَّن هذا المنشور كلمة مراقبة. راجع %{link}."
       staged: "يجب الموافقة على الموضوعات والمنشورات الجديدة من المستخدمين المؤقتين من قِبل فريق العمل. راجع %{link}."
       category: "تتطلَّب المنشورات في هذه الفئة موافقة يدوية بواسطة فريق العمل. راجع %{link}."
       must_approve_users: "يجب الموافقة على جميع المستخدمين الجُدد من قِبل فريق العمل. راجع %{link}."
@@ -5521,7 +5514,6 @@ ar:
       contains_media: "يحتوي هذا المنشور على وسائط مضمَّنة. راجع %{link}."
       queued_by_staff: "يعتقد أحد أعضاء فريق العمل أن هذا المنشور يحتاج إلى مراجعة. سيظل مخفيًا حتى تتم مراجعته."
       links:
-        watched_word: قائمة الكلمات المراقبة
         category: إعدادات الفئة
     actions:
       agree:

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 el:
   js:
     admin:
@@ -77,10 +71,6 @@ el:
               label: Ετικέτες
             restricted_category:
               label: Κατηγορία
-            restricted_group:
-              label: Ομάδα
-            restricted_groups:
-              label: Ομάδες
           created: Δημιουργήθηκε
         category_created_edited:
           fields:

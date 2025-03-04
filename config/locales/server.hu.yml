@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 hu:
   dates:
     short_date_no_year: "MMM D."
@@ -316,6 +310,9 @@ hu:
     site_settings:
       invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
+      site_settings_are_hidden: "Nem módosíthatja a rejtett beállításokat: %{setting_names}"
+      site_settings_are_shadowed_globally: "Ezeket a beállításokat nem módosíthatja, mert globálisan vannak konfigurálva: %{setting_names}"
+      site_settings_are_unconfigurable: "Nem módosíthatja a nem konfigurálható beállításokat: %{setting_names}"
       invalid_choice:
         one: "'%{name}' érvénytelen választás."
         other: "'%{name}' érvénytelen választás."
@@ -337,7 +334,7 @@ hu:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakter hosszúaknak kell lenniük, hogy elkerüljék a jogos felhasználók véletlen sebességkorlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nem lehet letiltani a szalagkép metaadatait, ha a composer médiaoptimalizáló kép engedélyezve van. Kapcsolja ki ezt az opciót, mielőtt letiltaná a szalagkép metaadatokat."
-      twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
+      x_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
       tl0_and_anonymous_flag: "A névtelen felhasználók számára meg kell adni a „webhely kapcsolatfelvételi e-mail-címét” vagy „az illegális tartalom bejelentéséhez szükséges e-mail-címet”."
     conflicting_google_user_id: 'A fiók Google-fiók azonosítója megváltozott; biztonsági okokból a személyzet beavatkozása szükséges. Kérjük, lépjen kapcsolatba a személyzettel, és mutassa meg nekik a következő címet: <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1650,6 +1647,7 @@ hu:
     search_query_log_max_retention_days: "A keresési lekérdezések tárolásának maximális időtartama napokban."
     search_ignore_accents: "Ha ez a beállítás engedélyezve van, a keresési lekérdezésekben lévő ékezeteket figyelmen kívül hagyja a rendszer, lehetővé téve a felhasználók számára, hogy akkor is találjanak eredményeket, ha nem adják meg a helyes ékezeteket."
     search_default_sort_order: "Alapértelmezett rendezési sorrend a teljes oldalas kereséshez"
+    search_experience: "A keresés alapértelmezett pozíciója és megjelenése asztali eszközökön"
     category_search_priority_low_weight: "A rangsorolásra alkalmazott súly az alacsony kategóriájú keresési prioritás esetén."
     category_search_priority_high_weight: "A rangsorolásra alkalmazott súly a magas kategóriájú keresési prioritás esetén."
     default_composer_category: "Az a kategória, amely előre kitölti a kategória legördülő menüt új téma létrehozásakor."
@@ -1715,7 +1713,7 @@ hu:
     favicon: "Egy favicon az Ön webhelyéhez, lásd <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. A CDN-en való helyes működéshez png formátumúnak kell lennie. 32x32 pixelre lesz átméretezve. Ha üresen hagyja, a large_icon lesz használva."
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
     opengraph_image: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
-    twitter_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
+    x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
     email_custom_headers: "Függőleges vonallal elválasztott lista az egyéni e-mail fejlécekről"
     email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -5029,7 +5027,6 @@ hu:
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
-      watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. Lásd a %{link}."
       staged: "Az átmeneti felhasználók új témáit és bejegyzéseit a stábtagoknak jóvá kell hagynia. Lásd %{link}."
       category: "Az ebbe a kategóriába tartozó bejegyzésekhez egy stábtag kézi jóváhagyása szükséges. Lásd a %{link}."
       must_approve_users: "Minden új felhasználót jóvá kell hagynia egy stábtagnak. Lásd: %{link}."
@@ -5040,7 +5037,6 @@ hu:
       contains_media: "Ez a bejegyzés beágyazott médiát tartalmaz. Lásd: %{link}."
       queued_by_staff: "Egy stábtag úgy gondolja, hogy ezt a bejegyzést felül kell vizsgálni. Addig rejtve marad."
       links:
-        watched_word: a figyelt szavak listája
         category: kategória beállítások
     actions:
       agree:

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 hu:
   site_settings:
     discourse_narrative_bot_enabled: "A Discourse eligazító bot (discobot) bekapcsolása"
@@ -169,8 +163,22 @@ hu:
 
           - Mindig hiszünk a [civilizált közösségi viselkedésben](%{base_uri}/guidelines).
       onebox:
+        instructions: |-
+          Következő, megosztaná velem valamelyik linket? Válaszoljon a **egy sorban található hivatkozással**, és az automatikusan kibővül egy remek összefoglalóval.
+
+          Bármely hivatkozás másolásához érintse meg hosszan a mobileszközt, vagy kattintson jobb gombbal a mutatóeszközre:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Menő! Ez a legtöbb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> hivatkozás esetén működik. Ne feledje, hogy egy vonalon kell lennie _önmagában_, semmi más ne legyen előtte vagy utána.
+        not_found: |-
+          Elnézést, nem találtam a linket a válaszban! :cry:
+
+          Megpróbálja hozzáadni a következő linket a saját sorához a következő válasz üzenetben?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Itt egy kép egy egyszarvúról:

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 it:
   js:
     admin:
@@ -164,11 +158,7 @@ it:
             restricted_category:
               label: Categoria
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
-            restricted_group:
-              label: Gruppo
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale nella posta in arrivo di questo gruppo
             restricted_groups:
-              label: Gruppi
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
             ignore_group_members:
               label: Ignora i membri del gruppo

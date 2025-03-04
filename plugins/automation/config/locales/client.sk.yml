@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 sk:
   js:
     admin:
@@ -170,11 +164,11 @@ sk:
             restricted_category:
               label: Kategória
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
-            restricted_group:
-              label: Skupina
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku osobnou správou v doručenej pošte tejto skupiny
+            restricted_user_group:
+              label: Obmedzená skupina používateľov
+              description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v tejto skupine
             restricted_groups:
-              label: Skupiny
+              label: Obmedzené skupiny doručenej pošty
               description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
             ignore_group_members:
               label: Ignorovať členov skupiny
@@ -393,6 +387,7 @@ sk:
               label: PMs
             sender:
               label: Odosielateľ PMs
+              description: "Uistite sa, že odosielateľ má správne oprávnenia na odosielanie PM príjemcovi."
         close_topic:
           fields:
             topic:

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 nl:
   dates:
     short_date_no_year: "D MMM"
@@ -335,7 +329,7 @@ nl:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents moeten minimaal 3 tekens lang zijn om te voorkomen dat de snelheid van legitieme gebruikers per ongeluk wordt beperkt."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Je kunt de volgende waarden niet toevoegen aan de instelling: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Je kunt megagegevens van afbeeldingen strippen niet uitschakelen als 'composer media optimization image enabled' is ingeschakeld. Schakel 'composer media optimization image enabled' uit voordat je megagegevens van afbeeldingen strippen uitschakelt."
-      twitter_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
+      x_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
       tl0_and_anonymous_flag: "Voor anonieme gebruikers moet ofwel 'site contact email' of 'email address to report illegal content' worden opgegeven."
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is medewerkerinterventie vereist. Neem contact op met een medewerker en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1717,7 +1711,7 @@ nl:
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
     apple_touch_icon: "Pictogram voor Apple touch-apparaten. Een doorzichtige achtergrond wordt niet aanbevolen. De grootte wordt automatisch aangepast naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
-    twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
+    x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -5079,7 +5073,6 @@ nl:
       new_topics_unless_trust_level: "Gebruikers met een laag vertrouwensniveau moeten topics laten goedkeuren door een medewerker. Zie %{link}."
       fast_typer: "Nieuwe gebruiker typte zijn eerste bericht verdacht snel, vermoed bot- of spammergedrag. Zie %{link}."
       auto_silence_regex: "Nieuwe gebruiker wiens eerste bericht overeenkomt met de instelling %{link}."
-      watched_word: "Dit bericht bevatte een geobserveerd woord. Zie je %{link}."
       staged: "Nieuwe topics en berichten voor gefaseerde gebruikers moeten worden goedgekeurd door een medewerker. Zie %{link}."
       category: "Voor berichten in deze categorie is handmatige goedkeuring door een medewerker vereist. Zie de %{link}."
       must_approve_users: "Alle nieuwe gebruikers moeten worden goedgekeurd door een medewerker. Zie %{link}."
@@ -5090,7 +5083,6 @@ nl:
       contains_media: "Dit bericht bevat ingesloten media. Zie %{link}."
       queued_by_staff: "Een medewerker vindt dat dit bericht moet worden beoordeeld. Het blijft tot die tijd verborgen."
       links:
-        watched_word: lijst van geobserveerde woorden
         category: categorie-instellingen
     actions:
       agree:

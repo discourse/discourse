@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 nl:
   js:
     number:
@@ -2344,13 +2338,6 @@ nl:
       password_label: "Wachtwoord"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
-    emoji_set:
-      apple_international: "Apple/internationaal"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "WIndows 10"
-      google_classic: "Google Klassiek"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Alleen categorieën"
       categories_with_featured_topics: "Categorieën met uitgelichte topics"
@@ -3561,11 +3548,8 @@ nl:
         one: "jij en %{count} ander hebben dit bericht geliket"
         other: "jij en %{count} anderen hebben dit bericht geliket"
       sr_post_like_count_button:
-        one: "%{count} persoon heeft dit bericht geliket. Klik om te bekijken"
-        other: "%{count} persoon hebben dit bericht geliket. Klik om te bekijken"
-      sr_post_read_count_button:
-        one: "%{count} persoon heeft dit bericht gelezen. Klik om te bekijken"
-        other: "%{count} persoon hebben dit bericht gelezen. Klik om te bekijken"
+        one: "%{count} persoon heeft dit bericht geliket."
+        other: "%{count} personen hebben dit bericht geliket."
       filtered_replies_hint:
         one: "Dit bericht en 1 antwoord weergeven"
         other: "Dit bericht en %{count} antwoorden weergeven"
@@ -3682,8 +3666,6 @@ nl:
           read_capped:
             one: "en %{count} ander heeft dit gelezen"
             other: "en %{count} anderen hebben dit gelezen"
-          sr_post_likers_list_description: "gebruikers die dit bericht hebben geliket"
-          sr_post_readers_list_description: "gebruikers die dit bericht hebben gelezen"
         by_you:
           off_topic: "Je hebt dit als off-topic gemarkeerd"
           spam: "Je hebt dit als spam gemarkeerd"
@@ -4273,6 +4255,9 @@ nl:
         prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
         insert_url: "%{shortcut} Selectie invoegen in open editorvenster"
         full_page_search: "%{shortcut} Start zoeken op volledige pagina"
+      admin:
+        title: "Beheerder"
+        search_prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
     badges:
       earned_n_times:
         one: "Deze badge is %{count} keer verdiend"
@@ -4842,6 +4827,16 @@ nl:
         logo:
           title: "Sitelogo"
           header_description: "Pas de variaties van je sitelogo aan"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Primair logo"
+              mobile: "Mobiel"
+              email: "E-mailadres"
+              manifest_screenshots:
+                description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
         navigation:
           title: "Navigatie"
           header_description: "Configureer de navigatielinks en menuopties voor je site. Dit omvat de locatie en het gedrag van het primaire navigatiemenu, de snelle links bovenaan de startpagina en de zijbalk voor beheer"
@@ -4858,8 +4853,9 @@ nl:
           title: "Frequentielimieten"
           header_description: "Configureer hoe vaak gebruikers bepaalde acties mogen uitvoeren, zoals het maken van topics, het verzenden van berichten en het plaatsen van antwoorden"
         search:
-          title: "Zoeken"
           header_description: "Configureer zoekinstellingen, inclusief logging en tokenisering voor Chinees en Japans"
+        search_everything:
+          title: "Zoeken"
         security:
           title: "Beveiliging"
           header_description: "Configureer beveiligingsinstellingen, waaronder tweeledige verificatie, moderatorprivileges en contentbeveiligingsbeleid"
@@ -4972,6 +4968,7 @@ nl:
           title: "Insluiting"
           header_description: "Discourse heeft de mogelijkheid om de reacties van een topic in te sluiten op een externe site met behulp van een Javascript-API die een iFRAME maakt"
       search:
+        title: "Zoeken"
         result_types:
           theme:
             one: "Thema"
@@ -5735,7 +5732,6 @@ nl:
           extra_files_remote: "Exporteer een thema of controleer de git-repository om deze bestanden te bekijken."
           preview: "Voorbeeld"
           settings_editor: "Instellingeneditor"
-          hide_unused_fields: "Ongebruikte velden verbergen"
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
           color_scheme_user_selectable: "Kleurenpalet kan door gebruikers worden geselecteerd"
@@ -5789,9 +5785,6 @@ nl:
           unsaved_parent_themes: "Je hebt het onderdeel niet toegewezen aan thema's. Wil je verder gaan?"
           discard: "Weggooien"
           stay: "Blijven"
-          css_html: "Aangepaste CSS/HTML"
-          edit_css_html: "CSS/HTML bewerken"
-          edit_css_html_help: "Je hebt geen CSS of HTML bewerkt"
           delete_upload_confirm: "Deze upload verwijderen? (Thema-CSS kan stoppen met werken!)"
           component_on_themes: "Onderdeel voor deze thema's bijvoegen"
           included_components: "Opgenomen onderdelen"
@@ -5852,22 +5845,14 @@ nl:
           imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
           scss:
             text: "CSS"
-            title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"
-          header:
-            text: "Koptekst"
-            title: "Voer HTML in voor weergave boven websitekoptekst"
           after_header:
             text: "Na koptekst"
-            title: "Voer HTML in voor weergave op alle pagina's na koptekst"
           footer:
             text: "Voettekst"
-            title: "Voer HTML in voor weergave op paginavoettekst"
           embedded_scss:
             text: "Ingebedde CSS"
-            title: "Voer aangepaste CSS in om met ingebedde versie van opmerkingen te leveren"
           embedded_header:
             text: "Ingebedde kop"
-            title: "Voer HTML in om boven de ingebedde versie van opmerkingen weer te geven"
           color_definitions:
             text: "Kleurdefinities"
             title: "Aangepaste kleurdefinities invoeren (alleen gevorderde gebruikers)"
@@ -5880,15 +5865,6 @@ nl:
               %{example}
 
               Het toevoegen van voorvoegsels aan de eigenschapsnamen wordt sterk aanbevolen om conflicten met plug-ins en/of core te voorkomen.
-          head_tag:
-            text: "Hoofd"
-            title: "HTML die voor de head-tag wordt ingevoegd"
-          body_tag:
-            text: "Inhoud"
-            title: "HTML die voor de body-tag wordt ingevoegd"
-          yaml:
-            text: "YAML"
-            title: "Thema-instellingen definiëren in YAML-indeling"
           scss_color_variables_warning: 'Het gebruik van kern-SCSS-kleurvariabelen in thema''s is verouderd. Gebruik in plaats daarvan aangepaste CSS-eigenschappen. Zie <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">deze gids</a> voor meer informatie.'
           scss_warning_inline: "Het gebruik van kern-SCSS-kleurvariabelen in thema's is verouderd."
           all_filter: "Alles"

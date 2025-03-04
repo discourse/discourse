@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 cs:
   dates:
     short_date_no_year: "D MMM"
@@ -380,7 +374,7 @@ cs:
       cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
-      twitter_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
+      x_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
       tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
   custom_fields:
     validations:

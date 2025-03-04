@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 be:
   site_settings:
     discourse_narrative_bot_enabled: "Уключыць Discourse Narrative Bot (discobot)"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ro:
   dates:
     short_date_no_year: "D MMM"
@@ -961,6 +955,7 @@ ro:
     search_prefer_recent_posts: "Dacă ai un forum mare și căutarea este prea lentă, această opțiune încearcă să indexeze mai multe postări recente întâi."
     search_recent_posts_size: "Câte postări recente să fie ținute în index"
     search_default_sort_order: "Ordine de sortare implicită pentru căutare pe întreaga pagină"
+    search_experience: "Poziția implicită și aspectul căutării pe dispozitivele desktop"
     allow_uncategorized_topics: "Permite crearea de subiecte fără categorie. ATENȚIE: Dacă o să ai postări fără categorie, va trebui să le identifici înainte să poți dezactiva din nou această setare."
     allow_duplicate_topic_titles: "Permite subiecte cu titluri duplicat sau identice."
     unique_posts_mins: "Câte minute până ce un utilizator poate posta din nou o postare cu același conținut"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ro:
   js:
     admin:
@@ -78,10 +72,11 @@ ro:
               description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
             restricted_category:
               label: Categorie
-            restricted_group:
-              label: Grup
+            restricted_user_group:
+              label: Grup de utilizatori restricționat
+              description: Opțional, se va declanșa numai dacă utilizatorul postării se află în acest grup
             restricted_groups:
-              label: Grupuri
+              label: Grupuri de căsuțe poștale restricționate
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"

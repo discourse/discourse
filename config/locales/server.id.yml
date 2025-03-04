@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 id:
   dates:
     short_date_no_year: "D MMM"
@@ -210,7 +204,7 @@ id:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari pengguna sah yang secara tidak sengaja dibatasi lajunya."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
-      twitter_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
+      x_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
     conflicting_google_user_id: 'ID Akun Google untuk akun ini telah berubah; intervensi staf diperlukan untuk alasan keamanan. Silakan hubungi staf dan arahkan mereka ke <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini karena server '%{hostname}' tidak dapat ditemukan. Alih-alih pratinjau, hanya tautan yang akan muncul di post Anda. :cry:"
