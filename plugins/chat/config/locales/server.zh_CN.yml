@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-zh_CN:
+zh-CN:
   site_settings:
     chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天。"

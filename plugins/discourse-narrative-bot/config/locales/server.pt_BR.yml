@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-pt_BR:
+pt:
   site_settings:
     discourse_narrative_bot_enabled: "Ativar o robô de narração do Discourse (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Desativar postagem de boas-vindas do robô de narração do Discourse"

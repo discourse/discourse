@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-zh_TW:
+zh-TW:
   site_settings:
     poll_maximum_options: "投票允許的最大選項數。"
     poll_edit_window_mins: "投票創建後多少分鐘內可以編輯？"

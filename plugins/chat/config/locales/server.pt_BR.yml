@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-pt_BR:
+pt:
   site_settings:
     chat_separate_sidebar_mode: "Mostrar modos de barra lateral separados para o fórum e o chat."
     chat_enabled: "Ativar chat."

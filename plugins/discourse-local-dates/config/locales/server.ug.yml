@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ug:
   site_settings:
     discourse_local_dates_enabled: "بۇ discourse-local-dates ئىقتىدارى قوزغىتىلىدۇ. يازمىدا [date] ئېلېمېنتى ئىشلىتىپ يەرلىك ۋاقىت رايونى ۋاقتىنى تونۇشنى قوللايدۇ"

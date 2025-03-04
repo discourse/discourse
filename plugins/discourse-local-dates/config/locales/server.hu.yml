@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 hu:
   site_settings:
     discourse_local_dates_enabled: "A discourse-local-dates funkció engedélyezése. Ez támogatást nyújt a bejegyzésekben lévő dátumok helyi időzónában történő megjelenítéséhez, a [date] elem használatával"

@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 he:
   js:
     number:
@@ -6586,7 +6580,7 @@ he:
             title: "סינון"
             user_placeholder: "שם משתמש"
             address_placeholder: "name@example.com"
-            type_placeholder: "סיכום, הרשמה…"
+            type_placeholder: "תמצית, הרשמה…"
             reply_key_placeholder: "מפתח תגובה"
             smtp_transaction_response_placeholder: "מזהה SMTP"
           email_addresses:

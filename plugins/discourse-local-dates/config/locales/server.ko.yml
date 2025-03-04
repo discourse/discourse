@@ -1,9 +1,3 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
 ko:
   site_settings:
     discourse_local_dates_enabled: "discourse-local-dates 기능을 사용합니다. 이렇게하면 [date] 요소를 사용하여 게시물에서 지역 시간대 인식 날짜에 대한 지원이 추가됩니다"

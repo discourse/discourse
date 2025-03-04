@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-zh_CN:
+zh-CN:
   site_settings:
     lazy_videos_enabled: "启用 Lazy Videos 插件"
     lazy_youtube_enabled: "为 YouTube 嵌入式视频启用延迟加载"

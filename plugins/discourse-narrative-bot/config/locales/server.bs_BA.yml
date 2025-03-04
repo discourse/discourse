@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-bs_BA:
+bs:
   site_settings:
     discourse_narrative_bot_enabled: "Omogući Discourse narativnog robota (discobot)"
     disable_discourse_narrative_bot_welcome_post: "Isključi objavu dobrodošlice od strane Discourse Narrative bot"
