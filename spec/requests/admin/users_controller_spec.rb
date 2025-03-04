@@ -110,15 +110,14 @@ RSpec.describe Admin::UsersController do
       end
 
       it "returns silence reason when user is silenced" do
-        silencer =
-          UserSilencer.new(
-            user,
-            admin,
-            message: :too_many_spam_flags,
-            reason: "because I said so",
-            keep_posts: true,
-          )
-        silencer.silence
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "because I said so",
+              post_action: "delete",
+              silenced_till: 2.days.from_now,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence"]["silence_reason"]).to eq("because I said so")
 
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
