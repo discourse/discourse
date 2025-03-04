@@ -3900,8 +3900,8 @@ packages:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
 
-  content-tag-utils@0.3.0:
-    resolution: {integrity: sha512-tyuXzzMyiOblbFiS+0m+jrE9WSeNEOx4FU47kNFBbFy1JBsdlD5WFEBGHnT5+Yulyqnor4y8Ep2fMxhSLGf2DQ==}
+  content-tag-utils@0.3.1:
+    resolution: {integrity: sha512-uBAmklAxqmem7WX/F7YA4eWBTegGLJ93MOPSJaJliAuzTNgF3u/H9YLlJ6Nae9/FwV+037OuXc75hvcmub1qww==}
     engines: {node: '>= 18'}
 
   content-tag@2.0.3:
@@ -12184,7 +12184,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  content-tag-utils@0.3.0:
+  content-tag-utils@0.3.1:
     dependencies:
       content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
 
@@ -13135,7 +13135,7 @@ snapshots:
       chalk: 5.4.1
       ci-info: 4.1.0
       content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
-      content-tag-utils: 0.3.0
+      content-tag-utils: 0.3.1
       date-fns: 3.6.0
       ember-template-recast: 6.1.5
       eslint-formatter-kakoune: 1.0.0
