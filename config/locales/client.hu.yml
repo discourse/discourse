@@ -6015,6 +6015,9 @@ hu:
           hover:
             name: "hover"
             description: "Háttérszín elemek, például a listaelemek háttérszíne, ha rájuk viszed az egérmutatót, vagy ha a billentyűzet fókuszában van."
+          editor:
+            light: "Világos"
+            dark: "Sötét"
         robots:
           title: "Felülbírálja a webhely robots.txt fájlját:"
           warning: "Ez véglegesen felülírja a kapcsolódó webhelybeállításokat."

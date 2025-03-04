@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ruby "~> 3.3.0"
+
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
@@ -52,6 +54,7 @@ gem "active_model_serializers", "~> 0.8.3"
 gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
+gem "discourse-emojis", require: "discourse_emojis"
 
 gem "message_bus"
 
@@ -94,7 +97,6 @@ gem "rake"
 
 gem "thor", require: false
 gem "diffy", require: false
-gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 

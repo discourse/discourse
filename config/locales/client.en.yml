@@ -2246,6 +2246,8 @@ en:
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         required: "Required"
+        date_before_or_equal: "Must be before or equal to %{date}"
+        date_after_or_equal: "Must be after or equal to %{date}"
         invalid_url: "Must be a valid URL"
         not_an_integer: "Must be a whole number"
         not_accepted: "Must be accepted"
@@ -2555,12 +2557,17 @@ en:
       continue: "Continue to %{site_name}"
 
     emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
+      apple_international: "Apple/International (deprecated to Twemoji)"
+      google: "Google (deprecated to Noto Emoji)"
+      twitter: "Twitter (deprecated to Twemoji)"
+      win10: "Win10 (deprecated to Fluent Emoji)"
+      google_classic: "Google Classic (deprecated to Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (deprecated to Standard)"
+      openmoji: OpenMoji
+      standard: Standard
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
 
     category_page_style:
       categories_only: "Categories Only"
@@ -3024,6 +3031,10 @@ en:
       browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
+
+      experience:
+        search_field: "Search field in site header"
+        search_icon: "Search icon near profile avatar"
 
       type:
         default: "Topics/posts"
@@ -3856,11 +3867,11 @@ en:
         other: "you and %{count} other people liked this post"
 
       sr_post_like_count_button:
-        one: "%{count} person liked this post. Click to view"
-        other: "%{count} people liked this post. Click to view"
+        one: "%{count} person liked this post."
+        other: "%{count} people liked this post."
       sr_post_read_count_button:
-        one: "%{count} person read this post. Click to view"
-        other: "%{count} people read this post. Click to view"
+        one: "%{count} person read this post."
+        other: "%{count} people read this post."
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3987,8 +3998,6 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
-          sr_post_likers_list_description: "users who liked this post"
-          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -4122,6 +4131,7 @@ en:
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
+      logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
       badge_colors: "Badge colors"
@@ -4615,6 +4625,11 @@ en:
         prev_next: "%{shortcut} Move selection up and down"
         insert_url: "%{shortcut} Insert selection into open composer"
         full_page_search: "%{shortcut} Launches full page search"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Move selection up and down"
+        search_open: "%{shortcut} Open search for the admin interface"
+        search_full_page: "%{shortcut} Open full page admin search"
 
     badges:
       earned_n_times:
@@ -5031,10 +5046,12 @@ en:
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       filter: "Filter..."
+      filter_links: "Filter links..."
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
         description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
+        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
       footer:
         interface_color_selector:
           light: "Light"
@@ -5224,6 +5241,72 @@ en:
         logo:
           title: "Site logo"
           header_description: "Customize the variations of your site logo"
+        branding:
+          title: "Branding"
+          logo:
+            title: "Logo"
+            form:
+              saved: "Logo settings are saved."
+              logo:
+                title: "Primary logo"
+                description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+                help_text: "Recommended size is 600 x 80 pixels."
+              logo_dark:
+                required: "Use a different logo for dark mode?"
+                title: "Primary logo dark"
+                help_text: "Recommended size is 600 x 80 pixels."
+              large_icon:
+                title: "Square icon"
+                description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+                help_text: "Recommended size is 512 x 512 pixels."
+              square_icon_dark:
+                required: "Use a different square icon for dark mode?"
+                title: "Square icon dark"
+                help_text: "Recommended size is 512 x 512 pixels."
+              favicon:
+                title: "Favicon"
+                description: "The logo will appear as the icon in the browser tab and the browser favorites/bookmarks."
+              logo_small:
+                title: "Small logo"
+                description: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
+                help_text: "Recommended size is 120 x 120 pixels."
+              logo_small_dark:
+                required: "Use a different small logo for dark mode?"
+                title: "Small logo dark"
+                help_text: "Recommended size is 120 x 120 pixels."
+              mobile: "Mobile"
+              email: "Email"
+              social_media: "Social media"
+              mobile_logo:
+                title: "Mobile logo"
+                description: "The logo used on mobile version of your site. If left blank, the image from the `logo` setting will be used."
+                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+              mobile_logo_dark:
+                required: "Use a different mobile logo for dark mode?"
+                title: "Mobile logo dark"
+                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+              manifest_icon:
+                title: "Manifest icon"
+                description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
+                help_text: "Recommended size is 512 x 512 pixels."
+              manifest_screenshots:
+                title: "Manifest screenshots"
+                description: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
+              apple_touch_icon:
+                title: "Apple touch icon"
+                description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
+                help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
+              digest_logo:
+                title: "Digest logo"
+                description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
+                help_text: "Use a wide rectangle image. Don't use an SVG image."
+              opengraph_image:
+                title: "OpenGraph image"
+                description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+              x_summary_large_image:
+                title: "X summary large image"
+                description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
+                help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
@@ -5240,8 +5323,11 @@ en:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
         search:
-          title: "Search"
+          title: "Search settings"
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
+        search_everything:
+          title: "Search"
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -5377,6 +5463,8 @@ en:
 
       search:
         modal_title: "Search anything in admin"
+        title: "Search"
+        instructions: "Type to search for pages, settings, reports, themes, components, and more..."
         result_types:
           page:
             one: "Page"
@@ -6167,7 +6255,7 @@ en:
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           settings_editor: "Settings Editor"
-          hide_unused_fields: "Hide unused fields"
+          show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme_user_selectable: "Color palette can be selected by users"
@@ -6221,9 +6309,9 @@ en:
           unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
           stay: "Stay"
-          css_html: "Custom CSS/HTML"
-          edit_css_html: "Edit CSS/HTML"
-          edit_css_html_help: "You have not edited any CSS or HTML"
+          css_html: "Custom Code"
+          edit_css_html: "Edit Code"
+          edit_css_html_help: "You have not edited any code yet."
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           component_on_themes: "Include component on these themes"
           included_components: "Included components"
@@ -6284,22 +6372,22 @@ en:
           imported_from_archive: "This theme was imported from a .zip file"
           scss:
             text: "CSS"
-            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+            title: "Custom CSS rules with support for SCSS syntax"
           header:
-            text: "Header"
-            title: "Enter HTML to display above site header"
+            text: "Before Header"
+            title: "Basic HTML to be rendered above the Discourse header"
           after_header:
             text: "After Header"
-            title: "Enter HTML to display on all pages after header"
+            title: "Basic HTML to be rendered below the Discourse header"
           footer:
             text: "Footer"
-            title: "Enter HTML to display on page footer"
+            title: "Basic HTML to be rendered at the bottom of the page"
           embedded_scss:
             text: "Embedded CSS"
-            title: "Enter custom CSS to deliver with embedded version of comments"
+            title: "CSS to be included when Discourse comments are embedded in another site"
           embedded_header:
             text: "Embedded Header"
-            title: "Enter HTML to display above the embedded version of comments"
+            title: "Basic HTML which will be rendered above the Discourse comments when embedded in another site"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
@@ -6313,17 +6401,14 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "Head"
-            title: "HTML that will be inserted before the head tag"
+            text: "<head>"
+            title: "HTML to insert at the end of the <head>, with support for script tags"
           body_tag:
-            text: "Body"
-            title: "HTML that will be inserted before the body tag"
-          yaml:
-            text: "YAML"
-            title: "Define theme settings in YAML format"
+            text: "<body>"
+            title: "HTML to insert at the end of the <body>, with support for script tags"
           js:
             text: "JS"
-            title: "Define a JavaScript initializer"
+            title: "JavaScript initializer with support for Ember's 'template tag' syntax"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
           all_filter: "All"

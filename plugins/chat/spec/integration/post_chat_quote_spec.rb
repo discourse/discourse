@@ -129,9 +129,9 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-messages">
       <p>This is a chat message.</p><div class="chat-transcript-reactions">
       <div class="chat-transcript-reaction">
-      <img width="20" height="20" src="/images/emoji/twitter/+1.png?v=12" title="+1" loading="lazy" alt="+1" class="emoji"> 1</div>
+      <img width="20" height="20" src="/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title="+1" loading="lazy" alt="+1" class="emoji"> 1</div>
       <div class="chat-transcript-reaction">
-      <img width="20" height="20" src="/images/emoji/twitter/heart.png?v=12" title="heart" loading="lazy" alt="heart" class="emoji"> 2</div>
+      <img width="20" height="20" src="/images/emoji/twitter/heart.png?v=#{Emoji::EMOJI_VERSION}" title="heart" loading="lazy" alt="heart" class="emoji"> 2</div>
       </div>
       </div>
       </div>

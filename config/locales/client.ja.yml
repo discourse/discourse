@@ -5696,6 +5696,9 @@ ja:
           hover:
             name: "ホバー"
             description: "リスト項目などの要素がホバーされているかキーボードフォーカスにある場合の背景色。"
+          editor:
+            light: "ライト"
+            dark: "ダーク"
         robots:
           title: "サイトの robots.txt ファイルをオーバーライド:"
           warning: "これにより、関連するすべてのサイト設定が永久にオーバーライドされます。"

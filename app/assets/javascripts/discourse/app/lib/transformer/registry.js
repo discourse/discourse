@@ -1,5 +1,6 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
@@ -8,6 +9,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "admin-reports-show-query-params",
   "category-available-views",
   "category-description-text",
   "category-display-name",

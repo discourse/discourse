@@ -61,7 +61,8 @@ describe "Emoji deny list", type: :system do
       topic_page.visit_topic_and_open_composer(topic)
 
       composer.type_content(":poop") # shows no results
-      expect(composer).to have_no_emoji_autocomplete
+      expect(emoji_picker).to have_no_emoji("poo")
+      expect(emoji_picker).to have_no_emoji("poop")
 
       composer.clear_content
 

@@ -4,8 +4,6 @@ module Chat
   class DirectMessageChannel < Channel
     alias_method :direct_message, :chatable
 
-    delegate :group?, to: :direct_message, prefix: true, allow_nil: true
-
     before_validation(on: :create) { self.threading_enabled = true }
 
     def direct_message_channel?
@@ -28,13 +26,17 @@ module Chat
       self.slug.blank?
     end
 
-    def remove(user)
-      return super unless direct_message_group?
+    # Group DMs are DMs with > 2 users
+    def direct_message_group?
+      direct_message.group?
+    end
+
+    def leave(user)
+      return super if !direct_message_group?
       transaction do
         membership_for(user)&.destroy!
         direct_message.users.delete(user)
       end
     end
-    alias leave remove
   end
 end

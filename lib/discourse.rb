@@ -850,6 +850,14 @@ module Discourse
     GitUtils.try_git(git_cmd, default_value)
   end
 
+  def self.user_agent
+    if git_version.present?
+      @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
+    else
+      @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+    end
+  end
+
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user =
@@ -1039,10 +1047,10 @@ module Discourse
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config
-    conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = SIDEKIQ_NAMESPACE
-    conf
+  def self.sidekiq_redis_config(old: false)
+    redis_config = GlobalSetting.redis_config.dup
+    return redis_config.merge(namespace: SIDEKIQ_NAMESPACE) if old
+    redis_config.merge(db: redis_config[:db].to_i + 1)
   end
 
   def self.static_doc_topic_ids

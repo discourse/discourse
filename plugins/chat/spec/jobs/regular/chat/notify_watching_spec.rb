@@ -271,7 +271,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
   context "for a direct message channel" do
     fab!(:channel) do
-      Fabricate(:direct_message_channel, users: [user1, user2, user3], with_membership: false)
+      Fabricate(:direct_message_channel, users: [user1, user2], with_membership: false)
     end
     fab!(:membership1) do
       Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel)
@@ -279,34 +279,66 @@ RSpec.describe Jobs::Chat::NotifyWatching do
     fab!(:membership2) do
       Fabricate(:user_chat_channel_membership, user: user2, chat_channel: channel)
     end
-    fab!(:membership3) do
-      Fabricate(:user_chat_channel_membership, user: user3, chat_channel: channel)
-    end
     fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user1) }
 
-    before do
-      membership2.update!(
-        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-      )
+    context "when the channel is a group DM" do
+      fab!(:membership3) do
+        Fabricate(:user_chat_channel_membership, user: user3, chat_channel: channel)
+      end
+
+      before do
+        channel.add(user3)
+        channel.chatable.update!(group: true)
+        membership2.update!(
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        )
+      end
+
+      it "sends a desktop notification" do
+        messages = notification_messages_for(user2)
+
+        expect(messages.first.data).to include(
+          {
+            username: user1.username,
+            notification_type: Notification.types[:chat_message],
+            post_url: message.url,
+            translated_title:
+              I18n.t(
+                "discourse_push_notifications.popup.new_chat_message",
+                { username: user1.username, channel: channel.title(user2) },
+              ),
+            tag: Chat::Notifier.push_notification_tag(:message, channel.id),
+            excerpt: message.push_notification_excerpt,
+          },
+        )
+      end
     end
 
-    it "sends a desktop notification" do
-      messages = notification_messages_for(user2)
+    context "when the channel is a regular DM" do
+      before do
+        membership2.update!(
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        )
+      end
 
-      expect(messages.first.data).to include(
-        {
-          username: user1.username,
-          notification_type: Notification.types[:chat_message],
-          post_url: message.url,
-          translated_title:
-            I18n.t(
-              "discourse_push_notifications.popup.new_direct_chat_message",
-              { username: user1.username, channel: channel.title(user2) },
-            ),
-          tag: Chat::Notifier.push_notification_tag(:message, channel.id),
-          excerpt: message.push_notification_excerpt,
-        },
-      )
+      it "sends a desktop notification" do
+        messages = notification_messages_for(user2)
+
+        expect(messages.first.data).to include(
+          {
+            username: user1.username,
+            notification_type: Notification.types[:chat_message],
+            post_url: message.url,
+            translated_title:
+              I18n.t(
+                "discourse_push_notifications.popup.new_direct_chat_message",
+                { username: user1.username },
+              ),
+            tag: Chat::Notifier.push_notification_tag(:message, channel.id),
+            excerpt: message.push_notification_excerpt,
+          },
+        )
+      end
     end
 
     context "when the channel is muted via membership preferences" do

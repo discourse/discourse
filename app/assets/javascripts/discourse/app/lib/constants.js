@@ -119,3 +119,11 @@ export const REPORT_MODES = {
 };
 
 export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";
+
+export const ADMIN_SEARCH_RESULT_TYPES = [
+  "page",
+  "setting",
+  "theme",
+  "component",
+  "report",
+];

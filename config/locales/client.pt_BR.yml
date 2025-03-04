@@ -5978,6 +5978,9 @@ pt_BR:
           hover:
             name: "focalizar"
             description: "A cor de fundo de elementos como os itens da lista quando passa o mouse ou têm o foco do teclado."
+          editor:
+            light: "Claro"
+            dark: "Escuro"
         robots:
           title: "Substituir o arquivo robots.txt do seu site:"
           warning: "Isso vai substituir permanentemente qualquer configuração relacionada do site."

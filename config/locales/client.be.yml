@@ -1861,6 +1861,9 @@ be:
           love:
             name: "каханне"
             description: "Колер кнопкі \"Падабаецца\"."
+          editor:
+            light: "святло"
+            dark: "цёмна"
       email:
         title: "Емейлы"
         settings: "Налады"

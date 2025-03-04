@@ -232,9 +232,14 @@ module Onebox
     end
 
     def self.user_agent
-      user_agent = SiteSetting.onebox_user_agent.presence || Onebox.options.user_agent
-      user_agent = "#{user_agent} v#{Discourse::VERSION::STRING}"
-      user_agent
+      if SiteSetting.onebox_user_agent.present?
+        return "#{SiteSetting.onebox_user_agent} v#{Discourse::VERSION::STRING}"
+      end
+
+      if Onebox.options.user_agent.present?
+        return "#{Onebox.options.user_agent} v#{Discourse::VERSION::STRING}"
+      end
+      Discourse.user_agent
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986

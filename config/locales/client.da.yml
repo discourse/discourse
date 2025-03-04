@@ -4613,6 +4613,9 @@ da:
             description: "Like knappens farve."
           selected:
             name: "valgte"
+          editor:
+            light: "Lys"
+            dark: "Mørk"
         robots:
           title: "Tilsidesæt dit websteds robots.txt-fil:"
           warning: "Dette vil tilsidesætte alle relaterede sideindstillinger permanent."

@@ -6296,6 +6296,9 @@ pl_PL:
           hover:
             name: "najechanie"
             description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
+          editor:
+            light: "Jasny"
+            dark: "Ciemny"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."

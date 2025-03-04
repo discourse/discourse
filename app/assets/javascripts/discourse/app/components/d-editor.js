@@ -22,6 +22,7 @@ import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
@@ -383,13 +384,16 @@ export default class DEditor extends Component {
             }
           }
 
-          const options = emojiSearch(term, {
-            maxResults: 5,
-            diversity: this.emojiStore.diversity,
-            exclude: emojiDenied,
-          });
+          loadEmojiSearchAliases().then((searchAliases) => {
+            const options = emojiSearch(term, {
+              maxResults: 5,
+              diversity: this.emojiStore.diversity,
+              exclude: emojiDenied,
+              searchAliases,
+            });
 
-          return resolve(options);
+            resolve(options);
+          });
         })
           .then((list) => {
             if (list === SKIP) {
