@@ -18,40 +18,22 @@ export default class DStyles extends Component {
   }
 
   get categoryBackgrounds() {
-    let css = [];
-    const darkCss = [];
+    const css = [];
 
     this.site.categories.forEach((category) => {
       const lightUrl = category.uploaded_background?.url;
-      const darkUrl =
-        this.session.defaultColorSchemeIsDark || this.session.darkModeAvailable
-          ? category.uploaded_background_dark?.url
-          : null;
-      const defaultUrl =
-        darkUrl && this.session.defaultColorSchemeIsDark ? darkUrl : lightUrl;
+      const darkUrl = category.uploaded_background_dark?.url;
 
-      if (defaultUrl) {
-        const url = getURLWithCDN(defaultUrl);
+      let resolvedUrl = this.interfaceColor.lightMode ? lightUrl : darkUrl;
+      resolvedUrl ??= lightUrl;
+
+      if (resolvedUrl) {
+        const url = getURLWithCDN(resolvedUrl);
         css.push(
           `body.category-${category.fullSlug} { background-image: url(${url}); }`
         );
       }
-
-      if (darkUrl && defaultUrl !== darkUrl) {
-        const url = getURLWithCDN(darkUrl);
-        darkCss.push(
-          `body.category-${category.fullSlug} { background-image: url(${url}); }`
-        );
-      }
     });
-
-    if (darkCss.length > 0) {
-      if (this.interfaceColor.darkModeForced) {
-        css = darkCss;
-      } else if (!this.interfaceColor.lightModeForced) {
-        css.push("@media (prefers-color-scheme: dark) {", ...darkCss, "}");
-      }
-    }
 
     return css.join("\n");
   }
