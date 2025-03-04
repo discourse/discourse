@@ -68,5 +68,22 @@ module(
 
       assert.dom(".form-template-field__description").hasText("Your full name");
     });
+
+    test("renders a description if present", async function (assert) {
+      const self = this;
+
+      const attributes = {
+        description: "Write your bio here",
+      };
+      this.set("attributes", attributes);
+
+      await render(<template>
+        <FormInput @attributes={{self.attributes}} />
+      </template>);
+
+      assert
+        .dom(".form-template-field__description")
+        .hasText("Write your bio here");
+    });
   }
 );
