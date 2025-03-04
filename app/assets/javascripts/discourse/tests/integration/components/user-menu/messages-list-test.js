@@ -92,8 +92,6 @@ function getGroupMessageSummaryNotification(overrides = {}) {
 module("Integration | Component | user-menu | messages-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = hbs`<UserMenu::MessagesList/>`;
-
   test("renders unread PM notifications first followed by messages and read group_message_summary notifications", async function (assert) {
     pretender.get("/u/eviltrout/user-menu-private-messages", () => {
       const copy = cloneJSON(
@@ -102,7 +100,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       copy.read_notifications = [getGroupMessageSummaryNotification()];
       return response(copy);
     });
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 3);
@@ -127,7 +125,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       return response(copy);
     });
 
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 2);
@@ -149,7 +147,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       return response(copy);
     });
 
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 2);
@@ -208,7 +206,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       ];
       return response(copy);
     });
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 6);
@@ -242,7 +240,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
   });
 
   test("show all button for message notifications", async function (assert) {
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
     assert
       .dom(".panel-body-bottom .show-all")
       .hasAttribute(
@@ -256,7 +254,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     this.currentUser.set("grouped_unread_notifications", {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
 
     assert
       .dom(".panel-body-bottom .notifications-dismiss")
@@ -290,7 +288,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       });
     });
 
-    await render(template);
+    await render(hbs`<UserMenu::MessagesList/>`);
 
     assert
       .dom(".empty-state-title")

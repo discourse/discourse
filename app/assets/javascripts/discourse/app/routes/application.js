@@ -215,21 +215,6 @@ export default class ApplicationRoute extends DiscourseRoute {
     return this.modal.close(initiatedBy);
   }
 
-  /**
-      Hide the modal, but keep it with all its state so that it can be shown again later.
-      This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
-      user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
-    **/
-  @action
-  hideModal() {
-    return this.modal.hide();
-  }
-
-  @action
-  reopenModal() {
-    return this.modal.reopen();
-  }
-
   @action
   editCategory(category) {
     DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
