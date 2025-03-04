@@ -1,5 +1,4 @@
 import { render, settled } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
@@ -8,6 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+import MessagesList from "discourse/components/user-menu/messages-list";
 
 function getMessage(overrides = {}) {
   return deepMerge(
@@ -100,7 +100,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       copy.read_notifications = [getGroupMessageSummaryNotification()];
       return response(copy);
     });
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 3);
@@ -125,7 +125,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       return response(copy);
     });
 
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 2);
@@ -147,7 +147,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       return response(copy);
     });
 
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 2);
@@ -206,7 +206,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       ];
       return response(copy);
     });
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
     const items = queryAll("ul li");
 
     assert.strictEqual(items.length, 6);
@@ -240,7 +240,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
   });
 
   test("show all button for message notifications", async function (assert) {
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
     assert
       .dom(".panel-body-bottom .show-all")
       .hasAttribute(
@@ -254,7 +254,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     this.currentUser.set("grouped_unread_notifications", {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
 
     assert
       .dom(".panel-body-bottom .notifications-dismiss")
@@ -288,7 +288,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       });
     });
 
-    await render(hbs`<UserMenu::MessagesList/>`);
+    await render(<template><MessagesList /></template>);
 
     assert
       .dom(".empty-state-title")

@@ -1,16 +1,16 @@
 import { click, render, settled } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import Menu from "discourse/components/user-menu/menu";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default tab is all notifications", async function (assert) {
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
 
     assert
       .dom(".top-tabs.tabs-list .btn.active")
@@ -23,13 +23,13 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     assert.dom(".top-tabs.tabs-list .btn.active").hasAttribute("tabindex", "0");
     assert.dom(".top-tabs.tabs-list .btn.active").hasAria("selected", "true");
   });
 
   test("inactive tab has a11y attributes that indicate it's inactive", async function (assert) {
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     assert
       .dom(".top-tabs.tabs-list .btn:not(.active)")
       .hasAttribute("tabindex", "-1");
@@ -40,7 +40,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("the menu has a group of tabs at the top", async function (assert) {
     this.currentUser.set("can_send_private_messages", true);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 6);
     ["all-notifications", "replies", "likes", "messages", "bookmarks"].forEach(
@@ -54,7 +54,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
     this.currentUser.set("can_send_private_messages", true);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
@@ -66,7 +66,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
     this.currentUser.set("user_option.likes_notifications_disabled", true);
     this.currentUser.set("can_send_private_messages", true);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     assert.dom("#user-menu-button-likes").doesNotExist();
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
@@ -83,7 +83,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 1);
     this.currentUser.set("can_send_private_messages", true);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
 
     assert
       .dom("#user-menu-button-review-queue")
@@ -102,7 +102,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("reviewables tab is not shown if current user can review but there are no pending reviewables", async function (assert) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 0);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     assert.dom("#user-menu-button-review-queue").doesNotExist();
   });
 
@@ -112,7 +112,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("groups", []);
     this.currentUser.set("can_send_private_messages", false);
 
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
 
     assert.dom("#user-menu-button-messages").doesNotExist();
 
@@ -132,7 +132,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("groups", []);
     this.currentUser.set("can_send_private_messages", true);
 
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
 
     assert.dom("#user-menu-button-messages").exists();
   });
@@ -140,7 +140,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("reviewables count is shown on the reviewables tab", async function (assert) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 4);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     assert
       .dom("#user-menu-button-review-queue .badge-notification")
       .hasText("4");
@@ -156,7 +156,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("changing tabs", async function (assert) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 1);
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
     let queryParams;
     pretender.get("/notifications", (request) => {
       queryParams = request.queryParams;
@@ -315,7 +315,7 @@ module("Integration | Component | user-menu", function (hooks) {
       [NOTIFICATION_TYPES.reaction]: 3,
       [NOTIFICATION_TYPES.bookmark_reminder]: 10,
     });
-    await render(hbs`<UserMenu::Menu/>`);
+    await render(<template><Menu /></template>);
 
     assert
       .dom("#user-menu-button-likes .badge-notification")

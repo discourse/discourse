@@ -1,5 +1,4 @@
 import { render, settled } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -13,6 +12,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import MenuItem from "discourse/components/user-menu/menu-item";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {
   const notification = Notification.create(
@@ -52,13 +52,14 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
+    test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       this.item.notification.read = false;
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.read").doesNotExist();
       assert.dom("li.unread").exists();
 
@@ -73,12 +74,13 @@ module(
         .doesNotExist("the item re-renders when the read property is updated");
     });
 
-    test("pushes the notification type name to the classList", async function (assert) {
+    test("pushes the notification type name to the classList", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li").hasClass("mentioned");
 
       this.set(
@@ -94,37 +96,41 @@ module(
         .exists("replaces underscores in type name with dashes");
     });
 
-    test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {
+    test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site, {
           is_warning: true,
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.is-warning").exists();
     });
 
-    test("doesn't push is-warning to the classList if the notification doesn't originate from a warning PM", async function (assert) {
+    test("doesn't push is-warning to the classList if the notification doesn't originate from a warning PM", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.is-warning").doesNotExist();
       assert.dom("li").exists();
     });
 
-    test("the item's href links to the topic that the notification originates from", async function (assert) {
+    test("the item's href links to the topic that the notification originates from", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li a").hasAttribute("href", "/t/this-is-fancy-title/449/113");
     });
 
-    test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {
+    test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site, {
@@ -138,28 +144,30 @@ module(
           },
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li a").hasAttribute("href", "/u/ossaama/messages/grouperss");
     });
 
-    test("the item's link has a title for accessibility", async function (assert) {
+    test("the item's link has a title for accessibility", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li a")
         .hasAttribute("title", i18n("notifications.titles.mentioned"));
     });
 
-    test("has elements for label and description", async function (assert) {
+    test("has elements for label and description", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li a .item-label")
@@ -173,14 +181,15 @@ module(
         );
     });
 
-    test("the description falls back to topic_title from data if fancy_title is absent", async function (assert) {
+    test("the description falls back to topic_title from data if fancy_title is absent", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site, {
           fancy_title: null,
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li a .item-description")
@@ -190,14 +199,15 @@ module(
         );
     });
 
-    test("fancy_title is emoji-unescaped", async function (assert) {
+    test("fancy_title is emoji-unescaped", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site, {
           fancy_title: "title with emoji :phone:",
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li a .item-description img.emoji")
         .exists(
@@ -205,7 +215,8 @@ module(
         );
     });
 
-    test("topic_title from data is emoji-unescaped safely", async function (assert) {
+    test("topic_title from data is emoji-unescaped safely", async function (assert) {const self = this;
+
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site, {
@@ -215,7 +226,7 @@ module(
           },
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li a .item-description")
@@ -228,7 +239,8 @@ module(
         .exists("emoji is rendered correctly");
     });
 
-    test("various aspects can be customized according to the notification's render director", async function (assert) {
+    test("various aspects can be customized according to the notification's render director", async function (assert) {const self = this;
+
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
           "linked",
@@ -277,7 +289,7 @@ module(
         })
       );
 
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li.additional.classes")
@@ -317,7 +329,8 @@ module(
         );
     });
 
-    test("description can be omitted", async function (assert) {
+    test("description can be omitted", async function (assert) {const self = this;
+
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
           "linked",
@@ -342,7 +355,7 @@ module(
         })
       );
 
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom(".item-description")
         .doesNotExist("description is not rendered");
@@ -351,7 +364,8 @@ module(
         .hasText("notification label", "only label content is displayed");
     });
 
-    test("label can be omitted", async function (assert) {
+    test("label can be omitted", async function (assert) {const self = this;
+
       withPluginApi("0.1", (api) => {
         api.registerNotificationTypeRenderer(
           "linked",
@@ -376,7 +390,7 @@ module(
         })
       );
 
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li")
         .hasText(
@@ -405,7 +419,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("item description is the fancy title of the message", async function (assert) {
+    test("item description is the fancy title of the message", async function (assert) {const self = this;
+
       this.set(
         "item",
         getMessage(
@@ -414,7 +429,7 @@ module(
           this.site
         )
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li.message .item-description")
         .hasText("This is a safe title!");
@@ -475,15 +490,17 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("uses bookmarkable_url for the href", async function (assert) {
+    test("uses bookmarkable_url for the href", async function (assert) {const self = this;
+
       this.set("item", getBookmark({}, this.siteSettings, this.site));
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li.bookmark a")
         .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
     });
 
-    test("item label is the bookmarked post author", async function (assert) {
+    test("item label is the bookmarked post author", async function (assert) {const self = this;
+
       this.set(
         "item",
         getBookmark(
@@ -492,11 +509,12 @@ module(
           this.site
         )
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.bookmark .item-label").hasText("bookmarkPostAuthor");
     });
 
-    test("item description is the bookmark title", async function (assert) {
+    test("item description is the bookmark title", async function (assert) {const self = this;
+
       this.set(
         "item",
         getBookmark(
@@ -505,7 +523,7 @@ module(
           this.site
         )
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li.bookmark .item-description")
         .hasText("Custom bookmark title");
@@ -541,35 +559,38 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {
+    test("doesn't push `reviewed` to the classList if the reviewable is pending", async function (assert) {const self = this;
+
       this.set(
         "item",
         getReviewable(this.currentUser, this.siteSettings, this.site, {
           pending: true,
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.reviewed").doesNotExist();
       assert.dom("li").exists();
     });
 
-    test("pushes `reviewed` to the classList if the reviewable isn't pending", async function (assert) {
+    test("pushes `reviewed` to the classList if the reviewable isn't pending", async function (assert) {const self = this;
+
       this.set(
         "item",
         getReviewable(this.currentUser, this.siteSettings, this.site, {
           pending: false,
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert.dom("li.reviewed").exists();
     });
 
-    test("has elements for label and description", async function (assert) {
+    test("has elements for label and description", async function (assert) {const self = this;
+
       this.set(
         "item",
         getReviewable(this.currentUser, this.siteSettings, this.site)
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
 
       assert
         .dom("li .item-label")
@@ -582,14 +603,15 @@ module(
       );
     });
 
-    test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {
+    test("the item's label is a placeholder that indicates deleted user if flagger_username is absent", async function (assert) {const self = this;
+
       this.set(
         "item",
         getReviewable(this.currentUser, this.siteSettings, this.site, {
           flagger_username: null,
         })
       );
-      await render(hbs`<UserMenu::MenuItem @item={{this.item}}/>`);
+      await render(<template><MenuItem @item={{self.item}} /></template>);
       assert
         .dom("li .item-label")
         .hasText(i18n("user_menu.reviewable.deleted_user"));

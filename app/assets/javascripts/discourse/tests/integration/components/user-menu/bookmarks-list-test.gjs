@@ -1,11 +1,11 @@
 import { render, settled } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+import BookmarksList from "discourse/components/user-menu/bookmarks-list";
 
 module(
   "Integration | Component | user-menu | bookmarks-list",
@@ -13,7 +13,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders notifications on top and bookmarks on bottom", async function (assert) {
-      await render(hbs`<UserMenu::BookmarksList/>`);
+      await render(<template><BookmarksList /></template>);
       const items = queryAll("ul li");
 
       assert.strictEqual(items.length, 2);
@@ -26,7 +26,7 @@ module(
     });
 
     test("show all button for bookmark notifications", async function (assert) {
-      await render(hbs`<UserMenu::BookmarksList/>`);
+      await render(<template><BookmarksList /></template>);
       assert
         .dom(".panel-body-bottom .show-all")
         .hasAttribute(
@@ -40,7 +40,7 @@ module(
       this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.bookmark_reminder]: 72,
       });
-      await render(hbs`<UserMenu::BookmarksList/>`);
+      await render(<template><BookmarksList /></template>);
       assert
         .dom(".panel-body-bottom .notifications-dismiss")
         .exists(
@@ -68,7 +68,7 @@ module(
       pretender.get("/u/eviltrout/user-menu-bookmarks", () => {
         return response({ notifications: [], bookmarks: [] });
       });
-      await render(hbs`<UserMenu::BookmarksList/>`);
+      await render(<template><BookmarksList /></template>);
       assert
         .dom(".empty-state-title")
         .hasText(i18n("user.no_bookmarks_title"), "empty state title is shown");

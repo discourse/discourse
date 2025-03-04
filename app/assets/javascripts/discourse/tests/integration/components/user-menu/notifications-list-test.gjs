@@ -1,5 +1,4 @@
 import { click, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
@@ -8,6 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+import NotificationsList from "discourse/components/user-menu/notifications-list";
 
 function getNotificationsData() {
   return cloneJSON(NotificationFixtures["/notifications"].notifications);
@@ -44,13 +44,13 @@ module(
 
     test("empty state when there are no notifications", async function (assert) {
       notificationsData.clear();
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert.dom(".empty-state .empty-state-title").exists();
       assert.dom(".empty-state .empty-state-body").exists();
     });
 
     test("doesn't set filter_by_types in the params of the request that fetches the notifications", async function (assert) {
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert.strictEqual(
         queryParams.filter_by_types,
         undefined,
@@ -59,12 +59,12 @@ module(
     });
 
     test("doesn't request the full notifications list in silent mode", async function (assert) {
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert.strictEqual(queryParams.silent, undefined);
     });
 
     test("show all button for all notifications page", async function (assert) {
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert
         .dom(".panel-body-bottom .btn.show-all")
         .hasAttribute(
@@ -78,7 +78,7 @@ module(
       this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .hasText(i18n("user.dismiss"), "dismiss button has a label");
@@ -95,14 +95,14 @@ module(
       notificationsData.forEach((notification) => {
         notification.read = true;
       });
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .doesNotExist();
     });
 
     test("dismiss button makes a request to the server and then refreshes the notifications list", async function (assert) {
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
@@ -204,7 +204,7 @@ module(
           ],
         });
       });
-      await render(hbs`<UserMenu::NotificationsList/>`);
+      await render(<template><NotificationsList /></template>);
       const items = queryAll("ul li");
       assert
         .dom(items[0])
