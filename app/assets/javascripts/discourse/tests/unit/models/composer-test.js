@@ -491,11 +491,11 @@ module("Unit | Model | composer", function (hooks) {
       value: "true",
     });
     const composer = createComposer.call(this, {});
-    assert.strictEqual(composer.composerVersion, "rich-v2");
+    assert.strictEqual(composer.composerVersion, "2");
   });
 
   test("composerVersion is correct when using 'classic' composer", async function (assert) {
     const composer = createComposer.call(this, {});
-    assert.strictEqual(composer.composerVersion, "classic-v1");
+    assert.strictEqual(composer.composerVersion, "1");
   });
 });

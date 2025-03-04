@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostStat < ActiveRecord::Base
+  COMPOSER_VERSIONS = { "1" => "classic", "2" => "rich_text" }
+
   belongs_to :post
 end
 

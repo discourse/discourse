@@ -359,10 +359,10 @@ export default class Composer extends RestModel {
       this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
     ) {
-      return "rich-v2";
+      return "2";
     }
 
-    return "classic-v1";
+    return "1";
   }
 
   @discourseComputed("archetypeId")
