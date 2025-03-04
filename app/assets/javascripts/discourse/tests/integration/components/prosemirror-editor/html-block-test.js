@@ -23,7 +23,7 @@ module(
         '<pre class="html-block"><code>&lt;div&gt;\n  &lt;p&gt;Hello&lt;/p&gt;\n  &lt;p&gt;World&lt;/p&gt;\n&lt;/div&gt;</code></pre>',
         "<div>\n  <p>Hello</p>\n  <p>World</p>\n</div>\n\n",
       ],
-      " html block multiple times": [
+      "html block multiple times": [
         "<div>1</div>\n\nA\n\n<div>2</div>",
         '<pre class="html-block"><code>&lt;div&gt;1&lt;/div&gt;</code></pre><p>A</p><pre class="html-block"><code>&lt;div&gt;2&lt;/div&gt;</code></pre>',
         "<div>1</div>\n\nA\n\n<div>2</div>\n\n",
