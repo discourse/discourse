@@ -13,22 +13,22 @@ export default RouteTemplate(<template>
   {{#if @controller.model.logs}}
     <div class="group-manage-logs-controls">
       <GroupManageLogsFilter
-        @clearFilter={{action "clearFilter"}}
+        @clearFilter={{@controller.clearFilter}}
         @value={{@controller.filters.action}}
         @type="action"
       />
       <GroupManageLogsFilter
-        @clearFilter={{action "clearFilter"}}
+        @clearFilter={{@controller.clearFilter}}
         @value={{@controller.filters.acting_user}}
         @type="acting_user"
       />
       <GroupManageLogsFilter
-        @clearFilter={{action "clearFilter"}}
+        @clearFilter={{@controller.clearFilter}}
         @value={{@controller.filters.target_user}}
         @type="target_user"
       />
       <GroupManageLogsFilter
-        @clearFilter={{action "clearFilter"}}
+        @clearFilter={{@controller.clearFilter}}
         @value={{@controller.filters.subject}}
         @type="subject"
       />
@@ -36,7 +36,7 @@ export default RouteTemplate(<template>
 
     <LoadMore
       @selector=".group-manage-logs .group-manage-logs-row"
-      @action={{action "loadMore"}}
+      @action={{@controller.loadMore}}
     >
       <table class="group-manage-logs">
         <thead>

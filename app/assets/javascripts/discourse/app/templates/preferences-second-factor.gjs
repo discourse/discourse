@@ -53,7 +53,7 @@ export default RouteTemplate(<template>
                   <div class="actions">
                     <TokenBasedAuthDropdown
                       @totp={{totp}}
-                      @editSecondFactor={{action "editSecondFactor"}}
+                      @editSecondFactor={{@controller.editSecondFactor}}
                       @disableSingleSecondFactor={{action
                         "disableSingleSecondFactor"
                       }}
@@ -63,7 +63,7 @@ export default RouteTemplate(<template>
               </div>
             {{/each}}
             <DButton
-              @action={{action "createTotp"}}
+              @action={{@controller.createTotp}}
               @icon="plus"
               @disabled={{@controller.loading}}
               @label="user.second_factor.totp.add"
@@ -89,7 +89,7 @@ export default RouteTemplate(<template>
                   <div class="actions">
                     <SecurityKeyDropdown
                       @securityKey={{security_key}}
-                      @editSecurityKey={{action "editSecurityKey"}}
+                      @editSecurityKey={{@controller.editSecurityKey}}
                       @disableSingleSecondFactor={{action
                         "disableSingleSecondFactor"
                       }}
@@ -99,7 +99,7 @@ export default RouteTemplate(<template>
               </div>
             {{/each}}
             <DButton
-              @action={{action "createSecurityKey"}}
+              @action={{@controller.createSecurityKey}}
               @icon="plus"
               @disabled={{@controller.loading}}
               @label="user.second_factor.security_key.add"
@@ -123,7 +123,7 @@ export default RouteTemplate(<template>
                     }}
                   {{else}}
                     <DButton
-                      @action={{action "editSecondFactorBackup"}}
+                      @action={{@controller.editSecondFactorBackup}}
                       @icon="plus"
                       @disabled={{@controller.loading}}
                       @label="user.second_factor_backup.enable_long"
@@ -164,7 +164,7 @@ export default RouteTemplate(<template>
               <div class="controls -actions">
                 <DButton
                   @icon="ban"
-                  @action={{action "disableAllSecondFactors"}}
+                  @action={{@controller.disableAllSecondFactors}}
                   @disabled={{@controller.loading}}
                   @label="user.second_factor.disable_all"
                   class="btn-danger"

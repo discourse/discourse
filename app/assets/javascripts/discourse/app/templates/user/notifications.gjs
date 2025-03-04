@@ -87,7 +87,7 @@ export default RouteTemplate(<template>
       <div class="navigation-controls">
         <DButton
           @title="user.dismiss_notifications_tooltip"
-          @action={{action "resetNew"}}
+          @action={{@controller.resetNew}}
           @label="user.dismiss_notifications"
           @icon="check"
           @disabled={{@controller.allNotificationsRead}}
@@ -100,7 +100,7 @@ export default RouteTemplate(<template>
   <section class="user-content" id="user-content">
     <LoadMore
       @selector=".user-stream .notification"
-      @action={{action "loadMore"}}
+      @action={{@controller.loadMore}}
       class="notification-history user-stream"
     >
       {{outlet}}

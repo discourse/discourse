@@ -21,7 +21,7 @@ export default RouteTemplate(<template>
     <LoadMore
       @id="user-content"
       @selector=".user-invite-list tr"
-      @action={{action "loadMore"}}
+      @action={{@controller.loadMore}}
       class="user-content"
     >
       <section class="user-additional-controls">

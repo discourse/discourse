@@ -77,7 +77,7 @@ export default RouteTemplate(<template>
                 {{/unless}}
               {{else}}
                 <LoginButtons
-                  @externalLogin={{action "externalLogin"}}
+                  @externalLogin={{@controller.externalLogin}}
                   @context="invite"
                 />
               {{/if}}
@@ -224,7 +224,7 @@ export default RouteTemplate(<template>
 
                 <div class="invitation-cta">
                   <DButton
-                    @action={{action "submit"}}
+                    @action={{@controller.submit}}
                     @disabled={{@controller.submitDisabled}}
                     @label="invites.accept_invite"
                     type="submit"
@@ -257,7 +257,7 @@ export default RouteTemplate(<template>
             {{#if @controller.existingUserRedeeming}}
               {{#if @controller.existingUserCanRedeem}}
                 <DButton
-                  @action={{action "submit"}}
+                  @action={{@controller.submit}}
                   @disabled={{@controller.submitDisabled}}
                   @label="invites.accept_invite"
                   type="submit"

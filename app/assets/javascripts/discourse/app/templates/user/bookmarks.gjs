@@ -43,8 +43,8 @@ export default RouteTemplate(<template>
       {{else}}
         <BookmarkList
           @bulkSelectHelper={{@controller.bulkSelectHelper}}
-          @loadMore={{action "loadMore"}}
-          @reload={{action "reload"}}
+          @loadMore={{@controller.loadMore}}
+          @reload={{@controller.reload}}
           @loadingMore={{@controller.loadingMore}}
           @content={{@controller.model.bookmarks}}
         />

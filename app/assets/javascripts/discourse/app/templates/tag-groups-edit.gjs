@@ -6,7 +6,7 @@ export default RouteTemplate(<template>
     <h3>{{iN "tagging.groups.edit_title"}}</h3>
     <TagGroupsForm
       @model={{@controller.model}}
-      @onDestroy={{action "onDestroy"}}
+      @onDestroy={{@controller.onDestroy}}
     />
   </div>
 </template>);

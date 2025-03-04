@@ -11,8 +11,8 @@ export default RouteTemplate(<template>
   </div>
   {{#if @controller.accountCreated.show_controls}}
     <ActivationControls
-      @sendActivationEmail={{action "sendActivationEmail"}}
-      @editActivationEmail={{action "editActivationEmail"}}
+      @sendActivationEmail={{@controller.sendActivationEmail}}
+      @editActivationEmail={{@controller.editActivationEmail}}
     />
   {{/if}}
 </template>);

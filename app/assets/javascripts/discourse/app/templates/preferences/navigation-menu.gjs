@@ -31,7 +31,7 @@ export default RouteTemplate(<template>
 
   <SaveControls
     @model={{@controller.model}}
-    @action={{action "save"}}
+    @action={{@controller.save}}
     @saved={{@controller.saved}}
   />
 </template>);

@@ -48,7 +48,7 @@ export default RouteTemplate(<template>
         </div>
         <div class="controls save-button">
           <DButton
-            @action={{action "saveEmail"}}
+            @action={{@controller.saveEmail}}
             @disabled={{@controller.saveDisabled}}
             @translatedLabel={{@controller.saveButtonText}}
             type="submit"

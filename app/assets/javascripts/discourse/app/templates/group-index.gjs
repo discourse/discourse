@@ -94,7 +94,7 @@ export default RouteTemplate(<template>
     {{#if @controller.hasMembers}}
       <LoadMore
         @selector=".directory-table .directory-table__cell"
-        @action={{action "loadMore"}}
+        @action={{@controller.loadMore}}
       >
         <ResponsiveTable
           @className="group-members

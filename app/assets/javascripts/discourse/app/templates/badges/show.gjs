@@ -74,7 +74,7 @@ export default RouteTemplate(<template>
 
     {{#if @controller.userBadges}}
       <div class="user-badges {{@controller.model.slug}}">
-        <LoadMore @selector=".badge-info" @action={{action "loadMore"}}>
+        <LoadMore @selector=".badge-info" @action={{@controller.loadMore}}>
           <div class="badges-granted">
             {{#each @controller.userBadges as |ub|}}
               <UserInfo

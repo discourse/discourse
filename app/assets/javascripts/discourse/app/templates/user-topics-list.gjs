@@ -23,7 +23,7 @@ export default RouteTemplate(<template>
   {{else}}
     <LoadMore
       @selector=".paginated-topics-list .topic-list .topic-list-item"
-      @action={{action "loadMore"}}
+      @action={{@controller.loadMore}}
       class="paginated-topics-list"
     >
       <TopicDismissButtons
@@ -32,7 +32,7 @@ export default RouteTemplate(<template>
         @model={{@controller.model}}
         @showResetNew={{@controller.showResetNew}}
         @showDismissRead={{@controller.showDismissRead}}
-        @resetNew={{action "resetNew"}}
+        @resetNew={{@controller.resetNew}}
         @dismissRead={{if
           @controller.showDismissRead
           (routeAction "dismissReadTopics")
@@ -81,7 +81,7 @@ export default RouteTemplate(<template>
         @model={{@controller.model}}
         @showResetNew={{@controller.showResetNew}}
         @showDismissRead={{@controller.showDismissRead}}
-        @resetNew={{action "resetNew"}}
+        @resetNew={{@controller.resetNew}}
         @dismissRead={{if
           @controller.showDismissRead
           (routeAction "dismissReadTopics")

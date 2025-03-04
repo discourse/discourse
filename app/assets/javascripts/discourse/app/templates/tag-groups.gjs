@@ -27,7 +27,7 @@ export default RouteTemplate(<template>
           </ul>
 
           <DButton
-            @action={{action "newTagGroup"}}
+            @action={{@controller.newTagGroup}}
             @icon="plus"
             @label="tagging.groups.new"
             class="btn-default"
