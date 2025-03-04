@@ -60,7 +60,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
             I18n.t(
               "reviewables.reasons.no_context.watched_word",
               link: link,
-              default: object.reason,
+              default: "watched_word",
             )
         else
           text =
@@ -69,7 +69,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
               link: link,
               words: words.join(", "),
               count: words.length,
-              default: object.reason,
+              default: "watched_word",
             )
         end
       else
