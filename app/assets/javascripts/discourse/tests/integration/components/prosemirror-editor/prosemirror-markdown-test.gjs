@@ -1,4 +1,8 @@
 import { module, test } from "qunit";
+import {
+  clearRichEditorExtensions,
+  resetRichEditorExtensions,
+} from "discourse/lib/composer/rich-editor-extensions";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
@@ -6,6 +10,9 @@ module(
   "Integration | Component | prosemirror-editor - prosemirror-markdown defaults",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(() => clearRichEditorExtensions());
+    hooks.afterEach(() => resetRichEditorExtensions());
 
     const testCases = {
       "paragraphs and hard breaks": [

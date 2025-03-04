@@ -1,4 +1,5 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import codeBlock from "./code-block";
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
@@ -21,6 +22,7 @@ const defaultExtensions = [
   image,
   link,
   heading,
+  codeBlock,
   quote,
   hashtag,
   mention,
