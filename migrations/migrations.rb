@@ -7,21 +7,21 @@ require "active_support"
 require "active_support/core_ext"
 require "zeitwerk"
 
-require_relative "converters"
+require_relative "lib/converters"
 
 module Migrations
   class NoSettingsFound < StandardError
   end
 
   def self.root_path
-    @root_path ||= File.expand_path("..", __dir__)
+    @root_path ||= __dir__
   end
 
   def self.load_rails_environment(quiet: false)
-    message = "Loading Rails environment ..."
+    message = "Loading Rails environment..."
     print message if !quiet
 
-    rails_root = File.expand_path("../..", __dir__)
+    rails_root = File.expand_path("..", __dir__)
     # rubocop:disable Discourse/NoChdir
     Dir.chdir(rails_root) do
       begin
@@ -64,7 +64,7 @@ module Migrations
 
       Dir[File.join(converter_path, "**", "*")].each do |subdirectory|
         next unless File.directory?(subdirectory)
-        loader.push_dir(subdirectory, namespace: namespace)
+        loader.push_dir(subdirectory, namespace:)
       end
     end
 

@@ -115,13 +115,13 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
       exception = StandardError.new("Warning exception")
 
       expect {
-        tracker.log_warning("Warning message", exception: exception, details: { key: "value" })
+        tracker.log_warning("Warning message", exception:, details: { key: "value" })
       }.to change { tracker.stats.warning_count }.by(1)
 
       expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
         type: ::Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: "Warning message",
-        exception: exception,
+        exception:,
         details: {
           key: "value",
         },
@@ -145,13 +145,13 @@ RSpec.describe ::Migrations::Converters::Base::StepTracker do
       exception = StandardError.new("Error exception")
 
       expect {
-        tracker.log_error("Error message", exception: exception, details: { key: "value" })
+        tracker.log_error("Error message", exception:, details: { key: "value" })
       }.to change { tracker.stats.error_count }.by(1)
 
       expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
         type: ::Migrations::Database::IntermediateDB::LogEntry::ERROR,
         message: "Error message",
-        exception: exception,
+        exception:,
         details: {
           key: "value",
         },
