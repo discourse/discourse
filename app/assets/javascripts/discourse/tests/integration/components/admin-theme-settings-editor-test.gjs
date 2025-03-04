@@ -18,9 +18,9 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       assert.dom(".ace_line").hasText("[");
     });
@@ -28,9 +28,9 @@ module(
     test("input is valid json", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", "foo");
       await click("button#save");
@@ -41,9 +41,9 @@ module(
     test("'setting' key is present for each setting", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "value": "value1" }]`);
       await click("button#save");
@@ -54,9 +54,9 @@ module(
     test("'value' key is present for each setting", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "setting": "setting1" }]`);
       await click("button#save");
@@ -67,9 +67,9 @@ module(
     test("only 'setting' and 'value' keys are present, no others", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "other_key": "other-key-1" }]`);
       await click("button#save");
@@ -84,9 +84,9 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       find(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([{ setting: "bar", value: "bar" }])
@@ -107,9 +107,9 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       find(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([

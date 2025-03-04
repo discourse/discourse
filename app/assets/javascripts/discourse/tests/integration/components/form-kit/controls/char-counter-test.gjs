@@ -13,18 +13,20 @@ module(
       let data = { foo: null };
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field
-            @name="foo"
-            @title="Foo"
-            @validation="length:0,5"
-            as |field|
-          >
-            <field.Input />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field
+              @name="foo"
+              @title="Foo"
+              @validation="length:0,5"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasCharCounter(0, 5);
 

@@ -9,11 +9,13 @@ module("Integration | Component | d-section", function (hooks) {
 
   test("can set classes on the body element", async function (assert) {
     await withSilencedDeprecationsAsync("discourse.d-section", async () => {
-      await render(<template>
-        <DSection @pageClass="test" @bodyClass="foo bar" class="special">
-          testing!
-        </DSection>
-      </template>);
+      await render(
+        <template>
+          <DSection @pageClass="test" @bodyClass="foo bar" class="special">
+            testing!
+          </DSection>
+        </template>
+      );
     });
 
     assert.dom(".special").hasText("testing!");

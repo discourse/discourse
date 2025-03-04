@@ -16,13 +16,15 @@ export async function testMarkdown(
     self.view = textManipulation.view;
   };
 
-  await render(<template>
-    <DEditor
-      @value={{self.value}}
-      @processPreview={{false}}
-      @onSetup={{handleSetup}}
-    />
-  </template>);
+  await render(
+    <template>
+      <DEditor
+        @value={{self.value}}
+        @processPreview={{false}}
+        @onSetup={{handleSetup}}
+      />
+    </template>
+  );
   await click(".composer-toggle-switch");
 
   await waitFor(".ProseMirror");

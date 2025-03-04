@@ -100,9 +100,9 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       },
     ];
 
-    await render(<template>
-      <ColorPaletteEditor @colors={{colors}} />
-    </template>);
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
 
     assert.true(
       this.subject.isActiveModeLight(),
@@ -180,9 +180,9 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       },
     ];
 
-    await render(<template>
-      <ColorPaletteEditor @colors={{colors}} />
-    </template>);
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
 
     assert.strictEqual(
       this.subject.color("my_awesome_color").displayName(),
@@ -219,13 +219,15 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       darkChanges.push([name, value]);
     };
 
-    await render(<template>
-      <ColorPaletteEditor
-        @colors={{colors}}
-        @onLightColorChange={{onLightColorChange}}
-        @onDarkColorChange={{onDarkColorChange}}
-      />
-    </template>);
+    await render(
+      <template>
+        <ColorPaletteEditor
+          @colors={{colors}}
+          @onLightColorChange={{onLightColorChange}}
+          @onDarkColorChange={{onDarkColorChange}}
+        />
+      </template>
+    );
 
     await this.subject.color("primary").sendInputEvent("#abcdef");
 

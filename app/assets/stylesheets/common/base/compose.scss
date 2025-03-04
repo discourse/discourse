@@ -18,8 +18,13 @@ html.composer-open {
   height: 0;
   min-height: 0;
   z-index: z("composer", "content");
-  transition: height 0.2s, max-width 0.2s, padding-bottom 0.2s, top 0.2s,
-    transform 0.2s, min-height 0.2s;
+  transition:
+    height 0.2s,
+    max-width 0.2s,
+    padding-bottom 0.2s,
+    top 0.2s,
+    transform 0.2s,
+    min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 

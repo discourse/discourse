@@ -30,8 +30,8 @@ export default class GroupSelector extends Component {
       items: Array.isArray(groupNames)
         ? groupNames
         : isEmpty(groupNames)
-        ? []
-        : [groupNames],
+          ? []
+          : [groupNames],
       single: this.single,
       fullWidthWrap: this.fullWidthWrap,
       updateData: opts && opts.updateData ? opts.updateData : false,

@@ -14,7 +14,9 @@
 .--transition {
   .post-action-feedback-alert,
   .post-action-feedback-svg {
-    transition: opacity 0.25s, color 0.25s;
+    transition:
+      opacity 0.25s,
+      color 0.25s;
   }
 }
 

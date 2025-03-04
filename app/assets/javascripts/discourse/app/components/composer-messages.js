@@ -156,9 +156,8 @@ export default class ComposerMessages extends Component {
 
           let usernames = [];
           response.usernames.forEach((username, index) => {
-            usernames[
-              index
-            ] = `<a class='mention' href='/u/${username}'>@${username}</a>`;
+            usernames[index] =
+              `<a class='mention' href='/u/${username}'>@${username}</a>`;
           });
 
           let body_key;

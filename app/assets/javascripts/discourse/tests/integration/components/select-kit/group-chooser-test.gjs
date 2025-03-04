@@ -27,12 +27,14 @@ module("Integration | Component | select-kit/group-chooser", function (hooks) {
         name: "ABC",
       },
     ];
-    await render(<template>
-      <GroupChooser
-        @content={{content}}
-        @options={{hash displayedGroupsLimit=1}}
-      />
-    </template>);
+    await render(
+      <template>
+        <GroupChooser
+          @content={{content}}
+          @options={{hash displayedGroupsLimit=1}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
 

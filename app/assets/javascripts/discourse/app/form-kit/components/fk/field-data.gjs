@@ -260,7 +260,5 @@ export default class FKFieldData extends Component {
     });
   }
 
-  <template>
-    {{yield this}}
-  </template>
+  <template>{{yield this}}</template>
 }
