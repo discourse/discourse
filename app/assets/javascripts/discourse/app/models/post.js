@@ -15,6 +15,7 @@ import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
+import Badge from "discourse/models/badge";
 import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -167,6 +168,34 @@ export default class Post extends RestModel {
   @trackedPostProperty yours;
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty excerpt;
+  @trackedPostProperty notice_created_by_user;
+  @trackedPostProperty created_at;
+  @trackedPostProperty notice;
+  @trackedPostProperty name;
+  @trackedPostProperty username;
+  @trackedPostProperty is_auto_generated;
+  @trackedPostProperty via_email;
+  @trackedPostProperty locked;
+  @trackedPostProperty updated_at;
+  @trackedPostProperty version;
+  @trackedPostProperty wiki;
+  @trackedPostProperty reply_count;
+  @trackedPostProperty reply_to_user;
+  @trackedPostProperty last_wiki_edit;
+  @trackedPostProperty group_moderator;
+  @trackedPostProperty staff;
+  @trackedPostProperty admin;
+  @trackedPostProperty moderator;
+  @trackedPostProperty trust_level;
+  @trackedPostProperty primary_group_name;
+  @trackedPostProperty user_title;
+  @trackedPostProperty title_is_group;
+  @trackedPostProperty badges_granted;
+  @trackedPostProperty cooked;
+  @trackedPostProperty cooked_hidden;
+  @trackedPostProperty can_see_hidden_post;
+  @trackedPostProperty link_counts;
+  @trackedPostProperty can_view_edit_history;
 
   customShare = null;
 
@@ -334,12 +363,20 @@ export default class Post extends RestModel {
     return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
+  get canSplitMergeTopic() {
+    return !!this.topic?.details?.can_split_merge_topic;
+  }
+
   get canToggleLike() {
     return !!this.likeAction?.get("canToggle");
   }
 
   get filteredRepliesPostNumber() {
     return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get hasReplies() {
+    return this.reply_count > 0;
   }
 
   get isWhisper() {
@@ -415,13 +452,9 @@ export default class Post extends RestModel {
   }
 
   // Expands the first post's content, if embedded and shortened.
-  expand() {
-    return ajax(`/posts/${this.id}/expand-embed`).then((post) => {
-      this.set(
-        "cooked",
-        `<section class="expanded-embed">${post.cooked}</section>`
-      );
-    });
+  async expand() {
+    const post = await ajax(`/posts/${this.id}/expand-embed`);
+    this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
   }
 
   // Recover a deleted post
@@ -673,5 +706,21 @@ export default class Post extends RestModel {
     if (badgeIds) {
       return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
     }
+  }
+
+  get badgesGranted() {
+    return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
+  }
+
+  get requestedGroupName() {
+    return this.post_number === 1 ? this.topic?.requested_group_name : null;
+  }
+
+  get expandablePost() {
+    return this.post_number === 1 && !!this.topic?.expandable_first_post;
+  }
+
+  get topicUrl() {
+    return this.topic?.url;
   }
 }

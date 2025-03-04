@@ -16,6 +16,7 @@ import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
+import { havePostStreamWidgetExtensions } from "discourse/widgets/post-stream";
 
 @singleton
 export default class Site extends RestModel {
@@ -80,6 +81,7 @@ export default class Site extends RestModel {
   }
 
   @service siteSettings;
+  @service currentUser;
 
   @tracked categories;
 
@@ -87,6 +89,7 @@ export default class Site extends RestModel {
 
   @sort("categories", "topicCountDesc") categoriesByCount;
 
+  #glimmerPostStreamEnabled;
   #glimmerTopicDecision;
 
   init() {
@@ -94,6 +97,67 @@ export default class Site extends RestModel {
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  get useGlimmerPostStream() {
+    if (this.#glimmerPostStreamEnabled !== undefined) {
+      // Use cached value after the first call to prevent duplicate messages in the console
+      return this.#glimmerPostStreamEnabled;
+    }
+
+    let enabled;
+
+    /* eslint-disable no-console */
+    let settingValue = this.siteSettings.glimmer_post_stream_mode;
+    if (
+      settingValue === "disabled" &&
+      this.currentUser?.use_glimmer_post_stream_mode_auto_mode
+    ) {
+      settingValue = "auto";
+    }
+
+    if (settingValue === "disabled") {
+      enabled = false;
+    } else {
+      if (settingValue === "enabled") {
+        if (havePostStreamWidgetExtensions) {
+          console.log(
+            "⚠️  Using the new 'glimmer' post stream, even though some themes/plugins are not ready.\n" +
+              "The following plugins and/or themes are using deprecated APIs and may have broken customizations: \n",
+            ...Array.from(havePostStreamWidgetExtensions).sort()
+          );
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+        }
+
+        enabled = true;
+      } else {
+        // auto
+        if (havePostStreamWidgetExtensions) {
+          console.warn(
+            [
+              "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' post stream. Falling back to the old implementation.\n" +
+                "The following plugins and/or themes are using deprecated APIs: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
+          );
+          enabled = false;
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+
+          enabled = true;
+        }
+      }
+    }
+    /* eslint-enable no-console */
+
+    this.#glimmerPostStreamEnabled = enabled;
+
+    return enabled;
   }
 
   get useGlimmerTopicList() {

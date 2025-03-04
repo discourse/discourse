@@ -30,7 +30,9 @@ import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
@@ -126,6 +128,7 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("select-post", {
   tagName: "div.select-posts",
 
@@ -169,6 +172,7 @@ createWidget("select-post", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
@@ -282,12 +286,14 @@ createWidget("post-avatar", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
   template: widgetHbs`{{d-icon "lock"}}`,
   title: () => i18n("post.locked"),
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-email-indicator", {
   tagName: "div.post-info.via-email",
 
@@ -321,6 +327,7 @@ function showReplyTab(attrs, siteSettings) {
   );
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
@@ -406,6 +413,7 @@ createWidget("post-meta-data", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("expand-hidden", {
   tagName: "a.expand-hidden",
 
@@ -418,6 +426,7 @@ createWidget("expand-hidden", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-date", {
   tagName: "div.post-info.post-date",
 
@@ -452,6 +461,7 @@ createWidget("post-date", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("expand-post-button", {
   tagName: "button.btn.expand-post",
   buildKey: (attrs) => `expand-post-button-${attrs.id}`,
@@ -474,6 +484,7 @@ createWidget("expand-post-button", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-group-request", {
   buildKey: (attrs) => `post-group-request-${attrs.id}`,
 
@@ -490,6 +501,7 @@ createWidget("post-group-request", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-contents", {
   buildKey: (attrs) => `post-contents-${attrs.id}`,
 
@@ -786,6 +798,7 @@ createWidget("post-contents", {
   },
 
   init() {
+    // TODO (glimmer-post-stream): How does this fit into the Glimmer lifecycle?
     this.postContentsDestroyCallbacks = [];
   },
 
@@ -794,6 +807,7 @@ createWidget("post-contents", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-notice", {
   tagName: "div.post-notice",
 
@@ -860,6 +874,7 @@ createWidget("post-notice", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
@@ -877,6 +892,7 @@ createWidget("post-body", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("post-article", {
   tagName: "article.boxed.onscreen-post",
   buildKey: (attrs) => `post-article-${attrs.id}`,
@@ -1068,6 +1084,7 @@ export function addPostClassesCallback(callback) {
   addPostClassesCallbacks.push(callback);
 }
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
   services: ["dialog", "user-tips"],
@@ -1180,3 +1197,44 @@ export default createWidget("post", {
     }
   },
 });
+
+// TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+registerWidgetShim(
+  "glimmer-post",
+  "div.topic-post-shim",
+  hbs`
+    <Post
+      @canCreatePost={{@data.canCreatePost}}
+      @changeNotice={{@data.changeNotice}}
+      @changePostOwner={{@data.changePostOwner}}
+      @deletePost={{@data.deletePost}}
+      @editPost={{@data.editPost}}
+      @grantBadge={{@data.grantBadge}}
+      @lockPost={{@data.lockPost}}
+      @multiSelect={{@data.multiSelect}}
+      @nextPost={{@data.nextPost}}
+      @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+      @post={{@data.post}}
+      @prevPost={{@data.prevPost}}
+      @rebakePost={{@data.rebakePost}}
+      @recoverPost={{@data.recoverPost}}
+      @replyToPost={{@data.replyToPost}}
+      @selectBelow={{@data.selectBelow}}
+      @selectReplies={{@data.selectReplies}}
+      @selected={{@data.selected}}
+      @showFlags={{@data.showFlags}}
+      @showHistory={{@data.showHistory}}
+      @showInvite={{@data.showInvite}}
+      @showLogin={{@data.showLogin}}
+      @showPagePublish={{@data.showPagePublish}}
+      @showRawEmail={{@data.showRawEmail}}
+      @showReadIndicator={{@data.showReadIndicator}}
+      @togglePostSelection={{@data.togglePostSelection}}
+      @togglePostType={{@data.togglePostType}}
+      @toggleReplies={{@toggleReplies}}
+      @toggleReplyAbove={{@data.toggleReplyAbove}}
+      @toggleWiki={{@data.toggleWiki}}
+      @unhidePost={{@data.unhidePost}}
+      @unlockPost={{@data.unlockPost}}
+    />`
+);

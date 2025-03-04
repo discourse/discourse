@@ -85,6 +85,7 @@ export function resetDecorators() {
 }
 
 const _customSettings = {};
+
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};
   _customSettings[widgetName][settingName] = newValue;
@@ -186,6 +187,7 @@ export default class Widget {
   }
 
   init() {}
+
   transform() {
     return {};
   }
