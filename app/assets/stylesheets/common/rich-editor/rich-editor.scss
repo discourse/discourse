@@ -15,12 +15,13 @@
 
   > div:first-child,
   > details:first-child {
+    margin-top: 0.5rem;
+
     // This is hacky, but helps having the leading gapcursor at the right position
     &.ProseMirror-gapcursor {
       position: relative;
       display: block;
     }
-    margin-top: 0.5rem;
   }
 
   h1,
@@ -168,11 +169,9 @@
  Section below from prosemirror-view/style/prosemirror.css
  ********************************************************/
 
+/* stylelint-disable-next-line no-duplicate-selectors */
 .ProseMirror {
   position: relative;
-}
-
-.ProseMirror {
   word-wrap: break-word;
   white-space: break-spaces;
 }

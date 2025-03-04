@@ -61,15 +61,15 @@ class AdminPluginSerializer < ApplicationSerializer
   end
 
   def plugin_settings
-    @plugin_settings ||= SiteSetting.plugins.select { |_, v| v == id }
+    object.plugin_settings
   end
 
   def has_settings
-    plugin_settings.values.any?
+    object.any_settings?
   end
 
   def has_only_enabled_setting
-    plugin_settings.keys.length == 1 && plugin_settings.keys.first == enabled_setting
+    object.has_only_enabled_setting?
   end
 
   def include_url?

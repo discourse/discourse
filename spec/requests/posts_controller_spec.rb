@@ -1494,6 +1494,29 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      describe "posts_controller_create_user modifier" do
+        fab!(:different_user) { Fabricate(:admin) }
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :posts_controller_create_user }
+        let!(:block) { Proc.new { different_user } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "can alter the user used to create the post" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.user).to eq(different_user)
+        end
+      end
+
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
         it "should return a 400 response code when no custom fields has been permitted" do
           sign_in(user)
@@ -1851,6 +1874,19 @@ RSpec.describe PostsController do
           expect(response.parsed_body["errors"]).to include(
             I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist"),
           )
+        end
+
+        context "with apply_modifier" do
+          it "can modify groups" do
+            plugin = Plugin::Instance.new
+            modifier = :mentionable_groups
+            proc = Proc.new { Group.all }
+            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+            expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+          end
         end
       end
     end

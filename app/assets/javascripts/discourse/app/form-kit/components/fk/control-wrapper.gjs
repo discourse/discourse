@@ -95,6 +95,8 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @preview={{@preview}}
+          @includeTime={{@includeTime}}
+          @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}
           @selection={{@selection}}
           @includeNone={{@includeNone}}
           id={{@field.id}}
@@ -106,6 +108,12 @@ export default class FKControlWrapper extends Component {
         >
           {{yield components}}
         </@component>
+
+        {{#if @field.helpText}}
+          <FKText
+            class="form-kit__container-help-text"
+          >{{@field.helpText}}</FKText>
+        {{/if}}
 
         <FKMeta @field={{@field}} @error={{this.error}} />
       </div>

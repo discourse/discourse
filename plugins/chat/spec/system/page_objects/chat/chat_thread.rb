@@ -140,6 +140,16 @@ module PageObjects
         end
       end
 
+      def has_reaction?(message, emoji, text = nil)
+        within(message_reactions_list(message)) do
+          has_css?("[data-emoji-name=\"#{emoji}\"]", text: text)
+        end
+      end
+
+      def message_reactions_list(message)
+        within(message_by_id(message.id)) { find(".chat-message-reaction-list") }
+      end
+
       def message_by_id(id)
         find(message_by_id_selector(id))
       end

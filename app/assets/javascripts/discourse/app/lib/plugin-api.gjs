@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.1.0";
+export const PLUGIN_API_VERSION = "2.1.1";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -55,11 +55,7 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import {
-  PLUGIN_NAV_MODE_SIDEBAR,
-  PLUGIN_NAV_MODE_TOP,
-  registerAdminPluginConfigNav,
-} from "discourse/lib/admin-plugin-config-nav";
+import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
@@ -634,6 +630,13 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * See KeyboardShortcuts.unbind documentation.
+   **/
+  removeKeyboardShortcut(shortcut, callback) {
+    KeyboardShortcuts.unbind({ [shortcut]: callback });
   }
 
   /**
@@ -3256,24 +3259,15 @@ class PluginApi {
    *
    * * route
    * * label OR text
-   *
-   * And the mode must be one of "sidebar" or "top", which controls
-   * where in the admin plugin show UI the links will be displayed.
    */
-  addAdminPluginConfigurationNav(pluginId, ...links) {
+  addAdminPluginConfigurationNav(pluginId, links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
-    // TODO (Ted - 2024-01-27): Remove once usage discontinued in plugins.
-    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
-    if (validModes.includes(links[0])) {
-      links.shift();
-    }
-
-    registerAdminPluginConfigNav(pluginId, links.flat());
+    registerAdminPluginConfigNav(pluginId, links);
   }
 
   /**

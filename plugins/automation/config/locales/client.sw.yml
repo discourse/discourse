@@ -7,7 +7,8 @@
 sw:
   js:
     discourse_automation:
-      create: Tengeneza
+      back: Iliyopita
+      edit: Hariri
       fields:
         user:
           label: Mtumiaji
@@ -49,10 +50,6 @@ sw:
               label: Lebo
             restricted_category:
               label: Kategoria
-            restricted_group:
-              label: Kikundi
-            restricted_groups:
-              label: Makundi
           created: Imetengenezwa
         category_created_edited:
           fields:

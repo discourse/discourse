@@ -31,14 +31,17 @@ zh_TW:
       time_short_day: "ddd, h:mm a"
       timeline_date: "YYYY年 M月"
       long_no_year: "MMM D, h:mm a"
-      long_no_year_no_time: "M月 D日"
-      full_no_year_no_time: "M月 D日"
-      long_with_year: "YYYY年M月D日 h:mm a"
-      long_with_year_no_time: "YYYY年 M月 D日"
-      full_with_year_no_time: "YYYY年 M月 D日"
-      long_date_without_year: "M月 D日 LT"
-      long_date_without_year_with_linebreak: "M月 D日 <br/>LT"
-      wrap_ago: "%{date}前"
+      long_no_year_no_time: "MMM D 日"
+      full_no_year_no_time: "MMMM D 日"
+      long_with_year: "YYYY 年 MMM D 日 HH:mm"
+      long_with_year_no_time: "YYYY 年 MMM D 日"
+      full_with_year_no_time: "YYYY 年 MMMM D 日"
+      long_date_with_year: "YYYY 年 MMM D 日 LT"
+      long_date_without_year: "MMM D 日 LT"
+      long_date_with_year_without_time: "YYYY 年 MMM D 日"
+      long_date_without_year_with_linebreak: "MMM D 日<br/>LT"
+      long_date_with_year_with_linebreak: "YYYY 年 MMM D 日<br/>LT"
+      wrap_ago: "%{date} 前"
       wrap_on: "在 %{date}"
       tiny:
         half_a_minute: "< 1 分鐘"
@@ -83,6 +86,7 @@ zh_TW:
           other: "超過 %{count} 年"
         almost_x_years:
           other: "大約 %{count} 年"
+        date_year: "YYYY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分鐘前"
@@ -114,6 +118,9 @@ zh_TW:
       facebook: "分享到 Facebook"
       email: "透過電子郵件傳送"
       url: "複製並分享網址"
+    word_connector:
+      comma: "， "
+      last_item: "和"
     action_codes:
       public_topic: "於 %{when} 發佈這個話題"
       open_topic: "將此轉換為主題 %{when}"
@@ -153,7 +160,9 @@ zh_TW:
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
+      message: "我們已更新本網站，<span>請重新整理</span>以保持順暢運作。"
       dismiss: "忽略"
+    bootstrap_mode: "快速開始"
     back_button: "上一步"
     themes:
       default_description: "預設"
@@ -161,6 +170,15 @@ zh_TW:
       error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
       only_admins: "（此消息僅向網站管理員顯示）"
     broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"
+    broken_page_change_alert: "onPageChange 處理器產生錯誤。請檢查瀏覽器開發工具以取得更多資訊。"
+    broken_plugin_alert: "由外掛程式引起 '%{name}'"
+    broken_transformer_alert: "出現錯誤。您的網站可能無法正常運作。"
+    critical_deprecation:
+      notice: "<b>[管理員通知]</b>您的主題或外掛之一需要更新，以相容於即將發生的 Discourse 核心變更。"
+      id: "（編號：<em>%{id}</em>）"
+      linked_id: "（編號：<a href='%{url}' target='_blank'><em>%{id}</em></a>）"
+      theme_source: "已識別的主題：<a target='_blank' href='%{path}'>'%{name}'</a>。"
+      plugin_source: "已識別的外掛程式：'%{name}'"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -221,6 +239,7 @@ zh_TW:
     now: "就在剛才"
     read_more: "閱讀更多"
     more: "更多"
+    more_options: "更多選項"
     x_more:
       other: "%{count} 更多"
     never: "永不"
@@ -239,7 +258,10 @@ zh_TW:
     related_messages:
       title: "相關訊息"
       pill: "相關訊息"
+      see_all: '查看 <a href="%{path}">所有消息</a> 來自 @%{username}…'
     suggested_topics:
+      title: "新的和未讀過的主題"
+      pill: "建議"
       pm_title: "推薦訊息"
     about:
       edit: "編輯此頁"
@@ -250,36 +272,87 @@ zh_TW:
       our_moderators: "我們的版主"
       moderators: "板主"
       stat:
+        all_time: "一直以來"
         last_day: "24 小時"
+        last_7_days: "7 天"
+        last_30_days: "30 天"
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
+      user_count: "註冊"
+      active_user_count: "活躍使用者"
+      visitor_count: "訪客"
+      eu_visitor_count: "來自歐盟的訪客"
+      traffic_info_footer_MF: |
+        在過去 6 個月內，本網站每月向估計 { total_visitors, plural,
+        one {# 位使用者}
+        other {# 位使用者}
+        } 提供內容，其中來自歐盟的使用者約為 { eu_visitors, plural,
+        one {# 位}
+        other {# 位}
+        }。
+      contact: "聯絡我們"
+      contact_info: "如果發生影響本網站的重大問題或緊急情況，請聯繫 %{contact_info}。"
+      site_activity: "網站活動"
+      view_more: "查看更多"
+      view_less: "顯示更少"
       activities:
         topics:
           other: "%{formatted_number} 話題"
         posts:
           other: "%{formatted_number} 篇貼文"
+        active_users:
+          other: "%{formatted_number} 活躍使用者"
+        sign_ups:
+          other: "%{formatted_number} 註冊"
         likes:
           other: "%{formatted_number}個讚"
+        visitors_MF: |
+          { total_count, plural,
+              other {{total_formatted_number} 訪客}
+          }, 關於 { eu_count, plural,
+              other {{eu_formatted_number}}
+          } 來自歐盟
         periods:
           last_7_days: "在過去 7 天內"
           today: "今天"
+          all_time: "一直以來"
       member_count:
         other: "%{formatted_number} 位成員"
+      admin_count:
+        other: "%{formatted_number} 管理員"
+      moderator_count:
+        other: "%{formatted_number} 版主"
+      report_inappropriate_content: "如果您遇到任何不當內容，請隨時與我們的主持人和管理員開始對話。請記住在聯繫之前登錄。"
+      site_age:
+        less_than_one_month: "建立於 < 1 個月前"
+        month:
+          other: "建立於 %{count} 個月前"
+        year:
+          other: "建立於 %{count} 年前"
     bookmarked:
       title: "書籤"
       edit_bookmark: "編輯書籤"
       clear_bookmarks: "清除書籤"
       help:
+        bookmark: "點擊以將此主題加入書籤"
+        edit_bookmark: "點擊以編輯此主題中文章的書籤"
         edit_bookmark_for_topic: "按一下以編輯此主題的書籤"
         unbookmark: "點擊以移除此話題所有書籤"
+        unbookmark_with_reminder: "點擊以刪除此主題中的所有書籤和提醒"
     bookmarks:
+      also_set_reminder: "也設定提醒？"
+      bookmarked_success: "已加入書籤！"
+      deleted_bookmark_success: "書籤已刪除！"
+      reminder_set_success: "提醒已設定！"
       created: "你已將這篇文章加入書籤。 %{name}"
+      created_generic: "您已將此加入書籤。 %{name}"
       create: "建立書籤"
       edit: "編輯書籤"
       not_bookmarked: "將此貼文加入書籤"
       remove_reminder_keep_bookmark: "刪除提醒並保留書籤"
       created_with_reminder: "您已使用提醒 %{date}將此帖子添加為書籤。 %{name}"
+      created_with_reminder_generic: "您已在 %{date} 將此內容加為書籤並設定提醒。%{name}"
       delete: "刪除書籤"
       confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
@@ -294,24 +367,38 @@ zh_TW:
         when_reminder_sent: "刪除書籤"
         on_owner_reply: "刪除書籤，一旦我回复"
         clear_reminder: "保留書籤和清除提醒"
+        after_reminder_label: "在提醒您之後，我們應該…"
+        after_reminder_checkbox: "將此設定為未來所有書籤提醒的預設值"
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
       search: "搜尋"
       bookmark: "書籤"
       bulk:
+        delete_completed: "成功刪除書籤。"
+        reminders_cleared: "成功清除書籤提醒。"
+        toggle: "切換書籤的批量選取"
         select_all: "選擇全部"
         clear_all: "清除全部"
+        selected_count:
+          other: "已選擇 %{count} 個"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
         at_time: "在 %{date_time}"
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     bookmark_bulk_actions:
+      clear_reminders:
+        name: "清除提醒"
+        description:
+          other: "您確定要清除這些 <b>%{count}</b> 書籤的提醒嗎？"
       delete_bookmarks:
         name: "刪除書籤"
+        description:
+          other: "您確定要刪除這些 <b>%{count}</b> 書籤嗎？"
     copy_codeblock:
       copied: "已複製!"
       copy: "將程式碼複製到剪貼簿"
       fullscreen: "以全螢幕顯示程式碼"
+      view_code: "檢視程式碼"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -320,11 +407,17 @@ zh_TW:
       remove_confirmation: "您確定要刪除此草稿嗎？"
       new_topic: "新話題草稿"
       new_private_message: "新個人訊息草稿"
+      edit_topic: "編輯主題草稿"
       abandon:
+        confirm: "您已有一份正在進行的草稿。你想對它做什麼？"
         yes_value: "捨棄"
         no_value: "繼續編輯"
       dropdown:
-        view_all: "查看全部"
+        title: "開啟最新草稿選單"
+        untitled: "無標題草稿"
+        view_all: "檢視所有草稿"
+        other_drafts:
+          other: "+其他 %{count} 份草稿"
     topic_count_all:
       other: "檢視 %{count} 則新話題"
     topic_count_categories:
@@ -339,11 +432,18 @@ zh_TW:
       other: "檢視 %{count} 則新話題"
     preview: "預覽"
     cancel: "取消"
+    deleting: "正在刪除..."
     save: "儲存變更"
+    saving: "正在儲存..."
     saved: "儲存完畢！"
     upload: "上傳"
+    uploading: "上傳中..."
+    processing: "處理中..."
+    uploading_filename: "正在上傳: %{filename}…"
+    processing_filename: "處理中： %{filename}…"
     clipboard: "剪貼簿"
     uploaded: "上傳完畢！"
+    pasting: "正在貼上…"
     enable: "啟用"
     disable: "停用"
     continue: "繼續"
@@ -367,9 +467,22 @@ zh_TW:
         search: "搜尋訊息"
         placeholder: "在這裡輸入訊息標題、網址或 ID"
     review:
+      show_more: "顯示更多"
+      show_less: "顯示更少"
       order_by: "排序按照"
       date_filter: "發表於"
       in_reply_to: "回覆給"
+      filtered_flagged_by: "檢舉者"
+      unknown:
+        title:
+          other: "您有停用外掛程式的待審核項目："
+        instruction: "在您啟用相關外掛程式之前，它們無法正常顯示。請啟用外掛程式並刷新頁面。或者，您也可以忽略它們。<a href='%{url}' target='_blank'>瞭解更多...</a>"
+        reviewable_unknown_source: "%{reviewableType} (未知外掛程式)"
+        reviewable_known_source: "%{reviewableType} (來自 '%{pluginName}' 外掛程式)"
+        ignore_all: "忽略全部"
+        enable_plugins: "啟用外掛程式"
+        delete_confirm: "您確定要刪除所有由禁用外掛程式建立的評論嗎？"
+        ignore_success: "所有由禁用外掛程式建立的評論已被刪除。"
       explain:
         why: "解釋為什麼這個項目結束在隊列"
         title: "可審閱的評分"
@@ -389,9 +502,16 @@ zh_TW:
           title: "由信任等級較高的使用者建立的可審閱項目的分數較高。"
         type_bonus:
           name: "類型獎金"
+          title: "某些可審查類型可由工作人員指定加分，使其具有較高的優先順序。"
       revise_and_reject_post:
+        title: "修訂"
         reason: "原因"
+        send_pm: "發送私訊"
+        feedback: "意見回饋"
+        custom_reason: "清楚說明原因"
+        other_reason: "其他..."
         optional: "選擇性"
+      stale_help: "此可審查問題已由 <b>%{username}</b>解決。"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -407,6 +527,8 @@ zh_TW:
         saved: "已儲存"
         save_changes: "儲存變更"
         title: "設定"
+        priorities:
+          title: "可審核的優先順序"
       moderation_history: "審核歷史"
       view_all: "查看全部"
       grouped_by_topic: "按主題分類"
@@ -431,6 +553,8 @@ zh_TW:
         fields: "欄位"
         reject_reason: "原因"
       user_percentage:
+        summary:
+          other: "%{agreed}, %{disagreed}, %{ignored} （共 %{count} 個檢舉）"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -463,6 +587,7 @@ zh_TW:
         category: "分類"
         score_type:
           title: "原因"
+          all: "(所有原因)"
         orders:
           score: "分數"
           score_asc: "分數 (反向)"
@@ -477,28 +602,52 @@ zh_TW:
       conversation:
         view_full: "查看完整對話"
       scores:
-        about: "該分數基於報告者的信任級別，其先前標誌的準確性以及報告的項目的優先級來計算。"
+        about: "該分數基於報告者的信任級別，其先前檢舉的準確性以及報告的項目的優先級來計算。"
         score: "分數"
+        date: "報告日期"
         type: "原因"
         status: "狀態"
         submitted_by: "回報由"
+        reviewed_by: "評論者"
+        reviewed_timestamp: "審核日期"
       statuses:
         pending:
           title: "申請中"
         approved:
           title: "已同意"
+        approved_flag:
+          title: "檢舉已批准"
+        approved_user:
+          title: "使用者已核准"
+        approved_post:
+          title: "帖文已批准"
         rejected:
           title: "被拒絕"
+        rejected_flag:
+          title: "檢舉被拒絕"
+        rejected_user:
+          title: "使用者被拒絕"
+        rejected_post:
+          title: "貼文被拒絕"
+        ignored:
+          title: "檢舉已忽略"
+        deleted:
+          title: "主題或貼文已刪除"
+        reviewed:
+          title: "全部已審核"
         all:
           title: "所有"
       context_question:
+        is_this_post: "此%{reviewable_type}是否%{reviewable_human_score_types}？"
         delimiter: "或"
+        something_else_wrong: "這個 %{reviewable_type}有什麼問題嗎？"
       types:
         reviewable_flagged_post:
-          title: "標記的貼文"
-          flagged_by: "標記由"
+          title: "檢舉的貼文"
+          flagged_by: "檢舉者"
           noun: "貼文"
         reviewable_queued_topic:
+          title: "已加入佇列的主題"
           noun: "話題"
         reviewable_queued_post:
           title: "排定的貼文"
@@ -537,6 +686,7 @@ zh_TW:
       in_two_hours: "兩小時內"
       later_today: "今日稍晚"
       two_days: "兩天"
+      three_days: "三天後"
       next_business_day: "下個工作日"
       tomorrow: "明天"
       post_local_date: "張貼日期"
@@ -558,6 +708,7 @@ zh_TW:
       never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
+      more_options: "更多選項…"
       select_timeframe: "選擇有效時間範圍"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
@@ -586,6 +737,9 @@ zh_TW:
       topic_count_long: "話題已開啟"
       post_count: "回覆"
       post_count_long: "回覆貼文"
+      no_results:
+        body: "此處將顯示社群成員的活動列表。由於您的社群仍然是新建立的，目前列表尚未有內容！"
+        extra_body: "管理員和版主可以在<a href='%{basePath}/admin/users/'>使用者管理</a>中查看並管理使用者。"
       no_results_with_search: "未找到任何結果。"
       days_visited: "造訪"
       days_visited_long: "到訪天數"
@@ -595,10 +749,13 @@ zh_TW:
       total_rows:
         other: "%{count} 個使用者"
       edit_columns:
+        title: "編輯目錄欄位"
         save: "儲存"
         reset_to_default: "重設為預設值"
       group:
         all: "所有群組"
+      sort:
+        label: "依 %{criteria}排序"
     group_histories:
       actions:
         change_group_setting: "更改群組設定"
@@ -611,9 +768,11 @@ zh_TW:
       member_requested: "請求"
       add_members:
         title: "將使用者加入 %{group_name}"
+        description: "輸入您要邀請加入群組的使用者清單，或貼到逗號分隔清單中："
         usernames_placeholder: "使用者名稱"
         usernames_or_emails_placeholder: "使用者名稱或電子郵件"
         notify_users: "通知使用者"
+        set_owner: "將使用者設定為此群組的擁有者"
       requests:
         title: "請求"
         reason: "原因"
@@ -639,6 +798,7 @@ zh_TW:
           notification: 通知
         email:
           title: "電子信箱"
+          status: "已透過 IMAP 同步了 %{old_emails}/%{total_emails} 封郵件。"
           enable_smtp: "啟用 SMTP"
           enable_imap: "啟用 IMAP"
           test_settings: "測試設定"
@@ -648,14 +808,29 @@ zh_TW:
           settings_required: "所有設定皆為必填，請輸入所有欄位再進行驗證。"
           smtp_settings_valid: "SMTP 設定有效。"
           smtp_title: "SMTP"
+          smtp_instructions: "當您為群組啟用 SMTP 時，從群組收件匣發送的所有外發電子郵件將透過此處指定的 SMTP 設定發送，而非透過為您的論壇配置的其他郵件伺服器發送。"
           imap_title: "IMAP"
           imap_additional_settings: "其他設定"
+          imap_instructions: '當您為群組啟用 IMAP 時，電子郵件將在群組收件匣與提供的 IMAP 伺服器之間同步。在啟用 IMAP 之前，必須先啟用 SMTP，並驗證與測試憑據。IMAP 將使用與 SMTP 相同的電子郵件帳號與密碼。詳情請參閱 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
+          imap_alpha_warning: "警告：此功能仍處於 Alpha 版階段。目前僅官方支援 Gmail，使用風險請自行承擔！"
           imap_settings_valid: "IMAP 設定有效。"
+          smtp_disable_confirm: "如果您禁用 SMTP，所有 SMTP 和 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
+          imap_disable_confirm: "如果您禁用 IMAP，所有 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
+          imap_mailbox_not_selected: "您必須為此 IMAP 配置選擇一個郵箱，否則將不會同步任何郵箱！"
+          prefill:
+            title: "使用設定預填充："
+            gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "微軟 365"
           ssl_modes:
             none: "無"
+            ssl_tls: "SSL/TLS"
+            starttls: "啟動TLS"
           credentials:
+            title: "憑證"
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
+            smtp_ssl_mode: "SSL 模式"
             imap_server: "IMAP 伺服器"
             imap_port: "IMAP 連接埠"
             imap_ssl: "在 IMAP 上使用 SSL"
@@ -663,17 +838,35 @@ zh_TW:
             password: "密碼"
           settings:
             title: "設定"
+            allow_unknown_sender_topic_replies: "允許未知寄件者回覆主題。"
+            allow_unknown_sender_topic_replies_hint: "允許未知的寄件者回覆群組主題。如果未啟用此功能，則來自尚未邀請到主題的電子郵件地址回覆，將建立一個新主題。"
+            from_alias: "來自別名"
+            from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
           mailboxes:
             synchronized: "信箱已同步"
+            none_found: "未在此電子郵件帳戶中找到任何郵件信箱。"
             disabled: "停用"
         membership:
           title: 會員身份
           access: 存取
         categories:
           title: 分類
+          long_title: "類別預設通知"
+          description: "當使用者加入此群組時，其類別通知設定將會設定為這些預設值。之後，他們可以進行變更。"
+          watched_categories_instructions: "自動關注這些類別中的所有主題。小組成員將收到所有新貼文和主題的通知，主題旁邊還會顯示新貼文的數量。"
+          tracked_categories_instructions: "自動追蹤這些類別中的所有主題。新貼文的數量將顯示在主題旁邊。"
+          watching_first_post_categories_instructions: "使用者將會收到這些類別中每個新主題的第一篇貼文的通知。"
+          regular_categories_instructions: "如果這些類別被靜音，群組成員也會解除靜音。如果使用者被提及或有人回覆他們，他們會收到通知。"
+          muted_categories_instructions: "使用者將不會收到任何關於這些類別中新主題的通知，這些類別也不會出現在類別或最新主題頁面上。"
         tags:
           title: 標籤
           long_title: "標記預設通知"
+          description: "當使用者加入此群組時，他們的標籤通知設定將會設定為這些預設值。之後，他們可以變更這些設定。"
+          watched_tags_instructions: "自動關注帶有這些標籤的所有主題。小組成員將收到所有新貼文和主題的通知，並且新貼文的數量也將出現在主題旁邊。"
+          tracked_tags_instructions: "自動追蹤所有具有這些標籤的主題。主題旁會顯示新發表文章的數量。"
+          watching_first_post_tags_instructions: "使用者會收到每個新主題中第一個帶有這些標籤的文章的通知。"
+          regular_tags_instructions: "如果這些標籤被靜音，群組成員也會解除靜音。如果使用者被提及或有人回覆他們，他們就會收到通知。"
+          muted_tags_instructions: "使用者不會收到有關這些標籤的新主題的任何通知，也不會出現在最新的主題中。"
         logs:
           title: "日誌"
           when: "時間"
@@ -686,14 +879,25 @@ zh_TW:
           to: "至"
       permissions:
         title: "權限"
+        none: "此組沒有相關類別。"
+        description: "此群組的成員可以存取這些類別"
       public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
+      empty:
+        posts: "沒有此群組成員的貼文"
+        members: "此群組中尚未有成員"
+        requests: "此群組尚未有會員申請"
+        mentions: "沒有提到這個群組"
+        messages: "此群組尚未有任何訊息"
+        topics: "此群組成員尚未有主題"
+        logs: "此群組尚未有記錄"
       add: "新增"
       join: "加入"
       leave: "離開"
       request: "請求"
       message: "訊息"
       confirm_leave: "您確定要離開此群組？"
+      allow_membership_requests: "允許使用者向群組擁有者發送加入請求 (需要公開可見的群組)"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -723,6 +927,7 @@ zh_TW:
         group_type: "群組類型"
         is_group_user: "成員"
         is_group_owner: "擁有者"
+        search_results: "搜尋結果會顯示在下方。"
       title:
         other: "群組"
       activity: "事件"
@@ -737,14 +942,27 @@ zh_TW:
         remove_owner: "移除擁有者身份"
         remove_owner_description: "移除 <b>%{username}</b> 的擁有者身份"
         make_primary: "設為主要"
+        make_primary_description: "將此設定為 <b>%{username}</b>"
+        remove_primary: "移除主要"
+        remove_primary_description: "將其作為 <b>%{username}</b>的主要群組刪除"
         remove_members: "移除成員"
+        remove_members_description: "從此群組移除選取的使用者"
+        make_owners: "成為擁有者"
+        make_owners_description: "讓選取的使用者成為此群組的擁有者"
         remove_owners: "移除擁有者"
+        remove_owners_description: "移除選取使用者為此群組的擁有者"
         make_all_primary: "將全部設為主要"
+        make_all_primary_description: "將此設定為所有選取使用者的主要群組"
+        remove_all_primary: "移除主要"
+        remove_all_primary_description: "刪除該群組作為主要群組"
         status: "狀態"
         owner: "擁有者"
         primary: "主要"
+        forbidden: "您無權查看會員。"
+        no_filter_matches: "沒有符合該搜尋的會員。"
       topics: "話題"
       posts: "貼文"
+      aria_post_number: "%{title} - 貼文#%{postNumber}"
       mentions: "提及"
       messages: "訊息"
       notification_level: "群組訊息的預設通知等級"
@@ -755,6 +973,7 @@ zh_TW:
         only_admins: "限管理員"
         mods_and_admins: "限板主與管理員"
         members_mods_and_admins: "限群組成員、板主以及管理員"
+        owners_mods_and_admins: "僅限群組擁有者、版主和管理員"
         everyone: "所有人"
       notifications:
         watching:
@@ -773,6 +992,7 @@ zh_TW:
           title: "靜音"
           description: "您不會收到任何此群組內訊息的推播通知。"
       flair_url: "頭像圖片"
+      flair_upload_description: "使用不小於 20 像素 X 20 像素的方形圖像。"
       flair_bg_color: "頭像背景顏色"
       flair_bg_color_placeholder: "（可選）十六進制色彩值"
       flair_color: "頭像顏色"
@@ -784,7 +1004,10 @@ zh_TW:
         image: "上傳圖片"
       default_notifications:
         modal_title: "使用者預設通知"
+        modal_description:
+          other: "您要回朔應用此變更嗎？這將會變更 %{count} 位現有使用者的偏好設定。"
         modal_yes: "是"
+        modal_no: "不，僅對以後應用變更"
     user_action_groups:
       "1": "已按讚"
       "2": "已收到讚"
@@ -803,6 +1026,7 @@ zh_TW:
     categories:
       categories_label: "分類"
       subcategories_label: "次分類"
+      no_subcategories: "無子類別"
       remove_filter: "取消過濾"
       plus_more_count:
         other: "+%{count} 更多"
@@ -833,6 +1057,8 @@ zh_TW:
         other: "%{count}過去一週的新話題"
       topic_stat_sentence_month:
         other: "%{count}過去一個月的新話題"
+      n_more:
+        other: "類別（其他 %{count} 個）…"
     ip_lookup:
       title: IP 位址查詢
       hostname: 伺服器名稱
@@ -854,14 +1080,23 @@ zh_TW:
     user_fields:
       none: "（選擇一個選項）"
       required: '請輸入「%{name}」的值'
+      required_checkbox: '欄位「%{name}」為必填項'
+      same_as_password: "您的密碼不應重複出現在其他欄位中"
       optional: (選擇性)
     user:
       said: "%{username}："
       profile: "個人檔案"
+      profile_possessive: "%{username} 的個人資料"
+      account_possessive: "%{name} 的帳戶"
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive:
         title: "匯出您的資料"
+        description: "下載您的帳戶活動和偏好設定的歸檔。"
+        button_text: "請求歸檔"
+        confirm: "確定要下載您的帳戶活動和偏好設定的歸檔嗎？"
+        success: "我們已經開始收集您的歸檔，您將在該過程完成後收到一條消息。"
+        rate_limit_error: "帳戶歸檔每天只能下載一次，請明天再試。"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -880,12 +1115,16 @@ zh_TW:
         ignore_duration_time_frame_required: "請選擇一個有效時間範圍"
         ignore_no_users: "你沒有被忽略的使用者"
         ignore_option: "已忽略"
+        ignore_option_title: "您將不會收到與此用戶相關的任何通知，並且其所有內容都將被隱藏。"
+        add_ignored_user: "新增…"
         mute_option: "靜音"
+        mute_option_title: "您將不會收到來自此用戶的任何通知、私人訊息或直接聊天訊息。"
         normal_option: "一般"
         normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       notification_schedule:
         title: "通知時程"
         label: "啟用自定義通知時程"
+        tip: "在這些時間以外，將暫停您的通知。"
         midnight: "半夜"
         none: "無"
         monday: "星期一"
@@ -901,6 +1140,8 @@ zh_TW:
       read_help: "最近看過的主題"
       preferences:
         title: "偏好設定"
+        profile:
+          enforced_required_fields: "您需要提供更多資訊才能繼續使用本網站。"
       feature_topic_on_profile:
         open_search: "選擇一個新主題"
         title: "選擇一個主題"
@@ -912,6 +1153,7 @@ zh_TW:
       use_current_timezone: "使用目前時區"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
       login_to_view_profile: "您必須登入才能查看使用者個人資料"
+      inactive_user: "此使用者不再活躍。"
       expand_profile: "展開"
       sr_expand_profile: "展開詳細個人資料"
       collapse_profile: "收合"
@@ -931,36 +1173,62 @@ zh_TW:
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         disable: "停用通知"
         enable: "啟用通知"
+        each_browser_note: "注意：您必須在所使用的每個瀏覽器上變更此設定。如果您暫停使用者功能表中的通知，所有通知都將被停用，無論此設定為何。"
         consent_prompt: "當別人回覆您的貼文時，您想要收到即時通知嗎？"
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
+      dismiss_bookmarks_tooltip: "將所有未讀書籤提醒標記為已讀"
+      dismiss_messages_tooltip: "將所有未讀的個人訊息通知標記為已讀"
+      no_likes_title: "您尚未收到任何喜歡"
+      no_likes_body: >
+        當有人喜歡您的某個貼文時，您都會在這裡收到通知，以便您了解其他人認為哪些貼文有價值。當您喜歡他們的貼文時其他人也會看到同樣的內容！<br><br> 您不會收到有關喜歡的電子郵件通知，但您可以在網站的「通知偏好」中調整您接收有關喜歡的通知方式。 <a href="%{preferencesUrl}">通知偏好</a>.
       no_messages_title: "您沒有任何訊息"
+      no_messages_body: >
+        需要與某人進行對話，而不是公開討論嗎？選擇他們的虛擬人像，使用 %{icon} 訊息按鈕來給他們發訊息。<br><br> 如果您需要協助，可以<a href='%{aboutUrl}'>留言給工作人員</a>。
       no_bookmarks_title: "您尚未添加任何書籤"
+      no_bookmarks_body: >
+        使用 %{icon} 按鈕開始將貼文加入書籤，這些貼文就會列在這裡，方便參考。您也可以安排提醒！
+      no_bookmarks_search: "根據搜尋查詢，未找到任何書籤。"
       no_notifications_title: "您尚未收到任何通知"
       no_notifications_body: >
         您將在這個面板上收到與您直接相關的活動通知，包括對您的主題和貼文的回覆，當有人<b>@提及您</b> 或引用您，以及對您關注的主題的回覆。如果您長時間未登入，系統也會將通知發送到您的電子郵件。<br><br> 尋找 %{icon} 來決定您想要收到通知的特定主題、類別和標籤。如需了解更多，請參閱您的 <a href="%{preferencesUrl}">通知偏好</a>。
+      no_other_notifications_title: "您尚未收到任何其他通知"
+      no_other_notifications_body: >
+        您會在此面板中收到與您相關的其他活動通知 - 例如﹔有人連結或編輯您的文章。
       no_notifications_page_title: "您尚未收到任何通知"
+      no_notifications_page_body: >
+        您將收到與您直接相關的活動通知，包括對您的主題和貼文的回覆、有人提及 <b>@</b> 您、引用您的貼文，或回覆您正在關注的主題。如果您長時間未登入，通知也會發送至您的電子郵件。<br><br> 查找 %{icon} 來設定您希望接收哪些特定主題、分類和標籤的通知。欲了解更多資訊，請查看您的<a href='%{preferencesUrl}'>通知偏好設定</a>。
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       skip_new_user_tips:
         description: "跳過新使用者登入時的提示和徽章"
+      reset_seen_user_tips: "再次顯示使用者提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
+      color_scheme_default_on_all_devices: "在我的所有裝置上設定預設調色盤"
       color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
+        disable_dark_scheme: "與常規相同"
+        dark_instructions: "您可以通過切換設備的深色模式來預覽深色模式調色板。"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
       dark_mode: "夜間模式"
+      dark_mode_enable: "啟用自動深色模式調色板"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
+      enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
+      enable_defer: " 將主題標記為未讀"
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
         navigation_section: "導覽"
+        navigation_section_instruction: "當導航菜單中的話題列表有新的或未讀條目時…"
+        link_to_filtered_list_checkbox_description: "連結到篩選後的列表"
+        show_count_new_items_checkbox_description: "顯示新條目的數量"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -999,9 +1267,12 @@ zh_TW:
       watched_first_post_categories_instructions: "你將會收到這些分類中新話題的第一則貼文的通知。"
       watched_first_post_tags: "關注第一則貼文"
       watched_first_post_tags_instructions: "你將會收到這些標籤中新話題的第一則貼文的通知。"
+      watched_precedence_over_muted: "如果我正在關注的類別或標籤中有我已設為免打擾的話題，請通知我。"
       muted_categories: "靜音"
       muted_categories_instructions: "你將不會在收到任何與這些分類中的新話題有關的通知。它們亦不會再出現於分類或最新頁面中。"
+      muted_categories_instructions_dont_hide: "您不會收到有關這些類別中新話題的任何通知。"
       regular_categories: "一般"
+      regular_categories_instructions: "您將在「最新」和「熱門」話題列表中看到這些類別。"
       no_category_access: "板主權限不足，無法使用儲存功能"
       delete_account: "刪除我的帳號"
       delete_account_confirm: "你真的要刪除帳號嗎？刪除後將無法還原。"
@@ -1011,19 +1282,38 @@ zh_TW:
       admin_delete: "刪除"
       users: "使用者"
       muted_users: "靜音"
+      muted_users_instructions: "禁止來自這些使用者的所有通知和私訊。"
       allowed_pm_users: "允許的"
+      allowed_pm_users_instructions: "僅允許來自這些使用者的私訊。"
       allow_private_messages_from_specific_users: "只允許指定的使用者寄送個人訊息給我"
       ignored_users: "忽略"
+      ignored_users_instructions: "禁止來自這些使用者的所有貼文、通知和私訊。"
       tracked_topics_link: "顯示"
+      automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
       apps: "應用"
       revoke_access: "撤銷許可"
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已通過審核："
       api_last_used_at: "最近使用於："
       theme: "佈景主題"
+      save_to_change_theme: '主題會在您點擊「%{save_text}」後更新。'
       home: "預設首頁"
       staged: "暫存"
+      staff_counters:
+        flags_given:
+          other: '<span class="%{className}">%{count}</span> 個有用的檢舉'
+        flagged_posts:
+          other: '<span class="%{className}">%{count}</span> 篇被檢舉的貼文'
+        deleted_posts:
+          other: '<span class="%{className}">%{count}</span> 篇刪除的貼文'
+        suspensions:
+          other: '<span class="%{className}">%{count}</span> 個暫停'
+        warnings_received:
+          other: '<span class="%{className}">%{count}</span> 個警告'
+        rejected_posts:
+          other: '<span class="%{className}">%{count}</span> 篇被拒絕的貼文'
       messages:
+        all: "所有收件匣"
         inbox: "收件匣"
         personal: "個人的"
         latest: "最新"
@@ -1041,7 +1331,57 @@ zh_TW:
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標記"
         all_tags: "所有標記"
+        warnings: "官方警告"
+        read_more_in_group: "想閱讀更多嗎？瀏覽 %{groupLink}中的其他消息。"
         read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 條未讀</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {和 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 條新</a>消息，或瀏覽 {groupLink} 中的其他消息}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 條未讀</a>消息，或瀏覽 {groupLink} 中的其他消息}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 條新</a>消息，或瀏覽 {groupLink} 中的其他消息}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/unread"># 條未讀</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {和 <a href="{basePath}/u/{username}/messages/new"># 條新</a>消息，或者瀏覽其他<a href="{basePath}/u/{username}/messages">個人消息</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/unread"># 條未讀</a>消息，或者瀏覽其他<a href="{basePath}/u/{username}/messages">個人消息</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {還有 <a href="{basePath}/u/{username}/messages/new"># 條新</a>消息，或者瀏覽其他<a href="{basePath}/u/{username}/messages">個人消息</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "帳號"
         security: "安全性"
@@ -1054,6 +1394,7 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
+        navigation_menu: "導覽選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -1062,23 +1403,32 @@ zh_TW:
         set_password: "設定密碼"
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
+        verify_identity: "若要繼續，請驗證您的身份。"
         title: "寄出密碼"
       second_factor_backup:
+        title: "2FA驗證碼"
         regenerate: "重新產生"
         disable: "禁用"
+        enable: "啟用備份驗證碼"
+        enable_long: "新增備份驗證碼"
+        not_enabled: "您尚未建立任何備份驗證碼。"
         manage:
           other: "你還剩下 <strong>%{count}</strong> 個可使用的備用碼"
         copy_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
         copied_to_clipboard: "複製至剪貼簿"
+        download_backup_codes: "下載備用碼"
         remaining_codes:
           other: "你還剩下 <strong>%{count}</strong> 個可使用的備用碼"
+        use: "使用備用碼"
+        enable_prerequisites: "您必須先啟用二次驗證方法，然後才能生成備用碼。"
         codes:
           title: "已產生備用碼"
           description: "每個備用碼僅可使用一次。請將它們保存在安全且可被找到的地方。"
       second_factor:
         title: "兩步驟驗證"
         enable: "管理兩步驟驗證"
+        disable_all: "全部禁用"
         name: "名稱"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"
@@ -1086,19 +1436,64 @@ zh_TW:
           使用可支援的 app 掃描此 QR Code（<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">安卓</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>）並輸入您的認證碼。
         disable_description: "請從您的應用程式輸入驗證碼"
         show_key_description: "手動輸入"
+        short_description: |
+          使用一次性安全碼或實體安全密鑰保護您的帳戶。
+        extended_description: |
+          雙重身份驗證會要求您提供除密碼之外的一次性令牌，從而為您的帳戶增加額外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 設備上生成令牌。
+        oauth_enabled_warning: "請注意，一旦您為帳戶啟用雙重身份驗證，社交登入將被禁用。"
+        use: "使用身份驗證器應用"
+        enforced_with_oauth_notice: "您需要啟用雙重身份驗證。只有在使用密碼登入時，您才會被提示使用此驗證方式，而使用外部身份驗證或社交登入方式時則不需要。"
+        enforced_notice: "您需要啟用雙重身份驗證才能訪問此網站。"
         disable: "禁用"
+        disable_confirm: "確定要禁用雙重身份驗證嗎？"
         delete: "刪除"
+        delete_confirm_header: "這些基於令牌的身份驗證器和實體安全密鑰將被刪除："
+        delete_confirm_instruction: "要確認，請在下面的框中輸入 <strong>%{confirm}</strong>。"
+        delete_single_confirm_title: "刪除身份驗證器"
+        delete_single_confirm_message: "您正在刪除 %{name}。此操作無法撤銷。如果您改變主意，則必須重新註冊此身份驗證器。"
+        delete_backup_codes_confirm_title: "刪除備用碼"
+        delete_backup_codes_confirm_message: "您正在刪除備用碼。此操作無法撤銷。如果您改變主意，則必須重新生成備用碼。"
         save: "儲存"
         edit: "編輯"
+        edit_title: "編輯身分驗證器"
+        edit_description: "身分驗證者名稱"
+        enable_security_key_description: |
+          準備好<a href="https://www.google.com/search?q=hardware+security+key" target="_blank">硬體安全密鑰</a>或相容的移動設備後，請按下面的「註冊」按鈕。
+        totp:
+          title: "基於令牌的身份驗證器"
+          add: "新增身份驗證器"
+          default_name: "我的身份驗證器"
+          name_and_code_required_error: "您必須提供名稱和身份驗證器應用碼。"
         security_key:
           register: "註冊"
+          title: "實體安全密鑰"
+          add: "新增實體安全密鑰"
+          default_name: "主要安全密鑰"
           iphone_default_name: "iPhone"
           android_default_name: "安卓"
+          not_allowed_error: "安全密鑰註冊過程已超時或被取消。"
+          already_added_error: "您已註冊此安全密鑰，無需再次註冊。"
+          edit: "編輯實體安全密鑰"
           save: "儲存"
+          edit_description: "實體安全密鑰名稱"
           name_required_error: "您必須提供安全金鑰名稱"
       passkeys:
+        rename_passkey: "重新命名密鑰"
+        add_passkey: "新增密鑰"
+        confirm_delete_passkey: "您確定要刪除此密鑰嗎？"
+        passkey_successfully_created: "成功！您的新密鑰已建立。"
+        rename_passkey_instructions: "選擇一個易於識別的密鑰名稱，例如，使用密碼管理器的名稱。"
+        name:
+          default: "主要密鑰"
         save: "保存"
+        title: "密鑰"
+        short_description: "密鑰是密碼替代方法，可以通過生物識別（例如觸控 ID 或者面容 ID）或通過設備 PIN/密碼驗證您的身份。"
         added_date: "已新增 %{date}"
+        last_used_date: "最後使用日期：%{date}"
+        never_used: "從未使用"
+        not_allowed_error: "密鑰註冊過程超時、被取消或不被允許。"
+        already_added_error: "您已註冊此密鑰，無需再次註冊。"
+        confirm_button: "或使用密鑰"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -1115,8 +1510,20 @@ zh_TW:
         taken: "抱歉，此電子郵件地址無效。"
         error: "修改你的電子郵件地址時發生錯誤，可能此電子郵件地址已經有人使用?"
         success: "我們已經寄出一封郵件至此電子郵件地址，請遵照說明進行確認。"
+        success_via_admin: "我們已向該地址發送一封電子郵件。使用者需要按照電子郵件中的確認說明進行操作。"
         success_staff: "我們已傳送一封電子郵件至你目前的信箱。請根據確認指示進行操作。"
+        back_to_preferences: "返回偏好設定"
         confirm_success: "你的電子郵箱已更新。"
+        confirm: "確認"
+        authorizing_new:
+          description: "請確認您希望將電子郵件地址更改為："
+          description_add: "請確認您希望新增備用電子郵件地址："
+        authorizing_old:
+          title: "驗證舊的電子郵件地址"
+          description: "請驗證您的舊電子郵件地址，以繼續變更您的電子郵件："
+          description_add: "請驗證您現有的電子郵件地址以繼續新增備用地址："
+          old_email: "舊電子郵件： %{email}"
+          new_email: "新電子郵件： %{email}"
       change_avatar:
         title: "設定個人資料圖片"
         letter_based: "系統分配的個人資料圖片"
@@ -1142,6 +1549,7 @@ zh_TW:
         destroy: "移除電子信箱"
         add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
+        instructions: "從未公開"
         ok: "我們將寄一封確認郵件給您。"
         required: "請輸入電子郵件地址"
         invalid: "請輸入有效的電子郵件地址。"
@@ -1163,6 +1571,7 @@ zh_TW:
         approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
       name:
         title: "名稱"
+        title_optional: "姓名（選填）"
         instructions: "您的全名 (選填)"
         instructions_required: "您的暱稱"
         required: "請輸入名稱"
@@ -1176,6 +1585,7 @@ zh_TW:
         not_available_no_suggestion: "不可使用"
         too_short: "你的使用者名稱太短。"
         too_long: "你的使用者名稱太長。"
+        checking: "檢查使用者名稱是否可用…"
         prefilled: "電子郵件地址與此註冊的使用者名稱相符。"
         required: "請輸入使用者名稱"
         edit: "編輯使用者名稱"
@@ -1309,8 +1719,19 @@ zh_TW:
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"
+        cannot_invite_to_forum: "抱歉，您沒有建立邀請的權限。請聯絡管理員以授予您邀請權限。"
         invite:
+          new_title: "邀請成員"
+          edit_title: "編輯邀請"
+          expires_in_time: "於 %{time} 過期"
+          expired_at_time: "過期時間為 %{time}"
+          create_link_to_invite: "建立可分享的連結，立即授予存取本網站的權限。"
+          copy_link_and_share_it: "複製以下連結並分享，即可立即授予本網站的存取權。"
           copy_link: "複製連結"
+          link_copied: "連結已複製！"
+          share_link: "分享連結"
+          link_validity_MF: |
+            連結最多可用於 { user_count, plural, other {# 個使用者} }，並且將在 { duration_days, plural, other {# 天} }後到期。
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
           update_invite: "更新"
@@ -1392,6 +1813,7 @@ zh_TW:
         the_topic: "話題"
     user_status:
       save: "儲存"
+      pause_notifications: "暫停通知"
     user_tips:
       button: "了解！"
       suggested_topics:
@@ -1480,8 +1902,11 @@ zh_TW:
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
       title: "註冊"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
+      already_have_account: "已經有帳號了？"
+      no_account_yet: "還沒有帳號嗎？"
       progress_bar:
         signup: "註冊"
+        activate: "啟動"
         approve: "批准"
         login: "登入"
     forgot_password:
@@ -1507,6 +1932,7 @@ zh_TW:
       complete_email_not_found: "沒有符合<b>%{email}</b>的帳號"
       confirm_title: 繼續連接至 %{site_name}
     login:
+      header_title: "歡迎回來"
       title: "登入"
       username: "使用者"
       password: "密碼"
@@ -1517,9 +1943,12 @@ zh_TW:
       second_factor_title: "兩步驟驗證"
       second_factor_description: "請輸入應用程式中的驗證碼："
       second_factor_backup_description: "請輸入一組您的備用碼"
+      passkey_security_error: "發生安全性錯誤： %{message}"
+      email_placeholder: "電子郵件/使用者名稱"
       caps_lock_warning: "大寫鎖定中"
       error: "未知的錯誤"
       rate_limit: "嘗試重新登入前請先等待"
+      password_expired: "密碼已過期。請 <a href='%{reset_url}'>重設您的密碼</a>。"
       blank_username: "請輸入您的電子郵件或使用者名稱。"
       blank_username_or_password: "請輸入你的電子郵件或者使用者名稱，以及密碼。"
       reset_password: "重設密碼"
@@ -1564,6 +1993,8 @@ zh_TW:
         name: "Discord"
         title: "使用 Discord 登入"
         sr_title: "使用 Discord 登入"
+      passkey:
+        name: "使用密碼登入"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -1579,13 +2010,6 @@ zh_TW:
       password_label: "密碼"
     password_reset:
       continue: "繼續連接至 %{site_name}"
-    emoji_set:
-      apple_international: "Apple/國際化"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "僅分類"
       categories_with_featured_topics: "有精選話題的分類"
@@ -1633,7 +2057,7 @@ zh_TW:
       activities: 活動
       objects: 物品
       symbols: 象徵<br>
-      flags: 檢舉
+      flags: 旗幟
       recent: 最近使用過的
       default_tone: 膚色深度：0
       light_tone: 膚色深度：1
@@ -1682,6 +2106,7 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
+      create_pm: "送出"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -1852,14 +2277,17 @@ zh_TW:
       tags: "標記"
       in: "在"
       type:
+        default: "主題/貼文"
         users: "使用者"
         categories: "分類"
+        categories_and_tags: "類別/標籤"
       context:
         user: "搜尋 @%{username} 的貼文"
         category: "搜尋 #%{category} 分類"
         topic: "搜尋此話題"
         private_messages: "搜尋訊息"
       advanced:
+        title: 進階篩選
         posted_by:
           label: 發文者
         in_category:
@@ -1871,6 +2299,7 @@ zh_TW:
         with_tags:
           label: 已標記
         filters:
+          label: 只返回主題/文章…
           title: 只有標題吻合
           likes: 我按了讚的
           posted: 我發了文的
@@ -1883,11 +2312,13 @@ zh_TW:
           seen: 我已讀的
           unseen: 我還未讀的
           wiki: 是公共編輯的
+          images: 包括圖片
           all_tags: 以上所有的標籤
         statuses:
           label: 當話題
           open: 是開放的
           closed: 是關閉的
+          public: 是公開的
           archived: 已經封存的
           noreplies: 沒有回覆
           single_user: 只有一個使用者參與
@@ -1908,6 +2339,8 @@ zh_TW:
           placeholder: 最小值
         max_views:
           placeholder: 最大值
+        additional_options:
+          label: "依發表次數和主題瀏覽次數篩選"
     hamburger_menu: "選單"
     new_item: "新增"
     go_back: "返回"
@@ -2175,6 +2608,7 @@ zh_TW:
         help: "打開此討論話題列印友善的版本"
       flag_topic:
         title: "檢舉"
+        help: "私下檢舉此主題以引起注意或傳送個人訊息"
         success_message: "已檢舉此話題。"
       feature_topic:
         title: "擁有這個話題"
@@ -2337,6 +2771,8 @@ zh_TW:
       has_likes_title_only_you: "你已按讚"
       has_likes_title_you:
         other: "你和其他 %{count} 人讚了該貼"
+      sr_post_like_count_button:
+        other: "%{count} 個使用者對此貼文讚好."
       view_all_posts: "檢視所有貼文"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
@@ -2368,6 +2804,8 @@ zh_TW:
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
         flag_action: "檢舉"
+        flag: "私下檢舉此文章以引起注意或傳送個人訊息"
+        anonymous_flag: "發送電子郵件給管理人員以檢舉此帖子"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
         share_action: "分享"
@@ -2406,8 +2844,10 @@ zh_TW:
           off_topic: "你已檢舉此貼文離題"
           spam: "你已檢舉此貼文為垃圾訊息內容"
           inappropriate: "你已檢舉此貼文內容不妥"
+          illegal: "您已將此貼文檢舉為非法"
           notify_moderators: "你已通知版主此貼文"
           notify_user: "您已送出訊息給這位使用者"
+          custom: "您將此主題檢舉為 %{custom}"
       delete:
         confirm:
           other: "您是否確定要刪除%{count}篇貼文？"
@@ -2582,36 +3022,61 @@ zh_TW:
         email: "電子信箱"
       list_filters:
         all: "所有話題"
+    anonymous_flagging:
+      title: "檢舉非法內容"
+      description: "如需檢舉非法內容，請聯絡 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
+      title: "感謝您維護我們社區的文明！"
+      review_process_description: "所有檢舉均已由版主收到並會盡快審核。"
       action: "檢舉貼文"
+      take_action: "採取行動…"
       take_action_options:
         default:
           title: "隱藏貼文"
+          details: "立即達到檢舉門檻，隱藏帖文並同意所有待處理的檢舉"
         suspend:
           title: "將使用者停權"
+          details: "達到檢舉門檻，並封鎖使用者"
         silence:
           title: "將使用者靜音"
+          details: "達到檢舉門檻，並將使用者靜音"
       notify_action: "訊息"
       official_warning: "正式警告"
       delete_spammer: "刪除垃圾貼文發送者"
+      flag_for_review: "等待審核"
+      delete_confirm_MF: |
+        您即將刪除此使用者 { POSTS, plural,
+            other {<b>#</b>個貼文}
+        } 及 { TOPICS, plural,
+            other {<b>#</b>個主題}
+        } 、移除其帳號、封鎖其 IP 位址的註冊者 <b>{ip_address}</b>並將他們的電子郵件地址 <b>{email}</b>加入永久封鎖清單。您確定這個使用者是垃圾郵件發送者嗎？
       yes_delete_spammer: "是的，刪除垃圾貼文發送者"
-      ip_address_missing: "(N/A)"
+      ip_address_missing: "（不適用）"
       hidden_email_address: "( 隱藏) "
       submit_tooltip: "送出私人檢舉"
+      take_action_tooltip: "立即達到檢舉門檻，隱藏帖文，並同意所有待處理的檢舉"
       cant: "抱歉，你目前無法檢舉此貼文。"
       notify_staff: "私下通知管理人員"
       formatted_name:
         off_topic: "離題內容"
         inappropriate: "不當內容"
         spam: "垃圾內容"
+        illegal: "違法"
       custom_placeholder_notify_user: "請具體說明出有建設性且溫和的意見。"
+      notify_user_textarea_label: "給使用者的訊息"
       custom_placeholder_notify_moderators: "讓我們知道您的意見，並請盡可能地提供相關連結和例子。"
+      notify_moderators_textarea_label: "給版主的訊息"
+      custom_placeholder_illegal: "請具體說明您認為此內容違法的原因，並盡可能提供相關連結和範例。"
+      confirmation_illegal: "我上面所寫的內容是準確且完整的。"
       custom_message:
         at_least:
           other: "輸入至少 %{count} 個字元"
+        more:
+          other: "還差 %{count} 個"
         left:
           other: "剩餘 %{count}"
     flagging_topic:
+      title: "感謝您維護我們社區的文明！"
       action: "檢舉話題"
       notify_action: "訊息"
     topic_map:
@@ -2647,6 +3112,8 @@ zh_TW:
       pinned:
         title: "已釘選"
         help: "此話題已置頂，將顯示在它所屬分類話題列表的最上方"
+      visibility_reasons:
+        op_flag_threshold_reached: "此主題已自動取消列出，因為它已達到檢舉門檻"
     posts: "貼文"
     pending_posts:
       label: "申請中"
@@ -2746,6 +3213,8 @@ zh_TW:
         this_month: "月"
         this_week: "週"
         today: "今天"
+    custom_homepage:
+      admin_message: '您的一個佈景主題已啟用「custom_homepage」修改器，但在 [custom-homepage] 連接器中沒有輸出任何內容。（此消息只顯示給網站管理員。）'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -2775,6 +3244,8 @@ zh_TW:
         profile: "%{shortcut} 個人頁面"
         messages: "%{shortcut} 私信"
         drafts: "%{shortcut}草稿"
+        next: "%{shortcut} 下一個主題"
+        previous: "%{shortcut} 上一個主題"
       navigation:
         title: "導航"
         jump: "%{shortcut} 前往貼文 #"
@@ -2782,19 +3253,37 @@ zh_TW:
         up_down: "%{shortcut} 移動選擇焦點 &uarr; &darr;"
         open: "%{shortcut} 打開選擇的話題"
         next_prev: "%{shortcut} 下一個/前一個段落"
+        go_to_unread_post: "%{shortcut} 前往第一篇未讀貼文"
       application:
         title: "應用"
         create: "%{shortcut} 開啟新話題"
-        notifications: "%{shortcut} Open notifications"
+        notifications: "%{shortcut} 開啟通知"
         user_profile_menu: "%{shortcut} 打開使用者菜單"
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"
+        filter_sidebar: "%{shortcut} 側邊欄篩選"
         help: "%{shortcut} 打開按鍵說明"
+        toggle_bulk_select: "%{shortcut} 切換批量選擇"
+        dismiss: "%{shortcut} 取消選定主題"
+        x: "%{shortcut} 切換選擇（在批量選擇模式下）"
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰寫中"
         return: "%{shortcut} 回到編輯頁面"
         fullscreen: "%{shortcut} 進入全螢幕編輯器"
+        insert_current_time: "%{shortcut} 插入目前時間"
+      bookmarks:
+        title: "加入書籤"
+        enter: "%{shortcut} 儲存並關閉"
+        later_today: "%{shortcut} 今天稍後"
+        later_this_week: "%{shortcut} 本週稍後"
+        tomorrow: "%{shortcut} 明天"
+        next_week: "%{shortcut} 下週"
+        next_business_week: "%{shortcut} 下週開始"
+        next_business_day: "%{shortcut} 下一個工作天"
+        custom: "%{shortcut} 自訂日期和時間"
+        none: "%{shortcut} 沒有提醒"
+        delete: "%{shortcut} 刪除書籤"
       actions:
         title: "動作"
         bookmark_topic: "%{shortcut} 切換話題收藏狀態"
@@ -2815,6 +3304,17 @@ zh_TW:
         mark_tracking: "%{shortcut} 追蹤話題"
         mark_watching: "%{shortcut} 看話題"
         print: "%{shortcut} 列印討論話題"
+        defer: "%{shortcut} 將主題標記為未讀"
+        topic_admin_actions: "%{shortcut} 開啟主題管理員操作"
+        archive_private_message: "%{shortcut} 切換封存個人訊息"
+      search_menu:
+        title: "搜尋選單"
+        prev_next: "%{shortcut} 上下移動選取項目"
+        insert_url: "%{shortcut} 將選取項目插入開啟的編輯器"
+        full_page_search: "%{shortcut} 啟動全頁搜尋"
+      admin:
+        title: "管理員"
+        search_prev_next: "%{shortcut} 上下移動選取項目"
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
@@ -2934,7 +3434,10 @@ zh_TW:
       dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
+    theme_preview_notice: "您當前正在預覽佈景主題，請關閉此瀏覽器標籤頁或窗口以返回到正常網站配置。"
     pause_notifications:
+      title: "暫停通知時間為…"
+      label: "暫停通知"
       options:
         half_hour: "30 分鐘"
         one_hour: "1 小時"
@@ -2949,7 +3452,20 @@ zh_TW:
         regular: "活躍使用者"
         leader: "資深"
     user_activity:
+      no_activity_title: "尚未有活動"
       no_activity_body: "歡迎來到我們的社群！你是新來的，還沒有參與討論。第一步，訪問 <a href='%{topUrl}'>精選話題</a> 或<a href='%{categoriesUrl}'>類別</a>，然後開始閱讀！在您喜歡或想了解更多資訊的貼文上選擇 %{heartIcon}。當您參與時，您的活動將>列在此處。"
+      no_replies_title: "您尚未回覆任何主題"
+      no_replies_title_others: "%{username} 尚未回覆任何主題"
+      no_drafts_title: "您尚未開始任何草稿"
+      no_drafts_body: "還沒準備好發布嗎？每當您開始撰寫主題、回覆或個人訊息時，我們都會自動儲存新草稿並將其列在這裡。選擇取消按鈕放棄或儲存草稿以便稍後繼續。"
+      no_likes_title: "您尚未喜歡任何主題"
+      no_likes_title_others: "%{username} 尚未喜歡任何主題"
+      no_likes_body: "加入並開始做出貢獻的一個好方法是開始閱讀已經發生的談話，然後選擇您喜歡的貼文 %{heartIcon} ！"
+      no_topics_title: "您尚未開始任何主題"
+      no_topics_body: "最好在開始新討論之前，最好先 <a href='%{searchUrl}'>搜索</a> 現有的討論主題，但如果您確信自己想要的主題尚未出現，請繼續開始自己的新主題。在主題清單、類別或標籤右上角尋找 <kbd>+ 新主題</kbd> 按鈕，開始在該區域建立新主題。"
+      no_topics_title_others: "%{username} 尚未開始任何主題"
+      no_read_topics_title: "您尚未閱讀任何主題"
+      no_read_topics_body: "當您開始閱讀討論時，您會在這裡看到清單。若要開始閱讀，請在<a href='%{topUrl}'>熱門</a>或<a href='%{categoriesUrl}'>分類</a>中尋找您感興趣的主題，或依關鍵字搜尋 %{searchIcon}。"
     no_group_messages_title: "找不到群組訊息"
     fullscreen_table:
       expand_btn: "展開表格"
@@ -3033,6 +3549,7 @@ zh_TW:
                 other: "%{count} 草稿"
             review:
               content: "審核"
+              title: "檢舉的帖子和其他排隊項目"
               pending_count:
                 other: "剩餘 %{count}"
             invite:
@@ -3042,6 +3559,10 @@ zh_TW:
           label: 論壇
       no_results:
         title: "沒有結果"
+      footer:
+        interface_color_selector:
+          light: "輕亮"
+          dark: "黑暗"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       button_title: "開始編輯"
@@ -3067,6 +3588,7 @@ zh_TW:
         context_menu:
           copy: "複製..."
           paste: "貼上..."
+    powered_by_discourse: "由 Discourse 提供支持"
   admin_js:
     settings: "設定"
     admin:
@@ -3080,45 +3602,257 @@ zh_TW:
       reports:
         title: "可見報告列表"
         sidebar_title: "報告"
-        sidebar_link:
-          all: "所有報告"
+      config_sections:
+        account:
+          title: "帳號"
+        reports:
+          title: "報告"
+        community:
+          title: "社群"
+        appearance:
+          title: "外觀"
+        email:
+          title: "Email"
+        security:
+          title: "安全性"
+        plugins:
+          title: "延伸套件"
       config:
         developer:
           title: "開發人員"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "管理"
+          header_description: "Discourse 中的檢舉系統可以幫助您和您的版主團隊管理內容和使用者行為，讓您的社群保持尊重和健康。預設值適合大多數社區，您不必更改。不過，如果您的網站有特殊需求，您可以停用不需要的檢舉，並新增您自己的自訂檢舉。"
+          keywords: "標記 | 評論 | 垃圾郵件 | 非法"
+        font_style:
+          title: "字體樣式"
+          header_description: "自訂您的佈景主題使用的字體樣式"
         files:
           title: "檔案"
+          header_description: "控制檔案大小和類型限制、頭像大小和來源、檔案儲存空間、影像品質和壓縮等設定"
         legal:
           title: "法律"
+          header_description: "設定法律設定，例如服務條款、隱私權政策、聯絡詳細資料以及歐盟特定考量"
+        localization:
+          title: "本地化"
+          header_description: "為您的成員設定社群的介面語言和其他本地化選項"
+          keywords: "地區 | 語言 | 時區 | 單一區 | ltr"
+        login_and_authentication:
+          title: "登入與驗證"
+          header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
+        logo:
+          title: "網站標誌"
+          header_description: "自訂網站標誌的變化"
+        branding:
+          title: "品牌（Branding）"
+          logo:
+            form:
+              mobile: "行動裝置"
+              email: "Email"
         navigation:
           title: "導覽"
+          header_description: "設定網站的導覽連結和功能表項目。這包括主導航功能表的位置和行為、首頁頂部的快速鏈接以及管理側邊欄"
         notifications:
           title: "通知"
+          header_description: "設定如何管理和傳送通知給使用者，包括電子郵件喜好設定、推送通知、提及限制和通知整合"
         onebox:
           title: "單一框"
+          header_description: "設定如何為您的網站產生和顯示單一框預覽"
         other:
           title: "其他"
+          header_description: "不適用於任何其他類別的設定"
+        rate_limits:
+          title: "速率限制"
+          header_description: "配置使用者執行特定操作（例如創建話題、發送訊息和發布回覆）的頻率"
         search:
-          title: "搜索"
+          title: "搜尋設定"
+          header_description: "設定中文和日語的搜尋設定，包括記錄和令牌化"
+        search_everything:
+          title: "搜尋"
+          header_description: "在這裡的管理介面中尋找任何東西。您可以在下方篩選結果，您的偏好設定將會被記住。"
         security:
           title: "安全性"
+          header_description: "設定安全設定，包括二次驗證、主持人權限和內容安全政策"
         spam:
           title: "垃圾內容"
+          header_description: "設定系統如何分析使用者註冊和張貼行為，以快速識別和阻止垃圾郵件"
+        trust_levels:
+          title: "信任等級"
+          header_description: "信任等級設定可讓您微調社群進階系統的要求和通知，當使用者持續積極參與您的論壇時，系統會自動將他們提升到更高的信任等級。"
         user_api:
           title: "使用者 API"
+          header_description: "設定哪些使用者群組可以存取 API，以及哪些範圍是允許的"
+        group_permissions:
+          title: "群組權限"
+          header_description: "所有基於群組的應用權限都在這裡管理，這些權限控制 Discourse 中各種功能的訪問權限"
+        dashboard:
+          title: "控制面板"
+          header_description: "儀表板提供您社群的健康快照，包括流量、使用者活動和其他關鍵指標"
+        users:
+          title: "使用者"
+          header_description: "檢視與管理使用者、傳送邀請函與匯出使用者資料"
+        groups:
+          title: "群組"
+          header_description: "建立和管理群組、設定群組權限，以及檢視群組活動和收件匣"
+        site_settings:
+          title: "所有網站設定"
+          header_description: "配置您的 Discourse 網站的設定以自訂其外觀、功能和使用者體驗。"
+        whats_new:
+          title: "有什麼最新消息？"
+          header_description: "隨時了解 Discourse 的最新功能與改進"
+          keywords: "更新紀錄|功能|發布"
+        backups:
+          title: "備份"
+          header_description: "Discourse 備份包括完整的網站資料庫，其中包含網站上的所有內容：話題、貼文、使用者、群組、設定、佈景主題等。根據備份文件的創建方式，它可能包含也可能不包含上傳內容。"
+          sub_pages:
+            logs:
+              title: "紀錄"
+              header_description: "檢視和管理備份、還原和上傳的日誌"
+        reports:
+          title: "報告"
+          header_description: "報告是幫助您了解網站上所發生事情的有力工具。它們可以幫助您了解趨勢、發現問題並根據數據做出決策。"
+        badges:
+          title: "徽章"
+          header_description: "徽章可獎勵使用者的活動、貢獻和成就，以表揚、確認和鼓勵社群內的正面行為和參與。"
+        permalinks:
+          title: "固定連結"
+          header_description: "為論壇無法識別的 URL 應用的重新導向。"
+        user_fields:
+          title: "使用者欄位"
+          header_description: "創建自訂使用者欄位以收集有關社區成員的額外詳細資訊。您可以選擇在註冊時需要哪些資訊、個人資料上顯示哪些內容以及使用者可以更新哪些資訊。"
+        watched_words:
+          title: "監察字詞"
+          header_description: "監察字詞是一種審查工具，可執行多種不同的動作，包括封鎖、審查、連結或標記含有特定字詞的文章"
+        color_palettes:
+          title: "調色盤"
+          header_description: "調色盤可以定義網站介面上使用的核心顏色，而主題則可以提供額外的樣式、版面設計和元件 - 兩者可以共同創造出網站獨特的外觀和感覺，而且兩者都可以供使用者選擇喜好。"
+        emoji:
+          title: "Emoji"
+          header_description: "添加可供所有人使用的新表情符號。選擇多個文件，使用其文件名創建表情符號。所選群組將用於同時添加的所有文件。"
+        themes:
+          title: "佈景主題"
+          header_description: "佈景主題是一種廣泛的客製化設計，可以改變論壇設計風格的多種元素，通常還包括額外的前端功能。"
+        components:
+          title: "元件"
+          header_description: "元件是較小的客製化設定，可以新增至佈景主題，以改變論壇設計風格的特定元素。"
+          keywords: "主題 | 元件 | 擴充套件"
+        site_texts:
+          title: "網站文字"
+          header_description: "自定義 Discourse 中使用的任何文本，以匹配社區的聲音和語調"
+        email:
+          title: "伺服器設定和記錄檔"
+          header_description: "自訂用於製作電子郵件的範本、預覽將要寄出的摘要電子郵件，以及檢視電子郵件記錄。"
+          keywords: "電子郵件|smtp|mailgun|sendgrid|已發送|已跳過|已退回|已收到|已拒絕|電子郵件日誌|預覽摘要"
+          sub_pages:
+            preview_summary:
+              title: "預覽摘要"
+              header_description: "預覽發送給不活躍使用者的摘要郵件內容。"
+            advanced_test:
+              title: "進階測試"
+              header_description: "瞭解 Discourse 如何處理收到的電子郵件"
+            templates:
+              title: "範本"
+              header_description: "自訂用於製作電子郵件的範本"
+            sent:
+              title: "送出"
+              header_description: "檢視已傳送的電子郵件記錄"
+            skipped:
+              title: "跳過"
+              header_description: "檢視已跳過的電子郵件記錄"
+            bounced:
+              title: "退回"
+              header_description: "檢視已退回的電子郵件記錄"
+            received:
+              title: "收到"
+              header_description: "檢視已收到的電子郵件記錄"
+            rejected:
+              title: "拒絶"
+              header_description: "檢視已拒絕的電子郵件記錄"
+        email_appearance:
+          title: "外觀"
+          header_description: "自訂渲染所有 HTML 電子郵件的範本，並使用 CSS 設定樣式"
+        staff_action_logs:
+          title: "日誌和篩選"
+          header_description: "日誌和篩選功能可讓您監控和管理社區，確保社區的安全和相互尊重。您可以查看員工執行的所有操作日誌、搜尋日誌和使用者篩選配置。"
+          keywords: "錯誤日誌 | 員工操作 | 篩選的電子郵件 | 篩選的 ip | 篩選網址 | 搜索日誌"
+          sub_pages:
+            screened_emails:
+              title: "已禁止的電子郵件地址"
+              header_description: "以下的電子郵件地址將無法用來建立新使用者。"
+            screened_ips:
+              title: "過濾的 IP 位址"
+              header_description: "被監視的 IP 位址。可以將個別 IP 位址列入允許列表。"
+            screened_urls:
+              title: "過濾的網址"
+              header_description: "此處列出的 URL 是由被識別為垃圾郵件發送者的用戶在貼文中使用的"
+            search_logs:
+              title: "搜尋記錄"
+              header_description: "檢視已執行的搜尋記錄"
+        plugins:
+          title: "已安裝外掛"
+          header_description: "您安裝的任何 Discourse 插件，或由 Discourse 托管預安裝的插件都將出現在此清單中"
+        api_keys:
+          title: "API 密鑰"
+          header_description: "API 金鑰功能可讓您安全地將 Discourse 與外部系統整合，並自動執行動作。管理員可以建立具有特定範圍的金鑰，以控制對資源和敏感資料的存取權限。範圍限制功能，確保增強安全性。"
+          keywords: "令牌|範圍"
+        webhooks:
+          title: "Webhooks"
+          header_description: "Webhooks 允許 Discourse 在您的網站中發生某些事件時通知外部服務。觸發網絡掛鉤時，POST 請求將發送到提供的 URL。"
+          keywords: "事件 | 負載 | 網址"
+        embedding:
+          title: "嵌入"
+          header_description: "Discourse 能夠使用創建 IFRAME 的 Javascript API 將主題中的註釋嵌入遠程網站中"
+      search:
+        modal_title: "搜尋管理員頁面中的任何內容"
+        title: "搜索"
+        instructions: "輸入以搜尋頁面、設定、報表、佈景主題、元件等..."
+        result_types:
+          page:
+            other: "頁面"
+          report:
+            other: "報告"
+          setting:
+            other: "設定"
+          theme:
+            other: "佈景主題"
+          component:
+            other: "元件"
+      new_features:
+        title: "有什麼最新消息？"
+        check_for_updates: "檢查更新"
       dashboard:
         title: "控制台"
+        last_updated: "儀表板更新："
+        discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
         critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
+        please_update: "請更新！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
+        version_check_pending: "看起來您最近更新了。極好的！"
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
         dismiss_notice: "忽略"
         new_features:
+          title: "有什麼最新消息？"
+          subtitle: "我們一直在發布新功能和改進。此頁面涵蓋了重點，但您可以單擊「了解更多」以查看詳細的版本說明。"
+          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a>上查看先前的新功能公告"
           learn_more: "了解更多..."
+          experimental: "實驗性"
+          only_experiments: "僅顯示實驗性功能"
+          experiment_enabled: "您已啟用實驗性功能。"
+          experiment_disabled: "您已停用實驗性功能。"
+          experiment_toggled_too_fast: "您切換實驗性功能的速度太快。請稍等幾秒鐘再重新嘗試。"
+          experiment_tooltip:
+            title_disabled: "嘗試我們的實驗性功能"
+            title_enabled: "關閉實驗性功能"
+            content_disabled: "試試我們最新開發的功能！目前仍在實驗階段，因此我們可能隨時移除。您可以隨時選擇退出。<br/><br/>變更此選項將啟用所有使用者的功能。"
+            content_enabled: "更改此項將為所有使用者禁用該功能。"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"
@@ -3156,8 +3890,17 @@ zh_TW:
         exception_error: 很抱歉，在查詢時發生了錯誤
         too_many_requests: 您已重複此動作太多次，請稍後再重試。
         not_found_error: 抱歉，這個報告不存在。
+        custom_date_range: 自定義日期範圍
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
+          percent_change_tooltip: "%{percent} 更改。"
+          percent_change_tooltip_previous_value:
+            yesterday:
+              other: "兩天前為 %{count} 。"
+            two_weeks_ago:
+              other: "兩週前為 %{count} 。"
+            thirty_days_ago:
+              other: "在過去的 30 天內為 %{count}。"
           today: "今天"
           yesterday: "昨天"
           last_7_days: "最近 7 天"
@@ -3172,14 +3915,17 @@ zh_TW:
           daily: 日
           monthly: 月
           weekly: 周
+          dates: "日期 (UTC)"
           groups: "所有群組"
           disabled: "該使用者已被禁言"
           totals_for_sample: "樣本總計"
+          average_for_sample: "樣本平均值"
           total: "總時數"
           no_data: "沒有可顯示的資料。"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
             disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
+          average_chart_label: 平均值
           filters:
             file_extension:
               label: 檔案副檔名
@@ -3187,10 +3933,18 @@ zh_TW:
               label: 群組
             category:
               label: 分類
+            include_subcategories:
+              label: "包含子類別"
+            type_of_web_hook_event:
+              label: "活動類型"
       flags:
         title: "管理"
         description: "簡述"
         enabled: "啟用?"
+        more_options:
+          title: "更多選項"
+          move_up: "上移"
+          move_down: "下移"
       groups:
         new:
           title: "新群組"
@@ -3198,6 +3952,7 @@ zh_TW:
           name:
             too_short: "群組名稱過短"
             too_long: "群組名稱過長"
+            checking: "正在檢查群組名稱是否可用..."
             available: "可以使用此群組名稱"
             not_available: "無法使用此群組名稱"
             blank: "群組名稱不能空白"
@@ -3211,12 +3966,29 @@ zh_TW:
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
+              logged_on_users: "已登入的使用者"
+              members: "群組擁有者、成員和管理員"
+              staff: "群組擁有者和管理員"
+              owners: "群組擁有者"
+              description: "管理員可以看到所有群組。"
+            members_visibility_levels:
+              title: "誰可以看到這個群組的成員？"
+              description: "管理員可以查看所有群組的成員。群組標識對所有使用者可見。"
+            publish_read_state: "群組訊息發佈時顯示群組已讀狀態"
           membership:
             automatic: 自動
+            automatic_tooltip: "此群組是自動創建的，您無法將其刪除，並且成員會自動添加和刪除"
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
+            effects: 影響
             trust_levels_none: "無"
             automatic_membership_email_domains: "當註冊使用者的電子郵件所屬網域，完全符合列表裡某項時，將會自動加進這個群組裡："
+            automatic_membership_user_count:
+              other: "%{count} 個使用者具有新的電子郵件網域，將被添加到群組中。"
+            automatic_membership_associated_groups: "作為此處列出的服務的群組成員的使用者將在使用該服務登入時自動添加到該群組。"
             primary_group: "自動設為主要群組"
+          alert:
+            primary_group: "由於這是一個主要群組，名稱「%{group_name}」將用於任何人都可以查看的 CSS 類中。"
+            flair_group: "由於此群組具有成員的標識，名稱「%{group_name}」對所有人可見。"
         name_placeholder: "群組名稱：不可含有空白字元，和使用者名稱的規則相同"
         primary: "主要群組"
         no_primary: "( 沒有主要群組 )"
@@ -3226,7 +3998,14 @@ zh_TW:
         about: "請在此編輯你的群組成員與名稱"
         group_members: "群組成員"
         delete: "刪除"
+        delete_confirm: "您確定要刪除 %{group}嗎？"
+        delete_details:
+          other: "%{count} 人將無法訪問此群組"
+        delete_with_messages_confirm:
+          other: "%{count} 條訊息將無法被群組成員訪問"
+        delete_warning: "刪除的群組無法恢復"
         delete_failed: "無法刪除群組，自動建立的群組無法刪除。"
+        delete_automatic_group: 這是一個自動生成的群組，無法刪除。
         delete_owner_confirm: "移除“%{username}”的權限？"
         add: "加入"
         custom: "客製"
@@ -3238,50 +4017,165 @@ zh_TW:
         none_selected: "選擇一個群組以開始"
         no_custom_groups: "建立一個新的自訂群組"
       api_keys:
+        title: "API 密鑰"
+        description: "API 金鑰功能可讓您安全地將 Discourse 與外部系統整合，並自動執行動作。管理員可以建立具有特定範圍的金鑰，以控制對資源和敏感資料的存取權限。範圍限制功能，確保增強安全性。"
+        add: "新增 API 金鑰"
         edit: "編輯"
         save: "保存"
         cancel: "取消"
         continue: "繼續"
+        back: "返回 API 金鑰"
         revoke: "撤回"
+        undo_revoke: "撤銷撤銷"
+        revoked: "已撤銷"
+        delete: 永久刪除
+        no_api_keys: "您還沒有任何 API 密鑰。"
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"
         user: "使用者"
         title: "API"
         key: "金鑰"
+        keys: "金鑰"
+        created: 創建者
         updated: 更新時間
+        last_used: 最後使用：
         never_used: 永不
         generate: "產生"
+        undo_revoke: "撤銷撤銷"
         revoke: "撤銷"
         all_users: "所有使用者"
+        active_keys: "有效的 API 金鑰"
+        manage_keys: 管理金鑰
         show_details: 詳細訊息
         description: 描述
+        no_description: '（沒有說明）'
         all_api_keys: 所有 API 金鑰
+        user_mode: 使用者等級
+        scope_mode: 範圍
+        impersonate_all_users: 模仿任何使用者
+        single_user: "單一使用者"
+        user_placeholder: 輸入使用者名稱
+        description_placeholder: 這個密鑰將用於什麼？
         save: 儲存
+        new_key: 新的 API 金鑰
+        revoked: 已撤銷
+        delete: 永久刪除
+        not_shown_again: 此按鍵將不會再顯示。繼續之前，請務必複製一份。
         continue: 繼續
         scopes:
+          description: |
+            使用範圍時，您可以將 API 金鑰限制在特定一組端點。
+            您也可以定義允許哪些參數。使用逗號分隔多個值。
+          title: 範圍
+          one_or_more: 至少必須選取一個範圍。
+          granular: 精細
           read_only: 唯讀
           global: 全域
+          global_description: API 金鑰沒有限制，所有端點都可以訪問。
           resource: 資源
           action: 動作
+          allowed_parameters: 允許的參數
+          optional_allowed_parameters: 允許的參數（可選）
+          any_parameter: '（任何參數）'
+          allowed_urls: 允許的網址
+          descriptions:
+            global:
+              read: 將 API 金鑰限制為唯讀端點。
+            topics:
+              read: 閱讀其中的主題或特定文章。也支援 RSS。
+              write: 建立新主題或張貼到現有主題。
+              update: 更新主題。變更標題、類別、標籤、狀態、原型、特徵連結等。
+              delete: 刪除主題。
+              recover: 恢復一個主題。
+              read_lists: 閱讀主題清單，如頂端、新、最新等。也支援 RSS。
+              status: "更新主題的狀態。狀態：關閉、歸檔、顯示、釘選。啟用：true、false。請在此處及要求的有效負載中指定 category_id，以僅允許在該類別中的主題上變更狀態。"
+            posts:
+              edit: 編輯任意帖文或特定帖文。
+              delete: 刪除貼文。
+              recover: 恢復帖文。
+              list: 列出最新貼文和私人貼文。也支援 RSS。
+            revisions:
+              read: "取得最新或特定的修訂版本。"
+              modify: "隱藏、顯示或還原修訂。"
+              permanently_delete: "永久刪除修訂。"
+            tags:
+              list: 列出標籤。
+            tag_groups:
+              list: 取得標籤群組的清單。
+              show: 依 ID 取得單一標籤群。
+              create: 建立標籤組。
+              update: 更新由 id 指定的標籤群。
+            categories:
+              list: 取得類別清單。
+              show: 依 ID 取得單一類別。
+            uploads:
+              create: 上傳新檔案或啟動單一或多部分直接上傳至外部儲存空間。
+            users:
+              bookmarks: 列出使用者書籤。使用 ICS 格式時，它會返回書籤提醒。
+              sync_sso: 使用 DiscourseConnect 同步使用者。
+              show: 取得使用者的相關資訊。
+              check_emails: 列出使用者電子郵件。
+              update: 更新使用者設定檔資訊。
+              log_out: 登出使用者的所有工作階段。
+              anonymize: 對使用者帳戶進行匿名化處理。
+              suspend: 停權使用者帳戶。
+              delete: 刪除使用者帳號。
+              list: 取得使用者清單。
+            user_status:
+              read: 讀取使用者狀態。
+              update: 更新使用者狀態。
+            email:
+              receive_emails: 將此範圍與郵件接收器合併以處理傳入的電子郵件。
+            invites:
+              create: 傳送電子郵件邀請或產生邀請連結。
+            badges:
+              create: 建立新的徽章。
+              show: 取得徽章的相關資訊。
+              update: 更新徽章。
+              delete: 刪除徽章。
+              list_user_badges: 列出使用者徽章。
+              assign_badge_to_user: 指定徽章給使用者。
+              revoke_badge_from_user: 撤銷使用者的徽章。
+            groups:
+              manage_groups: 列出、新增及移除群組成員。
+              administer_groups: 列出、顯示、建立、更新及刪除群組。
+            search:
+              show: 使用“/search.json?q=term”端點進行搜尋。
+              query: 使用“/search/query?term=term”端點進行搜尋。
+            wordpress:
+              publishing: WP Discourse 外掛程式發佈功能所需 (必填)。
+              commenting: WP Discourse 外掛程式評論功能所需。
+              discourse_connect: WP Discourse 外掛程式 DiscourseConnect 功能所需。
+              utilities: 如果您使用 WP Discourse 外掛實用程序，則必需。
+            logs:
+              messages: 列出 /logs 中的訊息或取得特定的日誌訊息。
       web_hooks:
         title: "Webhooks"
+        none: "您還沒有任何 webhooks"
         instruction: "Webhooks 讓 Discourse 可以在特定事件發生時通知外部服務。當 webhook 事件觸發時，一個 POST 請求將發向指定地址。"
         detailed_instruction: "一個 POST 請求將在選定事件發生時發至指定 URL。"
+        add: "新增 webhook"
         create: "建立"
         edit: "編輯"
         save: "保存"
+        show: "活動"
         delete: "刪除"
         cancel: "取消"
+        description_label: "事件觸發器"
         controls: "控制"
+        back: "回到 webhooks"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "密鑰不能包含空白字元。"
         secret_too_short: "密鑰必須至少有 12 個字元。"
+        secret_placeholder: "用於生成簽名的字符串"
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
         event_chooser: "哪些事件可以觸發到 Webhook？"
+        wildcard_event: "向我發送所有事件"
+        individual_event: "選擇個別事件"
         verify_certificate: "檢查 Payload URL 的 TLS 證書"
         active: "啟用"
         active_notice: "我們將在事件發生時分發事件詳情。"
@@ -3292,6 +4186,68 @@ zh_TW:
         groups_filter_instructions: "相關 Webhook 事件將在滿足特定群組的情況下才發送。留空忽略群組限制。"
         groups_filter: "觸發的群組"
         delete_confirm: "刪除這個 webhook？"
+        topic_event:
+          group_name: "主題活動"
+          topic_created: "主題已建立"
+          topic_revised: "主題已修改"
+          topic_edited: "主題已更新"
+          topic_destroyed: "主題已刪除"
+          topic_recovered: "主題已恢復"
+        post_event:
+          group_name: "發布活動"
+          post_created: "貼文已創建"
+          post_edited: "貼文已更新"
+          post_destroyed: "貼文已刪除"
+          post_recovered: "貼文已恢復"
+        group_event:
+          group_name: "團體活動"
+          group_created: "群組已建立"
+          group_updated: "群組已更新"
+          group_destroyed: "群組已刪除"
+        tag_event:
+          group_name: "標籤活動"
+          tag_created: "標籤已建立"
+          tag_updated: "標籤已更新"
+          tag_destroyed: "標籤已刪除"
+        category_event:
+          group_name: "類別活動"
+          category_created: "類別已建立"
+          category_updated: "類別已更新"
+          category_destroyed: "類別已刪除"
+        user_event:
+          group_name: "使用者活動"
+          user_logged_in: "使用者登入"
+          user_logged_out: "用戶登出"
+          user_confirmed_email: "使用者確認電子郵件"
+          user_created: "使用者已建立"
+          user_approved: "使用者已核准"
+          user_updated: "使用者已更新"
+          user_destroyed: "使用者已刪除"
+          user_suspended: "使用者被停權"
+          user_unsuspended: "使用者被停權已解除"
+        reviewable_event:
+          group_name: "可審核的事件"
+          reviewable_created: "可檢閱項目已準備就緒"
+          reviewable_updated: "可檢閱項目已更新"
+        user_badge_event:
+          group_name: "徽章活動"
+          user_badge_granted: "授予使用者徽章"
+          user_badge_revoked: "使用者徽章被撤銷"
+        like_event:
+          group_name: "點讚事件"
+          post_liked: "當使用者喜歡某個貼文時。"
+        notification_event:
+          group_name: "通知事件"
+          notification_created: "使用者在他們的 feed 中收到通知"
+        group_user_event:
+          group_name: "群組使用者事件"
+          user_added_to_group: "將使用者新增至群組"
+          user_removed_from_group: "將使用者從群組中移除"
+        custom_event:
+          group_name: "自訂事件"
+        user_promoted_event:
+          group_name: "使用者信任級別提升事件"
+          user_promoted: "使用者信任級別被提升"
         delivery_status:
           title: "分髮狀態"
           inactive: "不活躍"
@@ -3301,6 +4257,7 @@ zh_TW:
         events:
           none: "沒有相關事件。"
           redeliver: "重新發送"
+          redeliver_failed: "重新發送失敗"
           incoming:
             other: "有 %{count} 個新事件。"
           completed_in:
@@ -3308,6 +4265,9 @@ zh_TW:
           request: "請求"
           response: "回應"
           redeliver_confirm: "你確定要再次發送一樣的內容嗎？"
+          redeliver_failed_confirm:
+            other: "確定要重新遞送 %{count} 個webhook事件嗎？"
+          no_events_to_redeliver: "沒有要重新發送事件。"
           headers: "頭部"
           payload: "內容"
           body: "內容"
@@ -3318,77 +4278,125 @@ zh_TW:
           completion: "完成時間"
           actions: "操作"
           filter_status:
+            all: "所有活動"
+            successful: "發表"
             failed: "失敗"
       home:
         title: "主頁"
-      account:
-        title: "帳號"
-        sidebar_link:
-          backups: "備份"
-      community:
-        title: "社群"
-        sidebar_link:
-          badges: "徽章"
-          notifications: "通知"
-          permalinks: "固定連結"
-          users: "使用者"
-          groups: "群組"
-          legal: "法律"
-          moderation_flags:
-            title: "管理"
-      appearance:
-        title: "外觀"
-        sidebar_link:
-          emoji: "Emoji"
-          navigation: "導覽"
-          themes: "佈景主題"
-          components:
-            title: "元件"
-      email_settings:
-        sidebar_link:
-          appearance: "外觀"
-      security:
-        title: "安全性"
-      section_landing_pages:
-        account:
-          title: "帳號"
-          backups:
-            title: "備份"
       config_areas:
         about:
+          general_settings: "一般設定"
+          community_name: "社區名稱"
+          community_name_placeholder: "社區範例"
+          community_summary: "社區摘要"
+          community_description: "社區描述"
+          community_title: "社群標題"
+          community_title_help: "關鍵頁面（例如類別和主題清單）顯示在瀏覽器標籤中的簡短說明。"
+          banner_image: "橫幅圖片"
+          banner_image_help: |
+            建議使用：1100x300px.格式：JPG、PNG、SVG (最大 10MB)。
+          contact_information: "聯絡資訊"
+          community_owner: "社區擁有者"
+          community_owner_placeholder: "Johnny Smith"
+          community_owner_help: |
+            用於重要通知的電子郵件，也會顯示在 /about。公開網站上的匿名使用者可以看到。
+          contact_email: "聯絡電子郵件"
+          contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_help: |
+            用於重要通知的電子郵件，也會顯示在 /about。公開網站上的匿名使用者可以看到。
+          contact_url: "聯絡網址"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            當存在時，會取代 /about 上的聯絡人電子郵件地址，並顯示給公開網站上的匿名使用者。
+          site_contact_name: "網站聯絡人名稱"
+          site_contact_name_help: |
+            用來傳送所有自動訊息的管理人使用者名稱。如果留空，則會使用預設的系統帳戶。
+          site_contact_group: "網站聯絡人群組"
+          site_contact_group_help: |
+            受邀接收所有自動發送的私人訊息的群組。
+          your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
+          company_name_placeholder: "Acme 組織"
+          company_name_warning: |
+            如果留空，則不會提供模板服務條款或隱私權通知。
+          governing_law: "適用於法律"
+          governing_law_placeholder: "省、州或國家"
+          governing_law_help: |
+            指定網站法律條款的司法管轄區，通常是公司註冊地或營運地。
+          city_for_disputes: "爭議城市"
+          city_for_disputes_placeholder: "城市"
+          city_for_disputes_help: |
+            指定解決與該論壇相關的法律糾紛的城市。
           optional: "(選擇性)"
           update: "更新"
+          toasts:
+            general_settings_saved: "一般設定已儲存"
+            contact_information_saved: "已儲存聯絡資訊"
+            your_organization_saved: "您的組織已儲存"
           saved: "儲存完畢!"
         flags:
-          header: "管理"
+          edit_header: "編輯檢舉"
           description: "簡述"
           enabled: "啟用?"
+          add: "新增檢舉"
           edit: "編輯"
+          back: "返回檢舉"
           delete: "刪除"
           delete_confirm: '你確定要刪除%{name}嗎？'
           flags_tab: "投訴"
+          settings: "檢舉設定"
           form:
+            add_header: "新增檢舉"
+            edit_header: "編輯檢舉"
             save: "保存"
             name: "名字"
             description: "簡述"
+            applies_to: "將此檢舉顯示於"
             invalid_applies_to: "必要設定"
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"
+            enabled: "儲存後啟用此自訂檢舉"
+            alert: "一旦使用自訂檢舉，它只能被停用，而不能被編輯或刪除。"
+            edit_flag: "編輯檢舉"
+            non_editable: "您無法編輯此檢舉，因為它是系統檢舉或已在審核系統中使用，但是您仍然可以停用它。"
+            delete_flag: "刪除檢舉"
+            non_deletable: "您無法刪除此檢舉，因為它是系統檢舉或已在審核系統中使用，但是您仍然可以停用它。"
+            require_message: "提示使用者提供其他原因"
+            require_message_description: "選取此檢舉後，會顯示一個文字欄位供使用者提供其他關於為何檢舉內容的其他詳細資訊"
+            auto_action_type: "自動隱藏檢舉內容"
+          more_options:
+            title: "更多選項"
+            move_up: "上移"
+            move_down: "下移"
         permalinks:
           edit: "編輯"
           delete: "刪除"
         embeddable_host:
           edit: "編輯"
           delete: "刪除"
+          more_options:
+            title: "更多選項"
         look_and_feel:
           themes:
             title: "佈景主題"
+            themes_intro: "安裝新主題即可開始使用，或使用這些資源從頭開始建立您自己的主題。"
+            themes_intro_img_alt: "新增佈景主題預留位置"
+            set_default_theme: "設定預設值"
+            default_theme: "預設佈景主題"
+            themes_description: "佈景主題是一種廣泛的客製化設計，可以改變論壇設計風格的多種元素，通常還包括額外的前端功能。"
+            new_theme: "新佈景主題"
+            user_selectable: "使用者可選"
         user_fields:
+          field: "欄位"
           type: "類型"
+          more_options:
+            title: "更多選項"
+            move_up: "上移"
+            move_down: "下移"
           delete: "刪除"
+          delete_successful: "使用者欄位已刪除。"
+          save_successful: "儲存使用者欄位。"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -3398,29 +4406,25 @@ zh_TW:
         is_enabled: "是"
         not_enabled: "否"
         change_settings_short: "設定"
+        settings_disabled: "這個外掛程式只能啟用或停用，沒有其他設定。"
         howto: "如何安裝外掛?"
+        official: "官方 Discourse 外掛程式"
+        broken_route: "無法配置「%{name}」的連結。確保禁用廣告攔截器並嘗試重新載入頁面。"
         author: "作者 %{author}"
+        experimental_badge: "實驗性"
         learn_more: "了解更多"
-        sidebar_link:
-          installed: "已安裝"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "開發人員"
-          embedding: "嵌入"
-          user_api: "使用者 API"
-          onebox: "單一框"
-          files: "檔案"
-          other_options: "其他"
-          search: "搜索"
       navigation_menu:
         sidebar: "側選單"
+        header_dropdown: "標題下拉選單"
         legacy: "舊版"
       backups:
         title: "備份"
+        files_title: "備份檔案"
         menu:
           backups: "備份"
+          backup_files: "備份檔案"
           logs: "紀錄"
+        none: "沒有可用的備份。"
         read_only:
           enable:
             title: "開啟只讀模式"
@@ -3429,16 +4433,21 @@ zh_TW:
           disable:
             title: "關閉只讀模式"
             label: "關閉只讀模式"
+        logs:
+          none: "尚未記錄檔…"
         columns:
           filename: "文件名稱"
           size: "大小"
         upload:
           label: "上傳"
           title: "上傳備份"
+          uploading: "上傳中..."
+          uploading_progress: "正在上傳… %{progress}%"
           success: "%{filename}已成功上傳，該檔案正在被處理中，需花費幾分鐘才會顯示於列表。"
           error: "上載時發生問題： '%{filename}': %{message}"
         settings: "設定"
         operations:
+          is_running: "一個操作目前正在執行…"
           failed: "%{operation} 執行失敗。請觀看紀錄。"
           cancel:
             label: "取消"
@@ -3448,13 +4457,17 @@ zh_TW:
             label: "備份"
             title: "新增備份"
             confirm: "你確定要新增備份嗎?"
+            include_uploads: "包括所有上傳內容"
+            s3_upload_warning: '這僅適用於資料庫備份。將不包括上傳，這意味著如果備份還原到另一個託管設置，則所有圖像和其他文件上傳都可能會丟失。 <b>要啟用包括 S3 上傳的完整備份，請參閱 <a href="https://meta.discourse.org/t/-/276535" target="_blank">本指南</a>。</b>'
           download:
             label: "下載"
             title: "傳送含有下載連結的 email"
+            alert: "已通過電子郵件發送給您下載此備份的連結"
           destroy:
             title: "刪除"
             confirm: "你確定要刪除備份嗎?"
           restore:
+            is_disabled: "這僅適用於資料庫備份。將不包括上傳，這意味著如果備份還原到另一個託管設置，則所有圖像和其他文件上傳都可能會丟失。 <b>要啟用包括 S3 上傳的完整備份，請參閱 <a href=\"https://meta.discourse.org/t/-/276535\" target=\"_blank\">本指南</a>。</b>"
             label: "還原"
             title: "復原備份"
             confirm: "你確定要從該備份中恢復嗎？"
@@ -3463,6 +4476,7 @@ zh_TW:
             title: "回溯資料庫到以前的工作階段"
             confirm: "你確定要將資料庫回滾到之前的工作狀態嗎？"
         location:
+          local: "本地儲存"
           s3: "S3"
         backup_storage_error: "無法進入備份空間：%{error_message}"
       export_csv:
@@ -3477,19 +4491,30 @@ zh_TW:
           screened_url: "以 CSV 格式匯出所有已顯示的 URL 列表"
       export_json:
         button_text: "匯出"
+      invite:
+        button_text: "送出邀請"
+        button_title: "送出邀請"
       customize:
         title: "客製化"
         preview: "預覽"
         explain_preview: "以此佈景主題預覽網站"
         syntax_error: "語法錯誤"
+        settings_editor: "設定編輯器"
+        validation_settings_keys: "每個項目必須只有一個 'setting' 鍵和一個 'value' 鍵。"
+        validation_settings_deleted: "這些設定已刪除。請還原並重試。"
+        validation_settings_added: "這些設定已新增。請移除它們並重試。"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
         install: "安裝"
         delete: "刪除"
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
+        bulk_delete: "你確定嗎？"
+        bulk_themes_delete_confirm: "這將卸載以下佈景主題，您的網站上的任何用戶將無法再使用它們："
+        bulk_components_delete_confirm: "這將卸載以下元件，您網站上的任何使用者將無法再使用它們："
         color: "顏色"
         opacity: "不透明度"
+        copy: "複製"
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
@@ -3503,20 +4528,29 @@ zh_TW:
           revert_confirm: "你確定要恢復這個變更?"
         component:
           all_filter: "全部"
+          used_filter: "已使用"
+          unused_filter: "未使用"
           enabled_filter: "啟用"
           disabled_filter: "停用"
+          updates_available_filter: "有可用更新"
         theme:
+          filter_by: "篩選依據"
           theme: "佈景主題"
           component: "元件"
           components: "元件"
+          search_placeholder: "輸入以搜尋…"
           theme_name: "佈景主題名稱"
           component_name: "元件名稱"
           themes_intro: "選擇現有或安裝新佈景主題以開始"
+          themes_intro_new: "安裝新主題即可開始使用，或使用這些資源從頭開始建立您自己的主題。"
+          themes_intro_img_alt: "新增佈景主題預留位置"
           beginners_guide_title: "給使用者的Discourse佈景主題導覽"
           developers_guide_title: "給開發者的Discourse佈景主題導覽"
           browse_themes: "瀏覽社群佈景主題"
           customize_desc: "自訂："
           title: "佈景主題"
+          description: "佈景主題是一種廣泛的客製化設計，可以改變論壇設計風格的多種元素，通常還包括額外的前端功能。"
+          components_description: "元件是較小的客製化設定，可以新增至佈景主題，以改變論壇設計風格的特定元素。"
           create: "建立"
           create_type: "類型"
           create_name: "名稱"
@@ -3529,28 +4563,41 @@ zh_TW:
           common: "通用"
           desktop: "電腦"
           mobile: "行動裝置"
-          settings: "設定"
-          translations: "翻譯"
-          extra_scss: "額外的SCSS（CSS預處理器）"
+          extra_files: "附加檔案"
+          extra_files_upload: "匯出主題以檢視這些檔案。"
+          extra_files_remote: "導出主題或檢查 git 存儲庫以查看這些文件。"
           preview: "預覽"
-          show_advanced: "顯示進階選項"
-          hide_advanced: "隱藏進階選項"
-          hide_unused_fields: "隱藏未使用的欄位"
+          settings_editor: "設定編輯器"
           is_default: "佈景主題預設啟用"
           user_selectable: "使用者可選取佈景主題"
+          color_scheme_user_selectable: "調色盤可由使用者選擇"
+          auto_update: "當 Discourse 更新時自動更新"
           color_scheme: "調色盤"
+          edit_color_scheme: "編輯調色盤"
+          default_light_scheme: "亮色 (預設)"
           color_scheme_select: "選擇佈景主題可用的顏色"
           custom_sections: "自訂區域："
           theme_components: "佈景主題元件"
+          add_all_themes: "新增所有佈景主題"
           convert: "轉換"
           convert_component_alert: "您是否確定要轉換此元件為佈景主題？元件將會自%{relatives}移除。"
           convert_component_tooltip: "轉換此元件為佈景主題。"
+          convert_component_alert_generic: "您確定要將此元件轉換為佈景主題嗎？"
           convert_theme_alert: "您確定要將此佈景主題轉換為元件嗎？佈景主題將不再是%{relatives}的母項(parent)。"
+          convert_theme_alert_generic: "您確定要將此主題轉換為元件嗎？"
           convert_theme_tooltip: "轉換此佈景主題為元件"
           inactive_themes: "未啟用的佈景主題"
+          set_default_theme: "設定預設值"
+          default_theme: "預設主題"
+          set_default_success: "預設主題設定為 %{theme}"
+          install_success: "%{theme} 安裝成功！"
           inactive_components: "未使用的元件："
+          selected:
+            other: "已選擇 %{count} 個"
           cancel: "取消"
           broken_theme_tooltip: "此佈景主題的 CSS、HTML 或 YAML 中有錯誤。"
+          broken_theme: "停用損壞的主題"
+          disabled_component_tooltip: "此元件已停用"
           default_theme_tooltip: "此佈景主題是網站的預設佈景主題"
           updates_available_tooltip: "此佈景主題可更新"
           and_x_more:
@@ -3559,6 +4606,7 @@ zh_TW:
           uploads: "上傳檔案"
           no_uploads: "您能上傳與您的佈景主題有關的物件，例如：字型與圖片。"
           add_upload: "新增上傳檔案"
+          upload_file_tip: "選擇要上傳的資產（png、woff2 等…)"
           variable_name: "SCSS 的變數名稱"
           variable_name_invalid: "無效的變量名稱，僅能輸入字母且需以字母作為開頭，不可與其他使用者相同。"
           variable_name_error:
@@ -3566,15 +4614,22 @@ zh_TW:
             no_overwrite: "無效的變量名稱，不可複寫已存在的變量名稱。"
             must_be_unique: "無效的變量名稱，不可與其他使用者相同。"
           upload: "上傳"
+          select_component: "選擇要上傳的資產（png、woff2 等…)"
           unsaved_changes_alert: "您尚未儲存變更的內容，您是否要棄用內容並繼續進行？"
+          unsaved_parent_themes: "您尚未將元件分配給主題，是否要繼續？"
           discard: "捨棄"
           stay: "保留"
-          css_html: "自訂 CSS/HTML"
-          edit_css_html: "編輯 CSS/HTML"
-          edit_css_html_help: "您尚未編輯任何 CSS 或 HTML"
           delete_upload_confirm: "刪除此上傳檔案 ？（佈景主題的 CSS 可能會因此無法運作）"
+          component_on_themes: "包含這些主題的元件"
+          included_components: "包含的元件"
+          add_all: "新增全部"
           import_web_tip: "含有佈景主題的版本庫"
+          direct_install_tip: "您確定要從下面列出的存儲庫中安裝 <strong>%{name}</strong> 嗎？"
+          import_web_advanced: "進階…"
+          import_file_tip: "包含主題的 .tar.gz、.zip 或 .dcstyle.json 檔案"
           is_private: "佈景主題在私人git版本庫中"
+          finish_install: "完成佈景主題安裝"
+          last_attempt: "安裝過程未完成，最後一次嘗試："
           remote_branch: "分支名稱 (選填)"
           public_key: "授予公鑰以進入Repo（倉庫）的訪問權限："
           install: "安裝"
@@ -3583,55 +4638,88 @@ zh_TW:
           install_upload: "從您的裝置"
           install_git_repo: "來自 Git 的 Repository（版本庫）"
           install_create: "建立新的"
+          installing_message: "正在設置您的新主題…"
+          installing_message_long_time: "設定新主題的時間比預期稍長，請耐心等候…"
+          duplicate_remote_theme: "主題組件「%{name}」已安裝，您確定要安裝另一個副本嗎？"
+          force_install: "無法安裝主題，因為 Git 存儲庫無法訪問。您確定要繼續安裝它嗎？"
+          create_placeholder: "建立預留位置"
           about_theme: "關於"
           license: "版權"
           version: "版本："
           authors: "作者："
+          creator: "建立者:"
           source_url: "來源："
           enable: "啟用"
           disable: "禁用"
+          disabled: "此元件已停用。"
+          disabled_by: "此元件已被禁用，操作者："
           required_version:
             error: "由於佈景主題與此版本的 Discourse 不相容，此佈景主題已被自動停用。"
             minimum: "需要 Discourse%{version} 或更新的版本。"
             maximum: "需要 Discourse %{version} 或更舊的版本。"
           update_to_latest: "更新至最新版本"
           check_for_updates: "檢查更新"
+          updating: "更新中…"
+          update_success: "%{theme} 更新完成"
           up_to_date: "佈景主題已是最新版本，上次檢查時間："
+          has_overwritten_history: "目前的主題版本不再存在，因為 Git 歷史記錄被強制推覆了。"
           add: "新增"
           theme_settings: "佈景主題設定"
+          edit_objects_theme_setting: "物件設定編輯器"
+          overriden_settings_explanation: "覆蓋的設定以點標記並以突出顯示的顏色顯示。若要將這些設定重設為預設值，請按下旁邊的重設按鈕。"
           no_settings: "此佈景主題無設定"
           theme_translations: "佈景主題轉譯"
           empty: "沒有物件"
           commits_behind:
             other: "佈景主題落後了%{count}個變更！"
           compare_commits: "（查看新的提交）"
+          remote_theme_edits: "如果您要編輯此主題，您必須<a href='%{repoURL}' target='_blank'>在其儲存庫中提交變更</a>"
           repo_unreachable: "無法連線至此佈景主題的 Git 版本庫。錯誤訊息："
+          imported_from_archive: "此主題從 .zip 檔案匯入"
           scss:
             text: "CSS"
-            title: "輸入自訂的 CSS，可接受所有有效的 CSS 及 SCSS。"
-          header:
-            text: "頁首"
-            title: "輸入要顯示於網站頁首上方的 HTML"
           after_header:
             text: "頁首之後"
-            title: "輸入在所有頁面的頁首之後要顯示的 HTML"
           footer:
             text: "頁尾"
-            title: "輸入要顯示於頁尾的 HTML"
           embedded_scss:
             text: "嵌入的 CSS"
-            title: "輸入用於嵌入回應的自定義 CSS 樣式"
-          body_tag:
-            text: "內容"
-          yaml:
-            text: "YAML"
-            title: "用 YAML 格式定義佈景主題的設定"
+          embedded_header:
+            text: "嵌入式標頭"
+          color_definitions:
+            text: "顏色定義"
+            title: "輸入自訂顏色定義（僅限高級使用者）"
+            placeholder: |2-
+
+              使用此樣式表將自訂顏色新增至 CSS 自訂屬性清單。
+
+              範例：
+
+              %{example}
+
+              強烈建議為屬性名稱加上前綴，以避免與外掛程式和/或核心產生衝突。
+          js:
+            text: "JS"
+          scss_color_variables_warning: '在主題中使用核心 SCSS 顏色變數已棄用。請改用 CSS 自訂屬性。請參閱<a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>，了解更多詳細資訊。'
+          scss_warning_inline: "在主題中使用核心 SCSS 顏色變數已被棄用。"
           all_filter: "全部"
           active_filter: "啟用的"
           inactive_filter: "不活躍"
+          updates_available_filter: "有可用更新"
           schema:
+            title: "在主題中使用核心 SCSS 顏色變數已棄用。請改用 CSS 自訂屬性。請參閱<a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">本指南</a>，了解更多詳細資訊。"
+            back_button: "返回 %{name}"
             fields:
               required: "*必要設定"
+              groups:
+                at_least:
+                  other: "至少需要 %{count} 個群組"
+              categories:
+                at_least:
+                  other: "至少需要 %{count} 個類別"
+              tags:
+                at_least:
+                  other: "至少需要 %{count} 個標籤"
               string:
                 too_short:
                   other: "必須至少 %{count} 個字"
@@ -3643,7 +4731,11 @@ zh_TW:
             title: "選擇調色盤"
             description: "基本顏色："
           title: "顏色"
+          edit: "編輯調色盤"
+          long_title: "調色盤"
+          description: "調色盤可以定義網站介面上使用的核心顏色，而主題則可以提供額外的樣式、版面設計和元件 - 兩者可以共同創造出網站獨特的外觀和感覺，而且兩者都可以供使用者選擇喜好。"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
+          new_name: "新的調色盤"
           copy_name_prefix: "複製於"
           delete_confirm: "刪除此調色盤？"
           undo: "復原"
@@ -3653,6 +4745,10 @@ zh_TW:
           primary:
             name: "一級"
             description: "大部分的文字、圖示和邊框"
+          primary-medium:
+            name: "主要-中"
+          primary-low-mid:
+            name: "主要-低-中"
           secondary:
             name: "二級"
             description: "主要的背景顏色和一些按鈕上的文字顏色"
@@ -3661,6 +4757,7 @@ zh_TW:
             description: "連結、一些按鈕、通知和強調顏色"
           quaternary:
             name: "四級"
+            description: "可在主題中選擇使用。"
           header_background:
             name: "標頭背景"
             description: "網站標頭的背景顏色"
@@ -3670,6 +4767,12 @@ zh_TW:
           highlight:
             name: "重點"
             description: "頁面上重點元素的背景顏色，例如貼文和話題"
+          highlight-high:
+            name: "重點-高"
+          highlight-medium:
+            name: "重點-中"
+          highlight-low:
+            name: "重點-低"
           danger:
             name: "危險"
             description: "重要動作例如刪除貼文和話題的重點顏色"
@@ -3681,17 +4784,41 @@ zh_TW:
             description: "按讚按鈕的顏色"
           selected:
             name: "已選取"
+            description: "元素（例如清單項目）被選取/作用中時的背景顏色。"
+          hover:
+            name: "元素（例如清單項目）被選取或作用中時的背景顏色。"
+            description: "元素（例如清單項目）被懸停或鍵盤焦點時的背景顏色。"
+          editor:
+            light: "輕亮"
+            dark: "黑暗"
+        robots:
+          title: "覆蓋您網站的 robots.txt 檔案："
+          warning: "這將永久覆蓋任何相關的站點設定。"
+          overridden: 您的網站的預設 robots.txt 檔案已被覆蓋。
         email_style:
+          title: "電子郵件樣式"
+          heading: "自訂電子郵件樣式"
           html: "HTML"
           css: "CSS"
           reset: "重設為預設值"
+          reset_confirm: "您確定要重設為預設 %{fieldName} 並失去所有變更嗎？"
+          save_error_with_reason: "您的變更未儲存。 %{error}"
+          instructions: "自訂渲染所有 HTML 電子郵件的範本，並使用 CSS 設定樣式。"
       email:
         title: "電子郵件"
+        description: "自訂用於製作電子郵件的範本、預覽將要寄出的摘要電子郵件，以及檢視電子郵件記錄。"
         settings: "設定"
-        templates: "模板"
+        templates: "範本"
+        templates_title: "電子郵件範本"
+        preview_digest: "預覽摘要"
         advanced_test:
+          title: "進階測試"
           desc: "瀏覽 Discourse 如何處理收到的 email。為了能正確的處理 email，請在下方貼上完整的 email 內容。"
           email: "原始訊息"
+          run: "執行測試"
+          text: "選取的文字主體"
+          elided: "省略文字"
+        sending_test: "正在發送測試電子郵件…"
         error: "<b>錯誤</b> - %{server_error}"
         test_error: "發送測試電子郵件時遇到錯誤。請檢查你輸入的電子郵件地址，並確認網路提供者沒有封鎖郵件的發送，然後再試一次。"
         sent: "送出"
@@ -3699,18 +4826,30 @@ zh_TW:
         bounced: "退回"
         received: "收到"
         rejected: "拒絶"
+        sent_at: "送出時間"
         time: "時間"
         user: "使用者"
+        email_type: "電子郵件類型"
+        details_title: "顯示電子郵件詳細資料"
+        to_address: "收件人地址"
         test_email_address: "要測試的電子郵件地址"
+        send_test: "發送測試電子郵件"
         sent_test: "已送出!"
+        delivery_method: "傳送方式"
         preview_digest_desc: "預覽發送給不活躍使用者的摘要郵件內容。"
         refresh: "重新整理"
         send_digest_label: "發送結果至："
         send_digest: "發送"
+        sending_email: "發送電子郵件…"
         format: "格式"
         html: "html"
         text: "純文字"
+        html_preview: "電子郵件內容預覽"
+        last_seen_user: "使用者上次看到時間："
         no_result: "沒有找到摘要信息。"
+        reply_key: "回覆鍵"
+        post_link_with_smtp: "郵寄和 SMTP 詳細信息"
+        skipped_reason: "跳過原因"
         incoming_emails:
           from_address: "來自"
           to_addresses: "發至"
@@ -3719,14 +4858,17 @@ zh_TW:
           error: "錯誤"
           none: "沒有找到進站郵件。"
           modal:
+            title: "收到的電子郵件詳細資料"
             error: "錯誤"
             headers: "頭部"
             subject: "主題"
             body: "內容"
+            rejection_message: "遭拒郵件"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
+            subject_placeholder: "主旨"
             error_placeholder: "錯誤"
         logs:
           none: "找不到記錄。"
@@ -3734,7 +4876,12 @@ zh_TW:
             title: "過濾"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
+            type_placeholder: "摘要，註冊…"
             reply_key_placeholder: "回覆金鑰"
+            smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[查看更多...]"
+          post_id: "（貼文 ID： %{post_id}）"
       moderation_history:
         performed_by: "執行由"
         no_results: "暫無管理紀錄"
@@ -3746,6 +4893,8 @@ zh_TW:
           delete_topic: "話題已被刪除"
           post_approved: "貼文已通過審核"
       logs:
+        title: "日誌與篩選"
+        description: "日誌和篩選功能可讓您監控和管理社區，確保社區的安全和相互尊重。您可以查看員工執行的所有操作日誌、搜尋日誌和使用者篩選配置。"
         nav_title: "紀錄"
         action: "動作"
         created_at: "已建立"
@@ -3764,6 +4913,8 @@ zh_TW:
         staff_actions:
           all: "全部"
           filter: "篩選"
+          title: "管理人員操作"
+          clear_filters: "顯示所有內容"
           staff_user: "使用者"
           target_user: "目標使用者"
           subject: "主旨"
@@ -3811,6 +4962,7 @@ zh_TW:
             revoke_moderation: "撤銷板主權限"
             backup_create: "新增備份"
             deleted_tag: "刪除的標籤"
+            update_directory_columns: "更新目錄列"
             deleted_unused_tags: "刪除未被使用的標籤"
             renamed_tag: "重命名的標籤"
             revoke_email: "撤銷郵件"
@@ -3827,6 +4979,7 @@ zh_TW:
             post_edit: "編輯貼文"
             post_unlocked: "貼文已被解除封鎖"
             check_personal_message: "檢查個人訊息"
+            disabled_second_factor: "停用兩步驟驗證"
             topic_published: "話題已發佈"
             post_approved: "貼文已通過審核"
             post_rejected: "貼文未通過審核"
@@ -3845,8 +4998,55 @@ zh_TW:
             embeddable_host_create: "可嵌入主機建立"
             embeddable_host_update: "可嵌入主機更新"
             embeddable_host_destroy: "嵌入式主機破壞"
+            change_theme_setting: "變更主題設定"
+            disable_theme_component: "停用主題元件"
+            enable_theme_component: "啟用主題元件"
+            revoke_title: "撤銷頭銜"
+            change_title: "更改頭銜"
+            api_key_create: "建立 api 金鑰"
+            api_key_update: "更新 api 金鑰"
+            api_key_destroy: "銷毀 api 金鑰"
+            override_upload_secure_status: "覆蓋上傳安全狀態"
+            page_published: "已發布頁面"
+            page_unpublished: "已取香發布頁面"
+            add_email: "新增電子郵件"
+            update_email: "更新電子郵件"
+            destroy_email: "銷毀電子郵件"
+            topic_closed: "已關閉主題"
+            topic_opened: "已開啟主題"
+            topic_archived: "已封存主題"
+            topic_unarchived: "已取消封存主題"
+            post_staff_note_create: "加管理人備註"
+            post_staff_note_destroy: "銷毀工作人員備註"
+            delete_group: "刪除群組"
+            watched_word_create: "新增監察字詞"
+            watched_word_destroy: "刪除監察字詞"
+            create_public_sidebar_section: "建立公共側邊欄"
+            update_public_sidebar_section: "更新公共側邊欄"
+            destroy_public_sidebar_section: "銷毀公共側邊欄"
+            reset_bounce_score: "重置退回分數"
+            create_watched_word_group: "建立監察字詞組"
+            update_watched_word_group: "更新監察字詞組"
+            delete_watched_word_group: "銷毀監察字詞組"
+            toggle_flag: "切換檢舉"
+            move_flag: "移動檢舉"
+            create_flag: "建立檢舉"
+            update_flag: "更新檢舉"
+            delete_flag: "刪除檢舉"
+            topic_slow_mode_set: "設定主題慢速模式"
+            topic_slow_mode_removed: "移除主題慢速模式"
+            custom_emoji_create: "建立自訂表情符號"
+            custom_emoji_destroy: "刪除自訂表情符號"
+            delete_post_permanently: "永久刪除貼文"
+            delete_topic_permanently: "永久刪除主題"
+            tag_group_create: "建立標籤群組"
+            tag_group_destroy: "刪除標籤群組"
+            tag_group_change: "變更標籤群組"
+            delete_associated_accounts: "刪除關聯的帳戶"
         screened_emails:
+          title: "已禁止的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新使用者。"
+          email: "電子郵件地址"
           actions:
             allow: "允許"
         screened_urls:
@@ -3856,10 +5056,12 @@ zh_TW:
           domain: "網域"
         screened_ips:
           title: "過濾的 IP 位址"
+          description: '正在監視的 IP 位址。使用「允許」將 IP 位址列入允許名單。'
           delete_confirm: "你確定要刪除 %{ip_address} 的規則嗎?"
           actions:
             block: "封鎖"
             do_nothing: "允許"
+            allow_admin: "允許管理員"
           form:
             label: "新增:"
             ip_address: "IP 位址"
@@ -3869,17 +5071,32 @@ zh_TW:
             text: "Roll up"
             title: "如果有至少 'min_ban_entries_for_roll_up' 個記錄，建立一個子網域封鎖記錄"
         search_logs:
+          title: "搜尋記錄"
           term: "條款"
           searches: "搜尋結果"
           click_through_rate: "CTR"
           types:
             all_search_types: "所有搜尋類型"
             header: "頁首"
+            full_page: "完整頁面"
             click_through_only: "全部（僅點擊）"
+          header_search_results: "標題搜尋結果"
+        logster:
+          title: "錯誤記錄"
       watched_words:
+        title: "監察字詞"
+        description: "監察字詞是一種審查工具，可執行多種不同的動作，包括封鎖、審查、連結或標記含有特定字詞的文章"
         search: "搜尋"
         clear_filter: "清除"
+        show_words:
+          other: "顯示 %{count} 個字詞"
+        case_sensitive: "(區分大小寫)"
+        html: "(html)"
         download: 下載
+        clear_all: 清除全部
+        clear_all_confirm: "確定要清除 %{action} 操作的所有監察字詞嗎？"
+        invalid_regex: '監察字詞「%{word}」是無效的正則表達式。'
+        regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">監察字詞是正則表達式</a>，它們不會自動包含詞邊界。如果您希望正則表達式匹配整個字詞，請在正則表達式的開頭和結尾包含 <code>\b</code>'
         actions:
           block: "封鎖"
           censor: "審核"
@@ -3889,37 +5106,81 @@ zh_TW:
           tag: "標記"
           silence: "靜音"
           link: "連結"
+        action_descriptions:
+          block: "試圖創建包含這些字詞的貼文時，將顯示一條錯誤信息。"
+          censor: "允許包含這些字詞的貼文，但將其替換為隱藏敏感字詞的字符。"
+          require_approval: "包含這些字詞的貼文需要管理人員批准後才能被其他人看到。"
+          flag: "允許包含這些字詞的貼文，但將其標示為不恰當，以便版主審查。"
+          replace: "使用其他字詞替換貼文中的字詞。"
+          tag: "如果第一個貼文包含特定字詞，則自動為話題添加標籤。"
+          silence: "如果新帳戶的第一個貼文包含這些字詞，則將其禁言。該貼文將被自動隱藏，直到工作人員批准。"
+          link: "使用連結替換貼文中的字詞。"
         form:
+          label: "包含字詞或短語"
+          placeholder: "單詞或短語（* 為萬用字元）"
+          placeholder_regexp: "正則表達式"
+          replace_label: "更換"
+          replace_placeholder: "範例"
           tag_label: "標記"
           link_label: "連結"
           link_placeholder: "https://example.com"
           add: "新增"
           success: "成功"
           exists: "已存在"
+          upload: "從檔案新增"
           upload_successful: "上傳成功，文字已被添加。"
+          case_sensitivity_label: "是否區分大小寫"
+          case_sensitivity_description: "僅限字符大小寫匹配的字詞"
           html_label: "HTML"
+          html_description: "在替換中輸出 HTML"
+          words_or_phrases: "單詞或短語"
         test:
           button_label: "測試"
+          modal_title: "%{action}：測試監察字詞"
+          description: "在下方輸入文本以檢查有無與監察字詞的匹配"
+          found_matches: "找到匹配的項目："
           no_matches: "找不到符合的項目"
       form_templates:
-        nav_title: "模板"
+        nav_title: "範本"
+        title: "表單範本"
+        help: "創建可用於創建新話題的表單範本結構。"
+        new_template: "新範本"
         list_table:
           headings:
             name: "名字"
+            active_categories: "活躍類別"
             actions: "動作"
+          actions:
+            view: "檢視範本"
+            edit: "編輯範本"
+            delete: "刪除範本"
         view_template:
           close: "關閉"
           edit: "編輯"
           delete: "刪除"
+          toggle_preview: "切換預覽"
         new_template_form:
           submit: "保存"
           cancel: "取消"
+          name:
+            label: "範本名稱"
+            placeholder: "輸入此範本的名稱…"
+          template:
+            label: "範本"
+            placeholder: "在此建立一個 YAML 範本…"
           preview: "預覽"
+        delete_confirm: "您確定要刪除此範本嗎？"
         quick_insert_fields:
           add_new_field: "加入"
           checkbox: "核取方塊"
+          input: "簡短答案"
+          textarea: "長答案"
           dropdown: "下拉"
+          upload: "上傳檔案"
+          multiselect: "多選"
         validations_modal:
+          button_title: "驗證"
+          modal_title: "驗證選項"
           table_headers:
             key: "金鑰"
             type: "類型"
@@ -3928,20 +5189,40 @@ zh_TW:
             required:
               key: "必填"
               type: "布林值"
+              description: "需要填寫欄位才能提交表格。"
             minimum:
               key: "最小值"
               type: "整數"
+              description: "對於文字欄位，指定允許的最小字元數。"
             maximum:
               key: "最大值"
               type: "整數"
+              description: "對於文字欄位，指定允許的最大字元數。"
+            pattern:
+              key: "圖案"
+              type: "正則表達式字符串"
+              description: "對於文字欄位，指定允許輸入內容的正規表示式。"
             type:
               key: "類型"
               type: "字串"
+              description: "對於輸入字段，您可以指定預期的輸入類型（文本 | 電子郵件 | 日期 | 數字 | 網址 | 電話 | 顏色）"
+        preview_modal:
+          title: "預覽範本"
         field_placeholders:
+          validations: "在此輸入驗證"
+          id: "在此輸入ID"
+          label: "在此輸入標籤"
+          placeholder: "在此輸入占位符號"
+          none_label: "選擇項目"
           choices:
             first: "選項 1"
             second: "選項 2"
             third: "選項 3"
+        edit_category:
+          toggle_freeform: "表單範本已停用"
+          toggle_form_template: "已啟用表單範本"
+          select_template: "選擇表單範本"
+          select_template_help: "新增/編輯表格範本"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3949,17 +5230,39 @@ zh_TW:
         invalid: "抱歉，你不能以此使用者角度檢視。"
       users:
         title: "使用者"
+        description: "檢視和管理使用者。"
         create: "新增管理員"
         last_emailed: "最近寄出電子郵件"
         not_found: "抱歉，系統裡無此使用者名稱。"
         id_not_found: "抱歉，系統裡無此使用者名稱。"
         active: "已啟動"
         status: "狀態"
+        show_emails: "顯示電子郵件"
+        hide_emails: "隱藏電子郵件"
+        silence_reason: "禁言原因"
         bulk_actions:
+          title: "批次操作"
+          admin_cant_be_deleted: "無法刪除此使用者，因為他們是管理員"
+          too_many_or_old_posts: "無法刪除此使用者，因為他們有太多的貼文或很舊的貼文。"
+          too_many_selected_users:
+            other: "您已達到批量刪除使用者上限 %{count}"
           delete:
+            label: "刪除使用者…"
             confirmation_modal:
+              prompt_text:
+                other: '您即將永久刪除 %{count} 位使用者。請在下方輸入「%{confirmation_phrase}」以繼續：'
+              confirmation_phrase:
+                other: "刪除 %{count} 位使用者"
               close: "關閉"
               confirm: "刪除"
+              title:
+                other: "刪除 %{count} 位使用者"
+              bulk_delete_starting: "開始批量刪除…"
+              block_ip_and_email: "封鎖所有選定使用者的 IP 位址和電子郵件"
+              user_delete_succeeded: "[%{position}/%{total}] 已成功刪除 @%{username}"
+              user_delete_failed: "[%{position}/%{total}] 無法刪除 @%{username} - %{error}"
+              bulk_delete_finished: "批量刪除作業已完成。"
+              failed_to_delete_users: "下列使用者無法刪除："
         nav:
           new: "新使用者"
           active: "啟用的"
@@ -3969,6 +5272,8 @@ zh_TW:
           staged: "暫存"
         approved: "已批准？"
         titles:
+          active: "活躍使用者"
+          new: "新使用者"
           pending: "等待審核的使用者"
           newuser: "信任等級 0 的使用者 ( 新使用者 )"
           basic: "信任等級 1 的使用者 ( 初級使用者 )"
@@ -3976,20 +5281,36 @@ zh_TW:
           regular: "信任等級為3的使用者（活躍）"
           leader: "信任等級為4的使用者（資深）"
           staff: "管理員"
+          admins: "使用者管理員"
           moderators: "板主"
+          silenced: "被禁言的使用者"
+          suspended: "已停權的使用者"
+          staged: "暫存使用者"
         not_verified: "未確認"
         check_email:
           title: "顯示使用者 Email"
           text: "顯示"
         check_sso:
+          title: "顯示 SSO 有效負載"
           text: "顯示"
+        delete_associated_accounts:
+          title: "刪除此使用者的所有關聯帳號"
+          text: "刪除關聯的帳戶"
       user:
         suspend_failed: "將此使用者停權時發生錯誤 %{error}"
         unsuspend_failed: "恢復此使用者的權限時發生錯誤 %{error}"
+        suspend_duration: "停權使用者至："
         suspend_reason_label: "你為什麼要將此使用者停權？你輸入的原因將在此使用者登入時顯示，及顯示在此使用者的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason_hidden_label: "您為何要將該使用者停權？使用者在登入時會看見這段文字，請簡短描述。"
         suspend_reason: "原因"
         suspend_reason_title: "停權原因"
+        suspend_reasons:
+          not_listening_to_staff: "不聽從管理人員反饋"
+          consuming_staff_time: "消耗了過多的工作人員時間"
+          combative: "太激動"
+          in_wrong_place: "在錯誤的地方"
+          no_constructive_purpose: "除了在社區內引起異議外，該使用者的行動沒有任何建設性的目的"
+          custom: "自訂…"
         suspend_message: "Email 訊息"
         suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
@@ -4002,17 +5323,25 @@ zh_TW:
         silence_message: "Email 訊息"
         silence_message_placeholder: "(留白以傳送預設訊息)"
         suspended_until: "(直到%{until})"
+        suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"
+        cant_silence: "這位使用者無法被禁言。"
         delete_posts_failed: "刪除貼文時發生了錯誤。"
         post_edits: "編輯貼文"
+        view_edits: "檢視編輯"
         penalty_post_actions: "請問您要如何處理相關貼文？"
         penalty_post_delete: "刪除貼文"
+        penalty_post_delete_replies: "刪除貼文 + 任何回覆"
         penalty_post_edit: "編輯貼文"
         penalty_post_none: "不做任何動作"
         penalty_count: "違規次數"
+        penalty_history_MF: >-
+          在過去 6 個月中，此使用者被<b>停權 { SUSPENDED, plural, other {# 次} }</b>，被<b>禁言 { SILENCED, plural, other {# 次} }</b>。
         clear_penalty_history:
           title: "清除違規紀錄"
           description: "有違規紀錄的使用者無法抵達 TL3"
+        delete_all_posts_confirm_MF: |
+          您將刪除 {POSTS, plural, other {# 個貼文}}和 {TOPICS, plural, other {# 個話題}}。確定嗎？
         silence: "靜音"
         unsilence: "取消靜音"
         silenced: "靜音？"
@@ -4021,6 +5350,7 @@ zh_TW:
         suspended: "已停權?"
         staged: "暫存？"
         show_admin_profile: "管理員"
+        manage_user: "管理使用者"
         show_public_profile: "顯示公開的基本資料"
         action_logs: "操作紀錄"
         ip_lookup: "IP 反查"
@@ -4028,6 +5358,7 @@ zh_TW:
         logged_out: "使用者已從所有裝置中登出"
         revoke_admin: "撤銷管理員權限"
         grant_admin: "授予管理員權限"
+        grant_admin_success: "新管理員已被確認。"
         grant_admin_confirm: "我們已傳送一封 email 以確認新的管理員，請開啟郵件並依照內容指示操作。"
         revoke_moderation: "撤銷板主權限"
         grant_moderation: "授予板主權限"
@@ -4044,10 +5375,13 @@ zh_TW:
         private_topics_count: 私人話題
         posts_read_count: 讀過的貼文
         post_count: 已發表的貼文
+        second_factor_enabled: 啟用雙重認證
         topics_entered: 讀過的話題
         flags_given_count: 檢舉
         flags_received_count: 被檢舉
         warnings_received_count: 收到的警告
+        warnings_list_warning: |
+          身為版主，您可能無法檢視所有這些主題。如有必要，請要求管理員或發佈版主給予<b>@</b>管理<b>員</b>存取訊息的權限。
         flags_given_received_count: "已提出 / 收到的檢舉"
         approve: "批准"
         approved_by: "批准者"
@@ -4055,19 +5389,67 @@ zh_TW:
         approve_bulk_success: "完成! 已批准所有選取的使用者並送出通知。"
         time_read: "閱讀時間"
         post_edits_count: "編輯貼文"
+        exports:
+          title: 使用者匯出
+          download:
+            description: 下載最新匯出
+            expires_in:
+              other: '%{count} 小時後失效'
+            not_available: 沒有可用匯出
+            button: 請求封存
+            confirm: 確定要創建此使用者活動和偏好設定的封存嗎？
+            started: 我們已開始收集封存，下載連結會在程序完成後更新。
+            success: 封存已準備就緒，可供下載。
+            export_failed: 抱歉，匯出失敗。請檢查日誌以獲取更多資訊。
         anonymize: "匿名使用者"
+        anonymize_confirm: "您確定要將此帳戶匿名化嗎？這將會更改使用者名稱和電子郵件，並重設所有個人資料資訊。"
+        delete_associated_accounts_confirm: "您確定要刪除此帳戶的所有關聯帳戶？如果使用者的電子郵件已變更，可能無法登入。"
+        disable_second_factor_confirm: "您確定要停用此帳戶的雙重重驗證嗎？"
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
         delete_posts:
           button: "刪除所有貼文"
+          progress:
+            title: "刪除帖文的進度"
+            description: "刪除貼文中⋯"
           confirmation:
+            title: "刪除 @%{username} 發布的所有帖文"
+            description: |
+              <p>確定要刪除 @%{username} 發布的 <b>%{post_count}</b> 個貼文嗎？</p>
+
+              <p><b>此操作無法撤銷！</b></p>
+
+              <p>繼續輸入：<code>%{text}</code></p>
+            text: "刪除 @%{username} 發布的貼文"
+            delete: "刪除 @%{username} 發布的貼文"
             cancel: "取消"
         merge:
+          button: "合併"
           prompt:
+            title: "轉移並刪除 @%{username}"
+            description: |
+              <p>請為 <b>@%{username}</b> 的內容選擇一個新的所有者。</p>
+
+              <p>所有話題、貼文、訊息或由 <b>@%{username}</b> 創建的其他內容都將被轉移。</p>
+            target_username_placeholder: "新所有者的使用者名稱"
+            transfer_and_delete: "轉移並刪除 @%{username}"
             cancel: "取消"
+          progress:
+            title: "合併進度"
           confirmation:
+            title: "轉移並刪除 @%{username}"
+            description: |
+              <p><b>@%{username}</b> 的所有內容將被轉移到 <b>%{targetUsername}</b>。在內容轉移後，<b>@%{username}</b> 的帳戶將被刪除。</p>
+
+              <p><b>此操作無法撤銷！</b></p>
+
+              <p>要繼續，請輸入 <code>%{text}</code></p>
+            text: "將@%{username} 轉移到@%{targetUsername}"
+            transfer_and_delete: "轉移並刪除 @%{username}"
             cancel: "取消"
+        merging_user: "合併使用者…"
+        merge_failed: "合併用戶時發生錯誤。"
         delete_forbidden_because_staff: "管理員與板主不可刪除。"
         delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
@@ -4076,8 +5458,11 @@ zh_TW:
           other: "無法刪除所有的貼文。有些貼文時間早於 %{count} 天前。 ( 請見 delete_user_max_post_age 設定 )"
         cant_delete_all_too_many_posts:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
-        delete_and_block: "刪除並且<b>封鎖</b>此電子郵件地址與 IP 位址"
-        delete_dont_block: "只刪除"
+        delete_confirm_title: "確定要刪除此使用者嗎？此操作無法撤銷！"
+        delete_confirm: "通常最好將使用者匿名而不是刪除他們，以避免從現有討論中移除內容。"
+        delete_and_block: "刪除使用者並禁止其電子郵件和 IP 地址"
+        delete_dont_block: "刪除使用者"
+        deleting_user: "正在刪除使用者..."
         deleted: "此使用者已刪除。"
         delete_failed: "刪除此使用者時發生錯誤，請先刪除此使用者的所有貼文後再試一次。"
         send_activation_email: "送出啟用帳號的電子郵件"
@@ -4106,17 +5491,23 @@ zh_TW:
           threshold_reached: "近期該郵箱有過多退信。"
         trust_level_change_failed: "修改使用者的信任等級時發生錯誤。"
         suspend_modal_title: "將使用者停權"
+        confirm_cancel_penalty: "您確定要放棄懲罰嗎？"
         trust_level_2_users: "信任等級 2 使用者"
         trust_level_3_requirements: "信任等級 3 之條件"
         trust_level_locked_tip: "信任等級鎖定，系統將不會升級或降級使用者。"
+        trust_level_unlocked_tip: "信任等級已解鎖，系統可升級或降級使用者"
         lock_trust_level: "鎖住信任等級"
         unlock_trust_level: "解鎖信任等級"
         silenced_count: "被靜音"
         suspended_count: "被停權的"
+        last_six_months: "過去 6 個月"
+        other_matches:
+          other: "<b>還有 %{count} 位使用者</b>具有相同的 IP 地址。查看並選擇要與 %{username} 一起檢閱的可疑使用者。"
         other_matches_list:
           username: "使用者名稱"
           trust_level: "信任等級"
           read_time: "閱讀時間"
+          topics_entered: "輸入的主題"
           posts: "新發表的貼文"
         tl3_requirements:
           title: "信任等級 3 之條件"
@@ -4124,6 +5515,7 @@ zh_TW:
             other: "這最近 %{count} 天："
           value_heading: "價值"
           requirement_heading: "要求"
+          posts_read_days: "貼文閱讀：唯一日期"
           days: "天"
           topics_replied_to: "話題回覆"
           topics_viewed: "已讀話題"
@@ -4136,6 +5528,8 @@ zh_TW:
           likes_received: "收到的讚"
           likes_received_days: "收到的讚：唯一日"
           likes_received_users: "收到的讚：唯一使用者"
+          suspended: "被停權（過去 6 個月）"
+          silenced: "被禁言（過去 6 個月）"
           qualifies: "符合信任等級 3 的條件。"
           does_not_qualify: "不符合信任等級 3 的條件。"
           will_be_promoted: "將會在近期升級。"
@@ -4144,12 +5538,23 @@ zh_TW:
           locked_will_not_be_promoted: "信任等級鎖定。將不會再被升級。"
           locked_will_not_be_demoted: "信任等級鎖定。將不會再被降級。"
         discourse_connect:
+          title: "DiscourseConnect 點擊登入"
           external_id: "外部 ID"
           external_username: "使用者名稱"
           external_name: "名稱"
           external_email: "電子信箱"
           external_avatar_url: "個人資料圖片 URL"
+          last_payload: "最後有效負載"
+          delete_sso_record: "刪除 SSO 記錄"
+          confirm_delete: "您確定要刪除此 DiscourseConnect 記錄嗎？"
       user_fields:
+        title: "使用者欄位"
+        help: "創建自訂使用者欄位以收集有關社區成員的額外詳細資訊。您可以選擇在註冊時需要哪些資訊、個人資料上顯示哪些內容以及使用者可以更新哪些資訊。"
+        no_user_fields: "您還沒有任何自訂使用者欄位。"
+        add: "新增使用者欄位"
+        back: "返回到使用者欄位"
+        edit_header: "編輯使用者欄位"
+        new_header: "新增使用者欄位"
         untitled: "未命名"
         name: "欄位名稱"
         type: "欄位類別"
@@ -4166,42 +5571,80 @@ zh_TW:
           enabled: "必填"
           disabled: "非必填"
         requirement:
+          title: "欄位要求"
           optional:
-            title: "選擇性"
+            title: "可選"
+          for_all_users:
+            title: "適用於所有使用者"
+            description: "新使用者註冊時，他們必須填寫此欄位。當現有使用者返回網站時，如果這對他們來說是新的必填欄位，也會提示他們填寫。要重新提示所有使用者，請刪除此自訂欄位並重新創建。"
+          on_signup:
+            title: "註冊時"
+            description: "新使用者註冊時必須填寫此欄位。現有使用者不受影響。"
+          confirmation: "這將提示現有使用者填寫此欄位，並且在填寫該欄位之前不允許他們在網站上執行任何其他操作。是否繼續？"
         editable:
           title: "註冊後可以修改"
+          enabled: "可編輯"
+          disabled: "不可編輯"
         show_on_profile:
           title: "顯示在公開的基本資料裡"
+          enabled: "在基本資料裡顯示"
+          disabled: "不在基本資料裡顯示"
         show_on_user_card:
           title: "在使用者卡片上顯示"
+          enabled: "在使用者卡片上顯示"
+          disabled: "不在使用者卡片上顯示"
         searchable:
           title: "可搜尋"
           enabled: "可搜尋"
+          disabled: "不可搜尋"
         field_types:
           text: "文字"
           confirm: "確認"
           dropdown: "下拉"
+          multiselect: "多選"
       site_text:
+        description: "您可以自訂論壇上的任何文字。"
         search: "搜尋你想要編輯的文本"
+        title: "網站文字"
         edit: "編輯"
         revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
         go_back: "回到搜尋"
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
+        show_outdated: "僅顯示過時/無效"
+        show_untranslated: "僅顯示未翻譯內容"
+        only_show_selected_locale: "僅顯示所選語言的結果"
         locale: "語言:"
         more_than_50_results: "有超過50個搜尋結果。請嘗試重新定義搜尋關鍵字。"
+        no_results: "找不到匹配的網站文本"
+        interpolation_keys: "可用的插值鍵："
         outdated:
+          title: "此翻譯已過時"
+          description: "自此替換創建以來，此鍵的預設翻譯已更改。請在下面檢查您的翻譯是否與對原始意圖所做的任何更改相符。"
+          old_default: "舊預設值"
+          new_default: "新預設值"
           dismiss: "忽略"
       settings:
         show_overriden: "只顯示被覆寫的內容"
+        history: "檢視變更歷史記錄"
         reset: "重置"
         none: "無"
         save: "保存"
         cancel: "取消"
+        unmask: "取消禁止輸入"
+        not_found: "找不到設定"
       site_settings:
+        title: "網站設定"
+        description: "配置您的 Discourse 網站的設定以自訂其外觀、功能和使用者體驗。"
+        emoji_list:
+          invalid_input: "表情符號列表只能包含有效的表情符號名稱，例如: hugs"
+          add_emoji_button:
+            label: "新增表情符號"
         nav_title: "設定"
         no_results: "未找到任何結果。"
+        more_site_setting_results:
+          other: "結果超過 %{count} 個。請優化您的搜尋或選擇一個類別。"
         clear_filter: "清除"
         add_url: "加入網址"
         add_host: "新增主機"
@@ -4211,6 +5654,7 @@ zh_TW:
           empty: "尚未有圖片，請上傳圖檔。"
           upload:
             label: "上傳"
+            title: "上傳圖像"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
         table_column_heading:
@@ -4245,21 +5689,56 @@ zh_TW:
           groups: "群組"
           dashboard: "控制面板"
           navigation: "導覽"
+          experimental: "實驗性"
         secret_list:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
         default_categories:
+          modal_description:
+            other: "要回溯應用此變更嗎？這將更改 %{count} 位現有使用者的偏好設定。"
           modal_yes: "是"
+          modal_no: "不，僅對以後應用變更"
+        simple_list:
+          add_item: "新增項目…"
+        json_schema:
+          edit: 啟動編輯器
+          modal_title: "編輯 %{name}"
         file_types_list:
           add_image_types: "圖片"
+          add_video_types: "影片"
+          add_audio_types: "音訊"
+          add_document_types: "文件"
+          add_types_title: "允許擴充 %{types}"
+          add_types_toast: "新增了 %{types} 文件類型"
+        mandatory_group: "群組為必選"
+        requires_confirmation_messages:
+          default:
+            prompt: "更改此設定可能會對您的網站產生深遠或意想不到的後果。確定要繼續嗎？"
+            confirm: "是的，我確定"
+          min_password_length:
+            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
+            confirm: "是的，更新密碼原則"
+          min_admin_password_length:
+            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的管理者。確定要繼續嗎？"
+            confirm: "是的，更新密碼原則"
+          password_unique_charactes:
+            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
+            confirm: "是的，更新密碼原則"
+          block_common_passwords:
+            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
+            confirm: "是的，更新密碼原則"
       badges:
         status: 狀態
         title: 徽章
+        page_description: 徽章可獎勵使用者的活動、貢獻和成就，以表揚、認可和鼓勵社群內的正面行為和參與。
         new_badge: 新徽章
         new: 新
         name: 名稱
         badge: 徽章
         display_name: 顯示名稱
         description: 簡述
+        long_description: 詳細說明
+        badge_type: 徽章類型
+        group_settings: 群組設定
         badge_grouping: 群組
         badge_groupings:
           modal_title: 徽章群組
@@ -4280,14 +5759,20 @@ zh_TW:
         no_user_badges: "%{name} 未有任何升級徽章。"
         no_badges: 沒有可授予的徽章
         none_selected: "選擇一個徽章開始"
+        usage_heading: 使用方法
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
         visibility_heading: 能見度
         listable: 在徽章頁面上顯示徽章
+        show_in_post_header: 在授予徽章的貼文上顯示徽章
+        show_in_post_header_disabled: 需要同時啟用「在公開徽章頁面上顯示徽章」和「在徽章頁面上顯示授予徽章的貼文」。
         enabled: 啟用
         disabled: 停用
         icon: 圖示
         image: 圖片
+        graphic: 圖形
+        icon_or_image: 徽章需要圖標或圖像
+        icon_help: "輸入一個 Font Awesome 圖標名稱（使用前綴「far-」表示常規圖標，使用前綴「fab-」表示品牌圖標）"
         select_an_icon: "選擇圖示"
         upload_an_image: "上傳圖片"
         read_only_setting_help: "自訂文字"
@@ -4320,36 +5805,87 @@ zh_TW:
             with_post: <span class="username">%{username}</span> 的貼文 %{link}
             with_post_time: <span class="username">%{username}</span> 的貼文 %{link} 在 <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
+        badge_intro:
+          title: "選擇徽章或建立新徽章"
+          description: "從選擇現有的徽章開始自訂，或建立全新的徽章"
+        mass_award:
+          title: 批量授予
+          description: 一次將同一個徽章頒發多個使用者。
+          no_badge_selected: 請選擇一個徽章來開始。
+          perform: "頒發徽章給使用者"
+          upload_csv: 上傳包含使用者電子郵件或使用者名稱的 CSV
+          aborted: 請上傳包含使用者電子郵件或使用者名稱的 CSV
+          success:
+            other: "您的 CSV 已收到，%{count} 個使用者很快就會收到他們的徽章。"
+          csv_has_unmatched_users: "以下項目位於 CSV 文件中，但它們無法與現有使用者匹配，因此不會收到徽章："
+          csv_has_unmatched_users_truncated_list:
+            other: "CSV 文件中有 %{count} 個條目無法與現有使用者匹配，因此不會收到徽章。由於存在大量不匹配的條目，僅顯示前 100 個條目："
+          replace_owners: 您還沒有任何自訂表情符號。
+          grant_existing_holders: 向現有徽章持有者授予額外的徽章
       emoji:
         title: "Emoji"
+        description: "添加可供所有人使用的新表情符號。選擇多個文件，使用其文件名創建表情符號。所選群組將用於同時添加的所有文件。"
+        no_emoji: "您還沒有任何自訂表情符號。"
+        add: "加入表情符號"
         delete: "刪除"
+        back: "返回表情符號"
+        choose_files: "選擇檔案"
+        uploading: "上傳中..."
         name: "名稱"
         group: "群組"
+        created_by: "建立者"
         image: "圖片"
+        alt: "自訂表情符號預覽"
         delete_confirm: "你確定要刪除 :%{name}: emoji ?"
         settings: "設定"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         delete: "刪除"
         confirm_delete: "你確定要刪除此主機？"
+        sample: |
+          <p>將以下 HTML 代碼貼到您的網站以創建和嵌入 Discourse 話題。將 <b>EMBED_URL</b> 替換為您要嵌入它的頁面的規範 URL。</p>
+
+          <p>如果要自訂樣式，請取消註釋並將 <b>CLASS_NAME</b> 替換為主題的<i>嵌入式 CSS</i> 中定義的 CSS 類。</p>
+
+          <p>將 <b>DISCOURSE_USERNAME</b> 替換為話題作者的 Discourse 使用者名。Discourse 將通過 <code>&lt;meta&gt;</code> 標籤的 <code>content</code> 屬性自動查找使用者，其中 <code>name</code> 屬性設置為 <code>discourse-username</code> 或 <code>author</code>。<code>discourseUserName</code> 參數已被棄用，並將在 Discourse 3.2 版本中移除。</p>
         title: "嵌入"
+        description: "Discourse 能夠使用創建 IFRAME 的 Javascript API 在遠端網站中嵌入話題的評論。"
+        host: "允許的主機"
+        allowed_paths: "路徑允許清單"
         edit: "編輯"
+        category: "發佈到類別"
+        tags: "主題標籤"
+        post_author: "貼文作者"
+        post_author_with_default: "貼文作者（預設為 %{author}）"
+        add_host: "新增主機"
+        posts_and_topics: "貼文和主題配置"
+        crawlers: "爬蟲配置"
         crawlers_description: "當 Discourse 為你的貼文開啟了話題時，如果沒有 RSS/ATOM 流存在，它將嘗試從 HTML 中解析內容。有時分離其中的內容時可能是很有挑戰性的，所以我們提供了指定 CSS 規則的能力來幫助分離過程。"
         embed_by_username: "話題開啟者的使用者名稱"
         embed_post_limit: "嵌入的最大貼文數量。"
         embed_title_scrubber: "從貼文中提取標題的正則表達式 \"regular expression\""
         embed_truncate: "截斷嵌入的貼文"
+        embed_unlisted: "在收到回覆之前，導入的話題將被取消公開。"
         allowed_embed_selectors: "使用 CSS 選擇器選擇允許的嵌入元素"
         blocked_embed_selectors: "使用 CSS 選擇器移除嵌入元素"
         allowed_embed_classnames: "允許 CSS class 名稱"
         save: "保存"
+        posts_and_topics_settings_saved: "貼文和話題設定已保存"
+        crawler_settings_saved: "爬蟲設定已儲存"
+        back: "返回嵌入"
+        configuration_snippet: "組態程式碼片段"
         host_form:
+          add_header: "新增主機"
+          edit_header: "編輯主機"
           save: "保存"
         nav:
+          hosts: "主機"
           settings: "設定"
+          posts_and_topics: "貼文和主題"
           crawlers: "爬蟲"
       permalink:
         title: "固定連結"
+        description: "為論壇無法識別的 URL 應用的重新導向。"
         url: "網址"
         topic_id: "話題 ID"
         topic_title: "話題"
@@ -4359,18 +5895,32 @@ zh_TW:
         category_title: "分類"
         tag_name: "標記名稱"
         tag_title: "標記"
+        external_url: "外部或相關網址"
+        user_id: "使用者 ID"
         user_title: "使用者"
         username: "使用者名稱"
+        destination: "目標"
+        copy_to_clipboard: "將永久連結複製到剪貼簿"
         delete_confirm: 你確定要刪除此固定連結？
+        no_permalinks: "您還沒有任何永久連結。"
+        add: "新增永久連結"
+        back: "回到永久連結"
+        more_options: "更多選項"
+        copy_success: "永久連結已複製到剪貼簿"
         nav:
           settings: "設定"
           permalinks: "固定連結"
         form:
           label: "新增："
+          add_header: "新增永久連結"
+          edit_header: "編輯永久連結"
+          filter: "搜尋網址或目標網址"
           url: "網址"
+          permalink_type: "永久連結類型"
           save: "保存"
       reseed:
         action:
+          label: "取代文字 …"
           title: "將分類與話題的文字以翻譯文字取代。"
         modal:
           title: "取代文字"
@@ -4380,11 +5930,15 @@ zh_TW:
           replace: "取代"
   wizard_js:
     wizard:
+      jump_in: "轉至!"
+      finish: "退出設定"
       back: "上一步"
       next: "下一步"
+      configure_more: "設定更多…"
       step-text: "步驟"
       step: "%{current} / %{total}"
       upload: "上傳檔案"
+      uploading: "上傳中..."
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"
       staff_count:
         other: "您的社群包含您在內共有%{count}位管理員。"
@@ -4398,6 +5952,7 @@ zh_TW:
       homepage_choices:
         custom:
           label: "客製"
+          description: "顯示以 %{type} 為中心的首頁以及登入 %{landingPage} 的使用者"
         style_type:
           categories: "分類"
           topics: "話題"
@@ -4412,12 +5967,36 @@ zh_TW:
         read: "已讀"
         bookmarks: "書籤"
       previews:
+        topic_title: "你在讀什麼書？"
         share_button: "分享"
         reply_button: "回覆"
+        topic_preview: "主題預覽"
+        homepage_preview: "首頁預覽"
       homepage_preview:
         nav_buttons:
           all_categories: "所有分類"
+        topic_titles:
+          what_books: "你在讀什麼書？"
+          what_movies: "你最近看過哪些電影？"
+          random_fact: "今日隨筆"
+          tv_show: "推薦一部電視節目"
+          what_hobbies: "你的嗜好是什麼？"
+          what_music: "你現在在聽什麼？"
+          funniest_thing: "你今天見過的最有趣的事"
+          share_art: "分享你的藝術！"
+        topic_ops:
+          what_books: |
+            我們都喜歡閱讀，讓我們利用這個主題來分享
+            目前或最近的讀物。我是個奇幻迷，我已經
+            重新閱讀《魔戒》第 100 遍了。
+            您呢？
+        category_descriptions:
+          icebreakers: "通過有趣的問題了解您的社區成員。"
+          news: "討論近期的新聞和事件。"
+          site_feedback: "分享您對社群的想法並提出改善建議。"
         category_names:
+          icebreakers: "破冰問題"
+          news: "新聞"
           site_feedback: "站點回饋"
         table_headers:
           topic: "話題"

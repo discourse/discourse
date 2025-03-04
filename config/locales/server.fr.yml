@@ -314,9 +314,6 @@ fr:
     site_settings:
       invalid_site_setting: "Aucun paramètre nommé « %{name} » n'existe"
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
-      site_setting_is_hidden: "Vous n'avez pas l'autorisation de modifier les paramètres masqués"
-      site_setting_is_shadowed_globally: "Vous ne pouvez pas modifier ce paramètre, car il est configuré globalement"
-      site_setting_is_unconfigurable: "Vous n'avez pas l'autorisation de modifier les paramètres non configurables"
       invalid_choice:
         one: "« %{name} » n'est pas un choix valide."
         other: "« %{name} » ne sont pas des choix valides."
@@ -338,7 +335,7 @@ fr:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Les agents utilisateurs doivent comporter au moins 3 caractères pour éviter de limiter accidentellement le débit des utilisateurs légitimes."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d'optimisation des contenus multimédias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
-      twitter_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
+      x_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
       tl0_and_anonymous_flag: "Pour les utilisateurs anonymes, une « site contact email » ou une « email address to report illegal content » doit être fournie."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -693,7 +690,7 @@ fr:
               cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message direct à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
               reply_by_email_disabled: "Réponse par e-mail désactivée."
-              send_to_email_disabled: "Nous sommes désolés, vous ne pouvez pas faire parvenir de message personnel par e-mail."
+              send_to_email_disabled: "Nous sommes désolés, vous ne pouvez pas faire parvenir de message privé par e-mail."
               target_user_not_found: "Un des utilisateurs à qui vous envoyez ce message n'a pas été trouvé."
               too_large_group: "Le groupe : %{group_name}, a trop d'utilisateurs pour recevoir un message. La limite est de %{limit}."
               unable_to_update: "Une erreur s'est produite lors de la mise à jour de ce sujet."
@@ -1634,8 +1631,8 @@ fr:
     set_locale_from_cookie: "Permet de définir les paramètres régionaux d'un utilisateur anonyme via le cookie du navigateur « locale »"
     set_locale_from_param: "Permet de définir les paramètres régionaux d'un utilisateur anonyme via le paramètre d'URL « lang », p. ex., ?lang=es"
     support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche"
-    min_post_length: "Longueur minimale autorisée des messages en caractères (à l'exception des messages personnels)"
-    min_first_post_length: "Longueur minimale autorisée du premier message (corps du sujet) (à l'exception des messages personnels)"
+    min_post_length: "Longueur minimale autorisée des messages en caractères (à l'exception des messages privés)"
+    min_first_post_length: "Longueur minimale autorisée du premier message (corps du sujet) (à l'exception des messages privés)"
     min_personal_message_post_length: "Longueur minimale autorisée en caractères pour les messages (premier message et réponses)"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     topic_featured_link_enabled: "Permet aux utilisateurs d'associer un lien de fonctionnalité à leurs sujets. Lorsqu'ils sont activés, les sujets peuvent être associés à un lien en surbrillance, qui est visible publiquement et peut être modifié si l'utilisateur dispose des autorisations suffisantes. Le lien de fonctionnalité peut améliorer la compréhension d'un sujet en fournissant un contenu supplémentaire connexe."
@@ -1720,7 +1717,7 @@ fr:
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a> . Pour fonctionner correctement sur un CDN, il doit être au format PNG. Il sera redimensionné en 32x32. Si vous laissez ce champ vide, « large_icon » sera utilisée."
     apple_touch_icon: "Icône utilisée pour les appareils tactiles Apple. Un arrière-plan transparent n'est pas recommandé. Elle sera automatiquement redimensionnée à 180 x 180. Si ce champ est laissé vide, large_icon sera utilisé."
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
-    twitter_summary_large_image: "Carte Twitter « Summary Card with Large Image » (sa taille doit être d'au moins 280 en largeur et d'au moins 150 en hauteur et ne peut pas être au format .svg). Si vous laissez ce champ vide, les métadonnées normales de carte sont générées à l'aide d'« opengraph_image » tant que celle-ci n'est pas au format .svg également."
+    x_summary_large_image: "Carte Twitter « Summary Card with Large Image » (sa taille doit être d'au moins 280 en largeur et d'au moins 150 en hauteur et ne peut pas être au format .svg). Si vous laissez ce champ vide, les métadonnées normales de carte sont générées à l'aide d'« opengraph_image » tant que celle-ci n'est pas au format .svg également."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
     email_custom_headers: "Une liste délimitée par des barres verticales d'en-têtes d'e-mail"
     email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1734,8 +1731,8 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
     summary_timeline_button: "Afficher un bouton « Résumer » dans la chronologie de chaque sujet"
-    enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages personnels ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
-    personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à CRÉER des messages personnels. IMPORTANT : 1) Tous les utilisateurs peuvent RÉPONDRE aux messages. 2) Les administrateurs et les modérateurs peuvent CRÉER des messages pour n'importe quel utilisateur. 3) Les groupes de niveaux de confiance incluent des niveaux plus élevés ; choisissez trust_level_1 pour autoriser TL1, TL2, TL3, TL4 mais pas TL0. 4) Les paramètres d'interaction de groupe annulent ce paramètre pour la messagerie de groupes spécifiques."
+    enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages privés ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
+    personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à CRÉER des messages privés. IMPORTANT : 1) Tous les utilisateurs peuvent RÉPONDRE aux messages. 2) Les administrateurs et les modérateurs peuvent CRÉER des messages pour n'importe quel utilisateur. 3) Les groupes de niveaux de confiance incluent des niveaux plus élevés ; choisissez trust_level_1 pour autoriser TL1, TL2, TL3, TL4 mais pas TL0. 4) Les paramètres d'interaction de groupe annulent ce paramètre pour la messagerie de groupes spécifiques."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne dans la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon et risquent donc de les retarder"
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode « origin pull »). Par exemple : http://origin.site.com"
@@ -1804,9 +1801,9 @@ fr:
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
     content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS grâce à la politique de sécurité du contenu (CSP).</a> Les autres sources hôtes sont ignorées car la dynamique stricte est activée."
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
-    suppress_secured_categories_from_admin: "Supprimez les sujets privés et les messages directs dans certaines parties de l'interface utilisateur pour les administrateurs. Le contenu sera toujours visible à certains endroits. Il ne s'agit pas d'une fonctionnalité de sécurité : les administrateurs peuvent toujours accéder à l'ensemble du contenu du site."
+    suppress_secured_categories_from_admin: "Supprimez les sujets privés et les messages privés dans certaines parties de l'interface utilisateur pour les administrateurs. Le contenu sera toujours visible à certains endroits. Il ne s'agit pas d'une fonctionnalité de sécurité : les administrateurs peuvent toujours accéder à l'ensemble du contenu du site."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
-    display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
+    display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages privés marqués d'une étiquette donnée s'affiche."
     top_menu: "Déterminez quels éléments apparaissent dans la navigation de la page d'accueil et dans quel ordre."
     post_menu: "Configurez la visibilité et l'ordre des éléments de menu de publication par défaut. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
     post_menu_hidden_items: "Les éléments de menu à masquer par défaut dans le menu de publication, à moins que l'on clique sur une ellipse d'extension. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
@@ -2031,7 +2028,7 @@ fr:
     self_wiki_allowed_groups: "Autorisez les utilisateurs de ces groupes à créer leurs propres publications sur le wiki. Les administrateurs et les modérateurs peuvent toujours créer leurs propres publications sur le wiki."
     min_trust_to_send_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages directs ». Le niveau de confiance minimal requis pour créer de nouveaux messages directs."
     min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par e-mail."
-    send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages personnels par e-mail. Les administrateurs et les modérateurs peuvent toujours envoyer des messages personnels par e-mail."
+    send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages privés par e-mail. Les administrateurs et les modérateurs peuvent toujours envoyer des messages privés par e-mail."
     min_trust_to_flag_posts: "Le niveau de confiance minimal requis pour signaler des messages"
     flag_post_allowed_groups: "Groupes autorisés à signaler des publications. Les administrateurs et les modérateurs peuvent toujours signaler des publications."
     min_trust_to_post_links: "Le niveau de confiance minimal requis pour inclure des liens dans les messages"
@@ -2127,7 +2124,6 @@ fr:
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les messages des nouveaux utilisateurs seront automatiquement masqués après avoir été signalés comme spam par un utilisateur d'un niveau de confiance 3 et plus"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Les utilisateurs anonymes verront des informations indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler tout contenu illégal."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
     slow_mode_prevents_editing: "Le « mode lent » empêche-t-il l'édition après editing_grace_period ?"
@@ -2306,12 +2302,12 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximal de messages à intégrer."
     embed_username_required: "Un nom d'utilisateur est nécessaire pour la création du sujet."
-    notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
+    notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message privé aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_drafts_older_than_n_days: "Supprimez les brouillons qui n'ont pas été modifiés depuis plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
     bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode d''amorçage sur Meta</a> pour obtenir plus de détails.'
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
-    secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages directs et catégories privées. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
+    secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages privés et catégories privées. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
     secure_uploads_max_email_embed_image_size_kb: "La taille maximale d'images sécurisées qui seront intégrées dans des e-mails si le paramètre « secure uploads allow embed in emails » est activé. Si celui-ci n'est pas activé, ce paramètre est sans effet."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
@@ -2336,9 +2332,7 @@ fr:
     max_allowed_message_recipients: "Nombre maximal de destinataires autorisés dans un message."
     disable_watched_word_checking_in_user_fields: "désactiver la vérification des mots surveillés dans les champs d'utilisateur"
     watched_words_regular_expressions: "Permet d'utiliser des expressions régulières pour filtrer les mots. Si cette fonctionnalité est activée, elle regroupe les mots sensibles en fonction de leur sensibilité aux majuscules et minuscules. Elle compile ensuite tous les mots sélectionnés en une seule expression régulière, en ajoutant des limites de mots pour les mots surveillés réguliers. Ainsi, cette méthode de filtrage basée sur les expressions régulières ajoute une couche supplémentaire de contrôle sur la modération du contenu en prenant en charge des modèles de mots plus sophistiqués. Le réglage permet également de remplacer facilement le texte d'origine par le remplacement de votre choix."
-    enable_diffhtml_preview: "Fonctionnalité expérimentale utilisant diffHTML pour synchroniser la prévisualisation plutôt que de redéclencher un traitement d'affichage entier."
     enable_fast_edit: "Ajoute un bouton au menu de sélection des messages pour modifier une petite sélection en ligne."
-    enable_quote_copy: "Ajoute un bouton au menu de sélection des messages pour copier la sélection dans le presse-papiers sous forme de citation."
     old_post_notice_days: "Nombre de jours après lesquels un avis de publication est considéré comme ancien. Cela le différencie visuellement des nouvelles notifications sur le site."
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
@@ -2417,7 +2411,7 @@ fr:
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Définissez l'apparence visuelle des badges d'étiquette sur le site. Ce paramètre vous permet de personnaliser la représentation visuelle des étiquettes dans toutes les zones du site, en améliorant ainsi la cohérence de la mise en page et l'accessibilité pour les utilisateurs."
-    pm_tags_allowed_for_groups: "Autorisez les membres des groupes inclus à étiqueter n'importe quel message personnel"
+    pm_tags_allowed_for_groups: "Autorisez les membres des groupes inclus à étiqueter n'importe quel message privé"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
     tag_topic_allowed_groups: "Groupes autorisés à étiqueter des sujets. Les administrateurs et les modérateurs peuvent toujours étiqueter les sujets."
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
@@ -2782,8 +2776,8 @@ fr:
     already_silenced: "L'utilisateur a déjà été mis en sourdine par %{staff} il y a %{time_ago}."
     already_suspended: "L'utilisateur a déjà été suspendu par %{staff} il y a %{time_ago}."
     cannot_delete_has_posts:
-      one: "L'utilisateur %{username} a %{count} message dans un sujet public ou message personnel, vous ne pouvez donc pas le supprimer."
-      other: "L'utilisateur %{username} a %{count} messages dans des sujets publics ou messages personnels, vous ne pouvez donc pas le supprimer."
+      one: "L'utilisateur %{username} a %{count} publication dans un sujet public ou message privé, vous ne pouvez donc pas le supprimer."
+      other: "L'utilisateur %{username} a %{count} publications dans un sujet public ou messages privés, vous ne pouvez donc pas le supprimer."
     cannot_bulk_delete: "Un ou plusieurs utilisateurs ne peuvent pas être supprimés parce qu'ils sont administrateurs, parce qu'ils ont trop de publications ou parce qu'ils ont une très ancienne publication."
   unsubscribe_mailer:
     title: "Désabonnement"
@@ -5092,7 +5086,6 @@ fr:
       new_topics_unless_trust_level: "Les sujets créés par des utilisateurs dont le niveau de confiance est faible doivent être approuvés par un responsable. Voir %{link}."
       fast_typer: "Un nouvel utilisateur a écrit son premier message avec une rapidité suspecte, comportement typique des bots et des spammeurs. Voir %{link}."
       auto_silence_regex: "Nouvel utilisateur dont le premier message contient le motif textuel défini par le paramètre %{link}."
-      watched_word: "Ce message contient un mot surveillé. Voir votre %{link}."
       staged: "Tout nouveau sujet ou message pour les utilisateurs distants doit être approuvé par les responsables. Voir %{link}."
       category: "Les messages de cette catégorie doivent être approuvés manuellement par un responsable. Voir %{link}."
       must_approve_users: "Tous les nouveaux utilisateurs doivent être approuvés par un responsable. Voir %{link}."
@@ -5103,7 +5096,6 @@ fr:
       contains_media: "Ce message contient un ou plusieurs contenus multimédias ou vidéo. Voir %{link}."
       queued_by_staff: "Un responsable a estimé que ce message devait être examiné avant sa publication. Il restera masqué jusqu'à son approbation par un modérateur."
       links:
-        watched_word: liste des mots surveillés
         category: paramètres de la catégorie
     actions:
       agree:

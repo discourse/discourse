@@ -3119,7 +3119,7 @@ RSpec.describe UsersController do
           user.set_status!("off to dentist", "tooth")
           user.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
           expect(response.status).to eq(200)
 
@@ -3159,7 +3159,7 @@ RSpec.describe UsersController do
           user1.set_status!(old_status[:description], old_status[:emoji])
           user1.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user1.username}.json", params: { status: new_status }
           expect(response.status).to eq(403)
 
@@ -3216,7 +3216,7 @@ RSpec.describe UsersController do
             user.set_status!(old_status[:description], old_status[:emoji])
             user.reload
 
-            new_status = { emoji: "surfing_man", description: "surfing" }
+            new_status = { emoji: "man_surfing", description: "surfing" }
             put "/u/#{user.username}.json", params: { status: new_status }
             expect(response.status).to eq(200)
 
@@ -3261,7 +3261,7 @@ RSpec.describe UsersController do
           user.set_status!("off to dentist", "tooth")
           user.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
           expect(response.status).to eq(200)
 
@@ -4349,6 +4349,42 @@ RSpec.describe UsersController do
 
       expect(json["user_summary"]["topic_count"]).to eq(1)
       expect(json["user_summary"]["post_count"]).to eq(1)
+    end
+
+    context "when user has hidden posts with links" do
+      fab!(:user) { Fabricate(:user, trust_level: 4) }
+      fab!(:topic) { Fabricate(:topic, user:) }
+      fab!(:visible_post) do
+        create_post(topic:, user:, raw: "Check out [this link](https://visible-link.com)")
+      end
+      fab!(:another_visible_post) do
+        create_post(topic:, user:, raw: "And [another link](https://another-visible-link.com)")
+      end
+      fab!(:hidden_post) do
+        create_post(topic:, user:, raw: "This has a [hidden link](https://hidden-link.com)")
+      end
+      fab!(:deleted_post) do
+        create_post(topic:, user:, raw: "This has a [deleted link](https://deleted-link.com)")
+      end
+
+      before do
+        deleted_post.trash!
+        hidden_post.hide!(PostActionType.types[:off_topic])
+        sign_in(user)
+      end
+
+      it "doesn't include links from hidden or deleted posts" do
+        get "/u/#{user.username}/summary.json"
+
+        expect(response.status).to eq(200)
+
+        links = response.parsed_body["user_summary"]["links"]
+
+        expect(links.map { _1["url"] }).to contain_exactly(
+          "https://visible-link.com",
+          "https://another-visible-link.com",
+        )
+      end
     end
 
     context "when `hide_user_profiles_from_public` site setting is enabled" do

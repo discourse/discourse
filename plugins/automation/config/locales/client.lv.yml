@@ -7,7 +7,8 @@
 lv:
   js:
     discourse_automation:
-      create: Izveidot
+      back: Atpakaļ
+      edit: Rediģēt
       fields:
         user:
           label: Lietotājs
@@ -57,10 +58,6 @@ lv:
               label: Birkas
             restricted_category:
               label: Sadaļa
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupas
           created: Radīts
         category_created_edited:
           fields:

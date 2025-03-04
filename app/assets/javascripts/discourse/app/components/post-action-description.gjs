@@ -3,7 +3,7 @@ import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 
 export default class PostActionDescription extends Component {
   get description() {
-    if (this.args.actionCode && this.args.createdAt) {
+    if (this.args.actionCode) {
       return actionDescriptionHtml(
         this.args.actionCode,
         this.args.createdAt,

@@ -136,7 +136,7 @@ RSpec.describe UserStatusController do
         expect(user.user_status.ends_at).to eq_time(ends_at)
 
         new_status = "surfing"
-        new_status_emoji = "surfing_man"
+        new_status_emoji = "man_surfing"
         new_ends_at = DateTime.parse("2100-01-01 18:59")
         put "/user-status.json",
             params: {

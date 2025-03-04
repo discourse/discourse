@@ -20,7 +20,7 @@ RSpec.describe "React to message", type: :system do
       Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
-        emoji: "female_detective",
+        emoji: "woman_detective",
       )
     end
 
@@ -53,7 +53,7 @@ RSpec.describe "React to message", type: :system do
       Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
-        emoji: "female_detective",
+        emoji: "woman_detective",
       )
     end
 
@@ -154,7 +154,7 @@ RSpec.describe "React to message", type: :system do
       Chat::MessageReactor.new(current_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
-        emoji: "female_detective",
+        emoji: "woman_detective",
       )
     end
 
@@ -162,7 +162,7 @@ RSpec.describe "React to message", type: :system do
       Chat::MessageReactor.new(other_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
-        emoji: "female_detective",
+        emoji: "woman_detective",
       )
     end
 
@@ -171,11 +171,11 @@ RSpec.describe "React to message", type: :system do
         sign_in(current_user)
         chat.visit_channel(category_channel_1)
 
-        expect(channel).to have_reaction(message_1, "female_detective", "2")
+        expect(channel).to have_reaction(message_1, "woman_detective", "2")
 
-        channel.click_reaction(message_1, "female_detective")
+        channel.click_reaction(message_1, "woman_detective")
 
-        expect(channel).to have_reaction(message_1, "female_detective", "1")
+        expect(channel).to have_reaction(message_1, "woman_detective", "1")
       end
     end
   end
@@ -185,7 +185,7 @@ RSpec.describe "React to message", type: :system do
       Chat::MessageReactor.new(current_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
-        emoji: "female_detective",
+        emoji: "woman_detective",
       )
     end
 

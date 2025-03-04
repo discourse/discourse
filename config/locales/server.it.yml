@@ -314,9 +314,6 @@ it:
     site_settings:
       invalid_site_setting: "Non esiste alcuna impostazione di nome '%{name}'"
       invalid_category_id: "Hai specificato una categoria che non esiste"
-      site_setting_is_hidden: "Non disponi dei permessi per modificare le impostazioni nascoste"
-      site_setting_is_shadowed_globally: "Non è possibile modificare questa impostazione perché è configurata a livello globale."
-      site_setting_is_unconfigurable: "Non disponi dei permessi per modificare le impostazioni non configurabili"
       invalid_choice:
         one: "'%{name}' è una scelta non valida."
         other: "'%{name}' sono scelte non valide."
@@ -338,7 +335,7 @@ it:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Gli user agent devono essere lunghi almeno 3 caratteri per evitare di limitare accidentalmente le richieste degli utenti legittimi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Non puoi aggiungere nessuno dei seguenti valori all'impostazione: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Non è possibile disabilitare i metadati delle immagini eliminate se è abilitata l'opzione \"Ottimizzazione multimediale del compositore abilitata\". Disattiva questa opzione prima di disabilitare i metadati delle immagini eliminate."
-      twitter_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
+      x_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
       tl0_and_anonymous_flag: "Per gli utenti anonimi è necessario fornire 'site contact email' o 'email address to report illegal content'."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1720,7 +1717,7 @@ it:
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere un'immagine PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
     apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Si sconsiglia l'uso di sfondi trasparenti.Verrà automaticamente ridimensionata a 180x180. Se lasciata vuota, verrà usato il formato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
-    twitter_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
+    x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato oggetto personalizzabile per e-mail standard. Vedi <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2127,7 +2124,6 @@ it:
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
     reviewable_low_priority_threshold: "Il filtro di priorità nasconde gli elementi sottoposti a revisione che non raggiungono questo punteggio a meno che non venga utilizzato il filtro '(tutti)'."
     high_trust_flaggers_auto_hide_posts: "I messaggi di nuovi utenti vengono automaticamente nascosti dopo essere stati contrassegnati come spam da un utente TL3 +"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Gli utenti anonimi visualizzeranno le informazioni che dovranno inviare via e-mail agli amministratori per segnalare contenuti illegali."
     email_address_to_report_illegal_content: "Se il campo viene lasciato vuoto, verrà utilizzato l'indirizzo email predefinito dell'amministratore del sito."
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
     slow_mode_prevents_editing: "Stabilisce se la \"Modalità lenta\" impedisce la modifica, dopo il periodo indicato da editing_grace_period."
@@ -2336,9 +2332,7 @@ it:
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     disable_watched_word_checking_in_user_fields: "disabilita il controllo delle parole osservate nei campi utente"
     watched_words_regular_expressions: "Consente l'utilizzo di espressioni regolari per filtrare le parole. Se abilitata, questa funzione raggruppa le parole con distinzioni per distinzione tra maiuscole e minuscole, quindi compila tutte le parole selezionate creando un'unica espressione regolare che aggiunge i confini di parola per le parole osservate. Il metodo di filtraggio mediante espressioni regolari aggiunge un livello di controllo supplementare alla moderazione, introducendo il supporto per pattern di espressioni più sofisticate. Questa impostazione consente inoltre di sostituire facilmente il testo originale con un testo sostitutivo a tua scelta."
-    enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
     enable_fast_edit: "Aggiunge al menu di selezione messaggio un pulsante per modificare una piccola selezione in linea."
-    enable_quote_copy: "Aggiunge al menu di selezione messaggio un pulsante per copiare la sezione negli appunti come citazione in formato markdown."
     old_post_notice_days: "Il numero di giorni trascorsi i quali l'avviso di un messaggio viene considerato vecchio. L'avviso viene così differenziato visivamente dagli avvisi più recenti del sito."
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -4685,7 +4679,6 @@ it:
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di attendibilità devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo troppo rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
       auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
-      watched_word: "Questo messaggio includeva una parola osservata. Vedi il tuo %{link}."
       staged: "I nuovi argomenti e messaggi per gli utenti temporanei devono essere approvati dallo staff. Vedi %{link}"
       category: "I messaggi in questa categoria richiedono l'approvazione manuale da parte dello staff. Vedi %{link}."
       must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi %{link}."
@@ -4696,7 +4689,6 @@ it:
       contains_media: "Questo messaggio include contenuti multimediali incorporati. Vedi %{link}."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
       links:
-        watched_word: lista delle parole osservate
         category: impostazioni della categoria
     actions:
       agree:

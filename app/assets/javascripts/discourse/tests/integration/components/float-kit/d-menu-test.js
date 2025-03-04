@@ -25,7 +25,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   test("@label", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
-    assert.dom(".fk-d-menu__trigger").containsText("label");
+    assert.dom(".fk-d-menu__trigger .d-button-label").hasText(/^label$/);
   });
 
   test("@icon", async function (assert) {
@@ -385,5 +385,57 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
 
     assert.dom(document.body).isFocused();
+  });
+
+  test("traps pointerdown events only when expanded ", async function (assert) {
+    let propagated = false;
+
+    const listener = () => {
+      propagated = true;
+    };
+
+    this.didInsert = (element) => {
+      element.addEventListener("pointerdown", listener);
+    };
+    this.willDestroy = (element) => {
+      element.removeEventListener("pointerdown", listener);
+    };
+
+    await render(hbs`
+      <div {{didInsert this.didInsert}} {{will-destroy this.willDestroy}}>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @identifier="d-menu-pointerdown-trap-test"
+        />
+      </div>
+    `);
+
+    await triggerEvent(".d-menu-pointerdown-trap-test-trigger", "pointerdown");
+
+    assert.true(
+      propagated,
+      "the pointerdown event is propagated to the parent element when the menu isn't expanded"
+    );
+
+    propagated = false;
+
+    await open();
+    await triggerEvent(".d-menu-pointerdown-trap-test-trigger", "pointerdown");
+
+    assert.false(
+      propagated,
+      "the pointerdown event isn't propagated to the parent element when the menu is expanded"
+    );
+  });
+
+  test("@triggerComponent", async function (assert) {
+    await render(hbs`
+      <DMenu @inline={{true}} @triggerComponent={{element "span"}}>1</DMenu>
+    `);
+
+    await open();
+
+    assert.dom("span.fk-d-menu__trigger").exists();
   });
 });

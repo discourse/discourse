@@ -7,8 +7,8 @@
 ur:
   js:
     discourse_automation:
-      create: بنائیں
-      update: اپ ڈیٹ
+      back: واپس
+      edit: ترمیم کریں
       fields:
         user:
           label: صارف
@@ -64,10 +64,6 @@ ur:
               label: ٹیگز
             restricted_category:
               label: زمرہ
-            restricted_group:
-              label: گروپ
-            restricted_groups:
-              label: گروپس
           created: بنایا گیا
         category_created_edited:
           fields:

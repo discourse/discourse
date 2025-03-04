@@ -66,6 +66,7 @@
 .c-navbar__title {
   display: flex;
   align-items: center;
+
   @include ellipsis;
   height: var(--chat-header-offset);
 

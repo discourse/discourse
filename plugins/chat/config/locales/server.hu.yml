@@ -59,6 +59,7 @@ hu:
     deleted_chat_username: törölt
     errors:
       users_cant_be_added_to_channel: "Felhasználók nem adhatók hozzá ehhez a csatornához."
+      user_cant_be_removed_from_channel: "A felhasználót nem lehet eltávolítani erről a csatornáról"
       channel_exists_for_category: "Már létezik csatorna ehhez a kategóriával, és ezzel a névvel"
       channel_new_message_disallowed:
         archived: "A csatorna archiválva van, új üzenet nem küldhető"
@@ -90,6 +91,7 @@ hu:
       actor_muting_target_user: "%{username} felhasználót némította, ezért nem küldhet neki üzeneteket."
       actor_disallowed_dms: "Ön úgy döntött, hogy megakadályozza a felhasználókat abban, hogy személyes vagy közvetlen üzeneteket küldjenek, ezért nem hozhat létre új közvetlen üzeneteket."
       actor_preventing_target_user_from_dm: "Úgy döntött, hogy megakadályozza, hogy %{username} személyes vagy közvetlen üzeneteket küldjön Önnek, ezért nem hozhat létre új közvetlen üzeneteket számára."
+      not_reachable: "Sajnáljuk, a %{username} nem használja a csevegést."
       user_cannot_send_direct_messages: "Sajnos nem tud közvetlen üzeneteket küldeni."
       over_chat_max_direct_message_users_allow_self: "Csak saját magadnak tudsz közvetlen üzenetet létrehozni."
       over_chat_max_direct_message_users:
@@ -234,6 +236,12 @@ hu:
         private_email:
           one: "[%{site_name}] Új üzenet"
           other: "[%{site_name}] Új üzenetek"
+        watched_thread:
+          one: "[%{site_name}] Új téma üzenet itt: %{channel}"
+          other: "[%{site_name}] Új téma üzenetek itt: %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Új téma üzenet a %{channel} és %{count} további csoportban"
+          other: "[%{site_name}] Új téma üzenet a %{channel} és %{count} további csoportban"
         chat_dm_1:
           one: "[%{site_name}] Új üzenet tőle: %{name}"
           other: "[%{site_name}] Új üzenetek tőle: %{name}"

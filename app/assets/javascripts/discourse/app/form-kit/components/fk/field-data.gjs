@@ -137,6 +137,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Help text of the field.
+   * @type {string}
+   */
+  get helpText() {
+    return this.args.helpText;
+  }
+
+  /**
    * Indicates whether to show the field's title.
    * Defaults to `true`.
    * @type {boolean}

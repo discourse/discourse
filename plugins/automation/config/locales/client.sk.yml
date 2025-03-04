@@ -13,13 +13,16 @@ sk:
             delete_automation: vymazať automatizáciu
     discourse_automation:
       title: Automatizácia
-      create: Vytvoriť
-      update: Aktualizovať
+      table_title: Automatizácie
+      create: Pridanie automatizácie
+      update: Aktualizácia automatizácie
+      back: Späť
+      edit: Upraviť
       select_script: Vyberte skript
       select_trigger: Vyberte spúšťač
       confirm_automation_reset: Táto akcia resetuje možnosti skriptu a spúšťača, nový stav sa uloží, chcete pokračovať?
       confirm_automation_trigger: Táto akcia spustí automatizáciu, chcete pokračovať?
-      no_automation_yet: Zatiaľ ste nevytvorili žiadne automatizácie. Vyberte si niektorú z možností nižšie a začnite.
+      no_automation_yet: V súčasnosti nie sú nakonfigurované žiadne automatizácie.
       filter_placeholder: Filtrovanie podľa názvu alebo popisu...
       edit_automation:
         trigger_section:
@@ -167,11 +170,11 @@ sk:
             restricted_category:
               label: Kategória
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
-            restricted_group:
-              label: Skupina
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku osobnou správou v doručenej pošte tejto skupiny
+            restricted_user_group:
+              label: Obmedzená skupina používateľov
+              description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v tejto skupine
             restricted_groups:
-              label: Skupiny
+              label: Obmedzené skupiny doručenej pošty
               description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
             ignore_group_members:
               label: Ignorovať členov skupiny
@@ -390,6 +393,7 @@ sk:
               label: PMs
             sender:
               label: Odosielateľ PMs
+              description: "Uistite sa, že odosielateľ má správne oprávnenia na odosielanie PM príjemcovi."
         close_topic:
           fields:
             topic:

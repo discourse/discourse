@@ -170,21 +170,21 @@ uk:
           - Ми віримо в [цивілізовану поведінку спільноти](%{base_uri}/guidelines).
       onebox:
         instructions: |-
-          Далі, можете поділитися одним із цих посилань зі мною? Відповідайте за допомогою **посилання на рядок самостійно**, і воно автоматично розшириться, щоб включити чудовий підсумок.
+          Далі, чи можете ви поділитися одним з цих посилань зі мною? Напишіть у відповідь **посилання в окремому рядку**, і воно автоматично розгорнеться, включивши в себе стислий опис.
 
-          Щоб скопіювати будь-яке посилання, натисніть і утримуйте на мобільному пристрої, або клацніть правою кнопкою миші на посилання:
+          Щоб скопіювати будь-яке посилання, натисніть і утримуйте його на мобільному або клацніть правою кнопкою миші на вказівному пристрої:
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Класно! Це працюватиме для більшості <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> посилань. Пам'ятайте, що воно повинно бути на лінії _all by itself_, без нічого іншого спереду чи ззаду.
         not_found: |-
           Вибачте, я не зміг знайти посилання у вашій відповіді! :cry:
 
-          Чи можете ви спробувати додати це посилання у окремому рядку до наступної своєї відповіді?
+          Чи можете ви спробувати додати наступне посилання в окремому рядку у своїй наступній відповіді?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Ось малюнок єдинорога:

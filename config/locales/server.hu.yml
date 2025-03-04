@@ -60,6 +60,8 @@ hu:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
+    too_many_urls: "Egy kérelemben nem lehet 10-nél több URL-címet beilleszteni."
+    concurrency_not_allowed: "Egyidejű beágyazott egydobozos kérések nem engedélyezettek. Kérjük, egyszerre egy kérést küldjön."
   components:
     enabled_filter: "Engedélyezed"
     disabled_filter: "Kikapcsolt"
@@ -314,9 +316,9 @@ hu:
     site_settings:
       invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
-      site_setting_is_hidden: "Nem módosíthatja a rejtett beállításokat"
-      site_setting_is_shadowed_globally: "Ez a beállítás nem módosítható, mert globálisan van konfigurálva"
-      site_setting_is_unconfigurable: "Nem változtathatja meg a nem konfigurálható beállításokat."
+      site_settings_are_hidden: "Nem módosíthatja a rejtett beállításokat: %{setting_names}"
+      site_settings_are_shadowed_globally: "Ezeket a beállításokat nem módosíthatja, mert globálisan vannak konfigurálva: %{setting_names}"
+      site_settings_are_unconfigurable: "Nem módosíthatja a nem konfigurálható beállításokat: %{setting_names}"
       invalid_choice:
         one: "'%{name}' érvénytelen választás."
         other: "'%{name}' érvénytelen választás."
@@ -338,7 +340,7 @@ hu:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakter hosszúaknak kell lenniük, hogy elkerüljék a jogos felhasználók véletlen sebességkorlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nem lehet letiltani a szalagkép metaadatait, ha a composer médiaoptimalizáló kép engedélyezve van. Kapcsolja ki ezt az opciót, mielőtt letiltaná a szalagkép metaadatokat."
-      twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
+      x_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
       tl0_and_anonymous_flag: "A névtelen felhasználók számára meg kell adni a „webhely kapcsolatfelvételi e-mail-címét” vagy „az illegális tartalom bejelentéséhez szükséges e-mail-címet”."
     conflicting_google_user_id: 'A fiók Google-fiók azonosítója megváltozott; biztonsági okokból a személyzet beavatkozása szükséges. Kérjük, lépjen kapcsolatba a személyzettel, és mutassa meg nekik a következő címet: <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -765,6 +767,9 @@ hu:
           attributes:
             linkable_type:
               invalid: "nem érvényes"
+        api_key:
+          base:
+            at_least_one_granular_scope: "legalább egyet ki kell választani"
       <<: *errors
   uncategorized_category_name: "Nincs kategorizálva"
   general_category_name: "Általános"
@@ -1622,11 +1627,13 @@ hu:
     delete_old_hidden_posts: "A 30 napnál tovább rejtve maradó rejtett bejegyzések automatikus törlése."
     default_locale: "A Discourse alapértelmezett nyelve. A rendszer által generált kategóriák és témák szövegét lecserélheted a <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Személyre szabás / Szöveg</a>oldalon."
     allow_user_locale: "A felhasználók számára lehetővé teszi, hogy kiválasszák saját nyelvi felület preferenciájukat."
+    set_locale_from_accept_language_header: "Állítsa be a kezelőfelület nyelvét az anonim felhasználók számára a böngésző nyelvi fejlécéből"
     set_locale_from_cookie: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a \"locale\" böngésző süti segítségével."
     set_locale_from_param: "Lehetővé teszi egy névtelen felhasználó nyelvi beállítását a 'lang' URL paraméteren keresztül, pl. ?lang=es"
     support_mixed_text_direction: "Támogatja a vegyes balról jobbra és jobbról balra haladó szöveges irányokat"
     min_post_length: "Minimálisan megengedett bejegyzéshossz karakterekben (a személyes üzeneteket kivéve)"
     min_first_post_length: "Minimálisan megengedett első bejegyzés (téma törzse) hossza (a személyes üzeneteket kivéve)"
+    prevent_uploads_only_posts: "Ne számítsuk a feltöltési markdown kódot a minimális bejegyzés hossza ellenőrzésénél"
     min_personal_message_post_length: "Minimálisan megengedett bejegyzéshossz karakterekben üzeneteknél (mind az első bejegyzés, mind a válaszok esetében)"
     max_post_length: "Maximálisan megengedett bejegyzéshossz karakterekben"
     topic_featured_link_enabled: "Lehetővé teszi a felhasználók számára, hogy kiemelt linket társítsanak a témáikhoz. Ha be van kapcsolva, a témákhoz csatolható egy kiemelt link, amely nyilvánosan látható és szerkeszthető, ha a felhasználónak megfelelő jogosultságai vannak. A kiemelt link javíthatja a téma érthetőségét azáltal, hogy kapcsolódó további tartalmat biztosít."
@@ -1646,6 +1653,7 @@ hu:
     search_query_log_max_retention_days: "A keresési lekérdezések tárolásának maximális időtartama napokban."
     search_ignore_accents: "Ha ez a beállítás engedélyezve van, a keresési lekérdezésekben lévő ékezeteket figyelmen kívül hagyja a rendszer, lehetővé téve a felhasználók számára, hogy akkor is találjanak eredményeket, ha nem adják meg a helyes ékezeteket."
     search_default_sort_order: "Alapértelmezett rendezési sorrend a teljes oldalas kereséshez"
+    search_experience: "A keresés alapértelmezett pozíciója és megjelenése asztali eszközökön"
     category_search_priority_low_weight: "A rangsorolásra alkalmazott súly az alacsony kategóriájú keresési prioritás esetén."
     category_search_priority_high_weight: "A rangsorolásra alkalmazott súly a magas kategóriájú keresési prioritás esetén."
     default_composer_category: "Az a kategória, amely előre kitölti a kategória legördülő menüt új téma létrehozásakor."
@@ -1711,7 +1719,7 @@ hu:
     favicon: "Egy favicon az Ön webhelyéhez, lásd <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. A CDN-en való helyes működéshez png formátumúnak kell lennie. 32x32 pixelre lesz átméretezve. Ha üresen hagyja, a large_icon lesz használva."
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
     opengraph_image: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
-    twitter_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
+    x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
     email_custom_headers: "Függőleges vonallal elválasztott lista az egyéni e-mail fejlécekről"
     email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1851,6 +1859,7 @@ hu:
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     auth_skip_create_confirm: Külső hitelesítéssel történő regisztrációkor a fiók létrehozása felugró ablak kihagyása. Legjobb az auth_overrides_email, auth_overrides_username és auth_overrides_name beállításokkal együtt használni.
     auth_immediately: "Automatikus átirányítás a külső bejelentkezési rendszerre felhasználói interakció nélkül. Ez csak akkor lép életbe, ha a login_required beállítás értéke igaz, és csak egy külső hitelesítési módszer van"
+    auth_require_interaction: "Felhasználói beavatkozás szükséges, mielőtt átirányítaná egy külső bejelentkezési rendszerre az `/auth/*`-n keresztül. Ez egy mélyreható védekezés a „Login CSRF” támadások ellen. Csak akkor kapcsolja ki ezt a beállítást, ha teljes mértékben megbízik abban, hogy az összes engedélyezett hitelesítési módszer védett a bejelentkezési CSRF ellen."
     enable_discourse_connect: "DiscourseConnect-en keresztüli bejelentkezés engedélyezése (korábban 'Discourse SSO') (FIGYELMEZTETÉS: A FELHASZNÁLÓK E-MAIL CÍMEIT KÖTELEZŐEN ELLENŐRIZNIE KELL A KÜLSŐ OLDALNAK!)"
     verbose_discourse_connect_logging: "Részletes DiscourseConnect-tel kapcsolatos diagnosztikai információk naplózása a <a href='%{base_path}/logs' target='_blank'>Hiba-naplók</a> oldalon"
     enable_discourse_connect_provider: "DiscourseConnect (korábban 'Discourse SSO') szolgáltatói protokoll megvalósítása a /session/sso_provider végponton, a discourse_connect_provider_secrets beállítása szükséges"
@@ -2118,7 +2127,7 @@ hu:
     reviewable_default_visibility: "Ne jelenítsen meg áttekintendő elemeket, hacsak nem felelnek meg ennek a prioritásnak"
     reviewable_low_priority_threshold: "A prioritásszűrő elrejti azokat az áttekintendő elemeket, amelyek nem felelnek meg ennek a pontszámnak, kivéve, ha a „(bármely)” szűrőt használja."
     high_trust_flaggers_auto_hide_posts: "Az új felhasználói bejegyzések automatikusan el vannak rejtve, miután egy 3-as bizalmi szint feletti felhasználó spamként jelölte meg őket"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják azokat az információkat, amelyeket e-mailben kell küldeniük a rendszergazdáknak, hogy jelentsék az illegális tartalmat."
+    allow_all_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják azokat az információkat, amelyeket e-mailben kell küldeniük a rendszergazdáknak, hogy jelentsék az illegális tartalmat. Ez a beállítás elsőbbséget élvez az „engedélyezett csoportok megjelölésével” szemben."
     email_address_to_report_illegal_content: "Ha üresen hagyja, az alapértelmezett webhelyadminisztrátori e-mail-cím kerül felhasználásra."
     cooldown_hours_until_reflag: "Mennyi időt kell várniuk a felhasználóknak, amíg újra megjelölhetnek egy bejegyzést."
     slow_mode_prevents_editing: "A „Lassú mód” megakadályozza a szerkesztést az editing_grace_period után?"
@@ -2277,6 +2286,7 @@ hu:
     svg_icon_subset: "Adjon hozzá további FontAwesome ikonokat, amelyeket szeretné az eszközeibe beépíteni. Használja a 'fa-' előtagot a tömör ikonokhoz, a 'far-' előtagot a normál ikonokhoz és a 'fab-' előtagot a márkaikonokhoz."
     max_prints_per_hour_per_user: "/print oldalmegjelenítések maximális száma (állítsa 0-ra a nyomtatás letiltásához)"
     full_name_requirement: "Állítsa be, hogy a teljes név mező kötelező, opcionális, vagy opcionális de rejtett mező legyen a regisztrációs űrlapon."
+    interface_color_selector: "Konfigurálja, hogy hol érhető el az interfész színének világos/sötét módválasztója."
     enable_names: "Mutassa meg a felhasználó teljes nevét a profilján, felhasználói kártyáján és e-mailjeiben. Kapcsolja ki a teljes név elrejtését mindenhol."
     display_name_on_posts: "A felhasználó teljes nevének megjelenítése a bejegyzéseiben a @felhasználónév mellett."
     show_time_gap_days: "Ha két bejegyzés ennyi nap eltéréssel készül, jelenítse meg az időbeli eltérést a témában."
@@ -2327,9 +2337,7 @@ hu:
     max_allowed_message_recipients: "Az üzenetben megengedett maximális címzettek száma."
     disable_watched_word_checking_in_user_fields: "a figyelt szavak ellenőrzésének kikapcsolása a felhasználói mezőkben"
     watched_words_regular_expressions: "Lehetővé teszi a reguláris kifejezések használatát a szavak szűrésére. Ha engedélyezve van, ez a funkció csoportosítja az érzékeny szavakat azok kis- és nagybetű érzékenysége alapján. Ezután az összes kiválasztott szót egyetlen reguláris kifejezésbe fordítja le, hozzáadva szóhatárokat a rendszeresen figyelt szavakhoz. Ennek eredményeként ez a regex-alapú szűrési módszer további kontrollréteget biztosít a tartalom moderálásához, támogatva az összetettebb szómintákat. A beállítás lehetővé teszi az eredeti szöveg egyszerű helyettesítését egy választott alternatívával is."
-    enable_diffhtml_preview: "Kísérleti funkció, amely a DiffHTML segítségével szinkronizálja az előnézetet a teljes újrarenderelés helyett"
     enable_fast_edit: "Szerkesztés gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen szerkesztéséhez."
-    enable_quote_copy: "Idézet másolása gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen idézetként való vágólapra másolásához."
     old_post_notice_days: "Azoknak a napoknak a száma, amely után egy bejegyzés értesítése elavultnak minősül. Ez vizuálisan megkülönbözteti az újabb értesítésektől az oldalon."
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."
@@ -2441,6 +2449,7 @@ hu:
     share_quote_visibility: "Határozza meg, mikor jelenjenek meg az idézet megosztási gombok: soha, csak névtelen felhasználóknak, vagy minden felhasználónak. "
     create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
+    use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
     use_name_for_username_suggestions: "Használja a felhasználó teljes nevét, amikor felhasználóneveket javasol."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
     show_bottom_topic_map: "Megjeleníti a téma térképét a téma alján, ha az legalább 10 választ tartalmaz."
@@ -2456,6 +2465,7 @@ hu:
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
     admin_sidebar_enabled_groups: "A megadott csoportok számára az oldalsáv navigáció engedélyezése az admin felhasználói felületen, amely helyettesíti a felső szintű admin navigációs gombokat."
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
+    experimental_auto_grid_images: "Automatikusan [grid] címkékbe csomagolja a képeket, ha 3 vagy több képet töltöttek fel a komponálóba."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
@@ -2503,8 +2513,10 @@ hu:
       discourse_connect_url_is_empty: "Először be kell állítania egy 'discourse connect url'-t, mielőtt engedélyezné ezt a beállítást."
       enable_local_logins_disabled: "Először engedélyeznie kell a 'helyi bejelentkezések engedélyezése' opciót, mielőtt ezt a beállítást engedélyezné."
       min_username_length_exists: "Nem állíthatja a felhasználónév minimális hosszát a legrövidebb felhasználónév (%{username}) fölé."
+      min_group_name_length_exists: "A minimális felhasználónévhossz nem állítható a legrövidebb csoportnév (%{group_name}) fölé."
       min_username_length_range: "Nem lehet a legnagyobb értéknél nagyobb legkisebb értéket beállítani."
       max_username_length_exists: "Nem állíthatja a felhasználónév maximális hosszát a leghosszabb felhasználónév (%{username}) alá."
+      max_group_name_length_exists: "A felhasználónév maximális hossza nem állítható a leghosszabb csoportnév (%{group_name}) alá."
       max_username_length_range: "Nem lehet a legkisebb értéknél kisebb legnagyobb értéket beállítani."
       invalid_hex_value: "A színértékeknek 6 számjegyű hexadecimális kódoknak kell lenniük."
       empty_selectable_avatars: "A beállítás engedélyezése előtt fel kell töltened legalább két választható avatart."
@@ -5021,7 +5033,6 @@ hu:
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
-      watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. Lásd a %{link}."
       staged: "Az átmeneti felhasználók új témáit és bejegyzéseit a stábtagoknak jóvá kell hagynia. Lásd %{link}."
       category: "Az ebbe a kategóriába tartozó bejegyzésekhez egy stábtag kézi jóváhagyása szükséges. Lásd a %{link}."
       must_approve_users: "Minden új felhasználót jóvá kell hagynia egy stábtagnak. Lásd: %{link}."
@@ -5032,7 +5043,6 @@ hu:
       contains_media: "Ez a bejegyzés beágyazott médiát tartalmaz. Lásd: %{link}."
       queued_by_staff: "Egy stábtag úgy gondolja, hogy ezt a bejegyzést felül kell vizsgálni. Addig rejtve marad."
       links:
-        watched_word: a figyelt szavak listája
         category: kategória beállítások
     actions:
       agree:

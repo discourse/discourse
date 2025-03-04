@@ -288,9 +288,6 @@ ja:
     site_settings:
       invalid_site_setting: "'%{name}' という名前の設定は存在しません"
       invalid_category_id: "存在しないカテゴリを指定しました"
-      site_setting_is_hidden: "非表示の設定を変更する権限がありません"
-      site_setting_is_shadowed_globally: "この設定はグローバルに構成されているため変更できません"
-      site_setting_is_unconfigurable: "構成不可能な設定を変更する権限がありません"
       invalid_choice:
         other: "'%{name}' は無効な選択です。"
       default_categories_already_selected: "他のリストで使われているカテゴリは選択できません。"
@@ -311,8 +308,8 @@ ja:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "ユーザーエージェントは、正当なユーザーを誤ってレート制限しないように、3 文字以上である必要があります。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
-      twitter_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
-      tl0_and_anonymous_flag: "匿名ユーザーの場合は、「サイトの連絡先メールアドレス」または「違法コンテンツを報告するためのメールアドレス」のいずれかが指定されている必要があります。"
+      x_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
+      tl0_and_anonymous_flag: "匿名ユーザーの場合は、'site contact email' または 'email address to report illegal content' のいずれかが指定されている必要があります。"
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
     onebox:
       invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
@@ -1643,7 +1640,7 @@ ja:
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。透明な背景は推奨されません。自動的に 180x180 にサイズ変更されます。空白のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
-    twitter_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
+    x_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダーのパイプ区切りのリスト"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a> をご覧ください"
@@ -2048,7 +2045,6 @@ ja:
     reviewable_default_visibility: "レビュー待ち項目がこの優先度を満たさない場合、それを表示しない"
     reviewable_low_priority_threshold: "優先度フィルターは、'(すべて)' フィルターが使用されていない限り、このスコアを満たさないレビュー待ち項目を非表示にする。"
     high_trust_flaggers_auto_hide_posts: "新しいユーザーの投稿は、TL3 以上のユーザーが迷惑として通報した後、自動的に非表示になる"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "匿名ユーザーには、違法コンテンツを報告するには管理者にメールを送信する必要があるという情報が表示されます。"
     email_address_to_report_illegal_content: "空白のままにすると、デフォルトのサイト管理者のメールアドレスが使用されます。"
     cooldown_hours_until_reflag: "ユーザーが投稿をもう一度通報できるまでの時間"
     slow_mode_prevents_editing: "editing_grace_period の後、'低速モード' で編集を防止するかどうか"
@@ -2257,9 +2253,7 @@ ja:
     max_allowed_message_recipients: "メッセージに許可される最大受信者数。"
     disable_watched_word_checking_in_user_fields: "ユーザーフィールドでのウォッチ中の単語のチェックを無効にする"
     watched_words_regular_expressions: "単語をフィルタリングするための正規表現の使用を許可します。有効にすると、この機能は大文字と小文字を区別して、慎重な扱いを要する単語をグループ化します。そして選択されたすべての単語を 1 つの正規表現にコンパイルし、通常のウォッチ中の単語に単語境界を追加します。そのため、この正規表現を使用するフィルタリング手法では、より洗練された単語パターンをサポートすることで、コンテンツモデレーションに対する制御レイヤーがさらに追加されます。この設定は、元もテキストを任意の文字で置換したテキストに簡単に置き換えることも可能です。"
-    enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
     enable_fast_edit: "投稿選択メニューにインラインで小さな選択範囲を編集できるボタンを追加します。"
-    enable_quote_copy: "投稿選択メニューに、Markdown 引用として選択範囲をクリップボードにコピーするボタンを追加します。"
     old_post_notice_days: "投稿の通知が古いと見なされるまでの日数。これにより、サイトの新しい通知と視覚的に区別されます。"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
@@ -4946,7 +4940,6 @@ ja:
       new_topics_unless_trust_level: "信頼レベルが低いユーザーはそのトピックをスタッフが承認する必要があります。%{link} をご覧ください。"
       fast_typer: "新規ユーザーは、最初の投稿を、ボットまたは迷惑行為者と疑われる速さで入力しました。%{link} をご覧ください。"
       auto_silence_regex: "最初の投稿が %{link} 設定に一致する新規ユーザー。"
-      watched_word: "この投稿にはウォッチ語が含まれています。%{link} をご覧ください。"
       staged: "ステージングユーザーの新しいトピックと投稿はスタッフによる承認が必要です。%{link} をご覧ください。"
       category: "このカテゴリの投稿には、スタッフによる手動の承認が必要です。%{link} をご覧ください。"
       must_approve_users: "すべての新しいユーザーは、スタッフによる承認が必要です。%{link} をご覧ください。"
@@ -4957,7 +4950,6 @@ ja:
       contains_media: "この投稿には埋め込みメディアが含まれています。%{link} をご覧ください。"
       queued_by_staff: "スタッフメンバーは、この投稿にレビューが必要だと考えています。それまで非表示のままになります。"
       links:
-        watched_word: ウォッチ語のリスト
         category: カテゴリ設定
     actions:
       agree:

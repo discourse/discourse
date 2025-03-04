@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
@@ -5,19 +6,12 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
-import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
-import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
-const ACTION_AS_STRING_DEPRECATION_ARGS = [
-  "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",
-  { id: "discourse.d-button-action-string" },
-];
-
-export default class DButton extends GlimmerComponentWithDeprecatedParentView {
+export default class DButton extends Component {
   @service router;
   @service capabilities;
 
@@ -26,13 +20,6 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   @equal("args.display", "link") btnLink;
 
   @empty("computedLabel") noText;
-
-  constructor() {
-    super(...arguments);
-    if (typeof this.args.action === "string") {
-      deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
-    }
-  }
 
   get forceDisabled() {
     return !!this.args.isLoading;
@@ -121,16 +108,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
       if (actionVal) {
         const { actionParam, forwardEvent } = this.args;
 
-        if (typeof actionVal === "string") {
-          deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
-          if (this._target?.send) {
-            this._target.send(actionVal, actionParam);
-          } else {
-            throw new Error(
-              "DButton could not find a target for the action. Use a closure action instead"
-            );
-          }
-        } else if (typeof actionVal === "object" && actionVal.value) {
+        if (typeof actionVal === "object" && actionVal.value) {
           if (isIOS) {
             // Don't optimise INP in iOS
             // it results in focus events not being triggered
@@ -231,8 +209,10 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
           {{~/if~}}
         </span>
       {{~else if (or @icon @isLoading)~}}
-        &#8203;
-        {{! Zero-width space character, so icon-only button height = regular button height }}
+        <span aria-hidden="true">
+          &#8203;
+          {{! Zero-width space character, so icon-only button height = regular button height }}
+        </span>
       {{~/if~}}
 
       {{yield}}

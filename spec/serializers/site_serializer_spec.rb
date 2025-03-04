@@ -497,4 +497,19 @@ RSpec.describe SiteSerializer do
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end
+
+  describe "#groups" do
+    fab!(:group)
+    fab!(:admin)
+
+    it "serializes the automatic field of each group" do
+      serialized_groups =
+        described_class.new(Site.new(admin.guardian), scope: admin.guardian, root: false).as_json[
+          :groups
+        ]
+
+      expect(serialized_groups.find { |g| g["name"] == "everyone" }["automatic"]).to eq(true)
+      expect(serialized_groups.find { |g| g["name"] == group.name }["automatic"]).to eq(false)
+    end
+  end
 end

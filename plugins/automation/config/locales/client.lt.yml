@@ -7,8 +7,8 @@
 lt:
   js:
     discourse_automation:
-      create: Sukurti
-      update: Atnaujinti
+      back: Atgal
+      edit: Redaguoti
       fields:
         user:
           label: Narys
@@ -64,10 +64,6 @@ lt:
               label: Žymos
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Grupė
-            restricted_groups:
-              label: Grupės
           created: Sukurta
         category_created_edited:
           fields:

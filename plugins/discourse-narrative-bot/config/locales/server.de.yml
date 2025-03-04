@@ -174,17 +174,17 @@ de:
 
           Um einen Link zu kopieren, tippe und halte auf mobilen Geräten oder klicke rechts mit deiner Maus:
 
-          <https://de.wikipedia.org/wiki/Antiwitz>
-          <https://de.wikipedia.org/wiki/Tetraphobie>
-          <https://de.wikipedia.org/wiki/Beghilos>
+          [https://de.wikipedia.org/wiki/Antiwitz](https://de.wikipedia.org/wiki/Antiwitz)
+          [https://de.wikipedia.org/wiki/Tetraphobie](https://de.wikipedia.org/wiki/Tetraphobie)
+          [https://de.wikipedia.org/wiki/Beghilos](https://de.wikipedia.org/wiki/Beghilos)
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-
           Entschuldige bitte, ich konnte den Link in deiner Antwort nicht finden! :cry:
 
-          Kannst du versuchen, den folgenden Link auf einer eigenen Zeile in deine nächste Antwort einzufügen?
+          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deine nächste Antwort einzufügen?
 
-          <https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze>
+          [https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze](https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze)
       images:
         instructions: |-
           Hier ist ein Bild von einem Einhorn:

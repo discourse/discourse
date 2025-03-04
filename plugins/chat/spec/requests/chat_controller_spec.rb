@@ -274,7 +274,7 @@ RSpec.describe Chat::ChatController do
 
       put "/chat/#{chat_channel.id}/react/#{chat_message.id}.json",
           params: {
-            emoji: ":wave:",
+            emoji: ":waving_hand:",
             react_action: "add",
           }
       expect(response.status).to eq(403)

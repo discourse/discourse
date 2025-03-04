@@ -325,5 +325,43 @@ describe Chat::Mailer do
       user.user_option.update!(allow_private_messages: false)
       expect_not_enqueued
     end
+
+    it "queues a chat summary email when message is the original thread message" do
+      Fabricate(:chat_thread, channel: direct_message, original_message: Chat::Message.last)
+      expect_enqueued
+    end
+  end
+
+  describe "in direct message channel with threads" do
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other]) }
+    fab!(:message) do
+      Fabricate(:chat_message, chat_channel: dm_channel, user: other, created_at: 2.weeks.ago)
+    end
+    fab!(:thread) do
+      Fabricate(:chat_thread, channel: dm_channel, original_message: message, with_replies: 1)
+    end
+
+    it "does not queue a chat summary email for thread replies" do
+      expect_not_enqueued
+    end
+
+    it "queues a chat summary email when user is watching the thread" do
+      Fabricate(
+        :user_chat_thread_membership,
+        user: user,
+        thread: thread,
+        notification_level: Chat::NotificationLevels.all[:watching],
+      )
+
+      expect_enqueued
+    end
+
+    it "does not queue a chat summary for threads watched by other users" do
+      thread.membership_for(other).update!(
+        notification_level: Chat::NotificationLevels.all[:watching],
+      )
+
+      expect_not_enqueued
+    end
   end
 end

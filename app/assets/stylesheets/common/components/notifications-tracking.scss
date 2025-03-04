@@ -1,8 +1,3 @@
-.notifications-tracking-trigger-btn {
-  display: flex;
-  gap: 0.25em;
-}
-
 .notifications-tracking-btn {
   display: flex;
   flex: 1 0 auto;
@@ -30,6 +25,7 @@
     font-size: var(--font-0);
     color: var(--primary);
     max-width: 100%;
+
     @include ellipsis;
   }
 

@@ -7,6 +7,8 @@
 sq:
   js:
     discourse_automation:
+      back: Kthehu mbrapa
+      edit: Redaktoni
       fields:
         user:
           label: User
@@ -45,10 +47,6 @@ sq:
               label: Etiketat
             restricted_category:
               label: Kategori
-            restricted_group:
-              label: Grupi
-            restricted_groups:
-              label: Grupet
           created: Krijuar
         category_created_edited:
           fields:

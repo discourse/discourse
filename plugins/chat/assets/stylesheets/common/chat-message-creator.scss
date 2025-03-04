@@ -47,13 +47,14 @@
   }
 
   &__member {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: popIn 0.1s ease-out;
-    }
     padding: 0 0.25rem;
     border-radius: var(--border-radius);
     background: var(--primary-very-low);
     gap: 0.25rem;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: popIn 0.1s ease-out;
+    }
 
     &:hover {
       .discourse-no-touch & {
@@ -122,10 +123,6 @@
       flex-grow: 1;
       border-top: 1px solid var(--primary-low);
     }
-  }
-
-  &__participants-count {
-    white-space: nowrap;
   }
 
   &__warning-max-members {
