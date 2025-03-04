@@ -39,7 +39,7 @@ export default {
       }
 
       let componentName = templateKey;
-      const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
+      const finalOverrideModuleName = moduleNames.at(-1);
 
       if (mobile) {
         deprecated(
