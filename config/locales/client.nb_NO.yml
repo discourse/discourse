@@ -2253,13 +2253,6 @@ nb_NO:
       password_label: "Passord"
     password_reset:
       continue: "Fortsett til %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internasjonalt"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Klassisk Google"
-      facebook_messenger: "Facebook Meldingstjeneste"
     category_page_style:
       categories_only: "Kun kategorier"
       categories_with_featured_topics: "Kategorier med fremhevede emner"
@@ -3452,11 +3445,8 @@ nb_NO:
         one: "du og %{count} annen likte dette innlegget"
         other: "du og %{count} andre likte dette innlegget"
       sr_post_like_count_button:
-        one: "%{count} person likte dette innlegget. Klikk for å se"
-        other: "%{count} personer likte dette innlegget. Klikk for å se"
-      sr_post_read_count_button:
-        one: "%{count} person har lest dette innlegget. Klikk for å se"
-        other: "%{count} personer har lest dette innlegget. Klikk for å se"
+        one: "%{count} bruker likte dette innlegget."
+        other: "%{count} brukere likte dette innlegget."
       filtered_replies_hint:
         one: "Vis dette innlegget og svaret"
         other: "Vis dette innlegget og dets %{count} svar"
@@ -3564,8 +3554,6 @@ nb_NO:
           read_capped:
             one: "og %{count} annen leste dette"
             other: "og %{count} andre leser dette"
-          sr_post_likers_list_description: "brukere som likte dette innlegget"
-          sr_post_readers_list_description: "brukere som les dette innlegget"
         by_you:
           off_topic: "Du rapporterte dette som utenfor temaet"
           spam: "Du rapporterte dette som spam"
@@ -4101,6 +4089,9 @@ nb_NO:
         title: "Søk i menyen"
         prev_next: "%{shortcut} Flytt utvalg opp og ned"
         insert_url: "%{shortcut} Sett inn utvalg i åpen komponist"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Flytt utvalg opp og ned"
     badges:
       earned_n_times:
         one: "Har gjort seg fortjent til dette merket"
@@ -4408,6 +4399,11 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
+        branding:
+          logo:
+            form:
+              mobile: "Mobil"
+              email: "E-post"
         navigation:
           title: "Navigasjon"
         notifications:
@@ -4416,7 +4412,7 @@ nb_NO:
           title: "Onebox"
         other:
           title: "Annet"
-        search:
+        search_everything:
           title: "Søk"
         security:
           title: "Sikkerhet"
@@ -4480,6 +4476,7 @@ nb_NO:
         embedding:
           title: "Innbygging"
       search:
+        title: "Søk"
         result_types:
           theme:
             one: "Drakt"
@@ -4885,7 +4882,6 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
-          hide_unused_fields: "Skjul ubrukte felter"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
@@ -4924,9 +4920,6 @@ nb_NO:
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
           discard: "Forkast"
-          css_html: "Egendefinert CSS/HTML"
-          edit_css_html: "Rediger CSS/HTML"
-          edit_css_html_help: "Du har ikke redigert noe CSS eller HTML"
           delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
@@ -4951,24 +4944,12 @@ nb_NO:
             other: "Drakten er %{count} utgaver foreldet!"
           scss:
             text: "CSS"
-            title: "Skriv inn egendefinert CSS, alle gyldige CSS- og SCSS-stiler godtas"
-          header:
-            text: "Hode"
-            title: "Skriv inn HTML å vise over sidehodet"
           after_header:
             text: "Etter hode"
-            title: "Skriv inn HTML å vise på alle sider etter hode"
           footer:
             text: "Fot"
-            title: "Skriv inn HTML å vise på sidens fot"
           embedded_scss:
             text: "Innebygd CSS"
-            title: "Skriv inn egendefinert CSS for å levere med innebygde versjoner av kommentarer"
-          body_tag:
-            text: "Body"
-          yaml:
-            text: "YAML"
-            title: "Definer draktinnstillinger i YAML-format"
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"

@@ -64,10 +64,6 @@ lt:
               label: Žymos
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Grupė
-            restricted_groups:
-              label: Grupės
           created: Sukurta
         category_created_edited:
           fields:

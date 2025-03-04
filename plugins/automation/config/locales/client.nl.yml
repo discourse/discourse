@@ -164,11 +164,7 @@ nl:
             restricted_category:
               label: Categorie
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
-            restricted_group:
-              label: Groep
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in de inbox van deze groep'
             restricted_groups:
-              label: Groepen
               description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
             ignore_group_members:
               label: Groepsleden negeren

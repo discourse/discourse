@@ -64,10 +64,6 @@ pt:
               label: Etiquetas
             restricted_category:
               label: Categoria
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
           created: Criado
         category_created_edited:
           fields:
