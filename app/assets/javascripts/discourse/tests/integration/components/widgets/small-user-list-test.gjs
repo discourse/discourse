@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | small-user-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders avatars and support for unknown", async function (assert) {const self = this;
+  test("renders avatars and support for unknown", async function (assert) {
+    const self = this;
 
     this.set("args", {
       users: [
@@ -16,9 +17,9 @@ module("Integration | Component | Widget | small-user-list", function (hooks) {
       isVisible: true,
     });
 
-    await render(
-      <template><MountWidget @widget="small-user-list" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="small-user-list" @args={{self.args}} />
+    </template>);
 
     assert.dom('[data-user-card="eviltrout"]').exists({ count: 1 });
     assert.dom('[data-user-card="someone"]').doesNotExist();

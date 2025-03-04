@@ -9,28 +9,58 @@ import iN from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class AssociateAccountConfirm extends Component {<template><DModal @title={{iN "user.associated_accounts.confirm_modal_title" provider=(iN (concat "login." @model.provider_name ".name"))}} @closeModal={{@closeModal}} @flash={{this.flash}} @flashType="error">
-  <:body>
-    {{#if @model.existing_account_description}}
-      <p>
-        {{iN "user.associated_accounts.confirm_description.disconnect" provider=(iN (concat "login." @model.provider_name ".name")) account_description=@model.existing_account_description}}
-      </p>
-    {{/if}}
+export default class AssociateAccountConfirm extends Component {
+  <template>
+    <DModal
+      @title={{iN
+        "user.associated_accounts.confirm_modal_title"
+        provider=(iN (concat "login." @model.provider_name ".name"))
+      }}
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType="error"
+    >
+      <:body>
+        {{#if @model.existing_account_description}}
+          <p>
+            {{iN
+              "user.associated_accounts.confirm_description.disconnect"
+              provider=(iN (concat "login." @model.provider_name ".name"))
+              account_description=@model.existing_account_description
+            }}
+          </p>
+        {{/if}}
 
-    <p>
-      {{#if @model.account_description}}
-        {{iN "user.associated_accounts.confirm_description.account_specific" provider=(iN (concat "login." @model.provider_name ".name")) account_description=@model.account_description}}
-      {{else}}
-        {{iN "user.associated_accounts.confirm_description.generic" provider=(iN (concat "login." @model.provider_name ".name"))}}
-      {{/if}}
-    </p>
-  </:body>
+        <p>
+          {{#if @model.account_description}}
+            {{iN
+              "user.associated_accounts.confirm_description.account_specific"
+              provider=(iN (concat "login." @model.provider_name ".name"))
+              account_description=@model.account_description
+            }}
+          {{else}}
+            {{iN
+              "user.associated_accounts.confirm_description.generic"
+              provider=(iN (concat "login." @model.provider_name ".name"))
+            }}
+          {{/if}}
+        </p>
+      </:body>
 
-  <:footer>
-    <DButton @label="user.associated_accounts.connect" @action={{this.finishConnect}} @icon="plug" class="btn-primary" />
-    <DButton @label="user.associated_accounts.cancel" @action={{@closeModal}} />
-  </:footer>
-</DModal></template>
+      <:footer>
+        <DButton
+          @label="user.associated_accounts.connect"
+          @action={{this.finishConnect}}
+          @icon="plug"
+          class="btn-primary"
+        />
+        <DButton
+          @label="user.associated_accounts.cancel"
+          @action={{@closeModal}}
+        />
+      </:footer>
+    </DModal>
+  </template>
   @service router;
   @service currentUser;
 

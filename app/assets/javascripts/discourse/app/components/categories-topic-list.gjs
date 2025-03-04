@@ -6,29 +6,47 @@ import getUrl from "discourse/helpers/get-url";
 // Exists so plugins can use it
 import iN from "discourse/helpers/i18n";
 import eq from "truth-helpers/helpers/eq";
-export default class CategoriesTopicList extends Component {<template><div role="heading" aria-level="2" class="table-heading">
-  {{iN (concat "filters." this.filter ".title")}}
-  <PluginOutlet @name="categories-topics-table-heading" @connectorTagName="div" />
-</div>
+export default class CategoriesTopicList extends Component {
+  <template>
+    <div role="heading" aria-level="2" class="table-heading">
+      {{iN (concat "filters." this.filter ".title")}}
+      <PluginOutlet
+        @name="categories-topics-table-heading"
+        @connectorTagName="div"
+      />
+    </div>
 
-{{#if this.topics}}
-  {{#each this.topics as |t|}}
-    {{#if this.site.useGlimmerTopicList}}
-      <LatestTopicListItem @topic={{t}} />
-    {{else}}
-      <LatestTopicListItem @topic={{t}} />
-    {{/if}}
-  {{/each}}
+    {{#if this.topics}}
+      {{#each this.topics as |t|}}
+        {{#if this.site.useGlimmerTopicList}}
+          <LatestTopicListItem @topic={{t}} />
+        {{else}}
+          <LatestTopicListItem @topic={{t}} />
+        {{/if}}
+      {{/each}}
 
-  <div class="more-topics">
-    {{#if (eq this.siteSettings.desktop_category_page_style "categories_and_latest_topics_created_date")}}
-      <a href={{getUrl (concat "/" this.filter "?order=created")}} class="btn btn-default pull-right">{{iN "more"}}</a>
+      <div class="more-topics">
+        {{#if
+          (eq
+            this.siteSettings.desktop_category_page_style
+            "categories_and_latest_topics_created_date"
+          )
+        }}
+          <a
+            href={{getUrl (concat "/" this.filter "?order=created")}}
+            class="btn btn-default pull-right"
+          >{{iN "more"}}</a>
+        {{else}}
+          <a
+            href={{getUrl (concat "/" this.filter)}}
+            class="btn btn-default pull-right"
+          >{{iN "more"}}</a>
+        {{/if}}
+      </div>
     {{else}}
-      <a href={{getUrl (concat "/" this.filter)}} class="btn btn-default pull-right">{{iN "more"}}</a>
+      <div class="no-topics">
+        <h3>{{iN (concat "topics.none." this.filter)}}</h3>
+      </div>
     {{/if}}
-  </div>
-{{else}}
-  <div class="no-topics">
-    <h3>{{iN (concat "topics.none." this.filter)}}</h3>
-  </div>
-{{/if}}</template>}
+  </template>
+}

@@ -9,21 +9,48 @@ import List from "discourse/components/topic-list/list";
 import iN from "discourse/helpers/i18n";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 
-export default class BasicTopicList extends Component {<template><ConditionalLoadingSpinner @condition={{this.loading}}>
-  {{#if this.topics}}
-    {{#if this.site.useGlimmerTopicList}}
-      <List @showPosters={{this.showPosters}} @hideCategory={{this.hideCategory}} @topics={{this.topics}} @expandExcerpts={{this.expandExcerpts}} @bulkSelectHelper={{this.bulkSelectHelper}} @canBulkSelect={{this.canBulkSelect}} @tagsForUser={{this.tagsForUser}} @changeSort={{this.changeSort}} @order={{this.order}} @ascending={{this.ascending}} @focusLastVisitedTopic={{this.focusLastVisitedTopic}} />
-    {{else}}
-      <TopicList @showPosters={{this.showPosters}} @hideCategory={{this.hideCategory}} @topics={{this.topics}} @expandExcerpts={{this.expandExcerpts}} @bulkSelectHelper={{this.bulkSelectHelper}} @canBulkSelect={{this.canBulkSelect}} @tagsForUser={{this.tagsForUser}} @changeSort={{this.changeSort}} @order={{this.order}} @ascending={{this.ascending}} @focusLastVisitedTopic={{this.focusLastVisitedTopic}} />
-    {{/if}}
-  {{else}}
-    {{#unless this.loadingMore}}
-      <div class="alert alert-info">
-        {{iN "choose_topic.none_found"}}
-      </div>
-    {{/unless}}
-  {{/if}}
-</ConditionalLoadingSpinner></template>
+export default class BasicTopicList extends Component {
+  <template>
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      {{#if this.topics}}
+        {{#if this.site.useGlimmerTopicList}}
+          <List
+            @showPosters={{this.showPosters}}
+            @hideCategory={{this.hideCategory}}
+            @topics={{this.topics}}
+            @expandExcerpts={{this.expandExcerpts}}
+            @bulkSelectHelper={{this.bulkSelectHelper}}
+            @canBulkSelect={{this.canBulkSelect}}
+            @tagsForUser={{this.tagsForUser}}
+            @changeSort={{this.changeSort}}
+            @order={{this.order}}
+            @ascending={{this.ascending}}
+            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          />
+        {{else}}
+          <TopicList
+            @showPosters={{this.showPosters}}
+            @hideCategory={{this.hideCategory}}
+            @topics={{this.topics}}
+            @expandExcerpts={{this.expandExcerpts}}
+            @bulkSelectHelper={{this.bulkSelectHelper}}
+            @canBulkSelect={{this.canBulkSelect}}
+            @tagsForUser={{this.tagsForUser}}
+            @changeSort={{this.changeSort}}
+            @order={{this.order}}
+            @ascending={{this.ascending}}
+            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          />
+        {{/if}}
+      {{else}}
+        {{#unless this.loadingMore}}
+          <div class="alert alert-info">
+            {{iN "choose_topic.none_found"}}
+          </div>
+        {{/unless}}
+      {{/if}}
+    </ConditionalLoadingSpinner>
+  </template>
   @service site;
 
   @alias("topicList.loadingMore") loadingMore;

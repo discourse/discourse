@@ -20,9 +20,12 @@ const MIN_HEIGHT_TIMELINE = 325;
   "info.renderTimeline:with-timeline",
   "info.withTopicProgress:with-topic-progress"
 )
-export default class TopicNavigation extends Component {<template>{{#if this.canRender}}
-  {{yield this.info}}
-{{/if}}</template>
+export default class TopicNavigation extends Component {
+  <template>
+    {{#if this.canRender}}
+      {{yield this.info}}
+    {{/if}}
+  </template>
   @service modal;
 
   composerOpen = null;

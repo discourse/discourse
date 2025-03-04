@@ -15,7 +15,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     resetPostMenuExtraButtons();
   });
 
-  test("add extra button", async function (assert) {const self = this;
+  test("add extra button", async function (assert) {
+    const self = this;
 
     this.set("args", {});
     withPluginApi("0.14.0", (api) => {
@@ -33,14 +34,16 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert
       .dom(".actions .extra-buttons .hot-coffee")
       .exists("renders extra button");
   });
 
-  test("add extra button with feedback", async function (assert) {const self = this;
+  test("add extra button with feedback", async function (assert) {
+    const self = this;
 
     this.set("args", {});
 
@@ -67,7 +70,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     await render(<template>
       <article data-post-id="123">
         <MountWidget @widget="post-menu" @args={{self.args}} />
-      </article></template>);
+      </article>
+    </template>);
 
     await click(".hot-coffee");
 
@@ -79,7 +83,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       .exists("renders extra button");
   });
 
-  test("removes button based on callback", async function (assert) {const self = this;
+  test("removes button based on callback", async function (assert) {
+    const self = this;
 
     this.set("args", { canCreatePost: true, canRemoveReply: true });
 
@@ -92,12 +97,14 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
 
-  test("does not remove button", async function (assert) {const self = this;
+  test("does not remove button", async function (assert) {
+    const self = this;
 
     this.set("args", { canCreatePost: true, canRemoveReply: false });
 
@@ -110,12 +117,14 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert.dom(".actions .reply").exists("does not remove reply button");
   });
 
-  test("removes button", async function (assert) {const self = this;
+  test("removes button", async function (assert) {
+    const self = this;
 
     this.set("args", { canCreatePost: true });
 
@@ -126,12 +135,14 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
 
-  test("removes button when any callback evaluates to true", async function (assert) {const self = this;
+  test("removes button when any callback evaluates to true", async function (assert) {
+    const self = this;
 
     this.set("args", {});
 
@@ -143,7 +154,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
@@ -154,7 +166,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     },
   });
 
-  test("buttons are replaced when shouldRender is true", async function (assert) {const self = this;
+  test("buttons are replaced when shouldRender is true", async function (assert) {
+    const self = this;
 
     this.set("args", { id: 1, canCreatePost: true });
 
@@ -171,7 +184,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert.dom("h1.post-menu-replacement").exists("replacement is rendered");
     assert
@@ -179,7 +193,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       .doesNotExist("reply button is replaced button");
   });
 
-  test("buttons are not replaced when shouldRender is false", async function (assert) {const self = this;
+  test("buttons are not replaced when shouldRender is false", async function (assert) {
+    const self = this;
 
     this.set("args", { id: 1, canCreatePost: true, canRemoveReply: false });
 
@@ -196,7 +211,8 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} /></template>);
+      <MountWidget @widget="post-menu" @args={{self.args}} />
+    </template>);
 
     assert
       .dom("h1.post-menu-replacement")

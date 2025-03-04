@@ -6,20 +6,30 @@ import { service } from "@ember/service";
 import iN from "discourse/helpers/i18n";
 import DiscourseURL from "discourse/lib/url";
 
-export default class MoreLink extends Component {<template>{{#if this.topicResults}}
-  {{!-- template-lint-disable no-invalid-interactive --}}
-  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
-    {{#if this.moreUrl}}
-      <a href={{this.moreUrl}} {{on "click" this.transitionToMoreUrl}} class="filter search-link">
-        {{iN "more"}}...
-      </a>
-    {{else if this.topicResults.more}}
-      <a {{on "click" (fn this.moreOfType this.topicResults.type)}} class="filter search-link">
-        {{iN "more"}}...
-      </a>
+export default class MoreLink extends Component {
+  <template>
+    {{#if this.topicResults}}
+      {{! template-lint-disable no-invalid-interactive }}
+      <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
+        {{#if this.moreUrl}}
+          <a
+            href={{this.moreUrl}}
+            {{on "click" this.transitionToMoreUrl}}
+            class="filter search-link"
+          >
+            {{iN "more"}}...
+          </a>
+        {{else if this.topicResults.more}}
+          <a
+            {{on "click" (fn this.moreOfType this.topicResults.type)}}
+            class="filter search-link"
+          >
+            {{iN "more"}}...
+          </a>
+        {{/if}}
+      </div>
     {{/if}}
-  </div>
-{{/if}}</template>
+  </template>
   @service search;
 
   get topicResults() {

@@ -9,26 +9,58 @@ import dIcon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import onResize from "discourse/modifiers/on-resize";
 
-export default class HorizontalOverflowNav extends Component {<template>{{!-- template-lint-disable no-pointer-down-event-binding --}}
-{{!-- template-lint-disable no-invalid-interactive --}}
+export default class HorizontalOverflowNav extends Component {
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! template-lint-disable no-invalid-interactive }}
 
-<nav class="horizontal-overflow-nav {{if this.hasScroll "has-scroll"}}" aria-label={{@ariaLabel}}>
-  {{#if this.hasScroll}}
-    <a role="button" {{on "mousedown" this.horizontalScroll}} {{on "mouseup" this.stopScroll}} {{on "mouseleave" this.stopScroll}} data-direction="left" class={{concatClass "horizontal-overflow-nav__scroll-left" (if this.hideLeftScroll "disabled")}}>
-      {{dIcon "chevron-left"}}
-    </a>
-  {{/if}}
+    <nav
+      class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
+      aria-label={{@ariaLabel}}
+    >
+      {{#if this.hasScroll}}
+        <a
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
+          data-direction="left"
+          class={{concatClass
+            "horizontal-overflow-nav__scroll-left"
+            (if this.hideLeftScroll "disabled")
+          }}
+        >
+          {{dIcon "chevron-left"}}
+        </a>
+      {{/if}}
 
-  <ul {{onResize this.onResize}} {{on "scroll" this.onScroll}} {{didInsert this.scrollToActive}} {{on "mousedown" this.scrollDrag}} class="nav-pills action-list {{@className}}" ...attributes>
-    {{yield}}
-  </ul>
+      <ul
+        {{onResize this.onResize}}
+        {{on "scroll" this.onScroll}}
+        {{didInsert this.scrollToActive}}
+        {{on "mousedown" this.scrollDrag}}
+        class="nav-pills action-list {{@className}}"
+        ...attributes
+      >
+        {{yield}}
+      </ul>
 
-  {{#if this.hasScroll}}
-    <a role="button" {{on "mousedown" this.horizontalScroll}} {{on "mouseup" this.stopScroll}} {{on "mouseleave" this.stopScroll}} class={{concatClass "horizontal-overflow-nav__scroll-right" (if this.hideRightScroll "disabled")}}>
-      {{dIcon "chevron-right"}}
-    </a>
-  {{/if}}
-</nav></template>
+      {{#if this.hasScroll}}
+        <a
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
+          class={{concatClass
+            "horizontal-overflow-nav__scroll-right"
+            (if this.hideRightScroll "disabled")
+          }}
+        >
+          {{dIcon "chevron-right"}}
+        </a>
+      {{/if}}
+    </nav>
+  </template>
   @service site;
   @tracked hasScroll;
   @tracked hideRightScroll = false;

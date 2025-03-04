@@ -19,11 +19,26 @@ import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { i18n } from "discourse-i18n";
 
 @classNames("title-input")
-export default class ComposerTitle extends Component {<template><TextField @value={{this.composer.title}} @id="reply-title" @maxLength={{this.titleMaxLength}} @placeholderKey={{this.composer.titlePlaceholder}} @aria-label={{iN this.composer.titlePlaceholder}} @disabled={{this.disabled}} @autocomplete="off" />
+export default class ComposerTitle extends Component {
+  <template>
+    <TextField
+      @value={{this.composer.title}}
+      @id="reply-title"
+      @maxLength={{this.titleMaxLength}}
+      @placeholderKey={{this.composer.titlePlaceholder}}
+      @aria-label={{iN this.composer.titlePlaceholder}}
+      @disabled={{this.disabled}}
+      @autocomplete="off"
+    />
 
-<PluginOutlet @name="after-composer-title-input" @connectorTagName="div" @outletArgs={{hash composer=this.composer}} />
+    <PluginOutlet
+      @name="after-composer-title-input"
+      @connectorTagName="div"
+      @outletArgs={{hash composer=this.composer}}
+    />
 
-<PopupInputTip @validation={{this.validation}} /></template>
+    <PopupInputTip @validation={{this.validation}} />
+  </template>
   @alias("composer.canEditTopicFeaturedLink") watchForLink;
   @or("composer.loading", "composer.disableTitleInput") disabled;
 

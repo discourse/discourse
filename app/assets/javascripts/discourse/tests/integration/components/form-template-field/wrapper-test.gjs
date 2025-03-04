@@ -9,12 +9,11 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("does not render a component when template content has invalid YAML", async function (assert) {const self = this;
+    test("does not render a component when template content has invalid YAML", async function (assert) {
+      const self = this;
 
       this.set("content", `- type: checkbox\n  attributes;invalid`);
-      await render(
-        <template><Wrapper @content={{self.content}} /></template>
-      );
+      await render(<template><Wrapper @content={{self.content}} /></template>);
 
       assert
         .dom(".form-template-field")
@@ -22,7 +21,8 @@ module(
       assert.dom(".alert").exists("an alert message should exist");
     });
 
-    test("renders a component based on the component type found in the content YAML", async function (assert) {const self = this;
+    test("renders a component based on the component type found in the content YAML", async function (assert) {
+      const self = this;
 
       const content = `- type: checkbox\n  id: checkbox\n
 - type: input\n  id: name
@@ -40,9 +40,7 @@ module(
       ];
       this.set("content", content);
 
-      await render(
-        <template><Wrapper @content={{self.content}} /></template>
-      );
+      await render(<template><Wrapper @content={{self.content}} /></template>);
 
       componentTypes.forEach((componentType) => {
         assert
@@ -51,7 +49,8 @@ module(
       });
     });
 
-    test("renders a component based on the component type found in the content YAML, with initial values", async function (assert) {const self = this;
+    test("renders a component based on the component type found in the content YAML, with initial values", async function (assert) {
+      const self = this;
 
       const content = `- type: checkbox\n  id: checkbox\n
 - type: input\n  id: name
@@ -68,9 +67,12 @@ module(
         multi: ["Option 1"],
       });
 
-      await render(
-        <template><Wrapper @content={{self.content}} @initialValues={{self.initialValues}} /></template>
-      );
+      await render(<template>
+        <Wrapper
+          @content={{self.content}}
+          @initialValues={{self.initialValues}}
+        />
+      </template>);
 
       assert.dom("[name='checkbox']").hasValue("on");
       assert.dom("[name='name']").hasValue("Test Name");
@@ -79,7 +81,8 @@ module(
       assert.dom("[name='multi']").hasValue("Option 1");
     });
 
-    test("renders a component based on the component type found in the content YAML when passed ids", async function (assert) {const self = this;
+    test("renders a component based on the component type found in the content YAML when passed ids", async function (assert) {
+      const self = this;
 
       pretender.get("/form-templates/1.json", () => {
         return response({
@@ -93,9 +96,9 @@ module(
       });
 
       this.set("formTemplateId", [1]);
-      await render(
-        <template><Wrapper @id={{self.formTemplateId}} /></template>
-      );
+      await render(<template>
+        <Wrapper @id={{self.formTemplateId}} />
+      </template>);
 
       assert
         .dom(`.form-template-field[data-field-type='checkbox']`)

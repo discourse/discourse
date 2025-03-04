@@ -10,7 +10,8 @@ module("Integration | Component | number-field", function (hooks) {
   test("number field", async function (assert) {
     this.set("value", 123);
 
-    await withSilencedDeprecationsAsync("discourse.number-field", async () => {const self = this;
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      const self = this;
 
       await render(<template>
         <NumberField @value={{self.value}} @classNames="number-field-test" />
@@ -38,10 +39,15 @@ module("Integration | Component | number-field", function (hooks) {
   test("number field | min value", async function (assert) {
     this.set("value", "");
 
-    await withSilencedDeprecationsAsync("discourse.number-field", async () => {const self = this;
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      const self = this;
 
       await render(<template>
-        <NumberField @value={{self.value}} @classNames="number-field-test" @min="1" />
+        <NumberField
+          @value={{self.value}}
+          @classNames="number-field-test"
+          @min="1"
+        />
       </template>);
     });
 
@@ -54,10 +60,15 @@ module("Integration | Component | number-field", function (hooks) {
       "value is cleared when the input is less than the min"
     );
 
-    await withSilencedDeprecationsAsync("discourse.number-field", async () => {const self = this;
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      const self = this;
 
       await render(<template>
-        <NumberField @value={{self.value}} @classNames="number-field-test" @min="-10" />
+        <NumberField
+          @value={{self.value}}
+          @classNames="number-field-test"
+          @min="-10"
+        />
       </template>);
     });
 

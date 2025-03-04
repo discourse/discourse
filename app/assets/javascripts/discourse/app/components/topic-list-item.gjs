@@ -5,7 +5,11 @@ import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -49,8 +53,14 @@ export function navigateToTopic(topic, href) {
 @tagName("tr")
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
-export default class TopicListItem extends Component {<template><PluginOutlet @name="above-topic-list-item" @outletArgs={{hash topic=this.topic}} />
-{{this.topicListItemContents}}</template>
+export default class TopicListItem extends Component {
+  <template>
+    <PluginOutlet
+      @name="above-topic-list-item"
+      @outletArgs={{hash topic=this.topic}}
+    />
+    {{this.topicListItemContents}}
+  </template>
 
   static reopen() {
     deprecated(

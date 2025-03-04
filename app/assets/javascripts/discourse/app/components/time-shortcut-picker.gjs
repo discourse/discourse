@@ -11,7 +11,13 @@ import TapTileGrid from "discourse/components/tap-tile-grid";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
-import { defaultTimeShortcuts, formatTime, hideDynamicTimeShortcuts, specialShortcutOptions, TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
+import {
+  defaultTimeShortcuts,
+  formatTime,
+  hideDynamicTimeShortcuts,
+  specialShortcutOptions,
+  TIME_SHORTCUT_TYPES,
+} from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
 import { i18n } from "discourse-i18n";
 
@@ -41,38 +47,62 @@ const BINDINGS = {
 };
 
 @tagName("")
-export default class TimeShortcutPicker extends Component {<template><TapTileGrid @activeTile={{this.selectedShortcut}} as |grid|>
-  {{#each this.options key="id" as |option|}}
-    {{#unless option.hidden}}
-      <TapTile @tileId={{option.id}} @activeTile={{grid.activeTile}} @onChange={{action "selectShortcut"}}>
+export default class TimeShortcutPicker extends Component {
+  <template>
+    <TapTileGrid @activeTile={{this.selectedShortcut}} as |grid|>
+      {{#each this.options key="id" as |option|}}
+        {{#unless option.hidden}}
+          <TapTile
+            @tileId={{option.id}}
+            @activeTile={{grid.activeTile}}
+            @onChange={{action "selectShortcut"}}
+          >
 
-        <div class="tap-tile-title">{{iN option.label}}</div>
-        <div class="tap-tile-date">{{option.timeFormatted}}</div>
-      </TapTile>
-    {{/unless}}
+            <div class="tap-tile-title">{{iN option.label}}</div>
+            <div class="tap-tile-date">{{option.timeFormatted}}</div>
+          </TapTile>
+        {{/unless}}
 
-    {{#if option.isCustomTimeShortcut}}
-      {{#if this.customDatetimeSelected}}
-        <div class="control-group custom-date-time-wrap custom-input-wrap">
-          <div class="tap-tile-date-input">
-            {{dIcon "calendar-days"}}
-            <DatePickerFuture @value={{this.customDate}} @defaultDate={{this.defaultCustomDate}} @onSelect={{fn (mut this.customDate)}} @id="custom-date" />
-          </div>
-          <div class="tap-tile-time-input">
-            {{dIcon "far-clock"}}
-            <Input placeholder="--:--" id="custom-time" @type="time" class="time-input" @value={{this.customTime}} />
-          </div>
-        </div>
-        <div class="control-group custom-date-time-wrap custom-relative-wrap">
-          <label class="control-label" for="bookmark-relative-time-picker">
-            {{iN "relative_time_picker.relative"}}
-          </label>
-          <RelativeTimePicker @durationMinutes={{this.selectedDurationMins}} @onChange={{this.relativeTimeChanged}} id="bookmark-relative-time-picker" />
-        </div>
-      {{/if}}
-    {{/if}}
-  {{/each}}
-</TapTileGrid></template>
+        {{#if option.isCustomTimeShortcut}}
+          {{#if this.customDatetimeSelected}}
+            <div class="control-group custom-date-time-wrap custom-input-wrap">
+              <div class="tap-tile-date-input">
+                {{dIcon "calendar-days"}}
+                <DatePickerFuture
+                  @value={{this.customDate}}
+                  @defaultDate={{this.defaultCustomDate}}
+                  @onSelect={{fn (mut this.customDate)}}
+                  @id="custom-date"
+                />
+              </div>
+              <div class="tap-tile-time-input">
+                {{dIcon "far-clock"}}
+                <Input
+                  placeholder="--:--"
+                  id="custom-time"
+                  @type="time"
+                  class="time-input"
+                  @value={{this.customTime}}
+                />
+              </div>
+            </div>
+            <div
+              class="control-group custom-date-time-wrap custom-relative-wrap"
+            >
+              <label class="control-label" for="bookmark-relative-time-picker">
+                {{iN "relative_time_picker.relative"}}
+              </label>
+              <RelativeTimePicker
+                @durationMinutes={{this.selectedDurationMins}}
+                @onChange={{this.relativeTimeChanged}}
+                id="bookmark-relative-time-picker"
+              />
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    </TapTileGrid>
+  </template>
   @equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM) customDatetimeSelected;
   @equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE)
   relativeTimeSelected;

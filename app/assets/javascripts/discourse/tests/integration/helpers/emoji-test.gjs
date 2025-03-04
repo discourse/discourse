@@ -11,7 +11,8 @@ module("Integration | Helper | emoji", function (hooks) {
     assert.dom(`.emoji[title="tada"]`).exists();
   });
 
-  test("it renders custom title", async function (assert) {const self = this;
+  test("it renders custom title", async function (assert) {
+    const self = this;
 
     const title = "custom title";
     this.set("title", title);

@@ -11,7 +11,17 @@ import { i18n } from "discourse-i18n";
 const DATE_FORMAT = "YYYY-MM-DD";
 
 @classNames("date-picker-wrapper")
-export default class DatePicker extends Component {<template><Input @type={{this.inputType}} class="date-picker" placeholder={{this.placeholder}} @value={{this.value}} autocomplete="off" ...attributes /></template>
+export default class DatePicker extends Component {
+  <template>
+    <Input
+      @type={{this.inputType}}
+      class="date-picker"
+      placeholder={{this.placeholder}}
+      @value={{this.value}}
+      autocomplete="off"
+      ...attributes
+    />
+  </template>
   value = null;
   minDate = null;
   maxDate = null;

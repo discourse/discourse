@@ -19,11 +19,21 @@ function isInputDateSupported() {
 }
 
 @classNames("d-date-input")
-export default class DateInput extends Component {<template><Input @type={{this.inputType}} class="date-picker" placeholder={{this.placeholder}} @value={{readonly this.value}} id={{this.inputId}} {{on0 "input" (action "onChangeDate")}} />
+export default class DateInput extends Component {
+  <template>
+    <Input
+      @type={{this.inputType}}
+      class="date-picker"
+      placeholder={{this.placeholder}}
+      @value={{readonly this.value}}
+      id={{this.inputId}}
+      {{on0 "input" (action "onChangeDate")}}
+    />
 
-{{#unless this.useGlobalPickerContainer}}
-  <div class="picker-container"></div>
-{{/unless}}</template>
+    {{#unless this.useGlobalPickerContainer}}
+      <div class="picker-container"></div>
+    {{/unless}}
+  </template>
   date = null;
   useNativePicker = isInputDateSupported();
   _picker = null;

@@ -44,14 +44,15 @@ function createBulkSelectHelper(testThis, opts = {}) {
 module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("actions all topics can perform", async function (assert) {const self = this;
+  test("actions all topics can perform", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -73,16 +74,17 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     });
   });
 
-  test("does not allow unlisting topics that are already unlisted", async function (assert) {const self = this;
+  test("does not allow unlisting topics that are already unlisted", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this, {
       topicIds: [UNLISTED_TOPIC_ID],
     });
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -90,16 +92,17 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("does not allow relisting topics that are already visible", async function (assert) {const self = this;
+  test("does not allow relisting topics that are already visible", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this, {
       topicIds: [REGULAR_TOPIC_ID],
     });
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -107,15 +110,16 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("allows deferring topics if the user has the preference enabled", async function (assert) {const self = this;
+  test("allows deferring topics if the user has the preference enabled", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.currentUser.user_option.enable_defer = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -123,15 +127,16 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .exists();
   });
 
-  test("does not allow tagging actions if tagging_enabled is false", async function (assert) {const self = this;
+  test("does not allow tagging actions if tagging_enabled is false", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.siteSettings.tagging_enabled = false;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
@@ -141,13 +146,14 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     });
   });
 
-  test("does not allow tagging actions if user cannot manage topic", async function (assert) {const self = this;
+  test("does not allow tagging actions if user cannot manage topic", async function (assert) {
+    const self = this;
 
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
@@ -157,13 +163,14 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     });
   });
 
-  test("does not allow deleting topics if user is not staff", async function (assert) {const self = this;
+  test("does not allow deleting topics if user is not staff", async function (assert) {
+    const self = this;
 
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -171,16 +178,17 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("does not allow unlisting or relisting PM topics", async function (assert) {const self = this;
+  test("does not allow unlisting or relisting PM topics", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this, {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -191,16 +199,17 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("does not allow updating category for PMs", async function (assert) {const self = this;
+  test("does not allow updating category for PMs", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this, {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -208,16 +217,17 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       .doesNotExist();
   });
 
-  test("allows moving to archive and moving to inbox for PMs", async function (assert) {const self = this;
+  test("allows moving to archive and moving to inbox for PMs", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this, {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(
-      <template><BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} /></template>
-    );
+    await render(<template>
+      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+    </template>);
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert

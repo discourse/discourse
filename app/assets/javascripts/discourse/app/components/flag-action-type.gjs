@@ -1,4 +1,4 @@
-import Component, { Input,Textarea } from "@ember/component";
+import Component, { Input, Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { and, equal } from "@ember/object/computed";
@@ -11,52 +11,94 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
-export default class FlagActionType extends Component {<template><div class={{this.wrapperClassNames}}>
-  {{#if this.isNotifyUser}}
-    <h3>{{this.formattedName}}</h3>
-    <div class="controls">
-      <label class="radio checkbox-label">
-        <input id="radio_{{this.flag.name_key}}" {{on "click" (fn this.changePostActionType this.flag)}} type="radio" name="post_action_type_index" />
+export default class FlagActionType extends Component {
+  <template>
+    <div class={{this.wrapperClassNames}}>
+      {{#if this.isNotifyUser}}
+        <h3>{{this.formattedName}}</h3>
+        <div class="controls">
+          <label class="radio checkbox-label">
+            <input
+              id="radio_{{this.flag.name_key}}"
+              {{on "click" (fn this.changePostActionType this.flag)}}
+              type="radio"
+              name="post_action_type_index"
+            />
 
-        <div class="flag-action-type-details">
-          <span class="description">{{htmlSafe this.flag.description}}</span>
-          {{#if this.showMessageInput}}
-            <Textarea name="message" class="flag-message" placeholder={{this.customPlaceholder}} aria-label={{iN "flagging.notify_user_textarea_label"}} @value={{this.message}} />
-            <div class={{concatClass "custom-message-length" this.customMessageLengthClasses}}>
-              {{this.customMessageLength}}
+            <div class="flag-action-type-details">
+              <span class="description">{{htmlSafe
+                  this.flag.description
+                }}</span>
+              {{#if this.showMessageInput}}
+                <Textarea
+                  name="message"
+                  class="flag-message"
+                  placeholder={{this.customPlaceholder}}
+                  aria-label={{iN "flagging.notify_user_textarea_label"}}
+                  @value={{this.message}}
+                />
+                <div
+                  class={{concatClass
+                    "custom-message-length"
+                    this.customMessageLengthClasses
+                  }}
+                >
+                  {{this.customMessageLength}}
+                </div>
+              {{/if}}
             </div>
+          </label>
+        </div>
+        {{#if this.staffFlagsAvailable}}
+          <hr />
+          <h3>{{iN "flagging.notify_staff"}}</h3>
+        {{/if}}
+      {{else}}
+        <div class="controls {{this.flag.name_key}}">
+          <label class="radio checkbox-label">
+            <input
+              id="radio_{{this.flag.name_key}}"
+              {{on "click" (fn this.changePostActionType this.flag)}}
+              checked={{this.selected}}
+              type="radio"
+              name="post_action_type_index"
+            />
+            <div class="flag-action-type-details">
+              <strong>{{this.formattedName}}</strong>
+              <div class="description">{{htmlSafe this.description}}</div>
+              {{#if this.showMessageInput}}
+                <Textarea
+                  name="message"
+                  class="flag-message"
+                  placeholder={{this.customPlaceholder}}
+                  aria-label={{iN "flagging.notify_moderators_textarea_label"}}
+                  @value={{this.message}}
+                />
+                <div
+                  class={{concatClass
+                    "custom-message-length"
+                    this.customMessageLengthClasses
+                  }}
+                >
+                  {{this.customMessageLength}}
+                </div>
+              {{/if}}
+            </div>
+          </label>
+          {{#if this.showConfirmation}}
+            <label class="checkbox-label flag-confirmation">
+              <Input
+                name="confirmation"
+                @type="checkbox"
+                @checked={{this.isConfirmed}}
+              />
+              <span>{{iN "flagging.confirmation_illegal"}}</span>
+            </label>
           {{/if}}
         </div>
-      </label>
-    </div>
-    {{#if this.staffFlagsAvailable}}
-      <hr />
-      <h3>{{iN "flagging.notify_staff"}}</h3>
-    {{/if}}
-  {{else}}
-    <div class="controls {{this.flag.name_key}}">
-      <label class="radio checkbox-label">
-        <input id="radio_{{this.flag.name_key}}" {{on "click" (fn this.changePostActionType this.flag)}} checked={{this.selected}} type="radio" name="post_action_type_index" />
-        <div class="flag-action-type-details">
-          <strong>{{this.formattedName}}</strong>
-          <div class="description">{{htmlSafe this.description}}</div>
-          {{#if this.showMessageInput}}
-            <Textarea name="message" class="flag-message" placeholder={{this.customPlaceholder}} aria-label={{iN "flagging.notify_moderators_textarea_label"}} @value={{this.message}} />
-            <div class={{concatClass "custom-message-length" this.customMessageLengthClasses}}>
-              {{this.customMessageLength}}
-            </div>
-          {{/if}}
-        </div>
-      </label>
-      {{#if this.showConfirmation}}
-        <label class="checkbox-label flag-confirmation">
-          <Input name="confirmation" @type="checkbox" @checked={{this.isConfirmed}} />
-          <span>{{iN "flagging.confirmation_illegal"}}</span>
-        </label>
       {{/if}}
     </div>
-  {{/if}}
-</div></template>
+  </template>
   @and("flag.require_message", "selected") showMessageInput;
   @and("flag.isIllegal", "selected") showConfirmation;
   @equal("flag.name_key", "notify_user") isNotifyUser;

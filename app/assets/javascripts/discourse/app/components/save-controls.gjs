@@ -6,12 +6,20 @@ import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 
 @classNames("controls", "save-button")
-export default class SaveControls extends Component {<template><DButton @action={{this.action}} @disabled={{this.buttonDisabled}} @label={{this.savingText}} class="btn-primary save-changes" />
-{{#if this.saved}}
-  <span class="saved">{{iN "saved"}}</span>
-{{/if}}
+export default class SaveControls extends Component {
+  <template>
+    <DButton
+      @action={{this.action}}
+      @disabled={{this.buttonDisabled}}
+      @label={{this.savingText}}
+      class="btn-primary save-changes"
+    />
+    {{#if this.saved}}
+      <span class="saved">{{iN "saved"}}</span>
+    {{/if}}
 
-{{yield}}</template>
+    {{yield}}
+  </template>
   @or("model.isSaving", "saveDisabled") buttonDisabled;
 
   didInsertElement() {

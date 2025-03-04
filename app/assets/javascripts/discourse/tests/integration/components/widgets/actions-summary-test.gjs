@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | actions-summary", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("post deleted", async function (assert) {const self = this;
+  test("post deleted", async function (assert) {
+    const self = this;
 
     this.set("args", {
       deleted_at: "2016-01-01",
@@ -14,9 +15,9 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
       deletedByAvatarTemplate: "/images/avatar.png",
     });
 
-    await render(
-      <template><MountWidget @widget="actions-summary" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="actions-summary" @args={{self.args}} />
+    </template>);
 
     assert.dom(".post-action .d-icon-trash-can").exists("has the deleted icon");
     assert.dom(".avatar[title=eviltrout]").exists("has the deleted by avatar");

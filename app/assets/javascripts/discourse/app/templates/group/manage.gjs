@@ -1,18 +1,20 @@
 import { LinkTo } from "@ember/routing";
-import RouteTemplate from 'ember-route-template';
+import RouteTemplate from "ember-route-template";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import iN from "discourse/helpers/i18n";
-export default RouteTemplate(<template><section class="user-secondary-navigation">
-  <HorizontalOverflowNav class="activity-nav">
-    {{#each @controller.tabs as |tab|}}
-      <li>
-        <LinkTo @route={{tab.route}} @model={{@controller.model.name}}>
-          {{iN tab.title}}
-        </LinkTo>
-      </li>
-    {{/each}}
-  </HorizontalOverflowNav>
-</section>
-<section class="user-content" id="user-content">
-  {{outlet}}
-</section></template>);
+export default RouteTemplate(<template>
+  <section class="user-secondary-navigation">
+    <HorizontalOverflowNav class="activity-nav">
+      {{#each @controller.tabs as |tab|}}
+        <li>
+          <LinkTo @route={{tab.route}} @model={{@controller.model.name}}>
+            {{iN tab.title}}
+          </LinkTo>
+        </li>
+      {{/each}}
+    </HorizontalOverflowNav>
+  </section>
+  <section class="user-content" id="user-content">
+    {{outlet}}
+  </section>
+</template>);

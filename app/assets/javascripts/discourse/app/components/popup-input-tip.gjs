@@ -2,14 +2,21 @@ import Component from "@ember/component";
 import { not, or, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import dIcon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("a")
 @classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
 @attributeBindings("role", "ariaLabel", "tabindex")
-export default class PopupInputTip extends Component {<template>{{this.tipReason}} {{dIcon "circle-xmark"}}</template>
+export default class PopupInputTip extends Component {
+  <template>
+    {{this.tipReason}} {{dIcon "circle-xmark"}}
+  </template>
   @service composer;
 
   tipReason = null;

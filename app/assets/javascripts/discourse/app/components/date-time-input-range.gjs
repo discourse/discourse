@@ -6,9 +6,29 @@ import DateTimeInput from "discourse/components/date-time-input";
 import iN from "discourse/helpers/i18n";
 
 @classNames("d-date-time-input-range")
-export default class DateTimeInputRange extends Component {<template><DateTimeInput @date={{this.from}} @onChange={{action "onChangeRanges" (hash prop="from")}} @showTime={{this.showFromTime}} @placeholder={{iN "dates.from_placeholder"}} @timezone={{@timezone}} class="from" />
+export default class DateTimeInputRange extends Component {
+  <template>
+    <DateTimeInput
+      @date={{this.from}}
+      @onChange={{action "onChangeRanges" (hash prop="from")}}
+      @showTime={{this.showFromTime}}
+      @placeholder={{iN "dates.from_placeholder"}}
+      @timezone={{@timezone}}
+      class="from"
+    />
 
-<DateTimeInput @date={{this.to}} @relativeDate={{this.from}} @onChange={{action "onChangeRanges" (hash prop="to")}} @timeFirst={{this.toTimeFirst}} @showTime={{this.showToTime}} @clearable={{this.clearable}} @placeholder={{iN "dates.to_placeholder"}} @timezone={{@timezone}} class="to" /></template>
+    <DateTimeInput
+      @date={{this.to}}
+      @relativeDate={{this.from}}
+      @onChange={{action "onChangeRanges" (hash prop="to")}}
+      @timeFirst={{this.toTimeFirst}}
+      @showTime={{this.showToTime}}
+      @clearable={{this.clearable}}
+      @placeholder={{iN "dates.to_placeholder"}}
+      @timezone={{@timezone}}
+      class="to"
+    />
+  </template>
   from = null;
   to = null;
   onChangeTo = null;

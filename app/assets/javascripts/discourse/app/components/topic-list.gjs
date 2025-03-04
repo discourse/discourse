@@ -3,7 +3,11 @@ import { hash } from "@ember/helper";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { classNameBindings, classNames, tagName } from "@ember-decorators/component";
+import {
+  classNameBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListItem from "discourse/components/topic-list-item";
@@ -17,23 +21,89 @@ import LoadMore from "discourse/mixins/load-more";
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
-export default class TopicList extends Component.extend(LoadMore) {<template><caption class="sr-only">{{iN "sr_topic_list_caption"}}</caption>
+export default class TopicList extends Component.extend(LoadMore) {
+  <template>
+    <caption class="sr-only">{{iN "sr_topic_list_caption"}}</caption>
 
-<thead class="topic-list-header">
-  {{raw "topic-list-header" canBulkSelect=this.canBulkSelect toggleInTitle=this.toggleInTitle hideCategory=this.hideCategory showPosters=this.showPosters showLikes=this.showLikes showOpLikes=this.showOpLikes order=this.order ascending=this.ascending sortable=this.sortable listTitle=this.listTitle bulkSelectEnabled=this.bulkSelectEnabled bulkSelectHelper=this.bulkSelectHelper canDoBulkActions=this.canDoBulkActions showTopicsAndRepliesToggle=this.showTopicsAndRepliesToggle newListSubset=this.newListSubset newRepliesCount=this.newRepliesCount newTopicsCount=this.newTopicsCount}}
-</thead>
+    <thead class="topic-list-header">
+      {{raw
+        "topic-list-header"
+        canBulkSelect=this.canBulkSelect
+        toggleInTitle=this.toggleInTitle
+        hideCategory=this.hideCategory
+        showPosters=this.showPosters
+        showLikes=this.showLikes
+        showOpLikes=this.showOpLikes
+        order=this.order
+        ascending=this.ascending
+        sortable=this.sortable
+        listTitle=this.listTitle
+        bulkSelectEnabled=this.bulkSelectEnabled
+        bulkSelectHelper=this.bulkSelectHelper
+        canDoBulkActions=this.canDoBulkActions
+        showTopicsAndRepliesToggle=this.showTopicsAndRepliesToggle
+        newListSubset=this.newListSubset
+        newRepliesCount=this.newRepliesCount
+        newTopicsCount=this.newTopicsCount
+      }}
+    </thead>
 
-<PluginOutlet @name="before-topic-list-body" @outletArgs={{hash topics=this.topics selected=this.selected bulkSelectEnabled=this.bulkSelectEnabled lastVisitedTopic=this.lastVisitedTopic discoveryList=this.discoveryList hideCategory=this.hideCategory}} />
+    <PluginOutlet
+      @name="before-topic-list-body"
+      @outletArgs={{hash
+        topics=this.topics
+        selected=this.selected
+        bulkSelectEnabled=this.bulkSelectEnabled
+        lastVisitedTopic=this.lastVisitedTopic
+        discoveryList=this.discoveryList
+        hideCategory=this.hideCategory
+      }}
+    />
 
-<tbody class="topic-list-body">
-  {{#each this.filteredTopics as |topic index|}}
-    <TopicListItem @topic={{topic}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @showTopicPostBadges={{this.showTopicPostBadges}} @hideCategory={{this.hideCategory}} @showPosters={{this.showPosters}} @showLikes={{this.showLikes}} @showOpLikes={{this.showOpLikes}} @expandGloballyPinned={{this.expandGloballyPinned}} @expandAllPinned={{this.expandAllPinned}} @lastVisitedTopic={{this.lastVisitedTopic}} @selected={{this.selected}} @lastChecked={{this.lastChecked}} @tagsForUser={{this.tagsForUser}} @focusLastVisitedTopic={{this.focusLastVisitedTopic}} @index={{index}} />
-    {{raw "list/visited-line" lastVisitedTopic=this.lastVisitedTopic topic=topic}}
-    <PluginOutlet @name="after-topic-list-item" @outletArgs={{hash topic=topic index=index}} @connectorTagName="tr" />
-  {{/each}}
-</tbody>
+    <tbody class="topic-list-body">
+      {{#each this.filteredTopics as |topic index|}}
+        <TopicListItem
+          @topic={{topic}}
+          @bulkSelectEnabled={{this.bulkSelectEnabled}}
+          @showTopicPostBadges={{this.showTopicPostBadges}}
+          @hideCategory={{this.hideCategory}}
+          @showPosters={{this.showPosters}}
+          @showLikes={{this.showLikes}}
+          @showOpLikes={{this.showOpLikes}}
+          @expandGloballyPinned={{this.expandGloballyPinned}}
+          @expandAllPinned={{this.expandAllPinned}}
+          @lastVisitedTopic={{this.lastVisitedTopic}}
+          @selected={{this.selected}}
+          @lastChecked={{this.lastChecked}}
+          @tagsForUser={{this.tagsForUser}}
+          @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @index={{index}}
+        />
+        {{raw
+          "list/visited-line"
+          lastVisitedTopic=this.lastVisitedTopic
+          topic=topic
+        }}
+        <PluginOutlet
+          @name="after-topic-list-item"
+          @outletArgs={{hash topic=topic index=index}}
+          @connectorTagName="tr"
+        />
+      {{/each}}
+    </tbody>
 
-<PluginOutlet @name="after-topic-list-body" @outletArgs={{hash topics=this.topics selected=this.selected bulkSelectEnabled=this.bulkSelectEnabled lastVisitedTopic=this.lastVisitedTopic discoveryList=this.discoveryList hideCategory=this.hideCategory}} /></template>
+    <PluginOutlet
+      @name="after-topic-list-body"
+      @outletArgs={{hash
+        topics=this.topics
+        selected=this.selected
+        bulkSelectEnabled=this.bulkSelectEnabled
+        lastVisitedTopic=this.lastVisitedTopic
+        discoveryList=this.discoveryList
+        hideCategory=this.hideCategory
+      }}
+    />
+  </template>
 
   static reopen() {
     deprecated(

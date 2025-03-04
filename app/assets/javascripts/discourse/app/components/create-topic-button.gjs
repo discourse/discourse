@@ -7,22 +7,35 @@ import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DTooltip from "float-kit/components/d-tooltip";
 
 @tagName("")
-export default class CreateTopicButton extends Component {<template>{{#if this.canCreateTopic}}
-  <DButtonTooltip>
-    <:button>
-      <DButton @action={{this.action}} @icon="far-pen-to-square" @disabled={{this.disabled}} @label={{this.label}} id="create-topic" class={{this.btnClass}} />
-    </:button>
-    <:tooltip>
-      {{#if @disabled}}
-        <DTooltip @icon="circle-info" @content={{iN this.disallowedReason}} />
-      {{/if}}
-    </:tooltip>
-  </DButtonTooltip>
+export default class CreateTopicButton extends Component {
+  <template>
+    {{#if this.canCreateTopic}}
+      <DButtonTooltip>
+        <:button>
+          <DButton
+            @action={{this.action}}
+            @icon="far-pen-to-square"
+            @disabled={{this.disabled}}
+            @label={{this.label}}
+            id="create-topic"
+            class={{this.btnClass}}
+          />
+        </:button>
+        <:tooltip>
+          {{#if @disabled}}
+            <DTooltip
+              @icon="circle-info"
+              @content={{iN this.disallowedReason}}
+            />
+          {{/if}}
+        </:tooltip>
+      </DButtonTooltip>
 
-  {{#if @showDrafts}}
-    <TopicDraftsDropdown @disabled={{this.disabled}} />
-  {{/if}}
-{{/if}}</template>
+      {{#if @showDrafts}}
+        <TopicDraftsDropdown @disabled={{this.disabled}} />
+      {{/if}}
+    {{/if}}
+  </template>
   label = "topic.create";
   btnClass = "btn-default";
 

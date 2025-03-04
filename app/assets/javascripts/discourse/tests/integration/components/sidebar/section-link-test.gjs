@@ -7,7 +7,9 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default class attribute for link", async function (assert) {
-    const template = <template><SectionLink @linkName="Test Meta" @route="discovery.latest" /></template>;
+    const template = <template>
+      <SectionLink @linkName="Test Meta" @route="discovery.latest" />
+    </template>;
 
     await render(template);
 
@@ -21,7 +23,13 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("custom class attribute for link", async function (assert) {
-    const template = <template><SectionLink @linkName="Test Meta" @route="discovery.latest" @linkClass="123 abc" /></template>;
+    const template = <template>
+      <SectionLink
+        @linkName="Test Meta"
+        @route="discovery.latest"
+        @linkClass="123 abc"
+      />
+    </template>;
 
     await render(template);
 
@@ -35,7 +43,9 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("target attribute for link", async function (assert) {
-    const template = <template><SectionLink @linkName="test" @href="https://discourse.org" /></template>;
+    const template = <template>
+      <SectionLink @linkName="test" @href="https://discourse.org" />
+    </template>;
     await render(template);
 
     assert.dom("a").hasAttribute("target", "_self");
@@ -43,7 +53,9 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
   test("target attribute for link when user set external links in new tab", async function (assert) {
     this.currentUser.user_option.external_links_in_new_tab = true;
-    const template = <template><SectionLink @linkName="test" @href="https://discourse.org" /></template>;
+    const template = <template>
+      <SectionLink @linkName="test" @href="https://discourse.org" />
+    </template>;
     await render(template);
 
     assert.dom("a").hasAttribute("target", "_blank");

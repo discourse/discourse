@@ -11,19 +11,27 @@ import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import or0 from "truth-helpers/helpers/or";
 
-export default class GroupManageSaveButton extends Component {<template>{{#if this.privateGroupNameNotice}}
-  <div class="row">
-    <div class="alert alert-warning alert-private-group-name">
-      {{this.privateGroupNameNotice}}
+export default class GroupManageSaveButton extends Component {
+  <template>
+    {{#if this.privateGroupNameNotice}}
+      <div class="row">
+        <div class="alert alert-warning alert-private-group-name">
+          {{this.privateGroupNameNotice}}
+        </div>
+      </div>
+    {{/if}}
+    <div class="control-group buttons group-manage-save-button">
+      <DButton
+        @action={{this.save}}
+        @disabled={{or0 this.disabled this.saving}}
+        @translatedLabel={{this.savingText}}
+        class="btn-primary group-manage-save"
+      />
+      {{#if this.saved}}
+        <span>{{iN "saved"}}</span>
+      {{/if}}
     </div>
-  </div>
-{{/if}}
-<div class="control-group buttons group-manage-save-button">
-  <DButton @action={{this.save}} @disabled={{or0 this.disabled this.saving}} @translatedLabel={{this.savingText}} class="btn-primary group-manage-save" />
-  {{#if this.saved}}
-    <span>{{iN "saved"}}</span>
-  {{/if}}
-</div></template>
+  </template>
   @service modal;
 
   saving = null;

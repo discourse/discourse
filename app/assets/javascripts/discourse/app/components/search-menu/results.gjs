@@ -29,39 +29,95 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
   "search-result-group": GroupViewComponent,
 };
 
-export default class Results extends Component {<template>{{#if (and this.search.inTopicContext (not @searchTopics))}}
-  <BrowserSearchTip />
-{{else}}
-  <ConditionalLoadingSection @isLoading={{this.loading}}>
-    <div class="results">
-      <PluginOutlet @name="search-menu-results-top" @outletArgs={{hash closeSearchMenu=@closeSearchMenu searchTerm=this.search.activeGlobalSearchTerm inTopicContext=this.search.inTopicContext searchTopics=@searchTopics}} />
-      {{#if @suggestionKeyword}}
-        <Assistant @suggestionKeyword={{@suggestionKeyword}} @results={{@suggestionResults}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
-      {{else if this.termTooShort}}
-        <div class="no-results">{{iN "search.too_short"}}</div>
-      {{else if this.noTopicResults}}
-        <div class="no-results">{{iN "search.no_results"}}</div>
-      {{else if this.renderInitialOptions}}
-        <InitialOptions @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
-      {{else}}
-        {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
-          {{!-- render the first couple suggestions before a search has been performed--}}
-          <InitialOptions @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
-        {{/if}}
+export default class Results extends Component {
+  <template>
+    {{#if (and this.search.inTopicContext (not @searchTopics))}}
+      <BrowserSearchTip />
+    {{else}}
+      <ConditionalLoadingSection @isLoading={{this.loading}}>
+        <div class="results">
+          <PluginOutlet
+            @name="search-menu-results-top"
+            @outletArgs={{hash
+              closeSearchMenu=@closeSearchMenu
+              searchTerm=this.search.activeGlobalSearchTerm
+              inTopicContext=this.search.inTopicContext
+              searchTopics=@searchTopics
+            }}
+          />
+          {{#if @suggestionKeyword}}
+            <Assistant
+              @suggestionKeyword={{@suggestionKeyword}}
+              @results={{@suggestionResults}}
+              @closeSearchMenu={{@closeSearchMenu}}
+              @searchTermChanged={{@searchTermChanged}}
+            />
+          {{else if this.termTooShort}}
+            <div class="no-results">{{iN "search.too_short"}}</div>
+          {{else if this.noTopicResults}}
+            <div class="no-results">{{iN "search.no_results"}}</div>
+          {{else if this.renderInitialOptions}}
+            <InitialOptions
+              @closeSearchMenu={{@closeSearchMenu}}
+              @searchTermChanged={{@searchTermChanged}}
+            />
+          {{else}}
+            {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
+              {{! render the first couple suggestions before a search has been performed}}
+              <InitialOptions
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
+            {{/if}}
 
-        {{#if (and @searchTopics this.resultTypesWithComponent)}}
-          {{!-- render results after a search has been performed --}}
-          <Types @resultTypes={{this.resultTypesWithComponent}} @topicResultsOnly={{true}} @closeSearchMenu={{@closeSearchMenu}} @searchLogId={{this.searchLogId}} />
-          <MoreLink @updateTypeFilter={{@updateTypeFilter}} @triggerSearch={{@triggerSearch}} @resultTypes={{this.resultTypesWithComponent}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
-        {{else if (and (not @inPMInboxContext) (not @searchTopics) this.resultTypesWithComponent)}}
-          <Types @resultTypes={{this.resultTypesWithComponent}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} @displayNameWithUser={{true}} @searchLogId={{this.searchLogId}} />
-        {{/if}}
-        <PluginOutlet @name="search-menu-with-results-bottom" @outletArgs={{hash resultTypes=this.resultTypesWithComponent}} />
-      {{/if}}
-      <PluginOutlet @name="search-menu-results-bottom" @outletArgs={{hash inTopicContext=this.search.inTopicContext searchTermChanged=@searchTermChanged searchTopics=@searchTopics closeSearchMenu=@closeSearchMenu}} />
-    </div>
-  </ConditionalLoadingSection>
-{{/if}}</template>
+            {{#if (and @searchTopics this.resultTypesWithComponent)}}
+              {{! render results after a search has been performed }}
+              <Types
+                @resultTypes={{this.resultTypesWithComponent}}
+                @topicResultsOnly={{true}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchLogId={{this.searchLogId}}
+              />
+              <MoreLink
+                @updateTypeFilter={{@updateTypeFilter}}
+                @triggerSearch={{@triggerSearch}}
+                @resultTypes={{this.resultTypesWithComponent}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
+            {{else if
+              (and
+                (not @inPMInboxContext)
+                (not @searchTopics)
+                this.resultTypesWithComponent
+              )
+            }}
+              <Types
+                @resultTypes={{this.resultTypesWithComponent}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+                @displayNameWithUser={{true}}
+                @searchLogId={{this.searchLogId}}
+              />
+            {{/if}}
+            <PluginOutlet
+              @name="search-menu-with-results-bottom"
+              @outletArgs={{hash resultTypes=this.resultTypesWithComponent}}
+            />
+          {{/if}}
+          <PluginOutlet
+            @name="search-menu-results-bottom"
+            @outletArgs={{hash
+              inTopicContext=this.search.inTopicContext
+              searchTermChanged=@searchTermChanged
+              searchTopics=@searchTopics
+              closeSearchMenu=@closeSearchMenu
+            }}
+          />
+        </div>
+      </ConditionalLoadingSection>
+    {{/if}}
+  </template>
   @service search;
 
   @tracked searchTopics = this.args.searchTopics;

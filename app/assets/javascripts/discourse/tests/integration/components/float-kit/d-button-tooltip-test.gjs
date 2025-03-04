@@ -19,7 +19,8 @@ module(
           <:tooltip>
             <DTooltip />
           </:tooltip>
-        </DButtonTooltip></template>);
+        </DButtonTooltip>
+      </template>);
 
       assert.dom(".btn").exists();
       assert.dom("[data-trigger]").exists();

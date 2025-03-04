@@ -37,15 +37,34 @@ function entranceDate(dt, showTime) {
 }
 
 @classNameBindings("visible::hidden")
-export default class TopicEntrance extends Component {<template><DButton @action={{action "enterTop"}} @translatedAriaLabel={{iN "topic_entrance.sr_jump_top_button" date=this.topDate}} title={{iN "topic_entrance.jump_top_button_title"}} class="btn-default full jump-top">
-  {{dIcon "backward-step"}}
-  {{htmlSafe this.topDate}}
-</DButton>
+export default class TopicEntrance extends Component {
+  <template>
+    <DButton
+      @action={{action "enterTop"}}
+      @translatedAriaLabel={{iN
+        "topic_entrance.sr_jump_top_button"
+        date=this.topDate
+      }}
+      title={{iN "topic_entrance.jump_top_button_title"}}
+      class="btn-default full jump-top"
+    >
+      {{dIcon "backward-step"}}
+      {{htmlSafe this.topDate}}
+    </DButton>
 
-<DButton @action={{action "enterBottom"}} @translatedAriaLabel={{iN "topic_entrance.sr_jump_bottom_button" date=this.bottomDate}} title={{iN "topic_entrance.jump_bottom_button_title"}} class="btn-default full jump-bottom">
-  {{htmlSafe this.bottomDate}}
-  {{dIcon "forward-step"}}
-</DButton></template>
+    <DButton
+      @action={{action "enterBottom"}}
+      @translatedAriaLabel={{iN
+        "topic_entrance.sr_jump_bottom_button"
+        date=this.bottomDate
+      }}
+      title={{iN "topic_entrance.jump_bottom_button_title"}}
+      class="btn-default full jump-bottom"
+    >
+      {{htmlSafe this.bottomDate}}
+      {{dIcon "forward-step"}}
+    </DButton>
+  </template>
   @service router;
   @service session;
   @service historyStore;

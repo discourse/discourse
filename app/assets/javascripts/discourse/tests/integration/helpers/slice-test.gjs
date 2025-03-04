@@ -7,36 +7,33 @@ import slice from "discourse/helpers/slice";
 module("Integration | Helper | {{slice}}", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it slices an array with positional params", async function (assert) {const self = this;
+  test("it slices an array with positional params", async function (assert) {
+    const self = this;
 
     this.set("array", [2, 4, 6]);
 
-    await render(<template>
-      {{slice 1 3 self.array}}
-    </template>);
+    await render(<template>{{slice 1 3 self.array}}</template>);
 
     assert.dom().hasText("4,6", "sliced values");
   });
 
-  test("it slices when only 2 params are passed", async function (assert) {const self = this;
+  test("it slices when only 2 params are passed", async function (assert) {
+    const self = this;
 
     this.set("array", [2, 4, 6]);
 
-    await render(<template>
-      {{slice 1 self.array}}
-    </template>);
+    await render(<template>{{slice 1 self.array}}</template>);
 
     assert.dom().hasText("4,6", "sliced values");
   });
 
-  test("it recomputes the slice if an item in the array changes", async function (assert) {const self = this;
+  test("it recomputes the slice if an item in the array changes", async function (assert) {
+    const self = this;
 
     let array = [2, 4, 6];
     this.set("array", array);
 
-    await render(<template>
-      {{slice 1 3 self.array}}
-    </template>);
+    await render(<template>{{slice 1 3 self.array}}</template>);
 
     assert.dom().hasText("4,6", "sliced values");
 
@@ -45,7 +42,8 @@ module("Integration | Helper | {{slice}}", function (hooks) {
     assert.dom().hasText("4,5", "sliced values");
   });
 
-  test("it allows null array", async function (assert) {const self = this;
+  test("it allows null array", async function (assert) {
+    const self = this;
 
     this.set("array", null);
 
@@ -59,7 +57,8 @@ module("Integration | Helper | {{slice}}", function (hooks) {
     assert.dom().hasText("this is all that will render", "no error is thrown");
   });
 
-  test("it allows undefined array", async function (assert) {const self = this;
+  test("it allows undefined array", async function (assert) {
+    const self = this;
 
     this.set("array", undefined);
 

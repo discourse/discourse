@@ -12,7 +12,8 @@ const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 module("Integration | Component | date-time-input", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("default", async function (assert) {const self = this;
+  test("default", async function (assert) {
+    const self = this;
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
@@ -24,7 +25,8 @@ module("Integration | Component | date-time-input", function (hooks) {
       .hasAttribute("data-name", "14:45");
   });
 
-  test("prevents mutations", async function (assert) {const self = this;
+  test("prevents mutations", async function (assert) {
+    const self = this;
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
@@ -35,14 +37,15 @@ module("Integration | Component | date-time-input", function (hooks) {
     assert.true(this.date.isSame(DEFAULT_DATE_TIME));
   });
 
-  test("allows mutations through actions", async function (assert) {const self = this;
+  test("allows mutations through actions", async function (assert) {
+    const self = this;
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
     this.set("onChange", setDate);
 
-    await render(
-      <template><DateTimeInput @date={{self.date}} @onChange={{self.onChange}} /></template>
-    );
+    await render(<template>
+      <DateTimeInput @date={{self.date}} @onChange={{self.onChange}} />
+    </template>);
 
     await fillIn(".date-picker", "2019-01-02");
     await triggerEvent(".date-picker", "change");
@@ -50,18 +53,20 @@ module("Integration | Component | date-time-input", function (hooks) {
     assert.true(this.date.isSame(moment("2019-01-02 14:45")));
   });
 
-  test("can hide time", async function (assert) {const self = this;
+  test("can hide time", async function (assert) {
+    const self = this;
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(
-      <template><DateTimeInput @date={{self.date}} @showTime={{false}} /></template>
-    );
+    await render(<template>
+      <DateTimeInput @date={{self.date}} @showTime={{false}} />
+    </template>);
 
     assert.dom(".d-time-input .combo-box-header").doesNotExist();
   });
 
-  test("supports swapping timezone without changing visible date/time", async function (assert) {const self = this;
+  test("supports swapping timezone without changing visible date/time", async function (assert) {
+    const self = this;
 
     this.setProperties({
       date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
@@ -69,9 +74,13 @@ module("Integration | Component | date-time-input", function (hooks) {
       onChange: setDate,
     });
 
-    await render(
-      <template><DateTimeInput @date={{self.date}} @timezone={{self.timezone}} @onChange={{self.onChange}} /></template>
-    );
+    await render(<template>
+      <DateTimeInput
+        @date={{self.date}}
+        @timezone={{self.timezone}}
+        @onChange={{self.onChange}}
+      />
+    </template>);
     await triggerEvent(".date-picker", "change");
     assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+01:00");
 

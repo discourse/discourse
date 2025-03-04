@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | flat-button", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("press Enter", async function (assert) {const self = this;
+  test("press Enter", async function (assert) {
+    const self = this;
 
     this.set("foo", null);
     this.set("action", () => {
@@ -22,7 +23,8 @@ module("Integration | Component | flat-button", function (hooks) {
     assert.strictEqual(this.foo, "bar");
   });
 
-  test("click", async function (assert) {const self = this;
+  test("click", async function (assert) {
+    const self = this;
 
     this.set("foo", null);
     this.set("action", () => {

@@ -21,19 +21,45 @@ export const DELETE_STATUS_TYPE = "delete";
 export const BUMP_TYPE = "bump";
 export const DELETE_REPLIES_TYPE = "delete_replies";
 
-export default class EditTopicTimer extends Component {<template><DModal @title={{iN "topic.topic_status_update.title"}} @flash={{this.flash}} @closeModal={{@closeModal}} autoFocus="false" id="topic-timer-modal" class="edit-topic-timer-modal">
-  <:body>
-    {{#if this.topicTimer}}
-      <EditTopicTimerForm @topic={{@model.topic}} @topicTimer={{this.topicTimer}} @timerTypes={{this.publicTimerTypes}} @onChangeStatusType={{this.onChangeStatusType}} @onChangeInput={{this.onChangeInput}} />
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton class="btn-primary" @disabled={{this.saveDisabled}} @label="topic.topic_status_update.save" @action={{this.saveTimer}} @isLoading={{this.loading}} />
-    {{#if this.topicTimer.execute_at}}
-      <DButton class="btn-danger" @action={{this.removeTimer}} @label="topic.topic_status_update.remove" />
-    {{/if}}
-  </:footer>
-</DModal></template>
+export default class EditTopicTimer extends Component {
+  <template>
+    <DModal
+      @title={{iN "topic.topic_status_update.title"}}
+      @flash={{this.flash}}
+      @closeModal={{@closeModal}}
+      autoFocus="false"
+      id="topic-timer-modal"
+      class="edit-topic-timer-modal"
+    >
+      <:body>
+        {{#if this.topicTimer}}
+          <EditTopicTimerForm
+            @topic={{@model.topic}}
+            @topicTimer={{this.topicTimer}}
+            @timerTypes={{this.publicTimerTypes}}
+            @onChangeStatusType={{this.onChangeStatusType}}
+            @onChangeInput={{this.onChangeInput}}
+          />
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @disabled={{this.saveDisabled}}
+          @label="topic.topic_status_update.save"
+          @action={{this.saveTimer}}
+          @isLoading={{this.loading}}
+        />
+        {{#if this.topicTimer.execute_at}}
+          <DButton
+            class="btn-danger"
+            @action={{this.removeTimer}}
+            @label="topic.topic_status_update.remove"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
   @service currentUser;
 
   @tracked topicTimer;

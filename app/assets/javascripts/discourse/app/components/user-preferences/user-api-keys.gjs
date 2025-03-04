@@ -3,40 +3,54 @@ import DButton from "discourse/components/d-button";
 import boundDate from "discourse/helpers/bound-date";
 import iN from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
-<template>{{#if @model.userApiKeys}}
-  <div class="control-group pref-user-api-keys">
-    <label class="control-label pref-user-api-keys__label">{{iN "user.apps"}}</label>
+<template>
+  {{#if @model.userApiKeys}}
+    <div class="control-group pref-user-api-keys">
+      <label class="control-label pref-user-api-keys__label">{{iN
+          "user.apps"
+        }}</label>
 
-    <div class="controls">
-      {{#each @model.userApiKeys as |key|}}
-        <div>
-          <span class="pref-user-api-keys__application-name">{{key.application_name}}</span>
+      <div class="controls">
+        {{#each @model.userApiKeys as |key|}}
+          <div>
+            <span
+              class="pref-user-api-keys__application-name"
+            >{{key.application_name}}</span>
 
-          {{#if key.revoked}}
-            <DButton @action={{fn (routeAction "undoRevokeApiKey") key}} @label="user.undo_revoke_access" />
-          {{else}}
-            <DButton @action={{fn (routeAction "revokeApiKey") key}} @label="user.revoke_access" />
-          {{/if}}
+            {{#if key.revoked}}
+              <DButton
+                @action={{fn (routeAction "undoRevokeApiKey") key}}
+                @label="user.undo_revoke_access"
+              />
+            {{else}}
+              <DButton
+                @action={{fn (routeAction "revokeApiKey") key}}
+                @label="user.revoke_access"
+              />
+            {{/if}}
 
-          <p>
-            <ul class="pref-user-api-keys__scopes-list">
-              {{#each key.scopes as |scope|}}
-                <li class="pref-user-api-keys__scopes-list-item">{{scope}}</li>
-              {{/each}}
-            </ul>
-          </p>
+            <p>
+              <ul class="pref-user-api-keys__scopes-list">
+                {{#each key.scopes as |scope|}}
+                  <li
+                    class="pref-user-api-keys__scopes-list-item"
+                  >{{scope}}</li>
+                {{/each}}
+              </ul>
+            </p>
 
-          <p class="pref-user-api-keys__created-at">
-            <span>{{iN "user.api_approved"}}</span>
-            {{boundDate key.created_at}}
-          </p>
+            <p class="pref-user-api-keys__created-at">
+              <span>{{iN "user.api_approved"}}</span>
+              {{boundDate key.created_at}}
+            </p>
 
-          <p class="pref-user-api-keys__last-used-at">
-            <span>{{iN "user.api_last_used_at"}}</span>
-            {{boundDate key.last_used_at}}
-          </p>
-        </div>
-      {{/each}}
+            <p class="pref-user-api-keys__last-used-at">
+              <span>{{iN "user.api_last_used_at"}}</span>
+              {{boundDate key.last_used_at}}
+            </p>
+          </div>
+        {{/each}}
+      </div>
     </div>
-  </div>
-{{/if}}</template>
+  {{/if}}
+</template>

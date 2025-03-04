@@ -7,7 +7,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Helper | category-badge", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("displays category", async function (assert) {const self = this;
+  test("displays category", async function (assert) {
+    const self = this;
 
     this.set("category", Category.findById(1));
 
@@ -16,11 +17,14 @@ module("Integration | Helper | category-badge", function (hooks) {
     assert.dom(".badge-category__name").hasText(this.category.displayName);
   });
 
-  test("options.link", async function (assert) {const self = this;
+  test("options.link", async function (assert) {
+    const self = this;
 
     this.set("category", Category.findById(1));
 
-    await render(<template>{{categoryBadge self.category link=true}}</template>);
+    await render(<template>
+      {{categoryBadge self.category link=true}}
+    </template>);
 
     assert
       .dom(

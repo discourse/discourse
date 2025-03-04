@@ -13,7 +13,9 @@ module("Integration | Component | text-field", function (hooks) {
   });
 
   test("support a placeholder", async function (assert) {
-    await render(<template><TextField @placeholderKey="placeholder.i18n.key" /></template>);
+    await render(<template>
+      <TextField @placeholderKey="placeholder.i18n.key" />
+    </template>);
 
     assert.dom("input[type=text]").exists();
     assert
@@ -24,12 +26,15 @@ module("Integration | Component | text-field", function (hooks) {
   test("sets the dir attribute to auto when mixed text direction enabled", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
 
-    await render(<template><TextField @value="זהו שם עברי עם מקום עברי" /></template>);
+    await render(<template>
+      <TextField @value="זהו שם עברי עם מקום עברי" />
+    </template>);
 
     assert.dom("input").hasAttribute("dir", "auto");
   });
 
-  test("supports onChange", async function (assert) {const self = this;
+  test("supports onChange", async function (assert) {
+    const self = this;
 
     this.called = false;
     this.newValue = null;
@@ -39,9 +44,13 @@ module("Integration | Component | text-field", function (hooks) {
       this.called = true;
     });
 
-    await render(
-      <template><TextField class="tf-test" @value={{self.value}} @onChange={{self.changed}} /></template>
-    );
+    await render(<template>
+      <TextField
+        class="tf-test"
+        @value={{self.value}}
+        @onChange={{self.changed}}
+      />
+    </template>);
 
     await fillIn(".tf-test", "hello");
     assert.false(this.called);
@@ -51,7 +60,8 @@ module("Integration | Component | text-field", function (hooks) {
     assert.strictEqual(this.newValue, "new text");
   });
 
-  test("supports onChangeImmediate", async function (assert) {const self = this;
+  test("supports onChangeImmediate", async function (assert) {
+    const self = this;
 
     this.called = false;
     this.newValue = null;
@@ -61,9 +71,13 @@ module("Integration | Component | text-field", function (hooks) {
       this.called = true;
     });
 
-    await render(
-      <template><TextField class="tf-test" @value={{self.value}} @onChangeImmediate={{self.changed}} /></template>
-    );
+    await render(<template>
+      <TextField
+        class="tf-test"
+        @value={{self.value}}
+        @onChangeImmediate={{self.changed}}
+      />
+    </template>);
 
     await fillIn(".tf-test", "old");
     assert.false(this.called);

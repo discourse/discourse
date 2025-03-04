@@ -7,13 +7,21 @@ import iN from "discourse/helpers/i18n";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 
-export default class FullscreenCode extends Component {<template><DModal @title={{iN "copy_codeblock.view_code"}} @closeModal={{this.closeModal}} {{didInsert this.applyCodeblockButtons}} class="fullscreen-code-modal -max">
-  <:body>
-    <pre>
-      <code class={{@model.codeClasses}}>{{@model.code}}</code>
-    </pre>
-  </:body>
-</DModal></template>
+export default class FullscreenCode extends Component {
+  <template>
+    <DModal
+      @title={{iN "copy_codeblock.view_code"}}
+      @closeModal={{this.closeModal}}
+      {{didInsert this.applyCodeblockButtons}}
+      class="fullscreen-code-modal -max"
+    >
+      <:body>
+        <pre>
+          <code class={{@model.codeClasses}}>{{@model.code}}</code>
+        </pre>
+      </:body>
+    </DModal>
+  </template>
   @service siteSettings;
   @service session;
 

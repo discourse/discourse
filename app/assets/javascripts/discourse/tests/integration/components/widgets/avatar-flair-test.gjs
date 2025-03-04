@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | avatar-flair", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("avatar flair with an icon", async function (assert) {const self = this;
+  test("avatar flair with an icon", async function (assert) {
+    const self = this;
 
     this.set("args", {
       flair_url: "bars",
@@ -14,9 +15,9 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
       flair_color: "FFFFFF",
     });
 
-    await render(
-      <template><MountWidget @widget="avatar-flair" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="avatar-flair" @args={{self.args}} />
+    </template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -26,15 +27,16 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
     });
   });
 
-  test("avatar flair with an image", async function (assert) {const self = this;
+  test("avatar flair with an image", async function (assert) {
+    const self = this;
 
     this.set("args", {
       flair_url: "/images/avatar.png",
     });
 
-    await render(
-      <template><MountWidget @widget="avatar-flair" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="avatar-flair" @args={{self.args}} />
+    </template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg").doesNotExist("does not have an svg icon");

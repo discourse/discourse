@@ -6,10 +6,18 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("default displaySection value for section", async function (assert) {const self = this;
+  test("default displaySection value for section", async function (assert) {
+    const self = this;
 
     const template = <template>
-      <Section @sectionName="test" @headerLinkText="test header" @headerLinkTitle="some title" @headerActionsIcon="plus" @headerActions={{self.headerActions}} /></template>;
+      <Section
+        @sectionName="test"
+        @headerLinkText="test header"
+        @headerLinkTitle="some title"
+        @headerActionsIcon="plus"
+        @headerActions={{self.headerActions}}
+      />
+    </template>;
 
     this.headerActions = [];
     await render(template);
@@ -19,10 +27,19 @@ module("Integration | Component | sidebar | section", function (hooks) {
       .exists("section is displayed by default if no display arg is provided");
   });
 
-  test("displaySection is dynamic based on argument", async function (assert) {const self = this;
+  test("displaySection is dynamic based on argument", async function (assert) {
+    const self = this;
 
     const template = <template>
-      <Section @sectionName="test" @headerLinkText="test header" @headerLinkTitle="some title" @headerActionsIcon="plus" @headerActions={{self.headerActions}} @displaySection={{self.displaySection}} /></template>;
+      <Section
+        @sectionName="test"
+        @headerLinkText="test header"
+        @headerLinkTitle="some title"
+        @headerActionsIcon="plus"
+        @headerActions={{self.headerActions}}
+        @displaySection={{self.displaySection}}
+      />
+    </template>;
 
     this.displaySection = false;
     this.headerActions = [];
@@ -36,10 +53,19 @@ module("Integration | Component | sidebar | section", function (hooks) {
     assert.dom(".sidebar-section-wrapper").exists("section is displayed");
   });
 
-  test("can expand and collapse content when section is collapsible", async function (assert) {const self = this;
+  test("can expand and collapse content when section is collapsible", async function (assert) {
+    const self = this;
 
     const template = <template>
-      <Section @sectionName="test" @headerLinkText="test header" @headerLinkTitle="some title" @headerActionsIcon="plus" @headerActions={{self.headerActions}} @collapsable={{true}} /></template>;
+      <Section
+        @sectionName="test"
+        @headerLinkText="test header"
+        @headerLinkTitle="some title"
+        @headerActionsIcon="plus"
+        @headerActions={{self.headerActions}}
+        @collapsable={{true}}
+      />
+    </template>;
 
     this.headerActions = [];
     await render(template);

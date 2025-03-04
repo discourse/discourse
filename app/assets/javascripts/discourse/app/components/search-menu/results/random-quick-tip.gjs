@@ -55,15 +55,25 @@ export function removeDefaultQuickSearchRandomTips() {
 
 resetQuickSearchRandomTips();
 
-export default class RandomQuickTip extends Component {<template><li class="search-random-quick-tip">
-  <button class={{concatClass "tip-label" (if this.randomTip.clickable "tip-clickable")}} {{on "click" this.tipSelected}} aria-describedby="tip-description">
-    {{this.randomTip.label}}
-  </button>
+export default class RandomQuickTip extends Component {
+  <template>
+    <li class="search-random-quick-tip">
+      <button
+        class={{concatClass
+          "tip-label"
+          (if this.randomTip.clickable "tip-clickable")
+        }}
+        {{on "click" this.tipSelected}}
+        aria-describedby="tip-description"
+      >
+        {{this.randomTip.label}}
+      </button>
 
-  <span id="tip-description">
-    {{this.randomTip.description}}
-  </span>
-</li></template>
+      <span id="tip-description">
+        {{this.randomTip.description}}
+      </span>
+    </li>
+  </template>
   @service search;
 
   constructor() {

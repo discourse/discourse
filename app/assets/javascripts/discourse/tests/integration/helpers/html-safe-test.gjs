@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Helper | html-safe", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("default", async function (assert) {const self = this;
+  test("default", async function (assert) {
+    const self = this;
 
     this.set("string", "<p class='cookies'>biscuits</p>");
 

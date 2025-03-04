@@ -5,13 +5,16 @@ import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
-export default class UserSummaryCategorySearch extends Component {<template>{{#if @count}}
-  <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
-    {{@count}}
-  </LinkTo>
-{{else}}
-  &ndash;
-{{/if}}</template>
+export default class UserSummaryCategorySearch extends Component {
+  <template>
+    {{#if @count}}
+      <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
+        {{@count}}
+      </LinkTo>
+    {{else}}
+      &ndash;
+    {{/if}}
+  </template>
 
   @discourseComputed("user", "category")
   searchParams() {

@@ -19,7 +19,8 @@ module("Integration | Component | Widget | base", function (hooks) {
     I18n.translations = _translations;
   });
 
-  test("widget attributes are passed in via args", async function (assert) {const self = this;
+  test("widget attributes are passed in via args", async function (assert) {
+    const self = this;
 
     createWidget("hello-test", {
       tagName: "div.test",
@@ -28,12 +29,15 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { name: "Robin" });
 
-    await render(<template><MountWidget @widget="hello-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="hello-test" @args={{self.args}} />
+    </template>);
 
     assert.dom(".test").hasText("Hello Robin");
   });
 
-  test("widget rerenders when args change", async function (assert) {const self = this;
+  test("widget rerenders when args change", async function (assert) {
+    const self = this;
 
     createWidget("hello-test", {
       tagName: "div.test",
@@ -42,7 +46,9 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { name: "Robin" });
 
-    await render(<template><MountWidget @widget="hello-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="hello-test" @args={{self.args}} />
+    </template>);
 
     assert.dom(".test").hasText("Hello Robin");
 
@@ -66,7 +72,8 @@ module("Integration | Component | Widget | base", function (hooks) {
     assert.dom(".base-url-test").hasText("/");
   });
 
-  test("hbs template - no tagName", async function (assert) {const self = this;
+  test("hbs template - no tagName", async function (assert) {
+    const self = this;
 
     createWidget("hbs-test", {
       template: widgetHbs`<div class='test'>Hello {{attrs.name}}</div>`,
@@ -74,12 +81,15 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { name: "Robin" });
 
-    await render(<template><MountWidget @widget="hbs-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="hbs-test" @args={{self.args}} />
+    </template>);
 
     assert.dom("div.test").hasText("Hello Robin");
   });
 
-  test("hbs template - with tagName", async function (assert) {const self = this;
+  test("hbs template - with tagName", async function (assert) {
+    const self = this;
 
     createWidget("hbs-test", {
       tagName: "div.test",
@@ -88,23 +98,29 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { name: "Robin" });
 
-    await render(<template><MountWidget @widget="hbs-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="hbs-test" @args={{self.args}} />
+    </template>);
 
     assert.dom("div.test").hasText("Hello Robin");
   });
 
-  test("hbs template - with data attributes", async function (assert) {const self = this;
+  test("hbs template - with data attributes", async function (assert) {
+    const self = this;
 
     createWidget("hbs-test", {
       template: widgetHbs`<div class='my-div' data-my-test='hello world'></div>`,
     });
 
-    await render(<template><MountWidget @widget="hbs-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="hbs-test" @args={{self.args}} />
+    </template>);
 
     assert.dom("div.my-div").hasAttribute("data-my-test", "hello world");
   });
 
-  test("buildClasses", async function (assert) {const self = this;
+  test("buildClasses", async function (assert) {
+    const self = this;
 
     createWidget("classname-test", {
       tagName: "div.test",
@@ -116,14 +132,15 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { dynamic: "cool-class" });
 
-    await render(
-      <template><MountWidget @widget="classname-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="classname-test" @args={{self.args}} />
+    </template>);
 
     assert.dom(".test.static.cool-class").exists("has all the classes");
   });
 
-  test("buildAttributes", async function (assert) {const self = this;
+  test("buildAttributes", async function (assert) {
+    const self = this;
 
     createWidget("attributes-test", {
       tagName: "div.test",
@@ -135,15 +152,16 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { label: "accessibility" });
 
-    await render(
-      <template><MountWidget @widget="attributes-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="attributes-test" @args={{self.args}} />
+    </template>);
 
     assert.dom('.test[data-evil="trout"]').exists();
     assert.dom('.test[aria-label="accessibility"]').exists();
   });
 
-  test("buildId", async function (assert) {const self = this;
+  test("buildId", async function (assert) {
+    const self = this;
 
     createWidget("id-test", {
       buildId(attrs) {
@@ -153,7 +171,9 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     this.set("args", { id: 1234 });
 
-    await render(<template><MountWidget @widget="id-test" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="id-test" @args={{self.args}} />
+    </template>);
 
     assert.dom("#test-1234").exists();
   });
@@ -277,20 +297,22 @@ module("Integration | Component | Widget | base", function (hooks) {
     assert.dom(".container .value").hasText("hello world");
   });
 
-  test("handlebars d-icon", async function (assert) {const self = this;
+  test("handlebars d-icon", async function (assert) {
+    const self = this;
 
     createWidget("hbs-icon-test", {
       template: widgetHbs`{{d-icon "arrow-down"}}`,
     });
 
-    await render(
-      <template><MountWidget @widget="hbs-icon-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="hbs-icon-test" @args={{self.args}} />
+    </template>);
 
     assert.dom(".d-icon-arrow-down").exists();
   });
 
-  test("handlebars i18n", async function (assert) {const self = this;
+  test("handlebars i18n", async function (assert) {
+    const self = this;
 
     createWidget("hbs-i18n-test", {
       template: widgetHbs`
@@ -309,9 +331,9 @@ module("Integration | Component | Widget | base", function (hooks) {
     };
     this.set("args", { key: "hbs_test1" });
 
-    await render(
-      <template><MountWidget @widget="hbs-i18n-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="hbs-i18n-test" @args={{self.args}} />
+    </template>);
 
     // coming up
     assert.dom("span.string").hasText("evil");
@@ -319,7 +341,8 @@ module("Integration | Component | Widget | base", function (hooks) {
     assert.dom("a").hasAttribute("title", "evil");
   });
 
-  test("handlebars #each", async function (assert) {const self = this;
+  test("handlebars #each", async function (assert) {
+    const self = this;
 
     createWidget("hbs-each-test", {
       tagName: "ul",
@@ -334,9 +357,9 @@ module("Integration | Component | Widget | base", function (hooks) {
       items: ["one", "two", "three"],
     });
 
-    await render(
-      <template><MountWidget @widget="hbs-each-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="hbs-each-test" @args={{self.args}} />
+    </template>);
 
     assert.dom("ul li").exists({ count: 3 });
     assert.dom("ul li:nth-of-type(1)").hasText("one");
@@ -388,7 +411,9 @@ module("Integration | Component | Widget | base", function (hooks) {
       api.changeWidgetSetting("ov-settings-test", "age", 37);
     });
 
-    await render(<template><MountWidget @widget="ov-settings-test" /></template>);
+    await render(<template>
+      <MountWidget @widget="ov-settings-test" />
+    </template>);
 
     assert.dom(".settings").hasText("age is 37");
   });
@@ -404,7 +429,9 @@ module("Integration | Component | Widget | base", function (hooks) {
       },
     });
 
-    await render(<template><MountWidget @widget="get-accessor-test" /></template>);
+    await render(<template>
+      <MountWidget @widget="get-accessor-test" />
+    </template>);
 
     assert.dom("div.test").hasText("Hello eviltrout");
   });
@@ -416,14 +443,17 @@ module("Integration | Component | Widget | base", function (hooks) {
       template: widgetHbs`{{attach widget="test-override" attrs=attrs otherOpts=(hash tagName="section.override")}}`,
     });
 
-    await render(<template><MountWidget @widget="tag-name-override-test" /></template>);
+    await render(<template>
+      <MountWidget @widget="tag-name-override-test" />
+    </template>);
 
     assert
       .dom("section.override")
       .exists("renders container with overridden tagName");
   });
 
-  test("avoids rerendering on prepend", async function (assert) {const self = this;
+  test("avoids rerendering on prepend", async function (assert) {
+    const self = this;
 
     createWidget("prepend-test", {
       tagName: "div.test",
@@ -450,9 +480,9 @@ module("Integration | Component | Widget | base", function (hooks) {
     const array = ["ElementOne", "ElementTwo"];
     this.set("args", { array });
 
-    await render(
-      <template><MountWidget @widget="prepend-test" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="prepend-test" @args={{self.args}} />
+    </template>);
 
     const startElements = Array.from(document.querySelectorAll("span.val"));
     assert.deepEqual(

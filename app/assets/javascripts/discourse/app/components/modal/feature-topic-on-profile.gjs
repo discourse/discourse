@@ -8,15 +8,34 @@ import iN from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class FeatureTopicOnProfile extends Component {<template><DModal @closeModal={{@closeModal}} class="feature-topic-on-profile choose-topic-modal" id="choosing-topic" @title={{iN "user.feature_topic_on_profile.title"}}>
-  <:body>
-    <ChooseTopic @topicChangedCallback={{this.newTopicSelected}} @currentTopicId={{@model.user.featured_topic.id}} @loadOnInit={{true}} @additionalFilters="status:public" @label="user.feature_topic_on_profile.search_label" />
-  </:body>
-  <:footer>
-    <DButton @action={{this.save}} class="btn-primary save-featured-topic-on-profile" @disabled={{this.noTopicSelected}} @label="user.feature_topic_on_profile.save" />
-    <DButton @action={{@closeModal}} @label="cancel" class="btn-flat" />
-  </:footer>
-</DModal></template>
+export default class FeatureTopicOnProfile extends Component {
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="feature-topic-on-profile choose-topic-modal"
+      id="choosing-topic"
+      @title={{iN "user.feature_topic_on_profile.title"}}
+    >
+      <:body>
+        <ChooseTopic
+          @topicChangedCallback={{this.newTopicSelected}}
+          @currentTopicId={{@model.user.featured_topic.id}}
+          @loadOnInit={{true}}
+          @additionalFilters="status:public"
+          @label="user.feature_topic_on_profile.search_label"
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.save}}
+          class="btn-primary save-featured-topic-on-profile"
+          @disabled={{this.noTopicSelected}}
+          @label="user.feature_topic_on_profile.save"
+        />
+        <DButton @action={{@closeModal}} @label="cancel" class="btn-flat" />
+      </:footer>
+    </DModal>
+  </template>
   @tracked newFeaturedTopic = null;
   @tracked saving = false;
 

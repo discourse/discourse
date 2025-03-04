@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | topic-participant", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("one post", async function (assert) {const self = this;
+  test("one post", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "test",
@@ -14,14 +15,17 @@ module("Integration | Component | topic-participant", function (hooks) {
       post_count: 1,
     });
 
-    await render(<template><TopicParticipant @participant={{self.args}} /></template>);
+    await render(<template>
+      <TopicParticipant @participant={{self.args}} />
+    </template>);
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").doesNotExist();
     assert.dom(".avatar-flair").doesNotExist();
   });
 
-  test("many posts, a primary group with flair", async function (assert) {const self = this;
+  test("many posts, a primary group with flair", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "test",
@@ -34,7 +38,9 @@ module("Integration | Component | topic-participant", function (hooks) {
       flair_group_id: "41",
     });
 
-    await render(<template><TopicParticipant @participant={{self.args}} /></template>);
+    await render(<template>
+      <TopicParticipant @participant={{self.args}} />
+    </template>);
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").exists();

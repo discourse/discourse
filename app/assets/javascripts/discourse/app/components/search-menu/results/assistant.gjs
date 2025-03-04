@@ -25,43 +25,110 @@ const SUGGESTION_KEYWORD_MAP = {
   "@": "user",
 };
 
-export default class Assistant extends Component {<template><ul class="search-menu-assistant">
-  {{!-- suggestion type keywords are mapped to SUGGESTION_KEYWORD_MAP --}}
-  {{#if (eq this.suggestionType "tagIntersection")}}
-    <PluginOutlet @name="search-menu-results-assistant-tag-intersection-top" />
-    {{#each @results as |result|}}
-      <AssistantItem @tag={{result.tagName}} @additionalTags={{result.additionalTags}} @category={{result.category}} @slug={{@slug}} @withInLabel={{@withInLabel}} @isIntersection={{true}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="tag-intersection" />
-    {{/each}}
-  {{else if (eq this.suggestionType "categoryOrTag")}}
-    <PluginOutlet @name="search-menu-results-assistant-category-or-tag-top" />
-    {{#each @results as |result|}}
-      {{#if result.model}}
-        {{!-- render category --}}
-        <AssistantItem @category={{result.model}} @slug={{get this.fullSlugForCategoryMap result.model.id}} @withInLabel={{@withInLabel}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="category" />
-      {{else}}
-        {{!-- render tag --}}
-        <AssistantItem @tag={{result.name}} @slug={{concat this.prefix "#" result.name}} @withInLabel={{@withInLabel}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="tag" />
-      {{/if}}
-    {{/each}}
-  {{else if (eq this.suggestionType "user")}}
-    <PluginOutlet @name="search-menu-results-assistant-user-top" />
-    {{#if this.userMatchesInTopic}}
-      <AssistantItem @extraHint={{true}} @user={{this.user}} @slug={{concat this.prefix "@" this.user.username}} @suffix={{iN "search.in_topics_posts"}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="user" />
+export default class Assistant extends Component {
+  <template>
+    <ul class="search-menu-assistant">
+      {{! suggestion type keywords are mapped to SUGGESTION_KEYWORD_MAP }}
+      {{#if (eq this.suggestionType "tagIntersection")}}
+        <PluginOutlet
+          @name="search-menu-results-assistant-tag-intersection-top"
+        />
+        {{#each @results as |result|}}
+          <AssistantItem
+            @tag={{result.tagName}}
+            @additionalTags={{result.additionalTags}}
+            @category={{result.category}}
+            @slug={{@slug}}
+            @withInLabel={{@withInLabel}}
+            @isIntersection={{true}}
+            @searchAllTopics={{true}}
+            @searchTermChanged={{@searchTermChanged}}
+            @suggestionKeyword={{@suggestionKeyword}}
+            @typeClass="tag-intersection"
+          />
+        {{/each}}
+      {{else if (eq this.suggestionType "categoryOrTag")}}
+        <PluginOutlet
+          @name="search-menu-results-assistant-category-or-tag-top"
+        />
+        {{#each @results as |result|}}
+          {{#if result.model}}
+            {{! render category }}
+            <AssistantItem
+              @category={{result.model}}
+              @slug={{get this.fullSlugForCategoryMap result.model.id}}
+              @withInLabel={{@withInLabel}}
+              @searchAllTopics={{true}}
+              @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
+              @typeClass="category"
+            />
+          {{else}}
+            {{! render tag }}
+            <AssistantItem
+              @tag={{result.name}}
+              @slug={{concat this.prefix "#" result.name}}
+              @withInLabel={{@withInLabel}}
+              @searchAllTopics={{true}}
+              @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
+              @typeClass="tag"
+            />
+          {{/if}}
+        {{/each}}
+      {{else if (eq this.suggestionType "user")}}
+        <PluginOutlet @name="search-menu-results-assistant-user-top" />
+        {{#if this.userMatchesInTopic}}
+          <AssistantItem
+            @extraHint={{true}}
+            @user={{this.user}}
+            @slug={{concat this.prefix "@" this.user.username}}
+            @suffix={{iN "search.in_topics_posts"}}
+            @searchAllTopics={{true}}
+            @searchTermChanged={{@searchTermChanged}}
+            @suggestionKeyword={{@suggestionKeyword}}
+            @typeClass="user"
+          />
 
-      <AssistantItem @user={{this.user}} @slug={{concat this.prefix "@" this.user.username}} @suffix={{iN "search.in_this_topic"}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="user" />
-    {{else}}
-      {{#each @results as |result|}}
-        <AssistantItem @user={{result}} @slug={{concat this.prefix "@" result.username}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="user" />
-      {{/each}}
-    {{/if}}
-  {{else}}
-    <PluginOutlet @name="search-menu-results-assistant-shortcut-top" @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}} />
-    {{#each this.suggestionShortcuts as |item|}}
-      <AssistantItem @slug={{concat this.prefix item}} @label={{item}} @searchAllTopics={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{@suggestionKeyword}} @typeClass="shortcut" />
-    {{/each}}
-  {{/if}}
-  <PluginOutlet @name="search-menu-assistant-bottom" />
-</ul></template>
+          <AssistantItem
+            @user={{this.user}}
+            @slug={{concat this.prefix "@" this.user.username}}
+            @suffix={{iN "search.in_this_topic"}}
+            @searchTermChanged={{@searchTermChanged}}
+            @suggestionKeyword={{@suggestionKeyword}}
+            @typeClass="user"
+          />
+        {{else}}
+          {{#each @results as |result|}}
+            <AssistantItem
+              @user={{result}}
+              @slug={{concat this.prefix "@" result.username}}
+              @searchAllTopics={{true}}
+              @searchTermChanged={{@searchTermChanged}}
+              @suggestionKeyword={{@suggestionKeyword}}
+              @typeClass="user"
+            />
+          {{/each}}
+        {{/if}}
+      {{else}}
+        <PluginOutlet
+          @name="search-menu-results-assistant-shortcut-top"
+          @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}}
+        />
+        {{#each this.suggestionShortcuts as |item|}}
+          <AssistantItem
+            @slug={{concat this.prefix item}}
+            @label={{item}}
+            @searchAllTopics={{true}}
+            @searchTermChanged={{@searchTermChanged}}
+            @suggestionKeyword={{@suggestionKeyword}}
+            @typeClass="shortcut"
+          />
+        {{/each}}
+      {{/if}}
+      <PluginOutlet @name="search-menu-assistant-bottom" />
+    </ul>
+  </template>
   @service router;
   @service currentUser;
   @service siteSettings;

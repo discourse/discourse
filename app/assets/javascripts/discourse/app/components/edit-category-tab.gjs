@@ -13,7 +13,14 @@ import { i18n } from "discourse-i18n";
 
 @tagName("li")
 @classNameBindings("active", "tabClassName")
-export default class EditCategoryTab extends Component {<template><a href {{on "click" this.select}} class={{if this.active "active"}}>{{this.title}}</a></template>
+export default class EditCategoryTab extends Component {
+  <template>
+    <a
+      href
+      {{on "click" this.select}}
+      class={{if this.active "active"}}
+    >{{this.title}}</a>
+  </template>
   @empty("params.slug") newCategory;
   @propertyEqual("selectedTab", "tab") active;
 

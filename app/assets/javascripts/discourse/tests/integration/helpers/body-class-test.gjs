@@ -12,7 +12,8 @@ module("Integration | Helper | body-class", function (hooks) {
     assert.dom(document.body).hasClass("foo");
   });
 
-  test("Multiple classes", async function (assert) {const self = this;
+  test("Multiple classes", async function (assert) {
+    const self = this;
 
     this.set("bar", "bar");
     await render(<template>{{bodyClass "baz" self.bar}}</template>);
@@ -27,7 +28,8 @@ module("Integration | Helper | body-class", function (hooks) {
     assert.strictEqual(document.body.className, classesBefore);
   });
 
-  test("Dynamic classes", async function (assert) {const self = this;
+  test("Dynamic classes", async function (assert) {
+    const self = this;
 
     this.set("dynamic", "bar");
     await render(<template>{{bodyClass self.dynamic}}</template>);

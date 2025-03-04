@@ -30,32 +30,85 @@ const DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES = [
   "user",
 ];
 
-export default class InitialOptions extends Component {<template><ul class="search-menu-initial-options">
-  <PluginOutlet @name="search-menu-initial-options" @outletArgs={{hash termMatchesContextTypeKeyword=this.termMatchesContextTypeKeyword contextTypeComponent=this.contextTypeComponent slug=this.slug suggestionKeyword=this.contextTypeKeyword results=this.initialResults withInLabel=this.withInLabel suffix=this.suffix label=this.label closeSearchMenu=@closeSearchMenu searchTermChanged=@searchTermChanged}}>
-    {{#if this.termMatchesContextTypeKeyword}}
-      <AssistantItem0 @slug={{this.slug}} @extraHint={{true}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{this.contextTypeKeyword}} />
-    {{else}}
-      {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
-        {{#if this.search.activeGlobalSearchTerm}}
-          <AssistantItem0 @suffix={{iN "search.in_topics_posts"}} @closeSearchMenu={{@closeSearchMenu}} @searchAllTopics={{true}} @extraHint={{true}} @searchTermChanged={{@searchTermChanged}} @suggestionKeyword={{this.contextTypeKeyword}} />
-        {{/if}}
+export default class InitialOptions extends Component {
+  <template>
+    <ul class="search-menu-initial-options">
+      <PluginOutlet
+        @name="search-menu-initial-options"
+        @outletArgs={{hash
+          termMatchesContextTypeKeyword=this.termMatchesContextTypeKeyword
+          contextTypeComponent=this.contextTypeComponent
+          slug=this.slug
+          suggestionKeyword=this.contextTypeKeyword
+          results=this.initialResults
+          withInLabel=this.withInLabel
+          suffix=this.suffix
+          label=this.label
+          closeSearchMenu=@closeSearchMenu
+          searchTermChanged=@searchTermChanged
+        }}
+      >
+        {{#if this.termMatchesContextTypeKeyword}}
+          <AssistantItem0
+            @slug={{this.slug}}
+            @extraHint={{true}}
+            @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
+            @suggestionKeyword={{this.contextTypeKeyword}}
+          />
+        {{else}}
+          {{#if
+            (or this.search.activeGlobalSearchTerm this.search.searchContext)
+          }}
+            {{#if this.search.activeGlobalSearchTerm}}
+              <AssistantItem0
+                @suffix={{iN "search.in_topics_posts"}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchAllTopics={{true}}
+                @extraHint={{true}}
+                @searchTermChanged={{@searchTermChanged}}
+                @suggestionKeyword={{this.contextTypeKeyword}}
+              />
+            {{/if}}
 
-        {{#if this.search.searchContext}}
-          <this.contextTypeComponent @slug={{this.slug}} @suggestionKeyword={{this.contextTypeKeyword}} @results={{this.initialResults}} @withInLabel={{this.withInLabel}} @suffix={{this.suffix}} @label={{this.label}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
+            {{#if this.search.searchContext}}
+              <this.contextTypeComponent
+                @slug={{this.slug}}
+                @suggestionKeyword={{this.contextTypeKeyword}}
+                @results={{this.initialResults}}
+                @withInLabel={{this.withInLabel}}
+                @suffix={{this.suffix}}
+                @label={{this.label}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
 
-          {{#if (and this.currentUser this.siteSettings.log_search_queries this.displayInitialOptions)}}
-            <RecentSearches @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
+              {{#if
+                (and
+                  this.currentUser
+                  this.siteSettings.log_search_queries
+                  this.displayInitialOptions
+                )
+              }}
+                <RecentSearches
+                  @closeSearchMenu={{@closeSearchMenu}}
+                  @searchTermChanged={{@searchTermChanged}}
+                />
+              {{/if}}
+            {{/if}}
+          {{else}}
+            <RandomQuickTip @searchTermChanged={{@searchTermChanged}} />
+            {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
+              <RecentSearches
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
+            {{/if}}
           {{/if}}
         {{/if}}
-      {{else}}
-        <RandomQuickTip @searchTermChanged={{@searchTermChanged}} />
-        {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
-          <RecentSearches @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} />
-        {{/if}}
-      {{/if}}
-    {{/if}}
-  </PluginOutlet>
-</ul></template>
+      </PluginOutlet>
+    </ul>
+  </template>
   @service search;
   @service siteSettings;
   @service currentUser;

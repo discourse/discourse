@@ -7,19 +7,30 @@ import RadioButton from "discourse/components/radio-button";
 import htmlSafe from "discourse/helpers/html-safe";
 import { topicLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
-export default class NotificationLevel extends Component {<template><div class="bulk-notification-list">
-  {{#each this.notificationLevels as |level|}}
-    <div class="controls">
-      <label class="radio notification-level-radio checkbox-label">
-        <RadioButton @value={{level.id}} @name="notification_level" @selection={{this.notificationLevelId}} />
-        <strong>{{level.name}}</strong>
-        <div class="description">{{htmlSafe level.description}}</div>
-      </label>
+export default class NotificationLevel extends Component {
+  <template>
+    <div class="bulk-notification-list">
+      {{#each this.notificationLevels as |level|}}
+        <div class="controls">
+          <label class="radio notification-level-radio checkbox-label">
+            <RadioButton
+              @value={{level.id}}
+              @name="notification_level"
+              @selection={{this.notificationLevelId}}
+            />
+            <strong>{{level.name}}</strong>
+            <div class="description">{{htmlSafe level.description}}</div>
+          </label>
+        </div>
+      {{/each}}
     </div>
-  {{/each}}
-</div>
 
-<DButton @disabled={{this.disabled}} @action={{this.changeNotificationLevel}} @label="topics.bulk.change_notification_level" /></template>
+    <DButton
+      @disabled={{this.disabled}}
+      @action={{this.changeNotificationLevel}}
+      @label="topics.bulk.change_notification_level"
+    />
+  </template>
   notificationLevelId = null;
 
   @empty("notificationLevelId") disabled;

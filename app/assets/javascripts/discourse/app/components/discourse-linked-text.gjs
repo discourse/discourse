@@ -5,7 +5,10 @@ import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("span")
-export default class DiscourseLinkedText extends Component {<template>{{htmlSafe this.translatedText}}</template>
+export default class DiscourseLinkedText extends Component {
+  <template>
+    {{htmlSafe this.translatedText}}
+  </template>
   @discourseComputed("text", "textParams")
   translatedText(text) {
     if (text) {

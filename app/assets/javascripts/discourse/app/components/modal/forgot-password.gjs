@@ -16,35 +16,76 @@ import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-export default class ForgotPassword extends Component {<template><DModal @title={{iN "forgot_password.title"}} @closeModal={{@closeModal}} @flash={{this.flash}} @flashType="error" class="forgot-password-modal">
-  <:body>
-    {{#if this.offerHelp}}
-      {{htmlSafe0 this.offerHelp}}
-    {{else if this.siteSettings.hide_email_address_taken}}
-      <label for="username-or-email">
-        {{iN "forgot_password.invite_no_username"}}
-      </label>
-      <input {{on "input" this.updateEmailOrUsername}} value={{this.emailOrUsername}} placeholder={{iN "email"}} type="text" id="username-or-email" autocorrect="off" autocapitalize="off" />
-    {{else}}
-      <p>{{iN "forgot_password.invite"}}</p>
-      <label for="username-or-email">
-        {{iN "forgot_password.email-username"}}
-      </label>
-      <input {{on "input" this.updateEmailOrUsername}} value={{this.emailOrUsername}} placeholder={{iN "login.email_placeholder"}} type="text" id="username-or-email" autocorrect="off" autocapitalize="off" />
-    {{/if}}
-  </:body>
+export default class ForgotPassword extends Component {
+  <template>
+    <DModal
+      @title={{iN "forgot_password.title"}}
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType="error"
+      class="forgot-password-modal"
+    >
+      <:body>
+        {{#if this.offerHelp}}
+          {{htmlSafe0 this.offerHelp}}
+        {{else if this.siteSettings.hide_email_address_taken}}
+          <label for="username-or-email">
+            {{iN "forgot_password.invite_no_username"}}
+          </label>
+          <input
+            {{on "input" this.updateEmailOrUsername}}
+            value={{this.emailOrUsername}}
+            placeholder={{iN "email"}}
+            type="text"
+            id="username-or-email"
+            autocorrect="off"
+            autocapitalize="off"
+          />
+        {{else}}
+          <p>{{iN "forgot_password.invite"}}</p>
+          <label for="username-or-email">
+            {{iN "forgot_password.email-username"}}
+          </label>
+          <input
+            {{on "input" this.updateEmailOrUsername}}
+            value={{this.emailOrUsername}}
+            placeholder={{iN "login.email_placeholder"}}
+            type="text"
+            id="username-or-email"
+            autocorrect="off"
+            autocapitalize="off"
+          />
+        {{/if}}
+      </:body>
 
-  <:footer>
-    {{#if this.offerHelp}}
-      <DButton @action={{@closeModal}} @label="forgot_password.button_ok" type="submit" class="btn-large btn-primary" />
-      {{#unless this.helpSeen}}
-        <DButton @action={{this.help}} @label="forgot_password.button_help" @icon="circle-question" class="btn-large" />
-      {{/unless}}
-    {{else}}
-      <DButton @action={{this.resetPassword}} @disabled={{this.submitDisabled}} @label="forgot_password.reset" type="submit" class="btn-primary forgot-password-reset" />
-    {{/if}}
-  </:footer>
-</DModal></template>
+      <:footer>
+        {{#if this.offerHelp}}
+          <DButton
+            @action={{@closeModal}}
+            @label="forgot_password.button_ok"
+            type="submit"
+            class="btn-large btn-primary"
+          />
+          {{#unless this.helpSeen}}
+            <DButton
+              @action={{this.help}}
+              @label="forgot_password.button_help"
+              @icon="circle-question"
+              class="btn-large"
+            />
+          {{/unless}}
+        {{else}}
+          <DButton
+            @action={{this.resetPassword}}
+            @disabled={{this.submitDisabled}}
+            @label="forgot_password.reset"
+            type="submit"
+            class="btn-primary forgot-password-reset"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
   @service siteSettings;
 
   @tracked

@@ -11,29 +11,47 @@ import htmlSafe from "discourse/helpers/html-safe";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import and from "truth-helpers/helpers/and";
 
-export default class Results extends Component {<template><span class="topic">
-  <span class="first-line">
-    <TopicStatus @topic={{@result.topic}} @disableActions={{true}} @context="topic-view-title" />
-    <span class="topic-title" data-topic-id={{@result.topic.id}}>
-      {{#if (and this.siteSettings.use_pg_headlines_for_excerpt @result.topic_title_headline)}}
-        <a href={{if @withTopicUrl @result.url}}>
-          {{replaceEmoji (htmlSafe @result.topic_title_headline)}}
-        </a>
-      {{else}}
-        <a href={{if @withTopicUrl @result.url}}>
-          <HighlightedSearch @string={{@result.topic.fancyTitle}} />
-        </a>
-      {{/if}}
-      <PluginOutlet @name="search-menu-results-topic-title-suffix" @outletArgs={{hash topic=@result.topic}} />
+export default class Results extends Component {
+  <template>
+    <span class="topic">
+      <span class="first-line">
+        <TopicStatus
+          @topic={{@result.topic}}
+          @disableActions={{true}}
+          @context="topic-view-title"
+        />
+        <span class="topic-title" data-topic-id={{@result.topic.id}}>
+          {{#if
+            (and
+              this.siteSettings.use_pg_headlines_for_excerpt
+              @result.topic_title_headline
+            )
+          }}
+            <a href={{if @withTopicUrl @result.url}}>
+              {{replaceEmoji (htmlSafe @result.topic_title_headline)}}
+            </a>
+          {{else}}
+            <a href={{if @withTopicUrl @result.url}}>
+              <HighlightedSearch @string={{@result.topic.fancyTitle}} />
+            </a>
+          {{/if}}
+          <PluginOutlet
+            @name="search-menu-results-topic-title-suffix"
+            @outletArgs={{hash topic=@result.topic}}
+          />
+        </span>
+      </span>
+      <span class="second-line">
+        {{categoryLink
+          @result.topic.category
+          link=(if @withTopicUrl true false)
+        }}
+        {{#if this.siteSettings.tagging_enabled}}
+          {{discourseTags @result.topic tagName="span"}}
+        {{/if}}
+      </span>
     </span>
-  </span>
-  <span class="second-line">
-    {{categoryLink @result.topic.category link=(if @withTopicUrl true false)}}
-    {{#if this.siteSettings.tagging_enabled}}
-      {{discourseTags @result.topic tagName="span"}}
-    {{/if}}
-  </span>
-</span>
-<Blurb @result={{@result}} /></template>
+    <Blurb @result={{@result}} />
+  </template>
   @service siteSettings;
 }

@@ -18,7 +18,8 @@ module("Integration | Component | load-more", function (hooks) {
     configureEyeline();
   });
 
-  test("updates once after initialization", async function (assert) {const self = this;
+  test("updates once after initialization", async function (assert) {
+    const self = this;
 
     this.set("loadMore", () => this.set("loadedMore", true));
 

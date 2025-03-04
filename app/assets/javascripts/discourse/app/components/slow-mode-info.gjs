@@ -8,20 +8,27 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import Topic from "discourse/models/topic";
 
-export default class SlowModeInfo extends Component {<template>{{#if this.showSlowModeNotice}}
-  <div class="topic-status-info">
-    <h3 class="slow-mode-heading">
-      <span>
-        {{dIcon "hourglass-start"}}
-        {{iN "topic.slow_mode_notice.duration" duration=this.durationText}}
-      </span>
+export default class SlowModeInfo extends Component {
+  <template>
+    {{#if this.showSlowModeNotice}}
+      <div class="topic-status-info">
+        <h3 class="slow-mode-heading">
+          <span>
+            {{dIcon "hourglass-start"}}
+            {{iN "topic.slow_mode_notice.duration" duration=this.durationText}}
+          </span>
 
-      {{#if this.user.canManageTopic}}
-        <DButton @action={{this.disableSlowMode}} @icon="trash-can" class="slow-mode-remove" />
-      {{/if}}
-    </h3>
-  </div>
-{{/if}}</template>
+          {{#if this.user.canManageTopic}}
+            <DButton
+              @action={{this.disableSlowMode}}
+              @icon="trash-can"
+              class="slow-mode-remove"
+            />
+          {{/if}}
+        </h3>
+      </div>
+    {{/if}}
+  </template>
 
   @discourseComputed("topic.slow_mode_seconds")
   durationText(seconds) {

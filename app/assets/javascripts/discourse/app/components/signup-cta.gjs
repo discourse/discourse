@@ -8,22 +8,36 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
 
-export default class SignupCta extends Component {<template><div class="signup-cta alert alert-info">
-  {{#if this.session.hideSignupCta}}
-    <h3>
-      {{iN "signup_cta.hidden_for_session"}}
-    </h3>
-  {{else}}
-    <h3>{{replaceEmoji (iN "signup_cta.intro")}}</h3>
-    <p>{{replaceEmoji (iN "signup_cta.value_prop")}}</p>
+export default class SignupCta extends Component {
+  <template>
+    <div class="signup-cta alert alert-info">
+      {{#if this.session.hideSignupCta}}
+        <h3>
+          {{iN "signup_cta.hidden_for_session"}}
+        </h3>
+      {{else}}
+        <h3>{{replaceEmoji (iN "signup_cta.intro")}}</h3>
+        <p>{{replaceEmoji (iN "signup_cta.value_prop")}}</p>
 
-    <div class="buttons">
-      <DButton @action={{routeAction "showCreateAccount"}} @label="signup_cta.sign_up" @icon="user" class="btn-primary" />
-      <DButton @action={{action "hideForSession"}} @label="signup_cta.hide_session" class="no-icon" />
-      <a href {{on0 "click" this.neverShow}}>{{iN "signup_cta.hide_forever"}}</a>
+        <div class="buttons">
+          <DButton
+            @action={{routeAction "showCreateAccount"}}
+            @label="signup_cta.sign_up"
+            @icon="user"
+            class="btn-primary"
+          />
+          <DButton
+            @action={{action "hideForSession"}}
+            @label="signup_cta.hide_session"
+            class="no-icon"
+          />
+          <a href {{on0 "click" this.neverShow}}>{{iN
+              "signup_cta.hide_forever"
+            }}</a>
+        </div>
+      {{/if}}
     </div>
-  {{/if}}
-</div></template>
+  </template>
   action = "showCreateAccount";
 
   @action

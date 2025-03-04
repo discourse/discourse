@@ -16,7 +16,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.glimmer_post_menu_mode = "disabled";
   });
 
-  test("basic elements", async function (assert) {const self = this;
+  test("basic elements", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -27,13 +28,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { shareUrl: "/example", post_number: 1, topic });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".names").exists("includes poster name");
     assert.dom("a.post-date").exists("includes post date");
   });
 
-  test("post - links", async function (assert) {const self = this;
+  test("post - links", async function (assert) {
+    const self = this;
 
     this.set("args", {
       cooked:
@@ -44,16 +47,16 @@ module("Integration | Component | Widget | post", function (hooks) {
       ],
     });
 
-    await render(
-      <template>
-        <MountWidget @widget="post-contents" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post-contents" @args={{self.args}} />
+    </template>);
 
     assert.dom("a[data-clicks='1']").hasAttribute("data-clicks", "1");
     assert.dom("a[data-clicks='2']").hasAttribute("data-clicks", "2");
   });
 
-  test("post - onebox links", async function (assert) {const self = this;
+  test("post - onebox links", async function (assert) {
+    const self = this;
 
     this.set("args", {
       cooked: `
@@ -74,10 +77,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       ],
     });
 
-    await render(
-      <template>
-        <MountWidget @widget="post-contents" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post-contents" @args={{self.args}} />
+    </template>);
 
     assert
       .dom("a[data-clicks='1']")
@@ -95,13 +97,18 @@ module("Integration | Component | Widget | post", function (hooks) {
       );
   });
 
-  test("wiki", async function (assert) {const self = this;
+  test("wiki", async function (assert) {
+    const self = this;
 
     this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @showHistory={{self.showHistory}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showHistory={{self.showHistory}}
+      />
     </template>);
 
     await click(".post-info .wiki");
@@ -111,28 +118,37 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
-  test("wiki without revision", async function (assert) {const self = this;
+  test("wiki without revision", async function (assert) {
+    const self = this;
 
     this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
     this.set("editPost", () => (this.editPostCalled = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @editPost={{self.editPost}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @editPost={{self.editPost}}
+      />
     </template>);
 
     await click(".post-info .wiki");
     assert.true(this.editPostCalled, "clicking wiki icon edits the post");
   });
 
-  test("via-email", async function (assert) {const self = this;
+  test("via-email", async function (assert) {
+    const self = this;
 
     this.set("args", { via_email: true, canViewRawEmail: true });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @showRawEmail={{self.showRawEmail}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showRawEmail={{self.showRawEmail}}
+      />
+    </template>);
 
     await click(".post-info.via-email");
     assert.true(
@@ -141,16 +157,20 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
-  test("via-email without permission", async function (assert) {const self = this;
+  test("via-email without permission", async function (assert) {
+    const self = this;
 
     this.rawEmailShown = false;
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @showRawEmail={{self.showRawEmail}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showRawEmail={{self.showRawEmail}}
+      />
+    </template>);
 
     await click(".post-info.via-email");
     assert.false(
@@ -159,30 +179,38 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
-  test("history", async function (assert) {const self = this;
+  test("history", async function (assert) {
+    const self = this;
 
     this.set("args", { version: 3, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @showHistory={{self.showHistory}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showHistory={{self.showHistory}}
+      />
+    </template>);
 
     await click(".post-info.edits button");
     assert.true(this.historyShown, "clicking the pencil shows the history");
   });
 
-  test("history without view permission", async function (assert) {const self = this;
+  test("history without view permission", async function (assert) {
+    const self = this;
 
     this.historyShown = false;
     this.set("args", { version: 3, canViewEditHistory: false });
     this.set("showHistory", () => (this.historyShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @showHistory={{self.showHistory}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showHistory={{self.showHistory}}
+      />
+    </template>);
 
     await click(".post-info.edits");
     assert.false(
@@ -191,19 +219,22 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
-  test("whisper", async function (assert) {const self = this;
+  test("whisper", async function (assert) {
+    const self = this;
 
     this.set("args", { isWhisper: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-post.whisper").exists();
     assert.dom(".post-info.whisper").exists();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("like count button", async function (assert) {const self = this;
+  test("like count button", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
@@ -217,10 +248,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("args", { likeCount: 1 });
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+    </template>);
 
     assert.dom("button.like-count").exists();
     assert.dom(".who-liked").doesNotExist();
@@ -237,37 +267,41 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("like count with no likes", async function (assert) {const self = this;
+  test("like count with no likes", async function (assert) {
+    const self = this;
 
     this.set("args", { likeCount: 0 });
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+    </template>);
 
     assert.dom("button.like-count").doesNotExist();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("share button", async function (assert) {const self = this;
+  test("share button", async function (assert) {
+    const self = this;
 
     this.siteSettings.post_menu += "|share";
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".actions button.share").exists("renders a share button");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("copy link button", async function (assert) {const self = this;
+  test("copy link button", async function (assert) {
+    const self = this;
 
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert
       .dom(".actions button.post-action-menu__copy-link")
@@ -275,7 +309,8 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("liking", async function (assert) {const self = this;
+  test("liking", async function (assert) {
+    const self = this;
 
     const args = { showLike: true, canToggleLike: true, id: 5 };
     this.set("args", args);
@@ -284,10 +319,13 @@ module("Integration | Component | Widget | post", function (hooks) {
       args.likeCount = args.liked ? 1 : 0;
     });
 
-    await render(
-      <template>
-        <MountWidget @widget="post-menu" @args={{self.args}} @toggleLike={{self.toggleLike}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post-menu"
+        @args={{self.args}}
+        @toggleLike={{self.toggleLike}}
+      />
+    </template>);
 
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
@@ -304,17 +342,21 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("anon liking", async function (assert) {const self = this;
+  test("anon liking", async function (assert) {
+    const self = this;
 
     this.owner.unregister("service:current-user");
     const args = { showLike: true };
     this.set("args", args);
     this.set("showLogin", () => (this.loginShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post-menu" @args={{self.args}} @showLogin={{self.showLogin}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post-menu"
+        @args={{self.args}}
+        @showLogin={{self.showLogin}}
+      />
+    </template>);
 
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
@@ -332,59 +374,72 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("edit button", async function (assert) {const self = this;
+  test("edit button", async function (assert) {
+    const self = this;
 
     this.set("args", { canEdit: true });
     this.set("editPost", () => (this.editPostCalled = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @editPost={{self.editPost}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @editPost={{self.editPost}}
+      />
+    </template>);
 
     await click("button.edit");
     assert.true(this.editPostCalled, "triggered the edit action");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`edit button - can't edit`, async function (assert) {const self = this;
+  test(`edit button - can't edit`, async function (assert) {
+    const self = this;
 
     this.set("args", { canEdit: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.edit").doesNotExist("button is not displayed");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("delete topic button", async function (assert) {const self = this;
+  test("delete topic button", async function (assert) {
+    const self = this;
 
     this.set("args", { canDeleteTopic: true });
     this.set("deletePost", () => (this.deletePostCalled = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @deletePost={{self.deletePost}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @deletePost={{self.deletePost}}
+      />
+    </template>);
 
     await click("button.delete");
     assert.true(this.deletePostCalled, "triggered the delete action");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`delete topic button - can't delete`, async function (assert) {const self = this;
+  test(`delete topic button - can't delete`, async function (assert) {
+    const self = this;
 
     this.set("args", { canDeleteTopic: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`delete topic button - can't delete when topic author without permission`, async function (assert) {const self = this;
+  test(`delete topic button - can't delete when topic author without permission`, async function (assert) {
+    const self = this;
 
     this.set("args", {
       canDeleteTopic: false,
@@ -393,7 +448,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     await click(".show-more-actions");
 
@@ -409,41 +465,51 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("recover topic button", async function (assert) {const self = this;
+  test("recover topic button", async function (assert) {
+    const self = this;
 
     this.set("args", { canRecoverTopic: true });
     this.set("recoverPost", () => (this.recovered = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @recoverPost={{self.recoverPost}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @recoverPost={{self.recoverPost}}
+      />
+    </template>);
 
     await click("button.recover");
     assert.true(this.recovered);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`recover topic button - can't recover`, async function (assert) {const self = this;
+  test(`recover topic button - can't recover`, async function (assert) {
+    const self = this;
 
     this.set("args", { canRecoverTopic: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("delete post button", async function (assert) {const self = this;
+  test("delete post button", async function (assert) {
+    const self = this;
 
     this.set("args", { canDelete: true, canFlag: true });
     this.set("deletePost", () => (this.deletePostCalled = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @deletePost={{self.deletePost}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @deletePost={{self.deletePost}}
+      />
+    </template>);
 
     await click(".show-more-actions");
     await click("button.delete");
@@ -451,18 +517,21 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`delete post button - can't delete`, async function (assert) {const self = this;
+  test(`delete post button - can't delete`, async function (assert) {
+    const self = this;
 
     this.set("args", { canDelete: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`delete post button - can't delete, can't flag`, async function (assert) {const self = this;
+  test(`delete post button - can't delete, can't flag`, async function (assert) {
+    const self = this;
 
     this.set("args", {
       canDeleteTopic: false,
@@ -471,7 +540,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.delete").doesNotExist("delete button is not displayed");
     assert
@@ -480,40 +550,50 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("recover post button", async function (assert) {const self = this;
+  test("recover post button", async function (assert) {
+    const self = this;
 
     this.set("args", { canRecover: true });
     this.set("recoverPost", () => (this.recovered = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @recoverPost={{self.recoverPost}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @recoverPost={{self.recoverPost}}
+      />
+    </template>);
 
     await click("button.recover");
     assert.true(this.recovered);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test(`recover post button - can't recover`, async function (assert) {const self = this;
+  test(`recover post button - can't recover`, async function (assert) {
+    const self = this;
 
     this.set("args", { canRecover: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
-  test(`flagging`, async function (assert) {const self = this;
+  test(`flagging`, async function (assert) {
+    const self = this;
 
     this.set("args", { canFlag: true });
     this.set("showFlags", () => (this.flagsShown = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @showFlags={{self.showFlags}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @showFlags={{self.showFlags}}
+      />
+    </template>);
 
     assert.dom("button.create-flag").exists();
 
@@ -521,47 +601,56 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.true(this.flagsShown, "triggered the action");
   });
 
-  test(`flagging: can't flag`, async function (assert) {const self = this;
+  test(`flagging: can't flag`, async function (assert) {
+    const self = this;
 
     this.set("args", { canFlag: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.create-flag").doesNotExist();
   });
 
-  test(`flagging: can't flag when post is hidden`, async function (assert) {const self = this;
+  test(`flagging: can't flag when post is hidden`, async function (assert) {
+    const self = this;
 
     this.set("args", { canFlag: true, hidden: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.create-flag").doesNotExist();
   });
 
-  test(`read indicator`, async function (assert) {const self = this;
+  test(`read indicator`, async function (assert) {
+    const self = this;
 
     this.set("args", { read: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".read-state.read").exists();
   });
 
-  test(`unread indicator`, async function (assert) {const self = this;
+  test(`unread indicator`, async function (assert) {
+    const self = this;
 
     this.set("args", { read: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".read-state").exists();
   });
 
-  test("reply directly above (suppressed)", async function (assert) {const self = this;
+  test("reply directly above (suppressed)", async function (assert) {
+    const self = this;
 
     this.set("args", {
       replyToUsername: "eviltrout",
@@ -570,13 +659,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
     assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
   });
 
-  test("reply a few posts above (suppressed)", async function (assert) {const self = this;
+  test("reply a few posts above (suppressed)", async function (assert) {
+    const self = this;
 
     this.set("args", {
       replyToUsername: "eviltrout",
@@ -585,13 +676,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
     assert.dom(".avoid-tab").exists("has the avoid tab class");
   });
 
-  test("reply directly above", async function (assert) {const self = this;
+  test("reply directly above", async function (assert) {
+    const self = this;
 
     this.set("args", {
       replyToUsername: "eviltrout",
@@ -601,7 +694,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.suppress_reply_directly_above = false;
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".avoid-tab").exists("has the avoid tab class");
     await click("a.reply-to-tab");
@@ -609,98 +703,114 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom("section.embedded-posts .d-icon-arrow-up").exists();
   });
 
-  test("cooked content hidden", async function (assert) {const self = this;
+  test("cooked content hidden", async function (assert) {
+    const self = this;
 
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: true });
     this.set("expandHidden", () => (this.unhidden = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @expandHidden={{self.expandHidden}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @expandHidden={{self.expandHidden}}
+      />
+    </template>);
 
     await click(".topic-body .expand-hidden");
     assert.true(this.unhidden, "triggers the action");
   });
 
-  test(`cooked content hidden - can't view hidden post`, async function (assert) {const self = this;
+  test(`cooked content hidden - can't view hidden post`, async function (assert) {
+    const self = this;
 
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: false });
     this.set("expandHidden", () => (this.unhidden = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @expandHidden={{self.expandHidden}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @expandHidden={{self.expandHidden}}
+      />
+    </template>);
 
     assert
       .dom(".topic-body .expand-hidden")
       .doesNotExist("button is not displayed");
   });
 
-  test("expand first post", async function (assert) {const self = this;
+  test("expand first post", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     this.set("args", { expandablePost: true });
     this.set("post", store.createRecord("post", { id: 1234 }));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+    </template>);
 
     await click(".topic-body .expand-post");
     assert.dom(".expand-post").doesNotExist("button is gone");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("can't bookmark", async function (assert) {const self = this;
+  test("can't bookmark", async function (assert) {
+    const self = this;
 
     this.set("args", { canBookmark: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.bookmark").doesNotExist();
     assert.dom("button.bookmarked").doesNotExist();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("bookmark", async function (assert) {const self = this;
+  test("bookmark", async function (assert) {
+    const self = this;
 
     const args = { canBookmark: true };
 
     this.set("args", args);
     this.set("toggleBookmark", () => (args.bookmarked = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @toggleBookmark={{self.toggleBookmark}} /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @toggleBookmark={{self.toggleBookmark}}
+      />
+    </template>);
 
     assert.dom(".post-menu-area .bookmark").exists();
     assert.dom("button.bookmarked").doesNotExist();
   });
 
-  test("can't show admin menu when you can't manage", async function (assert) {const self = this;
+  test("can't show admin menu when you can't manage", async function (assert) {
+    const self = this;
 
     this.set("args", { canManage: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".post-menu-area .show-post-admin-menu").doesNotExist();
   });
 
-  test("show admin menu", async function (assert) {const self = this;
+  test("show admin menu", async function (assert) {
+    const self = this;
 
     this.set("args", { canManage: true });
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} />
-        <DMenus /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="post" @args={{self.args}} />
+      <DMenus />
+    </template>);
 
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
@@ -714,7 +824,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("clicking outside clears the popup");
   });
 
-  test("permanently delete topic", async function (assert) {const self = this;
+  test("permanently delete topic", async function (assert) {
+    const self = this;
 
     this.currentUser.set("admin", true);
     const store = getOwner(this).lookup("service:store");
@@ -733,11 +844,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
-    await render(
-      <template>
-        <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @permanentlyDeletePost={{self.permanentlyDeletePost}} />
-        <DMenus /></template>
-    );
+    await render(<template>
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @permanentlyDeletePost={{self.permanentlyDeletePost}}
+      />
+      <DMenus />
+    </template>);
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -749,7 +864,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("also hides the menu");
   });
 
-  test("permanently delete post", async function (assert) {const self = this;
+  test("permanently delete post", async function (assert) {
+    const self = this;
 
     this.currentUser.set("admin", true);
     const store = getOwner(this).lookup("service:store");
@@ -769,7 +885,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @permanentlyDeletePost={{self.permanentlyDeletePost}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @permanentlyDeletePost={{self.permanentlyDeletePost}}
+      />
       <DMenus />
     </template>);
 
@@ -784,7 +905,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("also hides the menu");
   });
 
-  test("toggle moderator post", async function (assert) {const self = this;
+  test("toggle moderator post", async function (assert) {
+    const self = this;
 
     this.currentUser.set("moderator", true);
 
@@ -805,8 +927,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("togglePostType", () => (this.toggled = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @togglePostType={{self.togglePostType}} />
-      <DMenus /></template>);
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @togglePostType={{self.togglePostType}}
+      />
+      <DMenus />
+    </template>);
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -819,7 +947,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("also hides the menu");
   });
 
-  test("rebake post", async function (assert) {const self = this;
+  test("rebake post", async function (assert) {
+    const self = this;
 
     this.currentUser.moderator = true;
     const store = getOwner(this).lookup("service:store");
@@ -835,8 +964,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("rebakePost", () => (this.baked = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @rebakePost={{self.rebakePost}} />
-      <DMenus /></template>);
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @rebakePost={{self.rebakePost}}
+      />
+      <DMenus />
+    </template>);
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -848,7 +983,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("also hides the menu");
   });
 
-  test("unhide post", async function (assert) {const self = this;
+  test("unhide post", async function (assert) {
+    const self = this;
 
     let unhidden;
     this.currentUser.admin = true;
@@ -866,7 +1002,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("unhidePost", () => (unhidden = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @unhidePost={{self.unhidePost}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @unhidePost={{self.unhidePost}}
+      />
       <DMenus />
     </template>);
 
@@ -883,7 +1024,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .doesNotExist("also hides the menu");
   });
 
-  test("change owner", async function (assert) {const self = this;
+  test("change owner", async function (assert) {
+    const self = this;
 
     this.currentUser.admin = true;
     const store = getOwner(this).lookup("service:store");
@@ -900,7 +1042,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("changePostOwner", () => (this.owned = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @model={{self.post}} @changePostOwner={{self.changePostOwner}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @model={{self.post}}
+        @changePostOwner={{self.changePostOwner}}
+      />
       <DMenus />
     </template>);
 
@@ -915,13 +1062,18 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("reply", async function (assert) {const self = this;
+  test("reply", async function (assert) {
+    const self = this;
 
     this.set("args", { canCreatePost: true });
     this.set("replyToPost", () => (this.replied = true));
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} @replyToPost={{self.replyToPost}} />
+      <MountWidget
+        @widget="post"
+        @args={{self.args}}
+        @replyToPost={{self.replyToPost}}
+      />
     </template>);
 
     await click(".post-controls .create");
@@ -929,78 +1081,91 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("reply - without permissions", async function (assert) {const self = this;
+  test("reply - without permissions", async function (assert) {
+    const self = this;
 
     this.set("args", { canCreatePost: false });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".post-controls .create").doesNotExist();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("replies - no replies", async function (assert) {const self = this;
+  test("replies - no replies", async function (assert) {
+    const self = this;
 
     this.set("args", { replyCount: 0 });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.show-replies").doesNotExist();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("replies - multiple replies", async function (assert) {const self = this;
+  test("replies - multiple replies", async function (assert) {
+    const self = this;
 
     this.siteSettings.suppress_reply_directly_below = true;
     this.set("args", { replyCount: 2, replyDirectlyBelow: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.show-replies").exists();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("replies - one below, suppressed", async function (assert) {const self = this;
+  test("replies - one below, suppressed", async function (assert) {
+    const self = this;
 
     this.siteSettings.suppress_reply_directly_below = true;
     this.set("args", { replyCount: 1, replyDirectlyBelow: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom("button.show-replies").doesNotExist();
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
-  test("replies - one below, not suppressed", async function (assert) {const self = this;
+  test("replies - one below, not suppressed", async function (assert) {
+    const self = this;
 
     this.siteSettings.suppress_reply_directly_below = false;
     this.set("args", { id: 6654, replyCount: 1, replyDirectlyBelow: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     await click("button.show-replies");
     assert.dom("section.embedded-posts.bottom .cooked").exists();
     assert.dom("section.embedded-posts .d-icon-arrow-down").exists();
   });
 
-  test("shows the topic map when setting the 'topicMap' attribute", async function (assert) {const self = this;
+  test("shows the topic map when setting the 'topicMap' attribute", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
     this.set("args", { topic, post_number: 1, topicMap: true });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-map").exists();
   });
 
-  test("shows the topic map when no replies", async function (assert) {const self = this;
+  test("shows the topic map when no replies", async function (assert) {
+    const self = this;
 
     this.siteSettings.show_topic_map_in_topics_without_replies = true;
 
@@ -1012,12 +1177,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { topic, post_number: 1 });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-map").exists();
   });
 
-  test("topic map - few participants", async function (assert) {const self = this;
+  test("topic map - few participants", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1036,12 +1203,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
     assert.dom(".topic-map__users-trigger").doesNotExist();
     assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
   });
 
-  test("topic map - participants", async function (assert) {const self = this;
+  test("topic map - participants", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1066,7 +1235,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
     assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
     await click(".topic-map__users-trigger");
@@ -1075,7 +1245,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .exists({ count: 6 });
   });
 
-  test("topic map - links", async function (assert) {const self = this;
+  test("topic map - links", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1094,7 +1265,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { topic, post_number: 1 });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-map").exists({ count: 1 });
     assert.dom(".topic-map__links-content").doesNotExist();
@@ -1105,7 +1277,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".topic-map__links-content .topic-link").exists({ count: 6 });
   });
 
-  test("topic map - no top reply summary", async function (assert) {const self = this;
+  test("topic map - no top reply summary", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1116,13 +1289,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { topic, post_number: 1 });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-map").exists();
     assert.dom(".summarization-button .top-replies").doesNotExist();
   });
 
-  test("topic map - has top replies summary", async function (assert) {const self = this;
+  test("topic map - has top replies summary", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1134,12 +1309,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { topic, post_number: 1 });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".summarization-button .top-replies").exists({ count: 1 });
   });
 
-  test("pm map", async function (assert) {const self = this;
+  test("pm map", async function (assert) {
+    const self = this;
 
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -1155,13 +1332,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".topic-map__private-message-map").exists({ count: 1 });
     assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
   });
 
-  test("post notice - with username", async function (assert) {const self = this;
+  test("post notice - with username", async function (assert) {
+    const self = this;
 
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
@@ -1179,7 +1358,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".post-notice.returning-user:not(.old)").hasText(
       i18n("post.notice.returning_user", {
@@ -1189,7 +1369,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
-  test("post notice - custom official notice with created by username", async function (assert) {const self = this;
+  test("post notice - custom official notice with created by username", async function (assert) {
+    const self = this;
 
     this.siteSettings.display_name_on_posts = false;
     this.siteSettings.prioritize_username_in_ux = true;
@@ -1206,7 +1387,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".post-notice.custom").hasText(
       "This is an official notice " +
@@ -1222,7 +1404,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .exists();
   });
 
-  test("post notice - with name", async function (assert) {const self = this;
+  test("post notice - with name", async function (assert) {
+    const self = this;
 
     this.siteSettings.display_name_on_posts = true;
     this.siteSettings.prioritize_username_in_ux = false;
@@ -1235,14 +1418,16 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert
       .dom(".post-notice.old.new-user")
       .hasText(i18n("post.notice.new_user", { user: "Jeff", time: "Jan '10" }));
   });
 
-  test("show group request in post", async function (assert) {const self = this;
+  test("show group request in post", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "foo",
@@ -1250,7 +1435,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".group-request a").hasText(i18n("groups.requests.handle"));
     assert
@@ -1258,7 +1444,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       .hasAttribute("href", "/g/testGroup/requests?filter=foo");
   });
 
-  test("shows user status if enabled in site settings", async function (assert) {const self = this;
+  test("shows user status if enabled in site settings", async function (assert) {
+    const self = this;
 
     this.siteSettings.enable_user_status = true;
     const status = {
@@ -1270,12 +1457,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { user });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".user-status-message").exists();
   });
 
-  test("doesn't show user status if disabled in site settings", async function (assert) {const self = this;
+  test("doesn't show user status if disabled in site settings", async function (assert) {
+    const self = this;
 
     this.siteSettings.enable_user_status = false;
     const status = {
@@ -1287,7 +1476,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { user });
 
     await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} /></template>);
+      <MountWidget @widget="post" @args={{self.args}} />
+    </template>);
 
     assert.dom(".user-status-message").doesNotExist();
   });

@@ -8,17 +8,41 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
 import { i18n } from "discourse-i18n";
-export default class DeleteTopicConfirm extends Component {<template><DModal @title={{iN "topic.actions.delete"}} @closeModal={{@closeModal}} class="delete-topic-confirm-modal" @flash={{this.flash}}>
-  <:body>
-    <p>
-      {{iN "post.controls.delete_topic_confirm_modal" count=this.siteSettings.min_topic_views_for_delete_confirm}}
-    </p>
-  </:body>
-  <:footer>
-    <DButton @action={{this.deleteTopic}} @disabled={{this.deletingTopic}} @label={{if this.deletingTopic "deleting" "post.controls.delete_topic_confirm_modal_yes"}} class="btn-danger" />
-    <DButton @action={{@closeModal}} @label="post.controls.delete_topic_confirm_modal_no" class="btn-primary" />
-  </:footer>
-</DModal></template>
+export default class DeleteTopicConfirm extends Component {
+  <template>
+    <DModal
+      @title={{iN "topic.actions.delete"}}
+      @closeModal={{@closeModal}}
+      class="delete-topic-confirm-modal"
+      @flash={{this.flash}}
+    >
+      <:body>
+        <p>
+          {{iN
+            "post.controls.delete_topic_confirm_modal"
+            count=this.siteSettings.min_topic_views_for_delete_confirm
+          }}
+        </p>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.deleteTopic}}
+          @disabled={{this.deletingTopic}}
+          @label={{if
+            this.deletingTopic
+            "deleting"
+            "post.controls.delete_topic_confirm_modal_yes"
+          }}
+          class="btn-danger"
+        />
+        <DButton
+          @action={{@closeModal}}
+          @label="post.controls.delete_topic_confirm_modal_no"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @service currentUser;
   @service siteSettings;
 

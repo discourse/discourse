@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat,fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -192,29 +192,60 @@ function resolvePanelComponent(owner, panelComponent) {
   return panelComponent;
 }
 
-export default class UserMenu extends Component {<template><div class={{this.classNames}} data-tab-id={{this.currentTabId}} data-max-width="320" {{didInsert this.triggerRenderedAppEvent}}>
-  <div class="panel-body">
-    <div class="panel-body-contents">
-      <div class="menu-tabs-container" role="tablist" aria-orientation="vertical" aria-label={{iN "user_menu.sr_menu_tabs"}}>
-        <div class="top-tabs tabs-list" {{didInsert this.focusFirstTab}}>
-          {{#each this.topTabs as |tab|}}
-            <MenuTab @tab={{tab}} @currentTabId={{this.currentTabId}} @onTabClick={{fn this.handleTabClick tab}} />
-          {{/each}}
-        </div>
-        <div class="bottom-tabs tabs-list">
-          {{#each this.bottomTabs as |tab|}}
-            <MenuTab @tab={{tab}} @currentTabId={{this.currentTabId}} @onTabClick={{fn this.handleTabClick tab}} />
-          {{/each}}
-        </div>
+export default class UserMenu extends Component {
+  <template>
+    <div
+      class={{this.classNames}}
+      data-tab-id={{this.currentTabId}}
+      data-max-width="320"
+      {{didInsert this.triggerRenderedAppEvent}}
+    >
+      <div class="panel-body">
+        <div class="panel-body-contents">
+          <div
+            class="menu-tabs-container"
+            role="tablist"
+            aria-orientation="vertical"
+            aria-label={{iN "user_menu.sr_menu_tabs"}}
+          >
+            <div class="top-tabs tabs-list" {{didInsert this.focusFirstTab}}>
+              {{#each this.topTabs as |tab|}}
+                <MenuTab
+                  @tab={{tab}}
+                  @currentTabId={{this.currentTabId}}
+                  @onTabClick={{fn this.handleTabClick tab}}
+                />
+              {{/each}}
+            </div>
+            <div class="bottom-tabs tabs-list">
+              {{#each this.bottomTabs as |tab|}}
+                <MenuTab
+                  @tab={{tab}}
+                  @currentTabId={{this.currentTabId}}
+                  @onTabClick={{fn this.handleTabClick tab}}
+                />
+              {{/each}}
+            </div>
 
-        <PluginOutlet @name="user-menu-tabs-list__after" @outletArgs={{hash user=this.currentUser}} />
-      </div>
-      <div id={{concat "quick-access-" this.currentTabId}} class="quick-access-panel">
-        <this.currentPanelComponent @closeUserMenu={{@closeUserMenu}} @filterByTypes={{this.currentNotificationTypes}} @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}} />
+            <PluginOutlet
+              @name="user-menu-tabs-list__after"
+              @outletArgs={{hash user=this.currentUser}}
+            />
+          </div>
+          <div
+            id={{concat "quick-access-" this.currentTabId}}
+            class="quick-access-panel"
+          >
+            <this.currentPanelComponent
+              @closeUserMenu={{@closeUserMenu}}
+              @filterByTypes={{this.currentNotificationTypes}}
+              @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div></template>
+  </template>
   @service appEvents;
   @service currentUser;
   @service router;

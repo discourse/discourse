@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("disabled badge", async function (assert) {const self = this;
+  test("disabled badge", async function (assert) {
+    const self = this;
 
     this.set("badge", { enabled: false });
 
@@ -15,7 +16,8 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".user-badge.disabled").exists();
   });
 
-  test("enabled badge", async function (assert) {const self = this;
+  test("enabled badge", async function (assert) {
+    const self = this;
 
     this.set("badge", { enabled: true });
 
@@ -24,7 +26,8 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".user-badge.disabled").doesNotExist();
   });
 
-  test("data-badge-name", async function (assert) {const self = this;
+  test("data-badge-name", async function (assert) {
+    const self = this;
 
     this.set("badge", { name: "foo" });
 
@@ -33,7 +36,8 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom('.user-badge[data-badge-name="foo"]').exists();
   });
 
-  test("title", async function (assert) {const self = this;
+  test("title", async function (assert) {
+    const self = this;
 
     this.set("badge", { description: "a <a href>good</a> run" });
 
@@ -54,7 +58,8 @@ module("Integration | Component | badge-button", function (hooks) {
       );
   });
 
-  test("icon", async function (assert) {const self = this;
+  test("icon", async function (assert) {
+    const self = this;
 
     this.set("badge", { icon: "xmark" });
 
@@ -63,7 +68,8 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".d-icon.d-icon-xmark").exists();
   });
 
-  test("accepts block", async function (assert) {const self = this;
+  test("accepts block", async function (assert) {
+    const self = this;
 
     this.set("badge", {});
 
@@ -76,7 +82,8 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".test").exists();
   });
 
-  test("badgeTypeClassName", async function (assert) {const self = this;
+  test("badgeTypeClassName", async function (assert) {
+    const self = this;
 
     this.set("badge", { badgeTypeClassName: "foo" });
 
@@ -85,18 +92,20 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".user-badge.foo").exists();
   });
 
-  test("setting showName to false hides the name", async function (assert) {const self = this;
+  test("setting showName to false hides the name", async function (assert) {
+    const self = this;
 
     this.set("badge", { name: "foo" });
 
-    await render(
-      <template><BadgeButton @badge={{self.badge}} @showName={{false}} /></template>
-    );
+    await render(<template>
+      <BadgeButton @badge={{self.badge}} @showName={{false}} />
+    </template>);
 
     assert.dom(".badge-display-name").doesNotExist();
   });
 
-  test("showName defaults to true", async function (assert) {const self = this;
+  test("showName defaults to true", async function (assert) {
+    const self = this;
 
     this.set("badge", { name: "foo" });
 

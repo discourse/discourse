@@ -7,7 +7,8 @@ import I18n, { i18n } from "discourse-i18n";
 module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it renders a toggle button in a disabled state", async function (assert) {const self = this;
+  test("it renders a toggle button in a disabled state", async function (assert) {
+    const self = this;
 
     this.set("state", false);
 
@@ -17,7 +18,8 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "false");
   });
 
-  test("it renders a toggle button in a enabled state", async function (assert) {const self = this;
+  test("it renders a toggle button in a enabled state", async function (assert) {
+    const self = this;
 
     this.set("state", true);
 
@@ -27,7 +29,8 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "true");
   });
 
-  test("it renders a checkmark icon when enabled", async function (assert) {const self = this;
+  test("it renders a checkmark icon when enabled", async function (assert) {
+    const self = this;
 
     this.set("state", true);
 
@@ -35,13 +38,18 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     assert.dom(".d-toggle-switch__checkbox-slider .d-icon-check").exists();
   });
 
-  test("it renders a label for the button", async function (assert) {const self = this;
+  test("it renders a label for the button", async function (assert) {
+    const self = this;
 
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
     this.set("state", true);
-    await render(
-      <template><DToggleSwitch @state={{self.state}} @label={{self.label}} @translatedLabel={{self.translatedLabel}} /></template>
-    );
+    await render(<template>
+      <DToggleSwitch
+        @state={{self.state}}
+        @label={{self.label}}
+        @translatedLabel={{self.translatedLabel}}
+      />
+    </template>);
 
     this.set("label", "test.fooLabel");
 

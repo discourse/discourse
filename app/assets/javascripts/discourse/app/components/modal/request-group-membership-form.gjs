@@ -15,24 +15,41 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
-export default class RequestGroupMembershipForm extends Component {<template><DModal @title={{this.title}} @closeModal={{@closeModal}} @inline={{@inline}} class="request-group-membership-form">
-  <:body>
-    <div class="control-group">
-      <label>
-        {{iN "groups.membership_request.reason"}}
-      </label>
+export default class RequestGroupMembershipForm extends Component {
+  <template>
+    <DModal
+      @title={{this.title}}
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
+      class="request-group-membership-form"
+    >
+      <:body>
+        <div class="control-group">
+          <label>
+            {{iN "groups.membership_request.reason"}}
+          </label>
 
-      <ExpandingTextArea {{on "input" (withEventValue (fn (mut this.reason)))}} value={{this.reason}} maxlength="5000" />
-    </div>
-  </:body>
+          <ExpandingTextArea
+            {{on "input" (withEventValue (fn (mut this.reason)))}}
+            value={{this.reason}}
+            maxlength="5000"
+          />
+        </div>
+      </:body>
 
-  <:footer>
-    <DButton @action={{this.requestMember}} @label="groups.membership_request.submit" @disabled={{this.disableSubmit}} class="btn-primary" />
+      <:footer>
+        <DButton
+          @action={{this.requestMember}}
+          @label="groups.membership_request.submit"
+          @disabled={{this.disableSubmit}}
+          class="btn-primary"
+        />
 
-    <DModalCancel @close={{@closeModal}} />
-    <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
-  </:footer>
-</DModal></template>
+        <DModalCancel @close={{@closeModal}} />
+        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+      </:footer>
+    </DModal>
+  </template>
   @tracked loading = false;
   @tracked reason = this.args.model.group.membership_request_template;
 

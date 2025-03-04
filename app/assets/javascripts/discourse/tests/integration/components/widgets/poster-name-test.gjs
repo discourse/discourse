@@ -8,7 +8,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("basic rendering", async function (assert) {const self = this;
+  test("basic rendering", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "eviltrout",
@@ -17,9 +18,9 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       user_title: "Trout Master",
     });
 
-    await render(
-      <template><MountWidget @widget="poster-name" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="poster-name" @args={{self.args}} />
+    </template>);
 
     assert.dom(".names").exists();
     assert.dom("span.username").exists();
@@ -28,7 +29,8 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.dom(".user-title").hasText("Trout Master");
   });
 
-  test("extra classes and glyphs", async function (assert) {const self = this;
+  test("extra classes and glyphs", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "eviltrout",
@@ -40,9 +42,9 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       primary_group_name: "fish",
     });
 
-    await render(
-      <template><MountWidget @widget="poster-name" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="poster-name" @args={{self.args}} />
+    </template>);
 
     assert.dom("span.staff").exists();
     assert.dom("span.admin").exists();
@@ -52,32 +54,35 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.dom("span.group--fish").exists();
   });
 
-  test("disable display name on posts", async function (assert) {const self = this;
+  test("disable display name on posts", async function (assert) {
+    const self = this;
 
     this.siteSettings.display_name_on_posts = false;
     this.set("args", { username: "eviltrout", name: "Robin Ward" });
 
-    await render(
-      <template><MountWidget @widget="poster-name" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="poster-name" @args={{self.args}} />
+    </template>);
 
     assert.dom(".full-name").doesNotExist();
   });
 
-  test("doesn't render a name if it's similar to the username", async function (assert) {const self = this;
+  test("doesn't render a name if it's similar to the username", async function (assert) {
+    const self = this;
 
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.display_name_on_posts = true;
     this.set("args", { username: "eviltrout", name: "evil-trout" });
 
-    await render(
-      <template><MountWidget @widget="poster-name" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="poster-name" @args={{self.args}} />
+    </template>);
 
     assert.dom(".second").doesNotExist();
   });
 
-  test("renders badges that are passed in", async function (assert) {const self = this;
+  test("renders badges that are passed in", async function (assert) {
+    const self = this;
 
     this.set("args", {
       username: "eviltrout",
@@ -91,9 +96,9 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       ].map((badge) => Badge.createFromJson({ badges: [badge] })[0]),
     });
 
-    await render(
-      <template><MountWidget @widget="poster-name" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="poster-name" @args={{self.args}} />
+    </template>);
 
     // Check that the custom CSS classes are set
     assert.dom("span.user-badge-button-badge1").exists();

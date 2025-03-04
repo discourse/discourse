@@ -15,18 +15,43 @@ import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
-import { authorizedExtensions, authorizesAllExtensions } from "discourse/lib/uploads";
+import {
+  authorizedExtensions,
+  authorizesAllExtensions,
+} from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 @classNames("pick-files-button")
-export default class PickFilesButton extends Component {<template>{{#if this.showButton}}
-  <DButton @action={{action "openSystemFilePicker"}} @label={{this.label}} @icon={{this.icon}} />
-{{/if}}
-{{#if this.acceptsAllFormats}}
-  <input {{didInsert (or @registerFileInput (noop))}} type="file" id={{this.fileInputId}} class={{this.fileInputClass}} multiple={{this.allowMultiple}} disabled={{this.fileInputDisabled}} />
-{{else}}
-  <input {{didInsert (or @registerFileInput (noop))}} type="file" id={{this.fileInputId}} class={{this.fileInputClass}} accept={{this.acceptedFormats}} multiple={{this.allowMultiple}} disabled={{this.fileInputDisabled}} />
-{{/if}}</template>
+export default class PickFilesButton extends Component {
+  <template>
+    {{#if this.showButton}}
+      <DButton
+        @action={{action "openSystemFilePicker"}}
+        @label={{this.label}}
+        @icon={{this.icon}}
+      />
+    {{/if}}
+    {{#if this.acceptsAllFormats}}
+      <input
+        {{didInsert (or @registerFileInput (noop))}}
+        type="file"
+        id={{this.fileInputId}}
+        class={{this.fileInputClass}}
+        multiple={{this.allowMultiple}}
+        disabled={{this.fileInputDisabled}}
+      />
+    {{else}}
+      <input
+        {{didInsert (or @registerFileInput (noop))}}
+        type="file"
+        id={{this.fileInputId}}
+        class={{this.fileInputClass}}
+        accept={{this.acceptedFormats}}
+        multiple={{this.allowMultiple}}
+        disabled={{this.fileInputDisabled}}
+      />
+    {{/if}}
+  </template>
   @service dialog;
 
   fileInputId = null;

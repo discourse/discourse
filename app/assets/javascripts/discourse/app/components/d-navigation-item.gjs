@@ -3,17 +3,25 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 
-export default class DNavigationItem extends Component {<template><li aria-current={{this.ariaCurrent}} title={{@title}} class={{@class}} ...attributes>
-  {{#if this.models}}
-    <LinkTo @route={{@route}} @models={{this.models}}>
-      {{yield}}
-    </LinkTo>
-  {{else}}
-    <LinkTo @route={{@route}}>
-      {{yield}}
-    </LinkTo>
-  {{/if}}
-</li></template>
+export default class DNavigationItem extends Component {
+  <template>
+    <li
+      aria-current={{this.ariaCurrent}}
+      title={{@title}}
+      class={{@class}}
+      ...attributes
+    >
+      {{#if this.models}}
+        <LinkTo @route={{@route}} @models={{this.models}}>
+          {{yield}}
+        </LinkTo>
+      {{else}}
+        <LinkTo @route={{@route}}>
+          {{yield}}
+        </LinkTo>
+      {{/if}}
+    </li>
+  </template>
   @service router;
 
   get ariaCurrent() {

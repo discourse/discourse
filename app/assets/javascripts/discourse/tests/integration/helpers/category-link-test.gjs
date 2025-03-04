@@ -14,9 +14,9 @@ module("Integration | Helper | category-link", function (hooks) {
   });
 
   test("description_text", async function (assert) {
-    await render(
-      <template>{{categoryLink (hash name="foo" description_text="bar")}}</template>
-    );
+    await render(<template>
+      {{categoryLink (hash name="foo" description_text="bar")}}
+    </template>);
 
     assert.dom(".badge-category").hasAttribute("title", "bar");
   });

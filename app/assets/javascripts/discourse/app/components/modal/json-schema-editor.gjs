@@ -10,15 +10,36 @@ import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
 import { iconNode } from "discourse/lib/icon-library";
 
-export default class JsonSchemaEditorModal extends Component {<template><DModal @flash={{this.flash}} @flashType={{this.flashType}} @closeModal={{@closeModal}} @title={{iN "admin.site_settings.json_schema.modal_title" name=@model.settingName}} @inline={{@inline}} class="json-schema-editor-modal">
-  <:body>
-    <div id="json-editor-holder" {{didInsert this.buildJsonEditor}} {{willDestroy this.teardownJsonEditor}}></div>
-  </:body>
+export default class JsonSchemaEditorModal extends Component {
+  <template>
+    <DModal
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      @closeModal={{@closeModal}}
+      @title={{iN
+        "admin.site_settings.json_schema.modal_title"
+        name=@model.settingName
+      }}
+      @inline={{@inline}}
+      class="json-schema-editor-modal"
+    >
+      <:body>
+        <div
+          id="json-editor-holder"
+          {{didInsert this.buildJsonEditor}}
+          {{willDestroy this.teardownJsonEditor}}
+        ></div>
+      </:body>
 
-  <:footer>
-    <DButton @action={{this.saveChanges}} @label="save" class="btn-primary" />
-  </:footer>
-</DModal></template>
+      <:footer>
+        <DButton
+          @action={{this.saveChanges}}
+          @label="save"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @tracked editor = null;
   @tracked value = this.args.model.value;
   @tracked flash;

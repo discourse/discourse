@@ -7,7 +7,20 @@ import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 @tagName("div")
-export default class CreateInviteUploader extends Component {<template>{{yield (hash data=this.data uploading=this.uploading uploadProgress=this.uploadProgress uploaded=this.uploaded submitDisabled=this.submitDisabled startUpload=this.startUpload) this.uppyUpload.setup}}</template>
+export default class CreateInviteUploader extends Component {
+  <template>
+    {{yield
+      (hash
+        data=this.data
+        uploading=this.uploading
+        uploadProgress=this.uploadProgress
+        uploaded=this.uploaded
+        submitDisabled=this.submitDisabled
+        startUpload=this.startUpload
+      )
+      this.uppyUpload.setup
+    }}
+  </template>
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "create-invite-uploader",
     type: "csv",

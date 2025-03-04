@@ -14,14 +14,13 @@ module(
       this.set("subject", selectKit());
     });
 
-    test("renders a dropdown with choices", async function (assert) {const self = this;
+    test("renders a dropdown with choices", async function (assert) {
+      const self = this;
 
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
-      await render(
-        <template><Dropdown @choices={{self.choices}} /></template>
-      );
+      await render(<template><Dropdown @choices={{self.choices}} /></template>);
       assert
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");
@@ -41,7 +40,8 @@ module(
         .hasValue("Choice 3", "has the correct name for choice 3");
     });
 
-    test("renders a dropdown with choices and attributes", async function (assert) {const self = this;
+    test("renders a dropdown with choices and attributes", async function (assert) {
+      const self = this;
 
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       const attributes = {
@@ -52,9 +52,9 @@ module(
       this.set("choices", choices);
       this.set("attributes", attributes);
 
-      await render(
-        <template><Dropdown @choices={{self.choices}} @attributes={{self.attributes}} /></template>
-      );
+      await render(<template>
+        <Dropdown @choices={{self.choices}} @attributes={{self.attributes}} />
+      </template>);
       assert
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");
@@ -64,14 +64,13 @@ module(
         .hasText(attributes.none_label, "None label is correct");
     });
 
-    test("doesn't render a label when attribute is missing", async function (assert) {const self = this;
+    test("doesn't render a label when attribute is missing", async function (assert) {
+      const self = this;
 
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
-      await render(
-        <template><Dropdown @choices={{self.choices}} /></template>
-      );
+      await render(<template><Dropdown @choices={{self.choices}} /></template>);
 
       assert.dom(".form-template-field__label").doesNotExist();
     });

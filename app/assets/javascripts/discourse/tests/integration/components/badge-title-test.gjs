@@ -9,7 +9,8 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 module("Integration | Component | badge-title", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("badge title", async function (assert) {const self = this;
+  test("badge title", async function (assert) {
+    const self = this;
 
     this.set("subject", selectKit());
     this.set("selectableUserBadges", [

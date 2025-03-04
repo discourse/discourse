@@ -7,17 +7,34 @@ import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 
-export default class SecondFactorEdit extends Component {<template><DModal @title={{iN "user.second_factor.edit_title"}} @closeModal={{@closeModal}}>
-  <:body>
-    <div class="input-group">
-      <label for="authenticator-name">{{iN "user.second_factor.edit_description"}}</label>
-      <Input name="authenticator-name" maxlength={{this.maxSecondFactorNameLength}} @type="text" @value={{@model.secondFactor.name}} />
-    </div>
-  </:body>
-  <:footer>
-    <DButton @action={{this.editSecondFactor}} class="btn-primary" @label="user.second_factor.save" />
-  </:footer>
-</DModal></template>
+export default class SecondFactorEdit extends Component {
+  <template>
+    <DModal
+      @title={{iN "user.second_factor.edit_title"}}
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        <div class="input-group">
+          <label for="authenticator-name">{{iN
+              "user.second_factor.edit_description"
+            }}</label>
+          <Input
+            name="authenticator-name"
+            maxlength={{this.maxSecondFactorNameLength}}
+            @type="text"
+            @value={{@model.secondFactor.name}}
+          />
+        </div>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.editSecondFactor}}
+          class="btn-primary"
+          @label="user.second_factor.save"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @tracked loading = false;
 
   maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;

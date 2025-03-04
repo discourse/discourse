@@ -10,38 +10,65 @@ import RadioButton from "discourse/components/radio-button";
 import iN from "discourse/helpers/i18n";
 import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
 
-export default class DownloadCalendar extends Component {<template><DModal @title={{iN "download_calendar.title"}} class="download-calendar-modal" @closeModal={{@closeModal}}>
-  <:body>
-    <div class="control-group">
-      <div class="ics">
-        <label class="radio" for="ics">
-          <RadioButton id="ics" @name="select-calendar" @value="ics" @selection={{this.selectedCalendar}} @onChange={{fn this.selectCalendar "ics"}} />
-          {{iN "download_calendar.save_ics"}}
-        </label>
-      </div>
-      <div class="google">
-        <label class="radio" for="google">
-          <RadioButton id="google" @name="select-calendar" @value="google" @selection={{this.selectedCalendar}} @onChange={{fn this.selectCalendar "google"}} />
-          {{iN "download_calendar.save_google"}}
-        </label>
-      </div>
-    </div>
+export default class DownloadCalendar extends Component {
+  <template>
+    <DModal
+      @title={{iN "download_calendar.title"}}
+      class="download-calendar-modal"
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        <div class="control-group">
+          <div class="ics">
+            <label class="radio" for="ics">
+              <RadioButton
+                id="ics"
+                @name="select-calendar"
+                @value="ics"
+                @selection={{this.selectedCalendar}}
+                @onChange={{fn this.selectCalendar "ics"}}
+              />
+              {{iN "download_calendar.save_ics"}}
+            </label>
+          </div>
+          <div class="google">
+            <label class="radio" for="google">
+              <RadioButton
+                id="google"
+                @name="select-calendar"
+                @value="google"
+                @selection={{this.selectedCalendar}}
+                @onChange={{fn this.selectCalendar "google"}}
+              />
+              {{iN "download_calendar.save_google"}}
+            </label>
+          </div>
+        </div>
 
-    {{#if this.currentUser}}
-      <div class="control-group remember">
-        <label class="checkbox-label">
-          <Input @type="checkbox" @checked={{this.remember}} />
-          <span>{{iN "download_calendar.remember"}}</span>
-        </label>
-        <span>{{iN "download_calendar.remember_explanation"}}</span>
-      </div>
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton class="btn-primary" @action={{this.downloadCalendar}} @label="download_calendar.download" />
-    <DButton class="btn-flat d-modal-cancel" @action={{@closeModal}} @label="cancel" />
-  </:footer>
-</DModal></template>
+        {{#if this.currentUser}}
+          <div class="control-group remember">
+            <label class="checkbox-label">
+              <Input @type="checkbox" @checked={{this.remember}} />
+              <span>{{iN "download_calendar.remember"}}</span>
+            </label>
+            <span>{{iN "download_calendar.remember_explanation"}}</span>
+          </div>
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @action={{this.downloadCalendar}}
+          @label="download_calendar.download"
+        />
+        <DButton
+          class="btn-flat d-modal-cancel"
+          @action={{@closeModal}}
+          @label="cancel"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @service currentUser;
 
   @tracked selectedCalendar = "ics";

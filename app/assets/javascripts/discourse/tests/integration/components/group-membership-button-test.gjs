@@ -6,11 +6,14 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | group-membership-button", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("canJoinGroup", async function (assert) {const self = this;
+  test("canJoinGroup", async function (assert) {
+    const self = this;
 
     this.set("model", { public_admission: false, is_group_user: true });
 
-    await render(<template><GroupMembershipButton @model={{self.model}} /></template>);
+    await render(<template>
+      <GroupMembershipButton @model={{self.model}} />
+    </template>);
 
     assert
       .dom(".group-index-join")
@@ -25,11 +28,14 @@ module("Integration | Component | group-membership-button", function (hooks) {
     assert.dom(".group-index-join").exists("allowed to join group");
   });
 
-  test("canLeaveGroup", async function (assert) {const self = this;
+  test("canLeaveGroup", async function (assert) {
+    const self = this;
 
     this.set("model", { public_exit: false, is_group_user: false });
 
-    await render(<template><GroupMembershipButton @model={{self.model}} /></template>);
+    await render(<template>
+      <GroupMembershipButton @model={{self.model}} />
+    </template>);
 
     assert
       .dom(".group-index-leave")
@@ -44,14 +50,17 @@ module("Integration | Component | group-membership-button", function (hooks) {
     assert.dom(".group-index-leave").exists("allowed to leave group");
   });
 
-  test("canRequestMembership", async function (assert) {const self = this;
+  test("canRequestMembership", async function (assert) {
+    const self = this;
 
     this.set("model", {
       allow_membership_requests: true,
       is_group_user: true,
     });
 
-    await render(<template><GroupMembershipButton @model={{self.model}} /></template>);
+    await render(<template>
+      <GroupMembershipButton @model={{self.model}} />
+    </template>);
 
     assert
       .dom(".group-index-request")

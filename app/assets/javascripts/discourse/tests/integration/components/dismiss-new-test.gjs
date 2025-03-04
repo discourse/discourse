@@ -11,29 +11,32 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     this.model = { selectedTopics: [] };
   });
 
-  test("modal title", async function (assert) {const self = this;
+  test("modal title", async function (assert) {
+    const self = this;
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert
       .dom("#discourse-modal-title")
       .hasText(i18n("topics.bulk.dismiss_new_modal.title"));
   });
 
-  test("default state", async function (assert) {const self = this;
+  test("default state", async function (assert) {
+    const self = this;
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert.dom(".dismiss-topics input").isChecked();
     assert.dom(".dismiss-posts input").isChecked();
     assert.dom(".untrack input").isNotChecked();
   });
 
-  test("one new selected topic", async function (assert) {const self = this;
+  test("one new selected topic", async function (assert) {
+    const self = this;
 
     this.model.selectedTopics.push({
       id: 1,
@@ -41,9 +44,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       unread_posts: false,
     });
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert.dom(".dismiss-posts").doesNotExist();
     assert
@@ -53,7 +56,8 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       );
   });
 
-  test("one new unread in selected topic", async function (assert) {const self = this;
+  test("one new unread in selected topic", async function (assert) {
+    const self = this;
 
     this.model.selectedTopics.push({
       id: 1,
@@ -61,9 +65,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       unread_posts: true,
     });
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert.dom(".dismiss-topics").doesNotExist();
     assert
@@ -73,13 +77,14 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       );
   });
 
-  test("no selected topics with topics subset", async function (assert) {const self = this;
+  test("no selected topics with topics subset", async function (assert) {
+    const self = this;
 
     this.model.subset = "topics";
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert.dom(".dismiss-posts").doesNotExist();
     assert
@@ -87,13 +92,14 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       .hasText(i18n("topics.bulk.dismiss_new_modal.topics"));
   });
 
-  test("no selected topics with replies subset", async function (assert) {const self = this;
+  test("no selected topics with replies subset", async function (assert) {
+    const self = this;
 
     this.model.subset = "replies";
 
-    await render(
-      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew @inline={{true}} @model={{self.model}} />
+    </template>);
 
     assert.dom(".dismiss-topics").doesNotExist();
     assert
@@ -101,7 +107,8 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       .hasText(i18n("topics.bulk.dismiss_new_modal.replies"));
   });
 
-  test("dismissed", async function (assert) {const self = this;
+  test("dismissed", async function (assert) {
+    const self = this;
 
     let state;
 
@@ -111,9 +118,13 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
 
     this.noop = () => {};
 
-    await render(
-      <template><DismissNew @closeModal={{self.noop}} @inline={{true}} @model={{self.model}} /></template>
-    );
+    await render(<template>
+      <DismissNew
+        @closeModal={{self.noop}}
+        @inline={{true}}
+        @model={{self.model}}
+      />
+    </template>);
 
     await click(".dismiss-topics [type='checkbox']");
     await click(".dismiss-posts [type='checkbox']");

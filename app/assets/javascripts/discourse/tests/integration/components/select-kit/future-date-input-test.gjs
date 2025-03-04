@@ -1,4 +1,4 @@
-import { fn,hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FutureDateInput from "discourse/components/future-date-input";
@@ -30,7 +30,9 @@ module(
 
     test("rendering and expanding", async function (assert) {
       await render(<template>
-        <FutureDateInput @options={{hash none="time_shortcut.select_timeframe"}} />
+        <FutureDateInput
+          @options={{hash none="time_shortcut.select_timeframe"}}
+        />
       </template>);
 
       assert.dom(".future-date-input-selector").exists("selector is rendered");
@@ -113,13 +115,17 @@ module(
       assert.true(options.includes(now));
     });
 
-    test("changing date/time updates the input correctly", async function (assert) {const self = this;
+    test("changing date/time updates the input correctly", async function (assert) {
+      const self = this;
 
       this.set("input", moment("2032-01-01 11:10"));
 
-      await render(
-        <template><FutureDateInput @input={{self.input}} @onChangeInput={{fn (mut self.input)}} /></template>
-      );
+      await render(<template>
+        <FutureDateInput
+          @input={{self.input}}
+          @onChangeInput={{fn (mut self.input)}}
+        />
+      </template>);
 
       await fillIn(".time-input", "11:15");
 

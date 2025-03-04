@@ -8,27 +8,41 @@ import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
 import { i18n } from "discourse-i18n";
 
-export default class SecondFactorConfirmPhrase extends Component {<template>{{iN "user.second_factor.delete_confirm_header"}}
+export default class SecondFactorConfirmPhrase extends Component {
+  <template>
+    {{iN "user.second_factor.delete_confirm_header"}}
 
-<ul>
-  {{#each @model.totps as |totp|}}
-    <li>{{totp.name}}</li>
-  {{/each}}
+    <ul>
+      {{#each @model.totps as |totp|}}
+        <li>{{totp.name}}</li>
+      {{/each}}
 
-  {{#each @model.security_keys as |sk|}}
-    <li>{{sk.name}}</li>
-  {{/each}}
+      {{#each @model.security_keys as |sk|}}
+        <li>{{sk.name}}</li>
+      {{/each}}
 
-  {{#if this.currentUser.second_factor_backup_enabled}}
-    <li>{{iN "user.second_factor_backup.title"}}</li>
-  {{/if}}
-</ul>
+      {{#if this.currentUser.second_factor_backup_enabled}}
+        <li>{{iN "user.second_factor_backup.title"}}</li>
+      {{/if}}
+    </ul>
 
-<p>
-  {{htmlSafe (iN "user.second_factor.delete_confirm_instruction" confirm=this.disabledString)}}
-</p>
+    <p>
+      {{htmlSafe
+        (iN
+          "user.second_factor.delete_confirm_instruction"
+          confirm=this.disabledString
+        )
+      }}
+    </p>
 
-<TextField @value={{this.confirmPhraseInput}} {{on "input" this.onConfirmPhraseInput}} @id="confirm-phrase" @autocorrect="off" @autocapitalize="off" /></template>
+    <TextField
+      @value={{this.confirmPhraseInput}}
+      {{on "input" this.onConfirmPhraseInput}}
+      @id="confirm-phrase"
+      @autocorrect="off"
+      @autocapitalize="off"
+    />
+  </template>
   @service dialog;
   @service currentUser;
 

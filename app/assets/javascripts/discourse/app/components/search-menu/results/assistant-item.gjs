@@ -23,58 +23,66 @@ export function resetItemSelectCallbacks() {
   _itemSelectCallbacks.length = 0;
 }
 
-export default class AssistantItem extends Component {<template>{{!-- template-lint-disable no-pointer-down-event-binding --}}
-{{!-- template-lint-disable no-invalid-interactive --}}
-<li class={{concatClass @typeClass "search-menu-assistant-item"}} {{on "keydown" this.onKeydown}} {{on "click" this.onClick}} data-usage={{@usage}}>
-  <a class="search-link" href={{this.href}}>
-    <span aria-label={{iN "search.title"}}>
-      {{dIcon (or @icon "magnifying-glass")}}
-    </span>
-
-    {{#if this.prefix}}
-      <span class="search-item-prefix">
-        {{this.prefix}}
-      </span>
-    {{/if}}
-
-    {{#if @withInLabel}}
-      <span class="label-suffix">{{iN "search.in"}}</span>
-    {{/if}}
-
-    {{#if @category}}
-      <Category @result={{@category}} />
-      {{#if (and @tag @isIntersection)}}
-        <span class="search-item-tag">
-          {{dIcon "tag"}}{{@tag}}
+export default class AssistantItem extends Component {
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! template-lint-disable no-invalid-interactive }}
+    <li
+      class={{concatClass @typeClass "search-menu-assistant-item"}}
+      {{on "keydown" this.onKeydown}}
+      {{on "click" this.onClick}}
+      data-usage={{@usage}}
+    >
+      <a class="search-link" href={{this.href}}>
+        <span aria-label={{iN "search.title"}}>
+          {{dIcon (or @icon "magnifying-glass")}}
         </span>
-      {{/if}}
-    {{else if @tag}}
-      {{#if (and @isIntersection @additionalTags.length)}}
-        <span class="search-item-tag">{{this.tagsSlug}}</span>
-      {{else}}
-        <span class="search-item-tag">
-          <Tag @result={{@tag}} />
-        </span>
-      {{/if}}
-    {{else if @user}}
-      <span class="search-item-user">
-        <User @result={{@user}} />
-      </span>
-    {{/if}}
 
-    <span class="search-item-slug">
-      {{#if @suffix}}
-        <span class="label-suffix">{{@suffix}}</span>
-      {{/if}}
-      {{@label}}
-    </span>
-    {{#if @extraHint}}
-      <span class="extra-hint">
-        {{iN "search.enter_hint"}}
-      </span>
-    {{/if}}
-  </a>
-</li></template>
+        {{#if this.prefix}}
+          <span class="search-item-prefix">
+            {{this.prefix}}
+          </span>
+        {{/if}}
+
+        {{#if @withInLabel}}
+          <span class="label-suffix">{{iN "search.in"}}</span>
+        {{/if}}
+
+        {{#if @category}}
+          <Category @result={{@category}} />
+          {{#if (and @tag @isIntersection)}}
+            <span class="search-item-tag">
+              {{dIcon "tag"}}{{@tag}}
+            </span>
+          {{/if}}
+        {{else if @tag}}
+          {{#if (and @isIntersection @additionalTags.length)}}
+            <span class="search-item-tag">{{this.tagsSlug}}</span>
+          {{else}}
+            <span class="search-item-tag">
+              <Tag @result={{@tag}} />
+            </span>
+          {{/if}}
+        {{else if @user}}
+          <span class="search-item-user">
+            <User @result={{@user}} />
+          </span>
+        {{/if}}
+
+        <span class="search-item-slug">
+          {{#if @suffix}}
+            <span class="label-suffix">{{@suffix}}</span>
+          {{/if}}
+          {{@label}}
+        </span>
+        {{#if @extraHint}}
+          <span class="extra-hint">
+            {{iN "search.enter_hint"}}
+          </span>
+        {{/if}}
+      </a>
+    </li>
+  </template>
   @service search;
   @service appEvents;
 

@@ -7,17 +7,37 @@ import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 
-export default class SecondFactorEditSecurityKey extends Component {<template><DModal @title={{iN "user.second_factor.security_key.edit"}} @closeModal={{@closeModal}} @tagName="form">
-  <:body>
-    <div class="input-group">
-      <label for="security-key-name">{{iN "user.second_factor.security_key.edit_description"}}</label>
-      <Input name="security-key-name" id="security-key-name" maxlength={{this.maxSecondFactorNameLength}} @type="text" @value={{@model.securityKey.name}} />
-    </div>
-  </:body>
-  <:footer>
-    <DButton @action={{this.editSecurityKey}} class="btn-primary" @label="user.second_factor.security_key.save" @type="submit" />
-  </:footer>
-</DModal></template>
+export default class SecondFactorEditSecurityKey extends Component {
+  <template>
+    <DModal
+      @title={{iN "user.second_factor.security_key.edit"}}
+      @closeModal={{@closeModal}}
+      @tagName="form"
+    >
+      <:body>
+        <div class="input-group">
+          <label for="security-key-name">{{iN
+              "user.second_factor.security_key.edit_description"
+            }}</label>
+          <Input
+            name="security-key-name"
+            id="security-key-name"
+            maxlength={{this.maxSecondFactorNameLength}}
+            @type="text"
+            @value={{@model.securityKey.name}}
+          />
+        </div>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.editSecurityKey}}
+          class="btn-primary"
+          @label="user.second_factor.security_key.save"
+          @type="submit"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @tracked loading = false;
 
   maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;

@@ -6,7 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | post-links", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("duplicate links", async function (assert) {const self = this;
+  test("duplicate links", async function (assert) {
+    const self = this;
 
     this.set("args", {
       id: 2,
@@ -24,14 +25,17 @@ module("Integration | Component | Widget | post-links", function (hooks) {
       ],
     });
 
-    await render(<template><MountWidget @widget="post-links" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="post-links" @args={{self.args}} />
+    </template>);
 
     assert
       .dom(".post-links a.track-link")
       .exists({ count: 1 }, "hides the dupe link");
   });
 
-  test("collapsed links", async function (assert) {const self = this;
+  test("collapsed links", async function (assert) {
+    const self = this;
 
     this.set("args", {
       id: 1,
@@ -74,7 +78,9 @@ module("Integration | Component | Widget | post-links", function (hooks) {
       ],
     });
 
-    await render(<template><MountWidget @widget="post-links" @args={{self.args}} /></template>);
+    await render(<template>
+      <MountWidget @widget="post-links" @args={{self.args}} />
+    </template>);
 
     assert.dom(".expand-links").exists({ count: 1 }, "collapsed by default");
 

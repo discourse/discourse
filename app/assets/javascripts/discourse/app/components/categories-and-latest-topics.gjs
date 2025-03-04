@@ -5,12 +5,20 @@ import CategoriesTopicList from "discourse/components/categories-topic-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 
 @classNames("categories-and-latest")
-export default class CategoriesAndLatestTopics extends Component {<template><div class="column categories">
-  <CategoriesOnly @categories={{this.categories}} />
-</div>
+export default class CategoriesAndLatestTopics extends Component {
+  <template>
+    <div class="column categories">
+      <CategoriesOnly @categories={{this.categories}} />
+    </div>
 
-<div class="column">
-  <CategoriesTopicList @topics={{this.topics}} @filter="latest" class="latest-topic-list" />
-</div>
+    <div class="column">
+      <CategoriesTopicList
+        @topics={{this.topics}}
+        @filter="latest"
+        class="latest-topic-list"
+      />
+    </div>
 
-<PluginOutlet @name="extra-categories-column" @connectorTagName="div" /></template>}
+    <PluginOutlet @name="extra-categories-column" @connectorTagName="div" />
+  </template>
+}

@@ -24,47 +24,112 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { i18n } from "discourse-i18n";
 
-export default class LocalLoginForm extends Component {<template><form id="login-form" method="post">
-  <div id="credentials" class={{this.credentialsClass}}>
-    <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
-      <Input {{on "focusin" this.scrollInputIntoView}} @value={{@loginName}} @type="email" id="login-account-name" class={{valueEntered @loginName}} autocomplete={{if @canUsePasskeys "username webauthn" "username"}} autocorrect="off" autocapitalize="off" disabled={{@showSecondFactor}} autofocus="autofocus" tabindex="1" {{on "input" @loginNameChanged}} {{on "keydown" this.loginOnEnter}} />
-      <label class="alt-placeholder" for="login-account-name">
-        {{iN "login.email_placeholder"}}
-      </label>
-      {{#if @canLoginLocalWithEmail}}
-        <a href class={{if @loginName "" "no-login-filled"}} tabindex="3" id="email-login-link" {{on "click" this.emailLogin}}>
-          {{iN "email_login.login_link"}}
-        </a>
-      {{/if}}
-    </div>
-    <div class="input-group">
-      <PasswordField {{on "focusin" this.scrollInputIntoView}} {{on "keydown" this.loginOnEnter}} @value={{@loginPassword}} @capsLockOn={{this.capsLockOn}} type={{if this.maskPassword "password" "text"}} disabled={{this.disableLoginFields}} autocomplete="current-password" maxlength="200" tabindex="1" id="login-account-password" class={{valueEntered @loginPassword}} />
-      <label class="alt-placeholder" for="login-account-password">
-        {{iN "login.password"}}
-      </label>
-      {{#if @loginPassword}}
-        <TogglePasswordMask @maskPassword={{this.maskPassword}} @togglePasswordMask={{this.togglePasswordMask}} tabindex="3" />
-      {{/if}}
-      <div class="login__password-links">
-        <a href id="forgot-password-link" tabindex="2" {{on "click" this.handleForgotPassword}}>
-          {{iN "forgot_password.action"}}
-        </a>
+export default class LocalLoginForm extends Component {
+  <template>
+    <form id="login-form" method="post">
+      <div id="credentials" class={{this.credentialsClass}}>
+        <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
+          <Input
+            {{on "focusin" this.scrollInputIntoView}}
+            @value={{@loginName}}
+            @type="email"
+            id="login-account-name"
+            class={{valueEntered @loginName}}
+            autocomplete={{if @canUsePasskeys "username webauthn" "username"}}
+            autocorrect="off"
+            autocapitalize="off"
+            disabled={{@showSecondFactor}}
+            autofocus="autofocus"
+            tabindex="1"
+            {{on "input" @loginNameChanged}}
+            {{on "keydown" this.loginOnEnter}}
+          />
+          <label class="alt-placeholder" for="login-account-name">
+            {{iN "login.email_placeholder"}}
+          </label>
+          {{#if @canLoginLocalWithEmail}}
+            <a
+              href
+              class={{if @loginName "" "no-login-filled"}}
+              tabindex="3"
+              id="email-login-link"
+              {{on "click" this.emailLogin}}
+            >
+              {{iN "email_login.login_link"}}
+            </a>
+          {{/if}}
+        </div>
+        <div class="input-group">
+          <PasswordField
+            {{on "focusin" this.scrollInputIntoView}}
+            {{on "keydown" this.loginOnEnter}}
+            @value={{@loginPassword}}
+            @capsLockOn={{this.capsLockOn}}
+            type={{if this.maskPassword "password" "text"}}
+            disabled={{this.disableLoginFields}}
+            autocomplete="current-password"
+            maxlength="200"
+            tabindex="1"
+            id="login-account-password"
+            class={{valueEntered @loginPassword}}
+          />
+          <label class="alt-placeholder" for="login-account-password">
+            {{iN "login.password"}}
+          </label>
+          {{#if @loginPassword}}
+            <TogglePasswordMask
+              @maskPassword={{this.maskPassword}}
+              @togglePasswordMask={{this.togglePasswordMask}}
+              tabindex="3"
+            />
+          {{/if}}
+          <div class="login__password-links">
+            <a
+              href
+              id="forgot-password-link"
+              tabindex="2"
+              {{on "click" this.handleForgotPassword}}
+            >
+              {{iN "forgot_password.action"}}
+            </a>
+          </div>
+          <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
+            {{dIcon "triangle-exclamation"}}
+            {{iN "login.caps_lock_warning"}}</div>
+        </div>
       </div>
-      <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">
-        {{dIcon "triangle-exclamation"}}
-        {{iN "login.caps_lock_warning"}}</div>
-    </div>
-  </div>
-  {{#if this.showSecondFactorForm}}
-    <SecondFactorForm @secondFactorMethod={{@secondFactorMethod}} @secondFactorToken={{@secondFactorToken}} @backupEnabled={{@backupEnabled}} @totpEnabled={{@totpEnabled}} @isLogin={{true}}>
-      {{#if @showSecurityKey}}
-        <SecurityKeyForm @setShowSecurityKey={{fn (mut @showSecurityKey)}} @setShowSecondFactor={{fn (mut @showSecondFactor)}} @setSecondFactorMethod={{fn (mut @secondFactorMethod)}} @backupEnabled={{@backupEnabled}} @totpEnabled={{@totpEnabled}} @otherMethodAllowed={{@otherMethodAllowed}} @action={{this.authenticateSecurityKey}} />
-      {{else}}
-        <SecondFactorInput {{on "keydown" this.loginOnEnter}} {{on "input" (withEventValue (fn (mut @secondFactorToken)))}} {{on "focusin" this.scrollInputIntoView}} @secondFactorMethod={{@secondFactorMethod}} value={{@secondFactorToken}} id="login-second-factor" />
+      {{#if this.showSecondFactorForm}}
+        <SecondFactorForm
+          @secondFactorMethod={{@secondFactorMethod}}
+          @secondFactorToken={{@secondFactorToken}}
+          @backupEnabled={{@backupEnabled}}
+          @totpEnabled={{@totpEnabled}}
+          @isLogin={{true}}
+        >
+          {{#if @showSecurityKey}}
+            <SecurityKeyForm
+              @setShowSecurityKey={{fn (mut @showSecurityKey)}}
+              @setShowSecondFactor={{fn (mut @showSecondFactor)}}
+              @setSecondFactorMethod={{fn (mut @secondFactorMethod)}}
+              @backupEnabled={{@backupEnabled}}
+              @totpEnabled={{@totpEnabled}}
+              @otherMethodAllowed={{@otherMethodAllowed}}
+              @action={{this.authenticateSecurityKey}}
+            />
+          {{else}}
+            <SecondFactorInput
+              {{on "keydown" this.loginOnEnter}}
+              {{on "input" (withEventValue (fn (mut @secondFactorToken)))}}
+              {{on "focusin" this.scrollInputIntoView}}
+              @secondFactorMethod={{@secondFactorMethod}}
+              value={{@secondFactorToken}}
+              id="login-second-factor"
+            />
+          {{/if}}
+        </SecondFactorForm>
       {{/if}}
-    </SecondFactorForm>
-  {{/if}}
-</form></template>
+    </form>
+  </template>
   @service modal;
 
   @tracked maskPassword = true;

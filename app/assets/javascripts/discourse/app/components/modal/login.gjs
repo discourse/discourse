@@ -23,76 +23,150 @@ import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
-import { getPasskeyCredential, isWebauthnSupported } from "discourse/lib/webauthn";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import ForgotPassword from "./forgot-password";
 
-export default class Login extends Component {<template><DModal class="login-modal -large" @bodyClass={{this.modalBodyClasses}} @closeModal={{@closeModal}} @flash={{this.flash}} @flashType={{this.flashType}} {{didInsert this.preloadLogin}} {{on "click" this.interceptResetLink}}>
-  <:body>
-    <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+export default class Login extends Component {
+  <template>
+    <DModal
+      class="login-modal -large"
+      @bodyClass={{this.modalBodyClasses}}
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      {{didInsert this.preloadLogin}}
+      {{on "click" this.interceptResetLink}}
+    >
+      <:body>
+        <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
 
-    {{#if this.hasNoLoginOptions}}
-      <div class={{if this.site.desktopView "login-left-side"}}>
-        <div class="login-welcome-header no-login-methods-configured">
-          <h1 class="login-title">{{iN "login.no_login_methods.title"}}</h1>
-          <img />
-          <p class="login-subheader">
-            {{htmlSafe0 (iN "login.no_login_methods.description" (hash adminLoginPath=this.adminLoginPath))}}
-          </p>
-        </div>
-      </div>
-    {{else}}
-      {{#if this.site.mobileView}}
-        <WelcomeHeader @header={{iN "login.header_title"}}>
-          <PluginOutlet @name="login-header-bottom" @outletArgs={{hash createAccount=this.createAccount}} />
-        </WelcomeHeader>
-        {{#if this.showLoginButtons}}
-          <LoginButtons @externalLogin={{this.externalLoginAction}} @passkeyLogin={{this.passkeyLogin}} @context="login" />
-        {{/if}}
-      {{/if}}
-
-      {{#if this.canLoginLocal}}
-        <div class={{if this.site.desktopView "login-left-side"}}>
-          {{#if this.site.desktopView}}
+        {{#if this.hasNoLoginOptions}}
+          <div class={{if this.site.desktopView "login-left-side"}}>
+            <div class="login-welcome-header no-login-methods-configured">
+              <h1 class="login-title">{{iN "login.no_login_methods.title"}}</h1>
+              <img />
+              <p class="login-subheader">
+                {{htmlSafe0
+                  (iN
+                    "login.no_login_methods.description"
+                    (hash adminLoginPath=this.adminLoginPath)
+                  )
+                }}
+              </p>
+            </div>
+          </div>
+        {{else}}
+          {{#if this.site.mobileView}}
             <WelcomeHeader @header={{iN "login.header_title"}}>
-              <PluginOutlet @name="login-header-bottom" @outletArgs={{hash createAccount=this.createAccount}} />
+              <PluginOutlet
+                @name="login-header-bottom"
+                @outletArgs={{hash createAccount=this.createAccount}}
+              />
             </WelcomeHeader>
+            {{#if this.showLoginButtons}}
+              <LoginButtons
+                @externalLogin={{this.externalLoginAction}}
+                @passkeyLogin={{this.passkeyLogin}}
+                @context="login"
+              />
+            {{/if}}
           {{/if}}
-          <LocalLoginForm @loginName={{this.loginName}} @loginNameChanged={{this.loginNameChanged}} @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}} @canUsePasskeys={{this.canUsePasskeys}} @passkeyLogin={{this.passkeyLogin}} @loginPassword={{this.loginPassword}} @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @backupEnabled={{this.backupEnabled}} @totpEnabled={{this.totpEnabled}} @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}} @securityKeyChallenge={{this.securityKeyChallenge}} @showSecurityKey={{this.showSecurityKey}} @otherMethodAllowed={{this.otherMethodAllowed}} @showSecondFactor={{this.showSecondFactor}} @handleForgotPassword={{this.handleForgotPassword}} @login={{this.triggerLogin}} @flashChanged={{this.flashChanged}} @flashTypeChanged={{this.flashTypeChanged}} @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}} />
-          {{#if this.site.desktopView}}
-            <div class="d-modal__footer">
-              <LoginPageCta @canLoginLocal={{this.canLoginLocal}} @showSecurityKey={{this.showSecurityKey}} @login={{this.triggerLogin}} @loginButtonLabel={{this.loginButtonLabel}} @loginDisabled={{this.loginDisabled}} @showSignupLink={{this.showSignupLink}} @createAccount={{this.createAccount}} @loggingIn={{this.loggingIn}} @showSecondFactor={{this.showSecondFactor}} />
+
+          {{#if this.canLoginLocal}}
+            <div class={{if this.site.desktopView "login-left-side"}}>
+              {{#if this.site.desktopView}}
+                <WelcomeHeader @header={{iN "login.header_title"}}>
+                  <PluginOutlet
+                    @name="login-header-bottom"
+                    @outletArgs={{hash createAccount=this.createAccount}}
+                  />
+                </WelcomeHeader>
+              {{/if}}
+              <LocalLoginForm
+                @loginName={{this.loginName}}
+                @loginNameChanged={{this.loginNameChanged}}
+                @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+                @canUsePasskeys={{this.canUsePasskeys}}
+                @passkeyLogin={{this.passkeyLogin}}
+                @loginPassword={{this.loginPassword}}
+                @secondFactorMethod={{this.secondFactorMethod}}
+                @secondFactorToken={{this.secondFactorToken}}
+                @backupEnabled={{this.backupEnabled}}
+                @totpEnabled={{this.totpEnabled}}
+                @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
+                @securityKeyChallenge={{this.securityKeyChallenge}}
+                @showSecurityKey={{this.showSecurityKey}}
+                @otherMethodAllowed={{this.otherMethodAllowed}}
+                @showSecondFactor={{this.showSecondFactor}}
+                @handleForgotPassword={{this.handleForgotPassword}}
+                @login={{this.triggerLogin}}
+                @flashChanged={{this.flashChanged}}
+                @flashTypeChanged={{this.flashTypeChanged}}
+                @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
+              />
+              {{#if this.site.desktopView}}
+                <div class="d-modal__footer">
+                  <LoginPageCta
+                    @canLoginLocal={{this.canLoginLocal}}
+                    @showSecurityKey={{this.showSecurityKey}}
+                    @login={{this.triggerLogin}}
+                    @loginButtonLabel={{this.loginButtonLabel}}
+                    @loginDisabled={{this.loginDisabled}}
+                    @showSignupLink={{this.showSignupLink}}
+                    @createAccount={{this.createAccount}}
+                    @loggingIn={{this.loggingIn}}
+                    @showSecondFactor={{this.showSecondFactor}}
+                  />
+                </div>
+              {{/if}}
             </div>
           {{/if}}
-        </div>
-      {{/if}}
 
-      {{#if (and this.showLoginButtons this.site.desktopView)}}
-        {{#unless this.canLoginLocal}}
-          <div class="login-left-side">
-            <WelcomeHeader @header={{iN "login.header_title"}} />
-          </div>
-        {{/unless}}
-        {{#if this.hasAtLeastOneLoginButton}}
-          <div class="login-right-side">
-            <LoginButtons @externalLogin={{this.externalLoginAction}} @passkeyLogin={{this.passkeyLogin}} @context="login" />
-          </div>
+          {{#if (and this.showLoginButtons this.site.desktopView)}}
+            {{#unless this.canLoginLocal}}
+              <div class="login-left-side">
+                <WelcomeHeader @header={{iN "login.header_title"}} />
+              </div>
+            {{/unless}}
+            {{#if this.hasAtLeastOneLoginButton}}
+              <div class="login-right-side">
+                <LoginButtons
+                  @externalLogin={{this.externalLoginAction}}
+                  @passkeyLogin={{this.passkeyLogin}}
+                  @context="login"
+                />
+              </div>
+            {{/if}}
+          {{/if}}
         {{/if}}
-      {{/if}}
-    {{/if}}
-  </:body>
+      </:body>
 
-  <:footer>
-    {{#if this.site.mobileView}}
-      {{#unless this.hasNoLoginOptions}}
-        <LoginPageCta @canLoginLocal={{this.canLoginLocal}} @showSecurityKey={{this.showSecurityKey}} @login={{this.triggerLogin}} @loginButtonLabel={{this.loginButtonLabel}} @loginDisabled={{this.loginDisabled}} @showSignupLink={{this.showSignupLink}} @createAccount={{this.createAccount}} @loggingIn={{this.loggingIn}} @showSecondFactor={{this.showSecondFactor}} />
-      {{/unless}}
-    {{/if}}
-  </:footer>
-</DModal></template>
+      <:footer>
+        {{#if this.site.mobileView}}
+          {{#unless this.hasNoLoginOptions}}
+            <LoginPageCta
+              @canLoginLocal={{this.canLoginLocal}}
+              @showSecurityKey={{this.showSecurityKey}}
+              @login={{this.triggerLogin}}
+              @loginButtonLabel={{this.loginButtonLabel}}
+              @loginDisabled={{this.loginDisabled}}
+              @showSignupLink={{this.showSignupLink}}
+              @createAccount={{this.createAccount}}
+              @loggingIn={{this.loggingIn}}
+              @showSecondFactor={{this.showSecondFactor}}
+            />
+          {{/unless}}
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
   @service capabilities;
   @service dialog;
   @service siteSettings;

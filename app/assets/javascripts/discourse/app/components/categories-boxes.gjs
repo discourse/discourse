@@ -19,87 +19,131 @@ import discourseComputed from "discourse/lib/decorators";
   "anyLogos:with-logos:no-logos",
   "hasSubcategories:with-subcategories"
 )
-export default class CategoriesBoxes extends Component {<template><PluginOutlet @name="categories-boxes-wrapper" @outletArgs={{hash categories=this.categories}}>
-  {{#each this.categories as |c|}}
-    <PluginOutlet @name="category-box-before-each-box" @outletArgs={{hash category=c}} />
+export default class CategoriesBoxes extends Component {
+  <template>
+    <PluginOutlet
+      @name="categories-boxes-wrapper"
+      @outletArgs={{hash categories=this.categories}}
+    >
+      {{#each this.categories as |c|}}
+        <PluginOutlet
+          @name="category-box-before-each-box"
+          @outletArgs={{hash category=c}}
+        />
 
-    <div style={{categoryColorVariable c.color}} data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} data-url={{c.url}} class="category category-box category-box-{{c.slug}}
-        {{if c.isMuted "muted"}}">
-      <div class="category-box-inner">
-        {{#unless c.isMuted}}
-          <div class="category-logo">
-            {{#if c.uploaded_logo.url}}
-              <CategoryLogo @category={{c}} />
-            {{/if}}
-          </div>
-        {{/unless}}
-
-        <div class="category-details">
-          <div class="category-box-heading">
-            <a class="parent-box-link" href={{c.url}}>
-              <h3>
-                <CategoryTitleBefore @category={{c}} />
-                {{#if c.read_restricted}}
-                  {{dIcon this.lockIcon}}
+        <div
+          style={{categoryColorVariable c.color}}
+          data-category-id={{c.id}}
+          data-notification-level={{c.notificationLevelString}}
+          data-url={{c.url}}
+          class="category category-box category-box-{{c.slug}}
+            {{if c.isMuted 'muted'}}"
+        >
+          <div class="category-box-inner">
+            {{#unless c.isMuted}}
+              <div class="category-logo">
+                {{#if c.uploaded_logo.url}}
+                  <CategoryLogo @category={{c}} />
                 {{/if}}
-                {{c.displayName}}
-              </h3>
-            </a>
-          </div>
+              </div>
+            {{/unless}}
 
-          {{#unless c.isMuted}}
-            <div class="description">
-              {{htmlSafe c.description_excerpt}}
+            <div class="category-details">
+              <div class="category-box-heading">
+                <a class="parent-box-link" href={{c.url}}>
+                  <h3>
+                    <CategoryTitleBefore @category={{c}} />
+                    {{#if c.read_restricted}}
+                      {{dIcon this.lockIcon}}
+                    {{/if}}
+                    {{c.displayName}}
+                  </h3>
+                </a>
+              </div>
+
+              {{#unless c.isMuted}}
+                <div class="description">
+                  {{htmlSafe c.description_excerpt}}
+                </div>
+
+                {{#if c.isGrandParent}}
+                  {{#each c.subcategories as |subcategory|}}
+                    <div
+                      data-category-id={{subcategory.id}}
+                      data-notification-level={{subcategory.notificationLevelString}}
+                      style={{borderColor subcategory.color}}
+                      class="subcategory with-subcategories
+                        {{if
+                          subcategory.uploaded_logo.url
+                          'has-logo'
+                          'no-logo'
+                        }}"
+                    >
+                      <div class="subcategory-box-inner">
+                        <CategoryTitleLink
+                          @tagName="h4"
+                          @category={{subcategory}}
+                        />
+                        {{#if subcategory.subcategories}}
+                          <div class="subcategories">
+                            {{#each
+                              subcategory.subcategories
+                              as |subsubcategory|
+                            }}
+                              {{#unless subsubcategory.isMuted}}
+                                <span class="subcategory">
+                                  <CategoryTitleBefore
+                                    @category={{subsubcategory}}
+                                  />
+                                  {{categoryLink
+                                    subsubcategory
+                                    hideParent="true"
+                                  }}
+                                </span>
+                              {{/unless}}
+                            {{/each}}
+                          </div>
+                        {{/if}}
+                      </div>
+                    </div>
+                  {{/each}}
+                {{else if c.subcategories}}
+                  <div class="subcategories">
+                    {{#each c.subcategories as |sc|}}
+                      <a class="subcategory" href={{sc.url}}>
+                        <span class="subcategory-image-placeholder">
+                          {{#if sc.uploaded_logo.url}}
+                            <CategoryLogo @category={{sc}} />
+                          {{/if}}
+                        </span>
+
+                        {{categoryLink sc hideParent="true"}}
+                      </a>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              {{/unless}}
             </div>
 
-            {{#if c.isGrandParent}}
-              {{#each c.subcategories as |subcategory|}}
-                <div data-category-id={{subcategory.id}} data-notification-level={{subcategory.notificationLevelString}} style={{borderColor subcategory.color}} class="subcategory with-subcategories
-                    {{if subcategory.uploaded_logo.url "has-logo" "no-logo"}}">
-                  <div class="subcategory-box-inner">
-                    <CategoryTitleLink @tagName="h4" @category={{subcategory}} />
-                    {{#if subcategory.subcategories}}
-                      <div class="subcategories">
-                        {{#each subcategory.subcategories as |subsubcategory|}}
-                          {{#unless subsubcategory.isMuted}}
-                            <span class="subcategory">
-                              <CategoryTitleBefore @category={{subsubcategory}} />
-                              {{categoryLink subsubcategory hideParent="true"}}
-                            </span>
-                          {{/unless}}
-                        {{/each}}
-                      </div>
-                    {{/if}}
-                  </div>
-                </div>
-              {{/each}}
-            {{else if c.subcategories}}
-              <div class="subcategories">
-                {{#each c.subcategories as |sc|}}
-                  <a class="subcategory" href={{sc.url}}>
-                    <span class="subcategory-image-placeholder">
-                      {{#if sc.uploaded_logo.url}}
-                        <CategoryLogo @category={{sc}} />
-                      {{/if}}
-                    </span>
-
-                    {{categoryLink sc hideParent="true"}}
-                  </a>
-                {{/each}}
-              </div>
-            {{/if}}
-          {{/unless}}
+            <PluginOutlet
+              @name="category-box-below-each-category"
+              @outletArgs={{hash category=c}}
+            />
+          </div>
         </div>
 
-        <PluginOutlet @name="category-box-below-each-category" @outletArgs={{hash category=c}} />
-      </div>
-    </div>
+        <PluginOutlet
+          @name="category-box-after-each-box"
+          @outletArgs={{hash category=c}}
+        />
+      {{/each}}
+    </PluginOutlet>
 
-    <PluginOutlet @name="category-box-after-each-box" @outletArgs={{hash category=c}} />
-  {{/each}}
-</PluginOutlet>
-
-<PluginOutlet @name="category-boxes-after-boxes" @outletArgs={{hash category=this.c}} /></template>
+    <PluginOutlet
+      @name="category-boxes-after-boxes"
+      @outletArgs={{hash category=this.c}}
+    />
+  </template>
   lockIcon = "lock";
 
   @discourseComputed("categories.[].uploaded_logo.url")

@@ -12,19 +12,26 @@ import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-export default class SharePanel extends Component {<template><div class="header">
-  <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
-</div>
+export default class SharePanel extends Component {
+  <template>
+    <div class="header">
+      <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
+    </div>
 
-<div class="body">
-  <DTextarea @value={{this.shareUrl}} @aria-label={{iN "share.url"}} class="topic-share-url" />
+    <div class="body">
+      <DTextarea
+        @value={{this.shareUrl}}
+        @aria-label={{iN "share.url"}}
+        class="topic-share-url"
+      />
 
-  <div class="sources">
-    {{#each this.sources as |source|}}
-      <ShareSource @source={{source}} @action={{this.share}} />
-    {{/each}}
-  </div>
-</div></template>
+      <div class="sources">
+        {{#each this.sources as |source|}}
+          <ShareSource @source={{source}} @action={{this.share}} />
+        {{/each}}
+      </div>
+    </div>
+  </template>
   tagName = null;
 
   @alias("panel.model.type") type;

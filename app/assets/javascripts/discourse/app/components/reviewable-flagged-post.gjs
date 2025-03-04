@@ -13,32 +13,51 @@ import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
 import { bind } from "discourse/lib/decorators";
 
-export default class ReviewableFlaggedPost extends Component {<template><div class="flagged-post-header">
-  <ReviewableTopicLink @reviewable={{@reviewable}} @tagName />
-  <ReviewablePostEdits @reviewable={{@reviewable}} @tagName />
-</div>
-
-<div class="post-contents-wrapper">
-  <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
-  <div class="post-contents">
-    <ReviewablePostHeader @reviewable={{@reviewable}} @createdBy={{@reviewable.target_created_by}} @tagName />
-    <div class="post-body {{if this.isCollapsed "is-collapsed"}}" {{didInsert this.calculatePostBodySize @reviewable}}>
-      {{#if @reviewable.blank_post}}
-        <p>{{iN "review.deleted_post"}}</p>
-      {{else}}
-        {{htmlSafe @reviewable.cooked}}
-      {{/if}}
+export default class ReviewableFlaggedPost extends Component {
+  <template>
+    <div class="flagged-post-header">
+      <ReviewableTopicLink @reviewable={{@reviewable}} @tagName />
+      <ReviewablePostEdits @reviewable={{@reviewable}} @tagName />
     </div>
 
-    {{#if this.isLongPost}}
-      <DButton @action={{this.toggleContent}} @label={{this.collapseButtonProps.label}} @icon={{this.collapseButtonProps.icon}} class="btn-default btn-icon post-body__toggle-btn" />
-    {{/if}}
-    <span>
-      <PluginOutlet @name="after-reviewable-flagged-post-body" @connectorTagName="div" @outletArgs={{hash model=@reviewable}} />
-    </span>
-    {{yield}}
-  </div>
-</div></template>
+    <div class="post-contents-wrapper">
+      <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+      <div class="post-contents">
+        <ReviewablePostHeader
+          @reviewable={{@reviewable}}
+          @createdBy={{@reviewable.target_created_by}}
+          @tagName
+        />
+        <div
+          class="post-body {{if this.isCollapsed 'is-collapsed'}}"
+          {{didInsert this.calculatePostBodySize @reviewable}}
+        >
+          {{#if @reviewable.blank_post}}
+            <p>{{iN "review.deleted_post"}}</p>
+          {{else}}
+            {{htmlSafe @reviewable.cooked}}
+          {{/if}}
+        </div>
+
+        {{#if this.isLongPost}}
+          <DButton
+            @action={{this.toggleContent}}
+            @label={{this.collapseButtonProps.label}}
+            @icon={{this.collapseButtonProps.icon}}
+            class="btn-default btn-icon post-body__toggle-btn"
+          />
+        {{/if}}
+        <span>
+          <PluginOutlet
+            @name="after-reviewable-flagged-post-body"
+            @connectorTagName="div"
+            @outletArgs={{hash model=@reviewable}}
+          />
+        </span>
+        {{yield}}
+      </div>
+    </div>
+  </template>
   @tracked isCollapsed = false;
   @tracked isLongPost = false;
   maxPostHeight = 300;

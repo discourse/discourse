@@ -12,16 +12,33 @@ import dIcon from "discourse/helpers/d-icon";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
-export default class CalendarDateTimeInput extends Component {<template><div class="calendar-date-time-input" {{didInsert this.setupInternalDateTime}} {{didInsert this.setupPikaday}} {{didUpdate this.changeMinDate @minDate}} {{didUpdate this.changeDate @date}} {{didUpdate this.changeTime @time}}>
-  <Input class="fake-input" />
+export default class CalendarDateTimeInput extends Component {
+  <template>
+    <div
+      class="calendar-date-time-input"
+      {{didInsert this.setupInternalDateTime}}
+      {{didInsert this.setupPikaday}}
+      {{didUpdate this.changeMinDate @minDate}}
+      {{didUpdate this.changeDate @date}}
+      {{didUpdate this.changeTime @time}}
+    >
+      <Input class="fake-input" />
 
-  <div class="date-picker" id="picker-container-{{@datePickerId}}"></div>
+      <div class="date-picker" id="picker-container-{{@datePickerId}}"></div>
 
-  <div class="time-pickers">
-    {{dIcon "far-clock"}}
-    <Input maxlength={{5}} placeholder="hh:mm" @type="time" @value={{this._time}} class="time-picker" {{on "input" (action this.onChangeTime)}} />
-  </div>
-</div></template>
+      <div class="time-pickers">
+        {{dIcon "far-clock"}}
+        <Input
+          maxlength={{5}}
+          placeholder="hh:mm"
+          @type="time"
+          @value={{this._time}}
+          class="time-picker"
+          {{on "input" (action this.onChangeTime)}}
+        />
+      </div>
+    </div>
+  </template>
   _timeFormat = this.args.timeFormat || "HH:mm:ss";
   _dateFormat = this.args.dateFormat || "YYYY-MM-DD";
   _dateTimeFormat = this.args.dateTimeFormat || "YYYY-MM-DD HH:mm:ss";

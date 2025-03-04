@@ -4,18 +4,21 @@ import $ from "jquery";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
 
-export default class LinkToInput extends Component {<template>{{#if this.showInput}}
-  {{yield}}
-{{else}}
-  <a href>
-    {{#if this.key}}
-      {{iN this.key}}
+export default class LinkToInput extends Component {
+  <template>
+    {{#if this.showInput}}
+      {{yield}}
+    {{else}}
+      <a href>
+        {{#if this.key}}
+          {{iN this.key}}
+        {{/if}}
+        {{#if this.icon}}
+          {{dIcon this.icon}}
+        {{/if}}
+      </a>
     {{/if}}
-    {{#if this.icon}}
-      {{dIcon this.icon}}
-    {{/if}}
-  </a>
-{{/if}}</template>
+  </template>
   showInput = false;
 
   click() {

@@ -6,7 +6,16 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 
 @tagName("")
-export default class CopyButton extends Component {<template><DButton @icon={{this.copyIcon}} @action={{this.copy}} class="copy-button {{this.copyClass}}" @ariaLabel={{this.ariaLabel}} @translatedLabel={{this.copyTranslatedLabel}} /></template>
+export default class CopyButton extends Component {
+  <template>
+    <DButton
+      @icon={{this.copyIcon}}
+      @action={{this.copy}}
+      class="copy-button {{this.copyClass}}"
+      @ariaLabel={{this.ariaLabel}}
+      @translatedLabel={{this.copyTranslatedLabel}}
+    />
+  </template>
   copyIcon = "copy";
   copyClass = "btn-primary";
 

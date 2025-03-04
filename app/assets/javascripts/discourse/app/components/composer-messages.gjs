@@ -17,12 +17,23 @@ import { i18n } from "discourse-i18n";
 let _messagesCache = {};
 
 @classNameBindings(":composer-popup-container", "hidden")
-export default class ComposerMessages extends Component {<template>{{#each this.messages as |message|}}
-  <ComposerMessage @message={{message}} @closeMessage={{this.closeMessage}} @shareModal={{fn (mut this.showShareModal) true}} @switchPM={{this.switchPM}} />
-  {{#if this.showShareModal}}
-    <ShareTopic @closeModal={{fn (mut this.showShareModal) false}} @model={{this.shareModalData}} />
-  {{/if}}
-{{/each}}</template>
+export default class ComposerMessages extends Component {
+  <template>
+    {{#each this.messages as |message|}}
+      <ComposerMessage
+        @message={{message}}
+        @closeMessage={{this.closeMessage}}
+        @shareModal={{fn (mut this.showShareModal) true}}
+        @switchPM={{this.switchPM}}
+      />
+      {{#if this.showShareModal}}
+        <ShareTopic
+          @closeModal={{fn (mut this.showShareModal) false}}
+          @model={{this.shareModalData}}
+        />
+      {{/if}}
+    {{/each}}
+  </template>
   @service modal;
   @tracked showShareModal;
 

@@ -18,16 +18,17 @@ module(
         .exists("a checkbox component exists");
     });
 
-    test("renders a checkbox with a label", async function (assert) {const self = this;
+    test("renders a checkbox with a label", async function (assert) {
+      const self = this;
 
       const attributes = {
         label: "Click this box",
       };
       this.set("attributes", attributes);
 
-      await render(
-        <template><Checkbox @attributes={{self.attributes}} /></template>
-      );
+      await render(<template>
+        <Checkbox @attributes={{self.attributes}} />
+      </template>);
 
       assert
         .dom(

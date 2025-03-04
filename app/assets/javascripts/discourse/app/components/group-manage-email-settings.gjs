@@ -15,55 +15,99 @@ import { i18n } from "discourse-i18n";
 import not from "truth-helpers/helpers/not";
 
 @tagName("")
-export default class GroupManageEmailSettings extends Component {<template><div class="group-manage-email-settings">
-  <h3>{{iN "groups.manage.email.smtp_title"}}</h3>
-  <p>{{iN "groups.manage.email.smtp_instructions"}}</p>
+export default class GroupManageEmailSettings extends Component {
+  <template>
+    <div class="group-manage-email-settings">
+      <h3>{{iN "groups.manage.email.smtp_title"}}</h3>
+      <p>{{iN "groups.manage.email.smtp_instructions"}}</p>
 
-  <label for="enable_smtp">
-    <Input @type="checkbox" @checked={{this.group.smtp_enabled}} id="enable_smtp" tabindex="1" {{on0 "input" this.smtpEnabledChange}} />
-    {{iN "groups.manage.email.enable_smtp"}}
-  </label>
-
-  {{#if this.group.smtp_enabled}}
-    <GroupSmtpEmailSettings @group={{this.group}} @smtpSettingsValid={{this.smtpSettingsValid}} @onChangeSmtpSettingsValid={{this.onChangeSmtpSettingsValid}} />
-  {{/if}}
-
-  {{#if this.siteSettings.enable_imap}}
-    <div class="group-manage-email-imap-wrapper">
-      <br />
-
-      <h3>{{iN "groups.manage.email.imap_title"}}</h3>
-      <p>
-        {{htmlSafe (iN "groups.manage.email.imap_instructions")}}
-      </p>
-
-      <div class="alert alert-warning">{{iN "groups.manage.email.imap_alpha_warning"}}</div>
-
-      <label for="enable_imap">
-        <Input @type="checkbox" disabled={{not this.enableImapSettings}} @checked={{this.group.imap_enabled}} id="enable_imap" tabindex="8" {{on0 "input" this.imapEnabledChange}} />
-        {{iN "groups.manage.email.enable_imap"}}
+      <label for="enable_smtp">
+        <Input
+          @type="checkbox"
+          @checked={{this.group.smtp_enabled}}
+          id="enable_smtp"
+          tabindex="1"
+          {{on0 "input" this.smtpEnabledChange}}
+        />
+        {{iN "groups.manage.email.enable_smtp"}}
       </label>
 
-      {{#if this.group.imap_enabled}}
-        <GroupImapEmailSettings @group={{this.group}} @imapSettingsValid={{this.imapSettingsValid}} />
+      {{#if this.group.smtp_enabled}}
+        <GroupSmtpEmailSettings
+          @group={{this.group}}
+          @smtpSettingsValid={{this.smtpSettingsValid}}
+          @onChangeSmtpSettingsValid={{this.onChangeSmtpSettingsValid}}
+        />
       {{/if}}
-    </div>
-  {{/if}}
 
-  <div class="group-manage-email-additional-settings-wrapper">
-    <div class="control-group">
-      <h3>{{iN "groups.manage.email.imap_additional_settings"}}</h3>
-      <label class="control-group-inline" for="allow_unknown_sender_topic_replies">
-        <Input @type="checkbox" name="allow_unknown_sender_topic_replies" id="allow_unknown_sender_topic_replies" @checked={{this.group.allow_unknown_sender_topic_replies}} tabindex="13" />
-        <span>{{iN "groups.manage.email.settings.allow_unknown_sender_topic_replies"}}</span>
-      </label>
-      <p>{{iN "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"}}</p>
-    </div>
-  </div>
+      {{#if this.siteSettings.enable_imap}}
+        <div class="group-manage-email-imap-wrapper">
+          <br />
 
-  <br />
-  <GroupManageSaveButton @model={{this.group}} @disabled={{not this.emailSettingsValid}} @beforeSave={{this.beforeSave}} @afterSave={{this.afterSave}} @tabindex="15" />
-</div></template>
+          <h3>{{iN "groups.manage.email.imap_title"}}</h3>
+          <p>
+            {{htmlSafe (iN "groups.manage.email.imap_instructions")}}
+          </p>
+
+          <div class="alert alert-warning">{{iN
+              "groups.manage.email.imap_alpha_warning"
+            }}</div>
+
+          <label for="enable_imap">
+            <Input
+              @type="checkbox"
+              disabled={{not this.enableImapSettings}}
+              @checked={{this.group.imap_enabled}}
+              id="enable_imap"
+              tabindex="8"
+              {{on0 "input" this.imapEnabledChange}}
+            />
+            {{iN "groups.manage.email.enable_imap"}}
+          </label>
+
+          {{#if this.group.imap_enabled}}
+            <GroupImapEmailSettings
+              @group={{this.group}}
+              @imapSettingsValid={{this.imapSettingsValid}}
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+
+      <div class="group-manage-email-additional-settings-wrapper">
+        <div class="control-group">
+          <h3>{{iN "groups.manage.email.imap_additional_settings"}}</h3>
+          <label
+            class="control-group-inline"
+            for="allow_unknown_sender_topic_replies"
+          >
+            <Input
+              @type="checkbox"
+              name="allow_unknown_sender_topic_replies"
+              id="allow_unknown_sender_topic_replies"
+              @checked={{this.group.allow_unknown_sender_topic_replies}}
+              tabindex="13"
+            />
+            <span>{{iN
+                "groups.manage.email.settings.allow_unknown_sender_topic_replies"
+              }}</span>
+          </label>
+          <p>{{iN
+              "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"
+            }}</p>
+        </div>
+      </div>
+
+      <br />
+      <GroupManageSaveButton
+        @model={{this.group}}
+        @disabled={{not this.emailSettingsValid}}
+        @beforeSave={{this.beforeSave}}
+        @afterSave={{this.afterSave}}
+        @tabindex="15"
+      />
+    </div>
+  </template>
   @service dialog;
 
   imapSettingsValid = false;

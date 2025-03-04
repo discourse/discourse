@@ -9,14 +9,24 @@ import { resendActivationEmail } from "discourse/lib/user-activation";
 import ActivationEdit from "./activation-edit";
 import ActivationResent from "./activation-resent";
 
-export default class NotActivated extends Component {<template><DModal @closeModal={{@closeModal}} @title={{iN "log_in"}} class="not-activated-modal">
-  <:body>
-    {{htmlSafe (iN "login.not_activated" sentTo=@model.sentTo)}}
-  </:body>
-  <:footer>
-    <ActivationControls @sendActivationEmail={{this.sendActivationEmail}} @editActivationEmail={{this.editActivationEmail}} />
-  </:footer>
-</DModal></template>
+export default class NotActivated extends Component {
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{iN "log_in"}}
+      class="not-activated-modal"
+    >
+      <:body>
+        {{htmlSafe (iN "login.not_activated" sentTo=@model.sentTo)}}
+      </:body>
+      <:footer>
+        <ActivationControls
+          @sendActivationEmail={{this.sendActivationEmail}}
+          @editActivationEmail={{this.editActivationEmail}}
+        />
+      </:footer>
+    </DModal>
+  </template>
   @service modal;
 
   @action

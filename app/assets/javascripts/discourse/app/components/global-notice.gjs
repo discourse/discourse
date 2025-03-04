@@ -54,25 +54,35 @@ class Notice extends EmberObject {
 }
 
 @tagName("")
-export default class GlobalNotice extends Component {<template><div class="global-notice">
-  {{#if this.visible}}
-    {{#each this.notices as |notice|}}
-      <div class="row">
-        <div id="global-notice-{{notice.id}}" class="alert alert-{{notice.options.level}} {{notice.id}}">
-          {{#if notice.options.html}}
-            {{htmlSafe0 notice.options.html}}
-          {{/if}}
+export default class GlobalNotice extends Component {
+  <template>
+    <div class="global-notice">
+      {{#if this.visible}}
+        {{#each this.notices as |notice|}}
+          <div class="row">
+            <div
+              id="global-notice-{{notice.id}}"
+              class="alert alert-{{notice.options.level}} {{notice.id}}"
+            >
+              {{#if notice.options.html}}
+                {{htmlSafe0 notice.options.html}}
+              {{/if}}
 
-          <span class="text">{{htmlSafe0 notice.text}}</span>
+              <span class="text">{{htmlSafe0 notice.text}}</span>
 
-          {{#if notice.options.dismissable}}
-            <DButton @icon="xmark" @action={{fn this.dismissNotice notice}} class="btn-transparent close" />
-          {{/if}}
-        </div>
-      </div>
-    {{/each}}
-  {{/if}}
-</div></template>
+              {{#if notice.options.dismissable}}
+                <DButton
+                  @icon="xmark"
+                  @action={{fn this.dismissNotice notice}}
+                  class="btn-transparent close"
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+  </template>
   @service keyValueStore;
   @service("logsNotice") logsNoticeService;
   @service router;

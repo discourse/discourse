@@ -8,22 +8,29 @@ import discourseComputed from "discourse/lib/decorators";
 const MAX_SUMMARY_RESULTS = 6;
 
 @tagName("")
-export default class UserSummaryTopicsList extends Component {<template>{{#if @items}}
-  <ul>
-    {{#each @items as |item|}}
-      {{yield item}}
-    {{/each}}
-  </ul>
-  {{#if this.hasMore}}
-    <p>
-      <LinkTo @route={{concat "userActivity." @type}} @model={{@user}} class="more">
-        {{iN (concat "user.summary.more_" @type)}}
-      </LinkTo>
-    </p>
-  {{/if}}
-{{else}}
-  <p>{{iN (concat "user.summary.no_" @type)}}</p>
-{{/if}}</template>
+export default class UserSummaryTopicsList extends Component {
+  <template>
+    {{#if @items}}
+      <ul>
+        {{#each @items as |item|}}
+          {{yield item}}
+        {{/each}}
+      </ul>
+      {{#if this.hasMore}}
+        <p>
+          <LinkTo
+            @route={{concat "userActivity." @type}}
+            @model={{@user}}
+            class="more"
+          >
+            {{iN (concat "user.summary.more_" @type)}}
+          </LinkTo>
+        </p>
+      {{/if}}
+    {{else}}
+      <p>{{iN (concat "user.summary.no_" @type)}}</p>
+    {{/if}}
+  </template>
 
   @discourseComputed("items.length")
   hasMore(length) {

@@ -10,11 +10,19 @@ import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
 
-export default class ReviewablePostEdits extends Component {<template>{{#if this.hasEdits}}
-  <a href {{on "click" this.showEditHistory}} class="has-edits {{this.historyClass}}" title={{iN "post.last_edited_on" dateTime=this.editedDate}}>
-    {{dIcon "pencil"}}
-  </a>
-{{/if}}</template>
+export default class ReviewablePostEdits extends Component {
+  <template>
+    {{#if this.hasEdits}}
+      <a
+        href
+        {{on "click" this.showEditHistory}}
+        class="has-edits {{this.historyClass}}"
+        title={{iN "post.last_edited_on" dateTime=this.editedDate}}
+      >
+        {{dIcon "pencil"}}
+      </a>
+    {{/if}}
+  </template>
   @service modal;
 
   @gt("reviewable.post_version", 1) hasEdits;

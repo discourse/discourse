@@ -10,26 +10,42 @@ import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 
 @classNameBindings("docked")
-export default class TopicProgress extends Component {<template>{{#unless this.hideProgress}}
-  {{yield}}
-{{/unless}}
+export default class TopicProgress extends Component {
+  <template>
+    {{#unless this.hideProgress}}
+      {{yield}}
+    {{/unless}}
 
-{{#if this.showBackButton}}
-  <div class="progress-back-container">
-    <DButton @label="topic.timeline.back" @action={{this.goBack}} @icon="arrow-down" class="btn-primary btn-small progress-back" />
-  </div>
-{{/if}}
+    {{#if this.showBackButton}}
+      <div class="progress-back-container">
+        <DButton
+          @label="topic.timeline.back"
+          @action={{this.goBack}}
+          @icon="arrow-down"
+          class="btn-primary btn-small progress-back"
+        />
+      </div>
+    {{/if}}
 
-<nav title={{iN "topic.progress.title"}} aria-label={{iN "topic.progress.title"}} class={{if this.hideProgress "hidden"}} id="topic-progress" style={{htmlSafe this.progressStyle}}>
-  <div class="nums">
-    <span>{{this.progressPosition}}</span>
-    <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
-    <span class={{if this.hugeNumberOfPosts "hidden"}}>{{this.postStream.filteredPostsCount}}</span>
-  </div>
-  <div class="bg"></div>
-</nav>
+    <nav
+      title={{iN "topic.progress.title"}}
+      aria-label={{iN "topic.progress.title"}}
+      class={{if this.hideProgress "hidden"}}
+      id="topic-progress"
+      style={{htmlSafe this.progressStyle}}
+    >
+      <div class="nums">
+        <span>{{this.progressPosition}}</span>
+        <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
+        <span
+          class={{if this.hugeNumberOfPosts "hidden"}}
+        >{{this.postStream.filteredPostsCount}}</span>
+      </div>
+      <div class="bg"></div>
+    </nav>
 
-<PluginOutlet @name="after-topic-progress" @connectorTagName="div" /></template>
+    <PluginOutlet @name="after-topic-progress" @connectorTagName="div" />
+  </template>
   elementId = "topic-progress-wrapper";
   docked = false;
   progressPosition = null;

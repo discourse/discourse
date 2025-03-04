@@ -33,11 +33,17 @@ export function resetWidgetCleanCallbacks() {
   _cleanCallbacks = {};
 }
 
-export default class MountWidget extends Component {<template>{{#each this._childComponents as |info|}}
-  {{#in-element info.element insertBefore=null}}
-    <info.component @data={{info.data}} @setWrapperElementAttrs={{info.setWrapperElementAttrs}} />
-  {{/in-element}}
-{{/each}}</template>
+export default class MountWidget extends Component {
+  <template>
+    {{#each this._childComponents as |info|}}
+      {{#in-element info.element insertBefore=null}}
+        <info.component
+          @data={{info.data}}
+          @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
+        />
+      {{/in-element}}
+    {{/each}}
+  </template>
   dirtyKeys = null;
   _tree = null;
   _rootNode = null;

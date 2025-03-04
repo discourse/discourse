@@ -6,18 +6,34 @@ import AssistantItem from "discourse/components/search-menu/results/assistant-it
 import iN from "discourse/helpers/i18n";
 import User from "discourse/models/user";
 
-export default class RecentSearches extends Component {<template>{{#if this.currentUser.recent_searches}}
-  <div class="search-menu-recent">
-    <div class="heading">
-      <h4>{{iN "search.recent"}}</h4>
-      <FlatButton @title="search.clear_recent" @icon="xmark" @action={{this.clearRecent}} class="clear-recent-searches" />
-    </div>
+export default class RecentSearches extends Component {
+  <template>
+    {{#if this.currentUser.recent_searches}}
+      <div class="search-menu-recent">
+        <div class="heading">
+          <h4>{{iN "search.recent"}}</h4>
+          <FlatButton
+            @title="search.clear_recent"
+            @icon="xmark"
+            @action={{this.clearRecent}}
+            class="clear-recent-searches"
+          />
+        </div>
 
-    {{#each this.currentUser.recent_searches as |slug|}}
-      <AssistantItem @icon="clock-rotate-left" @label={{slug}} @slug={{slug}} @closeSearchMenu={{@closeSearchMenu}} @searchTermChanged={{@searchTermChanged}} @usage="recent-search" @concatSlug={{true}} />
-    {{/each}}
-  </div>
-{{/if}}</template>
+        {{#each this.currentUser.recent_searches as |slug|}}
+          <AssistantItem
+            @icon="clock-rotate-left"
+            @label={{slug}}
+            @slug={{slug}}
+            @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
+            @usage="recent-search"
+            @concatSlug={{true}}
+          />
+        {{/each}}
+      </div>
+    {{/if}}
+  </template>
   @service currentUser;
   @service siteSettings;
 

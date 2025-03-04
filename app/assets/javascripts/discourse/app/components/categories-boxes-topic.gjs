@@ -6,11 +6,14 @@ import discourseComputed from "discourse/lib/decorators";
 
 @tagName("li")
 @attributeBindings("topic.id:data-topic-id")
-export default class CategoriesBoxesTopic extends Component {<template>{{dIcon this.topicStatusIcon}}
+export default class CategoriesBoxesTopic extends Component {
+  <template>
+    {{dIcon this.topicStatusIcon}}
 
-<a href={{this.topic.lastUnreadUrl}} class="title">
-  {{htmlSafe this.topic.fancyTitle}}
-</a></template>
+    <a href={{this.topic.lastUnreadUrl}} class="title">
+      {{htmlSafe this.topic.fancyTitle}}
+    </a>
+  </template>
 
   @discourseComputed("topic.pinned", "topic.closed", "topic.archived")
   topicStatusIcon(pinned, closed, archived) {

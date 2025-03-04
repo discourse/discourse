@@ -7,9 +7,16 @@ import periodTitle from "discourse/helpers/period-title";
 import discourseComputed from "discourse/lib/decorators";
 
 @classNames("top-title-buttons")
-export default class TopPeriodButtons extends Component {<template>{{#each this.periods as |p|}}
-  <DButton @action={{fn this.changePeriod p}} @translatedLabel={{periodTitle p}} class="btn-default" />
-{{/each}}</template>
+export default class TopPeriodButtons extends Component {
+  <template>
+    {{#each this.periods as |p|}}
+      <DButton
+        @action={{fn this.changePeriod p}}
+        @translatedLabel={{periodTitle p}}
+        class="btn-default"
+      />
+    {{/each}}
+  </template>
 
   @discourseComputed("period")
   periods(period) {

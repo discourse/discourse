@@ -11,21 +11,24 @@ import htmlSafe from "discourse/helpers/html-safe";
 
 @tagName("ul")
 @classNames("mobile-nav")
-export default class MobileNav extends Component {<template>{{#if this.site.mobileView}}
-  {{#if this.selectedHtml}}
-    <li>
-      <a href {{on0 "click" this.toggleExpanded}} class="expander">
-        <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-        {{dIcon "caret-down"}}
-      </a>
-    </li>
-  {{/if}}
-  <ul class="drop {{if this.expanded "expanded"}}">
-    {{yield}}
-  </ul>
-{{else}}
-  {{yield}}
-{{/if}}</template>
+export default class MobileNav extends Component {
+  <template>
+    {{#if this.site.mobileView}}
+      {{#if this.selectedHtml}}
+        <li>
+          <a href {{on0 "click" this.toggleExpanded}} class="expander">
+            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
+            {{dIcon "caret-down"}}
+          </a>
+        </li>
+      {{/if}}
+      <ul class="drop {{if this.expanded 'expanded'}}">
+        {{yield}}
+      </ul>
+    {{else}}
+      {{yield}}
+    {{/if}}
+  </template>
   @service router;
   selectedHtml = null;
 

@@ -92,13 +92,14 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       .exists("it filters the correct emoji using search alias");
   });
 
-  test("When selecting an emoji", async function (assert) {const self = this;
+  test("When selecting an emoji", async function (assert) {
+    const self = this;
 
     this.didSelectEmoji = (emoji) => assert.step(emoji);
 
-    await render(
-      <template><Content @didSelectEmoji={{self.didSelectEmoji}} /></template>
-    );
+    await render(<template>
+      <Content @didSelectEmoji={{self.didSelectEmoji}} />
+    </template>);
     await click('img.emoji[data-emoji="grinning"]');
 
     assert.verifySteps(["grinning"]);
@@ -178,13 +179,14 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       );
   });
 
-  test("When selecting a toned an emoji", async function (assert) {const self = this;
+  test("When selecting a toned an emoji", async function (assert) {
+    const self = this;
 
     this.didSelectEmoji = (emoji) => assert.step(emoji);
 
-    await render(
-      <template><Content @didSelectEmoji={{self.didSelectEmoji}} /></template>
-    );
+    await render(<template>
+      <Content @didSelectEmoji={{self.didSelectEmoji}} />
+    </template>);
     const picker = emojiPicker(".emoji-picker");
     await picker.select("raised_hands");
     await picker.tone(2);

@@ -7,9 +7,12 @@ module("Integration | Component | iframed-html", function (hooks) {
   setupRenderingTest(hooks);
 
   test("appends the html into the iframe", async function (assert) {
-    await render(
-      <template><IframedHtml @html="<h1 id='find-me'>hello</h1>" class="this-is-an-iframe" /></template>
-    );
+    await render(<template>
+      <IframedHtml
+        @html="<h1 id='find-me'>hello</h1>"
+        class="this-is-an-iframe"
+      />
+    </template>);
 
     assert
       .dom("iframe.this-is-an-iframe")

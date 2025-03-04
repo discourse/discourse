@@ -1,4 +1,11 @@
-import { click, fillIn, find, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";

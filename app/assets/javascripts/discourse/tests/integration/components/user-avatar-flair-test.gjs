@@ -48,7 +48,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     resetFlair();
   });
 
-  test("avatar flair for admin user", async function (assert) {const self = this;
+  test("avatar flair for admin user", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: true,
@@ -68,7 +69,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
   });
 
-  test("avatar flair for moderator user with fallback to staff", async function (assert) {const self = this;
+  test("avatar flair for moderator user with fallback to staff", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -88,7 +90,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
   });
 
-  test("avatar flair for trust level", async function (assert) {const self = this;
+  test("avatar flair for trust level", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -108,7 +111,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
   });
 
-  test("avatar flair for trust level when set to none", async function (assert) {const self = this;
+  test("avatar flair for trust level when set to none", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -123,7 +127,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
-  test("avatar flair for trust level with fallback", async function (assert) {const self = this;
+  test("avatar flair for trust level with fallback", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -143,7 +148,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
   });
 
-  test("avatar flair for login-required site, before login", async function (assert) {const self = this;
+  test("avatar flair for login-required site, before login", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -159,7 +165,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
-  test("avatar flair for primary group flair", async function (assert) {const self = this;
+  test("avatar flair for primary group flair", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,
@@ -184,7 +191,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
   });
 
-  test("user-avatar-flair for user with no flairs", async function (assert) {const self = this;
+  test("user-avatar-flair for user with no flairs", async function (assert) {
+    const self = this;
 
     this.set("args", {
       admin: false,

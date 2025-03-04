@@ -7,11 +7,19 @@ import { i18n } from "discourse-i18n";
 
 @classNames("colors-container")
 @attributeBindings("role", "ariaLabel:aria-label")
-export default class ColorPicker extends Component {<template>{{#each this.colors as |c|}}
-  <ColorPickerChoice @color={{c}} @usedColors={{this.usedColors}} @selectColor={{action "selectColor"}} @ariaLabel={{this.getColorLabel c}}>
-    {{dIcon "check"}}
-  </ColorPickerChoice>
-{{/each}}</template>
+export default class ColorPicker extends Component {
+  <template>
+    {{#each this.colors as |c|}}
+      <ColorPickerChoice
+        @color={{c}}
+        @usedColors={{this.usedColors}}
+        @selectColor={{action "selectColor"}}
+        @ariaLabel={{this.getColorLabel c}}
+      >
+        {{dIcon "check"}}
+      </ColorPickerChoice>
+    {{/each}}
+  </template>
   role = "group";
 
   @action

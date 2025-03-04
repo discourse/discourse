@@ -17,40 +17,74 @@ import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 const UP = "up";
 const DOWN = "down";
 
-export default class EditUserDirectoryColumns extends Component {<template><DModal @closeModal={{@closeModal}} @title={{iN "directory.edit_columns.title"}} class="edit-user-directory-columns-modal" @flash={{this.flash}}>
-  <:body>
-    {{#if this.loading}}
-      {{loadingSpinner size="large"}}
-    {{else}}
-      <div class="edit-directory-columns-container">
-        {{#each this.columns as |column|}}
-          <div class="edit-directory-column">
-            <div class="left-content">
-              <label class="column-name">
-                <Input @type="checkbox" @checked={{column.enabled}} />
-                {{#if (directoryColumnIsAutomatic column=column)}}
-                  {{directoryTableHeaderTitle field=column.name labelKey=this.labelKey icon=column.icon}}
-                {{else if (directoryColumnIsUserField column=column)}}
-                  {{directoryTableHeaderTitle field=column.user_field.name translated=true}}
-                {{else}}
-                  {{directoryTableHeaderTitle field=(iN column.name) translated=true}}
-                {{/if}}
-              </label>
-            </div>
-            <div class="right-content">
-              <DButton @icon="arrow-up" @action={{fn this.moveUp column}} class="button-secondary move-column-up" />
-              <DButton @icon="arrow-down" @action={{fn this.moveDown column}} class="button-secondary" />
-            </div>
+export default class EditUserDirectoryColumns extends Component {
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{iN "directory.edit_columns.title"}}
+      class="edit-user-directory-columns-modal"
+      @flash={{this.flash}}
+    >
+      <:body>
+        {{#if this.loading}}
+          {{loadingSpinner size="large"}}
+        {{else}}
+          <div class="edit-directory-columns-container">
+            {{#each this.columns as |column|}}
+              <div class="edit-directory-column">
+                <div class="left-content">
+                  <label class="column-name">
+                    <Input @type="checkbox" @checked={{column.enabled}} />
+                    {{#if (directoryColumnIsAutomatic column=column)}}
+                      {{directoryTableHeaderTitle
+                        field=column.name
+                        labelKey=this.labelKey
+                        icon=column.icon
+                      }}
+                    {{else if (directoryColumnIsUserField column=column)}}
+                      {{directoryTableHeaderTitle
+                        field=column.user_field.name
+                        translated=true
+                      }}
+                    {{else}}
+                      {{directoryTableHeaderTitle
+                        field=(iN column.name)
+                        translated=true
+                      }}
+                    {{/if}}
+                  </label>
+                </div>
+                <div class="right-content">
+                  <DButton
+                    @icon="arrow-up"
+                    @action={{fn this.moveUp column}}
+                    class="button-secondary move-column-up"
+                  />
+                  <DButton
+                    @icon="arrow-down"
+                    @action={{fn this.moveDown column}}
+                    class="button-secondary"
+                  />
+                </div>
+              </div>
+            {{/each}}
           </div>
-        {{/each}}
-      </div>
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton @label="directory.edit_columns.save" @action={{this.save}} class="btn-primary" />
-    <DButton @label="directory.edit_columns.reset_to_default" @action={{this.resetToDefault}} class="btn-secondary reset-to-default" />
-  </:footer>
-</DModal></template>
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          @label="directory.edit_columns.save"
+          @action={{this.save}}
+          class="btn-primary"
+        />
+        <DButton
+          @label="directory.edit_columns.reset_to_default"
+          @action={{this.resetToDefault}}
+          class="btn-secondary reset-to-default"
+        />
+      </:footer>
+    </DModal>
+  </template>
   @tracked loading = true;
   @tracked columns;
   @tracked labelKey;

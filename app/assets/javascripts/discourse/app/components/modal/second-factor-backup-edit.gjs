@@ -11,44 +11,72 @@ import { debounce } from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default class SecondFactorBackupEdit extends Component {<template><DModal @title={{iN "user.second_factor_backup.title"}} @closeModal={{@closeModal}} class="second-factor-backup-edit-modal">
-  <:body>
-    {{#if this.successMessage}}
-      <div class="alert alert-success">
-        {{this.successMessage}}
-      </div>
-    {{/if}}
+export default class SecondFactorBackupEdit extends Component {
+  <template>
+    <DModal
+      @title={{iN "user.second_factor_backup.title"}}
+      @closeModal={{@closeModal}}
+      class="second-factor-backup-edit-modal"
+    >
+      <:body>
+        {{#if this.successMessage}}
+          <div class="alert alert-success">
+            {{this.successMessage}}
+          </div>
+        {{/if}}
 
-    {{#if this.errorMessage}}
-      <div class="alert alert-error">
-        {{this.errorMessage}}
-      </div>
-    {{/if}}
+        {{#if this.errorMessage}}
+          <div class="alert alert-error">
+            {{this.errorMessage}}
+          </div>
+        {{/if}}
 
-    <ConditionalLoadingSection @isLoading={{this.loading}}>
-      {{#if this.backupCodes}}
-        <h3>{{iN "user.second_factor_backup.codes.title"}}</h3>
-        <p>{{iN "user.second_factor_backup.codes.description"}}</p>
-        <BackupCodes @copyBackupCode={{this.copyBackupCode}} @backupCodes={{this.backupCodes}} />
-      {{/if}}
-    </ConditionalLoadingSection>
+        <ConditionalLoadingSection @isLoading={{this.loading}}>
+          {{#if this.backupCodes}}
+            <h3>{{iN "user.second_factor_backup.codes.title"}}</h3>
+            <p>{{iN "user.second_factor_backup.codes.description"}}</p>
+            <BackupCodes
+              @copyBackupCode={{this.copyBackupCode}}
+              @backupCodes={{this.backupCodes}}
+            />
+          {{/if}}
+        </ConditionalLoadingSection>
 
-    {{#if this.backupEnabled}}
-      {{htmlSafe (iN "user.second_factor_backup.remaining_codes" count=this.remainingCodes)}}
-    {{else}}
-      {{htmlSafe (iN "user.second_factor_backup.not_enabled")}}
-    {{/if}}
-  </:body>
-  <:footer>
-    <div class="actions">
-      {{#if this.backupEnabled}}
-        <DButton class="btn-primary" @icon="arrow-rotate-right" @action={{this.generateSecondFactorCodes}} @type="submit" @isLoading={{this.loading}} @label="user.second_factor_backup.regenerate" />
-      {{else}}
-        <DButton class="btn-primary" @action={{this.generateSecondFactorCodes}} @type="submit" @disabled={{this.loading}} @label="user.second_factor_backup.enable" />
-      {{/if}}
-    </div>
-  </:footer>
-</DModal></template>
+        {{#if this.backupEnabled}}
+          {{htmlSafe
+            (iN
+              "user.second_factor_backup.remaining_codes"
+              count=this.remainingCodes
+            )
+          }}
+        {{else}}
+          {{htmlSafe (iN "user.second_factor_backup.not_enabled")}}
+        {{/if}}
+      </:body>
+      <:footer>
+        <div class="actions">
+          {{#if this.backupEnabled}}
+            <DButton
+              class="btn-primary"
+              @icon="arrow-rotate-right"
+              @action={{this.generateSecondFactorCodes}}
+              @type="submit"
+              @isLoading={{this.loading}}
+              @label="user.second_factor_backup.regenerate"
+            />
+          {{else}}
+            <DButton
+              class="btn-primary"
+              @action={{this.generateSecondFactorCodes}}
+              @type="submit"
+              @disabled={{this.loading}}
+              @label="user.second_factor_backup.enable"
+            />
+          {{/if}}
+        </div>
+      </:footer>
+    </DModal>
+  </template>
   @tracked loading = false;
   @tracked errorMessage;
   @tracked successMessage;

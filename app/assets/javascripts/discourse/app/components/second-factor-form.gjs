@@ -7,23 +7,30 @@ import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default class SecondFactorForm extends Component {<template><div id="second-factor">
-  <h3>{{this.secondFactorTitle}}</h3>
+export default class SecondFactorForm extends Component {
+  <template>
+    <div id="second-factor">
+      <h3>{{this.secondFactorTitle}}</h3>
 
-  {{#if this.optionalText}}
-    <p>{{htmlSafe this.optionalText}}</p>
-  {{/if}}
+      {{#if this.optionalText}}
+        <p>{{htmlSafe this.optionalText}}</p>
+      {{/if}}
 
-  <p class="second-factor__description">{{this.secondFactorDescription}}</p>
+      <p class="second-factor__description">{{this.secondFactorDescription}}</p>
 
-  {{yield}}
+      {{yield}}
 
-  {{#if this.showToggleMethodLink}}
-    <p>
-      <a href class="toggle-second-factor-method" {{on "click" this.toggleSecondFactorMethod}}>{{iN this.linkText}}</a>
-    </p>
-  {{/if}}
-</div></template>
+      {{#if this.showToggleMethodLink}}
+        <p>
+          <a
+            href
+            class="toggle-second-factor-method"
+            {{on "click" this.toggleSecondFactorMethod}}
+          >{{iN this.linkText}}</a>
+        </p>
+      {{/if}}
+    </div>
+  </template>
 
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {

@@ -21,13 +21,16 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
     this.clock?.restore();
   });
 
-  test("shows default options", async function (assert) {const self = this;
+  test("shows default options", async function (assert) {
+    const self = this;
 
     this.siteSettings.suggest_weekends_in_date_pickers = true;
     const tuesday = "2100-06-08T08:00:00";
     this.clock = fakeTime(tuesday, this.currentUser.user_option.timezone, true);
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     const expected = [
       i18n("time_shortcut.later_today"),
@@ -49,17 +52,21 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
     assert.deepEqual(options, expected);
   });
 
-  test("show 'Later This Week' if today is < Thursday", async function (assert) {const self = this;
+  test("show 'Later This Week' if today is < Thursday", async function (assert) {
+    const self = this;
 
     const monday = "2100-06-07T08:00:00";
     this.clock = fakeTime(monday, this.currentUser.user_option.timezone, true);
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert.dom("#tap_tile_later_this_week").exists("has later this week");
   });
 
-  test("does not show 'Later This Week' if today is >= Thursday", async function (assert) {const self = this;
+  test("does not show 'Later This Week' if today is >= Thursday", async function (assert) {
+    const self = this;
 
     const thursday = "2100-06-10T08:00:00";
     this.clock = fakeTime(
@@ -68,14 +75,17 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("#tap_tile_later_this_week")
       .doesNotExist("it does not have later this week");
   });
 
-  test("does not show 'Later Today' if 'Later Today' is tomorrow", async function (assert) {const self = this;
+  test("does not show 'Later Today' if 'Later Today' is tomorrow", async function (assert) {
+    const self = this;
 
     this.clock = fakeTime(
       "2100-12-11T22:00:00", // + 3 hours is tomorrow
@@ -83,14 +93,17 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("#tap_tile_later_today")
       .doesNotExist("it does not have later today");
   });
 
-  test("shows 'Later Today' if it is before 5pm", async function (assert) {const self = this;
+  test("shows 'Later Today' if it is before 5pm", async function (assert) {
+    const self = this;
 
     this.clock = fakeTime(
       "2100-12-11T16:50:00",
@@ -98,12 +111,15 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert.dom("#tap_tile_later_today").exists("has later today");
   });
 
-  test("does not show 'Later Today' if it is after 5pm", async function (assert) {const self = this;
+  test("does not show 'Later Today' if it is after 5pm", async function (assert) {
+    const self = this;
 
     this.clock = fakeTime(
       "2100-12-11T17:00:00",
@@ -111,14 +127,17 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("#tap_tile_later_today")
       .doesNotExist("it does not have later today");
   });
 
-  test("default custom date time is in one hour from now", async function (assert) {const self = this;
+  test("default custom date time is in one hour from now", async function (assert) {
+    const self = this;
 
     this.clock = fakeTime(
       "2100-12-11T17:00:00",
@@ -126,19 +145,24 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     await click("#tap_tile_custom");
     assert.dom("#custom-date > input").hasValue("2100-12-11");
     assert.dom("#custom-time").hasValue("18:00");
   });
 
-  test("shows 'Next Monday' instead of 'Monday' on Sundays", async function (assert) {const self = this;
+  test("shows 'Next Monday' instead of 'Monday' on Sundays", async function (assert) {
+    const self = this;
 
     const sunday = "2100-01-24T08:00:00";
     this.clock = fakeTime(sunday, this.currentUser.user_option.timezone, true);
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
@@ -149,12 +173,15 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       .hasText("Feb 1, 8:00 am");
   });
 
-  test("shows 'Next Monday' instead of 'Monday' on Mondays", async function (assert) {const self = this;
+  test("shows 'Next Monday' instead of 'Monday' on Mondays", async function (assert) {
+    const self = this;
 
     const monday = "2100-01-25T08:00:00";
     this.clock = fakeTime(monday, this.currentUser.user_option.timezone, true);
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
@@ -165,7 +192,8 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       .hasText("Feb 1, 8:00 am");
   });
 
-  test("the 'Next Month' option points to the first day of the next month", async function (assert) {const self = this;
+  test("the 'Next Month' option points to the first day of the next month", async function (assert) {
+    const self = this;
 
     this.clock = fakeTime(
       "2100-01-01T08:00:00",
@@ -173,7 +201,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       true
     );
 
-    await render(<template><TimeShortcutPicker @_itsatrap={{self.itsatrap}} /></template>);
+    await render(<template>
+      <TimeShortcutPicker @_itsatrap={{self.itsatrap}} />
+    </template>);
 
     assert
       .dom("div#tap_tile_next_month div.tap-tile-date")

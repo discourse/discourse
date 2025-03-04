@@ -3,9 +3,19 @@ import { service } from "@ember/service";
 import MenuPanel from "discourse/components/menu-panel";
 import SearchMenu from "discourse/components/search-menu";
 
-export default class SearchMenuPanel extends Component {<template><MenuPanel @animationClass={{this.animationClass}} @panelClass="search-menu-panel">
-  <SearchMenu @onClose={{@closeSearchMenu}} @inlineResults={{true}} @autofocusInput={{true}} />
-</MenuPanel></template>
+export default class SearchMenuPanel extends Component {
+  <template>
+    <MenuPanel
+      @animationClass={{this.animationClass}}
+      @panelClass="search-menu-panel"
+    >
+      <SearchMenu
+        @onClose={{@closeSearchMenu}}
+        @inlineResults={{true}}
+        @autofocusInput={{true}}
+      />
+    </MenuPanel>
+  </template>
   @service site;
   get animationClass() {
     return this.site.mobileView || this.site.narrowDesktopView

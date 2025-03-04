@@ -9,7 +9,8 @@ import { createWidget } from "discourse/widgets/widget";
 module("Integration | Component | Widget | post-cooked", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("quotes with no username and no valid topic", async function (assert) {const self = this;
+  test("quotes with no username and no valid topic", async function (assert) {
+    const self = this;
 
     this.set("args", {
       cooked: `<aside class=\"quote no-group quote-post-not-found\" data-post=\"1\" data-topic=\"123456\">\n<blockquote>\n<p>abcd</p>\n</blockquote>\n</aside>\n<p>Testing the issue</p>`,
@@ -23,9 +24,9 @@ module("Integration | Component | Widget | post-cooked", function (hooks) {
       },
     });
 
-    await render(
-      <template><MountWidget @widget="test-widget" @args={{self.args}} /></template>
-    );
+    await render(<template>
+      <MountWidget @widget="test-widget" @args={{self.args}} />
+    </template>);
 
     assert.dom("blockquote").hasText("abcd");
   });

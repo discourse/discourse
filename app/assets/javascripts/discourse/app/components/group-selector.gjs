@@ -6,7 +6,15 @@ import discourseComputed from "discourse/lib/decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { i18n } from "discourse-i18n";
 
-export default class GroupSelector extends Component {<template><input placeholder={{this.placeholder}} class="group-selector" type="text" name="groups" /></template>
+export default class GroupSelector extends Component {
+  <template>
+    <input
+      placeholder={{this.placeholder}}
+      class="group-selector"
+      type="text"
+      name="groups"
+    />
+  </template>
   @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
     return placeholderKey ? i18n(placeholderKey) : "";

@@ -13,24 +13,41 @@ import iN from "discourse/helpers/i18n";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
-export default class ChangeTimestamp extends Component {<template><DModal @bodyClass="change-timestamp" @closeModal={{@closeModal}} @flash={{this.flash}} @title={{iN "topic.change_timestamp.title"}}>
-  <:body>
-    <p>
-      {{iN "topic.change_timestamp.instructions"}}
-    </p>
-    <p class="alert alert-error {{unless this.validTimestamp "hidden"}}">
-      {{iN "topic.change_timestamp.invalid_timestamp"}}
-    </p>
-    <form>
-      <DatePickerPast @value={{readonly this.date}} @containerId="date-container" @onSelect={{fn (mut this.date)}} />
-      <Input @type="time" @value={{this.time}} />
-    </form>
-    <div id="date-container"></div>
-  </:body>
-  <:footer>
-    <DButton class="btn-primary" @disabled={{this.buttonDisabled}} @action={{this.changeTimestamp}} @label={{if this.saving "saving" "topic.change_timestamp.action"}} />
-  </:footer>
-</DModal></template>
+export default class ChangeTimestamp extends Component {
+  <template>
+    <DModal
+      @bodyClass="change-timestamp"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{iN "topic.change_timestamp.title"}}
+    >
+      <:body>
+        <p>
+          {{iN "topic.change_timestamp.instructions"}}
+        </p>
+        <p class="alert alert-error {{unless this.validTimestamp 'hidden'}}">
+          {{iN "topic.change_timestamp.invalid_timestamp"}}
+        </p>
+        <form>
+          <DatePickerPast
+            @value={{readonly this.date}}
+            @containerId="date-container"
+            @onSelect={{fn (mut this.date)}}
+          />
+          <Input @type="time" @value={{this.time}} />
+        </form>
+        <div id="date-container"></div>
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @disabled={{this.buttonDisabled}}
+          @action={{this.changeTimestamp}}
+          @label={{if this.saving "saving" "topic.change_timestamp.action"}}
+        />
+      </:footer>
+    </DModal>
+  </template>
   @tracked saving = false;
   @tracked date = moment().format("YYYY-MM-DD");
   @tracked time;
