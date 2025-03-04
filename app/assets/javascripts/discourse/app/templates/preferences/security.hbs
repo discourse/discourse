@@ -2,7 +2,12 @@
   <div class="control-group pref-password" data-setting-name="user-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
-      <a href {{on "click" this.changePassword}} class="btn btn-default">
+      <a
+        href
+        {{on "click" this.changePassword}}
+        class="btn btn-default"
+        id="change-password-button"
+      >
         {{d-icon "envelope"}}
         {{#if this.model.no_password}}
           {{i18n "user.change_password.set_password"}}
@@ -13,6 +18,35 @@
 
       {{this.passwordProgress}}
     </div>
+
+    {{#unless this.model.no_password}}
+      {{#if this.associatedAccountsLoaded}}
+        {{#if this.canRemovePassword}}
+          <div class="controls">
+            <DButton
+              id="remove-password-button"
+              @action={{this.removePassword}}
+              @icon="trash-can"
+              @label="user.change_password.remove"
+              class="btn-default"
+              @isLoading={{this.removePasswordInProgress}}
+            />
+          </div>
+          <div class="instructions">
+            {{i18n "user.change_password.remove_detail"}}
+          </div>
+        {{/if}}
+      {{else}}
+        <div class="controls">
+          <DButton
+            @action={{fn (route-action "checkEmail") this.model}}
+            @title="admin.users.check_email.title"
+            @icon="envelope"
+            @label="admin.users.check_email.text"
+          />
+        </div>
+      {{/if}}
+    {{/unless}}
   </div>
 
   {{#if this.canUsePasskeys}}

@@ -758,7 +758,7 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? &&
+    user.password = SecureRandom.hex if user.password_required? && user.password.blank? &&
       (authentication.has_authenticator? || associations.present?)
 
     if user.save
@@ -856,6 +856,26 @@ class UsersController < ApplicationController
                  security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
+  end
+
+  def remove_password
+    RateLimiter.new(nil, "remove-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "remove-password-min-#{request.remote_ip}", 3, 1.hour).performed!
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    RateLimiter.new(nil, "remove-password-hr-#{user.username}", 6, 1.hour).performed!
+
+    raise Discourse::NotFound if !user || !user.user_password
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
+    raise Discourse::InvalidAccess if !secure_session_confirmed?
+
+    if user.associated_accounts.blank? && user.passkey_credential_ids.blank?
+      raise Discourse::InvalidAccess
+    end
+
+    user.remove_password
+    render json: success_json
   end
 
   def password_reset_update

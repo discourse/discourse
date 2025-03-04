@@ -107,6 +107,89 @@ export default class SecurityController extends Controller {
     }
   }
 
+  @discourseComputed(
+    "model.is_anonymous",
+    "model.no_password",
+    "siteSettings",
+    "model.user_passkeys",
+    "model.associated_accounts"
+  )
+  canRemovePassword(
+    isAnonymous,
+    noPassword,
+    siteSettings,
+    userPasskeys,
+    associatedAccounts
+  ) {
+    if (
+      isAnonymous ||
+      noPassword ||
+      siteSettings.enable_discourse_connect ||
+      !siteSettings.enable_local_logins
+    ) {
+      return false;
+    }
+
+    return (
+      associatedAccounts?.length > 0 ||
+      (this.canUsePasskeys && userPasskeys?.length > 0)
+    );
+  }
+
+  @discourseComputed("model.associated_accounts")
+  associatedAccountsLoaded(associatedAccounts) {
+    return typeof associatedAccounts !== "undefined";
+  }
+
+  removePasswordConfirm() {
+    this.dialog.deleteConfirm({
+      title: i18n("user.change_password.remove"),
+      message: i18n("user.change_password.remove_detail"),
+      confirmButtonIcon: "trash-can",
+      didConfirm: () => {
+        this.set("removePasswordInProgress", true);
+
+        this.model
+          .removePassword()
+          .then((response) => {
+            this.set("removePasswordInProgress", false);
+            if (response.success) {
+              this.model.set("no_password", true);
+            }
+          })
+          .catch((error) => {
+            this.set("removePasswordInProgress", false);
+            popupAjaxError(error);
+          });
+      },
+    });
+  }
+
+  @action
+  async removePassword(event) {
+    event?.preventDefault();
+    if (this.removePasswordInProgress) {
+      return;
+    }
+
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: i18n("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => this.removePasswordConfirm(),
+        });
+      } else {
+        this.removePasswordConfirm();
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
   @action
   toggleShowAllAuthTokens(event) {
     event?.preventDefault();
