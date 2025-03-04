@@ -26,7 +26,8 @@ class TwitterApi
         end
       end
       text = link_hashtags_in link_handles_in text
-      result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
+      result =
+        PrettyText.cook(text, features_override: []).delete_prefix("<p>").delete_suffix("</p>")
 
       if tweet[:includes] && media = tweet[:includes][:media]
         media.each do |m|

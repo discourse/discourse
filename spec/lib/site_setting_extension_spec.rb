@@ -1142,5 +1142,49 @@ RSpec.describe SiteSettingExtension do
         expect(logger_spy).not_to have_received(:log_site_setting_change)
       end
     end
+
+    context "with plugin modifiers for log details" do
+      before do
+        settings.setting(:plugin_test, "initial")
+        settings.refresh!
+      end
+
+      it "uses the default log details when no plugin modifiers exist" do
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.plugin_test = "changed"
+        expect(settings.plugin_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :plugin_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console" },
+        ).once
+      end
+
+      it "applies plugin modifiers to log details" do
+        # Allow all apply_modifier calls to pass through normally
+        allow(DiscoursePluginRegistry).to receive(:apply_modifier).and_call_original
+
+        # But specifically mock our target call
+        allow(DiscoursePluginRegistry).to receive(:apply_modifier).with(
+          :site_setting_log_details,
+          "Updated via Rails console",
+        ).and_return("Updated via Rails console via test plugin")
+
+        logger_spy = instance_spy(StaffActionLogger)
+        allow(StaffActionLogger).to receive(:new).with(Discourse.system_user).and_return(logger_spy)
+
+        settings.plugin_test = "changed"
+        expect(settings.plugin_test).to eq("changed")
+        expect(logger_spy).to have_received(:log_site_setting_change).with(
+          :plugin_test,
+          "initial",
+          "changed",
+          { details: "Updated via Rails console via test plugin" },
+        ).once
+      end
+    end
   end
 end

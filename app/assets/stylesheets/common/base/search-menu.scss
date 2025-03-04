@@ -382,13 +382,12 @@ $search-pad-horizontal: 0.5em;
       width: 12px;
       height: 12px;
       border-width: 2px;
-      margin: 0;
+      margin: 0 0.5em 0.25em 0;
       margin-top: 2px;
     }
 
     .show-advanced-search,
     a.clear-search {
-      padding: 0 3px;
       display: inline-block;
       background-color: transparent;
 
