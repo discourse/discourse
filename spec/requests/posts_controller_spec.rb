@@ -1875,6 +1875,19 @@ RSpec.describe PostsController do
             I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist"),
           )
         end
+
+        context "with apply_modifier" do
+          it "can modify groups" do
+            plugin = Plugin::Instance.new
+            modifier = :mentionable_groups
+            proc = Proc.new { Group.all }
+            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+            expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+          end
+        end
       end
     end
 
