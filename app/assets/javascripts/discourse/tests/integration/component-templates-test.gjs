@@ -3,8 +3,6 @@ import { setComponentTemplate } from "@glimmer/manager";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
-import sinon from "sinon";
-import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -286,47 +284,6 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
       assert
         .dom("#mock-resolved")
         .hasText("Resolved Theme Override", "resolved component correct");
-    });
-  });
-
-  module("overriding gjs component", function (hooks) {
-    let errorStub;
-
-    hooks.beforeEach(() => {
-      registerTemporaryModule(
-        `discourse/components/mock-gjs-component`,
-        class MyComponent extends Component {
-          <template>
-            <span class="greeting">Hello world</span>
-          </template>
-        }
-      );
-
-      registerTemporaryModule(
-        `discourse/plugins/my-plugin/discourse/templates/components/mock-gjs-component`,
-        hbs`doomed override`
-      );
-
-      errorStub = sinon
-        .stub(console, "error")
-        .withArgs(sinon.match(/mock-gjs-component was authored using gjs/));
-
-      overrideThrowGjsError(false);
-    });
-
-    hooks.afterEach(() => {
-      overrideThrowGjsError(true);
-    });
-
-    setupRenderingTest(hooks);
-
-    test("theme overrides plugin component", async function (assert) {
-      await render(hbs`<MockGjsComponent />`);
-      assert
-        .dom(".greeting")
-        .hasText("Hello world", "renders original implementation");
-
-      sinon.assert.calledOnce(errorStub);
     });
   });
 });
