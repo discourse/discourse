@@ -2,6 +2,7 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
+import htmlInline from "./html-inline";
 import image from "./image";
 import link from "./link";
 import mention from "./mention";
@@ -9,7 +10,6 @@ import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
 import underline from "./underline";
-import htmlInline from "./html-inline";
 
 /**
  * List of default extensions
