@@ -5,6 +5,10 @@
   "description": "A platform for community discussion. Free, open, simple.",
   "license": "GPL-2.0-only",
   "author": "Discourse",
+  "exports": {
+    "./tests/*": "./tests/*",
+    "./*": "./app/*"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"
