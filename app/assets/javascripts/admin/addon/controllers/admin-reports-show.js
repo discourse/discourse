@@ -1,8 +1,15 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class AdminReportsShowController extends Controller {
-  queryParams = ["start_date", "end_date", "filters", "chart_grouping", "mode"];
+  queryParams = applyValueTransformer("admin-reports-show-query-params", [
+    "start_date",
+    "end_date",
+    "filters",
+    "chart_grouping",
+    "mode",
+  ]);
   start_date = null;
   end_date = null;
   filters = null;
