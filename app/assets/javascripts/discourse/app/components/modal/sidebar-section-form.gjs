@@ -1,26 +1,26 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component, { Input } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import SectionFormLink from "discourse/components/sidebar/section-form-link";
+import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
-import { fn } from "@ember/helper";
-import SectionFormLink from "discourse/components/sidebar/section-form-link";
-import DButton from "discourse/components/d-button";
-import not from "truth-helpers/helpers/not";
-import and from "truth-helpers/helpers/and";
 import DTooltip from "float-kit/components/d-tooltip";
-import dIcon from "discourse/helpers/d-icon";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 
 class Section {
   @tracked title;

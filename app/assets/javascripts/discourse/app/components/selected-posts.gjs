@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import CountIN from "discourse/components/count-i18n";
 import { on } from "@ember/modifier";
-import iN from "discourse/helpers/i18n";
+import CountIN from "discourse/components/count-i18n";
 import DButton from "discourse/components/d-button";
+import iN from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
 
 export default class SelectedPosts extends Component {<template><p>

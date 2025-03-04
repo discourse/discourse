@@ -1,19 +1,19 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
+import { fn } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
-import DButton from "discourse/components/d-button";
-import iN from "discourse/helpers/i18n";
-import { LinkTo } from "@ember/routing";
 import avatar from "discourse/helpers/avatar";
+import bodyClass from "discourse/helpers/body-class";
+import dIcon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import number from "discourse/helpers/number";
 import formatDuration from "discourse/helpers/format-duration";
 import htmlSafe from "discourse/helpers/html-safe";
-import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
-import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 export default RouteTemplate(<template>{{bodyClass "user-invites-page"}}
 
 {{#if @controller.canInviteToForum}}
@@ -175,4 +175,4 @@ export default RouteTemplate(<template>{{bodyClass "user-invites-page"}}
   <div class="alert alert-error invite-error">
     {{@controller.model.error}}
   </div>
-{{/if}}</template>)
+{{/if}}</template>);

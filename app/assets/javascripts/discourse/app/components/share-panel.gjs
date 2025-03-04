@@ -2,15 +2,15 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import DTextarea from "discourse/components/d-textarea";
+import ShareSource from "discourse/components/share-source";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import htmlSafe from "discourse/helpers/html-safe";
-import DTextarea from "discourse/components/d-textarea";
-import iN from "discourse/helpers/i18n";
-import ShareSource from "discourse/components/share-source";
 
 export default class SharePanel extends Component {<template><div class="header">
   <h3 class="title">{{htmlSafe this.shareTitle}}</h3>

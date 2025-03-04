@@ -1,16 +1,16 @@
-import RouteTemplate from 'ember-route-template'
-import or from "truth-helpers/helpers/or";
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import TextField from "discourse/components/text-field";
+import { fn } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
 import ResponsiveTable from "discourse/components/responsive-table";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
-import iN from "discourse/helpers/i18n";
+import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
 import boundDate from "discourse/helpers/bound-date";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import iN from "discourse/helpers/i18n";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template>{{#if (or @controller.loading @controller.canLoadMore)}}
   {{hideApplicationFooter}}
 {{/if}}
@@ -73,4 +73,4 @@ export default RouteTemplate(<template>{{#if (or @controller.loading @controller
   {{else}}
     <div>{{iN "groups.empty.requests"}}</div>
   {{/if}}
-</section></template>)
+</section></template>);

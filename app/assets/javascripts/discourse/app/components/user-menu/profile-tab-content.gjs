@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 import UserStatusModal from "discourse/components/modal/user-status";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import emoji from "discourse/helpers/emoji";
+import formatAge from "discourse/helpers/format-age";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import { userPath } from "discourse/lib/url";
-import DButton from "discourse/components/d-button";
-import emoji from "discourse/helpers/emoji";
-import formatAge from "discourse/helpers/format-age";
-import dIcon from "discourse/helpers/d-icon";
-import iN from "discourse/helpers/i18n";
-import concatClass from "discourse/helpers/concat-class";
-import { LinkTo } from "@ember/routing";
-import routeAction from "discourse/helpers/route-action";
 
 const _extraItems = [];
 

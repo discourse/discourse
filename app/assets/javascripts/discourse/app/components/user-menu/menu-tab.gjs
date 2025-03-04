@@ -9,6 +9,7 @@ export default class UserMenuTab extends Component {<template><a role="tab" clas
   {{/if}}
   {{yield}}
 </a></template>
+
   get isActive() {
     return this.args.tab.id === this.args.currentTabId;
   }

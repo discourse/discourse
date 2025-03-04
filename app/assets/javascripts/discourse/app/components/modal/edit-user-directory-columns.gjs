@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
+import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
+import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
+import iN from "discourse/helpers/i18n";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import { Input } from "@ember/component";
-import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
-import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
-import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 
 const UP = "up";
 const DOWN = "down";

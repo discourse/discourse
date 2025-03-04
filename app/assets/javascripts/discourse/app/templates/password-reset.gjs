@@ -1,19 +1,19 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import SecurityKeyForm from "discourse/components/security-key-form";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import InputTip from "discourse/components/input-tip";
+import PasswordField from "discourse/components/password-field";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
-import withEventValue from "discourse/helpers/with-event-value";
-import DButton from "discourse/components/d-button";
-import PasswordField from "discourse/components/password-field";
-import InputTip from "discourse/components/input-tip";
-import dIcon from "discourse/helpers/d-icon";
+import SecurityKeyForm from "discourse/components/security-key-form";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
+import bodyClass from "discourse/helpers/body-class";
+import dIcon from "discourse/helpers/d-icon";
+import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import iN from "discourse/helpers/i18n";
+import withEventValue from "discourse/helpers/with-event-value";
 export default RouteTemplate(<template>{{bodyClass "password-reset-page"}}
 {{hideApplicationSidebar}}
 {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
@@ -78,4 +78,4 @@ export default RouteTemplate(<template>{{bodyClass "password-reset-page"}}
       {{/if}}
     {{/if}}
   </form>
-</div></template>)
+</div></template>);

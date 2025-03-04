@@ -1,6 +1,6 @@
-import RouteTemplate from 'ember-route-template'
-import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><MessagesSecondaryNav>
@@ -20,4 +20,4 @@ export default RouteTemplate(<template><MessagesSecondaryNav>
   {{/if}}
 </MessagesSecondaryNav>
 
-{{outlet}}</template>)
+{{outlet}}</template>);

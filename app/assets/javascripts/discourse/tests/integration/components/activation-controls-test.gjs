@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ActivationControls from "discourse/components/activation-controls";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | activation-controls", function (hooks) {
   setupRenderingTest(hooks);

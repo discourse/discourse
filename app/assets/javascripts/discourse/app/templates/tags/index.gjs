@@ -1,11 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import DiscourseBanner from "discourse/components/discourse-banner";
-import TagsAdminDropdown from "discourse/components/tags-admin-dropdown";
-import iN from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import DiscourseBanner from "discourse/components/discourse-banner";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
+import TagsAdminDropdown from "discourse/components/tags-admin-dropdown";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><div class="container">
   <DiscourseBanner />
 </div>
@@ -47,4 +47,4 @@ export default RouteTemplate(<template><div class="container">
     {{/if}}
   </div>
 
-</div></template>)
+</div></template>);

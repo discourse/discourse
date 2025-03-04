@@ -1,10 +1,10 @@
-import RouteTemplate from 'ember-route-template'
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import GroupManageLogsFilter from "discourse/components/group-manage-logs-filter";
-import LoadMore from "discourse/components/load-more";
-import iN from "discourse/helpers/i18n";
-import GroupManageLogsRow from "discourse/components/group-manage-logs-row";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import GroupManageLogsFilter from "discourse/components/group-manage-logs-filter";
+import GroupManageLogsRow from "discourse/components/group-manage-logs-row";
+import LoadMore from "discourse/components/load-more";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{#unless @controller.model.all_loaded}}
   {{hideApplicationFooter}}
 {{/unless}}
@@ -39,4 +39,4 @@ export default RouteTemplate(<template>{{#unless @controller.model.all_loaded}}
   <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 {{else}}
   <div>{{iN "groups.empty.logs"}}</div>
-{{/if}}</template>)
+{{/if}}</template>);

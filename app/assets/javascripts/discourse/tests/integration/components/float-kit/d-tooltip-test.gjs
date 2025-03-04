@@ -1,11 +1,11 @@
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 import DTooltip from "float-kit/components/d-tooltip";
-import { hash } from "@ember/helper";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);

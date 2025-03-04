@@ -1,7 +1,7 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><div class="control-group preferences-navigation-menu-navigation" data-setting-name="user-navigation-menu-navigation">
   <legend class="control-label">{{iN "user.experimental_sidebar.navigation_section"}}</legend>
 
@@ -13,4 +13,4 @@ export default RouteTemplate(<template><div class="control-group preferences-nav
   </div>
 </div>
 
-<SaveControls @model={{@controller.model}} @action={{action "save"}} @saved={{@controller.saved}} /></template>)
+<SaveControls @model={{@controller.model}} @action={{action "save"}} @saved={{@controller.saved}} /></template>);

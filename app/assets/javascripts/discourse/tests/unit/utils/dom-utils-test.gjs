@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import domUtils from "discourse/lib/dom-utils";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DButton from "discourse/components/d-button";
 
 module("Unit | Utils | dom-utils", function (hooks) {
   setupRenderingTest(hooks);

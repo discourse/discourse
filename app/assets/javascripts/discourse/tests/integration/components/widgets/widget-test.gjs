@@ -3,12 +3,12 @@ import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import MountWidget from "discourse/components/mount-widget";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
-import MountWidget from "discourse/components/mount-widget";
 
 module("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);

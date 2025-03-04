@@ -2,17 +2,17 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import { ajax } from "discourse/lib/ajax";
-import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import htmlSafe from "discourse/helpers/html-safe";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import FutureDateInput from "discourse/components/future-date-input";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
 import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import { ajax } from "discourse/lib/ajax";
+import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {<template><DModal class="feature-topic" @title={{iN "topic.feature_topic.title"}} @closeModal={{@closeModal}}>
   <:body>

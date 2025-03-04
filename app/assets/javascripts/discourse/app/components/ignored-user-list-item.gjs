@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 
 @tagName("div")
 export default class IgnoredUserListItem extends Component {<template><div class="ignored-user-list-item">

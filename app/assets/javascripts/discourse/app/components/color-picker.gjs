@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
-import { i18n } from "discourse-i18n";
 import ColorPickerChoice from "discourse/components/color-picker-choice";
 import dIcon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 @classNames("colors-container")
 @attributeBindings("role", "ariaLabel:aria-label")

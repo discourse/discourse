@@ -1,8 +1,8 @@
 import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import NumberField from "discourse/components/number-field";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import NumberField from "discourse/components/number-field";
 
 module("Integration | Component | number-field", function (hooks) {
   setupRenderingTest(hooks);

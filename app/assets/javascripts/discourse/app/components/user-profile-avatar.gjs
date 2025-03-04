@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import boundAvatar from "discourse/helpers/bound-avatar";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import boundAvatar from "discourse/helpers/bound-avatar";
 
 export default class UserProfileAvatar extends Component {<template><PluginOutlet @name="user-profile-avatar-wrapper" @outletArgs={{hash user=@user}}>
   <div class="user-profile-avatar">

@@ -1,11 +1,10 @@
 import Component from "@ember/component";
-
+import { hash } from "@ember/helper";
+import PluginOutlet from "discourse/components/plugin-outlet";
 // Injections don't occur without a class
 import boundCategoryLink from "discourse/helpers/bound-category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 export default class TopicCategory extends Component {<template>{{#unless this.topic.isPrivateMessage}}
   {{boundCategoryLink this.topic.category ancestors=this.topic.category.predecessors hideParent=true}}
 {{/unless}}

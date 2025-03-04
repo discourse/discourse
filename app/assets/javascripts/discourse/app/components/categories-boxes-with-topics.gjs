@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
-import categoryColorVariable from "discourse/helpers/category-color-variable";
+import CategoriesBoxesTopic from "discourse/components/categories-boxes-topic";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
-import dIcon from "discourse/helpers/d-icon";
-import CategoriesBoxesTopic from "discourse/components/categories-boxes-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
+import categoryColorVariable from "discourse/helpers/category-color-variable";
+import dIcon from "discourse/helpers/d-icon";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
 @classNameBindings(

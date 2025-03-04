@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import IframedHtml from "discourse/components/iframed-html";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | iframed-html", function (hooks) {
   setupRenderingTest(hooks);

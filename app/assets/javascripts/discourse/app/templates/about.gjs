@@ -1,10 +1,10 @@
-import RouteTemplate from 'ember-route-template'
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import bodyClass from "discourse/helpers/body-class";
 import { LinkTo } from "@ember/routing";
-import iN from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import AboutPage from "discourse/components/about-page";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><PluginOutlet @name="about-wrapper" @outletArgs={{hash model=@controller.model contactInfo=@controller.contactInfo faqOverridden=@controller.faqOverridden}}>
   {{bodyClass "about-page"}}
 
@@ -33,4 +33,4 @@ export default RouteTemplate(<template><PluginOutlet @name="about-wrapper" @outl
       </div>
     </div>
   </section>
-</PluginOutlet></template>)
+</PluginOutlet></template>);

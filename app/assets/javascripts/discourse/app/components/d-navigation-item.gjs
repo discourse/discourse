@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
-import { LinkTo } from "@ember/routing";
 
 export default class DNavigationItem extends Component {<template><li aria-current={{this.ariaCurrent}} title={{@title}} class={{@class}} ...attributes>
   {{#if this.models}}

@@ -1,6 +1,6 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import categoryLink from "discourse/helpers/category-link";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><section class="user-content" id="user-content">
   {{#if @controller.model.permissions}}
     <label class="group-category-permissions-desc">
@@ -19,4 +19,4 @@ export default RouteTemplate(<template><section class="user-content" id="user-co
   {{else}}
     {{iN "groups.permissions.none"}}
   {{/if}}
-</section></template>)
+</section></template>);

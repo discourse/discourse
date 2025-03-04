@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { filterBy } from "@ember/object/computed";
-import iN from "discourse/helpers/i18n";
-import reviewableHistoryDescription from "discourse/helpers/reviewable-history-description";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
+import iN from "discourse/helpers/i18n";
+import reviewableHistoryDescription from "discourse/helpers/reviewable-history-description";
 
 export default class ReviewableHistories extends Component {<template>{{#if this.filteredHistories}}
   <table class="reviewable-histories">

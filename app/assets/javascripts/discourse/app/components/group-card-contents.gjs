@@ -1,21 +1,21 @@
+import { on as on0 } from "@ember/modifier";
 import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
+import AvatarFlair from "discourse/components/avatar-flair";
 import CardContentsBase from "discourse/components/card-contents-base";
+import DButton from "discourse/components/d-button";
+import GroupMembershipButton from "discourse/components/group-membership-button";
+import boundAvatar from "discourse/helpers/bound-avatar";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
-import { on as on0 } from "@ember/modifier";
-import AvatarFlair from "discourse/components/avatar-flair";
-import GroupMembershipButton from "discourse/components/group-membership-button";
-import routeAction from "discourse/helpers/route-action";
-import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse/helpers/html-safe";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import iN from "discourse/helpers/i18n";
 
 const maxMembersToDisplay = 10;
 

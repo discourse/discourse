@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { concat,fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import MenuTab from "discourse/components/user-menu/menu-tab";
+import iN from "discourse/helpers/i18n";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
@@ -17,11 +22,6 @@ import UserMenuOtherNotificationsList from "./other-notifications-list";
 import UserMenuProfileTabContent from "./profile-tab-content";
 import UserMenuRepliesNotificationsList from "./replies-notifications-list";
 import UserMenuReviewablesList from "./reviewables-list";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import iN from "discourse/helpers/i18n";
-import MenuTab from "discourse/components/user-menu/menu-tab";
-import { fn, hash, concat } from "@ember/helper";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;

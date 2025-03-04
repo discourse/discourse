@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import LoadMore from "discourse/components/load-more";
 import { configureEyeline } from "discourse/lib/eyeline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LoadMore from "discourse/components/load-more";
 
 module("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);

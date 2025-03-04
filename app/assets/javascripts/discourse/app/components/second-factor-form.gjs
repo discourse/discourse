@@ -1,11 +1,11 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import htmlSafe from "discourse/helpers/html-safe";
-import { on } from "@ember/modifier";
-import iN from "discourse/helpers/i18n";
 
 export default class SecondFactorForm extends Component {<template><div id="second-factor">
   <h3>{{this.secondFactorTitle}}</h3>
@@ -24,6 +24,7 @@ export default class SecondFactorForm extends Component {<template><div id="seco
     </p>
   {{/if}}
 </div></template>
+
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {

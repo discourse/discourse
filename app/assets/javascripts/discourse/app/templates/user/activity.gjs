@@ -1,12 +1,12 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
 import DNavigationItem from "discourse/components/d-navigation-item";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
 import gt from "truth-helpers/helpers/gt";
-import { hash } from "@ember/helper";
 export default RouteTemplate(<template>{{bodyClass "user-activity-page"}}
 <PluginOutlet @name="user-activity-navigation-wrapper">
   <div class="user-navigation user-navigation-secondary">
@@ -64,4 +64,4 @@ export default RouteTemplate(<template>{{bodyClass "user-activity-page"}}
 </PluginOutlet>
 <section class="user-content" id="user-content">
   {{outlet}}
-</section></template>)
+</section></template>);

@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dIcon from "discourse/helpers/d-icon";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | d-icon", function (hooks) {
   setupRenderingTest(hooks);

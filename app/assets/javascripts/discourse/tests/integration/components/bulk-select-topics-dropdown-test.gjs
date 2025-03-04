@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
 
 const REGULAR_TOPIC_ID = 123;
 const PM_TOPIC_ID = 124;

@@ -1,13 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import DButton from "discourse/components/d-button";
-import or from "truth-helpers/helpers/or";
-import SecondFactorInput from "discourse/components/second-factor-input";
-import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
 import { fn } from "@ember/helper";
-import gt from "truth-helpers/helpers/gt";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import SecondFactorInput from "discourse/components/second-factor-input";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import iN from "discourse/helpers/i18n";
+import withEventValue from "discourse/helpers/with-event-value";
+import gt from "truth-helpers/helpers/gt";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template>{{hideApplicationSidebar}}
 
 {{#if @controller.message}}
@@ -44,4 +44,4 @@ export default RouteTemplate(<template>{{hideApplicationSidebar}}
       {{/each}}
     </p>
   {{/if}}
-{{/unless}}</template>)
+{{/unless}}</template>);

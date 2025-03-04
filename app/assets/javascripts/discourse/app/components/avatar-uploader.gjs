@@ -1,14 +1,14 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
-import iN from "discourse/helpers/i18n";
 
 @tagName("span")
 export default class AvatarUploader extends Component {<template><input {{didInsert this.uppyUpload.setup}} class="hidden-upload-field" disabled={{this.uploading}} type="file" accept="image/*" aria-hidden="true" />

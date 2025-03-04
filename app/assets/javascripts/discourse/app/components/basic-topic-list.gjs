@@ -3,11 +3,11 @@ import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import discourseComputed, { bind } from "discourse/lib/decorators";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import List from "discourse/components/topic-list/list";
 import TopicList from "discourse/components/topic-list";
+import List from "discourse/components/topic-list/list";
 import iN from "discourse/helpers/i18n";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 
 export default class BasicTopicList extends Component {<template><ConditionalLoadingSpinner @condition={{this.loading}}>
   {{#if this.topics}}

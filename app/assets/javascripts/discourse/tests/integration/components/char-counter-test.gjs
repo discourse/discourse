@@ -1,10 +1,10 @@
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CharCounter from "discourse/components/char-counter";
-import { on } from "@ember/modifier";
 import withEventValue from "discourse/helpers/with-event-value";
-import { fn } from "@ember/helper";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | char-counter", function (hooks) {
   setupRenderingTest(hooks);

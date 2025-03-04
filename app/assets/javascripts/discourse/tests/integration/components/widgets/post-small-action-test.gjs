@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MountWidget from "discourse/components/mount-widget";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
-import MountWidget from "discourse/components/mount-widget";
 
 module(
   "Integration | Component | Widget | post-small-action",

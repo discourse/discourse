@@ -1,20 +1,20 @@
 import Component from "@ember/component";
+import { fn,hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { attributeBindings, classNameBindings, classNames, tagName } from "@ember-decorators/component";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { logSearchLinkClick } from "discourse/lib/search";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, fn } from "@ember/helper";
-import avatar from "discourse/helpers/avatar";
-import TrackSelected from "discourse/components/track-selected";
-import { on } from "@ember/modifier";
-import raw from "discourse/helpers/raw";
-import htmlSafe from "discourse/helpers/html-safe";
 import HighlightSearch from "discourse/components/highlight-search";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TrackSelected from "discourse/components/track-selected";
+import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
+import dIcon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import raw from "discourse/helpers/raw";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { logSearchLinkClick } from "discourse/lib/search";
 
 @tagName("div")
 @classNames("fps-result")

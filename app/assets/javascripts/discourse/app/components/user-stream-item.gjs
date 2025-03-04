@@ -1,23 +1,23 @@
 import Component from "@ember/component";
+import { fn,hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import ExpandPost from "discourse/components/expand-post";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicStatus from "discourse/components/topic-status";
+import avatar from "discourse/helpers/avatar";
+import categoryLink from "discourse/helpers/category-link";
+import dIcon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import htmlSafe from "discourse/helpers/html-safe";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { userPath } from "discourse/lib/url";
 import { actionDescription } from "discourse/widgets/post-small-action";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, fn } from "@ember/helper";
 import or from "truth-helpers/helpers/or";
-import avatar from "discourse/helpers/avatar";
-import TopicStatus from "discourse/components/topic-status";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import categoryLink from "discourse/helpers/category-link";
-import htmlSafe from "discourse/helpers/html-safe";
-import ExpandPost from "discourse/components/expand-post";
-import formatDate from "discourse/helpers/format-date";
-import dIcon from "discourse/helpers/d-icon";
-import DButton from "discourse/components/d-button";
 
 @tagName("li")
 @classNameBindings(

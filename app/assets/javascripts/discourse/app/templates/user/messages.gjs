@@ -1,11 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import RouteTemplate from 'ember-route-template';
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
+import bodyClass from "discourse/helpers/body-class";
 import routeAction from "discourse/helpers/route-action";
 export default RouteTemplate(<template>{{bodyClass "user-messages-page"}}
 
@@ -38,4 +38,4 @@ export default RouteTemplate(<template>{{bodyClass "user-messages-page"}}
 
 <section class="user-content" id="user-content">
   {{outlet}}
-</section></template>)
+</section></template>);

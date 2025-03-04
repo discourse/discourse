@@ -2,13 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { i18n } from "discourse-i18n";
-
+import DButton from "discourse/components/d-button";
 // Modal that displays confirmation text when user deletes a topic
 // The modal will display only if the topic exceeds a certain amount of views
 import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
+import { i18n } from "discourse-i18n";
 export default class DeleteTopicConfirm extends Component {<template><DModal @title={{iN "topic.actions.delete"}} @closeModal={{@closeModal}} class="delete-topic-confirm-modal" @flash={{this.flash}}>
   <:body>
     <p>

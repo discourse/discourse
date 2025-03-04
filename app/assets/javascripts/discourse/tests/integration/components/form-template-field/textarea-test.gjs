@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Textarea from "discourse/components/form-template-field/textarea";
 import Input from "discourse/components/form-template-field/input";
+import Textarea from "discourse/components/form-template-field/textarea";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
   "Integration | Component | form-template-field | textarea",

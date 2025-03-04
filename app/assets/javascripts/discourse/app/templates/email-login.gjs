@@ -1,13 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import htmlSafe from "discourse/helpers/html-safe";
-import SecurityKeyForm from "discourse/components/security-key-form";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
-import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
+import SecurityKeyForm from "discourse/components/security-key-form";
+import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 export default RouteTemplate(<template><div class="container email-login clearfix">
   <div class="content-wrapper">
     <div class="image-wrapper">
@@ -43,4 +43,4 @@ export default RouteTemplate(<template><div class="container email-login clearfi
       {{/if}}
     </form>
   </div>
-</div></template>)
+</div></template>);

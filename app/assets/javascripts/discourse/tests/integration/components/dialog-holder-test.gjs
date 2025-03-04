@@ -1,10 +1,10 @@
 import { click, fillIn, find, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import DialogHolder from "dialog-holder/components/dialog-holder";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);

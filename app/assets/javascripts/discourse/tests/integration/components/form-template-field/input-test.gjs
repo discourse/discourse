@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Input from "discourse/components/form-template-field/input";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
   "Integration | Component | form-template-field | input",

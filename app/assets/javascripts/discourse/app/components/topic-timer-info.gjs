@@ -3,6 +3,7 @@ import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
+import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -10,7 +11,6 @@ import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import DButton from "discourse/components/d-button";
 
 @classNames("topic-timer-info")
 export default class TopicTimerInfo extends Component {<template>{{#if this.showTopicTimer}}

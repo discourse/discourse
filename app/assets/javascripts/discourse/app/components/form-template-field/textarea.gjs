@@ -1,6 +1,6 @@
+import { Textarea } from "@ember/component";
 import dIcon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
-import { Textarea } from "@ember/component";
 <template><div class="control-group form-template-field" data-field-type="textarea">
   {{#if @attributes.label}}
     <label class="form-template-field__label">

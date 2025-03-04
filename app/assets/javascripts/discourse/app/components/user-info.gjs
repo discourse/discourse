@@ -1,16 +1,16 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { attributeBindings, classNameBindings } from "@ember-decorators/component";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import UserStatusMessage from "discourse/components/user-status-message";
+import avatar from "discourse/helpers/avatar";
+import formatUsername from "discourse/helpers/format-username";
 import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import avatar from "discourse/helpers/avatar";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import formatUsername from "discourse/helpers/format-username";
 import and from "truth-helpers/helpers/and";
-import UserStatusMessage from "discourse/components/user-status-message";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 
 @classNameBindings(":user-info", "size")
 @attributeBindings("dataUsername:data-username")

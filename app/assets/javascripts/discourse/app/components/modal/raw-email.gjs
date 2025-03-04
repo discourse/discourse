@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import Post from "discourse/models/post";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
-import eq from "truth-helpers/helpers/eq";
 import { Textarea } from "@ember/component";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import IframedHtml from "discourse/components/iframed-html";
+import iN from "discourse/helpers/i18n";
+import Post from "discourse/models/post";
+import eq from "truth-helpers/helpers/eq";
 
 export default class RawEmailComponent extends Component {<template><DModal @title={{iN "raw_email.title"}} class="incoming-email-modal" @closeModal={{@closeModal}}>
   <:body>

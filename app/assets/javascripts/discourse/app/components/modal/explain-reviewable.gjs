@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import ScoreValue from "discourse/components/score-value";
 import float from "discourse/helpers/float";
-import DButton from "discourse/components/d-button";
+import iN from "discourse/helpers/i18n";
 
 export default class ExplainReviewable extends Component {<template><DModal class="explain-reviewable" @closeModal={{@closeModal}} @title={{iN "review.explain.title"}}>
   <:body>

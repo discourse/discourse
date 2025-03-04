@@ -1,21 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AvatarUploader from "discourse/components/avatar-uploader";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
+import RadioButton from "discourse/components/radio-button";
+import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import { fn } from "@ember/helper";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import RadioButton from "discourse/components/radio-button";
-import htmlSafe from "discourse/helpers/html-safe";
-import DButton from "discourse/components/d-button";
-import AvatarUploader from "discourse/components/avatar-uploader";
-import DModalCancel from "discourse/components/d-modal-cancel";
 
 export default class AvatarSelectorModal extends Component {<template><DModal @bodyClass="avatar-selector" @closeModal={{@closeModal}} @title={{iN "user.change_avatar.title"}} class="avatar-selector-modal">
   <:body>

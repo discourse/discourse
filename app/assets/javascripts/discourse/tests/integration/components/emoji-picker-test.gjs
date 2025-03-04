@@ -1,10 +1,10 @@
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
+import Content from "discourse/components/emoji-picker/content";
 import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
-import Content from "discourse/components/emoji-picker/content";
 
 module("Integration | Component | emoji-picker-content", function (hooks) {
   setupRenderingTest(hooks);

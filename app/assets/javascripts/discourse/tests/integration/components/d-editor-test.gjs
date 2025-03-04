@@ -1,6 +1,7 @@
 import { next } from "@ember/runloop";
 import { click, fillIn, find, focus, render, settled, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DEditor from "discourse/components/d-editor";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -10,7 +11,6 @@ import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import { paste, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { getTextareaSelection, setTextareaSelection } from "discourse/tests/helpers/textarea-selection-helper";
 import { i18n } from "discourse-i18n";
-import DEditor from "discourse/components/d-editor";
 import DMenus from "float-kit/components/d-menus";
 
 module("Integration | Component | d-editor", function (hooks) {

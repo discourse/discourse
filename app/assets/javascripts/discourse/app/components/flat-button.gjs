@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { attributeBindings, classNames, tagName } from "@ember-decorators/component";
+import dIcon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import dIcon from "discourse/helpers/d-icon";
 
 @tagName("button")
 @classNames("btn-flat")

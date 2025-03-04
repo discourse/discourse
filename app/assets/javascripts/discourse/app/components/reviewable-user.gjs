@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse/lib/decorators";
-import iN from "discourse/helpers/i18n";
-import getUrl from "discourse/helpers/get-url";
 import { concat } from "@ember/helper";
 import ReviewableField from "discourse/components/reviewable-field";
+import getUrl from "discourse/helpers/get-url";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class ReviewableUser extends Component {<template><div class="reviewable-user-info">
   <div class="reviewable-user-fields">
@@ -44,6 +44,7 @@ export default class ReviewableUser extends Component {<template><div class="rev
 
   {{yield}}
 </div></template>
+
   @discourseComputed("reviewable.user_fields")
   userFields(fields) {
     return this.site.collectUserFields(fields);

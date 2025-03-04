@@ -1,11 +1,11 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import formatDate from "discourse/helpers/format-date";
 import dIcon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
+import formatDate from "discourse/helpers/format-date";
 import htmlSafe from "discourse/helpers/html-safe";
+import number from "discourse/helpers/number";
 
 @tagName("li")
 export default class UserSummaryTopic extends Component {<template><PluginOutlet @name="user-summary-topic-wrapper" @outletArgs={{hash topic=@topic url=@url}}>

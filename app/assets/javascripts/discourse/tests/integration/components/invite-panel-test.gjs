@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import InvitePanel from "discourse/components/invite-panel";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import InvitePanel from "discourse/components/invite-panel";
 
 module("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);

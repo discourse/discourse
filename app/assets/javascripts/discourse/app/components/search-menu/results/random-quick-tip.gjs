@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import { i18n } from "discourse-i18n";
 import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
+import { i18n } from "discourse-i18n";
 
 const DEFAULT_QUICK_TIPS = [
   {

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import DateTimeInput from "discourse/components/date-time-input";
-import { hash } from "@ember/helper";
 import iN from "discourse/helpers/i18n";
 
 @classNames("d-date-time-input-range")

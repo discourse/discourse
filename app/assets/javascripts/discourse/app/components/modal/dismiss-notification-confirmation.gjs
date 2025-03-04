@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 
 export default class DismissNotificationConfirmation extends Component {<template><DModal @headerClass="hidden" class="dismiss-notification-confirmation" @closeModal={{@closeModal}}>
   <:body>
@@ -12,6 +12,7 @@ export default class DismissNotificationConfirmation extends Component {<templat
     <DButton @action={{@closeModal}} @label="notifications.dismiss_confirmation.cancel" class="btn-default" />
   </:footer>
 </DModal></template>
+
   @action
   dismiss() {
     this.args.model?.dismissNotifications?.();

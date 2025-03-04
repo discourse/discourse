@@ -1,15 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import dIcon from "discourse/helpers/d-icon";
-import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
-import DButton from "discourse/components/d-button";
-import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
-import htmlSafe from "discourse/helpers/html-safe";
-import formatDate from "discourse/helpers/format-date";
 import { fn, hash } from "@ember/helper";
-import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
+import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
+import dIcon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{#if @controller.canChangePassword}}
   <div class="control-group pref-password" data-setting-name="user-password">
     <label class="control-label">{{iN "user.password.title"}}</label>
@@ -105,4 +105,4 @@ export default RouteTemplate(<template>{{#if @controller.canChangePassword}}
 
 <span>
   <PluginOutlet @name="user-custom-controls" @connectorTagName="div" @outletArgs={{hash model=@controller.model}} />
-</span></template>)
+</span></template>);

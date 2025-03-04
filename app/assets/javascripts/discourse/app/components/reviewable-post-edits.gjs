@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
+import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import dIcon from "discourse/helpers/d-icon";
 
 export default class ReviewablePostEdits extends Component {<template>{{#if this.hasEdits}}
   <a href {{on "click" this.showEditHistory}} class="has-edits {{this.historyClass}}" title={{iN "post.last_edited_on" dateTime=this.editedDate}}>

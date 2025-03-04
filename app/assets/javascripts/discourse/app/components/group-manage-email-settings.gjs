@@ -1,18 +1,18 @@
 import Component, { Input } from "@ember/component";
+import { on as on0 } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import discourseComputed from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
-import iN from "discourse/helpers/i18n";
-import { on as on0 } from "@ember/modifier";
-import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import htmlSafe from "discourse/helpers/html-safe";
-import not from "truth-helpers/helpers/not";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
+import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
+import not from "truth-helpers/helpers/not";
 
 @tagName("")
 export default class GroupManageEmailSettings extends Component {<template><div class="group-manage-email-settings">

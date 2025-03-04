@@ -1,5 +1,5 @@
-import DButton from "discourse/components/d-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
 import htmlSafe from "discourse/helpers/html-safe";
 import and from "truth-helpers/helpers/and";
 <template><div id="revision-controls">

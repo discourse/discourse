@@ -1,9 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import getUrl from "discourse/helpers/get-url";
-import dIcon from "discourse/helpers/d-icon";
-import iN from "discourse/helpers/i18n";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
+import getUrl from "discourse/helpers/get-url";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><a class="tag-groups--back" href={{getUrl "/tags"}}>
   {{dIcon "chevron-left"}}
   <span>{{iN "tagging.groups.back_btn"}}</span>
@@ -35,4 +35,4 @@ export default RouteTemplate(<template><a class="tag-groups--back" href={{getUrl
       <div class="alert info">{{iN "tagging.groups.disabled"}}</div>
     </div>
   {{/if}}
-</div></template>)
+</div></template>);

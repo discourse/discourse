@@ -1,7 +1,7 @@
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import TextField from "discourse/components/text-field";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | text-field", function (hooks) {
   setupRenderingTest(hooks);

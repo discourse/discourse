@@ -1,8 +1,8 @@
 import EmberObject, { action } from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import discourseComputed from "discourse/lib/decorators";
-import iN from "discourse/helpers/i18n";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class EditCategoryImages extends buildCategoryPanel("images") {<template><section class="field category-logo">
   <label>{{iN "category.logo"}}</label>
@@ -29,6 +29,7 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {<t
   <label>{{iN "category.background_image_dark"}}</label>
   <UppyImageUploader @imageUrl={{this.backgroundDarkImageUrl}} @onUploadDone={{action "backgroundDarkUploadDone"}} @onUploadDeleted={{action "backgroundDarkUploadDeleted"}} @type="category_background_dark" @id="category-dark-background-uploader" />
 </section></template>
+
   @discourseComputed("category.uploaded_background.url")
   backgroundImageUrl(uploadedBackgroundUrl) {
     return uploadedBackgroundUrl || "";

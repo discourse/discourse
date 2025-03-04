@@ -1,22 +1,22 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import FlagActionType from "discourse/components/flag-action-type";
+import FlagSelection from "discourse/components/flag-selection";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import htmlSafe from "discourse/helpers/html-safe";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import FlagSelection from "discourse/components/flag-selection";
-import FlagActionType from "discourse/components/flag-action-type";
-import DButton from "discourse/components/d-button";
 import not from "truth-helpers/helpers/not";
-import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
 

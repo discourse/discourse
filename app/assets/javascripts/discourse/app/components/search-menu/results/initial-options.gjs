@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
+import AssistantItem0 from "discourse/components/search-menu/results/assistant-item";
+import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
+import RecentSearches from "discourse/components/search-menu/results/recent-searches";
+import iN from "discourse/helpers/i18n";
 import { i18n } from "discourse-i18n";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
 import Assistant from "./assistant";
 import AssistantItem from "./assistant-item";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import AssistantItem0 from "discourse/components/search-menu/results/assistant-item";
-import or from "truth-helpers/helpers/or";
-import iN from "discourse/helpers/i18n";
-import and from "truth-helpers/helpers/and";
-import RecentSearches from "discourse/components/search-menu/results/recent-searches";
-import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,

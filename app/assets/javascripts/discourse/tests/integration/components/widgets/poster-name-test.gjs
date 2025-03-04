@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MountWidget from "discourse/components/mount-widget";
 import Badge from "discourse/models/badge";
 import User from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import MountWidget from "discourse/components/mount-widget";
 
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);

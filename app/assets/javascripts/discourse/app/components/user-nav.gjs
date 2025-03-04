@@ -1,9 +1,9 @@
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import { hash } from "@ember/helper";
 import DNavigationItem from "discourse/components/d-navigation-item";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 import and from "truth-helpers/helpers/and";
 <template><section class="user-navigation user-navigation-primary">
   <HorizontalOverflowNav @ariaLabel="User primary" class="main-nav nav user-nav">

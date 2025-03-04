@@ -1,23 +1,23 @@
-import RouteTemplate from 'ember-route-template'
+import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import FlashMessage from "discourse/components/flash-message";
+import LocalLoginForm from "discourse/components/local-login-form";
+import LoginButtons from "discourse/components/login-buttons";
+import LoginPageCta from "discourse/components/login-page-cta";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import WelcomeHeader from "discourse/components/welcome-header";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import bodyClass from "discourse/helpers/body-class";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import and from "truth-helpers/helpers/and";
-import or from "truth-helpers/helpers/or";
-import not from "truth-helpers/helpers/not";
-import FlashMessage from "discourse/components/flash-message";
-import concatClass from "discourse/helpers/concat-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import iN from "discourse/helpers/i18n";
 import htmlSafe from "discourse/helpers/html-safe";
-import { hash } from "@ember/helper";
-import WelcomeHeader from "discourse/components/welcome-header";
-import LoginButtons from "discourse/components/login-buttons";
-import LocalLoginForm from "discourse/components/local-login-form";
-import LoginPageCta from "discourse/components/login-page-cta";
-import DButton from "discourse/components/d-button";
+import iN from "discourse/helpers/i18n";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template>{{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
 {{hideApplicationSidebar}}
 {{bodyClass "login-page"}}
@@ -118,4 +118,4 @@ export default RouteTemplate(<template>{{hideApplicationHeaderButtons "search" "
       </div>
     </section>
   {{/if}}
-{{/if}}</template>)
+{{/if}}</template>);

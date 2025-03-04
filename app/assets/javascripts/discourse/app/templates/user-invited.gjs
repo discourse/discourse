@@ -1,7 +1,7 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
+import RouteTemplate from 'ember-route-template';
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
+import bodyClass from "discourse/helpers/body-class";
 export default RouteTemplate(<template>{{#if @controller.can_see_invite_details}}
   {{bodyClass "user-invites-page"}}
 
@@ -14,4 +14,4 @@ export default RouteTemplate(<template>{{#if @controller.can_see_invite_details}
   </div>
 {{/if}}
 
-{{outlet}}</template>)
+{{outlet}}</template>);

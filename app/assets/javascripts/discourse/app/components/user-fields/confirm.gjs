@@ -1,9 +1,9 @@
-import UserFieldBase from "./base";
-import iN from "discourse/helpers/i18n";
 import { Input } from "@ember/component";
 import { concat } from "@ember/helper";
-import htmlSafe from "discourse/helpers/html-safe";
 import InputTip from "discourse/components/input-tip";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import UserFieldBase from "./base";
 
 export default class UserFieldConfirm extends UserFieldBase {<template>{{#if this.field.name}}
   <label class="control-label">

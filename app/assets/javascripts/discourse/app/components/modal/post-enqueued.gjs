@@ -1,7 +1,7 @@
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 <template><DModal @closeModal={{@closeModal}} @title={{iN "review.approval.title"}} class="post-enqueued-modal">
   <:body>
     <p>{{iN "review.approval.description"}}</p>

@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import BulkSelectToggle from "discourse/components/bulk-select-toggle";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import dIcon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
-import bodyClass from "discourse/helpers/body-class";
 import and from "truth-helpers/helpers/and";
-import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import dIcon from "discourse/helpers/d-icon";
-import { Input } from "@ember/component";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 
 export default class DiscoveryFilterNavigation extends Component {<template>{{bodyClass "navigation-filter"}}
 

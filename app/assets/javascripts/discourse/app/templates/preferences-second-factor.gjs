@@ -1,14 +1,14 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import iN from "discourse/helpers/i18n";
-import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import DButton from "discourse/components/d-button";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
-import htmlSafe from "discourse/helpers/html-safe";
-import and from "truth-helpers/helpers/and";
+import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
-import { LinkTo } from "@ember/routing";
+import bodyClass from "discourse/helpers/body-class";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import and from "truth-helpers/helpers/and";
 export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
 
 <section class="user-content user-preferences solo-preference second-factor">
@@ -121,4 +121,4 @@ export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
       {{/if}}
     </form>
   </ConditionalLoadingSpinner>
-</section></template>)
+</section></template>);

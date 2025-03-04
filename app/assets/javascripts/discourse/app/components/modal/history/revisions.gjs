@@ -1,16 +1,16 @@
-import htmlSafe from "discourse/helpers/html-safe";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import dIcon from "discourse/helpers/d-icon";
-import eq from "truth-helpers/helpers/eq";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import discourseTag from "discourse/helpers/discourse-tag";
-import or from "truth-helpers/helpers/or";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import LinksRedirect from "discourse/components/links-redirect";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import LinksRedirect from "discourse/components/links-redirect";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
+import dIcon from "discourse/helpers/d-icon";
+import discourseTag from "discourse/helpers/discourse-tag";
+import htmlSafe from "discourse/helpers/html-safe";
+import and from "truth-helpers/helpers/and";
+import eq from "truth-helpers/helpers/eq";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 <template><div id="revisions" data-post-id={{@model.post_id}} class={{@hiddenClasses}}>
   {{#if @model.title_changes}}
     <div class="row">

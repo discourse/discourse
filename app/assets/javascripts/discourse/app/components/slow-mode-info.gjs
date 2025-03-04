@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import Topic from "discourse/models/topic";
-import dIcon from "discourse/helpers/d-icon";
-import iN from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
 
 export default class SlowModeInfo extends Component {<template>{{#if this.showSlowModeNotice}}
   <div class="topic-status-info">
@@ -22,6 +22,7 @@ export default class SlowModeInfo extends Component {<template>{{#if this.showSl
     </h3>
   </div>
 {{/if}}</template>
+
   @discourseComputed("topic.slow_mode_seconds")
   durationText(seconds) {
     return durationTextFromSeconds(seconds);

@@ -1,15 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import BasicTopicList from "discourse/components/basic-topic-list";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import CountIN from "discourse/components/count-i18n";
 import EmptyState from "discourse/components/empty-state";
 import LoadMore from "discourse/components/load-more";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import or from "truth-helpers/helpers/or";
-import { on } from "@ember/modifier";
-import CountIN from "discourse/components/count-i18n";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 export default RouteTemplate(<template>{{#if @controller.model.canLoadMore}}
   {{hideApplicationFooter}}
 {{/if}}
@@ -38,4 +38,4 @@ export default RouteTemplate(<template>{{#if @controller.model.canLoadMore}}
 
     <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
   </LoadMore>
-{{/if}}</template>)
+{{/if}}</template>);

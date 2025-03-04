@@ -1,9 +1,9 @@
-import UserFieldBase from "./base";
 import { Input } from "@ember/component";
 import { concat } from "@ember/helper";
-import iN from "discourse/helpers/i18n";
 import InputTip from "discourse/components/input-tip";
 import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import UserFieldBase from "./base";
 
 export default class UserFieldText extends UserFieldBase {<template><div class="controls">
   <Input id={{concat "user-" this.elementId}} @value={{this.value}} maxlength={{this.site.user_field_max_length}} />

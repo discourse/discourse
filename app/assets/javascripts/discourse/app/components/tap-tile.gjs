@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { reads } from "@ember/object/computed";
 import { attributeBindings, classNameBindings, classNames } from "@ember-decorators/component";
-import { propertyEqual } from "discourse/lib/computed";
 import dIcon from "discourse/helpers/d-icon";
+import { propertyEqual } from "discourse/lib/computed";
 
 @classNames("tap-tile")
 @classNameBindings("active")

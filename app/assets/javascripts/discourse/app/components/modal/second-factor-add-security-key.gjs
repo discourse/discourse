@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import { bufferToBase64, isWebauthnSupported, stringToBuffer } from "discourse/lib/webauthn";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import htmlSafe from "discourse/helpers/html-safe";
-import { Input } from "@ember/component";
-import DButton from "discourse/components/d-button";
 
 export default class SecondFactorAddSecurityKey extends Component {<template><DModal @closeModal={{@closeModal}} @title={{iN "user.second_factor.security_key.add"}} {{didInsert this.securityKeyRequested}}>
   <:body>

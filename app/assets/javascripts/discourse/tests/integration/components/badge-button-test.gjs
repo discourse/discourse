@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BadgeButton from "discourse/components/badge-button";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,12 +1,12 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import iN from "discourse/helpers/i18n";
-import EmptyState from "discourse/components/empty-state";
 import { Input } from "@ember/component";
-import DButton from "discourse/components/d-button";
+import RouteTemplate from 'ember-route-template';
 import BookmarkList from "discourse/components/bookmark-list";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import EmptyState from "discourse/components/empty-state";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{bodyClass "user-activity-bookmarks-page"}}
 
 <ConditionalLoadingSpinner @condition={{@controller.loading}}>
@@ -27,4 +27,4 @@ export default RouteTemplate(<template>{{bodyClass "user-activity-bookmarks-page
       <BookmarkList @bulkSelectHelper={{@controller.bulkSelectHelper}} @loadMore={{action "loadMore"}} @reload={{action "reload"}} @loadingMore={{@controller.loadingMore}} @content={{@controller.model.bookmarks}} />
     {{/if}}
   {{/if}}
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

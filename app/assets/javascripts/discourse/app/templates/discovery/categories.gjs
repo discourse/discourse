@@ -1,14 +1,14 @@
-import RouteTemplate from 'ember-route-template'
-import Layout from "discourse/components/discovery/layout";
-import Navigation from "discourse/components/discovery/navigation";
-import bodyClass from "discourse/helpers/body-class";
-import and from "truth-helpers/helpers/and";
-import concatClass from "discourse/helpers/concat-class";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
 import CountIN from "discourse/components/count-i18n";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
+import Layout from "discourse/components/discovery/layout";
+import Navigation from "discourse/components/discovery/navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
+import and from "truth-helpers/helpers/and";
 export default RouteTemplate(<template><Layout @model={{@controller.model}}>
   <:navigation>
     <Navigation @category={{@controller.model.parentCategory}} @showCategoryAdmin={{@controller.model.can_create_category}} @canCreateTopic={{@controller.model.can_create_topic}} @createTopic={{@controller.createTopic}} @filterType="categories" />
@@ -31,4 +31,4 @@ export default RouteTemplate(<template><Layout @model={{@controller.model}}>
 
     <PluginOutlet @name="below-discovery-categories" @connectorTagName="div" @outletArgs={{hash categories=@controller.model.categories topics=@controller.model.topics}} />
   </:list>
-</Layout></template>)
+</Layout></template>);

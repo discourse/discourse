@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import CookText from "discourse/components/cook-text";
+import DButton from "discourse/components/d-button";
 import RawEmailModal from "discourse/components/modal/raw-email";
-import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
-import dIcon from "discourse/helpers/d-icon";
-import categoryBadge from "discourse/helpers/category-badge";
-import ReviewableTags from "discourse/components/reviewable-tags";
-import { on } from "@ember/modifier";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import CookText from "discourse/components/cook-text";
-import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import ReviewableTags from "discourse/components/reviewable-tags";
+import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
+import categoryBadge from "discourse/helpers/category-badge";
+import dIcon from "discourse/helpers/d-icon";
 
 export default class ReviewableQueuedPost extends Component {<template><ReviewableTopicLink @reviewable={{@reviewable}} @tagName>
   <div class="title-text">

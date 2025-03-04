@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Dropdown from "discourse/components/form-template-field/dropdown";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import Dropdown from "discourse/components/form-template-field/dropdown";
 
 module(
   "Integration | Component | form-template-field | dropdown",

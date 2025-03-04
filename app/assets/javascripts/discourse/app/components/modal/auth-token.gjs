@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
+import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
+import DModalCancel from "discourse/components/d-modal-cancel";
 import dIcon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import { on } from "@ember/modifier";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import { ajax } from "discourse/lib/ajax";
+import { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
-import DButton from "discourse/components/d-button";
-import DModalCancel from "discourse/components/d-modal-cancel";
 
 export default class AuthTokenComponent extends Component {<template><DModal @title={{iN "user.auth_tokens.was_this_you"}} @closeModal={{@closeModal}}>
   <:body>

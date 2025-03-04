@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DismissNew from "discourse/components/modal/dismiss-new";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import DismissNew from "discourse/components/modal/dismiss-new";
 
 module("Integration | Component | modal/dismiss-new", function (hooks) {
   setupRenderingTest(hooks);

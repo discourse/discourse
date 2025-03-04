@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import { debounce } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
-import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
-import iN from "discourse/helpers/i18n";
-import dIcon from "discourse/helpers/d-icon";
-import or from "truth-helpers/helpers/or";
 import Category from "discourse/components/search-menu/results/type/category";
-import and from "truth-helpers/helpers/and";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import { debounce } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {

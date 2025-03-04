@@ -1,11 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
 import DNavigationItem from "discourse/components/d-navigation-item";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
 
 <div class="user-navigation user-navigation-secondary">
@@ -70,4 +70,4 @@ export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
   <form class="form-vertical">
     {{outlet}}
   </form>
-</section></template>)
+</section></template>);

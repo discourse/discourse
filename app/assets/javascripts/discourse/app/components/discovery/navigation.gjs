@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
+import CategoryLogo from "discourse/components/category-logo";
+import DNavigation from "discourse/components/d-navigation";
 import ReorderCategories from "discourse/components/modal/reorder-categories";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
+import dirSpan from "discourse/helpers/dir-span";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
-import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
-import { array, hash } from "@ember/helper";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import CategoryLogo from "discourse/components/category-logo";
-import dirSpan from "discourse/helpers/dir-span";
-import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import DNavigation from "discourse/components/d-navigation";
 
 export default class DiscoveryNavigation extends Component {<template><AddCategoryTagClasses @category={{@category}} @tags={{if @tag (array @tag.id)}} />
 

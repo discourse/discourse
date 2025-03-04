@@ -1,20 +1,20 @@
 import Component from "@ember/component";
-import { attributeBindings, classNameBindings } from "@ember-decorators/component";
-import { navigateToTopic, showEntrance } from "discourse/components/topic-list-item";
-import discourseComputed from "discourse/lib/decorators";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import UserLink from "discourse/components/user-link";
-import iN from "discourse/helpers/i18n";
-import avatar from "discourse/helpers/avatar";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import raw from "discourse/helpers/raw";
-import topicLink from "discourse/helpers/topic-link";
-import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import { attributeBindings, classNameBindings } from "@ember-decorators/component";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import { navigateToTopic, showEntrance } from "discourse/components/topic-list-item";
 import TopicPostBadges from "discourse/components/topic-post-badges";
+import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import UserLink from "discourse/components/user-link";
+import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
+import iN from "discourse/helpers/i18n";
+import raw from "discourse/helpers/raw";
+import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import topicLink from "discourse/helpers/topic-link";
+import discourseComputed from "discourse/lib/decorators";
 
 @attributeBindings("topic.id:data-topic-id")
 @classNameBindings(":latest-topic-list-item", "unboundClassNames")

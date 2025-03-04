@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { waitForPromise } from "@ember/test-waiters";
-import { create } from "virtual-dom";
-import { iconNode } from "discourse/lib/icon-library";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { waitForPromise } from "@ember/test-waiters";
+import { create } from "virtual-dom";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import iN from "discourse/helpers/i18n";
+import { iconNode } from "discourse/lib/icon-library";
 
 export default class JsonSchemaEditorModal extends Component {<template><DModal @flash={{this.flash}} @flashType={{this.flashType}} @closeModal={{@closeModal}} @title={{iN "admin.site_settings.json_schema.modal_title" name=@model.settingName}} @inline={{@inline}} class="json-schema-editor-modal">
   <:body>

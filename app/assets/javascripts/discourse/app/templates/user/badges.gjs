@@ -1,9 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import iN from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import BadgeCard from "discourse/components/badge-card";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{bodyClass "user-badges-page"}}
 
 <section class="user-content" id="user-content">
@@ -21,4 +21,4 @@ export default RouteTemplate(<template>{{bodyClass "user-badges-page"}}
       <PluginOutlet @name="after-user-profile-badges" @outletArgs={{hash user=@controller.user.model}} />
     </div>
   </PluginOutlet>
-</section></template>)
+</section></template>);

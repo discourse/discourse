@@ -1,7 +1,7 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
 import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
 import TagList from "discourse/components/tag-list";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><div class="list-controls">
   <div class="container">
     <h2>{{iN "tagging.tags"}}</h2>
@@ -26,4 +26,4 @@ export default RouteTemplate(<template><div class="list-controls">
 
 {{#if @controller.model}}
   <TagList @tags={{@controller.model}} @sortProperties={{@controller.sortProperties}} @titleKey="tagging.all_tags" @isPrivateMessage={{true}} @tagsForUser={{@controller.tagsForUser}} />
-{{/if}}</template>)
+{{/if}}</template>);

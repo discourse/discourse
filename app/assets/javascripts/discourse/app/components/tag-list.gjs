@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { sort } from "@ember/object/computed";
 import { classNameBindings } from "@ember-decorators/component";
+import CategoryTitleLink from "discourse/components/category-title-link";
+import dIcon from "discourse/helpers/d-icon";
+import discourseTag from "discourse/helpers/discourse-tag";
 import discourseComputed from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import CategoryTitleLink from "discourse/components/category-title-link";
-import discourseTag from "discourse/helpers/discourse-tag";
-import dIcon from "discourse/helpers/d-icon";
 
 @classNameBindings(
   ":tags-list",

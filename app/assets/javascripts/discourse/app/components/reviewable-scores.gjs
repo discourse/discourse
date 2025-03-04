@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import iN from "discourse/helpers/i18n";
+import ReviewableConversationPost from "discourse/components/reviewable-conversation-post";
 import ReviewableScore from "discourse/components/reviewable-score";
 import htmlSafe from "discourse/helpers/html-safe";
-import ReviewableConversationPost from "discourse/components/reviewable-conversation-post";
+import iN from "discourse/helpers/i18n";
 
 export default class ReviewableScores extends Component {<template>{{#if this.reviewable.reviewable_scores}}
   <div class="reviewable-scores__table-wrapper">

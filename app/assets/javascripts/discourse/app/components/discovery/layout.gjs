@@ -1,7 +1,7 @@
-import DiscourseBanner from "discourse/components/discourse-banner";
-import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
+import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
+import DiscourseBanner from "discourse/components/discourse-banner";
+import PluginOutlet from "discourse/components/plugin-outlet";
 <template><div class="container">
   <DiscourseBanner />
   {{#if @model.category}}

@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { bind } from "discourse/lib/decorators";
-import bodyClass from "discourse/helpers/body-class";
-import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import Sections from "discourse/components/sidebar/sections";
 import ApiPanels from "discourse/components/sidebar/api-panels";
 import Footer from "discourse/components/sidebar/footer";
+import Sections from "discourse/components/sidebar/sections";
+import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
+import bodyClass from "discourse/helpers/body-class";
+import { bind } from "discourse/lib/decorators";
 
 export default class Sidebar extends Component {<template>{{bodyClass "has-sidebar-page"}}
 

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import $ from "jquery";
-import iN from "discourse/helpers/i18n";
 import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
 
 export default class LinkToInput extends Component {<template>{{#if this.showInput}}
   {{yield}}

@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import TextField from "discourse/components/text-field";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import TextField from "discourse/components/text-field";
+import iN from "discourse/helpers/i18n";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const States = {
   initializing: "initializing",

@@ -1,12 +1,12 @@
 import Component from "@ember/component";
+import { on as on0 } from "@ember/modifier";
 import { action } from "@ember/object";
 import { on } from "@ember-decorators/object";
-import discourseLater from "discourse/lib/later";
+import DButton from "discourse/components/d-button";
 import iN from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
-import { on as on0 } from "@ember/modifier";
+import discourseLater from "discourse/lib/later";
 
 export default class SignupCta extends Component {<template><div class="signup-cta alert alert-info">
   {{#if this.session.hideSignupCta}}

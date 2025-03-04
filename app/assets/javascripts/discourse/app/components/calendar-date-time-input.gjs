@@ -1,16 +1,16 @@
 /* global Pikaday:true */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { Promise } from "rsvp";
-import loadScript from "discourse/lib/load-script";
-import { i18n } from "discourse-i18n";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { Input } from "@ember/component";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
 import dIcon from "discourse/helpers/d-icon";
-import { on } from "@ember/modifier";
+import loadScript from "discourse/lib/load-script";
+import { i18n } from "discourse-i18n";
 
 export default class CalendarDateTimeInput extends Component {<template><div class="calendar-date-time-input" {{didInsert this.setupInternalDateTime}} {{didInsert this.setupPikaday}} {{didUpdate this.changeMinDate @minDate}} {{didUpdate this.changeDate @date}} {{didUpdate this.changeTime @time}}>
   <Input class="fake-input" />

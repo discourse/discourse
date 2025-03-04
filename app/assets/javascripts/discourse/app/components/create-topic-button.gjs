@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DButton from "discourse/components/d-button";
-import DTooltip from "float-kit/components/d-tooltip";
-import iN from "discourse/helpers/i18n";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
+import iN from "discourse/helpers/i18n";
+import DButtonTooltip from "float-kit/components/d-button-tooltip";
+import DTooltip from "float-kit/components/d-tooltip";
 
 @tagName("")
 export default class CreateTopicButton extends Component {<template>{{#if this.canCreateTopic}}

@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import emoji from "discourse/helpers/emoji";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | emoji", function (hooks) {
   setupRenderingTest(hooks);

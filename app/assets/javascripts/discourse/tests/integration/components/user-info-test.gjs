@@ -1,7 +1,7 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import UserInfo from "discourse/components/user-info";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DTooltips from "float-kit/components/d-tooltips";
 
 module("Integration | Component | user-info", function (hooks) {

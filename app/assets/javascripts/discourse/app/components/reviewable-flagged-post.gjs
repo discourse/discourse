@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { bind } from "discourse/lib/decorators";
-import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
-import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
-import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
-import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
+import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
+import ReviewablePostHeader from "discourse/components/reviewable-post-header";
+import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import { bind } from "discourse/lib/decorators";
 
 export default class ReviewableFlaggedPost extends Component {<template><div class="flagged-post-header">
   <ReviewableTopicLink @reviewable={{@reviewable}} @tagName />

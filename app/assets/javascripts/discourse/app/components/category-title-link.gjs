@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
+import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import dIcon from "discourse/helpers/d-icon";
 import dirSpan from "discourse/helpers/dir-span";
-import CategoryLogo from "discourse/components/category-logo";
 
 @tagName("h3")
 export default class CategoryTitleLink extends Component {<template><a class="category-title-link" href={{this.category.url}}>

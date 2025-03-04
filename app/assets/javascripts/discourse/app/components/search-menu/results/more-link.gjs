@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DiscourseURL from "discourse/lib/url";
-import { on } from "@ember/modifier";
 import iN from "discourse/helpers/i18n";
-import { fn } from "@ember/helper";
+import DiscourseURL from "discourse/lib/url";
 
 export default class MoreLink extends Component {<template>{{#if this.topicResults}}
   {{!-- template-lint-disable no-invalid-interactive --}}

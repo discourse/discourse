@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
 import { concat } from "@ember/helper";
+import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
 

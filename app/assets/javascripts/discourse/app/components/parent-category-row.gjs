@@ -1,19 +1,19 @@
+import { array,hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import CategoryListItem from "discourse/components/category-list-item";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, array } from "@ember/helper";
-import borderColor from "discourse/helpers/border-color";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import htmlSafe from "discourse/helpers/html-safe";
+import CategoryUnread from "discourse/components/category-unread";
 import MobileCategoryTopic from "discourse/components/mobile-category-topic";
-import SubCategoryRow from "discourse/components/sub-category-row";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SubCategoryItem from "discourse/components/sub-category-item";
+import SubCategoryRow from "discourse/components/sub-category-row";
+import FeaturedTopic from "discourse/components/topic-list/featured-topic";
+import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
-import gt from "truth-helpers/helpers/gt";
+import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
-import { LinkTo } from "@ember/routing";
-import CategoryUnread from "discourse/components/category-unread";
-import FeaturedTopic from "discourse/components/topic-list/featured-topic";
+import gt from "truth-helpers/helpers/gt";
 
 export default class ParentCategoryRow extends CategoryListItem {<template>{{#unless this.isHidden}}
   <PluginOutlet @name="category-list-above-each-category" @outletArgs={{hash category=this.category}} />

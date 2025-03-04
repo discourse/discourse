@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Section from "discourse/components/sidebar/section";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import formatAge from "discourse/helpers/format-age";
 import htmlSafe from "discourse/helpers/html-safe";
-import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 
 export default class Blurb extends Component {<template><span class="blurb">
   {{formatAge @result.created_at}}

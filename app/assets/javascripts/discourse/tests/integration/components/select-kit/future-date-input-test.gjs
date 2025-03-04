@@ -1,11 +1,11 @@
+import { fn,hash } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import FutureDateInput from "discourse/components/future-date-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import FutureDateInput from "discourse/components/future-date-input";
-import { hash, fn } from "@ember/helper";
 
 function getOptions() {
   return Array.from(

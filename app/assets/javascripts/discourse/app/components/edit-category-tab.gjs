@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
@@ -9,7 +10,6 @@ import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import { on } from "@ember/modifier";
 
 @tagName("li")
 @classNameBindings("active", "tabClassName")

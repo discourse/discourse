@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Wrapper from "discourse/components/form-template-field/wrapper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import Wrapper from "discourse/components/form-template-field/wrapper";
 
 module(
   "Integration | Component | form-template-field | wrapper",

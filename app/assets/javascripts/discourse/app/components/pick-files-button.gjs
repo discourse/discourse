@@ -1,12 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed, { bind } from "discourse/lib/decorators";
-import { authorizedExtensions, authorizesAllExtensions } from "discourse/lib/uploads";
-import { i18n } from "discourse-i18n";
-
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered
 // for the input. They are handled by the uppy mixins directly.
@@ -16,9 +13,11 @@ import { i18n } from "discourse-i18n";
 // is sometimes useful if you need to do something outside the uppy upload with
 // the file, such as directly using JSON or CSV data from a file in JS.
 import DButton from "discourse/components/d-button";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import or from "truth-helpers/helpers/or";
 import noop from "discourse/helpers/noop";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import { authorizedExtensions, authorizesAllExtensions } from "discourse/lib/uploads";
+import { i18n } from "discourse-i18n";
+import or from "truth-helpers/helpers/or";
 @classNames("pick-files-button")
 export default class PickFilesButton extends Component {<template>{{#if this.showButton}}
   <DButton @action={{action "openSystemFilePicker"}} @label={{this.label}} @icon={{this.icon}} />

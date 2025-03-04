@@ -1,11 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
-import TopicStatus from "discourse/components/topic-status";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
+import TopicStatus from "discourse/components/topic-status";
 import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 export default RouteTemplate(<template>{{#if @controller.reviewableTopics}}
   <table class="reviewable-topics">
     <thead>
@@ -44,4 +44,4 @@ export default RouteTemplate(<template>{{#if @controller.reviewableTopics}}
   <div class="no-review">
     {{iN "review.none"}}
   </div>
-{{/if}}</template>)
+{{/if}}</template>);

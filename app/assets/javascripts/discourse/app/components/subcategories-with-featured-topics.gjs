@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
 import CategoryTitleLink from "discourse/components/category-title-link";
-import htmlSafe from "discourse/helpers/html-safe";
 import ParentCategoryRow from "discourse/components/parent-category-row";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
 
 export default class SubcategoriesWithFeaturedTopics extends Component {<template>{{#each this.categories as |category|}}

@@ -1,7 +1,7 @@
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import FlatButton from "discourse/components/flat-button";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | flat-button", function (hooks) {
   setupRenderingTest(hooks);

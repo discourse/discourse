@@ -1,27 +1,27 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
-import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import or from "truth-helpers/helpers/or";
-import SignupProgressBar from "discourse/components/signup-progress-bar";
-import WelcomeHeader from "discourse/components/welcome-header";
-import htmlSafe from "discourse/helpers/html-safe";
-import iN from "discourse/helpers/i18n";
-import UserInfo from "discourse/components/user-info";
+import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
-import { Input } from "@ember/component";
-import valueEntered from "discourse/helpers/value-entered";
-import { on } from "@ember/modifier";
-import and from "truth-helpers/helpers/and";
-import FullnameInput from "discourse/components/fullname-input";
 import PasswordField from "discourse/components/password-field";
+import SignupProgressBar from "discourse/components/signup-progress-bar";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import dIcon from "discourse/helpers/d-icon";
-import not from "truth-helpers/helpers/not";
 import UserField from "discourse/components/user-field";
-import DButton from "discourse/components/d-button";
+import UserInfo from "discourse/components/user-info";
+import WelcomeHeader from "discourse/components/welcome-header";
+import bodyClass from "discourse/helpers/body-class";
+import dIcon from "discourse/helpers/d-icon";
+import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
+import valueEntered from "discourse/helpers/value-entered";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template>{{bodyClass "invite-page"}}
 {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
 {{hideApplicationSidebar}}
@@ -170,4 +170,4 @@ export default RouteTemplate(<template>{{bodyClass "invite-page"}}
       </div>
     </div>
   </div>
-</section></template>)
+</section></template>);

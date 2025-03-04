@@ -1,15 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import bodyClass from "discourse/helpers/body-class";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import DNavigationItem from "discourse/components/d-navigation-item";
-import dIcon from "discourse/helpers/d-icon";
-import iN from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DNavigationItem from "discourse/components/d-navigation-item";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import dIcon from "discourse/helpers/d-icon";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{#if @controller.model.canLoadMore}}
   {{hideApplicationFooter}}
 {{/if}}
@@ -66,4 +66,4 @@ export default RouteTemplate(<template>{{#if @controller.model.canLoadMore}}
     {{outlet}}
     <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
   </LoadMore>
-</section></template>)
+</section></template>);

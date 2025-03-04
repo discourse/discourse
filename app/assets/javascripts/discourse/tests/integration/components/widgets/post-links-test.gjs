@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import MountWidget from "discourse/components/mount-widget";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Widget | post-links", function (hooks) {
   setupRenderingTest(hooks);

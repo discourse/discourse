@@ -1,21 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DModal from "discourse/components/d-modal";
+import Revision from "discourse/components/modal/history/revision";
+import Revisions from "discourse/components/modal/history/revisions";
+import TopicFooter from "discourse/components/modal/history/topic-footer";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import dasherize from "discourse/helpers/dasherize";
+import iN from "discourse/helpers/i18n";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import { concat } from "@ember/helper";
-import dasherize from "discourse/helpers/dasherize";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import Revision from "discourse/components/modal/history/revision";
-import Revisions from "discourse/components/modal/history/revisions";
-import TopicFooter from "discourse/components/modal/history/topic-footer";
 
 function customTagArray(val) {
   if (!val) {

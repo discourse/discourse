@@ -1,13 +1,13 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 import ParentCategoryRow from "discourse/components/parent-category-row";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class CategoriesOnly extends Component {<template><PluginOutlet @name="categories-only-wrapper" @outletArgs={{hash categories=this.categories}}>

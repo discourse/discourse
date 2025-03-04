@@ -1,10 +1,10 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
-import MountWidget from "discourse/components/mount-widget";
 
 module("Integration | Component | Widget | post-cooked", function (hooks) {
   setupRenderingTest(hooks);

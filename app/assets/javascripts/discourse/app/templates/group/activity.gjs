@@ -1,6 +1,6 @@
-import RouteTemplate from 'ember-route-template'
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import RouteTemplate from 'ember-route-template';
 import GroupActivityFilter from "discourse/components/group-activity-filter";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 export default RouteTemplate(<template><section class="user-secondary-navigation">
   <HorizontalOverflowNav class="activity-nav">
@@ -16,4 +16,4 @@ export default RouteTemplate(<template><section class="user-secondary-navigation
 </section>
 <section class="user-content" id="user-content">
   {{outlet}}
-</section></template>)
+</section></template>);

@@ -1,4 +1,4 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 import NavItem from "discourse/components/nav-item";
 export default RouteTemplate(<template><div class="reviewable">
   <ul class="nav nav-pills reviewable-title">
@@ -10,4 +10,4 @@ export default RouteTemplate(<template><div class="reviewable">
   </ul>
 
   {{outlet}}
-</div></template>)
+</div></template>);

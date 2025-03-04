@@ -2,10 +2,10 @@ import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import MountWidget from "discourse/components/mount-widget";
 import DMenus from "float-kit/components/d-menus";
 
 module(

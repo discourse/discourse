@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
+import htmlSafe from "discourse/helpers/html-safe";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 
 @tagName("span")
 export default class DiscourseLinkedText extends Component {<template>{{htmlSafe this.translatedText}}</template>

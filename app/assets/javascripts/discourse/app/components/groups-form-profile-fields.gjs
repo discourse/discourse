@@ -1,20 +1,20 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import DEditor from "discourse/components/d-editor";
+import GroupFlairInputs from "discourse/components/group-flair-inputs";
+import InputTip from "discourse/components/input-tip";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TextField from "discourse/components/text-field";
+import iN from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
-import iN from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import InputTip from "discourse/components/input-tip";
-import DEditor from "discourse/components/d-editor";
-import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 
 export default class GroupsFormProfileFields extends Component {<template>{{#if this.canEdit}}
   {{#if this.currentUser.can_create_group}}

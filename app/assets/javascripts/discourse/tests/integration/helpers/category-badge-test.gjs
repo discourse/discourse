@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import categoryBadge from "discourse/helpers/category-badge";
 import Category from "discourse/models/category";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import categoryBadge from "discourse/helpers/category-badge";
 
 module("Integration | Helper | category-badge", function (hooks) {
   setupRenderingTest(hooks);

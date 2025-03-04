@@ -1,8 +1,8 @@
+import { array } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import concatClass from "discourse/helpers/concat-class";
-import { array } from "@ember/helper";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | concat-class", function (hooks) {
   setupRenderingTest(hooks);

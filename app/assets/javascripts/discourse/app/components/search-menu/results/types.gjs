@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
+import { concat, fn,hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import iN from "discourse/helpers/i18n";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, concat, fn } from "@ember/helper";
-import iN from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
 import or from "truth-helpers/helpers/or";
 
 export default class Types extends Component {<template>{{#each this.filteredResultTypes as |resultType|}}

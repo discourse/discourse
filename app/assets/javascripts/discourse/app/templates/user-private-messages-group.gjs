@@ -1,9 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
+import RouteTemplate from 'ember-route-template';
 import DNavigationItem from "discourse/components/d-navigation-item";
+import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
+import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
-import GroupNotificationsTracking from "discourse/components/group-notifications-tracking";
 export default RouteTemplate(<template><MessagesSecondaryNav>
 
   <DNavigationItem @route="userPrivateMessages.group.index" @ariaCurrentContext="subNav" class="user-nav__messages-group-latest">
@@ -35,4 +35,4 @@ export default RouteTemplate(<template><MessagesSecondaryNav>
 
 <div class="group-messages group-{{@controller.group.name}}">
   {{outlet}}
-</div></template>)
+</div></template>);

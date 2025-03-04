@@ -1,28 +1,28 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ForgotPassword from "discourse/components/modal/forgot-password";
+import PasswordField from "discourse/components/password-field";
+import SecondFactorForm from "discourse/components/second-factor-form";
+import SecondFactorInput from "discourse/components/second-factor-input";
+import SecurityKeyForm from "discourse/components/security-key-form";
+import TogglePasswordMask from "discourse/components/toggle-password-mask";
+import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
+import valueEntered from "discourse/helpers/value-entered";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { i18n } from "discourse-i18n";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { Input } from "@ember/component";
-import valueEntered from "discourse/helpers/value-entered";
-import { on } from "@ember/modifier";
-import iN from "discourse/helpers/i18n";
-import PasswordField from "discourse/components/password-field";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import dIcon from "discourse/helpers/d-icon";
-import SecondFactorForm from "discourse/components/second-factor-form";
-import SecurityKeyForm from "discourse/components/security-key-form";
-import { fn } from "@ember/helper";
-import SecondFactorInput from "discourse/components/second-factor-input";
-import withEventValue from "discourse/helpers/with-event-value";
 
 export default class LocalLoginForm extends Component {<template><form id="login-form" method="post">
   <div id="credentials" class={{this.credentialsClass}}>

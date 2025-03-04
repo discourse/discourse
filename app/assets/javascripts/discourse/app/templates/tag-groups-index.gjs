@@ -1,7 +1,7 @@
-import RouteTemplate from 'ember-route-template'
-import iN from "discourse/helpers/i18n";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import dIcon from "discourse/helpers/d-icon";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template><div class="tag-group-content">
   <h3>
     {{#if @controller.model}}
@@ -21,4 +21,4 @@ export default RouteTemplate(<template><div class="tag-group-content">
       </LinkTo>
     {{/unless}}
   </section>
-</div></template>)
+</div></template>);

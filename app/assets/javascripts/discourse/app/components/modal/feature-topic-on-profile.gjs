@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
 import ChooseTopic from "discourse/components/choose-topic";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import iN from "discourse/helpers/i18n";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class FeatureTopicOnProfile extends Component {<template><DModal @closeModal={{@closeModal}} class="feature-topic-on-profile choose-topic-modal" id="choosing-topic" @title={{iN "user.feature_topic_on_profile.title"}}>
   <:body>

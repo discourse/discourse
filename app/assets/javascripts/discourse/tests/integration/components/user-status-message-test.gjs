@@ -1,8 +1,8 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import UserStatusMessage from "discourse/components/user-status-message";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import UserStatusMessage from "discourse/components/user-status-message";
 import DTooltips from "float-kit/components/d-tooltips";
 
 module("Integration | Component | user-status-message", function (hooks) {

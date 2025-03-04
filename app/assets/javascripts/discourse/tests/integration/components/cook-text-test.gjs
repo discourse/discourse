@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
+import CookText from "discourse/components/cook-text";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import CookText from "discourse/components/cook-text";
 
 module("Integration | Component | cook-text", function (hooks) {
   setupRenderingTest(hooks);

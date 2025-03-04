@@ -1,9 +1,9 @@
-import CreateInviteUploader from "discourse/components/create-invite-uploader";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import CreateInviteUploader from "discourse/components/create-invite-uploader";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 <template><CreateInviteUploader @autoFindInput={{false}} as |uploader setElement|>
   <DModal @title={{iN "user.invited.bulk_invite.text"}} class="create-invite-bulk-modal -large" @closeModal={{@closeModal}}>
     <:body>

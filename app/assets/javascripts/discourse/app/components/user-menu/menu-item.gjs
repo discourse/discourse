@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { on } from "@ember/modifier";
-import dIcon from "discourse/helpers/d-icon";
-import { concat } from "@ember/helper";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 export default class UserMenuItem extends Component {<template><li class={{this.className}}>
   <a href={{this.linkHref}} title={{this.linkTitle}} {{on "click" this.onClick}}>
@@ -34,6 +34,7 @@ export default class UserMenuItem extends Component {<template><li class={{this.
   </a>
   <PluginOutlet @name="menu-item-end" @outletArgs={{this.endOutletArgs}} />
 </li></template>
+
   get className() {
     return this.#item.className;
   }

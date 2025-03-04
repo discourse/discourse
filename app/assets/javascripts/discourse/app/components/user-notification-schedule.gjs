@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
-import iN from "discourse/helpers/i18n";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import UserNotificationScheduleDay from "discourse/components/user-notification-schedule-day";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 const DAYS = [
   "monday",

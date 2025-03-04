@@ -1,9 +1,9 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
+import DNavigationItem from "discourse/components/d-navigation-item";
+import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
+import dIcon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
 import iN from "discourse/helpers/i18n";
-import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
-import DNavigationItem from "discourse/components/d-navigation-item";
-import dIcon from "discourse/helpers/d-icon";
 export default RouteTemplate(<template>{{#if @controller.showWarningsWarning}}
   <div class="alert alert-info">{{htmlSafe (iN "admin.user.warnings_list_warning")}}</div>
 {{/if}}
@@ -39,4 +39,4 @@ export default RouteTemplate(<template>{{#if @controller.showWarningsWarning}}
 
 </MessagesSecondaryNav>
 
-{{outlet}}</template>)
+{{outlet}}</template>);

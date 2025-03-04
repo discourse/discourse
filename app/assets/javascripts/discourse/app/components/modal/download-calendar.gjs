@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import RadioButton from "discourse/components/radio-button";
-import { fn } from "@ember/helper";
-import { Input } from "@ember/component";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import RadioButton from "discourse/components/radio-button";
+import iN from "discourse/helpers/i18n";
+import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
 
 export default class DownloadCalendar extends Component {<template><DModal @title={{iN "download_calendar.title"}} class="download-calendar-modal" @closeModal={{@closeModal}}>
   <:body>

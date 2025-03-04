@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { gt } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import dIcon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
 import reviewableStatus from "discourse/helpers/reviewable-status";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ReviewableScore extends Component {<template><tr class="reviewable-score">

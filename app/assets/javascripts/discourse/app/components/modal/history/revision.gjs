@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
-import dIcon from "discourse/helpers/d-icon";
-import { LinkTo } from "@ember/routing";
-import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import boundDate from "discourse/helpers/bound-date";
-import eq from "truth-helpers/helpers/eq";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import htmlSafe from "discourse/helpers/html-safe";
-import concatClass from "discourse/helpers/concat-class";
-import iN from "discourse/helpers/i18n";
 import { on } from "@ember/modifier";
+import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
+import boundDate from "discourse/helpers/bound-date";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import and from "truth-helpers/helpers/and";
+import eq from "truth-helpers/helpers/eq";
+import not from "truth-helpers/helpers/not";
 
 export default class Revision extends Component {<template><div id="revision">
   <div id="revision-details">

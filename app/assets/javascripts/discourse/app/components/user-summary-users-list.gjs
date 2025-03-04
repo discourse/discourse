@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import iN from "discourse/helpers/i18n";
 import { concat } from "@ember/helper";
+import iN from "discourse/helpers/i18n";
 
 export default class UserSummaryUsersList extends Component {<template>{{#if this.users}}
   <ul>

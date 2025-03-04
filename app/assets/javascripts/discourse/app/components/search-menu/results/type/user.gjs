@@ -1,6 +1,6 @@
 import avatar from "discourse/helpers/avatar";
-import and from "truth-helpers/helpers/and";
 import formatUsername from "discourse/helpers/format-username";
+import and from "truth-helpers/helpers/and";
 <template>{{avatar @result imageSize="small" template=@result.avatar_template username=@result.username}}
 <div class="user-titles">
   {{#if (and @displayNameWithUser @result.name)}}

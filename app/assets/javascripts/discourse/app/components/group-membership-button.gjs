@@ -2,12 +2,12 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
-import DButton from "discourse/components/d-button";
 
 @classNames("group-membership-button")
 export default class GroupMembershipButton extends Component {<template>{{#if this.canJoinGroup}}

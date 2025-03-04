@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import BackupCodes from "discourse/components/backup-codes";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import { debounce } from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import BackupCodes from "discourse/components/backup-codes";
-import htmlSafe from "discourse/helpers/html-safe";
-import DButton from "discourse/components/d-button";
 
 export default class SecondFactorBackupEdit extends Component {<template><DModal @title={{iN "user.second_factor_backup.title"}} @closeModal={{@closeModal}} class="second-factor-backup-edit-modal">
   <:body>

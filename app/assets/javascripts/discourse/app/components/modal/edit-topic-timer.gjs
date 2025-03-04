@@ -4,14 +4,14 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
+import iN from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { i18n } from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
-import DButton from "discourse/components/d-button";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";

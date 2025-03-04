@@ -1,18 +1,18 @@
-import RouteTemplate from 'ember-route-template'
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import iN from "discourse/helpers/i18n";
-import or from "truth-helpers/helpers/or";
+import RouteTemplate from 'ember-route-template';
 import AvatarFlair from "discourse/components/avatar-flair";
-import GroupInfo from "discourse/components/group-info";
-import and from "truth-helpers/helpers/and";
-import DTooltip from "float-kit/components/d-tooltip";
-import dIcon from "discourse/helpers/d-icon";
-import GroupMembershipButton from "discourse/components/group-membership-button";
-import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse/helpers/html-safe";
+import GroupInfo from "discourse/components/group-info";
+import GroupMembershipButton from "discourse/components/group-membership-button";
 import GroupNavigation from "discourse/components/group-navigation";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
+import DTooltip from "float-kit/components/d-tooltip";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template><span>
   <PluginOutlet @name="before-group-container" @connectorTagName="div" @outletArgs={{hash group=@controller.model}} />
 </span>
@@ -81,4 +81,4 @@ export default RouteTemplate(<template><span>
     </section>
     {{outlet}}
   </div>
-</div></template>)
+</div></template>);

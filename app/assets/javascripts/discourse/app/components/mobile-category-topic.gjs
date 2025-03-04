@@ -1,11 +1,11 @@
 import Component from "@ember/component";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import { showEntrance } from "discourse/components/topic-list-item";
-import raw from "discourse/helpers/raw";
-import topicLink from "discourse/helpers/topic-link";
 import coldAgeClass from "discourse/helpers/cold-age-class";
-import rawDate from "discourse/helpers/raw-date";
 import formatAge from "discourse/helpers/format-age";
+import raw from "discourse/helpers/raw";
+import rawDate from "discourse/helpers/raw-date";
+import topicLink from "discourse/helpers/topic-link";
 
 @tagName("tr")
 @classNameBindings(":category-topic-link", "topic.archived", "topic.visited")

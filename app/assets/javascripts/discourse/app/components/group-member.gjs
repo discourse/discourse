@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import avatar from "discourse/helpers/avatar";
-import { on } from "@ember/modifier";
 import dIcon from "discourse/helpers/d-icon";
 
 @classNames("item")
@@ -15,6 +15,7 @@ export default class GroupMember extends Component {<template><a href={{this.mem
     {{dIcon "xmark"}}
   </a>
 {{/unless}}</template>
+
   @action
   remove(event) {
     event?.preventDefault();

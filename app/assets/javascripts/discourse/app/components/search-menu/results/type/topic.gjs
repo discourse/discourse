@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
-import TopicStatus from "discourse/components/topic-status";
-import and from "truth-helpers/helpers/and";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import htmlSafe from "discourse/helpers/html-safe";
-import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
+import Blurb from "discourse/components/search-menu/results/blurb";
+import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
-import Blurb from "discourse/components/search-menu/results/blurb";
+import htmlSafe from "discourse/helpers/html-safe";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import and from "truth-helpers/helpers/and";
 
 export default class Results extends Component {<template><span class="topic">
   <span class="first-line">

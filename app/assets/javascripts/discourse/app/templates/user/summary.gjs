@@ -1,20 +1,20 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
-import iN from "discourse/helpers/i18n";
-import UserStat from "discourse/components/user-stat";
 import { LinkTo } from "@ember/routing";
-import UserSummarySection from "discourse/components/user-summary-section";
-import UserSummaryTopicsList from "discourse/components/user-summary-topics-list";
-import UserSummaryTopic from "discourse/components/user-summary-topic";
-import shortenUrl from "discourse/helpers/shorten-url";
-import htmlSafe from "discourse/helpers/html-safe";
-import UserSummaryUsersList from "discourse/components/user-summary-users-list";
-import UserSummaryUser from "discourse/components/user-summary-user";
-import categoryLink from "discourse/helpers/category-link";
-import UserSummaryCategorySearch from "discourse/components/user-summary-category-search";
+import RouteTemplate from 'ember-route-template';
 import BadgeCard from "discourse/components/badge-card";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import UserStat from "discourse/components/user-stat";
+import UserSummaryCategorySearch from "discourse/components/user-summary-category-search";
+import UserSummarySection from "discourse/components/user-summary-section";
+import UserSummaryTopic from "discourse/components/user-summary-topic";
+import UserSummaryTopicsList from "discourse/components/user-summary-topics-list";
+import UserSummaryUser from "discourse/components/user-summary-user";
+import UserSummaryUsersList from "discourse/components/user-summary-users-list";
+import bodyClass from "discourse/helpers/body-class";
+import categoryLink from "discourse/helpers/category-link";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import shortenUrl from "discourse/helpers/shorten-url";
 export default RouteTemplate(<template>{{bodyClass "user-summary-page"}}
 
 <div class="user-content" id="user-content">
@@ -208,4 +208,4 @@ export default RouteTemplate(<template>{{bodyClass "user-summary-page"}}
       {{/if}}
     </div>
   {{/if}}
-</div></template>)
+</div></template>);

@@ -1,8 +1,8 @@
-import iN from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
 import { fn } from "@ember/helper";
-import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/components/d-button";
 import boundDate from "discourse/helpers/bound-date";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
 <template>{{#if @model.userApiKeys}}
   <div class="control-group pref-user-api-keys">
     <label class="control-label pref-user-api-keys__label">{{iN "user.apps"}}</label>

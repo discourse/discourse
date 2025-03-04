@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
@@ -7,6 +8,7 @@ import { htmlSafe } from "@ember/template";
 import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -16,8 +18,6 @@ import { findRawTemplate } from "discourse/lib/raw-templates";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -51,6 +51,7 @@ export function navigateToTopic(topic, href) {
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {<template><PluginOutlet @name="above-topic-list-item" @outletArgs={{hash topic=this.topic}} />
 {{this.topicListItemContents}}</template>
+
   static reopen() {
     deprecated(
       "Modifying topic-list-item with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",

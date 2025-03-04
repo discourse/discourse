@@ -1,8 +1,8 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
+import BadgeCard from "discourse/components/badge-card";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import iN from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import BadgeCard from "discourse/components/badge-card";
 export default RouteTemplate(<template>{{bodyClass "badges-page"}}
 
 <section>
@@ -28,4 +28,4 @@ export default RouteTemplate(<template>{{bodyClass "badges-page"}}
       {{/each}}
     </div>
   </div>
-</section></template>)
+</section></template>);

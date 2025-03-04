@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
-import { concat } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class AssociateAccountConfirm extends Component {<template><DModal @title={{iN "user.associated_accounts.confirm_modal_title" provider=(iN (concat "login." @model.provider_name ".name"))}} @closeModal={{@closeModal}} @flash={{this.flash}} @flashType="error">
   <:body>

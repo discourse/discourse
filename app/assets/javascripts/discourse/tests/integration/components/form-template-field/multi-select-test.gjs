@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import MultiSelect from "discourse/components/form-template-field/multi-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import MultiSelect from "discourse/components/form-template-field/multi-select";
 
 module(
   "Integration | Component | form-template-field | multi-select",

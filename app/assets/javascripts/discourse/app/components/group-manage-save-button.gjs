@@ -2,14 +2,14 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
+import iN from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import DButton from "discourse/components/d-button";
 import or0 from "truth-helpers/helpers/or";
-import iN from "discourse/helpers/i18n";
 
 export default class GroupManageSaveButton extends Component {<template>{{#if this.privateGroupNameNotice}}
   <div class="row">

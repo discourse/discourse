@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { i18n } from "discourse-i18n";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 import TextField from "discourse/components/text-field";
-import { on } from "@ember/modifier";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorConfirmPhrase extends Component {<template>{{iN "user.second_factor.delete_confirm_header"}}
 

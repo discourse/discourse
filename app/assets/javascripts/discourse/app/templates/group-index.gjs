@@ -1,23 +1,23 @@
-import RouteTemplate from 'ember-route-template'
-import or from "truth-helpers/helpers/or";
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
 import BulkGroupMemberDropdown from "discourse/components/bulk-group-member-dropdown";
-import routeAction from "discourse/helpers/route-action";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import GroupMemberDropdown from "discourse/components/group-member-dropdown";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import ResponsiveTable from "discourse/components/responsive-table";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import { Input } from "@ember/component";
-import { on } from "@ember/modifier";
+import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
-import iN from "discourse/helpers/i18n";
-import dIcon from "discourse/helpers/d-icon";
 import boundDate from "discourse/helpers/bound-date";
-import GroupMemberDropdown from "discourse/components/group-member-dropdown";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import dIcon from "discourse/helpers/d-icon";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
+import or from "truth-helpers/helpers/or";
 export default RouteTemplate(<template>{{#if (or @controller.loading @controller.canLoadMore)}}
   {{hideApplicationFooter}}
 {{/if}}
@@ -159,4 +159,4 @@ export default RouteTemplate(<template>{{#if (or @controller.loading @controller
     <br />
     <div>{{iN @controller.emptyMessageKey}}</div>
   {{/if}}
-</section></template>)
+</section></template>);

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ComposerToggles extends Component {<template><div class="composer-controls">
@@ -20,6 +20,7 @@ export default class ComposerToggles extends Component {<template><div class="co
 
   <DButton @icon={{this.toggleIcon}} @action={{this.toggleComposer}} @title={{this.toggleTitle}} class="btn-transparent toggler toggle-minimize btn-mini-toggle" />
 </div></template>
+
   @discourseComputed("composeState")
   toggleTitle(composeState) {
     return composeState === "draft" || composeState === "saving"

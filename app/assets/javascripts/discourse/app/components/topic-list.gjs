@@ -1,18 +1,18 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames, tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicListItem from "discourse/components/topic-list-item";
+import iN from "discourse/helpers/i18n";
+import raw from "discourse/helpers/raw";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import LoadMore from "discourse/mixins/load-more";
-import iN from "discourse/helpers/i18n";
-import raw from "discourse/helpers/raw";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import TopicListItem from "discourse/components/topic-list-item";
 
 @tagName("table")
 @classNames("topic-list")
@@ -34,6 +34,7 @@ export default class TopicList extends Component.extend(LoadMore) {<template><ca
 </tbody>
 
 <PluginOutlet @name="after-topic-list-body" @outletArgs={{hash topics=this.topics selected=this.selected bulkSelectEnabled=this.bulkSelectEnabled lastVisitedTopic=this.lastVisitedTopic discoveryList=this.discoveryList hideCategory=this.hideCategory}} /></template>
+
   static reopen() {
     deprecated(
       "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",

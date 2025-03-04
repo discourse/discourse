@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import DateInput from "discourse/components/date-input";
 import TimeInput from "discourse/components/time-input";
-import DButton from "discourse/components/d-button";
 
 @classNames("d-date-time-input")
 export default class DateTimeInput extends Component {<template>{{#unless this.timeFirst}}

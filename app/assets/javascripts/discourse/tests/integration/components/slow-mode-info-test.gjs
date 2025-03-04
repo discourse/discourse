@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import SlowModeInfo from "discourse/components/slow-mode-info";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);

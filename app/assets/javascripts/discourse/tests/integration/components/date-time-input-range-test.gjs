@@ -1,9 +1,9 @@
+import { fn } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DateTimeInputRange from "discourse/components/date-time-input-range";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import { fn } from "@ember/helper";
 
 const DEFAULT_DATE_TIME_STRING = "2019-01-29 14:45";
 const DEFAULT_DATE_TIME = moment(DEFAULT_DATE_TIME_STRING);

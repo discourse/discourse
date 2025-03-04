@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import softwareUpdatePrompt from "discourse/components/software-update-prompt";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
-import softwareUpdatePrompt from "discourse/components/software-update-prompt";
 
 module("Integration | Component | software-update-prompt", function (hooks) {
   setupRenderingTest(hooks);

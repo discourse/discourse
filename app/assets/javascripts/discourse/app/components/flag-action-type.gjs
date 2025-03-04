@@ -1,14 +1,14 @@
-import Component, { Textarea, Input } from "@ember/component";
+import Component, { Input,Textarea } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { i18n } from "discourse-i18n";
-import { on } from "@ember/modifier";
-import { fn } from "@ember/helper";
-import htmlSafe from "discourse/helpers/html-safe";
-import iN from "discourse/helpers/i18n";
-import concatClass from "discourse/helpers/concat-class";
 
 @tagName("")
 export default class FlagActionType extends Component {<template><div class={{this.wrapperClassNames}}>

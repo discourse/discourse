@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import SectionLink from "discourse/components/sidebar/section-link";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);

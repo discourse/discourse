@@ -5,13 +5,13 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
+import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DButton from "discourse/components/d-button";
-import iN from "discourse/helpers/i18n";
-import dIcon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 
 function entranceDate(dt, showTime) {
   const today = new Date();

@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 
 module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);

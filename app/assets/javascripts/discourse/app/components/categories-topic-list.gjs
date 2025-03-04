@@ -1,11 +1,11 @@
 import Component from "@ember/component";
-// Exists so plugins can use it
-import iN from "discourse/helpers/i18n";
 import { concat } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
-import eq from "truth-helpers/helpers/eq";
 import getUrl from "discourse/helpers/get-url";
+// Exists so plugins can use it
+import iN from "discourse/helpers/i18n";
+import eq from "truth-helpers/helpers/eq";
 export default class CategoriesTopicList extends Component {<template><div role="heading" aria-level="2" class="table-heading">
   {{iN (concat "filters." this.filter ".title")}}
   <PluginOutlet @name="categories-topics-table-heading" @connectorTagName="div" />

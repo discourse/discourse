@@ -1,6 +1,6 @@
+import { Input } from "@ember/component";
 import dIcon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
-import { Input } from "@ember/component";
 <template><div class="control-group form-template-field" data-field-type="input">
   {{#if @attributes.label}}
     <label class="form-template-field__label">

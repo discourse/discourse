@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import OtherNotificationsList from "discourse/components/user-menu/other-notifications-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
-import OtherNotificationsList from "discourse/components/user-menu/other-notifications-list";
 
 module(
   "Integration | Component | user-menu | other-notifications-list",

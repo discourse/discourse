@@ -1,11 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import bodyClass from "discourse/helpers/body-class";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import InputTip from "discourse/components/input-tip";
+import TextField from "discourse/components/text-field";
+import bodyClass from "discourse/helpers/body-class";
 import dIcon from "discourse/helpers/d-icon";
 import iN from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import InputTip from "discourse/components/input-tip";
-import DButton from "discourse/components/d-button";
 export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
 
 <section class="user-content user-preferences solo-preference">
@@ -44,4 +44,4 @@ export default RouteTemplate(<template>{{bodyClass "user-preferences-page"}}
       </div>
     {{/if}}
   </form>
-</section></template>)
+</section></template>);

@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DButton from "discourse/components/d-button";
 import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNames("controls", "save-button")
 export default class SaveControls extends Component {<template><DButton @action={{this.action}} @disabled={{this.buttonDisabled}} @label={{this.savingText}} class="btn-primary save-changes" />

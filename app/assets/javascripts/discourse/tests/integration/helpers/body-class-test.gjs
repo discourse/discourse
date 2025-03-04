@@ -1,7 +1,7 @@
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import bodyClass from "discourse/helpers/body-class";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | body-class", function (hooks) {
   setupRenderingTest(hooks);

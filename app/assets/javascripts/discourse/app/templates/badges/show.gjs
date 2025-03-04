@@ -1,17 +1,17 @@
-import RouteTemplate from 'ember-route-template'
-import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import { LinkTo } from "@ember/routing";
-import iN from "discourse/helpers/i18n";
-import BadgeCard from "discourse/components/badge-card";
-import DButton from "discourse/components/d-button";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import BadgeCard from "discourse/components/badge-card";
 import BadgeTitle from "discourse/components/badge-title";
-import LoadMore from "discourse/components/load-more";
-import UserInfo from "discourse/components/user-info";
-import htmlSafe from "discourse/helpers/html-safe";
-import formatDate from "discourse/helpers/format-date";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import UserInfo from "discourse/components/user-info";
+import formatDate from "discourse/helpers/format-date";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 export default RouteTemplate(<template>{{#if @controller.canLoadMore}}
   {{hideApplicationFooter}}
 {{/if}}
@@ -79,4 +79,4 @@ export default RouteTemplate(<template>{{#if @controller.canLoadMore}}
 
     <ConditionalLoadingSpinner @condition={{@controller.canLoadMore}} />
   {{/if}}
-</div></template>)
+</div></template>);

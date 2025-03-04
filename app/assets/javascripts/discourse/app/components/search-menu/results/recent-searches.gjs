@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import User from "discourse/models/user";
-import iN from "discourse/helpers/i18n";
 import FlatButton from "discourse/components/flat-button";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
+import iN from "discourse/helpers/i18n";
+import User from "discourse/models/user";
 
 export default class RecentSearches extends Component {<template>{{#if this.currentUser.recent_searches}}
   <div class="search-menu-recent">

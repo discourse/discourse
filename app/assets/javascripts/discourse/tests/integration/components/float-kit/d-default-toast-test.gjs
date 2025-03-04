@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DToastInstance from "float-kit/lib/d-toast-instance";
-import DDefaultToast from "float-kit/components/d-default-toast";
 import noop from "discourse/helpers/noop";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDefaultToast from "float-kit/components/d-default-toast";
+import DToastInstance from "float-kit/lib/d-toast-instance";
 
 module(
   "Integration | Component | FloatKit | d-default-toast",

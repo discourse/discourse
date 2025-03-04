@@ -1,10 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import DModal from "discourse/components/d-modal";
+import LocalLoginForm from "discourse/components/local-login-form";
+import LoginButtons from "discourse/components/login-buttons";
+import LoginPageCta from "discourse/components/login-page-cta";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import WelcomeHeader from "discourse/components/welcome-header";
+import htmlSafe0 from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -16,19 +27,8 @@ import { getPasskeyCredential, isWebauthnSupported } from "discourse/lib/webauth
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import ForgotPassword from "./forgot-password";
-import DModal from "discourse/components/d-modal";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { on } from "@ember/modifier";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import iN from "discourse/helpers/i18n";
-import htmlSafe0 from "discourse/helpers/html-safe";
-import { hash } from "@ember/helper";
-import WelcomeHeader from "discourse/components/welcome-header";
-import LoginButtons from "discourse/components/login-buttons";
-import LocalLoginForm from "discourse/components/local-login-form";
-import LoginPageCta from "discourse/components/login-page-cta";
 import and from "truth-helpers/helpers/and";
+import ForgotPassword from "./forgot-password";
 
 export default class Login extends Component {<template><DModal class="login-modal -large" @bodyClass={{this.modalBodyClasses}} @closeModal={{@closeModal}} @flash={{this.flash}} @flashType={{this.flashType}} {{didInsert this.preloadLogin}} {{on "click" this.interceptResetLink}}>
   <:body>

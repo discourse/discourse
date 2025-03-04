@@ -1,12 +1,12 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { h } from "virtual-dom";
+import MountWidget from "discourse/components/mount-widget";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { createWidget } from "discourse/widgets/widget";
-import MountWidget from "discourse/components/mount-widget";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);

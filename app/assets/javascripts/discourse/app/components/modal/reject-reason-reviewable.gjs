@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
+import { Input,Textarea } from "@ember/component";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import iN from "discourse/helpers/i18n";
-import { Textarea, Input } from "@ember/component";
-import DButton from "discourse/components/d-button";
 
 export default class RejectReasonReviewableModal extends Component {<template><DModal @bodyClass="reject-reason-reviewable-modal__explain-reviewable" @closeModal={{@closeModal}} @title={{iN "review.reject_reason.title"}} class="reject-reason-reviewable-modal">
   <:body>

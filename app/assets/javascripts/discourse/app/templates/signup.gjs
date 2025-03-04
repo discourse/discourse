@@ -1,31 +1,31 @@
-import RouteTemplate from 'ember-route-template'
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import FlashMessage from "discourse/components/flash-message";
+import FullnameInput from "discourse/components/fullname-input";
+import HoneypotInput from "discourse/components/honeypot-input";
+import InputTip from "discourse/components/input-tip";
+import LoginButtons from "discourse/components/login-buttons";
+import PasswordField from "discourse/components/password-field";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import SignupPageCta from "discourse/components/signup-page-cta";
+import SignupProgressBar from "discourse/components/signup-progress-bar";
+import TogglePasswordMask from "discourse/components/toggle-password-mask";
+import UserField from "discourse/components/user-field";
+import WelcomeHeader from "discourse/components/welcome-header";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import bodyClass from "discourse/helpers/body-class";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import FlashMessage from "discourse/components/flash-message";
-import concatClass from "discourse/helpers/concat-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import SignupProgressBar from "discourse/components/signup-progress-bar";
-import WelcomeHeader from "discourse/components/welcome-header";
-import iN from "discourse/helpers/i18n";
-import { hash } from "@ember/helper";
-import routeAction from "discourse/helpers/route-action";
 import htmlSafe from "discourse/helpers/html-safe";
-import { Input } from "@ember/component";
+import iN from "discourse/helpers/i18n";
+import loadingSpinner from "discourse/helpers/loading-spinner";
+import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
-import { on } from "@ember/modifier";
-import InputTip from "discourse/components/input-tip";
 import and from "truth-helpers/helpers/and";
-import FullnameInput from "discourse/components/fullname-input";
-import PasswordField from "discourse/components/password-field";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import dIcon from "discourse/helpers/d-icon";
-import HoneypotInput from "discourse/components/honeypot-input";
 import not from "truth-helpers/helpers/not";
-import UserField from "discourse/components/user-field";
-import SignupPageCta from "discourse/components/signup-page-cta";
-import LoginButtons from "discourse/components/login-buttons";
 export default RouteTemplate(<template>{{!-- template-lint-disable no-duplicate-id --}}
 {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
 {{hideApplicationSidebar}}
@@ -180,4 +180,4 @@ export default RouteTemplate(<template>{{!-- template-lint-disable no-duplicate-
       {{/if}}
     </div>
   </div>
-{{/if}}</template>)
+{{/if}}</template>);

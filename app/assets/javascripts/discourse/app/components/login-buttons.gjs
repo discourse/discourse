@@ -1,13 +1,13 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { classNameBindings } from "@ember-decorators/component";
+import GoogleIcon from "discourse/components/google-icon";
+import PasskeyLoginButton from "discourse/components/passkey-login-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
-import { on } from "@ember/modifier";
-import GoogleIcon from "discourse/components/google-icon";
-import dIcon from "discourse/helpers/d-icon";
-import PasskeyLoginButton from "discourse/components/passkey-login-button";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 @classNameBindings("hidden", "multiple")
 export default class LoginButtons extends Component {<template>{{#each this.buttons as |b|}}

@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { bind } from "discourse/lib/decorators";
-import concatClass from "discourse/helpers/concat-class";
 import { on } from "@ember/modifier";
-import dIcon from "discourse/helpers/d-icon";
-import onResize from "discourse/modifiers/on-resize";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
+import onResize from "discourse/modifiers/on-resize";
 
 export default class HorizontalOverflowNav extends Component {<template>{{!-- template-lint-disable no-pointer-down-event-binding --}}
 {{!-- template-lint-disable no-invalid-interactive --}}

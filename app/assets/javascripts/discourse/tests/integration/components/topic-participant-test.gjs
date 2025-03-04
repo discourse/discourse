@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import TopicParticipant from "discourse/components/topic-map/topic-participant";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | topic-participant", function (hooks) {
   setupRenderingTest(hooks);

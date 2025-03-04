@@ -1,35 +1,35 @@
-import RouteTemplate from 'ember-route-template'
+import { hash } from "@ember/helper";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import DialogHolder from "dialog-holder/components/dialog-holder";
+import RouteTemplate from 'ember-route-template';
+import CardContainer from "discourse/components/card-container";
+import ComposerContainer from "discourse/components/composer-container";
+import CustomHtml from "discourse/components/custom-html";
+import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
 import DiscourseRoot from "discourse/components/discourse-root";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import iN from "discourse/helpers/i18n";
-import DDocument from "discourse/components/d-document";
+import FooterNav from "discourse/components/footer-nav";
+import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
+import GlobalNotice from "discourse/components/global-notice";
+import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
+import ModalContainer from "discourse/components/modal-container";
+import NotificationConsentBanner from "discourse/components/notification-consent-banner";
+import OfflineIndicator from "discourse/components/offline-indicator";
 import PageLoadingSlider from "discourse/components/page-loading-slider";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
-import routeAction from "discourse/helpers/route-action";
-import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
-import OfflineIndicator from "discourse/components/offline-indicator";
-import and from "truth-helpers/helpers/and";
-import Sidebar from "discourse/components/sidebar";
-import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
-import CustomHtml from "discourse/components/custom-html";
-import NotificationConsentBanner from "discourse/components/notification-consent-banner";
-import PwaInstallBanner from "discourse/components/pwa-install-banner";
-import GlobalNotice from "discourse/components/global-notice";
-import CardContainer from "discourse/components/card-container";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
-import ModalContainer from "discourse/components/modal-container";
-import DialogHolder from "dialog-holder/components/dialog-holder";
-import TopicEntrance from "discourse/components/topic-entrance";
-import ComposerContainer from "discourse/components/composer-container";
+import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
-import FooterNav from "discourse/components/footer-nav";
+import Sidebar from "discourse/components/sidebar";
+import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
+import TopicEntrance from "discourse/components/topic-entrance";
+import iN from "discourse/helpers/i18n";
+import routeAction from "discourse/helpers/route-action";
 import DMenus from "float-kit/components/d-menus";
-import DTooltips from "float-kit/components/d-tooltips";
 import DToasts from "float-kit/components/d-toasts";
+import DTooltips from "float-kit/components/d-tooltips";
+import and from "truth-helpers/helpers/and";
 export default RouteTemplate(<template><DStyles />
 <DVirtualHeight />
 
@@ -111,4 +111,4 @@ export default RouteTemplate(<template><DStyles />
 
 <DMenus />
 <DTooltips />
-<DToasts /></template>)
+<DToasts /></template>);

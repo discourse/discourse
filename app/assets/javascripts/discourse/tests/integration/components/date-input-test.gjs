@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DateInput from "discourse/components/date-input";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const DEFAULT_DATE = moment("2019-01-29");
 

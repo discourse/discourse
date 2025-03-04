@@ -1,24 +1,24 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
+import Assistant from "discourse/components/search-menu/results/assistant";
+import InitialOptions from "discourse/components/search-menu/results/initial-options";
+import MoreLink from "discourse/components/search-menu/results/more-link";
+import Types from "discourse/components/search-menu/results/types";
+import iN from "discourse/helpers/i18n";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
 import PostViewComponent from "./results/type/post";
 import TagViewComponent from "./results/type/tag";
 import TopicViewComponent from "./results/type/topic";
 import UserViewComponent from "./results/type/user";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import Assistant from "discourse/components/search-menu/results/assistant";
-import iN from "discourse/helpers/i18n";
-import InitialOptions from "discourse/components/search-menu/results/initial-options";
-import Types from "discourse/components/search-menu/results/types";
-import MoreLink from "discourse/components/search-menu/results/more-link";
 
 const SEARCH_RESULTS_COMPONENT_TYPE = {
   "search-result-category": CategoryViewComponent,

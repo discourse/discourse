@@ -1,14 +1,14 @@
 import Component from "@ember/component";
 import { attributeBindings, classNameBindings, classNames, tagName } from "@ember-decorators/component";
-import { propertyEqual } from "discourse/lib/computed";
-import UserInfo from "discourse/components/user-info";
-import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
+import UserInfo from "discourse/components/user-info";
 import dIcon from "discourse/helpers/d-icon";
+import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
 import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
-import iN from "discourse/helpers/i18n";
 import formatDuration from "discourse/helpers/format-duration";
+import iN from "discourse/helpers/i18n";
+import { propertyEqual } from "discourse/lib/computed";
 
 @tagName("div")
 @classNames("directory-table__row")

@@ -1,7 +1,7 @@
 import CategoryListItem from "discourse/components/category-list-item";
-import categoryLink from "discourse/helpers/category-link";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryUnread from "discourse/components/category-unread";
+import categoryLink from "discourse/helpers/category-link";
 
 export default class SubCategoryItem extends CategoryListItem {<template>{{#unless this.isMuted}}
   {{#if this.site.mobileView}}

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import { fn, hash } from "@ember/helper";
 import avatar from "discourse/helpers/avatar";
 import boundDate from "discourse/helpers/bound-date";
 import iN from "discourse/helpers/i18n";

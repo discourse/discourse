@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import TimeInput from "discourse/components/time-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import TimeInput from "discourse/components/time-input";
 
 function setTime(time) {
   this.setProperties(time);

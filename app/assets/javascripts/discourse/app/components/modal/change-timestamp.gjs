@@ -1,19 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+// Modal related to changing the timestamp of posts
+import DModal from "discourse/components/d-modal";
+import DatePickerPast from "discourse/components/date-picker-past";
+import iN from "discourse/helpers/i18n";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
-
-// Modal related to changing the timestamp of posts
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import DatePickerPast from "discourse/components/date-picker-past";
-import { fn } from "@ember/helper";
-import { Input } from "@ember/component";
-import DButton from "discourse/components/d-button";
 export default class ChangeTimestamp extends Component {<template><DModal @bodyClass="change-timestamp" @closeModal={{@closeModal}} @flash={{this.flash}} @title={{iN "topic.change_timestamp.title"}}>
   <:body>
     <p>

@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DateTimeInput from "discourse/components/date-time-input";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 function setDate(date) {
   this.set("date", date);

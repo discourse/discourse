@@ -1,9 +1,16 @@
 import Component, { Input } from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import CopyButton from "discourse/components/copy-button";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import CreateInvite from "discourse/components/modal/create-invite";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ShareSource from "discourse/components/share-source";
+import iN from "discourse/helpers/i18n";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -11,13 +18,6 @@ import Sharing from "discourse/lib/sharing";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import iN from "discourse/helpers/i18n";
-import CopyButton from "discourse/components/copy-button";
-import ShareSource from "discourse/components/share-source";
-import DButton from "discourse/components/d-button";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 
 export default class ShareTopicModal extends Component.extend(
   bufferedProperty("invite")

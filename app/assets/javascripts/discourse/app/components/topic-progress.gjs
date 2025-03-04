@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DButton from "discourse/components/d-button";
-import iN from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNameBindings("docked")
 export default class TopicProgress extends Component {<template>{{#unless this.hideProgress}}

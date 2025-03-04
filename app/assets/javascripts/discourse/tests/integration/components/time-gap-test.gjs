@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import TimeGap from "discourse/components/time-gap";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import TimeGap from "discourse/components/time-gap";
 
 module("Integration | Component | time-gap", function (hooks) {
   setupRenderingTest(hooks);

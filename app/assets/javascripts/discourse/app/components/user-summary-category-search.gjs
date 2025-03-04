@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
-import { LinkTo } from "@ember/routing";
-import { hash } from "@ember/helper";
 
 @tagName("")
 export default class UserSummaryCategorySearch extends Component {<template>{{#if @count}}
@@ -12,6 +12,7 @@ export default class UserSummaryCategorySearch extends Component {<template>{{#i
 {{else}}
   &ndash;
 {{/if}}</template>
+
   @discourseComputed("user", "category")
   searchParams() {
     let query = `@${this.get("user.username")} #${this.get("category.slug")}`;

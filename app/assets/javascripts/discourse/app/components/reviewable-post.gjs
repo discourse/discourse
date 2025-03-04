@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
-import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import iN from "discourse/helpers/i18n";
+import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
 import htmlSafe from "discourse/helpers/html-safe";
+import iN from "discourse/helpers/i18n";
 
 export default class ReviewablePost extends Component {<template><div class="flagged-post-header">
   <ReviewableTopicLink @reviewable={{this.reviewable}} @tagName />

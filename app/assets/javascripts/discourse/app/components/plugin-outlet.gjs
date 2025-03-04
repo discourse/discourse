@@ -1,17 +1,17 @@
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
+import { concat } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
+import PluginConnector from "discourse/components/plugin-connector";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { helperContext } from "discourse/lib/helpers";
 import { buildArgsWithDeprecations, connectorsExist, renderedConnectorsFor } from "discourse/lib/plugin-connectors";
-import PluginConnector from "discourse/components/plugin-connector";
 import or from "truth-helpers/helpers/or";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { concat } from "@ember/helper";
 
 const PARENT_VIEW_DEPRECATION_MSG =
   "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
