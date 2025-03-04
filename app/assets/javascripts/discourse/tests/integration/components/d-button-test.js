@@ -232,15 +232,14 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
+    this.classicComponent = class extends ClassicComponent {
+      actions = {
         myLegacyAction() {
           this.legacyActionTriggered();
         },
-      },
-      layout: hbs`<DButton @action="myLegacyAction" />`,
-    });
+      };
+      layout = hbs`<DButton @action="myLegacyAction" />`;
+    };
 
     await withSilencedDeprecationsAsync(
       "discourse.d-button-action-string",
@@ -262,15 +261,14 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.simpleWrapperComponent = class extends ClassicComponent {};
 
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
+    this.classicComponent = class extends ClassicComponent {
+      actions = {
         myLegacyAction() {
           this.legacyActionTriggered();
         },
-      },
-      layout: hbs`<@simpleWrapperComponent><DButton @action="myLegacyAction" /></@simpleWrapperComponent>`,
-    });
+      };
+      layout = hbs`<@simpleWrapperComponent><DButton @action="myLegacyAction" /></@simpleWrapperComponent>`;
+    };
 
     await withSilencedDeprecationsAsync(
       "discourse.d-button-action-string",
