@@ -7,6 +7,7 @@ RSpec.describe ApiKey do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }
   it { is_expected.to validate_length_of(:description).is_at_most(255) }
+  it { is_expected.to define_enum_for(:scope_mode).with_values(%w[global read_only granular]) }
 
   it "validates at least one scope for granular mode" do
     api_key = ApiKey.new

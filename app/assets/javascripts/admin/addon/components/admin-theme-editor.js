@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -13,28 +15,57 @@ export default apiInitializer((api) => {
 });
 `;
 
+const ADVANCED_TARGETS = ["desktop", "mobile"];
+
+const ADVANCED_FIELDS = [
+  "embedded_scss",
+  "embedded_header",
+  "color_definitions",
+  "body_tag",
+];
+
 export default class AdminThemeEditor extends Component {
+  @service router;
+
+  @tracked showAdvanced;
+  @tracked onlyOverridden;
+  @tracked currentTargetName;
+
   warning = null;
 
   @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
 
-  @discourseComputed("theme.targets", "onlyOverridden")
-  visibleTargets(targets, onlyOverridden) {
-    return targets.filter((target) => {
-      if (!onlyOverridden) {
+  get visibleTargets() {
+    return this.theme.targets.filter((target) => {
+      if (target.edited) {
         return true;
       }
-      return target.edited;
+      if (!this.showAdvanced && ADVANCED_TARGETS.includes(target.name)) {
+        return false;
+      }
+      if (!this.onlyOverridden) {
+        return true;
+      }
     });
   }
 
-  @discourseComputed("currentTargetName", "onlyOverridden", "theme.fields")
-  visibleFields(targetName, onlyOverridden, fields) {
-    fields = fields[targetName];
-    if (onlyOverridden) {
+  get visibleFields() {
+    let fields = this.theme.fields[this.currentTargetName];
+    if (this.onlyOverridden) {
       fields = fields.filter((field) => field.edited);
     }
+    if (!this.showAdvanced) {
+      fields = fields.filter(
+        (field) => field.edited || !ADVANCED_FIELDS.includes(field.name)
+      );
+    }
     return fields;
+  }
+
+  get currentField() {
+    return this.theme.fields[this.currentTargetName].find(
+      (field) => field.name === this.fieldName
+    );
   }
 
   @discourseComputed("currentTargetName", "fieldName")
@@ -106,5 +137,21 @@ export default class AdminThemeEditor extends Component {
   @action
   setWarning(message) {
     this.set("warning", message);
+  }
+
+  @action
+  toggleShowAdvanced() {
+    this.showAdvanced = !this.showAdvanced;
+    if (
+      !this.visibleTargets.some((t) => t.name === this.currentTargetName) ||
+      !this.visibleFields.some((f) => f.name === this.fieldName)
+    ) {
+      this.router.replaceWith(
+        this.editRouteName,
+        this.theme.id,
+        this.visibleTargets[0].name,
+        this.visibleFields[0].name
+      );
+    }
   }
 }

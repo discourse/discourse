@@ -261,10 +261,10 @@ module SiteSettings::Validations
     validate_error :strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled
   end
 
-  def validate_twitter_summary_large_image(new_val)
+  def validate_x_summary_large_image(new_val)
     return if new_val.blank?
     return if !Upload.exists?(id: new_val, extension: "svg")
-    validate_error :twitter_summary_large_image_no_svg
+    validate_error :x_summary_large_image_no_svg
   end
 
   def validate_allow_all_users_to_flag_illegal_content(new_val)

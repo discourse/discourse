@@ -9,12 +9,12 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import DMenu from "float-kit/components/d-menu";
 
 export const FITZPATRICK_MODIFIERS = [
-  { scale: 1, modifier: null },
-  { scale: 2, modifier: ":t2" },
-  { scale: 3, modifier: ":t3" },
-  { scale: 4, modifier: ":t4" },
-  { scale: 5, modifier: ":t5" },
-  { scale: 6, modifier: ":t6" },
+  { scale: null, modifier: "" },
+  { scale: 2, modifier: ":t1" },
+  { scale: 3, modifier: ":t2" },
+  { scale: 4, modifier: ":t3" },
+  { scale: 5, modifier: ":t4" },
+  { scale: 6, modifier: ":t5" },
 ];
 
 export default class EmojiPicker extends Component {
@@ -56,10 +56,10 @@ export default class EmojiPicker extends Component {
                 @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
                 data-level={{fitzpatrick.scale}}
               >
-                {{#if (eq fitzpatrick.scale 1)}}
-                  {{replaceEmoji ":clap:"}}
-                {{else}}
+                {{#if fitzpatrick.scale}}
                   {{replaceEmoji (concat ":clap:t" fitzpatrick.scale ":")}}
+                {{else}}
+                  {{replaceEmoji ":clap:"}}
                 {{/if}}
               </DButton>
             </dropdown.item>

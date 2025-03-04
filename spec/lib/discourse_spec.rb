@@ -194,6 +194,14 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "#user_agent" do
+    it "returns a user agent string" do
+      expect(Discourse.user_agent).to eq(
+        "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+      )
+    end
+  end
+
   describe "#site_contact_user" do
     fab!(:admin)
     fab!(:another_admin) { Fabricate(:admin) }

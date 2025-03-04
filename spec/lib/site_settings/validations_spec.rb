@@ -462,16 +462,16 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
-  describe "#twitter_summary_large_image" do
+  describe "#x_summary_large_image" do
     it "does not allow SVG image files" do
       upload = Fabricate(:upload, url: "/images/logo-dark.svg", extension: "svg")
-      expect { validations.validate_twitter_summary_large_image(upload.id) }.to raise_error(
+      expect { validations.validate_x_summary_large_image(upload.id) }.to raise_error(
         Discourse::InvalidParameters,
-        I18n.t("errors.site_settings.twitter_summary_large_image_no_svg"),
+        I18n.t("errors.site_settings.x_summary_large_image_no_svg"),
       )
       upload.update!(url: "/images/logo-dark.png", extension: "png")
-      expect { validations.validate_twitter_summary_large_image(upload.id) }.not_to raise_error
-      expect { validations.validate_twitter_summary_large_image(nil) }.not_to raise_error
+      expect { validations.validate_x_summary_large_image(upload.id) }.not_to raise_error
+      expect { validations.validate_x_summary_large_image(nil) }.not_to raise_error
     end
   end
 
