@@ -23,6 +23,9 @@
     {{#if rs.reason}}
       <div class="reviewable-score-reason">{{html-safe rs.reason}}</div>
     {{/if}}
+    {{#if rs.context}}
+      <div class="reviewable-score-context">{{html-safe rs.context}}</div>
+    {{/if}}
 
     {{#if rs.reviewable_conversation}}
       <div class="reviewable-conversation">

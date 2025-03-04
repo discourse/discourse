@@ -2,6 +2,7 @@
 const extension = {
   markSpec: {
     strikethrough: {
+      before: "link",
       parseDOM: [
         { tag: "s" },
         { tag: "del" },

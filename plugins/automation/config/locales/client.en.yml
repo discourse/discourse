@@ -162,11 +162,11 @@ en:
             restricted_category:
               label: Category
               description: Optional, will trigger only if the post's topic is in this category
-            restricted_group:
-              label: Group
-              description: Optional, will trigger only if the post's topic is a personal message in this group's inbox
+            restricted_user_group:
+              label: Restricted user group
+              description: Optional, will trigger only if the post user is in this group
             restricted_groups:
-              label: Groups
+              label: Restricted inboxes groups
               description: Optional, will trigger only if the post's topic is a personal message in one of the group inboxes
             ignore_group_members:
               label: Ignore group members

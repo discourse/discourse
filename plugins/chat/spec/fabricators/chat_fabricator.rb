@@ -35,10 +35,11 @@ end
 Fabricator(:direct_message_channel, from: :chat_channel) do
   transient :users, :group, following: true, with_membership: true
   chatable do |attrs|
+    users = attrs[:users]
     Fabricate(
       :direct_message,
-      users: attrs[:users] || [Fabricate(:user), Fabricate(:user)],
-      group: attrs[:group] || false,
+      users: users || [Fabricate(:user), Fabricate(:user)],
+      group: attrs[:group] || (users ? users.length > 2 : false),
     )
   end
   status { :open }

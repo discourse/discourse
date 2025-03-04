@@ -42,7 +42,12 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
     if link_text
       link = build_link_for(object.reason, link_text)
-      text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: object.reason)
+
+      if object.reason == "watched_word"
+        text = watched_word_reason(link)
+      else
+        text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: object.reason)
+      end
     else
       text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
@@ -68,6 +73,35 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   private
+
+  def watched_word_reason(link)
+    if object.context.nil?
+      # If the words weren't recorded, try to guess them based on current settings.
+      words =
+        WordWatcher.new(object.reviewable.post.raw).word_matches_for_action?(
+          :flag,
+          all_matches: true,
+        )
+    else
+      words = object.context.split(",")
+    end
+
+    if words.nil?
+      text =
+        I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
+    else
+      text =
+        I18n.t(
+          "reviewables.reasons.watched_word",
+          link: link,
+          words: words.join(", "),
+          count: words.length,
+          default: "watched_word",
+        )
+    end
+
+    text
+  end
 
   def url_for(reason, text)
     case reason

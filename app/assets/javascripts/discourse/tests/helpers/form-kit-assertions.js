@@ -102,6 +102,11 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-checkbox")
           .checked;
       }
+      case "calendar": {
+        throw new Error(
+          `Calendar is a complex type, value can't be check from UI components`
+        );
+      }
     }
   }
 

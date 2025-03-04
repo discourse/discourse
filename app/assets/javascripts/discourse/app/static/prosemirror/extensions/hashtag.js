@@ -32,13 +32,19 @@ const extension = {
 
   inputRules: [
     {
-      match: /(?<=^|\W)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
-      handler: (state, match, start, end) =>
-        state.selection.$from.nodeBefore?.type !== state.schema.nodes.hashtag &&
-        state.tr.replaceWith(start, end, [
-          state.schema.nodes.hashtag.create({ name: match[1] }),
-          state.schema.text(" "),
-        ]),
+      match: /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
+      handler: (state, match, start, end) => {
+        const hashtagStart = start + match[1].length;
+        const name = match[2].slice(1);
+        return (
+          state.selection.$from.nodeBefore?.type !==
+            state.schema.nodes.hashtag &&
+          state.tr.replaceWith(hashtagStart, end, [
+            state.schema.nodes.hashtag.create({ name }),
+            state.schema.text(" "),
+          ])
+        );
+      },
       options: { undoable: false },
     },
   ],

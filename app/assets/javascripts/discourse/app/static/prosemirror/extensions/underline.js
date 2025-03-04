@@ -2,6 +2,7 @@
 const extension = {
   markSpec: {
     underline: {
+      before: "link",
       toDOM() {
         return ["u", 0];
       },

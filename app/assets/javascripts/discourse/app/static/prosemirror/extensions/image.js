@@ -39,19 +39,13 @@ const extension = {
               alt: dom.getAttribute("alt"),
               width: dom.getAttribute("width"),
               height: dom.getAttribute("height"),
-              originalSrc:
-                dom.getAttribute("data-orig-src") ??
-                dom.getAttribute("data-video-src"),
+              originalSrc: dom.dataset.origSrc,
               extras: dom.hasAttribute("data-thumbnail")
                 ? "thumbnail"
-                : dom.getAttribute("data-video-src")
-                ? "video"
-                : null,
+                : undefined,
             };
           },
         },
-        // TODO audio
-        // TODO video
       ],
       toDOM(node) {
         const width = node.attrs.width
@@ -80,7 +74,13 @@ const extension = {
           ];
         }
 
-        return ["img", { ...node.attrs, width, height }];
+        const { originalSrc, extras, ...attrs } = node.attrs;
+        attrs["data-orig-src"] = originalSrc;
+        if (extras === "thumbnail") {
+          attrs["data-thumbnail"] = true;
+        }
+
+        return ["img", { ...attrs, width, height }];
       },
     },
   },

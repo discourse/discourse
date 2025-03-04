@@ -43,13 +43,14 @@ const extension = {
 
   inputRules: [
     {
-      match: /(?<=^|\W):([^:]+):$/,
+      match: /(^|\W):([^:]+):$/,
       handler: (state, match, start, end) => {
-        if (emojiExists(match[1])) {
+        if (emojiExists(match[2])) {
+          const emojiStart = start + match[1].length;
           return state.tr.replaceWith(
-            start,
+            emojiStart,
             end,
-            state.schema.nodes.emoji.create({ code: match[1] })
+            state.schema.nodes.emoji.create({ code: match[2] })
           );
         }
       },
@@ -57,14 +58,17 @@ const extension = {
     },
     {
       match: new RegExp(
-        `(?<=^|\\W)(${Object.keys(translations).map(escapeRegExp).join("|")}) $`
+        "(^|\\W)(" +
+          Object.keys(translations).map(escapeRegExp).join("|") +
+          ") $"
       ),
       handler: (state, match, start, end) => {
+        const emojiStart = start + match[1].length;
         return state.tr
           .replaceWith(
-            start,
+            emojiStart,
             end,
-            state.schema.nodes.emoji.create({ code: translations[match[1]] })
+            state.schema.nodes.emoji.create({ code: translations[match[2]] })
           )
           .insertText(" ");
       },

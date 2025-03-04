@@ -44,3 +44,5 @@ const defaultExtensions = [
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+
+export default defaultExtensions;

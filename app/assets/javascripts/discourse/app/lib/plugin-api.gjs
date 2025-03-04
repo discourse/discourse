@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.1.0";
+export const PLUGIN_API_VERSION = "2.1.1";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -630,6 +630,13 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * See KeyboardShortcuts.unbind documentation.
+   **/
+  removeKeyboardShortcut(shortcut, callback) {
+    KeyboardShortcuts.unbind({ [shortcut]: callback });
   }
 
   /**
