@@ -325,13 +325,13 @@
             {{#if this.showSilenceReason}}
               <div
                 class="directory-table__cell silence_reason"
-                title={{user.silence_reason}}
+                title={{this.stripHtml user.silence_reason}}
               >
                 <span class="directory-table__label">
                   <span>{{i18n "admin.users.silence_reason"}}</span>
                 </span>
                 <span class="directory-table__value">
-                  {{user.silence_reason}}
+                  {{html-safe user.silence_reason}}
                 </span>
               </div>
             {{/if}}

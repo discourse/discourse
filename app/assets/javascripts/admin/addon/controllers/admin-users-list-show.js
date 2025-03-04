@@ -89,6 +89,11 @@ export default class AdminUsersListShowController extends Controller {
     return this._refreshUsers();
   }
 
+  stripHtml(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  }
+
   _refreshUsers() {
     if (!this._canLoadMore) {
       return;

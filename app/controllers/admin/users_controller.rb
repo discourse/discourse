@@ -324,7 +324,12 @@ class Admin::UsersController < Admin::StaffController
             silence_reason: full_reason,
             silenced_till: user.silenced_till,
             silenced_at: user.silenced_at,
-            silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
+            silenced_by:
+              BasicUserSerializer.new(
+                current_user,
+                root: false,
+                include_silence_reason: true,
+              ).as_json,
           },
         )
       end
