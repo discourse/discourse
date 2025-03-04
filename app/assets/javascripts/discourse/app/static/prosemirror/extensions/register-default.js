@@ -1,4 +1,5 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import codeBlock from "./code-block";
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
@@ -9,7 +10,6 @@ import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
 import underline from "./underline";
-import codeBlock from "./code-block";
 
 /**
  * List of default extensions
