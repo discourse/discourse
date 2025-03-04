@@ -101,6 +101,7 @@ Discourse::Application.routes.draw do
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "search" => "search#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -411,6 +412,8 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
+        get "branding" => "branding#index"
+        put "branding/logo" => "branding#logo"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -1724,10 +1727,12 @@ Discourse::Application.routes.draw do
     get "/form-templates" => "form_templates#index"
 
     get "/emojis" => "emojis#index"
+    get "/emojis/search-aliases" => "emojis#search_aliases", :format => :json
 
     if Rails.env.test?
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
+      get "/test_net_http_headers" => "test_requests#test_net_http_headers"
     end
   end
 end

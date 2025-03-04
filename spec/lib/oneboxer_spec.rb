@@ -626,9 +626,7 @@ RSpec.describe Oneboxer do
   end
 
   describe "onebox custom user agent" do
-    let!(:default_onebox_user_agent) do
-      "#{Onebox.options.user_agent} v#{Discourse::VERSION::STRING}"
-    end
+    let!(:default_onebox_user_agent) { Discourse.user_agent }
 
     it "uses the site setting value" do
       SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
