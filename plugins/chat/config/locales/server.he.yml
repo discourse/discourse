@@ -59,6 +59,7 @@ he:
     deleted_chat_username: נמחק
     errors:
       users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
+      user_cant_be_removed_from_channel: "אי אפשר להסיר את המשתמש מהערוץ הזה"
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
       channel_new_message_disallowed:
         archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
@@ -265,6 +266,16 @@ he:
           two: "[%{site_name}] הודעות חדשות"
           many: "[%{site_name}] הודעות חדשות"
           other: "[%{site_name}] הודעות חדשות"
+        watched_thread:
+          one: "[%{site_name}] הודעת שרשור חדשה תחת %{channel}"
+          two: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          many: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          other: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+        watched_threads:
+          one: "[%{site_name}] הודעת שרשור חדשה בערוץ %{channel} ובעוד %{count}"
+          two: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          many: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          other: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
         chat_dm_1:
           one: "[%{site_name}] הודעה חדשה מאת %{name}"
           two: "[%{site_name}] הודעות חדשות מאת %{name}"

@@ -368,6 +368,9 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
+      site_settings_are_hidden: "Nie je povolené meniť skryté nastavenia: %{setting_names}"
+      site_settings_are_shadowed_globally: "Tieto nastavenia nemôžete zmeniť, pretože sú nakonfigurované globálne: %{setting_names}"
+      site_settings_are_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia: %{setting_names}"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
         few: "'%{name}' sú neplatné voľby."
@@ -391,7 +394,7 @@ sk:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastaveniu nemôžete pridať žiadnu z nasledujúcich hodnôt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Ak je povolená možnosť „optimalizácia obrazu pre kompozitor“, nemôžete zakázať metadáta obrázka pásu. Pred zakázaním metadát obrázkov pásu zakážte možnosť „optimalizácia obrazu kompozitora je povolená“."
-      twitter_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
+      x_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
       tl0_and_anonymous_flag: "V prípade anonymných používateľov sa musí uviesť buď \"kontaktný e-mail stránky\", alebo \"e-mailová adresa na nahlásenie nezákonného obsahu\"."
     conflicting_google_user_id: 'ID účtu Google pre toto konto sa zmenilo; z bezpečnostných dôvodov je potrebný zásah personálu. Obráťte sa na personál a odkážte ich na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>.'
     onebox:
@@ -1810,6 +1813,7 @@ sk:
     search_query_log_max_retention_days: "Maximálny čas na uchovávanie vyhľadávacích dopytov v dňoch."
     search_ignore_accents: "Ak je toto nastavenie povolené, na značky s diakritikou vo vyhľadávacích dotazoch sa neprihliada, čo používateľom umožňuje nájsť výsledky, aj keď nezadajú správnu diakritiku."
     search_default_sort_order: "Predvolené poradie triedenia pre celostránkové vyhľadávanie"
+    search_experience: "Predvolená pozícia a vzhľad vyhľadávania na zariadeniach s počítačom"
     category_search_priority_low_weight: "Váha použitá na zaradenie pre prioritu vyhľadávania v nízkej kategórii."
     category_search_priority_high_weight: "Váha použitá na hodnotenie pre vysokú prioritu vyhľadávania v kategórii."
     default_composer_category: "Kategória, ktorá sa používa na predvyplnenie rozbaľovacieho zoznamu kategórií pri vytváraní novej témy."
@@ -1875,7 +1879,7 @@ sk:
     favicon: "Obľúbená ikona pre vašu stránku, pozri <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby správne fungovala cez CDN, musí to byť png. Bude mať zmenšenú veľkosť na 32x32. Ak zostane prázdna, použije sa large_icon."
     apple_touch_icon: "Ikona používaná pre dotykové zariadenia Apple. Priehľadné pozadie sa neodporúča. Automaticky sa zmení veľkosť na 180x180. Ak zostane prázdna, použije sa large_icon."
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
-    twitter_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
+    x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -5338,7 +5342,6 @@ sk:
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
-      watched_word: "Tento príspevok obsahoval sledované slovo. Pozrite si stránku %{link}."
       staged: "Nové témy a príspevky pre nezaktívnených užívateľov musia byť schválené personálom. Pozrite si %{link}."
       category: "Príspevky v tejto kategórii si vyžadujú manuálne schválenie členmi personálu. Pozrite si stránku %{link}."
       must_approve_users: "Všetci noví používatelia musia byť schválení personálom. Pozrite si %{link}."
@@ -5349,7 +5352,6 @@ sk:
       contains_media: "Tento príspevok obsahuje vložené médiá. Pozri %{link}."
       queued_by_staff: "Člen personálu si myslí, že tento príspevok potrebuje revíziu. Dovtedy zostane skrytý."
       links:
-        watched_word: zoznam sledovaných slov
         category: nastavenia kategórie
     actions:
       agree:

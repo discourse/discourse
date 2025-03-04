@@ -64,10 +64,6 @@ gl:
               label: Etiquetas
             restricted_category:
               label: Categoría
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
           created: Creado
         category_created_edited:
           fields:

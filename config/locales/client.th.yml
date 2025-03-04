@@ -1292,13 +1292,6 @@ th:
       password_label: "รหัสผ่าน"
     password_reset:
       continue: "ดำเนินการต่อไปยัง %{site_name}"
-    emoji_set:
-      apple_international: "แอปเปิล/นานาชาติ"
-      google: "กูเกิล"
-      twitter: "ทวิตเตอร์"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "หมวดหมู่เท่านั้น"
       categories_with_featured_topics: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
@@ -2342,6 +2335,8 @@ th:
         print: "%{shortcut}พิมพ์กระทู้"
       search_menu:
         title: "เมนูค้นหา"
+      admin:
+        title: "ผู้ดูแลระบบ"
     badges:
       granted_on: "ได้รับเมื่อ %{date}"
       title: เหรียญ
@@ -2548,13 +2543,18 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
+        branding:
+          logo:
+            form:
+              mobile: "โทรศัพท์"
+              email: "อีเมล"
         navigation:
           title: "การนำทาง"
         notifications:
           title: "การแจ้งเตือน"
         other:
           title: "อื่นๆ"
-        search:
+        search_everything:
           title: "ค้นหา"
         security:
           title: "ความปลอดภัย"
@@ -2591,6 +2591,7 @@ th:
         embedding:
           title: "ฝั่ง"
       search:
+        title: "ค้นหา"
         result_types:
           setting:
             other: "การตั้งค่า"
@@ -2861,8 +2862,6 @@ th:
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
           scss:
             text: "CSS"
-          header:
-            text: "Header"
           footer:
             text: "Footer"
           embedded_scss:

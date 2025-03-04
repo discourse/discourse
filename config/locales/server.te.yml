@@ -172,7 +172,7 @@ te:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "చట్టబద్ధమైన వినియోగదారులను ప్రమాదవశాత్తూ రేట్-పరిమితం చేయడాన్ని నివారించడానికి వినియోగదారు ఏజెంట్‌లు తప్పనిసరిగా కనీసం 3 అక్షరాల పొడవు ఉండాలి."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "మీరు సెట్టింగ్‌కు కింది విలువల్లో దేనినీ జోడించలేరు: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'కంపోజర్ మీడియా ఆప్టిమైజేషన్ ఇమేజ్ ఎనేబుల్' ప్రారంభించబడితే మీరు స్ట్రిప్ ఇమేజ్ మెటాడేటాను డిజేబుల్ చేయలేరు. స్ట్రిప్ ఇమేజ్ మెటాడేటాను డిసేబుల్ చేయడానికి ముందు 'కంపోజర్ మీడియా ఆప్టిమైజేషన్ ఇమేజ్ ఎనేబుల్ చేయబడింది' అని డిజేబుల్ చేయండి."
-      twitter_summary_large_image_no_svg: "Twitter కోసం ఉపయోగించే Twitter సారాంశం చిత్రాలు:ఇమేజ్ మెటాడేటా .svg చిత్రం కాకూడదు."
+      x_summary_large_image_no_svg: "Twitter కోసం ఉపయోగించే Twitter సారాంశం చిత్రాలు:ఇమేజ్ మెటాడేటా .svg చిత్రం కాకూడదు."
   word_connector:
     comma: ", "
   invite:
@@ -1108,7 +1108,7 @@ te:
     favicon: "మీ సైట్ కోసం ఫేవికాన్, <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>చూడండి. CDNలో సరిగ్గా పని చేయడానికి అది తప్పనిసరిగా png అయి ఉండాలి. 32x32కి పరిమాణం మార్చబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది."
     apple_touch_icon: "Apple టచ్ పరికరాల కోసం ఉపయోగించే చిహ్నం. పారదర్శక నేపథ్యం సిఫార్సు చేయబడలేదు. స్వయంచాలకంగా 180x180కి పరిమాణం మార్చబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది."
     opengraph_image: "డిఫాల్ట్ ఓపెన్‌గ్రాఫ్ చిత్రం, పేజీకి తగిన ఇతర చిత్రం లేనప్పుడు ఉపయోగించబడుతుంది. ఖాళీగా ఉంచినట్లయితే, large_icon ఉపయోగించబడుతుంది"
-    twitter_summary_large_image: "Twitter కార్డ్ 'సారాంశం పెద్ద చిత్రం' (కనీసం 280 వెడల్పు ఉండాలి మరియు కనీసం 150 ఎత్తు ఉండాలి, .svg ఉండకూడదు). ఖాళీగా ఉంచినట్లయితే, సాధారణ కార్డ్ మెటాడేటా opengraph_imageని ఉపయోగించి రూపొందించబడుతుంది, అది కూడా .svg కాదు."
+    x_summary_large_image: "Twitter కార్డ్ 'సారాంశం పెద్ద చిత్రం' (కనీసం 280 వెడల్పు ఉండాలి మరియు కనీసం 150 ఎత్తు ఉండాలి, .svg ఉండకూడదు). ఖాళీగా ఉంచినట్లయితే, సాధారణ కార్డ్ మెటాడేటా opengraph_imageని ఉపయోగించి రూపొందించబడుతుంది, అది కూడా .svg కాదు."
     notification_email: "నుండి: అన్ని అవసరమైన సిస్టమ్ ఇమెయిల్‌లను పంపేటప్పుడు ఉపయోగించే ఇమెయిల్ చిరునామా. ఇమెయిల్ రావాలంటే ఇక్కడ పేర్కొన్న డొమైన్ తప్పనిసరిగా SPF, DKIM మరియు రివర్స్ PTR రికార్డ్‌లను సరిగ్గా సెట్ చేసి ఉండాలి."
     email_custom_headers: "అనుకూల ఇమెయిల్ హెడర్‌ల పైప్-డిలిమిటెడ్ లిస్ట్"
     email_subject: "ప్రామాణిక ఇమెయిల్‌ల కోసం అనుకూలీకరించదగిన సబ్జెక్ట్ ఫార్మాట్. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>చూడండి"

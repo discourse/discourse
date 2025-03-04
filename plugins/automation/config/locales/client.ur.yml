@@ -64,10 +64,6 @@ ur:
               label: ٹیگز
             restricted_category:
               label: زمرہ
-            restricted_group:
-              label: گروپ
-            restricted_groups:
-              label: گروپس
           created: بنایا گیا
         category_created_edited:
           fields:
