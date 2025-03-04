@@ -3119,7 +3119,7 @@ RSpec.describe UsersController do
           user.set_status!("off to dentist", "tooth")
           user.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
           expect(response.status).to eq(200)
 
@@ -3159,7 +3159,7 @@ RSpec.describe UsersController do
           user1.set_status!(old_status[:description], old_status[:emoji])
           user1.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user1.username}.json", params: { status: new_status }
           expect(response.status).to eq(403)
 
@@ -3216,7 +3216,7 @@ RSpec.describe UsersController do
             user.set_status!(old_status[:description], old_status[:emoji])
             user.reload
 
-            new_status = { emoji: "surfing_man", description: "surfing" }
+            new_status = { emoji: "man_surfing", description: "surfing" }
             put "/u/#{user.username}.json", params: { status: new_status }
             expect(response.status).to eq(200)
 
@@ -3261,7 +3261,7 @@ RSpec.describe UsersController do
           user.set_status!("off to dentist", "tooth")
           user.reload
 
-          new_status = { emoji: "surfing_man", description: "surfing" }
+          new_status = { emoji: "man_surfing", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
           expect(response.status).to eq(200)
 
