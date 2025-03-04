@@ -9,7 +9,6 @@ import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import PreloadStore from "discourse/lib/preload-store";
-import { needsHbrTopicList } from "discourse/lib/raw-templates";
 import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
@@ -103,6 +102,8 @@ export default class Site extends RestModel {
     }
 
     let decision;
+
+    const { needsHbrTopicList } = require("discourse/lib/raw-templates");
 
     /* eslint-disable no-console */
     const settingValue = this.siteSettings.glimmer_topic_list_mode;
