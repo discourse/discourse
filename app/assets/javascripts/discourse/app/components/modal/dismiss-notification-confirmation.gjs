@@ -1,0 +1,20 @@
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import DModal from "discourse/components/d-modal";
+import DButton from "discourse/components/d-button";
+
+export default class DismissNotificationConfirmation extends Component {<template><DModal @headerClass="hidden" class="dismiss-notification-confirmation" @closeModal={{@closeModal}}>
+  <:body>
+    {{@model.confirmationMessage}}
+  </:body>
+  <:footer>
+    <DButton @icon="check" class="btn-primary" @action={{this.dismiss}} @label="notifications.dismiss_confirmation.dismiss" />
+    <DButton @action={{@closeModal}} @label="notifications.dismiss_confirmation.cancel" class="btn-default" />
+  </:footer>
+</DModal></template>
+  @action
+  dismiss() {
+    this.args.model?.dismissNotifications?.();
+    this.args.closeModal();
+  }
+}

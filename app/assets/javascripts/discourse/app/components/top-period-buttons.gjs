@@ -1,0 +1,22 @@
+import Component from "@ember/component";
+import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
+import DButton from "discourse/components/d-button";
+import { fn } from "@ember/helper";
+import periodTitle from "discourse/helpers/period-title";
+
+@classNames("top-title-buttons")
+export default class TopPeriodButtons extends Component {<template>{{#each this.periods as |p|}}
+  <DButton @action={{fn this.changePeriod p}} @translatedLabel={{periodTitle p}} class="btn-default" />
+{{/each}}</template>
+  @discourseComputed("period")
+  periods(period) {
+    return this.site.get("periods").filter((p) => p !== period);
+  }
+
+  @action
+  changePeriod(p) {
+    this.action(p);
+  }
+}
