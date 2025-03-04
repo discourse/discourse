@@ -59,6 +59,7 @@ sk:
     deleted_chat_username: vymazané
     errors:
       users_cant_be_added_to_channel: "Do tohto kanála nie je možné pridať používateľov."
+      user_cant_be_removed_from_channel: "Používateľ nemôže byť odstránený z tohto kanála"
       channel_exists_for_category: "Kanál už existuje pre túto kategóriu a názov"
       channel_new_message_disallowed:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy"
@@ -94,6 +95,7 @@ sk:
       actor_muting_target_user: "Vypnete zvuk na stránke %{username}, takže im nemôžete posielať správy."
       actor_disallowed_dms: "Rozhodli ste sa zabrániť používateľom odosielať vám osobné a priame správy, takže nemôžete vytvárať nové priame správy."
       actor_preventing_target_user_from_dm: "Rozhodli ste sa zabrániť tomu, aby vám %{username} odosielal osobné a priame správy, takže k nim nemôžete vytvárať nové priame správy."
+      not_reachable: "Prepáčte, %{username} nepoužíva chat."
       user_cannot_send_direct_messages: "Ľutujeme, nemôžete posielať priame správy."
       over_chat_max_direct_message_users_allow_self: "Súkromnú správu môžete vytvoriť len sami so sebou."
       over_chat_max_direct_message_users:
@@ -264,6 +266,16 @@ sk:
           few: "[%{site_name}] Nových správ"
           many: "[%{site_name}] Nových správ"
           other: "[%{site_name}] Nové správy"
+        watched_thread:
+          one: "[%{site_name}] Nová správa na %{channel}"
+          few: "[%{site_name}] Nové správy na %{channel}"
+          many: "[%{site_name}] Nových správ na %{channel}"
+          other: "[%{site_name}] Nové správy na %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nová správa vlákna v %{channel} a %{count} iné"
+          few: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          many: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          other: "[%{site_name}] Nové správy vlákna v %{channel} a %{count} iné"
         chat_dm_1:
           one: "[%{site_name}] Nová správa od %{name}"
           few: "[%{site_name}] Nových správ od %{name}"

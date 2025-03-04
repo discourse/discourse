@@ -156,7 +156,7 @@ export default class AdminReport extends Component {
   }
 
   get hasData() {
-    return this.model?.data?.length > 0;
+    return isPresent(this.model?.data);
   }
 
   get disabledLabel() {

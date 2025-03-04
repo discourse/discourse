@@ -7,8 +7,8 @@
 zh_TW:
   js:
     discourse_automation:
-      create: 創建
-      update: 更新
+      back: 上一步
+      edit: 編輯
       fields:
         user:
           label: 使用者
@@ -62,10 +62,6 @@ zh_TW:
               label: 標記
             restricted_category:
               label: 分類
-            restricted_group:
-              label: 群組
-            restricted_groups:
-              label: 群組
           created: 建立時間
         category_created_edited:
           fields:

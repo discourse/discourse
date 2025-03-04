@@ -3,8 +3,8 @@
 RSpec.describe WebhooksController do
   before { Discourse.redis.flushdb }
 
-  let(:email) { "em@il.com" }
-  let(:message_id) { "12345@il.com" }
+  fab!(:email) { "em@il.com" }
+  fab!(:message_id) { "12345@il.com" }
 
   describe "#mailgun" do
     let(:token) { "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de" }
@@ -82,10 +82,10 @@ RSpec.describe WebhooksController do
   end
 
   describe "#sendgrid" do
-    it "works" do
-      user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+    fab!(:user) { Fabricate(:user, email:) }
+    fab!(:email_log) { Fabricate(:email_log, user:, message_id: message_id, to_address: email) }
 
+    it "works" do
       post "/webhooks/sendgrid.json",
            params: {
              "_json" => [
@@ -104,6 +104,26 @@ RSpec.describe WebhooksController do
       expect(email_log.bounced).to eq(true)
       expect(email_log.bounce_error_code).to eq("5.0.0")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "sets the bounce error code to 5.1.2 when payload's `event` is `bounce`, `type` is `blocked` and `status` is blank" do
+      post "/webhooks/sendgrid.json",
+           params: {
+             "_json" => [
+               {
+                 "email" => email,
+                 "smtp-id" => "<12345@il.com>",
+                 "event" => "bounce",
+                 "type" => "blocked",
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("5.1.2")
     end
 
     it "verifies signatures" do

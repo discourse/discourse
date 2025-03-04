@@ -11,7 +11,31 @@
 }
 
 .topic-body {
-  padding: 0;
+  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
+  float: left;
+  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
+  position: relative;
+  border-top: 1px solid var(--primary-low);
+  padding: 0.8em 0 0 0;
+
+  .topic-meta-data {
+    padding: 0 var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .cooked {
+    padding: 1em var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .group-request {
+    padding: 0.5em var(--topic-body-width-padding) 0
+      var(--topic-body-width-padding);
+  }
+
+  a.expand-hidden {
+    padding-left: var(--topic-body-width-padding);
+  }
 
   &:first-of-type {
     border-top: none;
@@ -79,11 +103,11 @@ nav.post-controls {
     align-items: center;
     margin-left: 0;
     border-radius: var(--d-button-border-radius);
+    white-space: nowrap;
 
     .topic-post & {
       margin-right: 0.5em;
     }
-    white-space: nowrap;
 
     .d-icon {
       margin-inline: var(--control-icon-space);
@@ -131,12 +155,13 @@ pre.codeblock-buttons:hover {
 }
 
 .embedded-posts {
+  border: 1px solid var(--primary-low);
+
   h1,
   h2,
   h3 {
     margin: 10px 0;
   }
-  border: 1px solid var(--primary-low);
 
   .topic-body {
     box-sizing: border-box;
@@ -317,15 +342,15 @@ pre.codeblock-buttons:hover {
   &.top {
     margin-left: 0;
     border: none;
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
+    ); // 2px accounts for left and right borders
 
     .collapse-down {
       transform: translate(17%, 230%);
       z-index: 1;
     }
-    width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
-    ); // 2px accounts for left and right borders
 
     .row {
       .topic-body,
@@ -500,35 +525,6 @@ blockquote {
   }
 }
 
-// variables are used to calculate the width of .gap
-.topic-body {
-  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
-  float: left;
-  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
-  position: relative;
-  border-top: 1px solid var(--primary-low);
-  padding: 0.8em 0 0 0;
-
-  .topic-meta-data {
-    padding: 0 var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .cooked {
-    padding: 1em var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .group-request {
-    padding: 0.5em var(--topic-body-width-padding) 0
-      var(--topic-body-width-padding);
-  }
-
-  a.expand-hidden {
-    padding-left: var(--topic-body-width-padding);
-  }
-}
-
 .topic-avatar {
   border-top: 1px solid var(--primary-low);
   padding-top: 15px;
@@ -592,6 +588,7 @@ blockquote {
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;
+
   @include breakpoint(extra-large, min-width) {
     right: auto;
     margin-left: 330px;
@@ -674,10 +671,13 @@ a.attachment::before {
 
 .who-liked,
 .who-read {
-  margin-top: 20px;
   margin-bottom: 0;
   width: 100%;
   text-align: right;
+
+  &.--expanded {
+    margin-top: 1.25em;
+  }
 }
 
 span.highlighted {
@@ -709,7 +709,7 @@ span.highlighted {
 
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+    width: calc(100% - 47px); // 100% - [width of .topic-avatar + 2px]
   }
 
   .embedded-posts {

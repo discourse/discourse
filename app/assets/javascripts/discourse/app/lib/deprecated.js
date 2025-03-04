@@ -17,7 +17,7 @@ let emberDeprecationSilencer;
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
 export default function deprecated(msg, options = {}) {
-  const { id, since, dropFrom, url, raiseError } = options;
+  const { id, since, dropFrom, url, raiseError, source } = options;
 
   if (id && disabledDeprecations.has(id)) {
     return;
@@ -42,7 +42,8 @@ export default function deprecated(msg, options = {}) {
   if (require.has("discourse/lib/source-identifier")) {
     // This module doesn't exist in pretty-text/wizard/etc.
     consolePrefix =
-      require("discourse/lib/source-identifier").consolePrefix() || "";
+      require("discourse/lib/source-identifier").consolePrefix(null, source) ||
+      "";
   }
 
   handlers.forEach((h) => h(msg, options));

@@ -15,16 +15,6 @@
     font-size: var(--font-down-1-rem);
   }
 
-  .sidebar-section-link-prefix {
-    .prefix-image {
-      border: 1px solid transparent;
-    }
-
-    &.active .prefix-image {
-      box-shadow: 0 0 0 1px var(--success);
-    }
-  }
-
   .sidebar-section-link {
     display: inline-flex;
     width: 100%;
@@ -172,6 +162,14 @@
     width: var(--d-sidebar-section-link-prefix-width);
     height: var(--d-sidebar-section-link-prefix-width);
     margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+
+    .prefix-image {
+      border: 1px solid transparent;
+    }
+
+    &.active .prefix-image {
+      box-shadow: 0 0 0 1px var(--success);
+    }
 
     &.image {
       img {

@@ -65,6 +65,9 @@ module DiscourseAutomation
             next if ignore_group_members && post.user.in_any_groups?(restricted_group_ids)
           end
 
+          user_group = automation.trigger_field("restricted_user_group")["value"]
+          next if user_group && !post.user.in_any_groups?([user_group])
+
           ignore_automated = automation.trigger_field("ignore_automated")
           next if ignore_automated["value"] && post.incoming_email&.is_auto_generated?
 

@@ -8,8 +8,8 @@ da:
   js:
     discourse_automation:
       title: Automatisering
-      create: Opret
-      update: Opdater
+      back: Tilbage
+      edit: Rediger
       select_script: Vælg et script
       select_trigger: Vælg en udløser
       edit_automation:
@@ -133,10 +133,6 @@ da:
               label: Mærker
             restricted_category:
               label: Kategori
-            restricted_group:
-              label: Gruppe
-            restricted_groups:
-              label: Grupper
           created: Oprettet
           edited: Redigeret
         category_created_edited:

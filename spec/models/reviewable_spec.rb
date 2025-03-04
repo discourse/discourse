@@ -188,11 +188,18 @@ RSpec.describe Reviewable, type: :model do
           expect(reviewables).to contain_exactly(reviewable)
         end
 
-        it "Does not filter by status when status parameter is set to all" do
+        it "does not filter by status when status parameter is set to all" do
           rejected_reviewable =
             Fabricate(:reviewable, target: post, status: Reviewable.statuses[:rejected])
           reviewables = Reviewable.list_for(user, status: :all)
           expect(reviewables).to match_array [reviewable, rejected_reviewable]
+        end
+
+        it "does not include reviewables of unknown type" do
+          unknown_reviewable = Fabricate(:reviewable, target: post)
+          unknown_reviewable.update_column(:type, "UnknownPlugin")
+          reviewables = Reviewable.list_for(user, status: :all)
+          expect(reviewables).to match_array [reviewable]
         end
 
         it "supports sorting" do
@@ -217,16 +224,18 @@ RSpec.describe Reviewable, type: :model do
         end
 
         describe "Including pending queued posts even if they don't pass the minimum priority threshold" do
+          let(:queued_post) do
+            Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
+          end
+          let(:queued_user) { Fabricate(:reviewable_user, score: 0, force_review: true) }
+
           before do
             SiteSetting.reviewable_default_visibility = :high
             Reviewable.set_priorities(high: 10)
-            @queued_post =
-              Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
-            @queued_user = Fabricate(:reviewable_user, score: 0, force_review: true)
           end
 
           it "includes queued posts when searching for pending reviewables" do
-            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post, @queued_user)
+            expect(Reviewable.list_for(user)).to contain_exactly(queued_post, queued_user)
           end
 
           it "excludes pending queued posts when applying a different status filter" do
@@ -330,6 +339,89 @@ RSpec.describe Reviewable, type: :model do
     expect(Reviewable.valid_type?("Reviewable")).to eq(false)
     expect(Reviewable.valid_type?("ReviewableDoesntExist")).to eq(false)
     expect(Reviewable.valid_type?("User")).to eq(false)
+  end
+
+  describe ".source_for" do
+    it "returns the correct source" do
+      expect(Reviewable.source_for(ReviewablePost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableFlaggedPost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableQueuedPost)).to eq("core")
+      expect(Reviewable.source_for(ReviewableUser)).to eq("core")
+      expect(Reviewable.source_for("NonExistentType")).to eq("unknown")
+    end
+  end
+
+  describe ".unknown_types_and_sources" do
+    it "returns an empty array when no unknown types are present" do
+      expect(Reviewable.unknown_types_and_sources).to eq([])
+    end
+
+    context "with reviewables of unknown type or sources" do
+      fab!(:core_type) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "ReviewableDoesntExist", type_source: "core")
+        type
+      end
+
+      fab!(:known_core_type) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "ReviewableFlaggedPost", type_source: "core")
+        type
+      end
+
+      fab!(:unknown_type) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "UnknownType", type_source: "unknown")
+        type
+      end
+
+      fab!(:plugin_type) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "PluginReviewableDoesntExist", type_source: "my-plugin")
+        type
+      end
+
+      fab!(:plugin_type2) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "PluginReviewableStillDoesntExist", type_source: "my-plugin")
+        type
+      end
+
+      fab!(:plugin_type3) do
+        type = Fabricate(:reviewable)
+        type.update_columns(
+          type: "AnotherPluginReviewableDoesntExist",
+          type_source: "another-plugin",
+        )
+        type
+      end
+
+      fab!(:plugin_type4) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "ThisIsGettingSilly", type_source: "zzz-last-plugin")
+        type
+      end
+
+      fab!(:unknown_type2) do
+        type = Fabricate(:reviewable)
+        type.update_columns(type: "AnotherUnknownType", type_source: "unknown")
+        type
+      end
+
+      it "returns an array of unknown types, sorted by source (with 'unknown' always last), then by type" do
+        expect(Reviewable.unknown_types_and_sources).to eq(
+          [
+            { type: "AnotherPluginReviewableDoesntExist", source: "another-plugin" },
+            { type: "ReviewableDoesntExist", source: "core" },
+            { type: "PluginReviewableDoesntExist", source: "my-plugin" },
+            { type: "PluginReviewableStillDoesntExist", source: "my-plugin" },
+            { type: "ThisIsGettingSilly", source: "zzz-last-plugin" },
+            { type: "AnotherUnknownType", source: "unknown" },
+            { type: "UnknownType", source: "unknown" },
+          ],
+        )
+      end
+    end
   end
 
   describe "events" do

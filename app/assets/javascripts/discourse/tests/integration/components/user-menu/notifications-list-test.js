@@ -42,17 +42,15 @@ module(
       notificationsFetches = 0;
     });
 
-    const template = hbs`<UserMenu::NotificationsList/>`;
-
     test("empty state when there are no notifications", async function (assert) {
       notificationsData.clear();
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert.dom(".empty-state .empty-state-title").exists();
       assert.dom(".empty-state .empty-state-body").exists();
     });
 
     test("doesn't set filter_by_types in the params of the request that fetches the notifications", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert.strictEqual(
         queryParams.filter_by_types,
         undefined,
@@ -61,12 +59,12 @@ module(
     });
 
     test("doesn't request the full notifications list in silent mode", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert.strictEqual(queryParams.silent, undefined);
     });
 
     test("show all button for all notifications page", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert
         .dom(".panel-body-bottom .btn.show-all")
         .hasAttribute(
@@ -80,7 +78,7 @@ module(
       this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .hasText(i18n("user.dismiss"), "dismiss button has a label");
@@ -97,14 +95,14 @@ module(
       notificationsData.forEach((notification) => {
         notification.read = true;
       });
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .doesNotExist();
     });
 
     test("dismiss button makes a request to the server and then refreshes the notifications list", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       this.currentUser.set("grouped_unread_notifications", {
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
@@ -206,7 +204,7 @@ module(
           ],
         });
       });
-      await render(template);
+      await render(hbs`<UserMenu::NotificationsList/>`);
       const items = queryAll("ul li");
       assert
         .dom(items[0])

@@ -61,7 +61,11 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           chat_page.visit_channel_members(channel_1)
           find(".c-channel-members__filter").fill_in(with: "cat")
 
-          expect(page).to have_selector(".c-channel-members__list-item", count: 1, text: "cat")
+          expect(page).to have_selector(
+            ".c-channel-members__list-item .-user-info",
+            count: 1,
+            text: "cat",
+          )
         end
       end
 
@@ -88,7 +92,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     end
   end
 
-  context "when category channel" do
+  context "when group DM channel" do
     fab!(:channel_1) do
       Fabricate(
         :direct_message_channel,
@@ -115,6 +119,54 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           count: 1,
         ),
       )
+    end
+  end
+
+  describe "removing members" do
+    fab!(:current_user) { Fabricate(:admin) }
+
+    before { channel_1.add(Fabricate(:user)) }
+
+    context "when the channel is a category channel" do
+      it "allows removing members" do
+        chat_page.visit_channel_members(channel_1)
+
+        expect(chat_page).to have_css(".c-channel-members__list-item .-remove-member")
+      end
+    end
+
+    context "when the channel is a group DM" do
+      fab!(:channel_1) do
+        Fabricate(
+          :direct_message_channel,
+          slug: "test-channel",
+          users: [current_user, Fabricate(:user), Fabricate(:user)],
+          group: true,
+        )
+      end
+
+      it "allows removing members" do
+        chat_page.visit_channel_members(channel_1)
+
+        expect(chat_page).to have_css(".c-channel-members__list-item .-remove-member")
+      end
+    end
+
+    context "when the channel is a one-on-one DM" do
+      fab!(:channel_1) do
+        Fabricate(
+          :direct_message_channel,
+          slug: "test-channel",
+          users: [current_user, Fabricate(:user)],
+          group: false,
+        )
+      end
+
+      it "does not allow removing members" do
+        chat_page.visit_channel_members(channel_1)
+
+        expect(chat_page).to have_no_css(".c-channel-members__list-item .-remove-member")
+      end
     end
   end
 

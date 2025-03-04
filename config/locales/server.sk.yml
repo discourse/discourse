@@ -60,6 +60,8 @@ sk:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
+    too_many_urls: "V jednej požiadavke nie je možné vložiť do jedného poľa viac ako 10 adries URL."
+    concurrency_not_allowed: "Súbežné požiadavky na inline-oneboxing nie sú povolené. Prosím, pošlite vždy len jednu žiadosť."
   components:
     enabled_filter: "Povolené"
     disabled_filter: "Vypnuté"
@@ -366,9 +368,9 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
-      site_setting_is_hidden: "Nie je povolené meniť skryté nastavenia"
-      site_setting_is_shadowed_globally: "Toto nastavenie nemôžete zmeniť, pretože je globálne nakonfigurované"
-      site_setting_is_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia"
+      site_settings_are_hidden: "Nie je povolené meniť skryté nastavenia: %{setting_names}"
+      site_settings_are_shadowed_globally: "Tieto nastavenia nemôžete zmeniť, pretože sú nakonfigurované globálne: %{setting_names}"
+      site_settings_are_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia: %{setting_names}"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
         few: "'%{name}' sú neplatné voľby."
@@ -392,7 +394,7 @@ sk:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastaveniu nemôžete pridať žiadnu z nasledujúcich hodnôt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Ak je povolená možnosť „optimalizácia obrazu pre kompozitor“, nemôžete zakázať metadáta obrázka pásu. Pred zakázaním metadát obrázkov pásu zakážte možnosť „optimalizácia obrazu kompozitora je povolená“."
-      twitter_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
+      x_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
       tl0_and_anonymous_flag: "V prípade anonymných používateľov sa musí uviesť buď \"kontaktný e-mail stránky\", alebo \"e-mailová adresa na nahlásenie nezákonného obsahu\"."
     conflicting_google_user_id: 'ID účtu Google pre toto konto sa zmenilo; z bezpečnostných dôvodov je potrebný zásah personálu. Obráťte sa na personál a odkážte ich na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>.'
     onebox:
@@ -871,6 +873,9 @@ sk:
           attributes:
             linkable_type:
               invalid: "nie je platné"
+        api_key:
+          base:
+            at_least_one_granular_scope: "musí byť vybraný aspoň jeden."
       <<: *errors
   uncategorized_category_name: "Nezaradené do kategórie"
   general_category_name: "Všeobecné"
@@ -1788,6 +1793,7 @@ sk:
     support_mixed_text_direction: "Podpora zmiešaných smerov textu zľava doprava a sprava doľava"
     min_post_length: "Minimálna povolená dĺžka príspevku v znakoch (okrem osobných správ)"
     min_first_post_length: "Minimálna povolená dĺžka prvého príspevku (tela témy) (okrem osobných správ)"
+    prevent_uploads_only_posts: "Pri kontrole min. dĺžky príspevku nepočítajte s nahratím kódu markdown"
     min_personal_message_post_length: "Minimálna povolená dĺžka príspevku v znakoch pre správy (prvý príspevok aj odpovede)"
     max_post_length: "Maximálny povolený počet znakov v príspevkoch"
     topic_featured_link_enabled: "Umožňuje používateľom priradiť prepojenie funkcie k ich témam. Po zapnutí môže byť k témam pripojený zvýraznený odkaz, ktorý je verejne viditeľný a ktorý možno upravovať, ak má používateľ dostatočné oprávnenia. Funkčný odkaz môže zvýšiť zrozumiteľnosť témy poskytnutím súvisiaceho dodatočného obsahu."
@@ -1807,6 +1813,7 @@ sk:
     search_query_log_max_retention_days: "Maximálny čas na uchovávanie vyhľadávacích dopytov v dňoch."
     search_ignore_accents: "Ak je toto nastavenie povolené, na značky s diakritikou vo vyhľadávacích dotazoch sa neprihliada, čo používateľom umožňuje nájsť výsledky, aj keď nezadajú správnu diakritiku."
     search_default_sort_order: "Predvolené poradie triedenia pre celostránkové vyhľadávanie"
+    search_experience: "Predvolená pozícia a vzhľad vyhľadávania na zariadeniach s počítačom"
     category_search_priority_low_weight: "Váha použitá na zaradenie pre prioritu vyhľadávania v nízkej kategórii."
     category_search_priority_high_weight: "Váha použitá na hodnotenie pre vysokú prioritu vyhľadávania v kategórii."
     default_composer_category: "Kategória, ktorá sa používa na predvyplnenie rozbaľovacieho zoznamu kategórií pri vytváraní novej témy."
@@ -1872,7 +1879,7 @@ sk:
     favicon: "Obľúbená ikona pre vašu stránku, pozri <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby správne fungovala cez CDN, musí to byť png. Bude mať zmenšenú veľkosť na 32x32. Ak zostane prázdna, použije sa large_icon."
     apple_touch_icon: "Ikona používaná pre dotykové zariadenia Apple. Priehľadné pozadie sa neodporúča. Automaticky sa zmení veľkosť na 180x180. Ak zostane prázdna, použije sa large_icon."
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
-    twitter_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
+    x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2012,6 +2019,7 @@ sk:
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
     auth_skip_create_confirm: Pri registrácii prostredníctvom externého overovania preskočte vyskakovacie okno na vytvorenie konta. Najlepšie použiť spolu s auth_overrides_email, auth_overrides_username a auth_overrides_name.
     auth_immediately: "Automatické presmerovanie na externý prihlasovací systém bez interakcie používateľa. Toto sa prejaví len vtedy, keď je hodnota login_required true a existuje len jedna externá metóda overovania"
+    auth_require_interaction: "Vyžadovanie interakcie používateľa pred presmerovaním na externý prihlasovací systém prostredníctvom `/auth/*`. Ide o obranu do hĺbky proti útokom 'Login CSRF'. Toto nastavenie vypnite len vtedy, ak plne dôverujete, že všetky povolené metódy autentifikácie sú chránené proti prihlasovaciemu CSRF."
     enable_discourse_connect: "Povoľte prihlasovanie cez DiscourseConnect (predtým \"Discourse SSO\") (UPOZORNENIE: EMAILOVÉ ADRESY UŽÍVATEĽOV *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU!)"
     verbose_discourse_connect_logging: "Zaznamenávanie verbálnej diagnostiky súvisiacej s DiscourseConnect do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementácia protokolu poskytovateľa DiscourseConnect (predtým \"Discourse SSO\") na koncovom bode /session/sso_provider, vyžaduje nastavenie discourse_connect_provider_secrets"
@@ -2279,7 +2287,7 @@ sk:
     reviewable_default_visibility: "Nezobrazujte položky, ktoré sa dajú skontrolovať, pokiaľ nespĺňajú túto prioritu"
     reviewable_low_priority_threshold: "Filter priority skryje položky, ktoré sa dajú prezerať a ktoré nespĺňajú toto skóre, pokiaľ sa nepoužije filter \"(akýkoľvek)\"."
     high_trust_flaggers_auto_hide_posts: "Príspevky nových používateľov sa automaticky skryjú po označení ako spam používateľom TL3+"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonymní používatelia uvidia informácie, že majú správcom poslať e-mail a nahlásiť nezákonný obsah."
+    allow_all_users_to_flag_illegal_content: "Anonymní používatelia uvidia informácie, že majú správcom poslať e-mail a nahlásiť nezákonný obsah. Toto nastavenie má prednosť pred nastavením \"označovať povolené skupiny príspevkov\"."
     email_address_to_report_illegal_content: "Ak zostane prázdne, použije sa predvolený e-mail správcu stránky."
     cooldown_hours_until_reflag: "Koľko času budú musieť používatelia čakať, kým budú môcť zmeniť označenie príspevku"
     slow_mode_prevents_editing: "Zabraňuje \"pomalý režim\" úpravám po uplynutí obdobia editácie_grace_period?"
@@ -2438,6 +2446,7 @@ sk:
     svg_icon_subset: "Pridajte ďalšie ikony FontAwesome, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony použite prefix \"fa-\", pre bežné ikony \"far-\" a pre ikony značky \"fab-\"."
     max_prints_per_hour_per_user: "Maximálny počet výtlačkov /tlačovej strany (nastavením na 0 sa tlač zakáže)"
     full_name_requirement: "Vytvorte pole s celým menom ako povinné, voliteľné alebo voliteľné, ale skryté pole v registračnom formulári."
+    interface_color_selector: "Nakonfigurujte, kde je k dispozícii prepínač režimu svetla/tmy pre farbu rozhrania."
     enable_names: "Na profile zobraziť plné používateľské meno, karty a emaily používateľa. Vypnite na schovanie plného mena všade."
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
@@ -2488,9 +2497,7 @@ sk:
     max_allowed_message_recipients: "Maximálny počet príjemcov povolený v správe."
     disable_watched_word_checking_in_user_fields: "vypnutie kontroly sledovaných slov v užívateľských poliach"
     watched_words_regular_expressions: "Umožňuje používať regulárne výrazy na filtrovanie slov. Ak je táto funkcia povolená, zoskupuje citlivé slová podľa citlivosti veľkých a malých písmen. Potom zostaví všetky vybrané slová do jedného regulárneho výrazu a pridá hranice slov pre regulárne sledované slová. Následne táto metóda filtrovania založená na regexoch pridáva ďalšiu úroveň kontroly nad moderovaním obsahu tým, že podporuje zložitejšie vzory slov. Nastavenie tiež umožňuje jednoducho nahradiť pôvodný text náhradou podľa výberu."
-    enable_diffhtml_preview: "Experimentálna funkcia, ktorá používa diffHTML na synchronizáciu náhľadu namiesto úplného opätovného vykresľovania"
     enable_fast_edit: "Pridá tlačidlo do ponuky výberu príspevku na úpravu malého výberu inline."
-    enable_quote_copy: "Pridá do ponuky výberu príspevku tlačidlo na skopírovanie výberu do schránky ako citáciu markdown."
     old_post_notice_days: "Počet dní, po ktorých sa oznámenie o odoslaní považuje za staré. To ho vizuálne odlišuje od novších oznámení na stránke."
     new_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o nových príspevkoch používateľov."
     returning_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o odoslaní príspevku vracajúceho sa používateľa."
@@ -2621,6 +2628,7 @@ sk:
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
+    experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
@@ -2672,8 +2680,10 @@ sk:
       discourse_connect_url_is_empty: "Pred povolením tohto nastavenia musíte nastaviť \"url adresu discourse connect\"."
       enable_local_logins_disabled: "Pred povolením tohto nastavenia musíte najskôr povoliť „povoliť miestne prihlásenie“."
       min_username_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratšie používateľské meno (%{username})."
+      min_group_name_length_exists: "Minimálnu dĺžku používateľského mena nemôžete nastaviť nad najkratší názov skupiny (%{group_name})."
       min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
       max_username_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhšie používateľské meno (%{username})."
+      max_group_name_length_exists: "Maximálnu dĺžku používateľského mena nemôžete nastaviť pod najdlhší názov skupiny (%{group_name})."
       max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       invalid_hex_value: "Hodnoty farieb musia byť 6-miestne hexadecimálne kódy."
       empty_selectable_avatars: "Pred povolením tohto nastavenia musíte najprv nahrať aspoň dva vyberateľné avatary."
@@ -5332,7 +5342,6 @@ sk:
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
-      watched_word: "Tento príspevok obsahoval sledované slovo. Pozrite si stránku %{link}."
       staged: "Nové témy a príspevky pre nezaktívnených užívateľov musia byť schválené personálom. Pozrite si %{link}."
       category: "Príspevky v tejto kategórii si vyžadujú manuálne schválenie členmi personálu. Pozrite si stránku %{link}."
       must_approve_users: "Všetci noví používatelia musia byť schválení personálom. Pozrite si %{link}."
@@ -5343,7 +5352,6 @@ sk:
       contains_media: "Tento príspevok obsahuje vložené médiá. Pozri %{link}."
       queued_by_staff: "Člen personálu si myslí, že tento príspevok potrebuje revíziu. Dovtedy zostane skrytý."
       links:
-        watched_word: zoznam sledovaných slov
         category: nastavenia kategórie
     actions:
       agree:

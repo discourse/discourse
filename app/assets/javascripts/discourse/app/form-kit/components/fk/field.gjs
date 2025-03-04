@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
+import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
@@ -75,6 +76,7 @@ export default class FKField extends Component {
       @title={{@title}}
       @tooltip={{@tooltip}}
       @description={{@description}}
+      @helpText={{@helpText}}
       @showTitle={{@showTitle}}
       @collectionIndex={{@collectionIndex}}
       @set={{@set}}
@@ -88,6 +90,7 @@ export default class FKField extends Component {
       @descriptionFormat={{@descriptionFormat}}
       @disabled={{@disabled}}
       @parentName={{@parentName}}
+      @placeholderUrl={{@placeholderUrl}}
       as |field|
     >
       <this.wrapper @size={{@size}}>
@@ -107,6 +110,7 @@ export default class FKField extends Component {
             Select=(this.componentFor FKControlSelect field)
             Input=(this.componentFor FKControlInput field)
             RadioGroup=(this.componentFor FKControlRadioGroup field)
+            Calendar=(this.componentFor FKControlCalendar field)
             errorId=field.errorId
             id=field.id
             name=field.name

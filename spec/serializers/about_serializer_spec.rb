@@ -44,7 +44,10 @@ RSpec.describe AboutSerializer do
   end
 
   describe "#stats" do
-    after { DiscoursePluginRegistry.reset! }
+    after do
+      DiscoursePluginRegistry.reset_register!(:private_stat)
+      DiscoursePluginRegistry.reset_register!(:exposable_stat)
+    end
 
     let(:plugin) { Plugin::Instance.new }
 

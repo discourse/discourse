@@ -16,21 +16,6 @@ const DEFAULT_CONTENT = {
   label: "foo",
 };
 
-const TEMPLATE = hbs`
-  <MountWidget
-    @widget="widget-dropdown"
-    @args={{hash
-      id="my-dropdown"
-      icon=this.icon
-      label=this.label
-      class=this.class
-      translatedLabel=this.translatedLabel
-      content=this.content
-      options=this.options
-    }}
-  />
-`;
-
 module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -43,7 +28,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("dropdown id", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown").exists();
   });
@@ -52,7 +50,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("FooBaz");
   });
@@ -62,7 +73,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("translatedLabel", "BazFoo");
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("BazFoo");
   });
@@ -70,7 +94,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("content", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert
@@ -108,7 +145,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("can be opened and closed", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown.closed").exists();
     assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
@@ -125,7 +175,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("icon", "xmark");
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown .widget-dropdown-header .d-icon-xmark").exists();
   });
@@ -134,7 +197,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("class", "activated");
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown.activated").exists();
   });
@@ -142,7 +218,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("content with translatedLabel", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert.dom("#my-dropdown .widget-dropdown-item.item-2").hasText("FooBar");
@@ -152,7 +241,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert.dom("#my-dropdown .widget-dropdown-item.item-1").hasText("FooBaz");
@@ -161,7 +263,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("content with icon", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert
@@ -172,7 +287,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("content with html", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
     await click("#my-dropdown .widget-dropdown-header");
 
     assert
@@ -183,7 +311,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("separator", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert
@@ -194,7 +335,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("hides widget if no content", async function (assert) {
     this.setProperties({ content: null, label: "foo" });
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown .widget-dropdown-header").doesNotExist();
     assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
@@ -204,7 +358,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { headerClass: "btn-small and-text" });
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown .widget-dropdown-header").hasClass("btn-small");
     assert.dom("#my-dropdown .widget-dropdown-header").hasClass("and-text");
@@ -214,7 +381,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { bodyClass: "gigantic and-yet-small" });
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert.dom("#my-dropdown .widget-dropdown-body").hasClass("gigantic");
@@ -225,7 +405,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { caret: true });
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert
       .dom("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
@@ -236,7 +429,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { disabled: true });
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     assert.dom("#my-dropdown.disabled").exists();
 
@@ -249,7 +455,20 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   test("disabled item", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
-    await render(TEMPLATE);
+    await render(hbs`
+      <MountWidget
+        @widget="widget-dropdown"
+        @args={{hash
+          id="my-dropdown"
+          icon=this.icon
+          label=this.label
+          class=this.class
+          translatedLabel=this.translatedLabel
+          content=this.content
+          options=this.options
+        }}
+      />
+    `);
 
     await click("#my-dropdown .widget-dropdown-header");
     assert.dom(".widget-dropdown-item.item-5.disabled").exists();

@@ -1,12 +1,19 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {
+  @service currentUser;
+  @service dialog;
+  @service toasts;
   queryParams = [
     "priority",
     "type",
@@ -38,6 +45,7 @@ export default class ReviewIndexController extends Controller {
   sort_order = null;
   additional_filters = null;
   filterScoreType = null;
+  unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
   @discourseComputed("reviewableTypes")
   allTypes() {
@@ -106,6 +114,11 @@ export default class ReviewIndexController extends Controller {
     next(() => this.send("refreshRoute"));
   }
 
+  @discourseComputed("unknownReviewableTypes")
+  displayUnknownReviewableTypesWarning(unknownReviewableTypes) {
+    return unknownReviewableTypes?.length > 0 && this.currentUser.admin;
+  }
+
   @action
   remove(ids) {
     if (!ids) {
@@ -127,6 +140,26 @@ export default class ReviewIndexController extends Controller {
   resetTopic() {
     this.set("topic_id", null);
     this.refreshModel();
+  }
+
+  @action
+  ignoreAllUnknownTypes() {
+    return this.dialog.deleteConfirm({
+      message: i18n("review.unknown.delete_confirm"),
+      didConfirm: async () => {
+        try {
+          await ajax("/admin/unknown_reviewables/destroy", {
+            type: "delete",
+          });
+          this.set("unknownReviewableTypes", []);
+          this.toasts.success({
+            data: { message: i18n("review.unknown.ignore_success") },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   @action

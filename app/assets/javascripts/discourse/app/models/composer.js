@@ -41,7 +41,8 @@ export const CREATE_TOPIC = "createTopic",
   REPLY = "reply",
   EDIT = "edit",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic";
+  NEW_TOPIC_KEY = "new_topic",
+  EDIT_TOPIC_KEY = "topic_";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -141,6 +142,7 @@ export default class Composer extends RestModel {
   // Draft key
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
   static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
+  static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
 
   // TODO: Replace with injection
   static create(args) {

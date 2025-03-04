@@ -48,9 +48,7 @@
         />
         <div class="flag-action-type-details">
           <strong>{{this.formattedName}}</strong>
-          {{#if this.showDescription}}
-            <div class="description">{{html-safe this.description}}</div>
-          {{/if}}
+          <div class="description">{{html-safe this.description}}</div>
           {{#if this.showMessageInput}}
             <Textarea
               name="message"

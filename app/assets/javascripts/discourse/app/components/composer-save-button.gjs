@@ -16,7 +16,7 @@ export default class ComposerSaveButton extends Component {
       @icon={{@icon}}
       @translatedTitle={{this.translatedTitle}}
       @forwardEvent={{@forwardEvent}}
-      class={{concatClass "btn-primary create" (if @disabledSubmit "disabled")}}
+      class={{concatClass "btn-primary create" (if @disableSubmit "disabled")}}
       ...attributes
     />
   </template>

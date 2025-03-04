@@ -7,7 +7,7 @@
 id:
   js:
     discourse_automation:
-      create: Buat
+      edit: Ubah
       fields:
         user:
           label: Pengguna
@@ -46,8 +46,6 @@ id:
               label: Label
             restricted_category:
               label: Kategori
-            restricted_groups:
-              label: Grup
           created: Dibuat
         pm_created:
           fields:

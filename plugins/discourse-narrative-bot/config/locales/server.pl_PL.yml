@@ -171,23 +171,8 @@ pl_PL:
 
           - Wierzymy w [cywilizowane zachowanie członków](%{base_uri}/guidelines) społeczności w każdej sytuacji.
       onebox:
-        instructions: |-
-          Następnie, czy możesz udostępnić mi jeden z poniższych linków? Odpowiedz przy użyciu **linku w osobnej linii**, a automatycznie zostanie dodane jego sprytne podsumowanie.
-
-          Aby skopiować link, naciśnij i przytrzymaj na urządzeniu przenośnym lub kliknij prawym przyciskiem myszy:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Super! To zadziała dla większości <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linków. Pamiętaj, żeby umieszczać link w _osobnej linii_, z pustym miejscem przed nim i za nim.
-        not_found: |-
-          Przepraszam, nie mogłem znaleźć linku w twojej odpowiedzi!
-          :cry:
-
-          Czy możesz spróbować dodać następujący link, w osobnej linii, w następnej odpowiedzi?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           To jest obrazek jednorożca:

@@ -493,6 +493,7 @@ en:
       remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
+      edit_topic: "Edit topic draft"
       abandon:
         confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
@@ -500,7 +501,7 @@ en:
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
-        view_all: "view all"
+        view_all: "view all drafts"
         other_drafts:
           one: "+%{count} other draft"
           other: "+%{count} other drafts"
@@ -584,6 +585,17 @@ en:
       date_filter: "Posted between"
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
+      unknown:
+        title:
+          one: "You have pending reviewables from disabled plugin:"
+          other: "You have pending reviewables from disabled plugins:"
+        instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
+        reviewable_unknown_source: "%{reviewableType} (unknown plugin)"
+        reviewable_known_source: "%{reviewableType} (from the '%{pluginName}' plugin)"
+        ignore_all: "Ignore all"
+        enable_plugins: "Enable plugins"
+        delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
+        ignore_success: "All reviews created by disabled plugins have been deleted."
       explain:
         why: "explain why this item ended up in the queue"
         title: "Reviewable Scoring"
@@ -2225,6 +2237,8 @@ en:
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         required: "Required"
+        date_before_or_equal: "Must be before or equal to %{date}"
+        date_after_or_equal: "Must be after or equal to %{date}"
         invalid_url: "Must be a valid URL"
         not_an_integer: "Must be a whole number"
         not_accepted: "Must be accepted"
@@ -2534,12 +2548,17 @@ en:
       continue: "Continue to %{site_name}"
 
     emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
+      apple_international: "Apple/International (deprecated to Twemoji)"
+      google: "Google (deprecated to Noto Emoji)"
+      twitter: "Twitter (deprecated to Twemoji)"
+      win10: "Win10 (deprecated to Fluent Emoji)"
+      google_classic: "Google Classic (deprecated to Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (deprecated to Standard)"
+      openmoji: OpenMoji
+      standard: Standard
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
 
     category_page_style:
       categories_only: "Categories Only"
@@ -2554,6 +2573,10 @@ en:
       required_at_signup: "Required"
       optional_at_signup: "Optional"
       hidden_at_signup: "Optional, hidden at signup"
+    interface_color_selector:
+      disabled: "Do not display"
+      sidebar_footer: "Display in sidebar footer"
+      header: "Display in header"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -2999,6 +3022,10 @@ en:
       browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
+
+      experience:
+        search_field: "Search field in site header"
+        search_icon: "Search icon near profile avatar"
 
       type:
         default: "Topics/posts"
@@ -3831,11 +3858,11 @@ en:
         other: "you and %{count} other people liked this post"
 
       sr_post_like_count_button:
-        one: "%{count} person liked this post. Click to view"
-        other: "%{count} people liked this post. Click to view"
+        one: "%{count} person liked this post."
+        other: "%{count} people liked this post."
       sr_post_read_count_button:
-        one: "%{count} person read this post. Click to view"
-        other: "%{count} people read this post. Click to view"
+        one: "%{count} person read this post."
+        other: "%{count} people read this post."
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
@@ -3962,8 +3989,6 @@ en:
           read_capped:
             one: "and %{count} other read this"
             other: "and %{count} others read this"
-          sr_post_likers_list_description: "users who liked this post"
-          sr_post_readers_list_description: "users who read this post"
         by_you:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
@@ -4097,6 +4122,7 @@ en:
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
+      logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
       badge_colors: "Badge colors"
@@ -4220,6 +4246,7 @@ en:
 
     flagging:
       title: "Thanks for keeping our community civil!"
+      review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:
@@ -4589,6 +4616,11 @@ en:
         prev_next: "%{shortcut} Move selection up and down"
         insert_url: "%{shortcut} Insert selection into open composer"
         full_page_search: "%{shortcut} Launches full page search"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Move selection up and down"
+        search_open: "%{shortcut} Open search for the admin interface"
+        search_full_page: "%{shortcut} Open full page admin search"
 
     badges:
       earned_n_times:
@@ -5005,10 +5037,17 @@ en:
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       filter: "Filter..."
+      filter_links: "Filter links..."
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
         description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
+        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
+      footer:
+        interface_color_selector:
+          light: "Light"
+          dark: "Dark"
+          auto: "Auto"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5138,16 +5177,42 @@ en:
         meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
-        sidebar_link:
-          all: "All reports"
+
+      config_sections:
+        account:
+          title: "Account"
+        reports:
+          title: "Reports"
+        community:
+          title: "Community"
+        appearance:
+          title: "Appearance"
+        email:
+          title: "Email"
+        security:
+          title: "Security"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Advanced"
 
       config:
+        about:
+          title: "About your site"
+          header_description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
           header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
+        emojis:
+          title: "Emoji"
+          header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time"
+        flags:
+          title: "Moderation"
+          header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
+          keywords: "flag|review|spam|illegal"
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes"
@@ -5160,12 +5225,79 @@ en:
         localization:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
+          keywords: "locale|language|timezone|unicode|ltr"
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
         logo:
           title: "Site logo"
           header_description: "Customize the variations of your site logo"
+        branding:
+          title: "Branding"
+          logo:
+            title: "Logo"
+            form:
+              saved: "Logo settings are saved."
+              logo:
+                title: "Primary logo"
+                description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+                help_text: "Recommended size is 600 x 80 pixels."
+              logo_dark:
+                required: "Use a different logo for dark mode?"
+                title: "Primary logo dark"
+                help_text: "Recommended size is 600 x 80 pixels."
+              large_icon:
+                title: "Square icon"
+                description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+                help_text: "Recommended size is 512 x 512 pixels."
+              square_icon_dark:
+                required: "Use a different square icon for dark mode?"
+                title: "Square icon dark"
+                help_text: "Recommended size is 512 x 512 pixels."
+              favicon:
+                title: "Favicon"
+                description: "The logo will appear as the icon in the browser tab and the browser favorites/bookmarks."
+              logo_small:
+                title: "Small logo"
+                description: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
+                help_text: "Recommended size is 120 x 120 pixels."
+              logo_small_dark:
+                required: "Use a different small logo for dark mode?"
+                title: "Small logo dark"
+                help_text: "Recommended size is 120 x 120 pixels."
+              mobile: "Mobile"
+              email: "Email"
+              social_media: "Social media"
+              mobile_logo:
+                title: "Mobile logo"
+                description: "The logo used on mobile version of your site. If left blank, the image from the `logo` setting will be used."
+                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+              mobile_logo_dark:
+                required: "Use a different mobile logo for dark mode?"
+                title: "Mobile logo dark"
+                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+              manifest_icon:
+                title: "Manifest icon"
+                description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
+                help_text: "Recommended size is 512 x 512 pixels."
+              manifest_screenshots:
+                title: "Manifest screenshots"
+                description: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
+              apple_touch_icon:
+                title: "Apple touch icon"
+                description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
+                help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
+              digest_logo:
+                title: "Digest logo"
+                description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
+                help_text: "Use a wide rectangle image. Don't use an SVG image."
+              opengraph_image:
+                title: "OpenGraph image"
+                description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+              x_summary_large_image:
+                title: "X summary large image"
+                description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
+                help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
@@ -5182,8 +5314,11 @@ en:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
         search:
-          title: "Search"
+          title: "Search settings"
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
+        search_everything:
+          title: "Search"
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -5199,6 +5334,144 @@ en:
         group_permissions:
           title: "Group permissions"
           header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
+        dashboard:
+          title: "Dashboard"
+          header_description: "The dashboard provides a snapshot of your community’s health, including traffic, user activity, and other key metrics"
+        users:
+          title: "Users"
+          header_description: "View and manage users, send invites, and export user data"
+        groups:
+          title: "Groups"
+          header_description: "Create and manage groups, set group permissions, and view group activity and inboxes"
+        site_settings:
+          title: "All site settings"
+          header_description: "Configure all settings for your Discourse site to customize its appearance, functionality, and user experience"
+        whats_new:
+          title: "What's new?"
+          header_description: "Stay up-to-date with the latest features and improvements in Discourse"
+          keywords: "changelog|feature|release"
+        backups:
+          title: "Backups"
+          header_description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
+          sub_pages:
+            logs:
+              title: "Logs"
+              header_description: "View and manage logs for backups, restores, and uploads"
+        reports:
+          title: "Reports"
+          header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
+        badges:
+          title: "Badges"
+          header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
+        permalinks:
+          title: "Permalinks"
+          header_description: "Redirections to apply for URLs not known by the forum"
+        user_fields:
+          title: "User fields"
+          header_description: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
+        watched_words:
+          title: "Watched words"
+          header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
+        color_palettes:
+          title: "Color palettes"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+        emoji:
+          title: "Emoji"
+          header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
+        themes:
+          title: "Themes"
+          header_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features"
+        components:
+          title: "Components"
+          header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
+          keywords: "theme|component|extension"
+        site_texts:
+          title: "Site texts"
+          header_description: "Customize any text used in Discourse to match your community’s voice and tone"
+        email:
+          title: "Server setup & logs"
+          header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
+          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          sub_pages:
+            preview_summary:
+              title: "Preview summary"
+              header_description: "Preview the content of the summary emails sent to inactive users"
+            advanced_test:
+              title: "Advanced test"
+              header_description: "See how Discourse processes received emails"
+            templates:
+              title: "Templates"
+              header_description: "Customize the templates used to create emails"
+            sent:
+              title: "Sent"
+              header_description: "View a log of emails that have been sent"
+            skipped:
+              title: "Skipped"
+              header_description: "View a log of emails that have been skipped"
+            bounced:
+              title: "Bounced"
+              header_description: "View a log of emails that have bounced"
+            received:
+              title: "Received"
+              header_description: "View a log of emails that have been received"
+            rejected:
+              title: "Rejected"
+              header_description: "View a log of emails that have been rejected"
+        email_appearance:
+          title: "Appearance"
+          header_description: "Customize the template in which all html emails are rendered, and style using CSS"
+        staff_action_logs:
+          title: "Logs & screening"
+          header_description: "Logs and screening allow you to monitor and manage your community, ensuring that it remains safe and respectful. You can view logs of all actions taken by staff members, search logs, and user screening configuration"
+          keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+          sub_pages:
+            screened_emails:
+              title: "Screened emails"
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Screened IPs"
+              header_description: "IP addresses that are being watched. Individual IP addresses can be allowlisted."
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+            search_logs:
+              title: "Search logs"
+              header_description: "View a log of searches that have been performed"
+        plugins:
+          title: "Installed plugins"
+          header_description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list"
+        api_keys:
+          title: "API keys"
+          header_description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
+          keywords: "token|scope"
+        webhooks:
+          title: "Webhooks"
+          header_description: "Webhooks allows Discourse to notify external services when certain events happen in your site. When the webhook is triggered, a POST request will send to URLs provided."
+          keywords: "event|payload|url"
+        embedding:
+          title: "Embedding"
+          header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+
+      search:
+        modal_title: "Search anything in admin"
+        title: "Search"
+        instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        result_types:
+          page:
+            one: "Page"
+            other: "Pages"
+          report:
+            one: "Report"
+            other: "Reports"
+          setting:
+            one: "Setting"
+            other: "Settings"
+          theme:
+            one: "Theme"
+            other: "Themes"
+          component:
+            one: "Component"
+            other: "Components"
 
       new_features:
         title: "What's new?"
@@ -5225,6 +5498,7 @@ en:
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
           experimental: "Experimental"
+          only_experiments: "Only show experimental features"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
           experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
@@ -5460,6 +5734,7 @@ en:
             When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
+          one_or_more: At least one scope must be selected.
           granular: Granular
           read_only: Read-only
           global: Global
@@ -5678,81 +5953,9 @@ en:
             failed: "Failed"
       home:
         title: "Home"
-      account:
-        title: "Account"
-        sidebar_link:
-          backups: "Backups"
-          whats_new:
-            title: "What's new?"
-            keywords: "changelog|feature|release"
-
-      community:
-        title: "Community"
-        sidebar_link:
-          about_your_site: "About your site"
-          badges: "Badges"
-          login_and_authentication: "Login & authentication"
-          notifications: "Notifications"
-          permalinks: "Permalinks"
-          trust_levels: "Trust levels"
-          group_permissions: "Group permissions"
-          users: "Users"
-          groups: "Groups"
-          localization:
-            title: "Localization"
-            keywords: "locale|language|timezone|unicode|ltr"
-          user_fields: "User fields"
-          watched_words: "Watched words"
-          legal: "Legal"
-          moderation_flags:
-            title: "Moderation"
-            keywords: "flag|review"
-
-      appearance:
-        title: "Appearance"
-        sidebar_link:
-          font_style: "Font style"
-          site_logo: "Site logo"
-          color_schemes: "Color palettes"
-          emoji: "Emoji"
-          navigation: "Navigation"
-          themes: "Themes"
-          components:
-            title: "Components"
-            keywords: "theme|extension"
-          site_texts: "Site texts"
-
-      email_settings:
-        title: "Email Settings"
-        sidebar_link:
-          appearance: "Appearance"
-          server_setup:
-            title: "Server setup & logs"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
-
-      security:
-        title: "Security"
-        sidebar_link:
-          security: "Security settings"
-          spam: "Spam settings"
-          staff_action_logs:
-            title: "Logs & screening"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
-
-      section_landing_pages:
-        account:
-          title: "Account"
-          backups:
-            title: "Backups"
-            description: "Take a backup of your site's data"
-          whats_new:
-            title: "What's new?"
-            description: "Discover new releases and improvements to Discourse"
 
       config_areas:
         about:
-          header: "About your site"
-          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5762,7 +5965,7 @@ en:
           community_title_help: "Short description, shown in the browser tab, for key pages such as categories and topic lists."
           banner_image: "Banner image"
           banner_image_help: |
-            This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
+            Recommended: 1100x300px. Formats: JPG, PNG, SVG (max 10MB).
           contact_information: "Contact information"
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
@@ -5804,9 +6007,7 @@ en:
             your_organization_saved: "Your organization saved"
           saved: "saved!"
         flags:
-          header: "Moderation"
           edit_header: "Edit Flag"
-          subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
           add: "Add flag"
@@ -5849,8 +6050,6 @@ en:
           more_options:
             title: "More options"
         look_and_feel:
-          title: "Look and feel"
-          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -5872,8 +6071,6 @@ en:
           save_successful: "User field saved."
       plugins:
         title: "Plugins"
-        installed: "Installed plugins"
-        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"
@@ -5888,26 +6085,6 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
-        sidebar_link:
-          installed: "Installed"
-
-      advanced:
-        title: "Advanced"
-        sidebar_link:
-          api_keys:
-            title: "API keys"
-            keywords: "token"
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          rate_limits: "Rate limits"
-          user_api: "User API"
-          onebox: "Onebox"
-          files: "Files"
-          other_options: "Other"
-          search: "Search"
-          experimental: "Experimental"
-          all_site_settings: "All site settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5917,7 +6094,6 @@ en:
       backups:
         title: "Backups"
         files_title: "Backup files"
-        description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
         learn_more_url: ""
         menu:
           backups: "Backups"
@@ -6065,17 +6241,12 @@ en:
           common: "Common"
           desktop: "Desktop"
           mobile: "Mobile"
-          settings: "Settings"
-          translations: "Translations"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra files"
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
           settings_editor: "Settings Editor"
-          show_advanced: "Show advanced fields"
-          hide_advanced: "Hide advanced fields"
-          hide_unused_fields: "Hide unused fields"
+          show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme_user_selectable: "Color palette can be selected by users"
@@ -6129,9 +6300,9 @@ en:
           unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
           stay: "Stay"
-          css_html: "Custom CSS/HTML"
-          edit_css_html: "Edit CSS/HTML"
-          edit_css_html_help: "You have not edited any CSS or HTML"
+          css_html: "Custom Code"
+          edit_css_html: "Edit Code"
+          edit_css_html_help: "You have not edited any code yet."
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           component_on_themes: "Include component on these themes"
           included_components: "Included components"
@@ -6192,22 +6363,22 @@ en:
           imported_from_archive: "This theme was imported from a .zip file"
           scss:
             text: "CSS"
-            title: "Enter custom CSS, we accept all valid CSS and SCSS styles"
+            title: "Custom CSS rules with support for SCSS syntax"
           header:
-            text: "Header"
-            title: "Enter HTML to display above site header"
+            text: "Before Header"
+            title: "Basic HTML to be rendered above the Discourse header"
           after_header:
             text: "After Header"
-            title: "Enter HTML to display on all pages after header"
+            title: "Basic HTML to be rendered below the Discourse header"
           footer:
             text: "Footer"
-            title: "Enter HTML to display on page footer"
+            title: "Basic HTML to be rendered at the bottom of the page"
           embedded_scss:
             text: "Embedded CSS"
-            title: "Enter custom CSS to deliver with embedded version of comments"
+            title: "CSS to be included when Discourse comments are embedded in another site"
           embedded_header:
             text: "Embedded Header"
-            title: "Enter HTML to display above the embedded version of comments"
+            title: "Basic HTML which will be rendered above the Discourse comments when embedded in another site"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
@@ -6221,14 +6392,14 @@ en:
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
-            text: "Head"
-            title: "HTML that will be inserted before the head tag"
+            text: "<head>"
+            title: "HTML to insert at the end of the <head>, with support for script tags"
           body_tag:
-            text: "Body"
-            title: "HTML that will be inserted before the body tag"
-          yaml:
-            text: "YAML"
-            title: "Define theme settings in YAML format"
+            text: "<body>"
+            title: "HTML to insert at the end of the <body>, with support for script tags"
+          js:
+            text: "JS"
+            title: "JavaScript initializer with support for Ember's 'template tag' syntax"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
           all_filter: "All"
@@ -6327,6 +6498,9 @@ en:
           hover:
             name: "hover"
             description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
+          editor:
+            light: "Light"
+            dark: "Dark"
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
@@ -7038,8 +7212,8 @@ en:
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm_title: "Are you sure you want to delete this user? This is permanent!"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
-        delete_and_block: "Delete and <b>block</b> this email and IP address"
-        delete_dont_block: "Delete only"
+        delete_and_block: "Delete user and block their email and IP address"
+        delete_dont_block: "Delete user"
         deleting_user: "Deleting user…"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
@@ -7231,9 +7405,6 @@ en:
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
-        more_site_setting_results_no_category_sidebar:
-          one: "There is more than %{count} result. Please refine your search."
-          other: "There are more than %{count} results. Please refine your search."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

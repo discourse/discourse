@@ -281,6 +281,7 @@ export default class GlimmerHeader extends Component {
               @toggleSearchMenu={{this.toggleSearchMenu}}
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @toggleUserMenu={{this.toggleUserMenu}}
+              @topicInfoVisible={{@topicInfoVisible}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/if}}
@@ -315,7 +316,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=(@topicInfoVisible)}}
+        @outletArgs={{hash minimized=@topicInfoVisible}}
       />
     </header>
   </template>

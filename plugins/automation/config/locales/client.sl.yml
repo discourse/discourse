@@ -7,7 +7,8 @@
 sl:
   js:
     discourse_automation:
-      create: Ustvari
+      back: Nazaj
+      edit: Uredi
       fields:
         user:
           label: Uporabnik
@@ -59,10 +60,6 @@ sl:
               label: Oznake
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupine
           created: Ustvarjeno
         category_created_edited:
           fields:

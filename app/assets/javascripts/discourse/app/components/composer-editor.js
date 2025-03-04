@@ -456,8 +456,8 @@ export default class ComposerEditor extends Component {
     $preview.scrollTop(desired + 50);
   }
 
-  _renderMentions(preview, unseen) {
-    unseen ||= linkSeenMentions(preview, this.siteSettings);
+  _renderMentions(preview) {
+    const unseen = linkSeenMentions(preview, this.siteSettings);
     if (unseen.length > 0) {
       this._renderUnseenMentions(preview, unseen);
     } else {
@@ -480,9 +480,9 @@ export default class ComposerEditor extends Component {
     });
   }
 
-  _renderHashtags(preview, unseen) {
+  _renderHashtags(preview) {
     const context = this.site.hashtag_configurations["topic-composer"];
-    unseen ||= linkSeenHashtagsInContext(context, preview);
+    const unseen = linkSeenHashtagsInContext(context, preview);
     if (unseen.length > 0) {
       this._renderUnseenHashtags(preview, unseen, context);
     }
@@ -519,8 +519,12 @@ export default class ComposerEditor extends Component {
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
 
-  _decorateCookedElement(preview) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+  _decorateCookedElement(preview, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      preview,
+      helper
+    );
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -871,6 +875,15 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
+    toolbar.addButton({
+      id: "quote",
+      group: "fontStyles",
+      icon: "far-comment",
+      sendAction: this.composer.importQuote,
+      title: "composer.quote_post_title",
+      unshift: true,
+    });
+
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&
@@ -896,15 +909,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, unseenMentions, unseenHashtags) {
-    this._renderMentions(preview, unseenMentions);
-    this._renderHashtags(preview, unseenHashtags);
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      this._decorateCookedElement(preview);
-    }
+    this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
   }

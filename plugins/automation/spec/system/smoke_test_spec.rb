@@ -21,7 +21,10 @@ describe "DiscourseAutomation | smoke test", type: :system do
     after { DiscourseAutomation::Scriptable.remove("test") }
 
     it "populate correctly" do
-      visit("/admin/plugins/discourse-automation")
+      visit("/admin/plugins/automation")
+
+      find(".admin-config-area-empty-list__cta-button").click
+
       find(".admin-section-landing__header-filter").set("test")
       find(".admin-section-landing-item__content", match: :first).click
       fill_in("automation-name", with: "aaaaa")
@@ -34,7 +37,9 @@ describe "DiscourseAutomation | smoke test", type: :system do
   end
 
   it "works" do
-    visit("/admin/plugins/discourse-automation")
+    visit("/admin/plugins/automation")
+
+    find(".admin-config-area-empty-list__cta-button").click
 
     find(".admin-section-landing__header-filter").set("user group membership through badge")
     find(".admin-section-landing-item__content", match: :first).click
@@ -51,6 +56,6 @@ describe "DiscourseAutomation | smoke test", type: :system do
     find(".automation-enabled input").click
     find(".update-automation").click
 
-    expect(page).to have_css('[role="button"]', text: "aaaaa")
+    expect(page).to have_css(".automations__name", text: "aaaaa")
   end
 end

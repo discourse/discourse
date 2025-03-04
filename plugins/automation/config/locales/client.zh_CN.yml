@@ -13,13 +13,16 @@ zh_CN:
             delete_automation: 删除自动化
     discourse_automation:
       title: 自动化
-      create: 创建
-      update: 更新
+      table_title: 自动化
+      create: 添加自动化
+      update: 更新自动化
+      back: 返回
+      edit: 编辑
       select_script: 选择脚本
       select_trigger: 选择触发器
       confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
       confirm_automation_trigger: 此操作将触发自动化，要继续吗？
-      no_automation_yet: 您尚未创建任何自动化。请选择以下选项以开始。
+      no_automation_yet: 目前尚未配置自动化。
       filter_placeholder: 按名称或描述筛选…
       edit_automation:
         trigger_section:
@@ -164,11 +167,10 @@ zh_CN:
             restricted_category:
               label: 类别
               description: 可选，仅在帖子所属话题属于此类别时触发
-            restricted_group:
-              label: 群组
-              description: 可选，仅在帖子的话题是此群组收件箱中的个人消息时触发
+            restricted_user_group:
+              label: 受限用户组
+              description: 可选，仅当发帖用户属于此组时才会触发
             restricted_groups:
-              label: 群组
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
             ignore_group_members:
               label: 忽略群组成员

@@ -12,6 +12,7 @@ module("Integration | Component | Widget | small-user-list", function (hooks) {
         { id: 456, username: "eviltrout" },
         { id: 457, username: "someone", unknown: true },
       ],
+      isVisible: true,
     });
 
     await render(

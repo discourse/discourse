@@ -91,6 +91,7 @@ RSpec.describe Wizard::StepUpdater do
         )
       updater.update
       expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
       expect(wizard.completed_steps?("styling")).to eq(true)
       expect(SiteSetting.base_font).to eq("open_sans")
       expect(SiteSetting.heading_font).to eq("oswald")
@@ -100,9 +101,30 @@ RSpec.describe Wizard::StepUpdater do
       updater = wizard.create_updater("styling", site_font: "open_sans", homepage_style: "latest")
       updater.update
       expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
       expect(wizard.completed_steps?("styling")).to eq(true)
       expect(SiteSetting.base_font).to eq("open_sans")
       expect(SiteSetting.heading_font).to eq("open_sans")
+    end
+
+    it "does not require refresh if the font, color scheme, or theme are unchanged" do
+      SiteSetting.base_font = "open_sans"
+      SiteSetting.heading_font = "open_sans"
+      SiteSetting.top_menu = "latest|categories|unread|top"
+      dark_scheme = ColorScheme.find_by(name: "Dark")
+      Theme.find_default.update!(color_scheme: dark_scheme)
+      SiteSetting.default_dark_mode_color_scheme_id = -1
+      updater =
+        wizard.create_updater(
+          "styling",
+          color_scheme: "Dark",
+          site_font: "open_sans",
+          heading_font: "open_sans",
+          homepage_style: "latest",
+        )
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(false)
     end
 
     context "with colors" do

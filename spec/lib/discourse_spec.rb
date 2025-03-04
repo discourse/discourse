@@ -194,6 +194,14 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "#user_agent" do
+    it "returns a user agent string" do
+      expect(Discourse.user_agent).to eq(
+        "Discourse/#{Discourse::VERSION::STRING}-#{Discourse.git_version}; +https://www.discourse.org/",
+      )
+    end
+  end
+
   describe "#site_contact_user" do
     fab!(:admin)
     fab!(:another_admin) { Fabricate(:admin) }
@@ -549,6 +557,12 @@ RSpec.describe Discourse do
       expect(Discourse::Utils.execute_command("echo a b c", unsafe_shell: true).strip).to eq(
         "a b c",
       )
+    end
+
+    it "includes the command in the error message" do
+      expect do
+        Discourse::Utils.execute_command("false", "'foo'", failure_message: "oops")
+      end.to raise_error(RuntimeError, "false 'foo'\noops")
     end
   end
 

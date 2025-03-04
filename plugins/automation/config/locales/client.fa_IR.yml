@@ -8,8 +8,8 @@ fa_IR:
   js:
     discourse_automation:
       title: اتوماسیون
-      create: ایجاد
-      update: به روز رسانی
+      back: بازگشت
+      edit: ویرایش
       destroy_automation:
         confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
       fields:
@@ -93,10 +93,6 @@ fa_IR:
               label: برچسب‌ها
             restricted_category:
               label: دسته‌بندی
-            restricted_group:
-              label: گروه
-            restricted_groups:
-              label: گروه‌ها
           created: ساخته شده
           edited: ویرایش شده
         category_created_edited:

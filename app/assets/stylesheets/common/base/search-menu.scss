@@ -195,19 +195,16 @@ $search-pad-horizontal: 0.5em;
         align-items: center;
         background: var(--primary-200);
         color: var(--primary-medium);
-
-        .d-icon {
-          font-size: var(--font-down-2);
-          color: currentcolor;
-        }
-      }
-
-      .avatar-flair {
         border-radius: 50%;
 
         &.avatar-flair-image {
           background-repeat: no-repeat;
           background-size: 100% 100%;
+        }
+
+        .d-icon {
+          font-size: var(--font-down-2);
+          color: currentcolor;
         }
       }
 
@@ -311,6 +308,7 @@ $search-pad-horizontal: 0.5em;
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
+
         @include ellipsis;
 
         .d-icon {
@@ -384,13 +382,12 @@ $search-pad-horizontal: 0.5em;
       width: 12px;
       height: 12px;
       border-width: 2px;
-      margin: 0;
+      margin: 0 0.5em 0.25em 0;
       margin-top: 2px;
     }
 
     .show-advanced-search,
     a.clear-search {
-      padding: 0 3px;
       display: inline-block;
       background-color: transparent;
 
@@ -434,9 +431,6 @@ $search-pad-horizontal: 0.5em;
     .topic-title {
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      @supports not (overflow-wrap: anywhere) {
-        word-break: break-word;
-      }
       margin-right: 0.25em;
     }
   }

@@ -118,6 +118,8 @@ en_GB:
       config:
         navigation:
           title: "Navigation"
+        email_appearance:
+          header_description: "Customise the template in which all html emails are rendered, and style using CSS"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:
@@ -128,9 +130,6 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
-      appearance:
-        sidebar_link:
-          navigation: "Navigation"
       config_areas:
         flags:
           description: "Description"
@@ -147,8 +146,6 @@ en_GB:
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
-          header:
-            text: "Header"
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"

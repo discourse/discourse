@@ -7,7 +7,8 @@
 hy:
   js:
     discourse_automation:
-      create: Ստեղծել
+      back: Ետ
+      edit: Խմբագրել
       fields:
         user:
           label: Օգտատեր
@@ -63,10 +64,6 @@ hy:
               label: Թեգեր
             restricted_category:
               label: Կատեգորիա
-            restricted_group:
-              label: Խմբավորել
-            restricted_groups:
-              label: Խմբեր
           created: Ստեղծված
         category_created_edited:
           fields:

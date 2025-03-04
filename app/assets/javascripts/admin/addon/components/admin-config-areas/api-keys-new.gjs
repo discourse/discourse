@@ -10,6 +10,8 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { API_KEY_SCOPE_MODES } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
@@ -30,11 +32,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     { id: "single", name: i18n("admin.api.single_user") },
   ];
 
-  scopeModes = [
-    { id: "global", name: i18n("admin.api.scopes.global") },
-    { id: "read_only", name: i18n("admin.api.scopes.read_only") },
-    { id: "granular", name: i18n("admin.api.scopes.granular") },
-  ];
+  scopeModes = API_KEY_SCOPE_MODES.map((scopeMode) => {
+    return { id: scopeMode, name: i18n(`admin.api.scopes.${scopeMode}`) };
+  });
 
   globalScopes = null;
 
@@ -79,7 +79,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @action
   async save(data) {
-    const payload = { description: data.description };
+    const payload = {
+      description: data.description,
+      scope_mode: data.scope_mode,
+    };
 
     if (data.user_mode === "single") {
       payload.username = data.user;
@@ -121,6 +124,21 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     }
 
     return enabledScopes.flat();
+  }
+
+  @bind
+  atLeastOneGranularScope(data, { addError, removeError }) {
+    removeError("scopes");
+
+    if (
+      data.scope_mode === "granular" &&
+      this.#selectedScopes(data.scopes).length === 0
+    ) {
+      addError("scopes", {
+        title: i18n("admin.api.scopes.title"),
+        message: i18n("admin.api.scopes.one_or_more"),
+      });
+    }
   }
 
   @action
@@ -165,6 +183,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
               <Form
                 @onSubmit={{this.save}}
                 @data={{this.formData}}
+                @validate={{this.atLeastOneGranularScope}}
                 as |form transientData|
               >
                 <form.Field

@@ -166,22 +166,8 @@ pt:
 
           - Acreditamos no [comportamento da comunidade civilizada] (%{base_uri}/diretrizes) em todos os momentos.
       onebox:
-        instructions: |-
-          Em seguida, você pode compartilhar um desses links comigo? Responda com **um link em uma linha** e ele se expandirá automaticamente para incluir um resumo elegante.
-
-          Para copiar qualquer link, toque e segure no celular ou clique com o botão direito no seu dispositivo apontador:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Legal! Isso vai funcionar para a maioria dos <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Lembre-se, ele deve estar em uma linha _apenas ele_, sem nada mais na frente, ou após.
-        not_found: |-
-          Desculpe, não consegui encontrar o link na sua resposta! :cry:
-
-          Você poderia tentar adicionar o seguinte link, em sua própria linha, na sua próxima resposta?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Aqui está uma foto de um unicórnio:

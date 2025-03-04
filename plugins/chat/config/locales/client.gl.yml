@@ -63,6 +63,7 @@ gl:
         tabs:
           members: Membros
           settings: Configuración
+        remove_member: "Retirar"
       new_message_modal:
         no_items: "Sen elementos"
         filter: "Filtro"

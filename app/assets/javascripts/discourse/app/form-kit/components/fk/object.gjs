@@ -15,7 +15,9 @@ export default class FKObject extends Component {
   }
 
   get keys() {
-    return Object.keys(this.objectData);
+    return Object.keys(this.objectData).map((name) => {
+      return { name };
+    });
   }
 
   entryData(name) {
@@ -24,7 +26,7 @@ export default class FKObject extends Component {
 
   <template>
     <div class="form-kit__object">
-      {{#each this.keys key="index" as |name|}}
+      {{#each this.keys key="name" as |key|}}
         {{yield
           (hash
             Field=(component
@@ -62,8 +64,8 @@ export default class FKObject extends Component {
               remove=@remove
             )
           )
-          name
-          (this.entryData name)
+          key.name
+          (this.entryData key.name)
         }}
       {{/each}}
     </div>

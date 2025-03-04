@@ -13,13 +13,12 @@ pt_BR:
             delete_automation: excluir automação
     discourse_automation:
       title: Automação
-      create: Criar
-      update: Atualizar
+      back: Voltar
+      edit: Editar
       select_script: Selecione um script
       select_trigger: Selecione um acionador
       confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo. Deseja continuar?
       confirm_automation_trigger: Esta ação acionará a automação. Deseja continuar?
-      no_automation_yet: Você ainda não criou nenhuma automação. Escolha uma opção abaixo para começar.
       filter_placeholder: Filtrar por nome ou descrição...
       edit_automation:
         trigger_section:
@@ -165,11 +164,7 @@ pt_BR:
             restricted_category:
               label: Categoria
               description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
-            restricted_group:
-              label: Grupo
-              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal na caixa de mensagens deste grupo
             restricted_groups:
-              label: Grupos
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
             ignore_group_members:
               label: Ignorar membros de grupo

@@ -13,13 +13,12 @@ ar:
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
-      create: إنشاء
-      update: تحديث
+      back: الرجوع
+      edit: تعديل
       select_script: حدِّد برنامجًا نصيًا
       select_trigger: حدِّد مشغلًا
       confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟
       confirm_automation_trigger: سيؤدي هذا الإجراء إلى تشغيل الأتمتة، هل تريد المتابعة؟
-      no_automation_yet: لم تُنشئ أي عمليات أتمتة حتى الآن. حدِّد أحد الخيارات أدناه للبدء.
       filter_placeholder: التصفية حسب الاسم أو الوصف...
       edit_automation:
         trigger_section:
@@ -169,11 +168,7 @@ ar:
             restricted_category:
               label: الفئة
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة ضمن هذه الفئة
-            restricted_group:
-              label: المجموعة
-              description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في البريد الوارد لهذه المجموعة
             restricted_groups:
-              label: المجموعات
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في أحد صناديق البريد الوارد للمجموعة
             ignore_group_members:
               label: تجاهل أعضاء المجموعة

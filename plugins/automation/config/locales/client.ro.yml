@@ -12,8 +12,12 @@ ro:
           actions:
             delete_automation: șterge automatizarea
     discourse_automation:
-      create: Creează
-      no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.
+      table_title: Automatizări
+      create: Adaugă automatizare
+      update: Actualizează automatizare
+      back: Înapoi
+      edit: Editează
+      no_automation_yet: Momentan nu este nicio automatizare configurată.
       filter_placeholder: Filtrează după nume sau descriere...
       fields:
         user:
@@ -74,10 +78,11 @@ ro:
               description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
             restricted_category:
               label: Categorie
-            restricted_group:
-              label: Grup
+            restricted_user_group:
+              label: Grup de utilizatori restricționat
+              description: Opțional, se va declanșa numai dacă utilizatorul postării se află în acest grup
             restricted_groups:
-              label: Grupuri
+              label: Grupuri de căsuțe poștale restricționate
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"

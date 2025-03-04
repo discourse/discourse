@@ -1,48 +1,80 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
 
+const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  // Your code here
+});
+`;
+
+const ADVANCED_TARGETS = ["desktop", "mobile"];
+
+const ADVANCED_FIELDS = [
+  "embedded_scss",
+  "embedded_header",
+  "color_definitions",
+  "body_tag",
+];
+
 export default class AdminThemeEditor extends Component {
+  @service router;
+
+  @tracked showAdvanced;
+  @tracked onlyOverridden;
+  @tracked currentTargetName;
+
   warning = null;
 
   @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
 
-  @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
-  visibleTargets(targets, onlyOverridden, showAdvanced) {
-    return targets.filter((target) => {
-      if (target.advanced && !showAdvanced) {
-        return false;
-      }
-      if (!onlyOverridden) {
+  get visibleTargets() {
+    return this.theme.targets.filter((target) => {
+      if (target.edited) {
         return true;
       }
-      return target.edited;
+      if (!this.showAdvanced && ADVANCED_TARGETS.includes(target.name)) {
+        return false;
+      }
+      if (!this.onlyOverridden) {
+        return true;
+      }
     });
   }
 
-  @discourseComputed("currentTargetName", "onlyOverridden", "theme.fields")
-  visibleFields(targetName, onlyOverridden, fields) {
-    fields = fields[targetName];
-    if (onlyOverridden) {
+  get visibleFields() {
+    let fields = this.theme.fields[this.currentTargetName];
+    if (this.onlyOverridden) {
       fields = fields.filter((field) => field.edited);
+    }
+    if (!this.showAdvanced) {
+      fields = fields.filter(
+        (field) => field.edited || !ADVANCED_FIELDS.includes(field.name)
+      );
     }
     return fields;
   }
 
+  get currentField() {
+    return this.theme.fields[this.currentTargetName].find(
+      (field) => field.name === this.fieldName
+    );
+  }
+
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
-    if (["settings", "translations"].includes(targetName)) {
-      return "yaml";
-    }
-    if (["extra_scss"].includes(targetName)) {
+    if (fieldName === "color_definitions") {
       return "scss";
     }
-    if (["color_definitions"].includes(fieldName)) {
-      return "scss";
+    if (fieldName === "js") {
+      return "javascript";
     }
     return fieldName && fieldName.includes("scss") ? "scss" : "html";
   }
@@ -64,21 +96,26 @@ export default class AdminThemeEditor extends Component {
 
   @computed("fieldName", "currentTargetName", "theme")
   get activeSection() {
-    return this.theme.getField(this.currentTargetName, this.fieldName);
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
   }
 
   set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
   @discourseComputed("maximized")
   maximizeIcon(maximized) {
     return maximized ? "discourse-compress" : "discourse-expand";
-  }
-
-  @discourseComputed("currentTargetName", "theme.targets")
-  showAddField(currentTargetName, targets) {
-    return targets.find((t) => t.name === currentTargetName).customNames;
   }
 
   @discourseComputed(
@@ -91,18 +128,6 @@ export default class AdminThemeEditor extends Component {
   }
 
   @action
-  toggleShowAdvanced(event) {
-    event?.preventDefault();
-    this.toggleProperty("showAdvanced");
-  }
-
-  @action
-  toggleAddField(event) {
-    event?.preventDefault();
-    this.toggleProperty("addingField");
-  }
-
-  @action
   toggleMaximize(event) {
     event?.preventDefault();
     this.toggleProperty("maximized");
@@ -110,23 +135,23 @@ export default class AdminThemeEditor extends Component {
   }
 
   @action
-  cancelAddField() {
-    this.set("addingField", false);
-  }
-
-  @action
-  addField(name) {
-    if (!name) {
-      return;
-    }
-    name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
-    this.theme.setField(this.currentTargetName, name, "");
-    this.setProperties({ newFieldName: "", addingField: false });
-    this.fieldAdded(this.currentTargetName, name);
-  }
-
-  @action
   setWarning(message) {
     this.set("warning", message);
+  }
+
+  @action
+  toggleShowAdvanced() {
+    this.showAdvanced = !this.showAdvanced;
+    if (
+      !this.visibleTargets.some((t) => t.name === this.currentTargetName) ||
+      !this.visibleFields.some((f) => f.name === this.fieldName)
+    ) {
+      this.router.replaceWith(
+        this.editRouteName,
+        this.theme.id,
+        this.visibleTargets[0].name,
+        this.visibleFields[0].name
+      );
+    }
   }
 }

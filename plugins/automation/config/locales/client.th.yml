@@ -7,8 +7,8 @@
 th:
   js:
     discourse_automation:
-      create: สร้าง
-      update: อัปเดต
+      back: กลับ
+      edit: แก้ไข
       fields:
         user:
           label: ผู้ใช้
@@ -46,10 +46,6 @@ th:
               label: ป้าย
             restricted_category:
               label: หมวดหมู่
-            restricted_group:
-              label: กลุ่ม
-            restricted_groups:
-              label: กลุ่ม
           created: สร้างเมื่อ
         pm_created:
           fields:

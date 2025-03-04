@@ -13,13 +13,16 @@ hu:
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
-      create: Létrehozás
-      update: Frissítés
+      table_title: Automatizálások
+      create: Automatizálás hozzáadása
+      update: Automatizálás frissítése
+      back: Vissza
+      edit: Szerkesztés
       select_script: Válasszon egy parancsfájlt
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
-      no_automation_yet: Még nem hozott létre automatizálást. A kezdéshez válasszon az alábbi lehetőségek közül.
+      no_automation_yet: Jelenleg nincs beállított automatizálás.
       filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
@@ -165,11 +168,11 @@ hu:
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
-            restricted_group:
-              label: Csoport
-              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
+            restricted_user_group:
+              label: Korlátozott felhasználói csoport
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés felhasználója ebben a csoportban van
             restricted_groups:
-              label: Csoportok
+              label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
@@ -388,6 +391,7 @@ hu:
               label: PÜ-ek
             sender:
               label: PÜ feladó
+              description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
             topic:
