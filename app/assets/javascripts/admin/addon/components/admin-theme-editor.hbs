@@ -1,39 +1,37 @@
-<div class="edit-main-nav admin-controls">
-  <nav>
-    <ul class="nav nav-pills target">
-      {{#each this.visibleTargets as |target|}}
+{{#if (gt this.visibleTargets.length 1)}}
+  <div class="edit-main-nav admin-controls">
+    <nav>
+      <ul class="nav nav-pills target">
+        {{#each this.visibleTargets as |target|}}
+          <li>
+            <LinkTo
+              @route={{this.editRouteName}}
+              @models={{array this.theme.id target.name this.fieldName}}
+              @replace={{true}}
+              title={{this.field.title}}
+              class={{if target.edited "edited" "blank"}}
+            >
+              {{#if target.error}}{{d-icon "triangle-exclamation"}}{{/if}}
+              {{#if target.icon}}{{d-icon target.icon}}{{/if}}
+              {{i18n (concat "admin.customize.theme." target.name)}}
+            </LinkTo>
+          </li>
+        {{/each}}
+        <li class="spacer"></li>
         <li>
-          <LinkTo
-            @route={{this.editRouteName}}
-            @models={{array this.theme.id target.name this.fieldName}}
-            @replace={{true}}
-            title={{this.field.title}}
-            class={{if target.edited "edited" "blank"}}
-          >
-            {{#if target.error}}{{d-icon "triangle-exclamation"}}{{/if}}
-            {{#if target.icon}}{{d-icon target.icon}}{{/if}}
-            {{i18n (concat "admin.customize.theme." target.name)}}
-          </LinkTo>
+          <label>
+            <Input
+              @type="checkbox"
+              @checked={{this.showAdvanced}}
+              {{on "click" this.toggleShowAdvanced}}
+            />
+            {{i18n "admin.customize.theme.show_advanced"}}
+          </label>
         </li>
-      {{/each}}
-
-      <li class="spacer"></li>
-      <li>
-        <label>
-          <Input
-            @type="checkbox"
-            @checked={{this.onlyOverridden}}
-            {{on
-              "click"
-              (action this.onlyOverriddenChanged value="target.checked")
-            }}
-          />
-          {{i18n "admin.customize.theme.hide_unused_fields"}}
-        </label>
-      </li>
-    </ul>
-  </nav>
-</div>
+      </ul>
+    </nav>
+  </div>
+{{/if}}
 
 <div class="admin-controls">
   <nav>
@@ -56,6 +54,16 @@
 
       <li class="spacer"></li>
       <li>
+        {{#if (lte this.visibleTargets.length 1)}}
+          <label>
+            <Input
+              @type="checkbox"
+              @checked={{this.showAdvanced}}
+              {{on "click" this.toggleShowAdvanced}}
+            />
+            {{i18n "admin.customize.theme.show_advanced"}}
+          </label>
+        {{/if}}
         <a href {{on "click" this.toggleMaximize}} class="no-text">
           {{d-icon this.maximizeIcon}}
         </a>
@@ -71,6 +79,10 @@
 {{#if this.warning}}
   <pre class="field-warning">{{html-safe this.warning}}</pre>
 {{/if}}
+
+<div class="field-info">
+  {{this.currentField.title}}
+</div>
 
 <AceEditor
   @content={{this.activeSection}}

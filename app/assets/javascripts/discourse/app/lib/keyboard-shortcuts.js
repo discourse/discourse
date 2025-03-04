@@ -281,10 +281,16 @@ export default {
     }
   },
 
-  // unbinds all the shortcuts in a key binding object e.g.
-  // {
-  //   'c': createTopic
-  // }
+  /**
+   * unbind(combinations)
+   *
+   * Unbinds all the shortcuts in a key binding object.
+   *
+   *  - combinations:
+   *  {
+   *   'c': createTopic
+   * }
+   */
   unbind(combinations) {
     Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
   },

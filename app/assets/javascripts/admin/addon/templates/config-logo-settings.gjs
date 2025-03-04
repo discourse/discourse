@@ -2,7 +2,8 @@ import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminAreaSettings from "admin/components/admin-area-settings";
+import AdminBrandingLogoForm from "admin/components/admin-branding-logo-form";
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
 export default RouteTemplate(<template>
   <DPageHeader
@@ -19,13 +20,13 @@ export default RouteTemplate(<template>
     </:breadcrumbs>
   </DPageHeader>
 
-  <div class="admin-config-page__main-area">
-    <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @categories="branding"
-      @path="/admin/config/logo"
-      @filter={{@controller.filter}}
-      @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
-    />
-  </div>
+  <AdminConfigAreaCard
+    @heading="admin.config.branding.logo.title"
+    @collapsable={{true}}
+    class="admin-config-area-branding__logo"
+  >
+    <:content>
+      <AdminBrandingLogoForm />
+    </:content>
+  </AdminConfigAreaCard>
 </template>);
