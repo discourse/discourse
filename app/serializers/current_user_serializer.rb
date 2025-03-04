@@ -77,7 +77,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
-             :can_see_emails
+             :can_see_emails,
+             :can_see_ip
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -328,5 +329,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_see_emails?
     object.staff?
+  end
+
+  def can_see_ip
+    scope.can_see_ip?
+  end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
   end
 end
