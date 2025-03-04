@@ -22,7 +22,14 @@ class EmojiPicker {
 
   async tone(level) {
     await click(query(".emoji-picker__diversity-trigger", this.element));
-    await click(`.emoji-picker__diversity-menu [data-level="${level}"]`);
+
+    if (level === 1) {
+      await click(
+        `.emoji-picker__diversity-menu .emoji-picker__diversity-item:not([data-level])`
+      );
+    } else {
+      await click(`.emoji-picker__diversity-menu [data-level="${level}"]`);
+    }
   }
 }
 

@@ -60,25 +60,6 @@ export default class AdminCustomizeThemesEditController extends Controller {
   }
 
   @action
-  onlyOverriddenChanged(onlyShowOverridden) {
-    if (onlyShowOverridden) {
-      if (!this.model.hasEdited(this.currentTargetName, this.fieldName)) {
-        let firstTarget = this.get("model.targets").find((t) => t.edited);
-        let firstField = this.get(`model.fields.${firstTarget.name}`).find(
-          (f) => f.edited
-        );
-
-        this.router.replaceWith(
-          this.editRouteName,
-          this.get("model.id"),
-          firstTarget.name,
-          firstField.name
-        );
-      }
-    }
-  }
-
-  @action
   goBack() {
     this.router.replaceWith(this.showRouteName, this.model.id);
   }

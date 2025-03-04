@@ -188,7 +188,7 @@ globalThis.getMinifyResult = function () {
   lastMinifyError = lastMinifyResult = null;
 
   if (error) {
-    throw error;
+    throw error.toString();
   }
   return result;
 };

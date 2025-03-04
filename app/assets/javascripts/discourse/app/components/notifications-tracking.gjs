@@ -42,17 +42,25 @@ class NotificationsTrackingTrigger extends Component {
   }
 
   <template>
-    {{icon @selectedLevel.icon}}
+    <button
+      class={{concatClass
+        "btn btn-default"
+        (if this.showFullTitle "btn-icon-text" "no-text")
+      }}
+      ...attributes
+    >
+      {{icon @selectedLevel.icon}}
 
-    {{#if this.showFullTitle}}
-      <span class="d-button-label">
-        {{this.title}}
-      </span>
-    {{/if}}
+      {{#if this.showFullTitle}}
+        <span class="d-button-label">
+          {{this.title}}
+        </span>
+      {{/if}}
 
-    {{#if this.showCaret}}
-      {{icon "angle-down" class="notifications-tracking-btn__caret"}}
-    {{/if}}
+      {{#if this.showCaret}}
+        {{icon "angle-down" class="notifications-tracking-btn__caret"}}
+      {{/if}}
+    </button>
   </template>
 }
 
@@ -108,19 +116,18 @@ export default class NotificationsTracking extends Component {
       @onRegisterApi={{this.registerDmenuApi}}
       @title={{@title}}
       @autofocus={{false}}
+      @triggerComponent={{component
+        NotificationsTrackingTrigger
+        showFullTitle=@showFullTitle
+        showCaret=@showCaret
+        selectedLevel=this.selectedLevel
+        suffix=@suffix
+        prefix=@prefix
+      }}
       data-level-id={{this.selectedLevel.id}}
       data-level-name={{this.selectedLevel.key}}
       ...attributes
     >
-      <:trigger>
-        <NotificationsTrackingTrigger
-          @showFullTitle={{@showFullTitle}}
-          @showCaret={{@showCaret}}
-          @selectedLevel={{this.selectedLevel}}
-          @suffix={{@suffix}}
-          @prefix={{@prefix}}
-        />
-      </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each this.levels as |level|}}

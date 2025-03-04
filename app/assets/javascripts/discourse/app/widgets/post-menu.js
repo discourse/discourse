@@ -783,9 +783,7 @@ export default createWidget("post-menu", {
           listClassName: "who-read",
           description,
           count,
-          ariaLabel: i18n(
-            "post.actions.people.sr_post_readers_list_description"
-          ),
+          isVisible: true,
         })
       );
     }
@@ -805,9 +803,7 @@ export default createWidget("post-menu", {
           listClassName: "who-liked",
           description,
           count,
-          ariaLabel: i18n(
-            "post.actions.people.sr_post_likers_list_description"
-          ),
+          isVisible: true,
         })
       );
     }
