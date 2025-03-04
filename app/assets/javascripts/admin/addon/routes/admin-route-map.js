@@ -316,6 +316,7 @@ export default function () {
         this.route("logo", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("branding");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
