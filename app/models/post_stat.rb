@@ -15,8 +15,13 @@ end
 #  composer_open_duration_msecs :integer
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  composer_version             :string
+#  writing_device               :string
+#  writing_device_user_agent    :string
 #
 # Indexes
 #
-#  index_post_stats_on_post_id  (post_id)
+#  index_post_stats_on_composer_version  (composer_version)
+#  index_post_stats_on_post_id           (post_id)
+#  index_post_stats_on_writing_device    (writing_device)
 #

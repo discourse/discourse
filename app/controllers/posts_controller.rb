@@ -850,6 +850,7 @@ class PostsController < ApplicationController
       composer_open_duration_msecs
       visible
       draft_key
+      composer_version
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -950,6 +951,7 @@ class PostsController < ApplicationController
     result[:ip_address] = request.remote_ip
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
+    result[:writing_device] = BrowserDetection.device(request.user_agent)
 
     recipients = result[:target_recipients]
 
