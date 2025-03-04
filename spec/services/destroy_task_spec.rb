@@ -67,6 +67,30 @@ RSpec.describe DestroyTask do
     end
   end
 
+  describe "#destroy_posts" do
+    let(:task) { DestroyTask.new(StringIO.new) }
+
+    let!(:t1) { Fabricate(:topic) }
+    let!(:t2) { Fabricate(:topic) }
+
+    let!(:p1) { Fabricate(:post, topic: t1) }
+    let!(:p2) { Fabricate(:post, topic: t1) }
+    let!(:p3) { Fabricate(:post, topic: t2) }
+
+    before { p2.trash! }
+
+    it "destroys posts listed and creates staff action logs" do
+      expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.to change {
+        Post.with_deleted.count
+      }.by(-2).and change { UserHistory.pluck(:action) }.from([]).to(
+              [
+                UserHistory.actions[:delete_post_permanently],
+                UserHistory.actions[:delete_topic_permanently],
+              ],
+            )
+    end
+  end
+
   describe "private messages" do
     let!(:pm) { Fabricate(:private_message_post) }
     let!(:pm2) { Fabricate(:private_message_post) }
