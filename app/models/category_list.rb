@@ -135,14 +135,10 @@ class CategoryList
   end
 
   def find_categories
-    # Enforce paginaion for users who can see a large number of categories to
-    # smooth out the performance of the category list page.
-    paginate =
-      Category.secured(@guardian).count > MAX_UNOPTIMIZED_CATEGORIES ||
-        @guardian.can_lazy_load_categories?
-
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
     query = self.class.order_categories(query)
+
+    paginate = paginate_results?
 
     if @options[:parent_category_id].present? || paginate
       query = query.where(parent_category_id: @options[:parent_category_id])
@@ -264,5 +260,19 @@ class CategoryList
     @categories_with_children = result if categories == @categories
 
     result
+  end
+
+  def paginate_results?
+    return true if @guardian.can_lazy_load_categories?
+
+    query = Category.secured(@guardian)
+
+    if @options[:parent_category_id].present?
+      query = query.where(parent_category_id: @options[:parent_category_id])
+    end
+
+    # Enforce pagination for users who can see a large number of categories to
+    # smooth out the performance of the category list page.
+    query.count > MAX_UNOPTIMIZED_CATEGORIES
   end
 end
