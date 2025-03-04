@@ -55,9 +55,9 @@ importers:
       '@glint/template':
         specifier: 1.4.1-unstable.34c4510
         version: 1.4.1-unstable.34c4510
-      '@mixer/parallel-prettier':
-        specifier: ^2.0.3
-        version: 2.0.3(prettier@3.5.3)
+      '@rdil/parallel-prettier':
+        specifier: ^3.0.0
+        version: 3.0.0(prettier@3.5.3)
       '@swc/core':
         specifier: ^1.11.5
         version: 1.11.5
@@ -2344,12 +2344,6 @@ packages:
   '@messageformat/runtime@3.0.1':
     resolution: {integrity: sha512-6RU5ol2lDtO8bD9Yxe6CZkl0DArdv0qkuoZC+ZwowU+cdRlVE1157wjCmlA5Rsf1Xc/brACnsZa5PZpEDfTFFg==}
 
-  '@mixer/parallel-prettier@2.0.3':
-    resolution: {integrity: sha512-42ImvDusmxjpQLHEmZrljV/+L9ynfmaTe5ooLMTTLyELulUJtJW8vBXCadQdodfZ5wjr2Sg3YGIzWE0rnBsfDg==}
-    hasBin: true
-    peerDependencies:
-      prettier: ^2.0.0
-
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
 
@@ -2446,6 +2440,12 @@ packages:
     resolution: {integrity: sha512-MK7rtm8JjaxPN7Mf1JdZIZKPD2Z+W7osvrC1vjpvfOX1K0awDIHYbNi89f7eotp7eMUn2shWnt03HwVbriXtKQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@rdil/parallel-prettier@3.0.0':
+    resolution: {integrity: sha512-A+dgYJNMHNZu+9Wxvu/1/x2JHduOvysar+qMXptk966eQpg+ETC/i0e+rPeMUw54+mkC35f4RTnFmJgrQ/R7dQ==}
+    hasBin: true
+    peerDependencies:
+      prettier: 3.x
 
   '@sigstore/bundle@2.3.2':
     resolution: {integrity: sha512-wueKWDk70QixNLB363yHc2D2ItTgYiMTdPwK8D9dKQMR3ZQ0c35IxP5xnwQ8cNLoCgCRcHf14kE+CLIvNX1zmA==}
@@ -10333,16 +10333,6 @@ snapshots:
     dependencies:
       make-plural: 7.4.0
 
-  '@mixer/parallel-prettier@2.0.3(prettier@3.5.3)':
-    dependencies:
-      chalk: 4.1.2
-      commander: 7.2.0
-      glob-stream: 7.0.0
-      ignore: 5.3.2
-      ora: 5.4.1
-      prettier: 3.5.3
-      rxjs: 6.6.7
-
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
       eslint-scope: 5.1.1
@@ -10517,6 +10507,16 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
+
+  '@rdil/parallel-prettier@3.0.0(prettier@3.5.3)':
+    dependencies:
+      chalk: 4.1.2
+      commander: 7.2.0
+      glob-stream: 7.0.0
+      ignore: 5.3.2
+      ora: 5.4.1
+      prettier: 3.5.3
+      rxjs: 6.6.7
 
   '@sigstore/bundle@2.3.2':
     dependencies:
