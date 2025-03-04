@@ -1,7 +1,7 @@
 import ClassicComponent from "@ember/component";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
@@ -10,7 +10,7 @@ module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
 
   test("icon only button", async function (assert) {
-    await render(hbs`<DButton @icon="plus" tabindex="3" />`);
+    await render(<template><DButton @icon="plus" tabindex="3" /></template>);
 
     assert.dom("button.btn.btn-icon.no-text").exists("has all the classes");
     assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
@@ -18,7 +18,9 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("icon and text button", async function (assert) {
-    await render(hbs`<DButton @icon="plus" @label="topic.create" />`);
+    await render(<template>
+      <DButton @icon="plus" @label="topic.create" />
+    </template>);
 
     assert.dom("button.btn.btn-icon-text").exists("has all the classes");
     assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
@@ -26,28 +28,32 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("text only button", async function (assert) {
-    await render(hbs`<DButton @label="topic.create" />`);
+    await render(<template><DButton @label="topic.create" /></template>);
 
     assert.dom("button.btn.btn-text").exists("has all the classes");
     assert.dom("button span.d-button-label").exists("has the label");
   });
 
   test("form attribute", async function (assert) {
-    await render(hbs`<DButton @form="login-form" />`);
+    await render(<template><DButton @form="login-form" /></template>);
 
     assert.dom("button[form=login-form]").exists("has the form attribute");
   });
 
   test("link-styled button", async function (assert) {
-    await render(hbs`<DButton @display="link" />`);
+    await render(<template><DButton @display="link" /></template>);
 
     assert.dom("button.btn-link:not(.btn)").exists("has the right classes");
   });
 
   test("isLoading button", async function (assert) {
+    const self = this;
+
     this.set("isLoading", true);
 
-    await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
+    await render(<template>
+      <DButton @isLoading={{self.isLoading}} />
+    </template>);
 
     assert
       .dom("button.is-loading .loading-icon")
@@ -63,7 +69,7 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("button without isLoading attribute", async function (assert) {
-    await render(hbs`<DButton />`);
+    await render(<template><DButton /></template>);
 
     assert
       .dom("button.is-loading")
@@ -75,9 +81,13 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("isLoading button explicitly set to undefined state", async function (assert) {
+    const self = this;
+
     this.set("isLoading");
 
-    await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
+    await render(<template>
+      <DButton @isLoading={{self.isLoading}} />
+    </template>);
 
     assert
       .dom("button.is-loading")
@@ -89,9 +99,11 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("disabled button", async function (assert) {
+    const self = this;
+
     this.set("disabled", true);
 
-    await render(hbs`<DButton @disabled={{this.disabled}} />`);
+    await render(<template><DButton @disabled={{self.disabled}} /></template>);
 
     assert.dom("button").isDisabled();
 
@@ -100,11 +112,16 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-label", async function (assert) {
+    const self = this;
+
     I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
 
-    await render(
-      hbs`<DButton @ariaLabel={{this.ariaLabel}} @translatedAriaLabel={{this.translatedAriaLabel}} />`
-    );
+    await render(<template>
+      <DButton
+        @ariaLabel={{self.ariaLabel}}
+        @translatedAriaLabel={{self.translatedAriaLabel}}
+      />
+    </template>);
 
     this.set("ariaLabel", "test.fooAriaLabel");
 
@@ -119,11 +136,16 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("title", async function (assert) {
+    const self = this;
+
     I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
 
-    await render(
-      hbs`<DButton @title={{this.title}} @translatedTitle={{this.translatedTitle}} />`
-    );
+    await render(<template>
+      <DButton
+        @title={{self.title}}
+        @translatedTitle={{self.translatedTitle}}
+      />
+    </template>);
 
     this.set("title", "test.fooTitle");
     assert.dom("button").hasAttribute("title", i18n("test.fooTitle"));
@@ -137,11 +159,16 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("label", async function (assert) {
+    const self = this;
+
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
 
-    await render(
-      hbs`<DButton @label={{this.label}} @translatedLabel={{this.translatedLabel}} />`
-    );
+    await render(<template>
+      <DButton
+        @label={{self.label}}
+        @translatedLabel={{self.translatedLabel}}
+      />
+    </template>);
 
     this.set("label", "test.fooLabel");
 
@@ -156,7 +183,11 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-expanded", async function (assert) {
-    await render(hbs`<DButton @ariaExpanded={{this.ariaExpanded}} />`);
+    const self = this;
+
+    await render(<template>
+      <DButton @ariaExpanded={{self.ariaExpanded}} />
+    </template>);
 
     assert.dom("button").doesNotHaveAria("expanded");
 
@@ -174,13 +205,19 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-controls", async function (assert) {
-    await render(hbs`<DButton @ariaControls={{this.ariaControls}} />`);
+    const self = this;
+
+    await render(<template>
+      <DButton @ariaControls={{self.ariaControls}} />
+    </template>);
 
     this.set("ariaControls", "foo-bar");
     assert.dom("button").hasAria("controls", "foo-bar");
   });
 
   test("onKeyDown callback", async function (assert) {
+    const self = this;
+
     this.set("foo", null);
     this.set("onKeyDown", () => {
       this.set("foo", "bar");
@@ -189,9 +226,9 @@ module("Integration | Component | d-button", function (hooks) {
       this.set("foo", "baz");
     });
 
-    await render(
-      hbs`<DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />`
-    );
+    await render(<template>
+      <DButton @action={{self.action}} @onKeyDown={{self.onKeyDown}} />
+    </template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, "bar");
@@ -201,12 +238,14 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("press Enter", async function (assert) {
+    const self = this;
+
     this.set("foo", null);
     this.set("action", () => {
       this.set("foo", "bar");
     });
 
-    await render(hbs`<DButton @action={{this.action}} />`);
+    await render(<template><DButton @action={{self.action}} /></template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, null);
@@ -216,12 +255,14 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("@action function is triggered on click", async function (assert) {
+    const self = this;
+
     this.set("foo", null);
     this.set("action", () => {
       this.set("foo", "bar");
     });
 
-    await render(hbs`<DButton @action={{this.action}} />`);
+    await render(<template><DButton @action={{self.action}} /></template>);
 
     await click(".btn");
 
@@ -232,22 +273,28 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
+    this.classicComponent = class extends ClassicComponent {
+      actions = {
         myLegacyAction() {
           this.legacyActionTriggered();
         },
-      },
-      layout: hbs`<DButton @action="myLegacyAction" />`,
-    });
+      };
+
+      <template>
+        <DButton @action="myLegacyAction" />
+      </template>
+    };
 
     await withSilencedDeprecationsAsync(
       "discourse.d-button-action-string",
       async () => {
-        await render(
-          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} />`
-        );
+        const self = this;
+
+        await render(<template>
+          <this.classicComponent
+            @legacyActionTriggered={{self.legacyActionTriggered}}
+          />
+        </template>);
 
         await click(".btn");
       }
@@ -262,22 +309,31 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.simpleWrapperComponent = class extends ClassicComponent {};
 
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
+    this.classicComponent = class extends ClassicComponent {
+      actions = {
         myLegacyAction() {
           this.legacyActionTriggered();
         },
-      },
-      layout: hbs`<@simpleWrapperComponent><DButton @action="myLegacyAction" /></@simpleWrapperComponent>`,
-    });
+      };
+
+      <template>
+        <@simpleWrapperComponent>
+          <DButton @action="myLegacyAction" />
+        </@simpleWrapperComponent>
+      </template>
+    };
 
     await withSilencedDeprecationsAsync(
       "discourse.d-button-action-string",
       async () => {
-        await render(
-          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} @simpleWrapperComponent={{this.simpleWrapperComponent}} />`
-        );
+        const self = this;
+
+        await render(<template>
+          <this.classicComponent
+            @legacyActionTriggered={{self.legacyActionTriggered}}
+            @simpleWrapperComponent={{self.simpleWrapperComponent}}
+          />
+        </template>);
 
         await click(".btn");
       }
@@ -287,9 +343,9 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("ellipses", async function (assert) {
-    await render(
-      hbs`<DButton @translatedLabel="test label" @ellipsis={{true}} />`
-    );
+    await render(<template>
+      <DButton @translatedLabel="test label" @ellipsis={{true}} />
+    </template>);
 
     assert.dom(".d-button-label").hasText("test label…");
   });
