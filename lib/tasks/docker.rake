@@ -164,7 +164,7 @@ task "docker:test" do
       puts "prettier #{`pnpm prettier -v`}"
 
       if ENV["SINGLE_PLUGIN"]
-        @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
+        @good &&= run_or_fail("bundle exec rubocop plugins/#{ENV["SINGLE_PLUGIN"]}")
         @good &&=
           run_or_fail(
             "bundle exec ruby script/i18n_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/locales/{client,server}.en.yml",
@@ -182,7 +182,7 @@ task "docker:test" do
           )
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("bundle exec rubocop") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("pnpm eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
         @good &&=
           run_or_fail(

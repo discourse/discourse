@@ -120,4 +120,39 @@ describe Chat::DirectMessage do
       end
     end
   end
+
+  describe "#user_can_access?" do
+    context "when user is part of the chat" do
+      it "allows access" do
+        direct_message = Fabricate(:direct_message, users: [user1, user2])
+
+        expect(direct_message.user_can_access?(user1)).to eq(true)
+      end
+    end
+
+    context "when user is not part of the chat" do
+      it "denies access" do
+        user3 = Fabricate(:user)
+        direct_message = Fabricate(:direct_message, users: [user1, user2])
+
+        expect(direct_message.user_can_access?(user3)).to eq(false)
+      end
+    end
+
+    context "when the user is an admin" do
+      it "allows access to a group chat" do
+        admin = Fabricate(:admin)
+        direct_message = Fabricate(:direct_message, users: [user1, user2], group: true)
+
+        expect(direct_message.user_can_access?(admin)).to eq(true)
+      end
+
+      it "denies access to a personal chat" do
+        admin = Fabricate(:admin)
+        direct_message = Fabricate(:direct_message, users: [user1, user2], group: false)
+
+        expect(direct_message.user_can_access?(admin)).to eq(false)
+      end
+    end
+  end
 end

@@ -25,7 +25,7 @@ async function setDoNotDisturbMode() {
 
 acceptance("User Status", function (needs) {
   const userStatus = "off to dentist";
-  const userStatusEmoji = "grinning";
+  const userStatusEmoji = "grinning_face";
   const userId = 1;
   const userTimezone = "UTC";
 
@@ -46,6 +46,9 @@ acceptance("User Status", function (needs) {
     server.delete("/do-not-disturb.json", () =>
       helper.response({ success: true })
     );
+    server.get("/emojis/search-aliases.json", () => {
+      return helper.response([]);
+    });
   });
 
   test("shows user status on loaded page", async function (assert) {
@@ -257,7 +260,7 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
     await fillIn(".user-status-description", "another status");
 
-    await pickEmoji("grinning"); // another emoji
+    await pickEmoji("heart"); // another emoji
     await click(".d-modal-cancel");
     await openUserStatusModal();
 
@@ -316,7 +319,7 @@ acceptance(
   "User Status - pause notifications (do not disturb mode)",
   function (needs) {
     const userStatus = "off to dentist";
-    const userStatusEmoji = "grinning";
+    const userStatusEmoji = "grinning_face";
     const userId = 1;
     const userTimezone = "UTC";
 
@@ -337,6 +340,9 @@ acceptance(
       server.delete("/do-not-disturb.json", () =>
         helper.response({ success: true })
       );
+      server.get("/emojis/search-aliases.json", () => {
+        return helper.response([]);
+      });
     });
 
     test("shows the pause notifications control group", async function (assert) {
@@ -436,7 +442,7 @@ acceptance(
 
 acceptance("User Status - user menu", function (needs) {
   const userStatus = "off to dentist";
-  const userStatusEmoji = "grinning";
+  const userStatusEmoji = "grinning_face";
   const userId = 1;
   const userTimezone = "UTC";
 

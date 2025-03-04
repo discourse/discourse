@@ -14,6 +14,10 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       response(emojisFixtures["/emojis.json"])
     );
 
+    pretender.get("/emojis/search-aliases.json", () => {
+      return response([]);
+    });
+
     this.emojiStore = this.container.lookup("service:emoji-store");
   });
 
@@ -66,25 +70,25 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
   test("When filtering emojis", async function (assert) {
     await render(hbs`<EmojiPicker::Content />`);
-    await fillIn(".filter-input", "grinning");
+    await fillIn(".filter-input", "grin");
 
     assert
       .dom(".emoji-picker__section.filtered > img")
-      .exists({ count: 2 }, "it filters the emojis list");
+      .exists({ count: 6 }, "it filters the emojis list");
     assert
-      .dom('.emoji-picker__section.filtered > img[alt="grinning"]')
+      .dom('.emoji-picker__section.filtered > img[alt="grinning_face"]')
       .exists("it filters the correct emoji");
 
     await fillIn(".filter-input", "Grinning");
 
     assert
-      .dom('.emoji-picker__section.filtered > img[alt="grinning"]')
+      .dom('.emoji-picker__section.filtered > img[alt="grinning_face"]')
       .exists("it is case insensitive");
 
     await fillIn(".filter-input", "grinning");
 
     assert
-      .dom('.emoji-picker__section.filtered > img[alt="grinning"]')
+      .dom('.emoji-picker__section.filtered > img[alt="grinning_face"]')
       .exists("it filters the correct emoji using search alias");
   });
 
@@ -199,8 +203,8 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     await emojiPicker(".emoji-picker").fill("grinning");
 
     assert
-      .dom('img.emoji[data-emoji="grinning"]')
-      .hasAttribute("title", ":grinning:", "filtered emoji have a title");
+      .dom('img.emoji[data-emoji="grinning_face"]')
+      .hasAttribute("title", ":grinning_face:", "filtered emoji have a title");
 
     await emojiPicker(".emoji-picker").tone(1);
     await render(hbs`<EmojiPicker::Content />`);

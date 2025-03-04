@@ -2,24 +2,30 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import { ADMIN_SEARCH_RESULT_TYPES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
+import { i18n } from "discourse-i18n";
 import AdminSearchFilters from "admin/components/admin-search-filters";
-import { RESULT_TYPES } from "admin/services/admin-search-data-source";
+
+const ADMIN_SEARCH_FILTERS = "admin_search_filters";
 
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
+  @service keyValueStore;
+  @service router;
 
-  @tracked filter = "";
+  @tracked filter = this.args.initialFilter ?? "";
   @tracked searchResults = [];
-  @tracked showFilters = false;
+  @tracked showFilters = true;
   @tracked loading = false;
   typeFilters = new TrackedObject({
     page: true,
@@ -31,7 +37,19 @@ export default class AdminSearch extends Component {
 
   constructor() {
     super(...arguments);
-    this.adminSearchDataSource.buildMap();
+
+    if (this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS)) {
+      this.typeFilters = new TrackedObject(
+        JSON.parse(this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS))
+      );
+    }
+
+    this.adminSearchDataSource.buildMap().then(() => {
+      if (this.filter !== "") {
+        this.loading = true;
+        this.runSearch();
+      }
+    });
   }
 
   get visibleTypes() {
@@ -52,6 +70,20 @@ export default class AdminSearch extends Component {
   @action
   toggleTypeFilter(type) {
     this.typeFilters[type] = !this.typeFilters[type];
+
+    const allFiltersShowing = Object.values(this.typeFilters).every(
+      (value) => value
+    );
+
+    if (!allFiltersShowing) {
+      this.keyValueStore.setItem(
+        ADMIN_SEARCH_FILTERS,
+        JSON.stringify(this.typeFilters)
+      );
+    } else {
+      this.keyValueStore.removeItem(ADMIN_SEARCH_FILTERS);
+    }
+
     this.search();
   }
 
@@ -59,13 +91,71 @@ export default class AdminSearch extends Component {
   changeSearchTerm(event) {
     this.searchResults = [];
     this.filter = event.target.value;
-    this.loading = true;
-    this.search();
+    this.runSearch();
   }
 
   @action
   search() {
     discourseDebounce(this, this.#search, INPUT_DELAY);
+  }
+
+  // TODO (martin) Maybe we can move ListHandler / iterate-list from chat into
+  // core so we can use it here too.
+  @action
+  handleResultKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      event.target.click();
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
+      const previousResult = event.target.parentElement.previousElementSibling;
+      if (previousResult) {
+        previousResult.firstElementChild?.focus();
+      } else {
+        document.querySelector(".admin-search__input-field").focus();
+      }
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      event.stopPropagation();
+      event.target.parentElement.nextElementSibling.firstElementChild?.focus();
+    }
+  }
+
+  @action
+  handleSearchKeyDown(event) {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      event.stopPropagation();
+      document
+        .querySelector(".admin-search__result .admin-search__result-link")
+        .focus();
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.router.transitionTo("adminSearch.index", {
+        queryParams: { filter: this.filter },
+      });
+    }
+  }
+
+  @action
+  initialFilterUpdated() {
+    this.filter = this.args.initialFilter;
+    this.runSearch();
+  }
+
+  @action
+  runSearch() {
+    this.loading = true;
+    this.search();
   }
 
   #search() {
@@ -76,14 +166,20 @@ export default class AdminSearch extends Component {
   }
 
   <template>
-    <div class="admin-search__input-container">
+    <div
+      class="admin-search__input-container"
+      {{didUpdate this.initialFilterUpdated @initialFilter}}
+    >
       <div class="admin-search__input-group">
         {{icon "magnifying-glass" class="admin-search__input-icon"}}
         <input
           type="text"
           class="admin-search__input-field"
+          value={{this.filter}}
           {{autoFocus}}
           {{on "input" this.changeSearchTerm}}
+          {{on "keydown" this.handleSearchKeyDown}}
+          placeholder={{i18n "admin.search.instructions"}}
         />
       </div>
       <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
@@ -93,15 +189,20 @@ export default class AdminSearch extends Component {
       <AdminSearchFilters
         @toggleTypeFilter={{this.toggleTypeFilter}}
         @typeFilters={{this.typeFilters}}
-        @types={{RESULT_TYPES}}
+        @types={{ADMIN_SEARCH_RESULT_TYPES}}
       />
     {{/if}}
 
     <div class="admin-search__results">
       <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
-          <div class="admin-search__result">
-            <a href={{result.url}}>
+          <div class="admin-search__result" data-result-type={{result.type}}>
+            <a
+              href={{result.url}}
+              {{on "keydown" this.handleResultKeyDown}}
+              class="admin-search__result-link"
+              tabindex="0"
+            >
               <div class="admin-search__result-name">
                 {{#if result.icon}}
                   {{icon result.icon}}

@@ -1,5 +1,7 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import hashtag from "./hashtag";
 import mention from "./mention";
+import underline from "./underline";
 
 /**
  * List of default extensions
@@ -7,6 +9,12 @@ import mention from "./mention";
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions = [mention];
+const defaultExtensions = [
+  hashtag,
+  mention,
+  underline
+];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+
+export default defaultExtensions;
