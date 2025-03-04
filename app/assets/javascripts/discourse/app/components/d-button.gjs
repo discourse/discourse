@@ -9,7 +9,6 @@ import { or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
-import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
 export default class DButton extends Component {
