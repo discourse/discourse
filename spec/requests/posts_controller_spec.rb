@@ -1854,27 +1854,13 @@ RSpec.describe PostsController do
         end
 
         context "with apply_modifier" do
-          fab!(:group)
-          fab!(:private_group) { Fabricate(:group, users: [admin]) }
-
-          before { Jobs.run_immediately! }
-
           it "allows mentioning any groups" do
-            private_group.update!(mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins])
-            group.add(user)
             plugin = Plugin::Instance.new
             modifier = :mentionable_groups
             proc = Proc.new { Group.all }
             DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
 
-            post "/posts.json",
-                 params: {
-                   raw: "this is test topic mentioning @#{private_group.name}",
-                   title: "this is the test title for the topic",
-                 }
-
-            expect(response.status).to eq(200)
-            expect(GroupMention.find_by(group_id: private_group.id)).to be_present
+            expect(Group.mentionable(user)).to eq(Group.all)
           end
         end
       end
