@@ -6,8 +6,8 @@ import image from "./image";
 import link from "./link";
 import mention from "./mention";
 import quote from "./quote";
-import underline from "./underline";
 import strikethrough from "./strikethrough";
+import underline from "./underline";
 
 /**
  * List of default extensions
