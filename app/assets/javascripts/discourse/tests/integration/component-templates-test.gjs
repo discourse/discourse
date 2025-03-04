@@ -3,7 +3,6 @@ import { setComponentTemplate } from "@glimmer/manager";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
