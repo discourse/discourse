@@ -349,7 +349,7 @@ GEM
     optimist (3.2.0)
     ostruct (0.6.1)
     parallel (1.26.3)
-    parallel_tests (4.9.1)
+    parallel_tests (5.0.0)
       parallel
     parser (3.3.7.1)
       ast (~> 2.4.1)
@@ -960,7 +960,7 @@ CHECKSUMS
   optimist (3.2.0) sha256=01c9e4826bbcae048f96ce079eef662564829016b08f1f1bdc024b0fb398771c
   ostruct (0.6.1) sha256=09a3fb7ecc1fa4039f25418cc05ae9c82bd520472c5c6a6f515f03e4988cb817
   parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
-  parallel_tests (4.9.1) sha256=4782bf86edcce774f18f2a0dade29140b61f251b25cccaa0e1b3805dc90a84b5
+  parallel_tests (5.0.0) sha256=65f0697a70927a058a4e34f4af2700d46da224669f59b7fac87ae2f9c4036463
   parser (3.3.7.1) sha256=7dbe61618025519024ac72402a6677ead02099587a5538e84371b76659e6aca1
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
