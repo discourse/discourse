@@ -21,7 +21,7 @@ RSpec.describe PostCreator do
         writing_device: "linux",
         user_agent:
           "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
-        composer_version: "rich-v2",
+        composer_version: 2,
       }
     end
     let(:image_sizes) do
@@ -378,7 +378,7 @@ RSpec.describe PostCreator do
           expect(post.post_stat.writing_device_user_agent).to eq(
             "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
           )
-          expect(post.post_stat.composer_version).to eq("rich-v2")
+          expect(post.post_stat.composer_version).to eq(2)
           expect(user.reload.user_stat.draft_count).to eq(0)
         ensure
           PostCreator.track_post_stats = false
