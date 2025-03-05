@@ -6393,6 +6393,17 @@ RSpec.describe UsersController do
 
         expect(user1.passkey_credential_ids[0]).to eq(passkey.credential_id)
       end
+
+      it "fails if the user has neither password nor associated accounts" do
+        user1.user_password = nil
+        allow(user1).to receive(:associated_accounts).and_return([])
+        sign_in(user1)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to be(false)
+        expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+        expect(user1.passkey_credential_ids.length).to eq(1)
+      end
     end
   end
 
@@ -6537,6 +6548,21 @@ RSpec.describe UsersController do
                  provider_name: "testprovider",
                }
           expect(response.status).to eq(200)
+        end
+
+        it "fails if the user has neither password nor passkey" do
+          authenticator.can_revoke = true
+          user1.user_password = nil
+          allow(user1).to receive(:passkey_credential_ids).and_return([])
+          sign_in(user1)
+          post "/u/#{user1.username}/preferences/revoke-account.json",
+               params: {
+                 provider_name: "testprovider",
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to be(false)
+          expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+          expect(user1.associated_accounts.length).to eq(1)
         end
 
         it "works" do
