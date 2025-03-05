@@ -30,7 +30,17 @@ module Migrations::Converters::Base
     end
 
     def steps
-      raise NotImplementedError
+      @steps ||=
+        begin
+          step_class = ::Migrations::Converters::Base::Step
+          current_module = self.class.name.deconstantize.constantize
+
+          current_module
+            .constants
+            .map { |c| current_module.const_get(c) }
+            .select { |klass| klass.is_a?(Class) && klass < step_class }
+            .sort_by(&:to_s)
+        end
     end
 
     def before_step_execution(step)

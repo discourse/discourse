@@ -7,10 +7,6 @@ module Migrations::Converters::Discourse
       @source_db = ::Migrations::Database::Adapter::Postgres.new(settings[:source_db])
     end
 
-    def steps
-      [Users, UserEmails]
-    end
-
     def step_args(step_class)
       { source_db: @source_db }
     end
