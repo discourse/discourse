@@ -13,10 +13,8 @@ module("Integration | Helper | body-class", function (hooks) {
   });
 
   test("Multiple classes", async function (assert) {
-    const self = this;
-
-    this.set("bar", "bar");
-    await render(<template>{{bodyClass "baz" self.bar}}</template>);
+    const bar = "bar";
+    await render(<template>{{bodyClass "baz" bar}}</template>);
 
     assert.dom(document.body).hasClass("baz");
     assert.dom(document.body).hasClass("bar");

@@ -7,19 +7,17 @@ module("Integration | Component | Widget | small-user-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders avatars and support for unknown", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       users: [
         { id: 456, username: "eviltrout" },
         { id: 457, username: "someone", unknown: true },
       ],
       isVisible: true,
-    });
+    };
 
     await render(
       <template>
-        <MountWidget @widget="small-user-list" @args={{self.args}} />
+        <MountWidget @widget="small-user-list" @args={{args}} />
       </template>
     );
 

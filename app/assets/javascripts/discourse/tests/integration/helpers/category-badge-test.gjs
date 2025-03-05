@@ -8,27 +8,21 @@ module("Integration | Helper | category-badge", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays category", async function (assert) {
-    const self = this;
+    const category = Category.findById(1);
 
-    this.set("category", Category.findById(1));
+    await render(<template>{{categoryBadge category}}</template>);
 
-    await render(<template>{{categoryBadge self.category}}</template>);
-
-    assert.dom(".badge-category__name").hasText(this.category.displayName);
+    assert.dom(".badge-category__name").hasText(category.displayName);
   });
 
   test("options.link", async function (assert) {
-    const self = this;
+    const category = Category.findById(1);
 
-    this.set("category", Category.findById(1));
-
-    await render(
-      <template>{{categoryBadge self.category link=true}}</template>
-    );
+    await render(<template>{{categoryBadge category link=true}}</template>);
 
     assert
       .dom(
-        `a.badge-category__wrapper[href="/c/${this.category.slug}/${this.category.id}"]`
+        `a.badge-category__wrapper[href="/c/${category.slug}/${category.id}"]`
       )
       .exists();
   });

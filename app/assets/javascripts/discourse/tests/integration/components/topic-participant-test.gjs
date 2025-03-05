@@ -7,16 +7,14 @@ module("Integration | Component | topic-participant", function (hooks) {
   setupRenderingTest(hooks);
 
   test("one post", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       username: "test",
       avatar_template: "/images/avatar.png",
       post_count: 1,
-    });
+    };
 
     await render(
-      <template><TopicParticipant @participant={{self.args}} /></template>
+      <template><TopicParticipant @participant={{args}} /></template>
     );
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
@@ -25,9 +23,7 @@ module("Integration | Component | topic-participant", function (hooks) {
   });
 
   test("many posts, a primary group with flair", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       username: "test",
       avatar_template: "/images/avatar.png",
       post_count: 2,
@@ -36,10 +32,10 @@ module("Integration | Component | topic-participant", function (hooks) {
       flair_url: "/images/d-logo-sketch-small.png",
       flair_bg_color: "222",
       flair_group_id: "41",
-    });
+    };
 
     await render(
-      <template><TopicParticipant @participant={{self.args}} /></template>
+      <template><TopicParticipant @participant={{args}} /></template>
     );
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");

@@ -14,33 +14,28 @@ module("Integration | Helper | concat-class", function (hooks) {
   });
 
   test("Multiple class given", async function (assert) {
-    const self = this;
+    const bar = "bar";
 
-    this.set("bar", "bar");
     await render(
-      <template><button class={{concatClass "foo" self.bar}} /></template>
+      <template><button class={{concatClass "foo" bar}} /></template>
     );
 
     assert.dom("button").hasAttribute("class", "foo bar");
   });
 
   test("One undefined class given", async function (assert) {
-    const self = this;
-
-    this.set("bar", null);
     await render(
-      <template><button class={{concatClass "foo" self.bar}} /></template>
+      <template><button class={{concatClass "foo" undefined}} /></template>
     );
 
     assert.dom("button").hasAttribute("class", "foo");
   });
 
   test("Only undefined class given", async function (assert) {
-    const self = this;
+    const bar = null;
 
-    this.set("bar", null);
     await render(
-      <template><button class={{concatClass null self.bar}} /></template>
+      <template><button class={{concatClass null bar}} /></template>
     );
 
     assert.dom("button").doesNotHaveAttribute("class");

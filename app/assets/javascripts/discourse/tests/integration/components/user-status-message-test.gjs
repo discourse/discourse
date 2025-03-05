@@ -141,14 +141,10 @@ module("Integration | Component | user-status-message", function (hooks) {
   });
 
   test("accepts a custom css class", async function (assert) {
-    const self = this;
-
-    this.set("status", { emoji: "tooth", description: "off to dentist" });
+    const status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      <template>
-        <UserStatusMessage @status={{self.status}} class="foo" />
-      </template>
+      <template><UserStatusMessage @status={{status}} class="foo" /></template>
     );
 
     assert

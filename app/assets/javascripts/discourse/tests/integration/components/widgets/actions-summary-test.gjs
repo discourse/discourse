@@ -7,17 +7,15 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
   setupRenderingTest(hooks);
 
   test("post deleted", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       deleted_at: "2016-01-01",
       deletedByUsername: "eviltrout",
       deletedByAvatarTemplate: "/images/avatar.png",
-    });
+    };
 
     await render(
       <template>
-        <MountWidget @widget="actions-summary" @args={{self.args}} />
+        <MountWidget @widget="actions-summary" @args={{args}} />
       </template>
     );
 

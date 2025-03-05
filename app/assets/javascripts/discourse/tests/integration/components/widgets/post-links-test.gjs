@@ -7,9 +7,7 @@ module("Integration | Component | Widget | post-links", function (hooks) {
   setupRenderingTest(hooks);
 
   test("duplicate links", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       id: 2,
       links: [
         {
@@ -23,12 +21,10 @@ module("Integration | Component | Widget | post-links", function (hooks) {
           reflection: true,
         },
       ],
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="post-links" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="post-links" @args={{args}} /></template>
     );
 
     assert
@@ -37,9 +33,7 @@ module("Integration | Component | Widget | post-links", function (hooks) {
   });
 
   test("collapsed links", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       id: 1,
       links: [
         {
@@ -78,12 +72,10 @@ module("Integration | Component | Widget | post-links", function (hooks) {
           reflection: true,
         },
       ],
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="post-links" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="post-links" @args={{args}} /></template>
     );
 
     assert.dom(".expand-links").exists({ count: 1 }, "collapsed by default");
