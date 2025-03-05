@@ -8,8 +8,8 @@ import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
-import underline from "./underline";
 import typographerReplacements from "./typographer-replacements";
+import underline from "./underline";
 
 /**
  * List of default extensions
