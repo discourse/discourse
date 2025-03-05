@@ -6394,15 +6394,25 @@ RSpec.describe UsersController do
         expect(user1.passkey_credential_ids[0]).to eq(passkey.credential_id)
       end
 
-      it "fails if the user has neither password nor associated accounts" do
-        user1.user_password = nil
-        allow(user1).to receive(:associated_accounts).and_return([])
-        sign_in(user1)
-        delete "/u/delete_passkey/#{passkey.id}.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["success"]).to be(false)
-        expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
-        expect(user1.passkey_credential_ids.length).to eq(1)
+      context "with second passkey" do
+        fab!(:second_passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+        it "fails removing the last passkey if the user has neither password nor associated accounts" do
+          user1.user_password = nil
+          allow(user1).to receive(:associated_accounts).and_return([])
+
+          sign_in(user1)
+          expect(user1.passkey_credential_ids.length).to eq(2)
+
+          #succeeds removing the first passkey since there's still a second one
+          delete "/u/delete_passkey/#{passkey.id}.json"
+          expect(response.status).to eq(200)
+          expect(user1.passkey_credential_ids.length).to eq(1)
+
+          delete "/u/delete_passkey/#{second_passkey.id}.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+          expect(user1.passkey_credential_ids.length).to eq(1)
+        end
       end
     end
   end
@@ -6550,21 +6560,6 @@ RSpec.describe UsersController do
           expect(response.status).to eq(200)
         end
 
-        it "fails if the user has neither password nor passkey" do
-          authenticator.can_revoke = true
-          user1.user_password = nil
-          allow(user1).to receive(:passkey_credential_ids).and_return([])
-          sign_in(user1)
-          post "/u/#{user1.username}/preferences/revoke-account.json",
-               params: {
-                 provider_name: "testprovider",
-               }
-          expect(response.status).to eq(200)
-          expect(response.parsed_body["success"]).to be(false)
-          expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
-          expect(user1.associated_accounts.length).to eq(1)
-        end
-
         it "works" do
           authenticator.can_revoke = true
 
@@ -6573,6 +6568,55 @@ RSpec.describe UsersController do
                  provider_name: "testprovider",
                }
           expect(response.status).to eq(200)
+        end
+
+        context "with a second provider" do
+          let(:second_authenticator) do
+            Class
+              .new(Auth::ManagedAuthenticator) do
+                def name
+                  "testprovider2"
+                end
+
+                def enabled?
+                  true
+                end
+              end
+              .new
+          end
+
+          before do
+            DiscoursePluginRegistry.register_auth_provider(
+              Auth::AuthProvider.new(authenticator: second_authenticator),
+            )
+            authenticator.can_revoke = true
+            user1.user_password = nil
+            allow(user1).to receive(:passkey_credential_ids).and_return([])
+            user1.user_associated_accounts.create!(
+              provider_name: "testprovider2",
+              provider_uid: "foo",
+            )
+          end
+
+          it "fails removing the last associated account if the user has neither password nor passkey" do
+            expect(user1.associated_accounts.length).to eq(2)
+
+            #succeeds removing the first account since there's still a second one
+            post "/u/#{user1.username}/preferences/revoke-account.json",
+                 params: {
+                   provider_name: "testprovider2",
+                 }
+
+            expect(response.status).to eq(200)
+            expect(user1.associated_accounts.length).to eq(1)
+
+            post "/u/#{user1.username}/preferences/revoke-account.json",
+                 params: {
+                   provider_name: "testprovider",
+                 }
+            expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+            expect(user1.associated_accounts.length).to eq(1)
+          end
         end
       end
     end

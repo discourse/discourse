@@ -1693,11 +1693,16 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    if !current_user.has_password? && current_user.associated_accounts.blank?
-      return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+
+    if security_key.factor_type == UserSecurityKey.factor_types[:first_factor] &&
+         current_user.passkey_credential_ids.length == 1
+      if !current_user.has_password? && current_user.associated_accounts.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
     end
 
-    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
+    security_key&.destroy!
 
     render json: success_json
   end
@@ -1820,8 +1825,10 @@ class UsersController < ApplicationController
     authenticator = Discourse.authenticators.find { |a| a.name == provider_name }
     raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
 
-    if !user.has_password? && user.passkey_credential_ids.blank?
-      return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+    if user.associated_accounts&.length == 1
+      if !user.has_password? && user.passkey_credential_ids.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
     end
 
     skip_remote = params.permit(:skip_remote)
