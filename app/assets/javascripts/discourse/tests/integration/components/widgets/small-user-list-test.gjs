@@ -17,9 +17,11 @@ module("Integration | Component | Widget | small-user-list", function (hooks) {
       isVisible: true,
     });
 
-    await render(<template>
-      <MountWidget @widget="small-user-list" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="small-user-list" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom('[data-user-card="eviltrout"]').exists({ count: 1 });
     assert.dom('[data-user-card="someone"]').doesNotExist();

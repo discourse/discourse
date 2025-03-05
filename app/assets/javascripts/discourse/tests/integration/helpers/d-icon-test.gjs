@@ -7,7 +7,11 @@ module("Integration | Helper | d-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    await render(<template><div class="test">{{dIcon "bars"}}</div></template>);
+    await render(
+      <template>
+        <div class="test">{{dIcon "bars"}}</div>
+      </template>
+    );
 
     assert
       .dom(".test")
@@ -17,9 +21,11 @@ module("Integration | Helper | d-icon", function (hooks) {
   });
 
   test("with replacement", async function (assert) {
-    await render(<template>
-      <div class="test">{{dIcon "d-watching"}}</div>
-    </template>);
+    await render(
+      <template>
+        <div class="test">{{dIcon "d-watching"}}</div>
+      </template>
+    );
 
     assert
       .dom(".test")

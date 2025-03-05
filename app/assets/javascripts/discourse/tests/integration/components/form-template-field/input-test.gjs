@@ -25,9 +25,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormInput @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormInput @attributes={{self.attributes}} /></template>
+      );
 
       assert
         .dom(".form-template-field[data-field-type='input'] input[type='text']")
@@ -47,9 +47,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormInput @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormInput @attributes={{self.attributes}} /></template>
+      );
 
       assert.dom(".form-template-field__label").doesNotExist();
     });
@@ -62,9 +62,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormInput @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormInput @attributes={{self.attributes}} /></template>
+      );
 
       assert.dom(".form-template-field__description").hasText("Your full name");
     });
@@ -77,9 +77,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormInput @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormInput @attributes={{self.attributes}} /></template>
+      );
 
       assert
         .dom(".form-template-field__description")

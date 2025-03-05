@@ -11,9 +11,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { icon: "far-face-smile" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.btn.btn-icon.no-text").exists("has all the classes");
     assert.dom("button .d-icon.d-icon-far-face-smile").exists("has the icon");
@@ -24,9 +24,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { icon: "plus", label: "topic.create" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.btn.btn-icon-text").exists("has all the classes");
     assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
@@ -38,9 +38,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { emoji: "mega", label: "topic.create" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.widget-button").exists("renders the widget");
     assert.dom("button img.emoji").exists("it renders the emoji");
@@ -52,9 +52,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { label: "topic.create" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.btn.btn-text").exists("has all the classes");
     assert.dom("button span.d-button-label").exists("has the label");
@@ -65,9 +65,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { translatedLabel: "foo bar" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button span.d-button-label").hasText("foo bar");
   });
@@ -77,9 +77,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { label: "topic.create", translatedTitle: "foo bar" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert.dom("button").hasAttribute("title", "foo bar");
   });
@@ -89,9 +89,9 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     this.set("args", { icon: "plus", translatedLabel: "foo bar" });
 
-    await render(<template>
-      <MountWidget @widget="button" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+    );
 
     assert
       .dom("button.btn.btn-icon-text")

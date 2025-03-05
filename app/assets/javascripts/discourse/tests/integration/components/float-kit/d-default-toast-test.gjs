@@ -15,9 +15,9 @@ module(
 
       this.toast = new DToastInstance(this, { data: { icon: "check" } });
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert.dom(".fk-d-default-toast__icon-container .d-icon-check").exists();
     });
@@ -27,9 +27,9 @@ module(
 
       this.toast = new DToastInstance(this, {});
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert.dom(".fk-d-default-toast__icon-container").doesNotExist();
     });
@@ -39,13 +39,15 @@ module(
 
       this.toast = new DToastInstance(this, {});
 
-      await render(<template>
-        <DDefaultToast
-          @data={{self.toast.options.data}}
-          @showProgressBar={{true}}
-          @onRegisterProgressBar={{(noop)}}
-        />
-      </template>);
+      await render(
+        <template>
+          <DDefaultToast
+            @data={{self.toast.options.data}}
+            @showProgressBar={{true}}
+            @onRegisterProgressBar={{(noop)}}
+          />
+        </template>
+      );
 
       assert.dom(".fk-d-default-toast__progress-bar").exists();
     });
@@ -55,12 +57,14 @@ module(
 
       this.toast = new DToastInstance(this, {});
 
-      await render(<template>
-        <DDefaultToast
-          @data={{self.toast.options.data}}
-          @showProgressBar={{false}}
-        />
-      </template>);
+      await render(
+        <template>
+          <DDefaultToast
+            @data={{self.toast.options.data}}
+            @showProgressBar={{false}}
+          />
+        </template>
+      );
 
       assert.dom(".fk-d-default-toast__progress-bar").doesNotExist();
     });
@@ -70,9 +74,9 @@ module(
 
       this.toast = new DToastInstance(this, { data: { title: "Title" } });
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert
         .dom(".fk-d-default-toast__title")
@@ -84,9 +88,9 @@ module(
 
       this.toast = new DToastInstance(this, {});
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert.dom(".fk-d-default-toast__title").doesNotExist();
     });
@@ -96,9 +100,9 @@ module(
 
       this.toast = new DToastInstance(this, { data: { message: "Message" } });
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert
         .dom(".fk-d-default-toast__message")
@@ -110,9 +114,9 @@ module(
 
       this.toast = new DToastInstance(this, {});
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert.dom(".fk-d-default-toast__message").doesNotExist();
     });
@@ -133,9 +137,9 @@ module(
         },
       });
 
-      await render(<template>
-        <DDefaultToast @data={{self.toast.options.data}} />
-      </template>);
+      await render(
+        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+      );
 
       assert
         .dom(".fk-d-default-toast__actions .btn.btn-danger")

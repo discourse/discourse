@@ -43,13 +43,15 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
     this.set("state", true);
-    await render(<template>
-      <DToggleSwitch
-        @state={{self.state}}
-        @label={{self.label}}
-        @translatedLabel={{self.translatedLabel}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DToggleSwitch
+          @state={{self.state}}
+          @label={{self.label}}
+          @translatedLabel={{self.translatedLabel}}
+        />
+      </template>
+    );
 
     this.set("label", "test.fooLabel");
 

@@ -27,9 +27,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { shareUrl: "/example", post_number: 1, topic });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".names").exists("includes poster name");
     assert.dom("a.post-date").exists("includes post date");
@@ -47,9 +47,11 @@ module("Integration | Component | Widget | post", function (hooks) {
       ],
     });
 
-    await render(<template>
-      <MountWidget @widget="post-contents" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-contents" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("a[data-clicks='1']").hasAttribute("data-clicks", "1");
     assert.dom("a[data-clicks='2']").hasAttribute("data-clicks", "2");
@@ -77,9 +79,11 @@ module("Integration | Component | Widget | post", function (hooks) {
       ],
     });
 
-    await render(<template>
-      <MountWidget @widget="post-contents" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-contents" @args={{self.args}} />
+      </template>
+    );
 
     assert
       .dom("a[data-clicks='1']")
@@ -103,13 +107,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showHistory={{self.showHistory}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showHistory={{self.showHistory}}
+        />
+      </template>
+    );
 
     await click(".post-info .wiki");
     assert.true(
@@ -124,13 +130,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
     this.set("editPost", () => (this.editPostCalled = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @editPost={{self.editPost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @editPost={{self.editPost}}
+        />
+      </template>
+    );
 
     await click(".post-info .wiki");
     assert.true(this.editPostCalled, "clicking wiki icon edits the post");
@@ -142,13 +150,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { via_email: true, canViewRawEmail: true });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showRawEmail={{self.showRawEmail}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showRawEmail={{self.showRawEmail}}
+        />
+      </template>
+    );
 
     await click(".post-info.via-email");
     assert.true(
@@ -164,13 +174,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showRawEmail={{self.showRawEmail}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showRawEmail={{self.showRawEmail}}
+        />
+      </template>
+    );
 
     await click(".post-info.via-email");
     assert.false(
@@ -185,13 +197,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { version: 3, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showHistory={{self.showHistory}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showHistory={{self.showHistory}}
+        />
+      </template>
+    );
 
     await click(".post-info.edits button");
     assert.true(this.historyShown, "clicking the pencil shows the history");
@@ -204,13 +218,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { version: 3, canViewEditHistory: false });
     this.set("showHistory", () => (this.historyShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showHistory={{self.showHistory}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showHistory={{self.showHistory}}
+        />
+      </template>
+    );
 
     await click(".post-info.edits");
     assert.false(
@@ -224,9 +240,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { isWhisper: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-post.whisper").exists();
     assert.dom(".post-info.whisper").exists();
@@ -248,9 +264,11 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("args", { likeCount: 1 });
 
-    await render(<template>
-      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("button.like-count").exists();
     assert.dom(".who-liked").doesNotExist();
@@ -272,9 +290,11 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { likeCount: 0 });
 
-    await render(<template>
-      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("button.like-count").doesNotExist();
   });
@@ -286,9 +306,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.post_menu += "|share";
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".actions button.share").exists("renders a share button");
   });
@@ -299,9 +319,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert
       .dom(".actions button.post-action-menu__copy-link")
@@ -319,13 +339,15 @@ module("Integration | Component | Widget | post", function (hooks) {
       args.likeCount = args.liked ? 1 : 0;
     });
 
-    await render(<template>
-      <MountWidget
-        @widget="post-menu"
-        @args={{self.args}}
-        @toggleLike={{self.toggleLike}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post-menu"
+          @args={{self.args}}
+          @toggleLike={{self.toggleLike}}
+        />
+      </template>
+    );
 
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
@@ -350,13 +372,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", args);
     this.set("showLogin", () => (this.loginShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post-menu"
-        @args={{self.args}}
-        @showLogin={{self.showLogin}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post-menu"
+          @args={{self.args}}
+          @showLogin={{self.showLogin}}
+        />
+      </template>
+    );
 
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
@@ -380,13 +404,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canEdit: true });
     this.set("editPost", () => (this.editPostCalled = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @editPost={{self.editPost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @editPost={{self.editPost}}
+        />
+      </template>
+    );
 
     await click("button.edit");
     assert.true(this.editPostCalled, "triggered the edit action");
@@ -398,9 +424,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canEdit: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.edit").doesNotExist("button is not displayed");
   });
@@ -412,13 +438,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canDeleteTopic: true });
     this.set("deletePost", () => (this.deletePostCalled = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @deletePost={{self.deletePost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @deletePost={{self.deletePost}}
+        />
+      </template>
+    );
 
     await click("button.delete");
     assert.true(this.deletePostCalled, "triggered the delete action");
@@ -430,9 +458,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canDeleteTopic: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.delete").doesNotExist("button is not displayed");
   });
@@ -447,9 +475,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       canFlag: true,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     await click(".show-more-actions");
 
@@ -471,13 +499,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canRecoverTopic: true });
     this.set("recoverPost", () => (this.recovered = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @recoverPost={{self.recoverPost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @recoverPost={{self.recoverPost}}
+        />
+      </template>
+    );
 
     await click("button.recover");
     assert.true(this.recovered);
@@ -489,9 +519,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canRecoverTopic: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.recover").doesNotExist("button is not displayed");
   });
@@ -503,13 +533,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canDelete: true, canFlag: true });
     this.set("deletePost", () => (this.deletePostCalled = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @deletePost={{self.deletePost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @deletePost={{self.deletePost}}
+        />
+      </template>
+    );
 
     await click(".show-more-actions");
     await click("button.delete");
@@ -522,9 +554,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canDelete: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.delete").doesNotExist("button is not displayed");
   });
@@ -539,9 +571,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       canFlag: false,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.delete").doesNotExist("delete button is not displayed");
     assert
@@ -556,13 +588,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canRecover: true });
     this.set("recoverPost", () => (this.recovered = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @recoverPost={{self.recoverPost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @recoverPost={{self.recoverPost}}
+        />
+      </template>
+    );
 
     await click("button.recover");
     assert.true(this.recovered);
@@ -574,9 +608,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canRecover: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.recover").doesNotExist("button is not displayed");
   });
@@ -587,13 +621,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canFlag: true });
     this.set("showFlags", () => (this.flagsShown = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @showFlags={{self.showFlags}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @showFlags={{self.showFlags}}
+        />
+      </template>
+    );
 
     assert.dom("button.create-flag").exists();
 
@@ -606,9 +642,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canFlag: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.create-flag").doesNotExist();
   });
@@ -618,9 +654,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canFlag: true, hidden: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.create-flag").doesNotExist();
   });
@@ -630,9 +666,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { read: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".read-state.read").exists();
   });
@@ -642,9 +678,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { read: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".read-state").exists();
   });
@@ -658,9 +694,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       replyDirectlyAbove: true,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
     assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
@@ -675,9 +711,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       replyDirectlyAbove: false,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
     assert.dom(".avoid-tab").exists("has the avoid tab class");
@@ -693,9 +729,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
     this.siteSettings.suppress_reply_directly_above = false;
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".avoid-tab").exists("has the avoid tab class");
     await click("a.reply-to-tab");
@@ -709,13 +745,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: true });
     this.set("expandHidden", () => (this.unhidden = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @expandHidden={{self.expandHidden}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @expandHidden={{self.expandHidden}}
+        />
+      </template>
+    );
 
     await click(".topic-body .expand-hidden");
     assert.true(this.unhidden, "triggers the action");
@@ -727,13 +765,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: false });
     this.set("expandHidden", () => (this.unhidden = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @expandHidden={{self.expandHidden}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @expandHidden={{self.expandHidden}}
+        />
+      </template>
+    );
 
     assert
       .dom(".topic-body .expand-hidden")
@@ -747,9 +787,11 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { expandablePost: true });
     this.set("post", store.createRecord("post", { id: 1234 }));
 
-    await render(<template>
-      <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+      </template>
+    );
 
     await click(".topic-body .expand-post");
     assert.dom(".expand-post").doesNotExist("button is gone");
@@ -761,9 +803,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canBookmark: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.bookmark").doesNotExist();
     assert.dom("button.bookmarked").doesNotExist();
@@ -778,13 +820,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", args);
     this.set("toggleBookmark", () => (args.bookmarked = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @toggleBookmark={{self.toggleBookmark}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @toggleBookmark={{self.toggleBookmark}}
+        />
+      </template>
+    );
 
     assert.dom(".post-menu-area .bookmark").exists();
     assert.dom("button.bookmarked").doesNotExist();
@@ -795,9 +839,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canManage: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".post-menu-area .show-post-admin-menu").doesNotExist();
   });
@@ -807,10 +851,12 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canManage: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post" @args={{self.args}} />
+        <DMenus />
+      </template>
+    );
 
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
@@ -844,15 +890,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @permanentlyDeletePost={{self.permanentlyDeletePost}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @permanentlyDeletePost={{self.permanentlyDeletePost}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -884,15 +932,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @permanentlyDeletePost={{self.permanentlyDeletePost}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @permanentlyDeletePost={{self.permanentlyDeletePost}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
 
@@ -926,15 +976,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("togglePostType", () => (this.toggled = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @togglePostType={{self.togglePostType}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @togglePostType={{self.togglePostType}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -963,15 +1015,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("rebakePost", () => (this.baked = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @rebakePost={{self.rebakePost}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @rebakePost={{self.rebakePost}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -1001,15 +1055,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("unhidePost", () => (unhidden = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @unhidePost={{self.unhidePost}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @unhidePost={{self.unhidePost}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
 
@@ -1041,15 +1097,17 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("post", post);
     this.set("changePostOwner", () => (this.owned = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @model={{self.post}}
-        @changePostOwner={{self.changePostOwner}}
-      />
-      <DMenus />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @model={{self.post}}
+          @changePostOwner={{self.changePostOwner}}
+        />
+        <DMenus />
+      </template>
+    );
 
     await click(".post-menu-area .show-post-admin-menu");
     await click(
@@ -1068,13 +1126,15 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canCreatePost: true });
     this.set("replyToPost", () => (this.replied = true));
 
-    await render(<template>
-      <MountWidget
-        @widget="post"
-        @args={{self.args}}
-        @replyToPost={{self.replyToPost}}
-      />
-    </template>);
+    await render(
+      <template>
+        <MountWidget
+          @widget="post"
+          @args={{self.args}}
+          @replyToPost={{self.replyToPost}}
+        />
+      </template>
+    );
 
     await click(".post-controls .create");
     assert.true(this.replied);
@@ -1086,9 +1146,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { canCreatePost: false });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".post-controls .create").doesNotExist();
   });
@@ -1099,9 +1159,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", { replyCount: 0 });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.show-replies").doesNotExist();
   });
@@ -1113,9 +1173,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.suppress_reply_directly_below = true;
     this.set("args", { replyCount: 2, replyDirectlyBelow: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.show-replies").exists();
   });
@@ -1127,9 +1187,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.suppress_reply_directly_below = true;
     this.set("args", { replyCount: 1, replyDirectlyBelow: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom("button.show-replies").doesNotExist();
   });
@@ -1141,9 +1201,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.siteSettings.suppress_reply_directly_below = false;
     this.set("args", { id: 6654, replyCount: 1, replyDirectlyBelow: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     await click("button.show-replies");
     assert.dom("section.embedded-posts.bottom .cooked").exists();
@@ -1157,9 +1217,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     const topic = store.createRecord("topic", { id: 123 });
     this.set("args", { topic, post_number: 1, topicMap: true });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-map").exists();
   });
@@ -1176,9 +1236,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
     this.set("args", { topic, post_number: 1 });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-map").exists();
   });
@@ -1202,9 +1262,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       post_number: 1,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
     assert.dom(".topic-map__users-trigger").doesNotExist();
     assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
   });
@@ -1234,9 +1294,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       post_number: 1,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
     assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
     await click(".topic-map__users-trigger");
@@ -1264,9 +1324,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     ]);
     this.set("args", { topic, post_number: 1 });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-map").exists({ count: 1 });
     assert.dom(".topic-map__links-content").doesNotExist();
@@ -1288,9 +1348,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
     this.set("args", { topic, post_number: 1 });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-map").exists();
     assert.dom(".summarization-button .top-replies").doesNotExist();
@@ -1308,9 +1368,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
     this.set("args", { topic, post_number: 1 });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".summarization-button .top-replies").exists({ count: 1 });
   });
@@ -1331,9 +1391,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       post_number: 1,
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".topic-map__private-message-map").exists({ count: 1 });
     assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
@@ -1357,9 +1417,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       },
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".post-notice.returning-user:not(.old)").hasText(
       i18n("post.notice.returning_user", {
@@ -1386,9 +1446,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       },
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".post-notice.custom").hasText(
       "This is an official notice " +
@@ -1417,9 +1477,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       notice: { type: "new_user" },
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert
       .dom(".post-notice.old.new-user")
@@ -1434,9 +1494,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       requestedGroupName: "testGroup",
     });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".group-request a").hasText(i18n("groups.requests.handle"));
     assert
@@ -1456,9 +1516,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     const user = store.createRecord("user", { status });
     this.set("args", { user });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".user-status-message").exists();
   });
@@ -1475,9 +1535,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     const user = store.createRecord("user", { status });
     this.set("args", { user });
 
-    await render(<template>
-      <MountWidget @widget="post" @args={{self.args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="post" @args={{self.args}} /></template>
+    );
 
     assert.dom(".user-status-message").doesNotExist();
   });

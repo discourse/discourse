@@ -47,12 +47,14 @@ module("Integration | Helper | {{slice}}", function (hooks) {
 
     this.set("array", null);
 
-    await render(<template>
-      this is all that will render
-      {{#each (slice 1 2 self.array) as |value|}}
-        {{value}}
-      {{/each}}
-    </template>);
+    await render(
+      <template>
+        this is all that will render
+        {{#each (slice 1 2 self.array) as |value|}}
+          {{value}}
+        {{/each}}
+      </template>
+    );
 
     assert.dom().hasText("this is all that will render", "no error is thrown");
   });
@@ -62,12 +64,14 @@ module("Integration | Helper | {{slice}}", function (hooks) {
 
     this.set("array", undefined);
 
-    await render(<template>
-      this is all that will render
-      {{#each (slice 1 2 self.array) as |value|}}
-        {{value}}
-      {{/each}}
-    </template>);
+    await render(
+      <template>
+        this is all that will render
+        {{#each (slice 1 2 self.array) as |value|}}
+          {{value}}
+        {{/each}}
+      </template>
+    );
 
     assert.dom().hasText("this is all that will render", "no error is thrown");
   });

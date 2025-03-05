@@ -43,9 +43,11 @@ module("Integration | Component | date-time-input", function (hooks) {
     this.setProperties({ date: DEFAULT_DATE_TIME });
     this.set("onChange", setDate);
 
-    await render(<template>
-      <DateTimeInput @date={{self.date}} @onChange={{self.onChange}} />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInput @date={{self.date}} @onChange={{self.onChange}} />
+      </template>
+    );
 
     await fillIn(".date-picker", "2019-01-02");
     await triggerEvent(".date-picker", "change");
@@ -58,9 +60,11 @@ module("Integration | Component | date-time-input", function (hooks) {
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(<template>
-      <DateTimeInput @date={{self.date}} @showTime={{false}} />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInput @date={{self.date}} @showTime={{false}} />
+      </template>
+    );
 
     assert.dom(".d-time-input .combo-box-header").doesNotExist();
   });
@@ -74,13 +78,15 @@ module("Integration | Component | date-time-input", function (hooks) {
       onChange: setDate,
     });
 
-    await render(<template>
-      <DateTimeInput
-        @date={{self.date}}
-        @timezone={{self.timezone}}
-        @onChange={{self.onChange}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInput
+          @date={{self.date}}
+          @timezone={{self.timezone}}
+          @onChange={{self.onChange}}
+        />
+      </template>
+    );
     await triggerEvent(".date-picker", "change");
     assert.strictEqual(this.date.format(), "2023-05-05T12:00:00+01:00");
 

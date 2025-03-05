@@ -111,9 +111,11 @@ module("Integration | Component | d-editor", function (hooks) {
 
       this.set("value", "hello world.");
 
-      await render(<template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
-      </template>);
+      await render(
+        <template>
+          <DEditor @value={{self.value}} @composerEvents={{true}} />
+        </template>
+      );
 
       const textarea = jumpEnd("textarea.d-editor-input");
       await testFunc.call(this, assert, textarea);
@@ -515,9 +517,11 @@ third line`
 
     this.set("value", "one\n\ntwo\n\nthree");
 
-    await render(<template>
-      <DEditor @value={{self.value}} @composerEvents={{true}} />
-    </template>);
+    await render(
+      <template>
+        <DEditor @value={{self.value}} @composerEvents={{true}} />
+      </template>
+    );
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
@@ -538,9 +542,11 @@ third line`
 
     this.set("value", "one\n\n\n\ntwo");
 
-    await render(<template>
-      <DEditor @value={{self.value}} @composerEvents={{true}} />
-    </template>);
+    await render(
+      <template>
+        <DEditor @value={{self.value}} @composerEvents={{true}} />
+      </template>
+    );
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
@@ -748,9 +754,9 @@ third line`
     this.set("value", "hello world.");
     // we need DMenus here, as we are testing the d-editor which is not renderining
     // the in-element outlet container necessary for DMenu to work
-    await render(<template>
-      <DMenus /><DEditor @value={{self.value}} />
-    </template>);
+    await render(
+      <template><DMenus /><DEditor @value={{self.value}} /></template>
+    );
     const picker = emojiPicker();
     jumpEnd("textarea.d-editor-input");
     await click(".d-editor-button-bar .emoji");
@@ -933,9 +939,11 @@ third line`
     this.set("value", "");
     this.siteSettings.enable_rich_text_paste = true;
 
-    await render(<template>
-      <DEditor @value={{self.value}} @composerEvents={{true}} />
-    </template>);
+    await render(
+      <template>
+        <DEditor @value={{self.value}} @composerEvents={{true}} />
+      </template>
+    );
 
     await paste(".d-editor", "\ta\tb\n1\t2\t3");
     assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
@@ -950,9 +958,11 @@ third line`
     this.set("value", "");
     this.siteSettings.enable_rich_text_paste = true;
 
-    await render(<template>
-      <DEditor @value={{self.value}} @composerEvents={{true}} />
-    </template>);
+    await render(
+      <template>
+        <DEditor @value={{self.value}} @composerEvents={{true}} />
+      </template>
+    );
 
     await paste(".d-editor", '\ta\tb\n1\t"2\n2.5"\t3');
     assert.strictEqual(this.value, "||a|b|\n|---|---|---|\n|1|2<br>2.5|3|\n");

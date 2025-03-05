@@ -52,9 +52,11 @@ module(
       this.set("choices", choices);
       this.set("attributes", attributes);
 
-      await render(<template>
-        <Dropdown @choices={{self.choices}} @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template>
+          <Dropdown @choices={{self.choices}} @attributes={{self.attributes}} />
+        </template>
+      );
       assert
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");

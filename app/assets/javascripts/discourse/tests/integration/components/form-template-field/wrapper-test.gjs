@@ -67,12 +67,14 @@ module(
         multi: ["Option 1"],
       });
 
-      await render(<template>
-        <Wrapper
-          @content={{self.content}}
-          @initialValues={{self.initialValues}}
-        />
-      </template>);
+      await render(
+        <template>
+          <Wrapper
+            @content={{self.content}}
+            @initialValues={{self.initialValues}}
+          />
+        </template>
+      );
 
       assert.dom("[name='checkbox']").hasValue("on");
       assert.dom("[name='name']").hasValue("Test Name");
@@ -96,9 +98,9 @@ module(
       });
 
       this.set("formTemplateId", [1]);
-      await render(<template>
-        <Wrapper @id={{self.formTemplateId}} />
-      </template>);
+      await render(
+        <template><Wrapper @id={{self.formTemplateId}} /></template>
+      );
 
       assert
         .dom(`.form-template-field[data-field-type='checkbox']`)

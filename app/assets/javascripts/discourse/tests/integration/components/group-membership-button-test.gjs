@@ -11,9 +11,9 @@ module("Integration | Component | group-membership-button", function (hooks) {
 
     this.set("model", { public_admission: false, is_group_user: true });
 
-    await render(<template>
-      <GroupMembershipButton @model={{self.model}} />
-    </template>);
+    await render(
+      <template><GroupMembershipButton @model={{self.model}} /></template>
+    );
 
     assert
       .dom(".group-index-join")
@@ -33,9 +33,9 @@ module("Integration | Component | group-membership-button", function (hooks) {
 
     this.set("model", { public_exit: false, is_group_user: false });
 
-    await render(<template>
-      <GroupMembershipButton @model={{self.model}} />
-    </template>);
+    await render(
+      <template><GroupMembershipButton @model={{self.model}} /></template>
+    );
 
     assert
       .dom(".group-index-leave")
@@ -58,9 +58,9 @@ module("Integration | Component | group-membership-button", function (hooks) {
       is_group_user: true,
     });
 
-    await render(<template>
-      <GroupMembershipButton @model={{self.model}} />
-    </template>);
+    await render(
+      <template><GroupMembershipButton @model={{self.model}} /></template>
+    );
 
     assert
       .dom(".group-index-request")

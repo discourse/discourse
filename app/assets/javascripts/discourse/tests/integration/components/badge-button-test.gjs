@@ -73,11 +73,13 @@ module("Integration | Component | badge-button", function (hooks) {
 
     this.set("badge", {});
 
-    await render(<template>
-      <BadgeButton @badge={{self.badge}}>
-        <span class="test"></span>
-      </BadgeButton>
-    </template>);
+    await render(
+      <template>
+        <BadgeButton @badge={{self.badge}}>
+          <span class="test"></span>
+        </BadgeButton>
+      </template>
+    );
 
     assert.dom(".test").exists();
   });
@@ -97,9 +99,11 @@ module("Integration | Component | badge-button", function (hooks) {
 
     this.set("badge", { name: "foo" });
 
-    await render(<template>
-      <BadgeButton @badge={{self.badge}} @showName={{false}} />
-    </template>);
+    await render(
+      <template>
+        <BadgeButton @badge={{self.badge}} @showName={{false}} />
+      </template>
+    );
 
     assert.dom(".badge-display-name").doesNotExist();
   });

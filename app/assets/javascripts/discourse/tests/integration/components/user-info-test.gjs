@@ -34,9 +34,14 @@ module("Integration | Component | user-info", function (hooks) {
   test("includeLink", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @includeLink={{self.includeLink}} />
-    </template>);
+    await render(
+      <template>
+        <UserInfo
+          @user={{self.currentUser}}
+          @includeLink={{self.includeLink}}
+        />
+      </template>
+    );
 
     this.set("includeLink", true);
     assert.dom(`.name-line a[href="/u/${this.currentUser.username}"]`).exists();
@@ -50,12 +55,14 @@ module("Integration | Component | user-info", function (hooks) {
   test("includeAvatar", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <UserInfo
-        @user={{self.currentUser}}
-        @includeAvatar={{self.includeAvatar}}
-      />
-    </template>);
+    await render(
+      <template>
+        <UserInfo
+          @user={{self.currentUser}}
+          @includeAvatar={{self.includeAvatar}}
+        />
+      </template>
+    );
 
     this.set("includeAvatar", true);
     assert.dom(".user-image").exists();
@@ -70,9 +77,11 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
-    </template>);
+    await render(
+      <template>
+        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+      </template>
+    );
 
     assert.dom(".user-status-message").exists();
   });
@@ -82,9 +91,11 @@ module("Integration | Component | user-info", function (hooks) {
 
     this.currentUser.name = "Evil Trout";
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
-    </template>);
+    await render(
+      <template>
+        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+      </template>
+    );
 
     assert.dom(".user-status-message").doesNotExist();
   });
@@ -95,9 +106,11 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @showStatus={{false}} />
-    </template>);
+    await render(
+      <template>
+        <UserInfo @user={{self.currentUser}} @showStatus={{false}} />
+      </template>
+    );
 
     assert.dom(".user-status-message").doesNotExist();
   });
@@ -119,9 +132,11 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
-    </template>);
+    await render(
+      <template>
+        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+      </template>
+    );
 
     assert
       .dom(".user-status-message .user-status-message-description")
@@ -134,13 +149,15 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template>
-      <UserInfo
-        @user={{self.currentUser}}
-        @showStatus={{true}}
-        @showStatusDescription={{true}}
-      />
-    </template>);
+    await render(
+      <template>
+        <UserInfo
+          @user={{self.currentUser}}
+          @showStatus={{true}}
+          @showStatusDescription={{true}}
+        />
+      </template>
+    );
 
     assert
       .dom(".user-status-message .user-status-message-description")
@@ -153,9 +170,12 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template>
-      <UserInfo @user={{self.currentUser}} @showStatus={{true}} /><DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserInfo @user={{self.currentUser}} @showStatus={{true}} /><DTooltips
+        />
+      </template>
+    );
     await triggerEvent(".user-status-message", "pointermove");
 
     assert

@@ -21,9 +21,9 @@ module(
 
       this.set("choices", choices);
 
-      await render(<template>
-        <MultiSelect @choices={{self.choices}} />
-      </template>);
+      await render(
+        <template><MultiSelect @choices={{self.choices}} /></template>
+      );
       assert
         .dom(".form-template-field__multi-select")
         .exists("a multiselect component exists");
@@ -55,12 +55,14 @@ module(
       this.set("choices", choices);
       this.set("attributes", attributes);
 
-      await render(<template>
-        <MultiSelect
-          @choices={{self.choices}}
-          @attributes={{self.attributes}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MultiSelect
+            @choices={{self.choices}}
+            @attributes={{self.attributes}}
+          />
+        </template>
+      );
       assert
         .dom(".form-template-field__multi-select")
         .exists("a multiselect dropdown component exists");
@@ -76,9 +78,9 @@ module(
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
-      await render(<template>
-        <MultiSelect @choices={{self.choices}} />
-      </template>);
+      await render(
+        <template><MultiSelect @choices={{self.choices}} /></template>
+      );
 
       assert.dom(".form-template-field__label").doesNotExist();
     });

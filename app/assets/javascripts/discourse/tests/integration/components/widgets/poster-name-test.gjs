@@ -18,9 +18,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       user_title: "Trout Master",
     });
 
-    await render(<template>
-      <MountWidget @widget="poster-name" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="poster-name" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".names").exists();
     assert.dom("span.username").exists();
@@ -42,9 +44,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       primary_group_name: "fish",
     });
 
-    await render(<template>
-      <MountWidget @widget="poster-name" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="poster-name" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("span.staff").exists();
     assert.dom("span.admin").exists();
@@ -60,9 +64,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     this.siteSettings.display_name_on_posts = false;
     this.set("args", { username: "eviltrout", name: "Robin Ward" });
 
-    await render(<template>
-      <MountWidget @widget="poster-name" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="poster-name" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".full-name").doesNotExist();
   });
@@ -74,9 +80,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     this.siteSettings.display_name_on_posts = true;
     this.set("args", { username: "eviltrout", name: "evil-trout" });
 
-    await render(<template>
-      <MountWidget @widget="poster-name" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="poster-name" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".second").doesNotExist();
   });
@@ -96,9 +104,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       ].map((badge) => Badge.createFromJson({ badges: [badge] })[0]),
     });
 
-    await render(<template>
-      <MountWidget @widget="poster-name" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="poster-name" @args={{self.args}} />
+      </template>
+    );
 
     // Check that the custom CSS classes are set
     assert.dom("span.user-badge-button-badge1").exists();

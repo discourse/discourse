@@ -33,9 +33,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert
       .dom(".actions .extra-buttons .hot-coffee")
@@ -67,11 +69,13 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <article data-post-id="123">
-        <MountWidget @widget="post-menu" @args={{self.args}} />
-      </article>
-    </template>);
+    await render(
+      <template>
+        <article data-post-id="123">
+          <MountWidget @widget="post-menu" @args={{self.args}} />
+        </article>
+      </template>
+    );
 
     await click(".hot-coffee");
 
@@ -96,9 +100,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
@@ -116,9 +122,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".actions .reply").exists("does not remove reply button");
   });
@@ -134,9 +142,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
@@ -153,9 +163,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".actions .reply").doesNotExist("removes reply button");
   });
@@ -183,9 +195,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("h1.post-menu-replacement").exists("replacement is rendered");
     assert
@@ -210,9 +224,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       });
     });
 
-    await render(<template>
-      <MountWidget @widget="post-menu" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-menu" @args={{self.args}} />
+      </template>
+    );
 
     assert
       .dom("h1.post-menu-replacement")

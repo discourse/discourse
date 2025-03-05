@@ -44,9 +44,11 @@ module("Integration | Component | slow-mode-info", function (hooks) {
       user: { canManageTopic: true },
     });
 
-    await render(<template>
-      <SlowModeInfo @topic={{self.topic}} @user={{self.user}} />
-    </template>);
+    await render(
+      <template>
+        <SlowModeInfo @topic={{self.topic}} @user={{self.user}} />
+      </template>
+    );
 
     assert.dom(".slow-mode-remove").exists();
   });
@@ -59,9 +61,11 @@ module("Integration | Component | slow-mode-info", function (hooks) {
       user: { canManageTopic: false },
     });
 
-    await render(<template>
-      <SlowModeInfo @topic={{self.topic}} @user={{self.user}} />
-    </template>);
+    await render(
+      <template>
+        <SlowModeInfo @topic={{self.topic}} @user={{self.user}} />
+      </template>
+    );
 
     assert
       .dom(".slow-mode-remove")

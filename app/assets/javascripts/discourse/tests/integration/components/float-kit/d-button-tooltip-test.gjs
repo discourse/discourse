@@ -11,16 +11,18 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <DButtonTooltip>
-          <:button>
-            <DButton />
-          </:button>
-          <:tooltip>
-            <DTooltip />
-          </:tooltip>
-        </DButtonTooltip>
-      </template>);
+      await render(
+        <template>
+          <DButtonTooltip>
+            <:button>
+              <DButton />
+            </:button>
+            <:tooltip>
+              <DTooltip />
+            </:tooltip>
+          </DButtonTooltip>
+        </template>
+      );
 
       assert.dom(".btn").exists();
       assert.dom("[data-trigger]").exists();

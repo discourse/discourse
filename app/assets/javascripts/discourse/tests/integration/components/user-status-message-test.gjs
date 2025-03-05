@@ -22,18 +22,20 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it renders user status emoji", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} />
-    </template>);
+    await render(
+      <template><UserStatusMessage @status={{self.status}} /></template>
+    );
     assert.dom("img.emoji[alt='tooth']").exists("the status emoji is shown");
   });
 
   test("it renders status description if enabled", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} @showDescription={{true}} />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} @showDescription={{true}} />
+      </template>
+    );
 
     assert
       .dom('[data-trigger][data-identifier="user-status-message-tooltip"]')
@@ -50,9 +52,11 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = "2100-02-01T12:30:00.000Z";
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} /><DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} /><DTooltips />
+      </template>
+    );
     await triggerEvent(".user-status-message", "pointermove");
 
     assert
@@ -70,9 +74,11 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} /><DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} /><DTooltips />
+      </template>
+    );
     await triggerEvent(".user-status-message", "pointermove");
 
     assert
@@ -90,9 +96,11 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = null;
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} /><DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} /><DTooltips />
+      </template>
+    );
     await triggerEvent(".user-status-message", "pointermove");
 
     assert
@@ -105,9 +113,11 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it shows tooltip by default", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} /><DTooltips />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} /><DTooltips />
+      </template>
+    );
     await triggerEvent(".user-status-message", "pointermove");
 
     assert
@@ -121,9 +131,9 @@ module("Integration | Component | user-status-message", function (hooks) {
     this.owner.unregister("service:current-user");
     this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} />
-    </template>);
+    await render(
+      <template><UserStatusMessage @status={{self.status}} /></template>
+    );
 
     assert
       .dom('[data-trigger][data-identifier="user-status-message-tooltip"]')
@@ -135,9 +145,11 @@ module("Integration | Component | user-status-message", function (hooks) {
 
     this.set("status", { emoji: "tooth", description: "off to dentist" });
 
-    await render(<template>
-      <UserStatusMessage @status={{self.status}} class="foo" />
-    </template>);
+    await render(
+      <template>
+        <UserStatusMessage @status={{self.status}} class="foo" />
+      </template>
+    );
 
     assert
       .dom('[data-trigger][data-identifier="user-status-message-tooltip"].foo')

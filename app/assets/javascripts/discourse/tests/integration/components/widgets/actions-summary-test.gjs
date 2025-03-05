@@ -15,9 +15,11 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
       deletedByAvatarTemplate: "/images/avatar.png",
     });
 
-    await render(<template>
-      <MountWidget @widget="actions-summary" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="actions-summary" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".post-action .d-icon-trash-can").exists("has the deleted icon");
     assert.dom(".avatar[title=eviltrout]").exists("has the deleted by avatar");

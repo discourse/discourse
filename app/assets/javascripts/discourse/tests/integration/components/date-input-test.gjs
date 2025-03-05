@@ -24,9 +24,11 @@ module("Integration | Component | date-input", function (hooks) {
     this.setProperties({ date: DEFAULT_DATE });
     this.set("onChange", () => {});
 
-    await render(<template>
-      <DateInput @date={{self.date}} @onChange={{self.onChange}} />
-    </template>);
+    await render(
+      <template>
+        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+      </template>
+    );
 
     await fillIn(".date-picker", "2019-01-02");
     await triggerEvent(".date-picker", "change");
@@ -40,9 +42,11 @@ module("Integration | Component | date-input", function (hooks) {
     this.setProperties({ date: DEFAULT_DATE });
     this.set("onChange", (date) => this.set("date", date));
 
-    await render(<template>
-      <DateInput @date={{self.date}} @onChange={{self.onChange}} />
-    </template>);
+    await render(
+      <template>
+        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+      </template>
+    );
 
     await fillIn(".date-picker", "2019-02-02");
     await triggerEvent(".date-picker", "change");
@@ -57,9 +61,11 @@ module("Integration | Component | date-input", function (hooks) {
       date: moment.tz("2023-05-05T10:00:00", "ETC/GMT-12"),
     });
 
-    await render(<template>
-      <DateInput @date={{self.date}} @onChange={{self.onChange}} />
-    </template>);
+    await render(
+      <template>
+        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+      </template>
+    );
     assert.dom(".date-picker").hasValue("2023-05-05");
 
     this.setProperties({

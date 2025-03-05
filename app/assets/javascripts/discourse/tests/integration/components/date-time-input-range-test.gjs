@@ -16,13 +16,15 @@ module("Integration | Component | date-time-input-range", function (hooks) {
 
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
-    await render(<template>
-      <DateTimeInputRange
-        @from={{self.state.from}}
-        @to={{self.state.to}}
-        @onChange={{fn (mut self.state)}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInputRange
+          @from={{self.state.from}}
+          @to={{self.state.to}}
+          @onChange={{fn (mut self.state)}}
+        />
+      </template>
+    );
 
     assert.dom(".from.d-date-time-input .date-picker").hasValue("2019-01-29");
     assert
@@ -55,14 +57,16 @@ module("Integration | Component | date-time-input-range", function (hooks) {
 
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
-    await render(<template>
-      <DateTimeInputRange
-        @from={{self.state.from}}
-        @to={{self.state.to}}
-        @relativeDate={{self.state.from}}
-        @onChange={{fn (mut self.state)}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInputRange
+          @from={{self.state.from}}
+          @to={{self.state.to}}
+          @relativeDate={{self.state.from}}
+          @onChange={{fn (mut self.state)}}
+        />
+      </template>
+    );
 
     await fillIn(".to.d-date-time-input .date-picker", "2019-01-29");
     const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
@@ -83,14 +87,16 @@ module("Integration | Component | date-time-input-range", function (hooks) {
       },
     });
 
-    await render(<template>
-      <DateTimeInputRange
-        @from={{self.state.from}}
-        @to={{self.state.to}}
-        @onChange={{fn (mut self.state)}}
-        @timezone="Europe/Paris"
-      />
-    </template>);
+    await render(
+      <template>
+        <DateTimeInputRange
+          @from={{self.state.from}}
+          @to={{self.state.to}}
+          @onChange={{fn (mut self.state)}}
+          @timezone="Europe/Paris"
+        />
+      </template>
+    );
 
     assert.dom(".from.d-date-time-input .date-picker").hasValue("2019-01-29");
     assert

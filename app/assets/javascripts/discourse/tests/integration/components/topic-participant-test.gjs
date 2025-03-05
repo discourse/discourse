@@ -15,9 +15,9 @@ module("Integration | Component | topic-participant", function (hooks) {
       post_count: 1,
     });
 
-    await render(<template>
-      <TopicParticipant @participant={{self.args}} />
-    </template>);
+    await render(
+      <template><TopicParticipant @participant={{self.args}} /></template>
+    );
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").doesNotExist();
@@ -38,9 +38,9 @@ module("Integration | Component | topic-participant", function (hooks) {
       flair_group_id: "41",
     });
 
-    await render(<template>
-      <TopicParticipant @participant={{self.args}} />
-    </template>);
+    await render(
+      <template><TopicParticipant @participant={{self.args}} /></template>
+    );
 
     assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").exists();

@@ -11,16 +11,20 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
 
     this.foo = [1];
     this.bar = 1;
-    await render(<template>
-      {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
-    </template>);
+    await render(
+      <template>
+        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+      </template>
+    );
 
     assert.dom(".test").exists("is true when element is found");
 
     this.bar = 2;
-    await render(<template>
-      {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
-    </template>);
+    await render(
+      <template>
+        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+      </template>
+    );
 
     assert.dom(".test").doesNotExist("is false when element is not found");
   });
@@ -30,16 +34,20 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
 
     this.foo = "foo";
     this.bar = "f";
-    await render(<template>
-      {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
-    </template>);
+    await render(
+      <template>
+        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+      </template>
+    );
 
     assert.dom(".test").exists("is true when element is found");
 
     this.bar = "b";
-    await render(<template>
-      {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
-    </template>);
+    await render(
+      <template>
+        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+      </template>
+    );
 
     assert.dom(".test").doesNotExist("is false when element is not found");
   });

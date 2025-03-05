@@ -25,9 +25,11 @@ module("Integration | Component | Widget | post-links", function (hooks) {
       ],
     });
 
-    await render(<template>
-      <MountWidget @widget="post-links" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-links" @args={{self.args}} />
+      </template>
+    );
 
     assert
       .dom(".post-links a.track-link")
@@ -78,9 +80,11 @@ module("Integration | Component | Widget | post-links", function (hooks) {
       ],
     });
 
-    await render(<template>
-      <MountWidget @widget="post-links" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="post-links" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".expand-links").exists({ count: 1 }, "collapsed by default");
 

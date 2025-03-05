@@ -22,9 +22,9 @@ module("Integration | Helper | category-badge", function (hooks) {
 
     this.set("category", Category.findById(1));
 
-    await render(<template>
-      {{categoryBadge self.category link=true}}
-    </template>);
+    await render(
+      <template>{{categoryBadge self.category link=true}}</template>
+    );
 
     assert
       .dom(

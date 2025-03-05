@@ -25,9 +25,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormTextarea @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormTextarea @attributes={{self.attributes}} /></template>
+      );
 
       assert
         .dom(".form-template-field__textarea")
@@ -47,9 +47,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <FormTextarea @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><FormTextarea @attributes={{self.attributes}} /></template>
+      );
 
       assert.dom(".form-template-field__label").doesNotExist();
     });

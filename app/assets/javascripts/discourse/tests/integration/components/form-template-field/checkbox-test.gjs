@@ -26,9 +26,9 @@ module(
       };
       this.set("attributes", attributes);
 
-      await render(<template>
-        <Checkbox @attributes={{self.attributes}} />
-      </template>);
+      await render(
+        <template><Checkbox @attributes={{self.attributes}} /></template>
+      );
 
       assert
         .dom(

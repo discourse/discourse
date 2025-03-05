@@ -50,9 +50,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     this.currentUser.admin = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -82,9 +84,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       topicIds: [UNLISTED_TOPIC_ID],
     });
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -100,9 +104,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       topicIds: [REGULAR_TOPIC_ID],
     });
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -117,9 +123,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     this.currentUser.user_option.enable_defer = true;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -134,9 +142,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     this.siteSettings.tagging_enabled = false;
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
@@ -151,9 +161,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     ["append-tags", "replace-tags", "remove-tags"].forEach((action) => {
@@ -168,9 +180,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     this.bulkSelectHelper = createBulkSelectHelper(this);
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -186,9 +200,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -207,9 +223,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
@@ -225,9 +243,11 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
       topicIds: [PM_TOPIC_ID],
     });
 
-    await render(<template>
-      <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
-    </template>);
+    await render(
+      <template>
+        <BulkSelectTopicsDropdown @bulkSelectHelper={{self.bulkSelectHelper}} />
+      </template>
+    );
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert

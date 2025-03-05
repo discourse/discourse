@@ -26,9 +26,9 @@ module("Integration | Component | invite-panel", function (hooks) {
     });
     this.set("inviteModel", user);
 
-    await render(<template>
-      <InvitePanel @inviteModel={{self.inviteModel}} />
-    </template>);
+    await render(
+      <template><InvitePanel @inviteModel={{self.inviteModel}} /></template>
+    );
 
     const input = selectKit(".invite-user-input");
     await input.expand();

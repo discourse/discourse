@@ -15,9 +15,11 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
       flair_color: "FFFFFF",
     });
 
-    await render(<template>
-      <MountWidget @widget="avatar-flair" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="avatar-flair" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -34,9 +36,11 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
       flair_url: "/images/avatar.png",
     });
 
-    await render(<template>
-      <MountWidget @widget="avatar-flair" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="avatar-flair" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg").doesNotExist("does not have an svg icon");

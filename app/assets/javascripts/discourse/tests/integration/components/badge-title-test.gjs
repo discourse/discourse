@@ -27,9 +27,11 @@ module("Integration | Component | badge-title", function (hooks) {
 
     pretender.put("/u/eviltrout/preferences/badge_title", () => response({}));
 
-    await render(<template>
-      <BadgeTitle @selectableUserBadges={{self.selectableUserBadges}} />
-    </template>);
+    await render(
+      <template>
+        <BadgeTitle @selectableUserBadges={{self.selectableUserBadges}} />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.selectRowByValue(42);

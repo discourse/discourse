@@ -15,9 +15,11 @@ module("Integration | Component | char-counter", function (hooks) {
     this.value = "Hello World";
     this.max = 12;
 
-    await render(<template>
-      <CharCounter @value={{self.value}} @max={{self.max}} />
-    </template>);
+    await render(
+      <template>
+        <CharCounter @value={{self.value}} @max={{self.max}} />
+      </template>
+    );
 
     assert.dom(this.element).includesText("11/12");
   });
@@ -27,13 +29,15 @@ module("Integration | Component | char-counter", function (hooks) {
 
     this.max = 50;
 
-    await render(<template>
-      <CharCounter @value={{self.charCounterContent}} @max={{self.max}}>
-        <textarea
-          {{on "input" (withEventValue (fn (mut self.charCounterContent)))}}
-        ></textarea>
-      </CharCounter>
-    </template>);
+    await render(
+      <template>
+        <CharCounter @value={{self.charCounterContent}} @max={{self.max}}>
+          <textarea
+            {{on "input" (withEventValue (fn (mut self.charCounterContent)))}}
+          ></textarea>
+        </CharCounter>
+      </template>
+    );
 
     assert
       .dom(this.element)
@@ -52,9 +56,11 @@ module("Integration | Component | char-counter", function (hooks) {
     this.max = 10;
     this.value = "Hello World";
 
-    await render(<template>
-      <CharCounter @value={{self.value}} @max={{self.max}} />
-    </template>);
+    await render(
+      <template>
+        <CharCounter @value={{self.value}} @max={{self.max}} />
+      </template>
+    );
 
     assert.dom(".char-counter.exceeded").exists("exceeded class is applied");
   });

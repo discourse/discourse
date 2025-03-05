@@ -15,9 +15,11 @@ module(
 
       this.set("args", { id: 123 });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert.dom(".small-action-desc .small-action-delete").doesNotExist();
       assert.dom(".small-action-desc .small-action-recover").doesNotExist();
@@ -29,9 +31,11 @@ module(
 
       this.set("args", { id: 123, canEdit: true });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert
         .dom(".small-action-desc .small-action-edit")
@@ -43,9 +47,11 @@ module(
 
       this.set("args", { id: 123, actionDescriptionWidget: "button" });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert
         .dom(".small-action .widget-button")
@@ -57,9 +63,11 @@ module(
 
       this.set("args", { id: 123, canEdit: true, canRecover: true });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert
         .dom(".small-action-desc .small-action-edit")
@@ -74,9 +82,11 @@ module(
 
       this.set("args", { id: 123, canDelete: true });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert
         .dom(".small-action-desc .small-action-delete")
@@ -88,9 +98,11 @@ module(
 
       this.set("args", { id: 123, canRecover: true });
 
-      await render(<template>
-        <MountWidget @widget="post-small-action" @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
       assert
         .dom(".small-action-desc .small-action-recover")
@@ -111,9 +123,11 @@ module(
 
         this.set("args", { id: 123, canRecover: false });
 
-        await render(<template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
-        </template>);
+        await render(
+          <template>
+            <MountWidget @widget="post-small-action" @args={{self.args}} />
+          </template>
+        );
 
         assert
           .dom(".abcde")
@@ -123,9 +137,11 @@ module(
 
         this.set("args", { id: 123, canRecover: true });
 
-        await render(<template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
-        </template>);
+        await render(
+          <template>
+            <MountWidget @widget="post-small-action" @args={{self.args}} />
+          </template>
+        );
 
         assert
           .dom(".abcde")

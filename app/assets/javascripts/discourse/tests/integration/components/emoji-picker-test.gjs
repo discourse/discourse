@@ -97,9 +97,9 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
     this.didSelectEmoji = (emoji) => assert.step(emoji);
 
-    await render(<template>
-      <Content @didSelectEmoji={{self.didSelectEmoji}} />
-    </template>);
+    await render(
+      <template><Content @didSelectEmoji={{self.didSelectEmoji}} /></template>
+    );
     await click('img.emoji[data-emoji="grinning"]');
 
     assert.verifySteps(["grinning"]);
@@ -184,9 +184,9 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
     this.didSelectEmoji = (emoji) => assert.step(emoji);
 
-    await render(<template>
-      <Content @didSelectEmoji={{self.didSelectEmoji}} />
-    </template>);
+    await render(
+      <template><Content @didSelectEmoji={{self.didSelectEmoji}} /></template>
+    );
     const picker = emojiPicker(".emoji-picker");
     await picker.select("raised_hands");
     await picker.tone(2);

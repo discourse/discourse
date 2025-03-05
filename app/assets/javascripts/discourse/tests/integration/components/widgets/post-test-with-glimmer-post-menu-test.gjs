@@ -42,9 +42,15 @@ module(
 
       this.set("args", { shareUrl: "/example", post_number: 1, topic });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".names").exists("includes poster name");
       assert.dom("a.post-date").exists("includes post date");
@@ -62,13 +68,15 @@ module(
         ],
       });
 
-      await render(<template>
-        <MountWidget
-          @widget="post-contents"
-          @model={{self.post}}
-          @args={{self.args}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post-contents"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.strictEqual(
         queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
@@ -102,13 +110,15 @@ module(
         ],
       });
 
-      await render(<template>
-        <MountWidget
-          @widget="post-contents"
-          @model={{self.post}}
-          @args={{self.args}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post-contents"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.strictEqual(
         queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
@@ -128,14 +138,16 @@ module(
       this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
       this.set("showHistory", () => (this.historyShown = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @showHistory={{self.showHistory}}
+          />
+        </template>
+      );
 
       await click(".post-info .wiki");
       assert.true(
@@ -150,14 +162,16 @@ module(
       this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
       this.set("editPost", () => (this.editPostCalled = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @editPost={{self.editPost}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @editPost={{self.editPost}}
+          />
+        </template>
+      );
 
       await click(".post-info .wiki");
       assert.true(this.editPostCalled, "clicking wiki icon edits the post");
@@ -169,14 +183,16 @@ module(
       this.set("args", { via_email: true, canViewRawEmail: true });
       this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showRawEmail={{self.showRawEmail}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @showRawEmail={{self.showRawEmail}}
+          />
+        </template>
+      );
 
       await click(".post-info.via-email");
       assert.true(
@@ -192,14 +208,16 @@ module(
       this.set("args", { via_email: true, canViewRawEmail: false });
       this.set("showRawEmail", () => (this.rawEmailShown = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showRawEmail={{self.showRawEmail}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @showRawEmail={{self.showRawEmail}}
+          />
+        </template>
+      );
 
       await click(".post-info.via-email");
       assert.false(
@@ -214,14 +232,16 @@ module(
       this.set("args", { version: 3, canViewEditHistory: true });
       this.set("showHistory", () => (this.historyShown = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @showHistory={{self.showHistory}}
+          />
+        </template>
+      );
 
       await click(".post-info.edits button");
       assert.true(this.historyShown, "clicking the pencil shows the history");
@@ -234,14 +254,16 @@ module(
       this.set("args", { version: 3, canViewEditHistory: false });
       this.set("showHistory", () => (this.historyShown = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @showHistory={{self.showHistory}}
+          />
+        </template>
+      );
 
       await click(".post-info.edits");
       assert.false(
@@ -255,9 +277,15 @@ module(
 
       this.set("args", { isWhisper: true });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.strictEqual(count(".topic-post.whisper"), 1);
       assert.strictEqual(count(".post-info.whisper"), 1);
@@ -268,9 +296,15 @@ module(
 
       this.set("args", { read: true });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".read-state.read").exists();
     });
@@ -280,9 +314,15 @@ module(
 
       this.set("args", { read: false });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".read-state").exists();
     });
@@ -296,9 +336,15 @@ module(
         replyDirectlyAbove: true,
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
       assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
@@ -313,9 +359,15 @@ module(
         replyDirectlyAbove: false,
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom("a.reply-to-tab").exists("shows the tab");
       assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
@@ -331,9 +383,15 @@ module(
       });
       this.siteSettings.suppress_reply_directly_above = false;
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
       await click("a.reply-to-tab");
@@ -347,14 +405,16 @@ module(
       this.set("args", { cooked_hidden: true, canSeeHiddenPost: true });
       this.set("expandHidden", () => (this.unhidden = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @expandHidden={{self.expandHidden}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @expandHidden={{self.expandHidden}}
+          />
+        </template>
+      );
 
       await click(".topic-body .expand-hidden");
       assert.true(this.unhidden, "triggers the action");
@@ -366,14 +426,16 @@ module(
       this.set("args", { cooked_hidden: true, canSeeHiddenPost: false });
       this.set("expandHidden", () => (this.unhidden = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @expandHidden={{self.expandHidden}}
-        />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @expandHidden={{self.expandHidden}}
+          />
+        </template>
+      );
 
       assert
         .dom(".topic-body .expand-hidden")
@@ -385,9 +447,15 @@ module(
 
       this.set("args", { expandablePost: true });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       await click(".topic-body .expand-post");
       assert.dom(".expand-post").doesNotExist("button is gone");
@@ -398,9 +466,15 @@ module(
 
       this.set("args", { canManage: false });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".post-menu-area .show-post-admin-menu").doesNotExist();
     });
@@ -410,10 +484,16 @@ module(
 
       this.currentUser.admin = true;
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+          <DMenus />
+        </template>
+      );
 
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
@@ -448,15 +528,17 @@ module(
       this.set("post", post);
       this.set("permanentlyDeletePost", () => (this.deleted = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @permanentlyDeletePost={{self.permanentlyDeletePost}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @permanentlyDeletePost={{self.permanentlyDeletePost}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -488,15 +570,17 @@ module(
       this.set("post", post);
       this.set("permanentlyDeletePost", () => (this.deleted = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @permanentlyDeletePost={{self.permanentlyDeletePost}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @permanentlyDeletePost={{self.permanentlyDeletePost}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
 
@@ -530,15 +614,17 @@ module(
       this.set("post", post);
       this.set("togglePostType", () => (this.toggled = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @togglePostType={{self.togglePostType}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @togglePostType={{self.togglePostType}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -567,15 +653,17 @@ module(
       this.set("post", post);
       this.set("rebakePost", () => (this.baked = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @rebakePost={{self.rebakePost}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @rebakePost={{self.rebakePost}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -597,15 +685,17 @@ module(
       this.set("args", { canManage: true });
       this.set("unhidePost", () => (unhidden = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @unhidePost={{self.unhidePost}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @unhidePost={{self.unhidePost}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
 
@@ -637,15 +727,17 @@ module(
       this.set("post", post);
       this.set("changePostOwner", () => (this.owned = true));
 
-      await render(<template>
-        <MountWidget
-          @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @changePostOwner={{self.changePostOwner}}
-        />
-        <DMenus />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+            @changePostOwner={{self.changePostOwner}}
+          />
+          <DMenus />
+        </template>
+      );
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -664,9 +756,15 @@ module(
       const topic = store.createRecord("topic", { id: 123 });
       this.set("args", { topic, post_number: 1, topicMap: true });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".topic-map").exists();
     });
@@ -683,9 +781,15 @@ module(
       });
       this.set("args", { topic, post_number: 1 });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".topic-map").exists();
     });
@@ -709,9 +813,15 @@ module(
         post_number: 1,
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
       assert.dom(".topic-map__users-trigger").doesNotExist();
       assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
     });
@@ -741,9 +851,15 @@ module(
         post_number: 1,
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
       assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
       await click(".topic-map__users-trigger");
@@ -771,9 +887,15 @@ module(
       ]);
       this.set("args", { topic, post_number: 1 });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".topic-map").exists({ count: 1 });
       assert.dom(".topic-map__links-content").doesNotExist();
@@ -795,9 +917,15 @@ module(
       });
       this.set("args", { topic, post_number: 1 });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".topic-map").exists();
       assert.dom(".summarization-button .top-replies").doesNotExist();
@@ -815,9 +943,15 @@ module(
       });
       this.set("args", { topic, post_number: 1 });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".summarization-button .top-replies").exists({ count: 1 });
     });
@@ -838,9 +972,15 @@ module(
         post_number: 1,
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".topic-map__private-message-map").exists({ count: 1 });
       assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
@@ -864,9 +1004,15 @@ module(
         },
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".post-notice.returning-user:not(.old)").hasText(
         i18n("post.notice.returning_user", {
@@ -889,9 +1035,15 @@ module(
         notice: { type: "new_user" },
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert
         .dom(".post-notice.old.new-user")
@@ -908,9 +1060,15 @@ module(
         requestedGroupName: "testGroup",
       });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".group-request a").hasText(i18n("groups.requests.handle"));
       assert
@@ -930,9 +1088,15 @@ module(
       const user = store.createRecord("user", { status });
       this.set("args", { user });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".user-status-message").exists();
     });
@@ -949,9 +1113,15 @@ module(
       const user = store.createRecord("user", { status });
       this.set("args", { user });
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
 
       assert.dom(".user-status-message").doesNotExist();
     });
@@ -961,9 +1131,15 @@ module(
 
       this.siteSettings.post_menu_hidden_items = "bookmark|edit|copyLink";
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
       assert.dom(".show-more-actions").exists();
     });
 
@@ -972,9 +1148,15 @@ module(
 
       this.siteSettings.post_menu_hidden_items = "bookmark|edit";
 
-      await render(<template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
-      </template>);
+      await render(
+        <template>
+          <MountWidget
+            @widget="post"
+            @model={{self.post}}
+            @args={{self.args}}
+          />
+        </template>
+      );
       assert.dom(".show-more-actions").doesNotExist();
     });
   }

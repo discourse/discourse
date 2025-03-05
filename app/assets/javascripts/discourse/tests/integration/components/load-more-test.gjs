@@ -23,11 +23,13 @@ module("Integration | Component | load-more", function (hooks) {
 
     this.set("loadMore", () => this.set("loadedMore", true));
 
-    await render(<template>
-      <LoadMore @selector=".numbers tr" @action={{self.loadMore}}>
-        <table class="numbers"><tbody><tr></tr></tbody></table>
-      </LoadMore>
-    </template>);
+    await render(
+      <template>
+        <LoadMore @selector=".numbers tr" @action={{self.loadMore}}>
+          <table class="numbers"><tbody><tr></tr></tbody></table>
+        </LoadMore>
+      </template>
+    );
 
     assert.true(this.loadedMore);
   });

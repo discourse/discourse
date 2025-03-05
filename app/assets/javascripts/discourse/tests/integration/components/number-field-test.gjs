@@ -13,9 +13,11 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       const self = this;
 
-      await render(<template>
-        <NumberField @value={{self.value}} @classNames="number-field-test" />
-      </template>);
+      await render(
+        <template>
+          <NumberField @value={{self.value}} @classNames="number-field-test" />
+        </template>
+      );
     });
 
     await fillIn(".number-field-test", "33");
@@ -42,13 +44,15 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       const self = this;
 
-      await render(<template>
-        <NumberField
-          @value={{self.value}}
-          @classNames="number-field-test"
-          @min="1"
-        />
-      </template>);
+      await render(
+        <template>
+          <NumberField
+            @value={{self.value}}
+            @classNames="number-field-test"
+            @min="1"
+          />
+        </template>
+      );
     });
 
     await triggerKeyEvent(".number-field-test", "keydown", 189); // -
@@ -63,13 +67,15 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       const self = this;
 
-      await render(<template>
-        <NumberField
-          @value={{self.value}}
-          @classNames="number-field-test"
-          @min="-10"
-        />
-      </template>);
+      await render(
+        <template>
+          <NumberField
+            @value={{self.value}}
+            @classNames="number-field-test"
+            @min="-10"
+          />
+        </template>
+      );
     });
 
     await fillIn(".number-field-test", "-1");

@@ -24,9 +24,11 @@ module("Integration | Component | Widget | post-cooked", function (hooks) {
       },
     });
 
-    await render(<template>
-      <MountWidget @widget="test-widget" @args={{self.args}} />
-    </template>);
+    await render(
+      <template>
+        <MountWidget @widget="test-widget" @args={{self.args}} />
+      </template>
+    );
 
     assert.dom("blockquote").hasText("abcd");
   });

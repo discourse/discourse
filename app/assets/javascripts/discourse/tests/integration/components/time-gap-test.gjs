@@ -11,9 +11,9 @@ module("Integration | Component | time-gap", function (hooks) {
     const self = this;
 
     this.set("daysSince", 5);
-    await render(<template>
-      <TimeGap @daysSince={{self.daysSince}} />
-    </template>);
+    await render(
+      <template><TimeGap @daysSince={{self.daysSince}} /></template>
+    );
     assert
       .dom(".small-action-desc.timegap")
       .hasText(i18n("dates.later.x_days", { count: 5 }));
@@ -23,9 +23,9 @@ module("Integration | Component | time-gap", function (hooks) {
     const self = this;
 
     this.set("daysSince", 90);
-    await render(<template>
-      <TimeGap @daysSince={{self.daysSince}} />
-    </template>);
+    await render(
+      <template><TimeGap @daysSince={{self.daysSince}} /></template>
+    );
     assert
       .dom(".small-action-desc.timegap")
       .hasText(i18n("dates.later.x_months", { count: 3 }));
@@ -35,9 +35,9 @@ module("Integration | Component | time-gap", function (hooks) {
     const self = this;
 
     this.set("daysSince", 730);
-    await render(<template>
-      <TimeGap @daysSince={{self.daysSince}} />
-    </template>);
+    await render(
+      <template><TimeGap @daysSince={{self.daysSince}} /></template>
+    );
     assert
       .dom(".small-action-desc.timegap")
       .hasText(i18n("dates.later.x_years", { count: 2 }));
@@ -47,9 +47,9 @@ module("Integration | Component | time-gap", function (hooks) {
     const self = this;
 
     this.set("daysSince", 10);
-    await render(<template>
-      <TimeGap @daysSince={{self.daysSince}} />
-    </template>);
+    await render(
+      <template><TimeGap @daysSince={{self.daysSince}} /></template>
+    );
     assert.dom(".topic-avatar").exists();
     assert.dom(".small-action-desc.timegap").exists();
   });

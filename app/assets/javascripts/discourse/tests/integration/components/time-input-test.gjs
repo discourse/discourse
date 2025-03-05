@@ -20,9 +20,11 @@ module("Integration | Component | time-input", function (hooks) {
 
     this.setProperties({ hours: "14", minutes: "58" });
 
-    await render(<template>
-      <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
-    </template>);
+    await render(
+      <template>
+        <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
+      </template>
+    );
 
     assert.strictEqual(this.subject.header().name(), "14:58");
   });
@@ -32,9 +34,11 @@ module("Integration | Component | time-input", function (hooks) {
 
     this.setProperties({ hours: "14", minutes: "58" });
 
-    await render(<template>
-      <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
-    </template>);
+    await render(
+      <template>
+        <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);
@@ -47,13 +51,15 @@ module("Integration | Component | time-input", function (hooks) {
     this.setProperties({ hours: "14", minutes: "58" });
     this.set("onChange", setTime);
 
-    await render(<template>
-      <TimeInput
-        @hours={{self.hours}}
-        @minutes={{self.minutes}}
-        @onChange={{self.onChange}}
-      />
-    </template>);
+    await render(
+      <template>
+        <TimeInput
+          @hours={{self.hours}}
+          @minutes={{self.minutes}}
+          @onChange={{self.onChange}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);

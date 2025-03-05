@@ -29,11 +29,13 @@ module(
     });
 
     test("rendering and expanding", async function (assert) {
-      await render(<template>
-        <FutureDateInput
-          @options={{hash none="time_shortcut.select_timeframe"}}
-        />
-      </template>);
+      await render(
+        <template>
+          <FutureDateInput
+            @options={{hash none="time_shortcut.select_timeframe"}}
+          />
+        </template>
+      );
 
       assert.dom(".future-date-input-selector").exists("selector is rendered");
 
@@ -92,9 +94,9 @@ module(
     });
 
     test("doesn't show 'Custom date and time' if disabled", async function (assert) {
-      await render(<template>
-        <FutureDateInput @includeDateTime={{false}} />
-      </template>);
+      await render(
+        <template><FutureDateInput @includeDateTime={{false}} /></template>
+      );
 
       await this.subject.expand();
       const options = getOptions();
@@ -104,9 +106,9 @@ module(
     });
 
     test("shows the now option if enabled", async function (assert) {
-      await render(<template>
-        <FutureDateInput @includeNow={{true}} />
-      </template>);
+      await render(
+        <template><FutureDateInput @includeNow={{true}} /></template>
+      );
 
       await this.subject.expand();
       const options = getOptions();
@@ -120,12 +122,14 @@ module(
 
       this.set("input", moment("2032-01-01 11:10"));
 
-      await render(<template>
-        <FutureDateInput
-          @input={{self.input}}
-          @onChangeInput={{fn (mut self.input)}}
-        />
-      </template>);
+      await render(
+        <template>
+          <FutureDateInput
+            @input={{self.input}}
+            @onChangeInput={{fn (mut self.input)}}
+          />
+        </template>
+      );
 
       await fillIn(".time-input", "11:15");
 

@@ -14,9 +14,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
   test("modal title", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert
       .dom("#discourse-modal-title")
@@ -26,9 +26,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
   test("default state", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert.dom(".dismiss-topics input").isChecked();
     assert.dom(".dismiss-posts input").isChecked();
@@ -44,9 +44,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       unread_posts: false,
     });
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert.dom(".dismiss-posts").doesNotExist();
     assert
@@ -65,9 +65,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       unread_posts: true,
     });
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert.dom(".dismiss-topics").doesNotExist();
     assert
@@ -82,9 +82,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
 
     this.model.subset = "topics";
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert.dom(".dismiss-posts").doesNotExist();
     assert
@@ -97,9 +97,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
 
     this.model.subset = "replies";
 
-    await render(<template>
-      <DismissNew @inline={{true}} @model={{self.model}} />
-    </template>);
+    await render(
+      <template><DismissNew @inline={{true}} @model={{self.model}} /></template>
+    );
 
     assert.dom(".dismiss-topics").doesNotExist();
     assert
@@ -118,13 +118,15 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
 
     this.noop = () => {};
 
-    await render(<template>
-      <DismissNew
-        @closeModal={{self.noop}}
-        @inline={{true}}
-        @model={{self.model}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DismissNew
+          @closeModal={{self.noop}}
+          @inline={{true}}
+          @model={{self.model}}
+        />
+      </template>
+    );
 
     await click(".dismiss-topics [type='checkbox']");
     await click(".dismiss-posts [type='checkbox']");

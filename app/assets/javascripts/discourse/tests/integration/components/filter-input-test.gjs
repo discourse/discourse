@@ -9,17 +9,17 @@ module("Integration | Component | filter-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Left icon", async function (assert) {
-    await render(<template>
-      <FilterInput @icons={{hash left="bell"}} />
-    </template>);
+    await render(
+      <template><FilterInput @icons={{hash left="bell"}} /></template>
+    );
 
     assert.true(exists(".d-icon-bell.-left"));
   });
 
   test("Right icon", async function (assert) {
-    await render(<template>
-      <FilterInput @icons={{hash right="bell"}} />
-    </template>);
+    await render(
+      <template><FilterInput @icons={{hash right="bell"}} /></template>
+    );
 
     assert.true(exists(".d-icon-bell.-right"));
   });
@@ -31,9 +31,9 @@ module("Integration | Component | filter-input", function (hooks) {
   });
 
   test("Html attributes", async function (assert) {
-    await render(<template>
-      <FilterInput data-foo="1" placeholder="bar" />
-    </template>);
+    await render(
+      <template><FilterInput data-foo="1" placeholder="bar" /></template>
+    );
 
     assert.true(exists('.filter-input[data-foo="1"]'));
     assert.true(exists('.filter-input[placeholder="bar"]'));
@@ -46,9 +46,9 @@ module("Integration | Component | filter-input", function (hooks) {
     this.set("action", (event) => {
       this.set("value", event.target.value);
     });
-    await render(<template>
-      <FilterInput @filterAction={{self.action}} />
-    </template>);
+    await render(
+      <template><FilterInput @filterAction={{self.action}} /></template>
+    );
     await fillIn(".filter-input", "foo");
 
     assert.strictEqual(this.value, "foo");
@@ -57,9 +57,9 @@ module("Integration | Component | filter-input", function (hooks) {
   test("Focused state", async function (assert) {
     const self = this;
 
-    await render(<template>
-      <FilterInput @filterAction={{self.action}} />
-    </template>);
+    await render(
+      <template><FilterInput @filterAction={{self.action}} /></template>
+    );
     await triggerEvent(".filter-input", "focusin");
 
     assert.true(exists(".filter-input-container.is-focused"));
