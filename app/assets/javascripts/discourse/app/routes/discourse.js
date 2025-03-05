@@ -12,7 +12,7 @@ export default class DiscourseRoute extends Route {
   }
 
   _refreshTitleOnce() {
-    this.send("_collectTitleTokens", []);
+    this._collectTitleTokens([]);
   }
 
   @action

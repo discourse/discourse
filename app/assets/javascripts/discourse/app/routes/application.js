@@ -83,7 +83,7 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   toggleSidebar() {
-    this.controllerFor("application").send("toggleSidebar");
+    this.controllerFor("application").toggleSidebar();
   }
 
   @action

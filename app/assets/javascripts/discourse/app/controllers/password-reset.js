@@ -161,7 +161,7 @@ export default class PasswordResetController extends Controller {
       this.model.allowed_credential_ids,
       (credentialData) => {
         this.set("securityKeyCredential", credentialData);
-        this.send("submit");
+        this.submit();
       },
       (errorMessage) => {
         this.setProperties({

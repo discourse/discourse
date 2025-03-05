@@ -30,7 +30,7 @@ module("Unit | Controller | preferences/profile", function (hooks) {
       },
     });
 
-    controller.send("_updateUserFields");
+    controller._updateUserFields();
 
     const fields = controller.model.user_fields;
     assert.strictEqual(fields[1], "2", "updates string value");

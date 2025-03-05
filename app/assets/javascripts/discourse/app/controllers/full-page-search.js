@@ -248,7 +248,7 @@ export default class FullPageSearchController extends Controller {
     const model = this.model;
     if (model && this.get("model.q") !== this.q) {
       this.setSearchTerm(this.q);
-      this.send("search");
+      this.search();
     }
   }
 

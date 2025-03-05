@@ -72,7 +72,7 @@ export default class EmailLoginController extends Controller {
       this.model.allowed_credential_ids,
       (credentialData) => {
         this.set("securityKeyCredential", credentialData);
-        this.send("finishLogin");
+        this.finishLogin();
       },
       (errorMessage) => {
         this.set("model.error", errorMessage);

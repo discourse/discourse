@@ -44,7 +44,7 @@ module("Unit | Controller | topic", function (hooks) {
     assert.strictEqual(controller.buffered.title, model.title);
     assert.strictEqual(controller.buffered.category_id, model.category_id);
 
-    controller.send("cancelEditingTopic");
+    controller.cancelEditingTopic();
 
     assert.false(
       controller.editingTopic,
@@ -68,12 +68,12 @@ module("Unit | Controller | topic", function (hooks) {
     });
 
     model.set("views", 10000);
-    controller.send("deleteTopic");
+    controller.deleteTopic();
     assert.false(destroyed, "don't destroy popular topic");
     assert.true(modalDisplayed, "display confirmation modal for popular topic");
 
     model.set("views", 3);
-    controller.send("deleteTopic");
+    controller.deleteTopic();
     assert.true(destroyed, "destroy not popular topic");
   });
 
@@ -88,7 +88,7 @@ module("Unit | Controller | topic", function (hooks) {
     model.set("views", 100);
 
     const stub = sinon.stub(model, "destroy");
-    controller.send("deleteTopic", { force_destroy: true });
+    controller.deleteTopic({ force_destroy: true });
 
     assert.deepEqual(
       stub.getCall(0).args[1],
@@ -111,7 +111,7 @@ module("Unit | Controller | topic", function (hooks) {
     controller.selectedPostIds.pushObject(1);
     assert.strictEqual(controller.selectedPostIds.length, 1);
 
-    controller.send("toggleMultiSelect");
+    controller.toggleMultiSelect();
     await settled();
 
     assert.true(
@@ -127,7 +127,7 @@ module("Unit | Controller | topic", function (hooks) {
     controller.selectedPostIds.pushObject(2);
     assert.strictEqual(controller.selectedPostIds.length, 1);
 
-    controller.send("toggleMultiSelect");
+    controller.toggleMultiSelect();
     await settled();
 
     assert.false(
@@ -469,14 +469,14 @@ module("Unit | Controller | topic", function (hooks) {
       "no posts selected by default"
     );
 
-    controller.send("selectAll");
+    controller.selectAll();
     assert.strictEqual(
       controller.selectedPostsCount,
       3,
       "calling 'selectAll' selects all posts"
     );
 
-    controller.send("deselectAll");
+    controller.deselectAll();
     assert.strictEqual(
       controller.selectedPostsCount,
       0,
@@ -493,14 +493,14 @@ module("Unit | Controller | topic", function (hooks) {
       "no posts selected by default"
     );
 
-    controller.send("togglePostSelection", { id: 1 });
+    controller.togglePostSelection({ id: 1 });
     assert.strictEqual(
       controller.selectedPostIds[0],
       1,
       "adds the selected post id if not already selected"
     );
 
-    controller.send("togglePostSelection", { id: 1 });
+    controller.togglePostSelection({ id: 1 });
     assert.strictEqual(
       controller.selectedPostIds[0],
       undefined,
@@ -530,7 +530,7 @@ module("Unit | Controller | topic", function (hooks) {
       "no posts selected by default"
     );
 
-    controller.send("selectBelow", { id: 3 });
+    controller.selectBelow({ id: 3 });
     assert.deepEqual(controller.selectedPostIds, [3, 4, 5, 8]);
   });
 
@@ -546,7 +546,7 @@ module("Unit | Controller | topic", function (hooks) {
     const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
-    controller.send("selectReplies", { id: 1 });
+    controller.selectReplies({ id: 1 });
     await settled();
 
     assert.strictEqual(
@@ -555,7 +555,7 @@ module("Unit | Controller | topic", function (hooks) {
       "selects two, the post and its replies"
     );
 
-    controller.send("togglePostSelection", { id: 1 });
+    controller.togglePostSelection({ id: 1 });
     assert.strictEqual(
       controller.selectedPostsCount,
       1,
@@ -567,7 +567,7 @@ module("Unit | Controller | topic", function (hooks) {
       "is selecting the reply id"
     );
 
-    controller.send("selectReplies", { id: 1 });
+    controller.selectReplies({ id: 1 });
     await settled();
 
     assert.strictEqual(
@@ -586,7 +586,7 @@ module("Unit | Controller | topic", function (hooks) {
     const placeholder = new Placeholder("post-placeholder");
 
     assert.strictEqual(
-      controller.send("topVisibleChanged", {
+      controller.topVisibleChanged({
         post: placeholder,
       }),
       undefined,
@@ -615,7 +615,7 @@ module("Unit | Controller | topic", function (hooks) {
     const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
-    controller.send("deletePost", post);
+    controller.deletePost(post);
     await settled();
 
     assert.true(destroyed, "post was destroyed");

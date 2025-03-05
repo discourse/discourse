@@ -39,7 +39,7 @@ export default class ValueList extends Component {
 
   keyDown(event) {
     if (event.key === "Enter") {
-      this.send("addValue", this.newValue);
+      this.addValue(this.newValue);
     }
   }
 

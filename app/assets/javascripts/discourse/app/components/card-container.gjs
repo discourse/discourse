@@ -14,7 +14,7 @@ export default class CardContainer extends Component {
 
   @action
   filterPosts(user) {
-    this.topic.send("filterParticipant", user);
+    this.topic.filterParticipant(user);
   }
 
   @action
