@@ -2,7 +2,8 @@
 
 module Middleware
   class DefaultHeaders
-    HTML_ONLY_HEADERS = Set.new(%w[X-Frame-Options X-XSS-Protection])
+    HTML_ONLY_HEADERS = Set.new(%w[X-XSS-Protection])
+    EXCLUDED_HEADERS = Set.new(%w[X-Frame-Options])
 
     def initialize(app, settings = {})
       @app = app
@@ -12,12 +13,15 @@ module Middleware
       status, headers, body = @app.call(env)
       is_html_response = html_response?(headers)
 
-      if default_headers = Rails.application.config.action_dispatch.default_headers
-        default_headers.each do |header_name, value|
-          next if !is_html_response && HTML_ONLY_HEADERS.include?(header_name)
+      default_headers =
+        Rails.application.config.action_dispatch.default_headers&.select do |header_name|
+          !EXCLUDED_HEADERS.include?(header_name)
+        end || {}
 
-          headers[header_name] = value if headers[header_name].nil?
-        end
+      default_headers.each do |header_name, value|
+        next if !is_html_response && HTML_ONLY_HEADERS.include?(header_name)
+
+        headers[header_name] = value if headers[header_name].nil?
       end
 
       headers[

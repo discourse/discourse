@@ -2,7 +2,6 @@
 RSpec.describe Middleware::DefaultHeaders do
   let(:mock_default_headers) do
     {
-      "X-Frame-Options" => "SAMEORIGIN",
       "X-XSS-Protection" => "0",
       "X-Content-Type-Options" => "nosniff",
       "X-Permitted-Cross-Domain-Policies" => "none",
