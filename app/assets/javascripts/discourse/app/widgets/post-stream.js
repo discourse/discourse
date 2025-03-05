@@ -4,6 +4,7 @@ import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
 import { iconNode } from "discourse/lib/icon-library";
+import { connectorsExist } from "discourse/lib/plugin-connectors";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
@@ -311,10 +312,7 @@ export default createWidget("post-stream", {
           })
         );
       }
-      if (
-        this.siteSettings.show_below_op_plugin_outlet &&
-        post.post_number === 1
-      ) {
+      if (connectorsExist("below-op") && post.post_number === 1) {
         result.push(
           new RenderGlimmer(
             this,

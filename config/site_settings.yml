@@ -1178,10 +1178,6 @@ posting:
     default: 7
     max: 36500
     client: true
-  show_below_op_plugin_outlet:
-    client: true
-    default: false
-    hidden: true
   short_progress_text_threshold:
     client: true
     default: 10000
