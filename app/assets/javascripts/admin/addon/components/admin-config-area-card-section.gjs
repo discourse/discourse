@@ -8,7 +8,7 @@ export default class AdminConfigAreaCardSection extends Component {
   @tracked collapsed = this.args.collapsed;
 
   get headerCaretIcon() {
-    return this.collapsed ? "plus" : "minus";
+    return this.collapsed ? "angle-right" : "angle-down";
   }
 
   @action
