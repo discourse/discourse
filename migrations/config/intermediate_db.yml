@@ -7,6 +7,12 @@ output:
 
 schema:
   tables:
+    user_emails:
+      columns:
+        include:
+          - "user_id"
+          - "email"
+          - "primary"
     users:
       columns:
         exclude:
@@ -228,7 +234,6 @@ schema:
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
         - "user_custom_fields"
-        - "user_emails"
         - "user_exports"
         - "user_field_options"
         - "user_fields"

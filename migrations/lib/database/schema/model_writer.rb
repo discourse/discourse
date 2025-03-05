@@ -41,7 +41,7 @@ module Migrations::Database::Schema
       output_stream.puts "module #{@namespace}"
       output_stream.puts "  module #{to_singular_classname(table.name)}"
       output_stream.puts "    SQL = <<~SQL"
-      output_stream.puts "      INSERT INTO #{table.name} ("
+      output_stream.puts "      INSERT INTO #{escape_identifier(table.name)} ("
       output_stream.puts column_names(columns)
       output_stream.puts "      )"
       output_stream.puts "      VALUES ("
@@ -49,7 +49,7 @@ module Migrations::Database::Schema
       output_stream.puts "      )"
       output_stream.puts "    SQL"
       output_stream.puts
-      output_stream.puts "    def self.create!("
+      output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
       output_stream.puts "      ::Migrations::Database::IntermediateDB.insert("
@@ -68,7 +68,7 @@ module Migrations::Database::Schema
     end
 
     def column_names(columns)
-      columns.map { |c| "        #{c.name}" }.join(",\n")
+      columns.map { |c| "        #{escape_identifier(c.name)}" }.join(",\n")
     end
 
     def value_placeholders(columns)
@@ -130,6 +130,14 @@ module Migrations::Database::Schema
           "        #{argument},"
         end
         .join("\n")
+    end
+
+    def escape_identifier(identifier)
+      if ::Migrations::Database::Schema::SQLITE_KEYWORDS.include?(identifier)
+        "'#{identifier}'"
+      else
+        identifier
+      end
     end
   end
 end

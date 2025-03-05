@@ -22,7 +22,7 @@ module Migrations::Database::Schema
     private
 
     def output_create_table_statement(table)
-      @output.puts "CREATE TABLE #{table.name}"
+      @output.puts "CREATE TABLE #{escape_identifier(table.name)}"
       @output.puts "("
     end
 
@@ -48,7 +48,7 @@ module Migrations::Database::Schema
 
       columns.map do |c|
         definition = [
-          c.name.ljust(max_column_name_length),
+          escape_identifier(c.name).ljust(max_column_name_length),
           convert_datatype(c.datatype).ljust(max_datatype_length),
         ]
 
@@ -76,6 +76,14 @@ module Migrations::Database::Schema
         "JSON_TEXT"
       else
         raise "Unknown datatype: #{type}"
+      end
+    end
+
+    def escape_identifier(identifier)
+      if ::Migrations::Database::Schema::SQLITE_KEYWORDS.include?(identifier)
+        "'#{identifier}'"
+      else
+        identifier
       end
     end
 

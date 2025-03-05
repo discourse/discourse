@@ -6,7 +6,7 @@ module Migrations::Converters::Discourse
 
     def max_progress
       @source_db.count <<~SQL
-        SELECT COUNT(*) AS count
+        SELECT COUNT(*)
         FROM users
       SQL
     end
@@ -20,7 +20,7 @@ module Migrations::Converters::Discourse
     end
 
     def process_item(item)
-      IntermediateDB::User.create!(
+      IntermediateDB::User.create(
         id: item[:id],
         active: item[:active],
         admin: item[:admin],

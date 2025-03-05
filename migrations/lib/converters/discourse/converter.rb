@@ -8,7 +8,7 @@ module Migrations::Converters::Discourse
     end
 
     def steps
-      [Users]
+      [Users, UserEmails]
     end
 
     def step_args(step_class)

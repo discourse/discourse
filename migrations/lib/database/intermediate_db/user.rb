@@ -43,7 +43,7 @@ module Migrations::Database::IntermediateDB
       )
     SQL
 
-    def self.create!(
+    def self.create(
       id:,
       active: nil,
       admin: nil,

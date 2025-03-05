@@ -17,7 +17,7 @@ module Migrations::Database::IntermediateDB
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     SQL
 
-    def self.create_for_file!(
+    def self.create_for_file(
       path:,
       filename: nil,
       type: nil,
@@ -25,7 +25,7 @@ module Migrations::Database::IntermediateDB
       origin: nil,
       user_id: nil
     )
-      create!(
+      create(
         id: ::Migrations::ID.hash(path),
         filename: filename || File.basename(path),
         path:,
@@ -36,15 +36,8 @@ module Migrations::Database::IntermediateDB
       )
     end
 
-    def self.create_for_url!(
-      url:,
-      filename:,
-      type: nil,
-      description: nil,
-      origin: nil,
-      user_id: nil
-    )
-      create!(
+    def self.create_for_url(url:, filename:, type: nil, description: nil, origin: nil, user_id: nil)
+      create(
         id: ::Migrations::ID.hash(url),
         filename:,
         url:,
@@ -55,7 +48,7 @@ module Migrations::Database::IntermediateDB
       )
     end
 
-    def self.create_for_data!(
+    def self.create_for_data(
       data:,
       filename:,
       type: nil,
@@ -63,7 +56,7 @@ module Migrations::Database::IntermediateDB
       origin: nil,
       user_id: nil
     )
-      create!(
+      create(
         id: ::Migrations::ID.hash(data),
         filename:,
         data: ::Migrations::Database.to_blob(data),
@@ -74,7 +67,7 @@ module Migrations::Database::IntermediateDB
       )
     end
 
-    def self.create!(
+    def self.create(
       id:,
       filename:,
       path: nil,

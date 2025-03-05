@@ -2,6 +2,13 @@
 -- update the "config/intermediate_db.yml" configuration file and then run
 -- `bin/cli schema generate` to regenerate this file.
 
+CREATE TABLE user_emails
+(
+    email   TEXT    NOT NULL,
+    'primary' BOOLEAN,
+    user_id NUMERIC NOT NULL
+);
+
 CREATE TABLE users
 (
     id                        NUMERIC  NOT NULL PRIMARY KEY,
