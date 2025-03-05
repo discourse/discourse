@@ -4,20 +4,20 @@
 
 CREATE TABLE user_emails
 (
-    email   TEXT    NOT NULL,
+    email     TEXT    NOT NULL PRIMARY KEY,
     'primary' BOOLEAN,
-    user_id NUMERIC NOT NULL
+    user_id   NUMERIC NOT NULL
 );
 
 CREATE TABLE users
 (
-    id                        NUMERIC  NOT NULL PRIMARY KEY,
+    id                        NUMERIC   NOT NULL PRIMARY KEY,
     active                    BOOLEAN,
     admin                     BOOLEAN,
     approved                  BOOLEAN,
     approved_at               DATETIME,
     approved_by_id            NUMERIC,
-    created_at                DATETIME NOT NULL,
+    created_at                DATETIME  NOT NULL,
     date_of_birth             DATE,
     first_seen_at             DATETIME,
     flair_group_id            NUMERIC,
@@ -36,9 +36,9 @@ CREATE TABLE users
     suspended_at              DATETIME,
     suspended_till            DATETIME,
     title                     TEXT,
-    trust_level               INTEGER  NOT NULL,
+    trust_level               INTEGER   NOT NULL,
     uploaded_avatar_id        TEXT,
-    username                  TEXT     NOT NULL,
+    username                  TEXT      NOT NULL,
     views                     INTEGER
 );
 

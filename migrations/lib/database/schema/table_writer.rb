@@ -33,7 +33,8 @@ module Migrations::Database::Schema
 
     def output_primary_key(table)
       if table.primary_key_column_names.size > 1
-        pk_definition = table.primary_key_column_names.join(", ")
+        pk_definition =
+          table.primary_key_column_names.map { |name| escape_identifier(name) }.join(", ")
         @output.puts "    PRIMARY KEY (#{pk_definition})"
       end
       @output.puts ");"
@@ -43,8 +44,8 @@ module Migrations::Database::Schema
       columns = table.sorted_columns
       has_composite_primary_key = table.primary_key_column_names.size > 1
 
-      max_column_name_length = columns.map { |c| c.name.length }.max
-      max_datatype_length = columns.map { |c| c.datatype.length }.max
+      max_column_name_length = columns.map { |c| escape_identifier(c.name).length }.max
+      max_datatype_length = columns.map { |c| convert_datatype(c.datatype).length }.max
 
       columns.map do |c|
         definition = [
@@ -91,10 +92,14 @@ module Migrations::Database::Schema
       return unless table.indexes
 
       table.indexes.each do |index|
+        index_name = escape_identifier(index.name)
+        table_name = escape_identifier(table.name)
+        column_names = index.column_names.map { |name| escape_identifier(name) }
+
         @output.puts ""
         @output.print "CREATE "
         @output.print "UNIQUE " if index.unique
-        @output.print "INDEX #{index.name} ON #{table.name} (#{index.column_names.join(", ")})"
+        @output.print "INDEX #{index_name} ON #{table_name} (#{column_names.join(", ")})"
         @output.print " #{index.condition}" if index.condition.present?
         @output.puts ";"
       end
