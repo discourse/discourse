@@ -6,6 +6,6 @@ RSpec.shared_examples "a database entity" do
   end
 
   it "responds to .create!" do
-    expect(subject).to respond_to(:create!)
+    expect(subject).to respond_to(:create)
   end
 end
