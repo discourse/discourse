@@ -288,7 +288,7 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    Sidekiq.error_handlers.clear
+    Sidekiq.default_configuration.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
