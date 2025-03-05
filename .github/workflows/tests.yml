@@ -264,10 +264,6 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
-      - name: Ensure latest minio binary installed for Core System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bundle exec ruby script/install_minio_binaries.rb
-
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
@@ -363,7 +359,6 @@ jobs:
             exit 1
           fi
         timeout-minutes: 30
-
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
