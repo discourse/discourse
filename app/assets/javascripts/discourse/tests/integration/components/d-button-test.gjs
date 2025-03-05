@@ -79,13 +79,7 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("isLoading button explicitly set to undefined state", async function (assert) {
-    const self = this;
-
-    this.set("isLoading");
-
-    await render(
-      <template><DButton @isLoading={{self.isLoading}} /></template>
-    );
+    await render(<template><DButton @isLoading={{undefined}} /></template>);
 
     assert
       .dom("button.is-loading")

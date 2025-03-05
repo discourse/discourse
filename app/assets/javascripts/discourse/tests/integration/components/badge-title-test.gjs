@@ -10,10 +10,8 @@ module("Integration | Component | badge-title", function (hooks) {
   setupRenderingTest(hooks);
 
   test("badge title", async function (assert) {
-    const self = this;
-
-    this.set("subject", selectKit());
-    this.set("selectableUserBadges", [
+    const subject = selectKit();
+    const selectableUserBadges = [
       EmberObject.create({
         id: 0,
         badge: { name: "(none)" },
@@ -23,18 +21,18 @@ module("Integration | Component | badge-title", function (hooks) {
         badge_id: 102,
         badge: { name: "Test" },
       }),
-    ]);
+    ];
 
     pretender.put("/u/eviltrout/preferences/badge_title", () => response({}));
 
     await render(
       <template>
-        <BadgeTitle @selectableUserBadges={{self.selectableUserBadges}} />
+        <BadgeTitle @selectableUserBadges={{selectableUserBadges}} />
       </template>
     );
 
-    await this.subject.expand();
-    await this.subject.selectRowByValue(42);
+    await subject.expand();
+    await subject.selectRowByValue(42);
     await click(".btn");
 
     assert.strictEqual(this.currentUser.title, "Test");
