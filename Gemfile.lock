@@ -260,7 +260,7 @@ GEM
       mini_racer (>= 0.6.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_racer (0.18.0.pre1)
+    mini_racer (0.18.0)
       libv8-node (~> 23.6.1.0)
     mini_scheduler (0.18.0)
       sidekiq (>= 6.5, < 8.0)
@@ -706,7 +706,7 @@ DEPENDENCIES
   message_bus
   messageformat-wrapper
   mini_mime
-  mini_racer (= 0.18.pre1)
+  mini_racer
   mini_scheduler
   mini_sql
   mini_suffix
@@ -919,7 +919,7 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_racer (0.18.0.pre1) sha256=8baff2aa2ebb74f6e133c21a6fa3de50748e40c1182966a0707703275a3a6a51
+  mini_racer (0.18.0) sha256=742ea6f25e45ad33efaa3e0b7c5c5a0ab4f2c1f5b116de1324c04cc89fd5607e
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
