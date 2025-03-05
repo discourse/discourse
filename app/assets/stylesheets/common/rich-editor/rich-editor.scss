@@ -168,13 +168,14 @@
  Section below from prosemirror-view/style/prosemirror.css
  ********************************************************/
 
-/* stylelint-disable-next-line no-duplicate-selectors */
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
   position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }
 
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror pre {
   white-space: pre-wrap;
 }
