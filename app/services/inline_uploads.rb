@@ -249,7 +249,7 @@ class InlineUploads
     raw =
       raw.gsub(%r{^(https?://\S+)(\s?)$}) do |match|
         if upload = blk.call(match)
-          "![](#{upload.short_url})"
+          "![#{upload.original_filename}](#{upload.short_url})"
         else
           match
         end

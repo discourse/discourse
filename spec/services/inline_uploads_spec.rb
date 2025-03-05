@@ -712,4 +712,20 @@ RSpec.describe InlineUploads do
       expect(url).to eq("https://some-site.com/a_test?q=1&b=hello%20there")
     end
   end
+
+  describe ".replace_hotlinked_image_urls" do
+    fab!(:image_upload)
+    it "replaces URL with image markdown and uses filename as alt" do
+      origin = "http://foo.bar/#{image_upload.original_filename}"
+      raw =
+        InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
+          expect(match_src).to eq(origin)
+          image_upload
+        end
+
+      expect(raw).to eq(
+        "look at this:\n![#{image_upload.original_filename}](#{image_upload.short_url})",
+      )
+    end
+  end
 end
