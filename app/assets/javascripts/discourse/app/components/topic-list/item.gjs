@@ -374,7 +374,7 @@ export default class Item extends Component {
 
                 <div class="num activity last">
                   <PluginOutlet
-                    @name="topic-list-item-mobile-num-activity"
+                    @name="topic-list-item-mobile-bumped-at"
                     @outletArgs={{hash topic=@topic}}
                   >
                     <span title={{@topic.bumpedAtTitle}} class="age activity">
