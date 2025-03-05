@@ -6,7 +6,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
@@ -18,10 +17,11 @@ export default class WelcomeBanner extends Component {
   headerHeight = headerOffset();
 
   get displayForRoute() {
-    const currentRouteName = this.router.currentRouteName;
     return this.siteSettings.top_menu
       .split("|")
-      .any((m) => `discovery.${m}` === currentRouteName);
+      .any(
+        (menuItem) => `discovery.${menuItem}` === this.router.currentRouteName
+      );
   }
 
   get headerText() {
@@ -40,6 +40,10 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
+    if (!this.siteSettings.show_welcome_banner) {
+      return false;
+    }
+
     // console.log(
     //   this.scrollDirection.distanceToTop,
     //   headerOffset(),
@@ -57,7 +61,7 @@ export default class WelcomeBanner extends Component {
       <div class="welcome-banner">
         <div class="custom-search-banner welcome-banner__inner-wrapper">
           <div class="wrap custom-search-banner-wrap welcome-banner__wrap">
-            <h1>{{htmlSafe this.headerText}}</h1>
+            <h1 class="welcome-banner__title">{{htmlSafe this.headerText}}</h1>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">
               <DButton
