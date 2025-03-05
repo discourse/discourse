@@ -129,8 +129,9 @@
   flex-wrap: nowrap;
   gap: var(--space-4);
   flex-direction: column;
-  width: 100%;
+  width: calc(100% - 1em);
   border: 1px solid var(--primary-low);
+  padding: 0.5em;
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -140,7 +141,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 0.5em;
+
+    &.collapsable {
+      cursor: pointer;
+    }
   }
 
   &__title {
