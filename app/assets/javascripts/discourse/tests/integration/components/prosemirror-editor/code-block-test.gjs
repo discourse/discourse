@@ -13,31 +13,31 @@ module(
     Object.entries({
       "basic code block": [
         "```plaintext\nconsole.log('Hello, world!');\n```",
-        `<pre class="code-block"><code>console.log('Hello, world!');</code>${select(
+        `<pre><code>console.log('Hello, world!');</code>${select(
           "plaintext"
         )}</pre>`,
         "```plaintext\nconsole.log('Hello, world!');\n```",
       ],
       "code block within list item": [
         "- ```plaintext\n  console.log('Hello, world!');\n  ```",
-        `<ul><li><pre class="code-block"><code>console.log('Hello, world!');</code>${select(
+        `<ul><li><pre><code>console.log('Hello, world!');</code>${select(
           "plaintext"
         )}</pre></li></ul>`,
         "* ```plaintext\n  console.log('Hello, world!');\n  ```",
       ],
       "code block with language": [
         '```javascript\nconsole.log("Hello, world!");\n```',
-        `<pre class="code-block"><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Hello, world!"</span>);</code>${select()}</pre>`,
+        `<pre><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Hello, world!"</span>);</code>${select()}</pre>`,
         '```javascript\nconsole.log("Hello, world!");\n```',
       ],
       "code block with 4 spaces": [
         "    print('Hello, world!')",
-        `<pre class="code-block"><code><span class="hljs-title function_">print</span>(<span class="hljs-string">'Hello, world!'</span>)</code>${select()}</pre>`,
+        `<pre><code><span class="hljs-title function_">print</span>(<span class="hljs-string">'Hello, world!'</span>)</code>${select()}</pre>`,
         "```\nprint('Hello, world!')\n```",
       ],
       "code block with 4 spaces within list item": [
         "-     print('Hello, world!')",
-        `<ul><li><pre class="code-block"><code><span class="hljs-title function_">print</span>(<span class="hljs-string">\'Hello, world!\'</span>)</code>${select()}</pre></li></ul>`,
+        `<ul><li><pre><code><span class="hljs-title function_">print</span>(<span class="hljs-string">\'Hello, world!\'</span>)</code>${select()}</pre></li></ul>`,
         "* ```\n  print('Hello, world!')\n  ```",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {

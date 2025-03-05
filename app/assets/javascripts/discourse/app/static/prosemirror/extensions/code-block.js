@@ -15,7 +15,6 @@ class CodeBlockWithLangSelectorNodeView {
     const code = document.createElement("code");
     const pre = document.createElement("pre");
     pre.appendChild(code);
-    pre.classList.add("code-block");
 
     this.dom = pre;
     this.contentDOM = code;
