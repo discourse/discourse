@@ -1,8 +1,6 @@
-import ClassicComponent from "@ember/component";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
-import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -224,64 +222,6 @@ module("Integration | Component | d-button", function (hooks) {
     await render(hbs`<DButton @action={{this.action}} />`);
 
     await click(".btn");
-
-    assert.strictEqual(this.foo, "bar");
-  });
-
-  test("@action can sendAction when passed a string", async function (assert) {
-    this.set("foo", null);
-    this.set("legacyActionTriggered", () => this.set("foo", "bar"));
-
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
-        myLegacyAction() {
-          this.legacyActionTriggered();
-        },
-      },
-      layout: hbs`<DButton @action="myLegacyAction" />`,
-    });
-
-    await withSilencedDeprecationsAsync(
-      "discourse.d-button-action-string",
-      async () => {
-        await render(
-          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} />`
-        );
-
-        await click(".btn");
-      }
-    );
-
-    assert.strictEqual(this.foo, "bar");
-  });
-
-  test("Uses correct target with @action string when component called with block", async function (assert) {
-    this.set("foo", null);
-    this.set("legacyActionTriggered", () => this.set("foo", "bar"));
-
-    this.simpleWrapperComponent = class extends ClassicComponent {};
-
-    // eslint-disable-next-line ember/no-classic-classes
-    this.classicComponent = ClassicComponent.extend({
-      actions: {
-        myLegacyAction() {
-          this.legacyActionTriggered();
-        },
-      },
-      layout: hbs`<@simpleWrapperComponent><DButton @action="myLegacyAction" /></@simpleWrapperComponent>`,
-    });
-
-    await withSilencedDeprecationsAsync(
-      "discourse.d-button-action-string",
-      async () => {
-        await render(
-          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} @simpleWrapperComponent={{this.simpleWrapperComponent}} />`
-        );
-
-        await click(".btn");
-      }
-    );
 
     assert.strictEqual(this.foo, "bar");
   });

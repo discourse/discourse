@@ -2344,13 +2344,6 @@ pt_BR:
       password_label: "Senha"
     password_reset:
       continue: "Continuar para %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Apenas categorias"
       categories_with_featured_topics: "Categorias com tópicos em destaque"
@@ -3561,11 +3554,8 @@ pt_BR:
         one: "você e mais %{count} pessoa curtiram esta postagem"
         other: "você e mais %{count} outras pessoas curtiram esta postagem"
       sr_post_like_count_button:
-        one: "%{count} pessoa curtiu esta postagem. Clique para visualizar"
-        other: "%{count} pessoas curtiram esta postagem. Clique para visualizar"
-      sr_post_read_count_button:
-        one: "%{count} pessoa leu esta postagem. Clique para visualizar"
-        other: "%{count} pessoas leram esta postagem. Clique para visualizar"
+        one: "%{count} pessoa curtiu esta postagem."
+        other: "%{count} pessoas curtiram esta postagem."
       filtered_replies_hint:
         one: "Exibir esta postagem e a resposta"
         other: "Exibir esta postagem e as %{count} respostas"
@@ -3682,8 +3672,6 @@ pt_BR:
           read_capped:
             one: "e %{count} outro(a) leu isto"
             other: "e %{count} outros(as) leram isto"
-          sr_post_likers_list_description: "usuários curtiram esta postagem"
-          sr_post_readers_list_description: "usuários que leram esta postagem"
         by_you:
           off_topic: "Você sinalizou isto como desvio de tópico"
           spam: "Você sinalizou isto como spam"
@@ -4273,6 +4261,9 @@ pt_BR:
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
         insert_url: "%{shortcut} Inserir seleção no compositor aberto"
         full_page_search: "%{shortcut} inicia pesquisa de página inteira"
+      admin:
+        title: "Administração"
+        search_prev_next: "%{shortcut} Mover seleção para cima e para baixo"
     badges:
       earned_n_times:
         one: "Emblema obtido %{count} vez"
@@ -4842,6 +4833,16 @@ pt_BR:
         logo:
           title: "Logotipo do site"
           header_description: "Personalize as variações do logotipo do seu site"
+        branding:
+          title: "Identidade visual"
+          logo:
+            form:
+              logo:
+                title: "Logotipo principal"
+              mobile: "Móvel"
+              email: "E-mail"
+              manifest_screenshots:
+                description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4858,8 +4859,9 @@ pt_BR:
           title: "Limites de frequência"
           header_description: "Configure a frequência com a qual os(as) usuários(as) podem realizar certas ações, como criar tópicos, enviar mensagens e postar respostas"
         search:
-          title: "Pesquisar"
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
+        search_everything:
+          title: "Pesquisar"
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -4969,6 +4971,7 @@ pt_BR:
           title: "Incorporar"
           header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
       search:
+        title: "Pesquisar"
         result_types:
           theme:
             one: "Tema"
@@ -5732,7 +5735,6 @@ pt_BR:
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
           settings_editor: "Editor de configurações"
-          hide_unused_fields: "Ocultar campos não usados"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
           color_scheme_user_selectable: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
@@ -5786,9 +5788,6 @@ pt_BR:
           unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
           stay: "Permanecer"
-          css_html: "CSS/HTML personalizado"
-          edit_css_html: "Editar CSS/HTML"
-          edit_css_html_help: "Você não editou nenhum CSS ou HTML"
           delete_upload_confirm: "Excluir este envio? (O CSS do tema pode parar de funcionar!)"
           component_on_themes: "Incluir componente nestes temas."
           included_components: "Componentes incluídos"
@@ -5849,22 +5848,14 @@ pt_BR:
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
           scss:
             text: "CSS"
-            title: "Digite o CSS personalizado, aceitamos todos os estilos CSS e SCSS válidos"
-          header:
-            text: "Cabeçalho"
-            title: "Digite o HTML para exibir o cabeçalho do site acima"
           after_header:
             text: "Após cabeçalho"
-            title: "Digite o HTML para exibir em todas as páginas após o cabeçalho"
           footer:
             text: "Rodapé"
-            title: "Digite o HTML para exibir no rodapé da página"
           embedded_scss:
             text: "CSS incorporado"
-            title: "Insira o CSS personalizado para entregar com a versão incorporada dos comentários"
           embedded_header:
             text: "Cabeçalho Incorporado"
-            title: "Insira o HTML para exibir acima da versão incorporada dos comentários"
           color_definitions:
             text: "Definições de cor"
             title: "Digite definições de cor personalizadas (apenas usuários(as) avançados(as))"
@@ -5877,15 +5868,6 @@ pt_BR:
               %{example}
 
               É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plugins e/ou núcleo.
-          head_tag:
-            text: "Head"
-            title: "HTML que será inserido antes da etiqueta head"
-          body_tag:
-            text: "Corpo"
-            title: "O HTML que será inserido antes da etiqueta body"
-          yaml:
-            text: "YAML"
-            title: "Definir configurações de tema no formato YAML"
           scss_color_variables_warning: 'Usar variáveis de cor SCSS nos temas foi preterido. Use as propriedades personalizadas do CSS. Consulte <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">este guia</a> para obter mais detalhes.'
           scss_warning_inline: "Usar variáveis de cor SCSS nos temas foi preterido."
           all_filter: "Tudo"

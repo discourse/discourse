@@ -1854,13 +1854,6 @@ lt:
       password_label: "Slaptažodis"
     password_reset:
       continue: "Tėsti į %{site_name}"
-    emoji_set:
-      apple_international: "Apple"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Žinutės"
     category_page_style:
       categories_only: "Tiktai Kategorijos"
       categories_with_featured_topics: "Kategorijos su populiariomis temomis"
@@ -2777,10 +2770,10 @@ lt:
         many: "tau ir %{count} žmonėms patiko šis įrašas"
         other: "tau ir %{count} žmonėms patiko šis įrašas"
       sr_post_like_count_button:
-        one: "%{count} asmeniui patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
-        few: "%{count} asmenims patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
-        many: "%{count} žmonių patiko šis įrašas. Spustelėkite norėdami peržiūrėti"
-        other: "%{count} žmonėms patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
+        one: "%{count} žmogui patiko šis įrašas."
+        few: "%{count} žmonėms patinka šis įrašas."
+        many: "%{count} žmonėms patinka šis įrašas."
+        other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       errors:
@@ -2869,8 +2862,6 @@ lt:
             few: "ir %{count}kitų mėgsta tai"
             many: "ir %{count}kitų mėgsta tai "
             other: "ir %{count} kitų mėgsta tai"
-          sr_post_likers_list_description: "vartotojai, kuriems patiko šis pranešimas"
-          sr_post_readers_list_description: "vartotojai, kurie perskaitė šį pranešimą"
         by_you:
           off_topic: "Tu pažymėjai tai kaip \"ne į temą\"."
           spam: "Tu pažymėjai tai, kaip šiukšlę"
@@ -3368,6 +3359,9 @@ lt:
         title: "Paieškos meniu"
         prev_next: "%{shortcut} Perkelti pasirinkimą aukštyn ir žemyn"
         full_page_search: "%{shortcut} Paleidžiama viso puslapio paieška"
+      admin:
+        title: "Administratorius"
+        search_prev_next: "%{shortcut} Perkelti pasirinkimą aukštyn ir žemyn"
     badges:
       granted_on: "Suteikta %{date}"
       title: Ženkleliai
@@ -3689,6 +3683,12 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
+        branding:
+          title: "Prekinis ženklas"
+          logo:
+            form:
+              mobile: "Mobilus"
+              email: "El. paštas"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3697,7 +3697,7 @@ lt:
           title: "Laukelio nustatymai"
         other:
           title: "Kiti"
-        search:
+        search_everything:
           title: "Paieška"
         security:
           title: "Apsauga"
@@ -3755,6 +3755,7 @@ lt:
         embedding:
           title: "Įterpimai"
       search:
+        title: "Paieška"
         result_types:
           theme:
             one: "Tema"
@@ -4186,7 +4187,6 @@ lt:
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
-          hide_unused_fields: "Slėpti nenaudojamus laukus"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
@@ -4229,9 +4229,6 @@ lt:
           unsaved_parent_themes: "Jūs nepriskyrėte komponento temoms, ar norite judėti toliau?"
           discard: "Išmesti"
           stay: "Likti"
-          css_html: "Pasirinktinis CSS/HTML"
-          edit_css_html: "Redaguoti CSS/HTML"
-          edit_css_html_help: "Jūs neredagavote jokio CSS ar HTML"
           delete_upload_confirm: "Ištrinti šį įkėlimą? (Tema CSS gali nustoti veikti!)"
           component_on_themes: "Įtraukite komponentą į šias temas"
           included_components: "Įtraukti komponentai"
@@ -4274,25 +4271,14 @@ lt:
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
           scss:
             text: "CSS"
-            title: "Įveskite pasirinktinį CSS, mes priimame visus galiojančius CSS ir SCSS stilius"
-          header:
-            text: "Viršus"
-            title: "Įveskite HTML, kad būtų rodomas virš svetainės antraštės"
           after_header:
             text: "Po viršaus"
-            title: "Įveskite HTML, kad būtų rodomas visuose puslapiuose po antraštėmis"
           footer:
             text: "Apačia"
-            title: "Įveskite HTML, kad rodyti puslapio apačioje"
           embedded_scss:
             text: "Įterptas CSS"
           color_definitions:
             text: "Spalvų apibrėžimai"
-          body_tag:
-            text: "Turinys"
-          yaml:
-            text: "YAML"
-            title: "Apibrėžkite temos nustatymus YAML formatu"
           all_filter: "Visos"
           active_filter: "Aktyvūs"
           inactive_filter: "Neaktyvus"

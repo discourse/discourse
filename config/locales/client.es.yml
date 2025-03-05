@@ -2344,13 +2344,6 @@ es:
       password_label: "Contraseña"
     password_reset:
       continue: "Continuar a %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Solo categorías"
       categories_with_featured_topics: "Categorías con temas destacados"
@@ -3561,11 +3554,8 @@ es:
         one: "A ti y a %{count} persona os ha gustado esta publicación"
         other: "A ti y a otras %{count} personas os ha gustado esta publicación"
       sr_post_like_count_button:
-        one: "%{count} persona le ha dado a me gusta en esta publicación. Haz clic para ver"
-        other: "%{count} personas le han dado a me gusta en esta publicación. Haz clic para ver"
-      sr_post_read_count_button:
-        one: "%{count} persona ha leído esta publicación. Haz clic para ver"
-        other: "%{count} personas han leído esta publicación. Haz clic para ver"
+        one: "%{count} persona le ha dado Me gusta a esta publicación."
+        other: "%{count} personas le han dado me gusta a esta publicación."
       filtered_replies_hint:
         one: "Ver esta publicación y su respuesta"
         other: "Ver esta publicación y sus %{count} respuestas"
@@ -3682,8 +3672,6 @@ es:
           read_capped:
             one: "y %{count} otro ha leído esto"
             other: "y %{count} otros han leído esto"
-          sr_post_likers_list_description: "usuarios que le han dado a me gusta en esta publicación"
-          sr_post_readers_list_description: "usuarios que han leído esta publicación"
         by_you:
           off_topic: "Denunciaste esto como sin relación con el tema"
           spam: "Denunciaste esto como spam"
@@ -4273,6 +4261,9 @@ es:
         prev_next: "%{shortcut} Mover selección arriba y abajo"
         insert_url: "%{shortcut} Insertar selección dentro del editor abierto"
         full_page_search: "%{shortcut} Lanza la página de búsqueda"
+      admin:
+        title: "Administrador"
+        search_prev_next: "%{shortcut} Mover selección arriba y abajo"
     badges:
       earned_n_times:
         one: "Medalla ganada %{count} vez"
@@ -4842,6 +4833,18 @@ es:
         logo:
           title: "Logotipo del sitio"
           header_description: "Personaliza las variaciones del logotipo de tu sitio"
+        branding:
+          title: "Marca"
+          logo:
+            form:
+              logo:
+                title: "Logotipo principal"
+              mobile: "Móvil"
+              email: "Correo electrónico"
+              manifest_screenshots:
+                description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
+              opengraph_image:
+                description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -4858,8 +4861,9 @@ es:
           title: "Límites de velocidad"
           header_description: "Configura la frecuencia con la que los usuarios pueden realizar determinadas acciones, como crear temas, enviar mensajes y publicar respuestas"
         search:
-          title: "Buscar"
           header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
+        search_everything:
+          title: "Buscar"
         security:
           title: "Seguridad"
           header_description: "Configura los ajustes de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
@@ -4972,6 +4976,7 @@ es:
           title: "Incrustado"
           header_description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
       search:
+        title: "Buscar"
         result_types:
           theme:
             one: "Tema"
@@ -5734,7 +5739,6 @@ es:
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
           settings_editor: "Editor de ajustes"
-          hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
           color_scheme_user_selectable: "Los usuarios pueden seleccionar la paleta de colores"
@@ -5788,9 +5792,6 @@ es:
           unsaved_parent_themes: "No has asignado este componente a ningún tema, ¿quieres continuar?"
           discard: "Descartar"
           stay: "Permanecer"
-          css_html: "Personalizar CSS/HTML"
-          edit_css_html: "Editar CSS/HTML"
-          edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Eliminar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           component_on_themes: "Incluir componentes en estos temas"
           included_components: "Componentes incluidos"
@@ -5851,22 +5852,14 @@ es:
           imported_from_archive: "Este tema se importó desde un archivo .zip"
           scss:
             text: "CSS"
-            title: "Introduce el CSS personalizado, aceptamos todos los estilos válidos de CSS y SCSS"
-          header:
-            text: "Encabezado"
-            title: "Introduce el HTML para mostrar en el encabezado"
           after_header:
             text: "Después del encabezado"
-            title: "Introduce el HTML para mostrar en todas las páginas después del encabezado"
           footer:
             text: "Pie de página"
-            title: "Introduce el HTML para mostrar en el pie de página"
           embedded_scss:
             text: "CSS incrustado"
-            title: "Introduce el CSS personalizado para mostrar en la versión insertada de los comentarios"
           embedded_header:
             text: "Encabezado incrustado"
-            title: "Introduce el HTML que se mostrará encima de la versión incrustada de los comentarios"
           color_definitions:
             text: "Definiciones de color"
             title: "Introducir definiciones de colores personalizadas (para usuarios avanzados)"
@@ -5879,15 +5872,6 @@ es:
               %{example}
 
               Se recomienda poner prefijos a los nombres de propiedad para evitar conflictos con plugins o el core
-          head_tag:
-            text: "Cabecera"
-            title: "HTML que se insertará después de la etiqueta head"
-          body_tag:
-            text: "Cuerpo"
-            title: "HTML que se insertará antes de la etiqueta body"
-          yaml:
-            text: "YAML"
-            title: "Definir ajustes al tema en formato YAML"
           scss_color_variables_warning: 'El uso de las variables de color SCSS de núcleo en los temas está obsoleto. Utiliza propiedades CSS personalizadas en su lugar. Consulta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">esta guía</a> para más detalles.'
           scss_warning_inline: "El uso de variables de color SCSS del sistema en los temas está obsoleto."
           all_filter: "Todo"

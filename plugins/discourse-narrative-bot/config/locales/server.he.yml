@@ -173,6 +173,12 @@ he:
       onebox:
         reply: |-
           אחלה! השיטה הזו אמורה לעבוד עבור כל הקישורים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. אך חשוב לזכור, הוא חייב להיות בשורה _עצמאית_, ללא שום דבר לפני או אחרי.
+        not_found: |-
+          לא הצלחתי למצוא את הקישור בתגובה שלך, סליחה! :cry:
+
+          אפשר לנסות להוסיף את הקישור הבא בשורה נפרדת בתגובה הבאה שלך?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           הנה תמונה של חד־קרן:

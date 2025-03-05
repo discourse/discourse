@@ -1573,13 +1573,6 @@ id:
       password_label: "Kata Sandi"
     password_reset:
       continue: "Lanjut ke %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internasional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Hanya Kategori"
       categories_with_featured_topics: "Kategori dengan Topik Unggulan"
@@ -2105,6 +2098,8 @@ id:
       actions:
         title: "Aksi"
         defer: "%{shortcut} Tandai topik sebagai belum dibaca"
+      admin:
+        title: "Admin"
     badges:
       others_count:
         other: "Diberi kepada orang lain %{count} kali"
@@ -2305,13 +2300,17 @@ id:
         email:
           title: "Surel"
       config:
+        branding:
+          logo:
+            form:
+              email: "Surel"
         navigation:
           title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
         other:
           title: "Lainnya"
-        search:
+        search_everything:
           title: "Cari"
         spam:
           title: "Spam"
@@ -2334,6 +2333,7 @@ id:
             rejected:
               title: "Ditolak"
       search:
+        title: "Cari"
         result_types:
           setting:
             other: "Pengaturan"
@@ -2533,10 +2533,6 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
-          header:
-            text: "Header"
-          body_tag:
-            text: "Konten"
           all_filter: "Semua"
           active_filter: "Aktif"
           schema:

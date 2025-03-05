@@ -168,11 +168,11 @@ hu:
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
-            restricted_group:
-              label: Csoport
-              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
+            restricted_user_group:
+              label: Korlátozott felhasználói csoport
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés felhasználója ebben a csoportban van
             restricted_groups:
-              label: Csoportok
+              label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
@@ -391,6 +391,7 @@ hu:
               label: PÜ-ek
             sender:
               label: PÜ feladó
+              description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
             topic:

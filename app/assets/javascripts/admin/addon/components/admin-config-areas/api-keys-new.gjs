@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { API_KEY_SCOPE_MODES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
@@ -31,11 +32,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     { id: "single", name: i18n("admin.api.single_user") },
   ];
 
-  scopeModes = [
-    { id: "global", name: i18n("admin.api.scopes.global") },
-    { id: "read_only", name: i18n("admin.api.scopes.read_only") },
-    { id: "granular", name: i18n("admin.api.scopes.granular") },
-  ];
+  scopeModes = API_KEY_SCOPE_MODES.map((scopeMode) => {
+    return { id: scopeMode, name: i18n(`admin.api.scopes.${scopeMode}`) };
+  });
 
   globalScopes = null;
 

@@ -164,11 +164,7 @@ fr:
             restricted_category:
               label: Catégorie
               description: Facultatif, ne se déclenchera que si le sujet de la publication se trouve dans cette catégorie
-            restricted_group:
-              label: Groupe
-              description: Facultatif, se déclenchera uniquement si le sujet de la publication est un message direct dans la boîte de réception de ce groupe
             restricted_groups:
-              label: Groupes
               description: Facultatif, ne se déclenchera que si le sujet de la publication est un message direct dans l'une des boîtes de réception du groupe
             ignore_group_members:
               label: Ignorer les membres du groupe
