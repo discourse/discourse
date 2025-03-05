@@ -85,12 +85,12 @@ class ReviewableScoreSerializer < ApplicationSerializer
         s << " #{object.reviewable.payload["title"]}" if object.reviewable.payload.key?("title")
       end
 
-      words = WordWatcher.new(s).word_matches_across_all_actions if s
+      words = WordWatcher.new(s).word_matches_across_all_actions
     else
       words = object.context.split(",")
     end
 
-    if words.nil?
+    if words.nil? || words.empty?
       text =
         I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
     else
