@@ -14,14 +14,12 @@ module Middleware
       is_html_response = html_response?(headers)
 
       default_headers =
-        Rails.application.config.action_dispatch.default_headers&.select do |header_name|
-          !EXCLUDED_HEADERS.include?(header_name)
-        end || {}
+        Rails.application.config.action_dispatch.default_headers.to_h.except(*EXCLUDED_HEADERS)
 
       default_headers.each do |header_name, value|
         next if !is_html_response && HTML_ONLY_HEADERS.include?(header_name)
 
-        headers[header_name] = value if headers[header_name].nil?
+        headers[header_name] ||= value
       end
 
       headers[
