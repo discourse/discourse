@@ -214,8 +214,8 @@ export default class FloatKitInstance {
       !Array.isArray(this.options.triggers)
     ) {
       return this.site.mobileView
-        ? this.options.triggers.mobile ?? ["click"]
-        : this.options.triggers.desktop ?? ["click"];
+        ? (this.options.triggers.mobile ?? ["click"])
+        : (this.options.triggers.desktop ?? ["click"]);
     }
 
     return this.options.triggers ?? ["click"];
@@ -227,8 +227,8 @@ export default class FloatKitInstance {
       !Array.isArray(this.options.untriggers)
     ) {
       return this.site.mobileView
-        ? this.options.untriggers.mobile ?? ["click"]
-        : this.options.untriggers.desktop ?? ["click"];
+        ? (this.options.untriggers.mobile ?? ["click"])
+        : (this.options.untriggers.desktop ?? ["click"]);
     }
 
     return this.options.untriggers ?? ["click"];

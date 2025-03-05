@@ -13,13 +13,15 @@ module(
       let data = { foo: "" };
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Password />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Password />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasValue("");
 
@@ -35,13 +37,15 @@ module(
     test("toggle visibility", async function (assert) {
       let data = { foo: "test" };
 
-      await render(<template>
-        <Form @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Password />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Password />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(formKit().field("foo").element.querySelector("input"))

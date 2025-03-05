@@ -9,10 +9,12 @@ module(
     setupRenderingTest(hooks);
 
     test("renders admin config area card section without toggle button", async function (assert) {
-      await render(<template>
-        <AdminConfigAreaCardSection @heading="test heading"><:content
-          >test</:content></AdminConfigAreaCardSection>
-      </template>);
+      await render(
+        <template>
+          <AdminConfigAreaCardSection @heading="test heading"><:content
+            >test</:content></AdminConfigAreaCardSection>
+        </template>
+      );
 
       assert
         .dom(".admin-config-area-card-section__title")
@@ -24,12 +26,14 @@ module(
     });
 
     test("renders admin config area card section with toggle button", async function (assert) {
-      await render(<template>
-        <AdminConfigAreaCardSection
-          @heading="test heading"
-          @collapsable={{true}}
-        ><:content>test</:content></AdminConfigAreaCardSection>
-      </template>);
+      await render(
+        <template>
+          <AdminConfigAreaCardSection
+            @heading="test heading"
+            @collapsable={{true}}
+          ><:content>test</:content></AdminConfigAreaCardSection>
+        </template>
+      );
 
       assert
         .dom(".admin-config-area-card-section__title")
@@ -45,13 +49,15 @@ module(
     });
 
     test("renders admin config area card section with toggle button and collapsed by default", async function (assert) {
-      await render(<template>
-        <AdminConfigAreaCardSection
-          @heading="test heading"
-          @collapsable={{true}}
-          @collapsed={{true}}
-        ><:content>test</:content></AdminConfigAreaCardSection>
-      </template>);
+      await render(
+        <template>
+          <AdminConfigAreaCardSection
+            @heading="test heading"
+            @collapsable={{true}}
+            @collapsed={{true}}
+          ><:content>test</:content></AdminConfigAreaCardSection>
+        </template>
+      );
 
       assert.dom(".admin-config-area-card-section__title").exists();
       assert.dom(".admin-config-area-card-section__toggle-button").exists();
