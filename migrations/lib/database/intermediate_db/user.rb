@@ -28,7 +28,6 @@ module Migrations::Database::IntermediateDB
         previous_visit_at,
         primary_group_id,
         registration_ip_address,
-        required_fields_version,
         silenced_till,
         staged,
         suspended_at,
@@ -40,7 +39,7 @@ module Migrations::Database::IntermediateDB
         views
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -65,7 +64,6 @@ module Migrations::Database::IntermediateDB
       previous_visit_at: nil,
       primary_group_id: nil,
       registration_ip_address: nil,
-      required_fields_version: nil,
       silenced_till: nil,
       staged: nil,
       suspended_at: nil,
@@ -98,7 +96,6 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_datetime(previous_visit_at),
         primary_group_id,
         ::Migrations::Database.format_ip_address(registration_ip_address),
-        required_fields_version,
         ::Migrations::Database.format_datetime(silenced_till),
         ::Migrations::Database.format_boolean(staged),
         ::Migrations::Database.format_datetime(suspended_at),
