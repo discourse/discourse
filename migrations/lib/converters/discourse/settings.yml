@@ -1,0 +1,9 @@
+intermediate_db:
+  path: "~/intermediate.db"
+
+source_db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "gerhard"
+  password: "password"
+  dbname: "discourse_meta"

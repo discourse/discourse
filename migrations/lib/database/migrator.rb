@@ -3,7 +3,7 @@
 module Migrations::Database
   class Migrator
     def initialize(db_path)
-      @db_path = db_path
+      @db_path = File.expand_path(db_path, ::Migrations.root_path)
       @db = nil
     end
 

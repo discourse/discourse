@@ -8,6 +8,7 @@ module Migrations::Database
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
     def self.open_database(path:)
+      path = File.expand_path(path, ::Migrations.root_path)
       FileUtils.mkdir_p(File.dirname(path))
 
       db = ::Extralite::Database.new(path)
@@ -25,7 +26,7 @@ module Migrations::Database
     attr_reader :db, :path
 
     def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
-      @path = path
+      @path = File.expand_path(path, ::Migrations.root_path)
       @transaction_batch_size = transaction_batch_size
       @db = self.class.open_database(path:)
       @statement_counter = 0
