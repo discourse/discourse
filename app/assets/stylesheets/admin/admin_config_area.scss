@@ -163,6 +163,12 @@
     .form-kit__container {
       padding-left: 1em;
       width: calc(100% - 1em) !important;
+      border-left: 1px solid var(--primary-low);
     }
+  }
+
+  .form-kit__field-toggle .form-kit__container-content.--full {
+    // avoid label wrapping
+    width: var(--form-kit-small-input) !important;
   }
 }
