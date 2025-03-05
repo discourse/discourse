@@ -60,10 +60,6 @@ sl:
               label: Oznake
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupine
           created: Ustvarjeno
         category_created_edited:
           fields:

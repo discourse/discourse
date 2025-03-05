@@ -314,7 +314,7 @@ pl_PL:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć przypadkowego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
-      twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
+      x_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -1759,7 +1759,7 @@ pl_PL:
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
     apple_touch_icon: "Ikona używana w urządzeniach dotykowych Apple. Przezroczyste tło nie jest zalecane. Zostanie automatycznie zmniejszona do rozmiaru 180x180. Jeśli pozostanie pusta, użyta zostanie ikona large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
-    twitter_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
+    x_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -5033,7 +5033,6 @@ pl_PL:
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
       fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
       auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
-      watched_word: "Ten post zawierał obserwowane słowo. Zobacz swoje %{link}."
       staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz %{link}."
       category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz %{link}."
       must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz %{link}."
@@ -5044,7 +5043,6 @@ pl_PL:
       contains_media: "Ten post zawiera osadzone media. Zobacz %{link}."
       queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
       links:
-        watched_word: lista obserwowanych słów
         category: ustawienia kategorii
     actions:
       agree:

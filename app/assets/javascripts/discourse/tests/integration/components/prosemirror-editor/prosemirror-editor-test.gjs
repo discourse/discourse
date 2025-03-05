@@ -1,6 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { resetRichEditorExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  clearRichEditorExtensions,
+  resetRichEditorExtensions,
+} from "discourse/lib/composer/rich-editor-extensions";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -8,6 +11,10 @@ import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module("Integration | Component | prosemirror-editor", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    clearRichEditorExtensions();
+  });
 
   hooks.afterEach(function () {
     resetRichEditorExtensions();
@@ -23,12 +30,14 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
       { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
     ];
 
-    await render(<template>
-      <ProsemirrorEditor
-        @includeDefault={{false}}
-        @extensions={{minimumExtensions}}
-      />
-    </template>);
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @includeDefault={{false}}
+          @extensions={{minimumExtensions}}
+        />
+      </template>
+    );
 
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });

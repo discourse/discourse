@@ -18,9 +18,14 @@ module("Integration | Component | PostList | Index", function (hooks) {
   test("@additionalItemClasses", async function (assert) {
     const posts = postModel;
     const additionalClasses = ["first-class", "second-class"];
-    await render(<template>
-      <PostList @posts={{posts}} @additionalItemClasses={{additionalClasses}} />
-    </template>);
+    await render(
+      <template>
+        <PostList
+          @posts={{posts}}
+          @additionalItemClasses={{additionalClasses}}
+        />
+      </template>
+    );
     assert.dom(".post-list-item").hasClass("first-class");
     assert.dom(".post-list-item").hasClass("second-class");
   });
@@ -28,9 +33,11 @@ module("Integration | Component | PostList | Index", function (hooks) {
   test("@titleAriaLabel", async function (assert) {
     const posts = postModel;
     const titleAriaLabel = "My custom aria title label";
-    await render(<template>
-      <PostList @posts={{posts}} @titleAriaLabel={{titleAriaLabel}} />
-    </template>);
+    await render(
+      <template>
+        <PostList @posts={{posts}} @titleAriaLabel={{titleAriaLabel}} />
+      </template>
+    );
     assert
       .dom(".post-list-item__details .title a")
       .hasAttribute("aria-label", titleAriaLabel);
@@ -38,17 +45,19 @@ module("Integration | Component | PostList | Index", function (hooks) {
 
   test("@emptyText", async function (assert) {
     const posts = [];
-    await render(<template>
-      <PostList @posts={{posts}} @emptyText="My custom empty text" />
-    </template>);
+    await render(
+      <template>
+        <PostList @posts={{posts}} @emptyText="My custom empty text" />
+      </template>
+    );
     assert.dom(".post-list__empty-text").hasText("My custom empty text");
   });
 
   test("@showUserInfo", async function (assert) {
     const posts = postModel;
-    await render(<template>
-      <PostList @posts={{posts}} @showUserInfo={{false}} />
-    </template>);
+    await render(
+      <template><PostList @posts={{posts}} @showUserInfo={{false}} /></template>
+    );
     assert.dom(".post-list-item__details .post-member-info").doesNotExist();
   });
 
@@ -57,9 +66,11 @@ module("Integration | Component | PostList | Index", function (hooks) {
       post.topic_html_title = `Fancy title`;
       return post;
     });
-    await render(<template>
-      <PostList @posts={{posts}} @titlePath="topic_html_title" />
-    </template>);
+    await render(
+      <template>
+        <PostList @posts={{posts}} @titlePath="topic_html_title" />
+      </template>
+    );
     assert.dom(".post-list-item__details .title a").hasText("Fancy title");
   });
 
@@ -68,9 +79,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       post.post_id = post.id;
       return post;
     });
-    await render(<template>
-      <PostList @posts={{posts}} @idPath="post_id" />
-    </template>);
+    await render(
+      <template><PostList @posts={{posts}} @idPath="post_id" /></template>
+    );
     assert.dom(".post-list-item .excerpt").hasAttribute("data-post-id", "1");
   });
 
@@ -79,9 +90,9 @@ module("Integration | Component | PostList | Index", function (hooks) {
       post.postUrl = `/t/${post.topic_id}/${post.id}`;
       return post;
     });
-    await render(<template>
-      <PostList @posts={{posts}} @urlPath="postUrl" />
-    </template>);
+    await render(
+      <template><PostList @posts={{posts}} @urlPath="postUrl" /></template>
+    );
     assert
       .dom(".post-list-item__details .title a")
       .hasAttribute("href", "/t/1/1");
@@ -93,9 +104,11 @@ module("Integration | Component | PostList | Index", function (hooks) {
       return post;
     });
 
-    await render(<template>
-      <PostList @posts={{posts}} @usernamePath="draft_username" />
-    </template>);
+    await render(
+      <template>
+        <PostList @posts={{posts}} @usernamePath="draft_username" />
+      </template>
+    );
     assert
       .dom(".post-list-item__header .avatar-link")
       .hasAttribute("data-user-card", "john");

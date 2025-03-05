@@ -13,13 +13,15 @@ module(
       let data = { foo: null };
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Checkbox />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.deepEqual(data, { foo: null });
       assert.form().field("foo").hasValue(false);
@@ -34,25 +36,29 @@ module(
     });
 
     test("when disabled", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-            <field.Checkbox />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.dom(".form-kit__control-checkbox").hasAttribute("disabled");
     });
 
     test("@tooltip", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Field @tooltip="test" @name="foo" @title="Foo" as |field|>
-            <field.Checkbox />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @tooltip="test" @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__control-checkbox-content .form-kit__tooltip")
@@ -60,13 +66,15 @@ module(
     });
 
     test("optional", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Checkbox />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasTitle("Foo (optional)");
     });

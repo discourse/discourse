@@ -11,6 +11,8 @@
   box-sizing: border-box;
 
   @include chat-scrollbar {
-    transition: scrollbar-color 0.25s ease-in-out, padding-top 0.2s ease-in-out;
+    transition:
+      scrollbar-color 0.25s ease-in-out,
+      padding-top 0.2s ease-in-out;
   }
 }

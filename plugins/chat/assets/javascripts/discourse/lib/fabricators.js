@@ -74,8 +74,8 @@ export default class ChatFabricators {
       title: args.title
         ? args.title
         : chatable instanceof Category
-        ? chatable.name
-        : null,
+          ? chatable.name
+          : null,
       description: args.description,
       chatable,
       status: args.status || CHANNEL_STATUSES.open,

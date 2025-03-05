@@ -45,9 +45,11 @@ module(
       const state = new TestClass();
       state.topic = buildTopic.call(this, { level: 1 });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".notifications-tracking-trigger")
@@ -68,9 +70,11 @@ module(
         archetype: "private_message",
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".notifications-tracking-trigger")
@@ -81,9 +85,11 @@ module(
       this.currentUser.set("user_option.mailing_list_mode", true);
       const topic = buildTopic.call(this, { level: 2 });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -97,9 +103,11 @@ module(
       const state = new TestClass();
       state.topic = buildTopic.call(this, { level: 2 });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
+        </template>
+      );
 
       state.topic = buildTopic.call(this, { level: 3, reason: 999 });
       await settled();
@@ -120,9 +128,11 @@ module(
         category_id: 88,
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -140,9 +150,11 @@ module(
         category_id: 88,
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -160,9 +172,11 @@ module(
         category_id: 88,
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -180,9 +194,11 @@ module(
         category_id: 88,
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -200,9 +216,11 @@ module(
         tags: ["test"],
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")
@@ -220,9 +238,11 @@ module(
         tags: ["test"],
       });
 
-      await render(<template>
-        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
-      </template>);
+      await render(
+        <template>
+          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+        </template>
+      );
 
       assert
         .dom(".topic-notifications-button .text")

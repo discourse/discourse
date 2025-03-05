@@ -1792,13 +1792,6 @@ vi:
       password_label: "Mật khẩu"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Chỉ chuyên mục"
       categories_with_featured_topics: "Các chuyên mục và chủ đề nổi bật"
@@ -2772,9 +2765,7 @@ vi:
       has_likes_title_you:
         other: "bạn và %{count} người khác đã like bài viết này"
       sr_post_like_count_button:
-        other: "%{count} người thích bài đăng này. Bấm để xem"
-      sr_post_read_count_button:
-        other: "%{count} người đọc bài đăng này. Bấm để xem"
+        other: "%{count} người thích bài viết này."
       filtered_replies_hint:
         other: "Xem bài đăng này và %{count} câu trả lời của nó"
       filtered_replies_viewing:
@@ -2864,8 +2855,6 @@ vi:
             other: "và %{count} người khác thích nầy"
           read_capped:
             other: "và %{count} người khác đọc bài này"
-          sr_post_likers_list_description: "người dùng đã thích bài đăng này"
-          sr_post_readers_list_description: "người dùng đã đọc bài đăng này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -3357,6 +3346,9 @@ vi:
         prev_next: "%{shortcut} Di chuyển lựa chọn lên và xuống"
         insert_url: "%{shortcut} Chèn lựa chọn vào trình chỉnh sửa nội dung"
         full_page_search: "%{shortcut} Khởi chạy tìm kiếm toàn trang"
+      admin:
+        title: "Quản trị"
+        search_prev_next: "%{shortcut} Di chuyển lựa chọn lên và xuống"
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
@@ -3702,6 +3694,12 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
+        branding:
+          title: "Xây dựng thương hiệu"
+          logo:
+            form:
+              mobile: "Điện thoại"
+              email: "Email"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -3710,7 +3708,7 @@ vi:
           title: "Onebox"
         other:
           title: "Khác"
-        search:
+        search_everything:
           title: "Tìm kiếm"
         security:
           title: "Bảo mật"
@@ -3775,6 +3773,7 @@ vi:
         embedding:
           title: "Nhúng"
       search:
+        title: "Tìm kiếm"
         result_types:
           report:
             other: "Báo cáo"
@@ -4288,7 +4287,6 @@ vi:
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
-          hide_unused_fields: "Ẩn các trường không sử dụng"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"
@@ -4331,9 +4329,6 @@ vi:
           unsaved_parent_themes: "Bạn chưa gán thành phần cho các chủ đề, bạn có muốn tiếp tục không?"
           discard: "Hủy bỏ"
           stay: "Ở lại"
-          css_html: "CSS / HTML tùy chỉnh"
-          edit_css_html: "Chỉnh sửa CSS / HTML"
-          edit_css_html_help: "Bạn chưa chỉnh sửa bất kỳ CSS hoặc HTML nào"
           delete_upload_confirm: "Xóa nội dung tải lên này? (CSS chủ đề có thể ngừng hoạt động!)"
           component_on_themes: "Bao gồm thành phần trên các chủ đề này"
           included_components: "Các thành phần bao gồm"
@@ -4385,19 +4380,12 @@ vi:
           imported_from_archive: "Theme này đã được nhập từ tệp .zip"
           scss:
             text: "CSS"
-            title: "Nhập CSS tùy chỉnh, chúng tôi chấp nhận tất cả các kiểu CSS và SCSS hợp lệ"
-          header:
-            text: "Header"
-            title: "Nhập HTML để hiển thị phía trên tiêu đề trang web"
           after_header:
             text: "Sau tiêu đề"
-            title: "Nhập HTML để hiển thị trên tất cả các trang sau tiêu đề"
           footer:
             text: "Footer"
-            title: "Nhập HTML để hiển thị cuối website"
           embedded_scss:
             text: "Nhúng CSS"
-            title: "Nhập CSS tùy chỉnh phiên bản có lời chú thích"
           color_definitions:
             text: "Màu sắc"
             title: "Nhập màu tùy chỉnh (chỉ dành cho người dùng nâng cao)"
@@ -4410,13 +4398,6 @@ vi:
               %{example}
 
               Việc đặt tiền tố tên thuộc tính rất được khuyến khích để tránh xung đột với các plugin và/hoặc lõi.
-          head_tag:
-            text: "Đầu"
-          body_tag:
-            text: "Thân"
-          yaml:
-            text: "YAML"
-            title: "Xác định cài đặt chủ đề ở định dạng YAML"
           scss_warning_inline: "Việc sử dụng các biến màu SCSS cốt lõi trong các chủ đề không được dùng nữa."
           all_filter: "All"
           active_filter: "Kích hoạt"

@@ -16,9 +16,9 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       disableActions: true,
     };
 
-    await render(<template>
-      <MountWidget @widget="topic-status" @args={{args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="topic-status" @args={{args}} /></template>
+    );
 
     assert.dom(".topic-status .d-icon-lock").exists();
   });
@@ -39,9 +39,9 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       disableActions: true,
     };
 
-    await render(<template>
-      <MountWidget @widget="topic-status" @args={{args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="topic-status" @args={{args}} /></template>
+    );
 
     assert.dom(".topic-status .d-icon-far-square-check").exists();
   });
@@ -52,9 +52,9 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       topic: store.createRecord("topic", { closed: true, pinned: true }),
     };
 
-    await render(<template>
-      <MountWidget @widget="topic-status" @args={{args}} />
-    </template>);
+    await render(
+      <template><MountWidget @widget="topic-status" @args={{args}} /></template>
+    );
 
     assert.dom(".topic-statuses .pinned").exists("pinned icon is shown");
     assert

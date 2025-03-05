@@ -64,10 +64,6 @@ hy:
               label: Թեգեր
             restricted_category:
               label: Կատեգորիա
-            restricted_group:
-              label: Խմբավորել
-            restricted_groups:
-              label: Խմբեր
           created: Ստեղծված
         category_created_edited:
           fields:

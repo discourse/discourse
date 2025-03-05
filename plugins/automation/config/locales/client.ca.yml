@@ -58,10 +58,6 @@ ca:
               label: Etiquetes
             restricted_category:
               label: Categoria
-            restricted_group:
-              label: Grup
-            restricted_groups:
-              label: Grups
           created: Creat
         category_created_edited:
           fields:

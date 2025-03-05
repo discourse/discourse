@@ -199,7 +199,8 @@ class Reviewable < ActiveRecord::Base
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
-    force_review: false
+    force_review: false,
+    context: nil
   )
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
@@ -216,6 +217,7 @@ class Reviewable < ActiveRecord::Base
         meta_topic_id: meta_topic_id,
         take_action_bonus: take_action_bonus,
         created_at: created_at || Time.zone.now,
+        context: context,
       )
     rs.reason = reason.to_s if reason
     rs.save!

@@ -71,7 +71,11 @@ module("Integration | Component | search-menu", function (hooks) {
   });
 
   test("clicking outside results hides and blurs input", async function (assert) {
-    await render(<template><div id="click-me"><SearchMenu /></div></template>);
+    await render(
+      <template>
+        <div id="click-me"><SearchMenu /></div>
+      </template>
+    );
     await click("#search-term");
 
     assert

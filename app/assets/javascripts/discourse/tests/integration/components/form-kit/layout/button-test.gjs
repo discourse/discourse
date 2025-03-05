@@ -14,11 +14,13 @@ module("Integration | Component | FormKit | Layout | Button", function (hooks) {
       done();
     };
 
-    await render(<template>
-      <Form as |form|>
-        <form.Button class="something" @action={{fn somethingAction 1}} />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Button class="something" @action={{fn somethingAction 1}} />
+        </Form>
+      </template>
+    );
 
     await click(".something");
   });

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Szavazás"
   js:
     poll:
       voters:

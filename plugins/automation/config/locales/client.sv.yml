@@ -145,10 +145,6 @@ sv:
               label: Taggar
             restricted_category:
               label: Kategori
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupper
           created: Skapade
         category_created_edited:
           fields:

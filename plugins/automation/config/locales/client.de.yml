@@ -168,11 +168,11 @@ de:
             restricted_category:
               label: Kategorie
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
-            restricted_group:
-              label: Gruppe
-              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang dieser Gruppe ist
+            restricted_user_group:
+              label: Eingeschränkte Benutzergruppe
+              description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in dieser Gruppe ist
             restricted_groups:
-              label: Gruppen
+              label: Gruppen mit eingeschränktem Posteingang
               description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
             ignore_group_members:
               label: Gruppenmitglieder ignorieren

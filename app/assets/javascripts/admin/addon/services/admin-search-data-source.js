@@ -111,10 +111,14 @@ export default class AdminSearchDataSource extends Service {
 
   #addPageLink(mapItem, link, parentLabel = "") {
     let url;
-    if (link.routeModels) {
-      url = this.router.urlFor(link.route, ...link.routeModels);
-    } else {
-      url = this.router.urlFor(link.route);
+    if (link.route) {
+      if (link.routeModels) {
+        url = this.router.urlFor(link.route, ...link.routeModels);
+      } else {
+        url = this.router.urlFor(link.route);
+      }
+    } else if (link.href) {
+      url = getURL(link.href);
     }
 
     const mapItemLabel = this.#labelOrText(mapItem);

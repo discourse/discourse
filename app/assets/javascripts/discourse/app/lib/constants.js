@@ -127,3 +127,5 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
   "component",
   "report",
 ];
+
+export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];

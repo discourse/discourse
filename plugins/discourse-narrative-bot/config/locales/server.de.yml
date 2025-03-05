@@ -170,21 +170,21 @@ de:
           - Wir glauben an [zivilisiertes Community-Verhalten](%{base_uri}/guidelines) zu jeder Zeit.
       onebox:
         instructions: |-
-          Kannst du als Nächstes einen dieser Links mit mir teilen? Antworte mit **einem Link in einer eigenen Zeile**, und er wird automatisch erweitert, um eine hübsche Zusammenfassung zu enthalten.
+          Als Nächstes: Kannst du einen dieser Links mit mir teilen? Antworte mit **einem Link auf einer eigenen Zeile** und er wird automatisch in eine hübsche, kurze Inhaltsangabe erweitert.
 
-          Um einen Link zu kopieren, tippe und halte ihn auf dem Handy oder klicke mit der rechten Maustaste auf dein Zeigegerät:
+          Um einen Link zu kopieren, tippe und halte auf mobilen Geräten oder klicke rechts mit deiner Maus:
 
-          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
-          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
-          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+          [https://de.wikipedia.org/wiki/Antiwitz](https://de.wikipedia.org/wiki/Antiwitz)
+          [https://de.wikipedia.org/wiki/Tetraphobie](https://de.wikipedia.org/wiki/Tetraphobie)
+          [https://de.wikipedia.org/wiki/Beghilos](https://de.wikipedia.org/wiki/Beghilos)
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-
-          Sorry, ich konnte den Link in deiner Antwort nicht finden! :cry:
+          Entschuldige bitte, ich konnte den Link in deiner Antwort nicht finden! :cry:
 
-          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deiner nächsten Antwort einzufügen?
+          Kannst du versuchen, den folgenden Link in einer eigenen Zeile in deine nächste Antwort einzufügen?
 
-          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
+          [https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze](https://de.wikipedia.org/wiki/Exotische_Kurzhaarkatze)
       images:
         instructions: |-
           Hier ist ein Bild von einem Einhorn:

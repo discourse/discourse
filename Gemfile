@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.3.0"
+ruby "~> 3.3"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -101,7 +101,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.18.pre1"
+gem "mini_racer"
 
 gem "highline", require: false
 

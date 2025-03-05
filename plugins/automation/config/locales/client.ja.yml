@@ -163,11 +163,7 @@ ja:
             restricted_category:
               label: カテゴリ
               description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
-            restricted_group:
-              label: グループ
-              description: オプション。投稿のトピックがこのグループの受信トレイにある個人メッセージである場合にのみトリガーされます。
             restricted_groups:
-              label: グループ
               description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
             ignore_group_members:
               label: グループメンバーを無視
