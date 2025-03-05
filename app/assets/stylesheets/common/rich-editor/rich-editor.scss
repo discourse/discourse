@@ -134,7 +134,7 @@
     white-space: normal;
   }
 
-  .code-block {
+  pre {
     position: relative;
   }
 
@@ -150,7 +150,6 @@
   }
 
   .html-block {
-    position: relative;
     border: 1px dashed var(--primary-low-mid);
 
     &::after {
