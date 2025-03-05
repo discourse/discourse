@@ -7,26 +7,26 @@ import SettingObjectHelper from "admin/lib/setting-object-helper";
 
 export default class SiteSetting extends EmberObject {
   static findAll(params = {}) {
-    return ajax("/admin/site_settings", { data: params }).then(function (
-      settings
-    ) {
-      // Group the results by category
-      const categories = {};
-      settings.site_settings.forEach(function (s) {
-        if (!categories[s.category]) {
-          categories[s.category] = [];
-        }
-        categories[s.category].pushObject(SiteSetting.create(s));
-      });
+    return ajax("/admin/site_settings", { data: params }).then(
+      function (settings) {
+        // Group the results by category
+        const categories = {};
+        settings.site_settings.forEach(function (s) {
+          if (!categories[s.category]) {
+            categories[s.category] = [];
+          }
+          categories[s.category].pushObject(SiteSetting.create(s));
+        });
 
-      return Object.keys(categories).map(function (n) {
-        return {
-          nameKey: n,
-          name: i18n("admin.site_settings.categories." + n),
-          siteSettings: categories[n],
-        };
-      });
-    });
+        return Object.keys(categories).map(function (n) {
+          return {
+            nameKey: n,
+            name: i18n("admin.site_settings.categories." + n),
+            siteSettings: categories[n],
+          };
+        });
+      }
+    );
   }
 
   static update(key, value, opts = {}) {

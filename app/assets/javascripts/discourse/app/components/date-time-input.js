@@ -30,8 +30,8 @@ export default class DateTimeInput extends Component {
       const date = this.date
         ? this.date
         : this.relativeDate
-        ? this.relativeDate
-        : moment.tz(this.resolvedTimezone);
+          ? this.relativeDate
+          : moment.tz(this.resolvedTimezone);
 
       this.onChange(
         moment.tz(

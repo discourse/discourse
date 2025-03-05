@@ -52,8 +52,8 @@ export default class FKControlInput extends Component {
       event.target.value === ""
         ? undefined
         : this.type === "number"
-        ? parseFloat(event.target.value)
-        : event.target.value;
+          ? parseFloat(event.target.value)
+          : event.target.value;
 
     this.args.field.set(value);
   }

@@ -45,10 +45,6 @@ be:
               label: тэгі
             restricted_category:
               label: катэгорыя
-            restricted_group:
-              label: група
-            restricted_groups:
-              label: групы
           created: створаны
         category_created_edited:
           fields:

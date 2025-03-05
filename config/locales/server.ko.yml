@@ -3733,7 +3733,6 @@ ko:
     reasons:
       post_count: "모든 사용자의 처음 몇 개의 게시물은 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"
       auto_silence_regex: "첫 게시물이 %{link} 설정과 일치하는 신규 사용자입니다."
-      watched_word: "이 게시물에는 감시 단어가 포함되어 있습니다. 다음을 참조하세요. %{link}"
       category: "이 카테고리의 게시물은 운영진의 수동 승인이 필요합니다. 다음을 참조하세요. %{link}"
       must_approve_users: "모든 신규 사용자는 운영진의 승인을 받아야 합니다. 다음을 참조하세요. %{link}"
       invite_only: "모든 신규 사용자는 초대를 받아야 합니다. 다음을 참조하세요. %{link}"
@@ -3742,7 +3741,6 @@ ko:
       contains_media: "이 게시물에는 임베디드 미디어가 있습니다. 다음을 참조하세요. %{link}"
       queued_by_staff: "운영진이 게시물 검토가 필요하다고 판단했습니다. 검토할 때까지는 숨김 처리됩니다."
       links:
-        watched_word: 감시 단어 목록
         category: 카테고리 설정
     actions:
       agree:

@@ -2344,13 +2344,6 @@ it:
       password_label: "Password"
     password_reset:
       continue: "Procedi su %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internazionale"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Solo Categorie"
       categories_with_featured_topics: "Categorie con argomenti in evidenza"
@@ -3561,11 +3554,8 @@ it:
         one: "tu e un'altra persona avete messo \"Mi piace\" a questo messaggio"
         other: "tu e altre %{count} persone avete messo \"Mi piace\" a questo messaggio"
       sr_post_like_count_button:
-        one: "Questo messaggio è piaciuto a %{count} persona. Clicca per sapere chi è"
-        other: "Questo messaggio è piaciuto a %{count} persone. Clicca per sapere chi sono"
-      sr_post_read_count_button:
-        one: "%{count} persona ha letto questo messaggio. Clicca per sapere chi è"
-        other: "%{count} persone hanno letto questo messaggio. Clicca per sapere chi sono"
+        one: "%{count} persona ha messo \"Mi piace\" a questo messaggio."
+        other: "%{count} persone hanno messo \"Mi piace\" a questo messaggio."
       filtered_replies_hint:
         one: "Visualizza questo messaggio e la sua risposta"
         other: "Visualizza questo messaggio e le sue %{count} risposte"
@@ -3682,8 +3672,6 @@ it:
           read_capped:
             one: "e %{count} ha letto"
             other: "e altri %{count} hanno letto"
-          sr_post_likers_list_description: "utenti a cui è piaciuto questo messaggio"
-          sr_post_readers_list_description: "utenti che hanno letto questo messaggio"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
           spam: "L'hai segnalato come spam"
@@ -4273,6 +4261,9 @@ it:
         prev_next: "%{shortcut} Sposta la selezione su e giù"
         insert_url: "%{shortcut} Inserisci la selezione nello strumento di composizione aperto"
         full_page_search: "%{shortcut} Avvia la ricerca a pagina intera"
+      admin:
+        title: "Amministrazione"
+        search_prev_next: "%{shortcut} Sposta la selezione su e giù"
     badges:
       earned_n_times:
         one: "Ha guadagnato questo distintivo %{count} volta"
@@ -4844,6 +4835,18 @@ it:
         logo:
           title: "Logo del sito"
           header_description: "Personalizza le varianti del logo del tuo sito"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Logo primario"
+              mobile: "Mobile"
+              email: "Email"
+              manifest_screenshots:
+                description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
+              opengraph_image:
+                description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -4860,8 +4863,9 @@ it:
           title: "Limiti di frequenza"
           header_description: "Configura la frequenza con cui gli utenti possono eseguire determinate azioni, come la creazione di argomenti, l'invio di messaggi e la pubblicazione di risposte"
         search:
-          title: "Cerca"
           header_description: "Configura le impostazioni di ricerca, tra cui la registrazione e la tokenizzazione per le lingue cinese e giapponese"
+        search_everything:
+          title: "Cerca"
         security:
           title: "Sicurezza"
           header_description: "Configura le impostazioni di sicurezza, tra cui l'autenticazione a due fattori, i privilegi di moderatore e le policy di sicurezza dei contenuti"
@@ -4974,6 +4978,7 @@ it:
           title: "Integrazione"
           header_description: "Discourse ha la capacità di incorporare i commenti di un argomento in un sito remoto utilizzando un'API Javascript che crea un IFRAME"
       search:
+        title: "Cerca"
         result_types:
           theme:
             one: "Tema"
@@ -5737,7 +5742,6 @@ it:
           extra_files_remote: "Esporta il tema o consulta l'archivio git per visualizzare questi file."
           preview: "Anteprima"
           settings_editor: "Editor delle impostazioni"
-          hide_unused_fields: "Nascondi campi inutilizzati"
           is_default: "Il tema è abilitato per impostazione predefinita"
           user_selectable: "Il tema può essere selezionato dagli utenti"
           color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
@@ -5791,9 +5795,6 @@ it:
           unsaved_parent_themes: "Non hai assegnato il Componente ai Temi, vuoi andare avanti?"
           discard: "Annulla"
           stay: "Resta"
-          css_html: "CSS/HTML personalizzato"
-          edit_css_html: "Modifica CSS/HTML"
-          edit_css_html_help: "Non hai modificato nessun CSS o HTML"
           delete_upload_confirm: "Eliminare questo caricamento? (Il CSS del tema potrebbe non funzionare!)"
           component_on_themes: "Includi Componente in questi Temi"
           included_components: "Componenti inclusi"
@@ -5854,22 +5855,14 @@ it:
           imported_from_archive: "Questo tema è stato importato da un file .zip"
           scss:
             text: "CSS"
-            title: "Inserire il CSS personalizzato, accettiamo tutti gli stili validi di CSS e SCSS"
-          header:
-            text: "Intestazione"
-            title: "Inserire l'HTML da visualizzare sopra l'intestazione del sito"
           after_header:
             text: "Dopo Intestazione"
-            title: "Inserire l'HTML da visualizzare dopo l'intestazione"
           footer:
             text: "Fondo pagina"
-            title: "Inserire l'HTML da visualizzare a piè di pagina"
           embedded_scss:
             text: "CSS incorporato"
-            title: "Inserisci CSS personalizzato da inviare con la versione incorporata dei commenti"
           embedded_header:
             text: "Intestazione incorporata"
-            title: "Immetti il codice HTML da visualizzare sopra la versione incorporata dei commenti"
           color_definitions:
             text: "Definizioni dei colori"
             title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
@@ -5882,15 +5875,6 @@ it:
               %{example}
 
               Si consiglia di assegnare un prefisso ai nomi delle proprietà per evitare conflitti con i plugin e/o il kernel.
-          head_tag:
-            text: "Intestazione"
-            title: "HTML che sarà inserito prima dell'etichetta di intestazione"
-          body_tag:
-            text: "Corpo"
-            title: "HTML che sarà inserito prima dell'etichetta del corpo"
-          yaml:
-            text: "YAML"
-            title: "Definisci le impostazioni del tema in formato YAML"
           scss_color_variables_warning: 'L''utilizzo delle variabili di colore SCSS di base nei temi è deprecato. Utilizzare invece le proprietà personalizzate CSS. Vedi <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">questa guida</a> per maggiori dettagli.'
           scss_warning_inline: "L'utilizzo delle variabili di colore SCSS di base nei temi è deprecato."
           all_filter: "Tutti"

@@ -23,7 +23,9 @@
     bottom: -25px;
     background: none;
     opacity: 0;
-    transition: opacity 0.25s ease, transform 0.5s ease;
+    transition:
+      opacity 0.25s ease,
+      transform 0.5s ease;
     transform: scale(0.1);
     padding: 0;
     z-index: z("dropdown");

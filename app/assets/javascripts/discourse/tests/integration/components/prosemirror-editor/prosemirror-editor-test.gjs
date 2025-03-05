@@ -25,12 +25,14 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
       { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
     ];
 
-    await render(<template>
-      <ProsemirrorEditor
-        @includeDefault={{false}}
-        @extensions={{minimumExtensions}}
-      />
-    </template>);
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @includeDefault={{false}}
+          @extensions={{minimumExtensions}}
+        />
+      </template>
+    );
 
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });

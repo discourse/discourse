@@ -1376,13 +1376,6 @@ et:
       password_label: "Parool"
     password_reset:
       continue: "Edasi saidile %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google klassikaline"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Ainult foorumid"
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
@@ -2494,6 +2487,8 @@ et:
         mark_tracking: "%{shortcut} Jälgi teemat"
         mark_watching: "%{shortcut} Vaatle teemat"
         print: "%{shortcut} Prindi teema"
+      admin:
+        title: "Admin"
     badges:
       earned_n_times:
         one: "Teenis selle märgise %{count} kord"
@@ -2714,6 +2709,11 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        branding:
+          logo:
+            form:
+              mobile: "Mobiil"
+              email: "Meiliaadress"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -2722,7 +2722,7 @@ et:
           title: "Onebox"
         other:
           title: "Muu"
-        search:
+        search_everything:
           title: "Otsi"
         security:
           title: "Turve"
@@ -2781,6 +2781,7 @@ et:
         embedding:
           title: "Sängitamine"
       search:
+        title: "Otsi"
         result_types:
           theme:
             one: "Kujundusteema"
@@ -3126,7 +3127,6 @@ et:
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
-          edit_css_html: "Muuda CSS-i/HTML-i"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"
@@ -3138,18 +3138,12 @@ et:
           theme_settings: "Teema seaded"
           scss:
             text: "CSS"
-          header:
-            text: "Päis"
           after_header:
             text: "Pärast päist"
           footer:
             text: "Jalus"
           embedded_scss:
             text: "Sängitatud CSS"
-          body_tag:
-            text: "Sisu"
-          yaml:
-            text: "YAML"
           all_filter: "Kõik"
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"

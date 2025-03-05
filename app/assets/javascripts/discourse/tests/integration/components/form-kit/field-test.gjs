@@ -26,32 +26,36 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@size", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @size={{8}}>
-          Test
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @size={{8}}>
+            Test
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
   });
 
   test("@disabled", async function (assert) {
-    await render(<template>
-      <Form @data={{hash disabled=true}} as |form data|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @disabled={{data.disabled}}
-          as |field|
-        >
-          <field.Input />
-        </form.Field>
+    await render(
+      <template>
+        <Form @data={{hash disabled=true}} as |form data|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @disabled={{data.disabled}}
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
 
-        <form.Button class="test" @action={{fn form.set "disabled" false}} />
-      </Form>
-    </template>);
+          <form.Button class="test" @action={{fn form.set "disabled" false}} />
+        </Form>
+      </template>
+    );
 
     assert
       .dom("#control-foo.is-disabled[data-disabled]")
@@ -65,13 +69,20 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@description", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @description="foo foo" as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @description="foo foo"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.form().field("foo").hasDescription("foo foo");
   });
@@ -81,13 +92,15 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       assert.deepEqual(error.message, "@name can't include `.` or `-`.");
     });
 
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo.bar" @title="Foo" @size={{8}} as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo.bar" @title="Foo" @size={{8}} as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     resetOnerror();
   });
@@ -100,28 +113,42 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       );
     });
 
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @size={{8}} as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @size={{8}} as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     resetOnerror();
   });
 
   test("@validation", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @validation="required" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Field @name="bar" @title="Bar" @validation="required" as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Field
+            @name="bar"
+            @title="Bar"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     await formKit().submit();
 
@@ -143,15 +170,22 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       addError("foo", { title: "Some error", message: "error" });
     };
 
-    await render(<template>
-      <Form @data={{hash foo="bar"}} as |form|>
-        <form.Field @name="foo" @title="Foo" @validate={{validate}} as |field|>
-          <field.Input />
-        </form.Field>
+    await render(
+      <template>
+        <Form @data={{hash foo="bar"}} as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validate={{validate}}
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
 
-        <form.Submit />
-      </Form>
-    </template>);
+          <form.Submit />
+        </Form>
+      </template>
+    );
 
     await formKit().submit();
 
@@ -162,32 +196,36 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@showTitle", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @showTitle={{false}}
-          as |field|
-        ><field.Input /></form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @showTitle={{false}}
+            as |field|
+          ><field.Input /></form.Field>
+        </Form>
+      </template>
+    );
 
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
   test("@format", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @description="foo description"
-          @format="full"
-          as |field|
-        ><field.Input /></form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @description="foo description"
+            @format="full"
+            as |field|
+          ><field.Input /></form.Field>
+        </Form>
+      </template>
+    );
 
     assert
       .dom(".form-kit__field.--full")
@@ -201,18 +239,20 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@descriptionFormat", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @description="foo description"
-          @format="full"
-          @descriptionFormat="large"
-          as |field|
-        ><field.Input /></form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @description="foo description"
+            @format="full"
+            @descriptionFormat="large"
+            as |field|
+          ><field.Input /></form.Field>
+        </Form>
+      </template>
+    );
 
     assert
       .dom(".form-kit__field.--full")
@@ -223,17 +263,19 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@titleFormat", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @format="full"
-          @titleFormat="large"
-          as |field|
-        ><field.Input /></form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @format="full"
+            @titleFormat="large"
+            as |field|
+          ><field.Input /></form.Field>
+        </Form>
+      </template>
+    );
 
     assert
       .dom(".form-kit__field.--full")
@@ -256,42 +298,48 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       onSetWasCalled();
     };
 
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     await fillIn("input", "bar");
   });
 
   test("@tooltip", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @tooltip="text" as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @tooltip="text" as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     await click(".fk-d-tooltip__trigger");
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("text");
 
-    await render(<template>
-      <Form as |form|>
-        <form.Field
-          @name="foo"
-          @title="Foo"
-          @tooltip={{component DTooltip content="component"}}
-          as |field|
-        >
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @tooltip={{component DTooltip content="component"}}
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     await click(".fk-d-tooltip__trigger");
 

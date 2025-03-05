@@ -2354,13 +2354,6 @@ fa_IR:
       password_label: "رمزعبور"
     password_reset:
       continue: "برو به %{site_name}"
-    emoji_set:
-      apple_international: "اپل/جهانی"
-      google: "گوگل"
-      twitter: "توئیتر"
-      win10: "ویندوز 10"
-      google_classic: "گوگل کلاسیک"
-      facebook_messenger: "پیامرسان فیس بوک"
     category_page_style:
       categories_only: "فقط دسته‌بندی‌ها"
       categories_with_featured_topics: "دسته‌بندی هایی که دارای موضوعات برجسته هستند"
@@ -3573,11 +3566,8 @@ fa_IR:
         one: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
         other: "شما و %{count} شخص دیگر این نوشته را پسندیده‌اید"
       sr_post_like_count_button:
-        one: "%{count} کاربر این پست را پسندیده است. برای مشاهده کلیک کنید"
-        other: "%{count} کاربر این پست را پسندیده‌اند. برای مشاهده کلیک کنید"
-      sr_post_read_count_button:
-        one: "%{count} کاربر این پست را خوانده است. برای مشاهده کلیک کنید"
-        other: "%{count} کاربر این پست را خوانده‌اند. برای مشاهده کلیک کنید"
+        one: "%{count} کاربر این مورد را پسندیده‌اند."
+        other: "%{count} کاربر این مورد را پسندیده‌اند."
       filtered_replies_hint:
         one: "این پست و پاسخ آن را مشاهده کنید"
         other: "این پست و %{count} پاسخ آن را مشاهده کنید"
@@ -3694,8 +3684,6 @@ fa_IR:
           read_capped:
             one: "و %{count} نفر دیگر این را خوانده‌اند"
             other: "و %{count} نفر دیگر این را خوانده‌اند"
-          sr_post_likers_list_description: "کاربرانی که این پست را پسندیده‌اند"
-          sr_post_readers_list_description: "کاربرانی که این پست را خوانده‌اند"
         by_you:
           off_topic: "شما برای این مورد پرچم خارج از بحث زدید"
           spam: "شما برای این مورد پرچم هرزنامه زدید"
@@ -4290,6 +4278,9 @@ fa_IR:
         prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
         insert_url: "%{shortcut} انتخاب را در ابزار نوشتن باز قرار دهید"
         full_page_search: "%{shortcut} جستجوی تمام صفحه را راه‌اندازی می‌کند"
+      admin:
+        title: "مدیر کل"
+        search_prev_next: "%{shortcut} حرکت دادن انتخاب شده به بالا و پایین"
     badges:
       earned_n_times:
         one: "این مدال را %{count} بار به دست آورده"
@@ -4857,6 +4848,14 @@ fa_IR:
         logo:
           title: "لوگوی سایت"
           header_description: "تغییرات آرم سایت خود را سفارشی کنید"
+        branding:
+          title: "برندسازی"
+          logo:
+            form:
+              logo:
+                title: "لوگوی اصلی"
+              mobile: "موبایل"
+              email: "ایمیل"
         navigation:
           title: "ناوبری"
           header_description: "پیوندهای ناوبری و آیتم‌های منو را برای سایت خود پیکربندی کنید. این شامل مکان و رفتار منوی پیمایش اصلی، پیوندهای سریع در بالای صفحه اصلی، و همچنین نوار کناری مدیریت است."
@@ -4873,8 +4872,9 @@ fa_IR:
           title: "میزان محدودیت‌ها"
           header_description: "پیکربندی تعداد دفعاتی که کاربران می‌توانند اقدامات خاصی را انجام دهند، مانند ایجاد موضوعات، ارسال پیام، و ارسال پاسخ"
         search:
-          title: "جستجو"
           header_description: "تنظیمات جستجو از جمله ورود به سیستم و نشانه‌گذاری را برای زبان های چینی و ژاپنی پیکربندی کنید"
+        search_everything:
+          title: "جستجو"
         security:
           title: "امنیت"
           header_description: "پیکربندی تنظیمات امنیتی، از جمله احراز هویت دو مرحله‌ای، امتیازات ناظر، و سیاست‌های امنیتی محتوا"
@@ -4988,6 +4988,7 @@ fa_IR:
           title: "جاسازی"
       search:
         modal_title: "جستجو در مدیریت"
+        title: "جستجو"
         result_types:
           page:
             one: "صفحه"
@@ -5748,7 +5749,6 @@ fa_IR:
           extra_files_remote: "برای مشاهده این فایل‌ها، پوسته را صادر کنید یا مخزن git را بررسی کنید."
           preview: "پیش‌نمایش"
           settings_editor: "تنظیمات ویرایشگر"
-          hide_unused_fields: "مخفی‌کردن فیلد‌های بلااستفاده"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"
           color_scheme_user_selectable: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
@@ -5801,9 +5801,6 @@ fa_IR:
           unsaved_changes_alert: "تغییرات‌تان را هنوز ذخیره نکرده‌اید، می‌خواهید آن‌ها را نادیده گرفته و ادامه دهید؟"
           discard: "دور انداختن"
           stay: "ماندن"
-          css_html: "CSS/HTML سفارشی"
-          edit_css_html: "ویرایش CSS/HTML"
-          edit_css_html_help: "شما CSS یا HTML را ویرایش نکرده‌اید"
           delete_upload_confirm: "حذف فایل بارگذاری شده؟ (شاید قالب CSS با مشکل مواجه شود!)"
           add_all: "افزودن همه"
           import_web_tip: "مخزن شامل قالب است"
@@ -5861,19 +5858,12 @@ fa_IR:
           imported_from_archive: "این پوسته از یک فایل zip. وارد شده است"
           scss:
             text: "سی اس اس"
-            title: "کد CSS مد نظرتان را وارد کنید، از تمام کد‌های CSS و SCSS معتبر پشتیبانی می‌شود."
-          header:
-            text: "سربرگ"
-            title: "کد HTML را جهت نمایش بالای سربرگ سایت وارد کنید."
           after_header:
             text: "بعد از سربرگ"
-            title: "کد HTML را جهت نمایش در سربرگ تمامی صفحات سایت وارد کنید"
           footer:
             text: "پاورقی"
-            title: "کد HTML جهت نمایش در پاورقی سایت را وارد کنید"
           embedded_scss:
             text: "کد CSS جاسازی شده"
-            title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
           embedded_header:
             text: "سربرگ جاسازی شده"
           color_definitions:
@@ -5888,15 +5878,6 @@ fa_IR:
               %{example}
 
               برای جلوگیری از تداخل با افزونه‌ها و/یا هسته، پیشوند برای نام ویژگی توصیه می‌شود.
-          head_tag:
-            text: "Head"
-            title: "کد HTML که قبل از برچسب head درج خواهد شد"
-          body_tag:
-            text: "Body"
-            title: "کد HTML که قبل از برچسب body درج خواهد شد"
-          yaml:
-            text: "YAML"
-            title: "تنظیمات تم را در قالب YAML تعریف کنید"
           js:
             text: "JS"
           all_filter: "همه"
