@@ -13,27 +13,29 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       assert.deepEqual(data.foo, 1);
     };
 
-    await render(<template>
-      <Form @data={{hash foo=1}} @onSubmit={{onSubmit}} />
-    </template>);
+    await render(
+      <template><Form @data={{hash foo=1}} @onSubmit={{onSubmit}} /></template>
+    );
 
     await formKit().submit();
   });
 
   test("addItemToCollection", async function (assert) {
-    await render(<template>
-      <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
-        <form.Button
-          @action={{fn form.addItemToCollection "foo" (hash bar=3)}}
-        >Add</form.Button>
+    await render(
+      <template>
+        <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
+          <form.Button
+            @action={{fn form.addItemToCollection "foo" (hash bar=3)}}
+          >Add</form.Button>
 
-        <form.Collection @name="foo" as |collection|>
-          <collection.Field @name="bar" @title="Bar" as |field|>
-            <field.Input />
-          </collection.Field>
-        </form.Collection>
-      </Form>
-    </template>);
+          <form.Collection @name="foo" as |collection|>
+            <collection.Field @name="bar" @title="Bar" as |field|>
+              <field.Input />
+            </collection.Field>
+          </form.Collection>
+        </Form>
+      </template>
+    );
 
     await click("button");
 
@@ -51,12 +53,14 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       addError("bar", { title: "Bar", message: "error" });
     };
 
-    await render(<template>
-      <Form @data={{hash foo=1 bar=2}} @validate={{validate}} as |form|>
-        <form.Field @name="foo" @title="Foo" />
-        <form.Field @name="bar" @title="Bar" />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{hash foo=1 bar=2}} @validate={{validate}} as |form|>
+          <form.Field @name="foo" @title="Foo" />
+          <form.Field @name="bar" @title="Bar" />
+        </Form>
+      </template>
+    );
 
     await formKit().submit();
 
@@ -69,17 +73,29 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   test("@validateOn", async function (assert) {
     const data = { foo: "test" };
 
-    await render(<template>
-      <Form @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" @validation="required" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Field @name="bar" @title="Bar" @validation="required" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Submit />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{data}} as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Field
+            @name="bar"
+            @title="Bar"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Submit />
+        </Form>
+      </template>
+    );
 
     await formKit().field("foo").fillIn("");
 
@@ -116,16 +132,18 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       assert.deepEqual(model.foo, 1);
     };
 
-    await render(<template>
-      <Form
-        @data={{model}}
-        @onSubmit={{submit}}
-        @onRegisterApi={{registerApi}}
-        as |form data|
-      >
-        <div class="bar">{{data.bar}}</div>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form
+          @data={{model}}
+          @onSubmit={{submit}}
+          @onRegisterApi={{registerApi}}
+          as |form data|
+        >
+          <div class="bar">{{data.bar}}</div>
+        </Form>
+      </template>
+    );
 
     await formApi.set("bar", 2);
     await formApi.submit();
@@ -146,11 +164,13 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   });
 
   test("@data", async function (assert) {
-    await render(<template>
-      <Form @data={{hash foo=1}} as |form data|>
-        <div class="foo">{{data.foo}}</div>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} as |form data|>
+          <div class="foo">{{data.foo}}</div>
+        </Form>
+      </template>
+    );
 
     assert.dom(".foo").hasText("1");
   });
@@ -165,17 +185,24 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       done();
     };
 
-    await render(<template>
-      <Form @data={{hash bar=1}} @onReset={{onReset}} as |form|>
-        <form.Field @title="Foo" @name="foo" @validation="required" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Field @title="Bar" @name="bar" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Button class="set-bar" @action={{fn form.set "bar" 2}} />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{hash bar=1}} @onReset={{onReset}} as |form|>
+          <form.Field
+            @title="Foo"
+            @name="foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Field @title="Bar" @name="bar" as |field|>
+            <field.Input />
+          </form.Field>
+          <form.Button class="set-bar" @action={{fn form.set "bar" 2}} />
+        </Form>
+      </template>
+    );
 
     await click(".set-bar");
     await formKit().field("foo").fillIn("");
@@ -193,14 +220,16 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   test("immutable by default", async function (assert) {
     const data = { foo: 1 };
 
-    await render(<template>
-      <Form @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{data}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Input />
+          </form.Field>
+          <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
+        </Form>
+      </template>
+    );
 
     await click(".set-foo");
 
@@ -208,12 +237,14 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   });
 
   test("yielded set", async function (assert) {
-    await render(<template>
-      <Form @data={{hash foo=1}} as |form data|>
-        <div class="foo">{{data.foo}}</div>
-        <form.Button class="test" @action={{fn form.set "foo" 2}} />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} as |form data|>
+          <div class="foo">{{data.foo}}</div>
+          <form.Button class="test" @action={{fn form.set "foo" 2}} />
+        </Form>
+      </template>
+    );
 
     await click(".test");
 
@@ -221,16 +252,18 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   });
 
   test("yielded setProperties", async function (assert) {
-    await render(<template>
-      <Form @data={{hash foo=1 bar=1}} as |form data|>
-        <div class="foo">{{data.foo}}</div>
-        <div class="bar">{{data.bar}}</div>
-        <form.Button
-          class="test"
-          @action={{fn form.setProperties (hash foo=2 bar=2)}}
-        />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @data={{hash foo=1 bar=1}} as |form data|>
+          <div class="foo">{{data.foo}}</div>
+          <div class="bar">{{data.bar}}</div>
+          <form.Button
+            class="test"
+            @action={{fn form.setProperties (hash foo=2 bar=2)}}
+          />
+        </Form>
+      </template>
+    );
 
     await click(".test");
 
@@ -250,11 +283,13 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       }
     };
 
-    await render(<template>
-      <Form @validate={{validate}} as |form|>
-        <form.Submit />
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @validate={{validate}} as |form|>
+          <form.Submit />
+        </Form>
+      </template>
+    );
 
     await formKit().submit();
 
@@ -266,25 +301,27 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   });
 
   test("destroying field", async function (assert) {
-    await render(<template>
-      <Form @data={{hash visible=true}} as |form data|>
-        {{#if data.visible}}
-          <form.Field
-            @title="Foo"
-            @name="foo"
-            @validation="required"
-            as |field|
-          >
-            <field.Input />
-          </form.Field>
-        {{/if}}
+    await render(
+      <template>
+        <Form @data={{hash visible=true}} as |form data|>
+          {{#if data.visible}}
+            <form.Field
+              @title="Foo"
+              @name="foo"
+              @validation="required"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          {{/if}}
 
-        <form.Button
-          class="test"
-          @action={{fn form.setProperties (hash visible=false)}}
-        />
-      </Form>
-    </template>);
+          <form.Button
+            class="test"
+            @action={{fn form.setProperties (hash visible=false)}}
+          />
+        </Form>
+      </template>
+    );
 
     await formKit().submit();
 

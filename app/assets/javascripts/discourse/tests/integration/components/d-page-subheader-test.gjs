@@ -9,9 +9,9 @@ module("Integration | Component | DPageSubheader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("@titleLabel", async function (assert) {
-    await render(<template>
-      <DPageSubheader @titleLabel={{i18n "admin.title"}} />
-    </template>);
+    await render(
+      <template><DPageSubheader @titleLabel={{i18n "admin.title"}} /></template>
+    );
     assert
       .dom(".d-page-subheader__title")
       .exists()
@@ -24,9 +24,11 @@ module("Integration | Component | DPageSubheader", function (hooks) {
   });
 
   test("@descriptionLabel", async function (assert) {
-    await render(<template>
-      <DPageSubheader @descriptionLabel={{i18n "admin.badges.description"}} />
-    </template>);
+    await render(
+      <template>
+        <DPageSubheader @descriptionLabel={{i18n "admin.badges.description"}} />
+      </template>
+    );
     assert
       .dom(".d-page-subheader__description")
       .exists()
@@ -39,12 +41,14 @@ module("Integration | Component | DPageSubheader", function (hooks) {
   });
 
   test("@learnMoreUrl", async function (assert) {
-    await render(<template>
-      <DPageSubheader
-        @descriptionLabel={{i18n "admin.badges.description"}}
-        @learnMoreUrl="https://meta.discourse.org/t/96331"
-      />
-    </template>);
+    await render(
+      <template>
+        <DPageSubheader
+          @descriptionLabel={{i18n "admin.badges.description"}}
+          @learnMoreUrl="https://meta.discourse.org/t/96331"
+        />
+      </template>
+    );
     assert.dom(".d-page-subheader__learn-more").exists();
     assert
       .dom(".d-page-subheader__learn-more a")
@@ -58,35 +62,37 @@ module("Integration | Component | DPageSubheader", function (hooks) {
       actionCalled = true;
     };
 
-    await render(<template>
-      <DPageSubheader>
-        <:actions as |actions|>
-          <actions.Primary
-            @route="adminBadges.show"
-            @routeModels="new"
-            @icon="plus"
-            @label="admin.badges.new"
-            class="new-badge"
-          />
+    await render(
+      <template>
+        <DPageSubheader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              class="new-badge"
+            />
 
-          <actions.Default
-            @route="adminBadges.award"
-            @routeModels="new"
-            @icon="upload"
-            @label="admin.badges.mass_award.title"
-            class="award-badge"
-          />
+            <actions.Default
+              @route="adminBadges.award"
+              @routeModels="new"
+              @icon="upload"
+              @label="admin.badges.mass_award.title"
+              class="award-badge"
+            />
 
-          <actions.Danger
-            @action={{someAction}}
-            @title="admin.badges.group_settings"
-            @label="admin.badges.group_settings"
-            @icon="gear"
-            class="edit-groupings-btn"
-          />
-        </:actions>
-      </DPageSubheader>
-    </template>);
+            <actions.Danger
+              @action={{someAction}}
+              @title="admin.badges.group_settings"
+              @label="admin.badges.group_settings"
+              @icon="gear"
+              class="edit-groupings-btn"
+            />
+          </:actions>
+        </DPageSubheader>
+      </template>
+    );
 
     assert
       .dom(
@@ -117,27 +123,29 @@ module("Integration | Component | DPageSubheader | Mobile", function (hooks) {
   setupRenderingTest(hooks);
 
   test("action buttons become a dropdown on mobile", async function (assert) {
-    await render(<template>
-      <DPageSubheader>
-        <:actions as |actions|>
-          <actions.Primary
-            @route="adminBadges.show"
-            @routeModels="new"
-            @icon="plus"
-            @label="admin.badges.new"
-            class="new-badge"
-          />
+    await render(
+      <template>
+        <DPageSubheader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              class="new-badge"
+            />
 
-          <actions.Default
-            @route="adminBadges.award"
-            @routeModels="new"
-            @icon="upload"
-            @label="admin.badges.mass_award.title"
-            class="award-badge"
-          />
-        </:actions>
-      </DPageSubheader>
-    </template>);
+            <actions.Default
+              @route="adminBadges.award"
+              @routeModels="new"
+              @icon="upload"
+              @label="admin.badges.mass_award.title"
+              class="award-badge"
+            />
+          </:actions>
+        </DPageSubheader>
+      </template>
+    );
 
     assert
       .dom(
