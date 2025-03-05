@@ -85,11 +85,11 @@ RSpec.describe ReviewableScoreSerializer do
         reviewable_score =
           ReviewableScore.new(reviewable: queued_reviewable, reason: "watched_word")
 
-        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "queued")
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "contents")
         Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "title")
 
         result = described_class.new(reviewable_score, scope: Guardian.new(admin), root: nil)
-        expect(result.reason).to include("queued, title")
+        expect(result.reason).to include("contents, title")
       end
 
       it "uses the no-context message if the post has no watched words" do
