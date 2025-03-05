@@ -311,6 +311,26 @@ export default createWidget("post-stream", {
           })
         );
       }
+      if (
+        this.siteSettings.show_below_op_plugin_outlet &&
+        post.post_number === 1
+      ) {
+        result.push(
+          new RenderGlimmer(
+            this,
+            "div.below-op-plugin-outlet",
+            hbs`
+                <PluginOutlet
+                  @name="below-op"
+                  @outletArgs={{hash topic=@data.topic}}
+                />
+                  `,
+            {
+              topic: post.topic,
+            }
+          )
+        );
+      }
 
       prevPost = post;
     }
