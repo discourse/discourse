@@ -14,6 +14,10 @@ schema:
           - "email"
           - "primary"
       primary_key_column_names: [ "email" ]
+    user_options:
+      columns:
+        exclude: [ ]
+      primary_key_column_names: [ "user_id" ]
     users:
       columns:
         exclude:
@@ -242,7 +246,6 @@ schema:
         - "user_ip_address_histories"
         - "user_notification_schedules"
         - "user_open_ids"
-        - "user_options"
         - "user_passwords"
         - "user_profile_views"
         - "user_profiles"
