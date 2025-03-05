@@ -13,6 +13,7 @@ schema:
           - "user_id"
           - "email"
           - "primary"
+      primary_key_column_names: [ "email" ]
     users:
       columns:
         exclude:

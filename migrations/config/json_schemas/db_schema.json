@@ -38,7 +38,11 @@
           "type": "string"
         }
       },
-      "required": ["schema_file", "models_directory", "models_namespace"]
+      "required": [
+        "schema_file",
+        "models_directory",
+        "models_namespace"
+      ]
     },
     "schema": {
       "type": "object",
@@ -145,8 +149,18 @@
                     }
                   },
                   "additionalProperties": false,
-                  "required": ["name", "columns"]
+                  "required": [
+                    "name",
+                    "columns"
+                  ]
                 }
+              },
+              "primary_key_column_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
               },
               "copy_of": {
                 "type": "string"

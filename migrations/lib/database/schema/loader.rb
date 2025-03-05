@@ -37,7 +37,9 @@ module Migrations::Database::Schema
     private
 
     def table(table_name, config, table_alias = nil)
-      primary_key_column_names = @db.primary_keys(table_name)
+      primary_key_column_names =
+        config[:primary_key_column_names].presence || @db.primary_keys(table_name)
+
       columns =
         filtered_columns_of(table_name, config).map do |column|
           Column.new(
@@ -47,7 +49,7 @@ module Migrations::Database::Schema
             max_length: column.type == :text ? column.limit : nil,
             is_primary_key: primary_key_column_names.include?(column.name),
           )
-        end + added_columns(config)
+        end + added_columns(config, primary_key_column_names)
 
       Table.new(table_alias || table_name, columns, indexes(config), primary_key_column_names)
     end
@@ -65,7 +67,7 @@ module Migrations::Database::Schema
       columns_by_name.values
     end
 
-    def added_columns(config)
+    def added_columns(config, primary_key_column_names)
       columns = config.dig(:columns, :add) || []
       columns.map do |column|
         datatype = column[:type].to_sym
