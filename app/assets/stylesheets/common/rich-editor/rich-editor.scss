@@ -148,6 +148,20 @@
   pre {
     position: relative;
   }
+
+  .html-block {
+    border: 1px dashed var(--primary-low-mid);
+
+    &::after {
+      position: absolute;
+      right: 0;
+      top: 0;
+      content: "HTML";
+      font-size: var(--font-down-2-rem);
+      color: var(--primary-low-mid);
+      z-index: 1;
+    }
+  }
 }
 
 /*********************************************************
