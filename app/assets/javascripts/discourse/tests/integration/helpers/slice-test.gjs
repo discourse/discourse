@@ -24,9 +24,12 @@ module("Integration | Helper | {{slice}}", function (hooks) {
   });
 
   test("it recomputes the slice if an item in the array changes", async function (assert) {
-    let array = [2, 4, 6];
+    const self = this;
 
-    await render(<template>{{slice 1 3 array}}</template>);
+    let array = [2, 4, 6];
+    this.set("array", array);
+
+    await render(<template>{{slice 1 3 self.array}}</template>);
 
     assert.dom().hasText("4,6", "sliced values");
 
