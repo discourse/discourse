@@ -25,5 +25,6 @@
     minlength={{@validations.minimum}}
     maxlength={{@validations.maximum}}
     disabled={{@attributes.disabled}}
+    {{on "input" (if @onChange @onChange (noop))}}
   />
 </div>

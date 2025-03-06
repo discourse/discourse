@@ -44,17 +44,6 @@ html.composer-open {
   .with-form-template {
     overflow: auto;
     flex: 1;
-
-    .toggle-preview,
-    #mobile-file-upload,
-    .submit-panel .mobile-preview {
-      display: none;
-    }
-
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
-    }
   }
 
   .saving-text,
