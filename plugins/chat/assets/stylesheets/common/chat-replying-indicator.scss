@@ -2,7 +2,7 @@
   color: var(--primary-medium);
   display: inline-flex;
   font-size: var(--font-down-2);
-  min-height: 1em;
+  min-height: 1em; // Ensures the span height is consistent even when empty
   line-height: normal;
 
   &-container {
