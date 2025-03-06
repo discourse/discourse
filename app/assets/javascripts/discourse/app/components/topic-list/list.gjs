@@ -185,7 +185,7 @@ export default class TopicList extends Component {
     <table
       class={{concatClass
         "topic-list"
-        (if this.bulkSelectEnabled "sticky-header")
+        (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
       }}
     >
