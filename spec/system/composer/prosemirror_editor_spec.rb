@@ -125,6 +125,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("code", text: "This is code")
     end
+
+    it "supports typographer replacements" do
+      page.visit "/new-topic"
+
+      expect(composer).to be_opened
+
+      composer.toggle_rich_editor
+      composer.type_content(
+        "foo +- bar.. test???? wow!!!! x,, y-- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
+      )
+
+      expect(rich).to have_css(
+        "p",
+        text: "foo ± bar… test??? wow!!! x, y– a–> b←- c→ d← e←> f←→ ™ ¶",
+      )
+    end
   end
 
   context "with keymap" do

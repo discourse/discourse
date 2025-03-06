@@ -12,6 +12,7 @@ import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
+import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 
 /**
@@ -33,6 +34,7 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
+  typographerReplacements,
   table,
   markdownPaste,
 ];
