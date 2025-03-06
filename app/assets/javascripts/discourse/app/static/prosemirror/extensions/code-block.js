@@ -85,7 +85,8 @@ const extension = {
           (hljs = await ensureHighlightJs(
             getContext().session.highlightJsPath
           )),
-          ["code_block", "html_block"]
+          ["code_block", "html_block"],
+          (node) => node.attrs.params || "text"
         ),
       new Plugin({
         props: {

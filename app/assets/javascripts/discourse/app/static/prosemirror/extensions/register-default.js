@@ -5,6 +5,7 @@ import hashtag from "./hashtag";
 import heading from "./heading";
 import image from "./image";
 import link from "./link";
+import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
@@ -29,6 +30,7 @@ const defaultExtensions = [
   strikethrough,
   underline,
   table,
+  markdownPaste,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
