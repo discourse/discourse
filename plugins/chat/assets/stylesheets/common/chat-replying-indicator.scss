@@ -2,16 +2,12 @@
   color: var(--primary-medium);
   display: inline-flex;
   font-size: var(--font-down-2);
+  min-height: 1em;
+  line-height: normal;
 
   &-container {
     display: flex;
     height: 16px;
-  }
-
-  &::before {
-    // unicode zero width space character
-    // Ensures the span height is consistent even when empty
-    content: "\200b";
   }
 
   .chat-replying-indicator__text {
