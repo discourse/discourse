@@ -44,6 +44,10 @@ html.composer-open {
   .with-form-template {
     overflow: auto;
     flex: 1;
+
+    #mobile-file-upload {
+      display: none;
+    }
   }
 
   .saving-text,
