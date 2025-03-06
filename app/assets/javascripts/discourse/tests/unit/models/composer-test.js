@@ -30,6 +30,7 @@ module("Unit | Model | composer", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.keyValueStore = getOwner(this).lookup("service:key-value-store");
   });
 
   test("replyLength", function (assert) {
@@ -481,5 +482,20 @@ module("Unit | Model | composer", function (hooks) {
     await composer.save({});
 
     assert.true(saved);
+  });
+
+  test("composerVersion is correct when using 'rich text' composer", async function (assert) {
+    this.siteSettings.rich_editor = true;
+    this.keyValueStore.set({
+      key: "d-editor-prefers-rich-editor",
+      value: "true",
+    });
+    const composer = createComposer.call(this, {});
+    assert.strictEqual(composer.composerVersion, 2);
+  });
+
+  test("composerVersion is correct when using 'classic' composer", async function (assert) {
+    const composer = createComposer.call(this, {});
+    assert.strictEqual(composer.composerVersion, 1);
   });
 });
