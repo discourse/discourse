@@ -143,6 +143,8 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = params[:tag_id].force_encoding("UTF-8")
+      fetch_tag
+
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
 
@@ -162,8 +164,8 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
-      @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @title = @description_meta
+      @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
+      @description_meta = @tag&.description.presence || @title
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
       canonical_method = url_method(canonical_params)
@@ -419,7 +421,8 @@ class TagsController < ::ApplicationController
   private
 
   def fetch_tag
-    @tag = Tag.find_by_name(params[:tag_id].force_encoding("UTF-8"))
+    return if params[:tag_id] == "none"
+    @tag ||= Tag.find_by_name(params[:tag_id].force_encoding("UTF-8"))
     raise Discourse::NotFound unless @tag
   end
 
