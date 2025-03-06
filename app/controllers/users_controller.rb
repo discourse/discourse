@@ -1695,7 +1695,7 @@ class UsersController < ApplicationController
 
     security_key = current_user.security_keys.find_by(id: params[:id].to_i)
 
-    if security_key.factor_type == UserSecurityKey.factor_types[:first_factor] &&
+    if security_key&.factor_type == UserSecurityKey.factor_types[:first_factor] &&
          current_user.passkey_credential_ids.length == 1
       if !current_user.has_password? && current_user.associated_accounts.blank?
         return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
