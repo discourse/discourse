@@ -195,10 +195,7 @@ export default createWidget("post-stream", {
 
   html(attrs) {
     const posts = attrs.posts || [];
-    let postArray = posts.toArray();
-    postArray = postArray
-      .concat(applyDecorators(this, "posts", postArray))
-      .filter(Boolean);
+    const postArray = posts.toArray();
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
@@ -314,6 +311,9 @@ export default createWidget("post-stream", {
           })
         );
       }
+
+      result.push(applyDecorators(this, "below-post", post));
+
       prevPost = post;
     }
 
