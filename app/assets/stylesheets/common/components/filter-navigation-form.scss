@@ -1,0 +1,27 @@
+.filter-navigation__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-navigation__tags-list {
+  display: flex !important;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-block: 1rem;
+
+  .form-kit__collection {
+    display: contents;
+
+    .form-kit__container-content {
+      width: auto;
+    }
+
+    .form-kit__field-custom {
+      min-width: auto;
+
+      .form-kit__control-custom {
+        width: auto;
+      }
+    }
+  }
+}

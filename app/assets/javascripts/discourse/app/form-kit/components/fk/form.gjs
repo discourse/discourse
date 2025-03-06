@@ -106,6 +106,7 @@ class FKForm extends Component {
       unregisterField: instance.unregisterField,
       triggerRevalidationFor: instance.triggerRevalidationFor,
       remove: instance.remove,
+      add: instance.addItemToCollection,
     };
 
     return curryComponent(klass, baseArguments, getOwner(this));

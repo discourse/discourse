@@ -41,7 +41,10 @@ export default class DiscoveryFilterNavigation extends Component {
   get formData() {
     return {
       query: "",
-      tags: [{ name: "rest-api" }],
+      tags: [
+        { name: "foo", selected: true },
+        { name: "bar", selected: false },
+      ],
     };
   }
 
@@ -142,6 +145,7 @@ export default class DiscoveryFilterNavigation extends Component {
           <Form
             @onSubmit={{this.updateFilter}}
             @data={{this.formData}}
+            class="filter-navigation__form"
             as |form data|
           >
             <form.Field
@@ -260,7 +264,19 @@ export default class DiscoveryFilterNavigation extends Component {
               <field.Input />
             </form.Field>
 
-            <Tags @form={{form}} @data={{data}} />
+            <details open>
+              <summary>Tags</summary>
+
+              <div class="filter-navigation__tags-list">
+                <Tags @form={{form}} @data={{data}} />
+              </div>
+            </details>
+
+            <form.Field name="tag">
+              <field.Custom>
+                <TagsList @onChange={{field.set}} />
+              </field.Custom>
+            </form.Field>
 
             <form.Actions>
               <form.Submit @label="form_templates.filter" />

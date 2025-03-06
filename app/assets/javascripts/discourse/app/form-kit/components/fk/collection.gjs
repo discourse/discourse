@@ -6,9 +6,23 @@ import FKObject from "discourse/form-kit/components/fk/object";
 import element from "discourse/helpers/element";
 
 export default class FKCollection extends Component {
+  constructor() {
+    super(...arguments);
+
+    this.args.onRegisterApi?.({
+      remove: this.remove,
+      add: this.add,
+    });
+  }
+
   @action
   remove(index) {
     this.args.remove(this.name, index);
+  }
+
+  @action
+  add(value) {
+    this.args.add(this.name, value);
   }
 
   get collectionData() {
@@ -27,8 +41,12 @@ export default class FKCollection extends Component {
 
   <template>
     {{#let (element this.tagName) as |Wrapper|}}
-      {{#each this.collectionData key="index" as |data index|}}
-        <Wrapper class="form-kit__collection">
+      <Wrapper
+        class="form-kit__collection"
+        @onRegisterApi={{@onRegisterApi}}
+        ...attributes
+      >
+        {{#each this.collectionData key="index" as |data index|}}
           {{yield
             (hash
               Field=(component
@@ -67,12 +85,14 @@ export default class FKCollection extends Component {
                 remove=@remove
               )
               remove=this.remove
+              add=this.add
             )
             index
             (get this.collectionData index)
           }}
-        </Wrapper>
-      {{/each}}
+
+        {{/each}}
+      </Wrapper>
     {{/let}}
   </template>
 }
