@@ -25,7 +25,7 @@ module(
       ],
       "basic code block without a lanuage": [
         "```\nconsole.log('Hello, world!');\n```",
-        `<pre><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'Hello, world!'</span>);</code>${select()}</pre>`,
+        `<pre><code>console.log('Hello, world!');</code>${select()}</pre>`,
         "```\nconsole.log('Hello, world!');\n```",
       ],
       "code block within list item": [
@@ -42,12 +42,12 @@ module(
       ],
       "code block with 4 spaces": [
         "    print('Hello, world!')",
-        `<pre><code><span class="hljs-title function_">print</span>(<span class="hljs-string">'Hello, world!'</span>)</code>${select()}</pre>`,
+        `<pre><code>print('Hello, world!')</code>${select()}</pre>`,
         "```\nprint('Hello, world!')\n```",
       ],
       "code block with 4 spaces within list item": [
         "-     print('Hello, world!')",
-        `<ul><li><pre><code><span class="hljs-title function_">print</span>(<span class="hljs-string">\'Hello, world!\'</span>)</code>${select()}</pre></li></ul>`,
+        `<ul><li><pre><code>print('Hello, world!')</code>${select()}</pre></li></ul>`,
         "* ```\n  print('Hello, world!')\n  ```",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {

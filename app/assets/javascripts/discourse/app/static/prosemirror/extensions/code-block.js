@@ -86,6 +86,15 @@ const extension = {
             getContext().session.highlightJsPath
           )),
           ["code_block", "html_block"],
+
+          // NOTE: If the language has not been set with the code block, we default to plain
+          // text rather than autodetecting. This is to work around an infinite loop issue
+          // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
+          // for > 10 seconds, for example:
+          //
+          // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
+          //
+          // We can remove this if we find some other workaround.
           (node) => node.attrs.params || "text"
         ),
       new Plugin({
