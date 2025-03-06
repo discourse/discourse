@@ -582,7 +582,7 @@ export default class ChatComposer extends Component {
           }
 
           if (term === "") {
-            const favorites = this.emojiStore.favoritesForContext("chat");
+            const favorites = this.emojiStore.favorites;
             if (favorites.length > 0) {
               return resolve(favorites.slice(0, 5));
             } else {

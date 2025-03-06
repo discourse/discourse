@@ -102,16 +102,13 @@ export default class EmojiPicker extends Component {
 
   get groups() {
     const favorites = {
-      favorites: this.emojiStore
-        .favoritesForContext(this.args.context)
-        .filter((f) => !this.site.denied_emojis?.includes(f))
-        .map((emoji) => {
-          return {
-            name: emoji,
-            group: "favorites",
-            url: emojiUrlFor(emoji),
-          };
-        }),
+      favorites: this.emojiStore.favorites.map((emoji) => {
+        return {
+          name: emoji,
+          group: "favorites",
+          url: emojiUrlFor(emoji),
+        };
+      }),
     };
 
     return {
@@ -127,7 +124,7 @@ export default class EmojiPicker extends Component {
 
   @action
   clearFavorites() {
-    this.emojiStore.resetContext(this.args.context);
+    this.emojiStore.reset();
   }
 
   @action
@@ -306,8 +303,7 @@ export default class EmojiPicker extends Component {
         emoji = `${emoji}:t${diversity}`;
       }
 
-      this.emojiStore.trackEmojiForContext(emoji, this.args.context);
-
+      this.emojiStore.trackEmoji(emoji);
       this.args.didSelectEmoji?.(emoji);
 
       await this.args.close?.();

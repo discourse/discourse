@@ -295,7 +295,7 @@ export default class DEditor extends Component {
 
       transformComplete: (v, event) => {
         if (v.code) {
-          this.emojiStore.trackEmojiForContext(v.code, "topic");
+          this.emojiStore.trackEmoji(v.code);
           return `${v.code}:`;
         } else {
           this.textManipulation.autocomplete({ cancel: true });
@@ -338,7 +338,7 @@ export default class DEditor extends Component {
           }
 
           if (term === "") {
-            const favorites = this.emojiStore.favoritesForContext("topic");
+            const favorites = this.emojiStore.favorites;
             if (favorites.length) {
               return resolve(
                 favorites
