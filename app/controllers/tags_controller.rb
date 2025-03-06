@@ -178,6 +178,8 @@ class TagsController < ::ApplicationController
   end
 
   def show
+    synonym_tag = Tag.where_name(params[:tag_id]).where.not(target_tag_id: nil).first
+    return redirect_to tag_show_path(synonym_tag.target_tag.name) if synonym_tag
     show_latest
   end
 
