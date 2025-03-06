@@ -22,7 +22,10 @@ function sourceForModuleName(name) {
 
   const themeMatch = name.match(/^discourse\/theme-(\d+)\//)?.[1];
   if (themeMatch) {
-    return getThemeInfo(parseInt(themeMatch, 10));
+    return {
+      ...getThemeInfo(parseInt(themeMatch, 10)),
+      type: "theme",
+    };
   }
 }
 

@@ -9,11 +9,13 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Container class="something">Test</form.Container>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Container class="something">Test</form.Container>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__container.something .form-kit__container-content")
@@ -21,11 +23,13 @@ module(
     });
 
     test("@title", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Container @title="Title">Test</form.Container>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Container @title="Title">Test</form.Container>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__container .form-kit__container-title")
@@ -33,11 +37,13 @@ module(
     });
 
     test("@subtitle", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Container @subtitle="Subtitle">Test</form.Container>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Container @subtitle="Subtitle">Test</form.Container>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__container .form-kit__container-subtitle")

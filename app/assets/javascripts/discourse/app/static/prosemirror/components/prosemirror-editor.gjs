@@ -73,7 +73,7 @@ export default class ProsemirrorEditor extends Component {
 
   get pluginParams() {
     return {
-      utils,
+      utils: { ...utils, convertFromMarkdown: this.convertFromMarkdown },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,

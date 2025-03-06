@@ -70,7 +70,7 @@ export default class Notifications extends Component {
 
     {{#if this.currentUser.status}}
       <UserStatusBubble
-        @timezone={{this.this.currentUser.user_option.timezone}}
+        @timezone={{this.currentUser.user_option.timezone}}
         @status={{this.currentUser.status}}
       />
     {{/if}}

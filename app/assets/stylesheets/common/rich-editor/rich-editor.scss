@@ -134,10 +134,6 @@
     white-space: normal;
   }
 
-  pre {
-    position: relative;
-  }
-
   .code-language-select {
     position: absolute;
     right: 0.25rem;
@@ -147,6 +143,10 @@
     background-color: var(--primary-very-low);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
+  }
+
+  pre {
+    position: relative;
   }
 
   .html-block {

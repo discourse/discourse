@@ -63,8 +63,6 @@ export default class FKField extends Component {
       );
     }
 
-    field.type = component.controlType;
-
     return curryComponent(FKControlWrapper, baseArguments, getOwner(this));
   }
 

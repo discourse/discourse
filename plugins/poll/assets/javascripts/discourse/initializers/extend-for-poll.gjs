@@ -43,9 +43,12 @@ function attachPolls(elem, helper) {
       }
 
       pollNode.replaceWith(newPollNode);
-      helper.renderGlimmer(newPollNode, <template>
-        <Poll @poll={{poll}} @post={{post}} @titleHTML={{titleHTML}} />
-      </template>);
+      helper.renderGlimmer(
+        newPollNode,
+        <template>
+          <Poll @poll={{poll}} @post={{post}} @titleHTML={{titleHTML}} />
+        </template>
+      );
     }
   });
 }

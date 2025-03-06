@@ -21,9 +21,11 @@ module("Integration | Component | avatar-uploader", function (hooks) {
       done();
     };
 
-    await render(<template>
-      <AvatarUploader @id="avatar-uploader" @done={{callback}} />
-    </template>);
+    await render(
+      <template>
+        <AvatarUploader @id="avatar-uploader" @done={{callback}} />
+      </template>
+    );
 
     await this.container
       .lookup("service:app-events")
