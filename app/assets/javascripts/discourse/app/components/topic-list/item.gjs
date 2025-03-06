@@ -386,13 +386,18 @@ export default class Item extends Component {
                 </span>
 
                 <div class="num activity last">
-                  <span title={{@topic.bumpedAtTitle}} class="age activity">
-                    <a href={{@topic.lastPostUrl}}>{{formatDate
-                        @topic.bumpedAt
-                        format="tiny"
-                        noTitle="true"
-                      }}</a>
-                  </span>
+                  <PluginOutlet
+                    @name="topic-list-item-mobile-bumped-at"
+                    @outletArgs={{hash topic=@topic}}
+                  >
+                    <span title={{@topic.bumpedAtTitle}} class="age activity">
+                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                          @topic.bumpedAt
+                          format="tiny"
+                          noTitle="true"
+                        }}</a>
+                    </span>
+                  </PluginOutlet>
                 </div>
               </div>
             </div>
