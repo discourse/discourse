@@ -312,7 +312,7 @@ export default createWidget("post-stream", {
         );
       }
 
-      result.push(applyDecorators(this, "below-post", post));
+      result.push(applyDecorators(this, "after", post));
 
       prevPost = post;
     }
