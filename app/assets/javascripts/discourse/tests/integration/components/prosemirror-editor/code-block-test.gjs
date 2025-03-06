@@ -1,6 +1,5 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { paste } from "discourse/tests/helpers/qunit-helpers";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module(
