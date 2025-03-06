@@ -3,6 +3,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
+  "topic-list-item-click",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([
