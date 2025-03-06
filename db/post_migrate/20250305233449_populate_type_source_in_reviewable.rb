@@ -1,11 +1,8 @@
 # frozen_string_literal: true
-class AddTypeSourceToReviewable < ActiveRecord::Migration[7.2]
+class PopulateTypeSourceInReviewable < ActiveRecord::Migration[7.2]
   def change
-    add_column :reviewables, :type_source, :string, null: false, default: "unknown"
-
     # Migrate known reviewables to have a type_source
-    # This process is repeated in db/post_migrate/20250306045125_populate_type_source_in_reviewable.rb,
-    # to ensure that the column is populated after migrated servers are deployed to production.
+    # Copied from db/migrate/20250212045125_add_type_source_to_reviewable.rb
     known_reviewables = {
       "chat" => %w[ReviewableChatMessage],
       "core" => %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost],
