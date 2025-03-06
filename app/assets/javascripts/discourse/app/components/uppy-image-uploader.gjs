@@ -191,7 +191,7 @@ export default class UppyImageUploader extends Component {
               @acceptedFormatsOverride="image/*"
               @fileInputId={{this.computedId}}
             />
-            Click to upload or drag &amp; drop file
+            {{i18n "upload_selector.select_file"}}
           </label>
 
           <span
@@ -231,13 +231,13 @@ export default class UppyImageUploader extends Component {
             @acceptedFormatsOverride="image/*"
             @fileInputId={{this.computedId}}
           />
-          Change
+          {{i18n "upload_selector.change"}}
         </label>
         <DButton
           @action={{@onUploadDeleted}}
           @icon="trash-can"
           @disabled={{this.disabled}}
-          @label="Delete"
+          @label="delete"
           class="btn-danger btn-small"
         />
       </div>
