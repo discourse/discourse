@@ -3,6 +3,7 @@ import codeBlock from "./code-block";
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
+import htmlInline from "./html-inline";
 import image from "./image";
 import link from "./link";
 import markdownPaste from "./markdown-paste";
@@ -29,6 +30,7 @@ const defaultExtensions = [
   mention,
   strikethrough,
   underline,
+  htmlInline,
   table,
   markdownPaste,
 ];
