@@ -17,13 +17,15 @@ module("Integration | Component | topic-list", function (hooks) {
       store.createRecord("topic", { id: 24235 }),
     ];
 
-    await render(<template>
-      <HbrTopicList
-        @canBulkSelect={{true}}
-        @bulkSelectHelper={{bulkSelectHelper}}
-        @topics={{topics}}
-      />
-    </template>);
+    await render(
+      <template>
+        <HbrTopicList
+          @canBulkSelect={{true}}
+          @bulkSelectHelper={{bulkSelectHelper}}
+          @topics={{topics}}
+        />
+      </template>
+    );
 
     assert.strictEqual(bulkSelectHelper.selected.length, 0, "defaults to 0");
 
@@ -62,9 +64,11 @@ module("Integration | Component | topic-list", function (hooks) {
       store.createRecord("topic", { id: 24235, pinned: true }),
     ];
 
-    await render(<template>
-      <TopicList @topics={{topics}} @highlightLastVisited={{true}} />
-    </template>);
+    await render(
+      <template>
+        <TopicList @topics={{topics}} @highlightLastVisited={{true}} />
+      </template>
+    );
 
     assert.dom(".topic-status .d-icon-thumbtack").exists({ count: 2 });
   });

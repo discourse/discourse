@@ -16,17 +16,24 @@ export async function testMarkdown(
     self.view = textManipulation.view;
   };
 
-  await render(<template>
-    <DEditor
-      @value={{self.value}}
-      @processPreview={{false}}
-      @onSetup={{handleSetup}}
-    />
-  </template>);
+  await render(
+    <template>
+      <DEditor
+        @value={{self.value}}
+        @processPreview={{false}}
+        @onSetup={{handleSetup}}
+      />
+    </template>
+  );
+
+  // ensure toggling to rich editor and back works
+  await click(".composer-toggle-switch");
+  await click(".composer-toggle-switch");
   await click(".composer-toggle-switch");
 
   await waitFor(".ProseMirror");
   await settled();
+
   const editor = document.querySelector(".ProseMirror");
 
   // typeIn for contentEditable isn't reliable, and is slower

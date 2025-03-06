@@ -66,6 +66,7 @@ const CLOSED = "closed",
     target_recipients: "targetRecipients",
     typing_duration_msecs: "typingTime",
     composer_open_duration_msecs: "composerTime",
+    composer_version: "composerVersion",
     tags: "tags",
     featured_link: "featuredLink",
     shared_draft: "sharedDraft",
@@ -194,6 +195,8 @@ export default class Composer extends RestModel {
   }
 
   @service dialog;
+  @service siteSettings;
+  @service keyValueStore;
 
   @tracked topic;
   @tracked post;
@@ -349,6 +352,17 @@ export default class Composer extends RestModel {
     }
 
     return total;
+  }
+
+  get composerVersion() {
+    if (
+      this.siteSettings.rich_editor &&
+      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
+    ) {
+      return 2;
+    }
+
+    return 1;
   }
 
   @discourseComputed("archetypeId")

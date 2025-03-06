@@ -93,6 +93,15 @@
     }
   }
 
+  &.silence-info .controls {
+    display: flex;
+    margin-left: 0;
+
+    .full-reason {
+      margin-left: 0.3em;
+    }
+  }
+
   &.username,
   &.name {
     .value {

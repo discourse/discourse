@@ -251,7 +251,9 @@
 
       &:hover {
         border: 0;
-        box-shadow: 0 0 0 1px var(--primary-300), 0 0 0 4px var(--primary-100);
+        box-shadow:
+          0 0 0 1px var(--primary-300),
+          0 0 0 4px var(--primary-100);
         transition: all 0.2s ease-in-out;
       }
     }

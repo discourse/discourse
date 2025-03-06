@@ -525,7 +525,7 @@
         </LinkTo>
       </div>
       <div class="controls">
-        <b>{{i18n "admin.user.suspend_reason"}}</b>:
+        <strong>{{i18n "admin.user.suspend_reason"}}</strong>:
         <div class="full-reason">{{this.model.full_suspend_reason}}</div>
       </div>
     </div>
@@ -585,7 +585,7 @@
       </div>
       <div class="controls">
         <b>{{i18n "admin.user.silence_reason"}}</b>:
-        <div class="full-reason">{{this.model.silence_reason}}</div>
+        <div class="full-reason">{{html-safe this.model.silence_reason}}</div>
       </div>
     </div>
   {{/if}}

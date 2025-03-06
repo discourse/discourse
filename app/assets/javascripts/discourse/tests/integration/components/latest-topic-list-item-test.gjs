@@ -23,10 +23,12 @@ module("Integration | Component | latest-topic-list-item", function (hooks) {
     const store = this.owner.lookup("service:store");
     const topic = store.createRecord("topic", { id: 1234, foo: true });
     const topic2 = store.createRecord("topic", { id: 1235, foo: false });
-    await render(<template>
-      <LatestTopicListItem @topic={{topic}} />
-      <LatestTopicListItem @topic={{topic2}} />
-    </template>);
+    await render(
+      <template>
+        <LatestTopicListItem @topic={{topic}} />
+        <LatestTopicListItem @topic={{topic2}} />
+      </template>
+    );
 
     assert.dom(".latest-topic-list-item[data-topic-id='1234']").hasClass("bar");
     assert

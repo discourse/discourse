@@ -1,9 +1,12 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import codeBlock from "./code-block";
 import emoji from "./emoji";
 import hashtag from "./hashtag";
 import heading from "./heading";
+import htmlInline from "./html-inline";
 import image from "./image";
 import link from "./link";
+import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
@@ -22,13 +25,16 @@ const defaultExtensions = [
   image,
   link,
   heading,
+  codeBlock,
   quote,
   hashtag,
   mention,
   strikethrough,
   underline,
+  htmlInline,
   typographerReplacements,
   table,
+  markdownPaste,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

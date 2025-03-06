@@ -4,6 +4,8 @@ class AddTypeSourceToReviewable < ActiveRecord::Migration[7.2]
     add_column :reviewables, :type_source, :string, null: false, default: "unknown"
 
     # Migrate known reviewables to have a type_source
+    # This process is repeated in db/post_migrate/20250306045125_populate_type_source_in_reviewable.rb,
+    # to ensure that the column is populated after migrated servers are deployed to production.
     known_reviewables = {
       "chat" => %w[ReviewableChatMessage],
       "core" => %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost],
@@ -19,9 +21,11 @@ class AddTypeSourceToReviewable < ActiveRecord::Migration[7.2]
     }
 
     known_reviewables.each do |plugin, types|
-      types.each do |type|
-        Reviewable.where(type: type, type_source: "unknown").update_all(type_source: plugin)
-      end
+      DB.exec(
+        "UPDATE reviewables SET type_source = :plugin WHERE type_source = 'unknown' AND type IN (:types)",
+        plugin: plugin,
+        types: types,
+      )
     end
   end
 end

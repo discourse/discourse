@@ -112,6 +112,9 @@ module Onebox
             # https://www.youtube.com/shorts/wi2jAtpBl0Y
             id ||= uri.path[%r{/shorts/([\w\-]+)}, 1] if uri.path["/shorts/"]
 
+            # https://www.youtube.com/live/eJemwqO0SDw
+            id ||= uri.path[%r{/live/([\w\-]+)}, 1] if uri.path["/live/"]
+
             # https://www.youtube.com/watch?v=Z0UISCEe52Y
             id ||= params["v"]
 
