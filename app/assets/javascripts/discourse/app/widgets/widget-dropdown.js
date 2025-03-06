@@ -108,10 +108,10 @@ export const WidgetDropdownItemClass = {
         attrs.item === "separator"
           ? "<hr>"
           : attrs.item.html
-          ? attrs.item.html
-          : attrs.item.translatedLabel
-          ? attrs.item.translatedLabel
-          : i18n(attrs.item.label),
+            ? attrs.item.html
+            : attrs.item.translatedLabel
+              ? attrs.item.translatedLabel
+              : i18n(attrs.item.label),
     };
   },
 

@@ -11,8 +11,14 @@ import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class FKControlWrapper extends Component {
+  constructor() {
+    super(...arguments);
+
+    this.args.field.type = this.args.component.controlType;
+  }
+
   get controlType() {
-    if (this.args.component.controlType === "input") {
+    if (this.args.field.type === "input") {
       return this.args.field.type + "-" + (this.args.type || "text");
     }
 

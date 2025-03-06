@@ -41,7 +41,9 @@
       width: calc(var(--toggle-switch-height) - 2px);
       height: calc(var(--toggle-switch-height) - 4px);
       top: 2px;
-      transition: left 0.25s, right 0.25s;
+      transition:
+        left 0.25s,
+        right 0.25s;
       border-radius: 0.25em;
       box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
 
@@ -64,7 +66,9 @@
     display: inline-block;
     position: absolute;
     opacity: 0;
-    transition: opacity 0.25s left 0.25s, right 0.25s;
+    transition:
+      opacity 0.25s left 0.25s,
+      right 0.25s;
     height: 100%;
     width: calc(var(--toggle-switch-height) - 2px);
 

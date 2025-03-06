@@ -342,6 +342,9 @@ class PostCreator
         drafts_saved: revisions,
         typing_duration_msecs: @opts[:typing_duration_msecs] || 0,
         composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0,
+        writing_device: @opts[:writing_device]&.to_s,
+        writing_device_user_agent: @opts[:user_agent]&.truncate(400),
+        composer_version: @opts[:composer_version],
       )
     end
   end

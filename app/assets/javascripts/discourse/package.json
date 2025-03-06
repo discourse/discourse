@@ -5,6 +5,10 @@
   "description": "A platform for community discussion. Free, open, simple.",
   "license": "GPL-2.0-only",
   "author": "Discourse",
+  "exports": {
+    "./tests/*": "./tests/*",
+    "./*": "./app/*"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -72,7 +76,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
-    "@swc/core": "^1.11.5",
+    "@swc/core": "^1.11.7",
     "@types/jquery": "^3.5.32",
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
@@ -84,7 +88,7 @@
     "a11y-dialog": "8.1.1",
     "admin": "workspace:1.0.0",
     "autosize": "^6.0.1",
-    "babel-import-util": "^3.0.0",
+    "babel-import-util": "^3.0.1",
     "babel-plugin-ember-template-compilation": "^2.3.0",
     "broccoli-asset-rev": "^3.0.0",
     "custom-proxy": "workspace:1.0.0",
@@ -108,7 +112,7 @@
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
     "ember-decorators": "^6.1.1",
-    "ember-exam": "^9.0.0",
+    "ember-exam": "^9.1.0",
     "ember-load-initializers": "^3.0.1",
     "ember-modifier": "^4.2.0",
     "ember-qunit": "^9.0.1",

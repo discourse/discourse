@@ -536,7 +536,7 @@ export default class ChatComposer extends Component {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
             component: EmojiPickerDetached,
-            context: `channel_${this.args.channel.id}`,
+            context: "chat",
             modalForMobile: true,
             data: {
               didSelectEmoji: (emoji) => {
