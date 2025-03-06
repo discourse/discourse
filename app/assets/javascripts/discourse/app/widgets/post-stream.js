@@ -4,13 +4,12 @@ import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
 import { iconNode } from "discourse/lib/icon-library";
-import { connectorsExist } from "discourse/lib/plugin-connectors";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
 let transformCallbacks = null;
@@ -196,7 +195,10 @@ export default createWidget("post-stream", {
 
   html(attrs) {
     const posts = attrs.posts || [];
-    const postArray = posts.toArray();
+    let postArray = posts.toArray();
+    postArray = postArray
+      .concat(applyDecorators(this, "posts", postArray))
+      .filter(Boolean);
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
@@ -312,24 +314,6 @@ export default createWidget("post-stream", {
           })
         );
       }
-      if (connectorsExist("below-op") && post.post_number === 1) {
-        result.push(
-          new RenderGlimmer(
-            this,
-            "div.below-op-plugin-outlet",
-            hbs`
-                <PluginOutlet
-                  @name="below-op"
-                  @outletArgs={{hash topic=@data.topic}}
-                />
-                  `,
-            {
-              topic: post.topic,
-            }
-          )
-        );
-      }
-
       prevPost = post;
     }
 
