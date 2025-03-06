@@ -5,6 +5,10 @@ html.composer-open {
   }
 }
 
+:root {
+  --composer-max-width--hide-preview: 740px;
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -28,7 +32,7 @@ html.composer-open {
   }
 
   &.hide-preview {
-    max-width: 740px;
+    max-width: var(--composer-max-width--hide-preview);
   }
 
   .reply-area {
