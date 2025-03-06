@@ -112,6 +112,11 @@ export default class UppyImageUploader extends Component {
     }
   }
 
+  get progressBarStyle() {
+    let progress = this.uppyUpload.uploadProgress || 0;
+    return htmlSafe(`width: ${progress}%`);
+  }
+
   @action
   toggleLightbox() {
     const lightboxElement = document.querySelector(
@@ -194,23 +199,14 @@ export default class UppyImageUploader extends Component {
             {{i18n "upload_selector.select_file"}}
           </label>
 
-          <span
-            class={{concatClass
-              "btn btn-small"
-              (unless this.uppyUpload.uploading "hidden")
-            }}
+          <div
+            aria-label="{{i18n "upload_selector.processing"}}
+            {{this.uppyUpload.uploadProgress}}%"
+            role="progressbar"
+            class="progress-bar-container {{unless this.uppyUpload.uploading 'hidden'}}"
           >
-            {{i18n "upload_selector.uploading"}}
-            {{this.uppyUpload.uploadProgress}}%
-          </span>
-          <span
-            class={{concatClass
-              "btn btn-small"
-              (unless this.uppyUpload.processing "hidden")
-            }}
-          >
-            {{i18n "upload_selector.processing"}}
-          </span>
+            <div class="progress-bar" style={{this.progressBarStyle}}></div>
+          </div>
         </div>
       {{/if}}
     </div>
