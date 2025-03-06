@@ -21,9 +21,11 @@ class AddTypeSourceToReviewable < ActiveRecord::Migration[7.2]
     }
 
     known_reviewables.each do |plugin, types|
-      types.each do |type|
-        Reviewable.where(type: type, type_source: "unknown").update_all(type_source: plugin)
-      end
+      DB.exec(
+        "UPDATE reviewables SET type_source = :plugin WHERE type_source = 'unknown' AND type IN (:types)",
+        plugin: plugin,
+        types: types,
+      )
     end
   end
 end
