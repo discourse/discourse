@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
@@ -10,14 +9,22 @@ export function addCustomUserFieldValidationCallback(callback) {
   addCustomUserFieldValidationCallbacks.push(callback);
 }
 
-// each userField => EmberObject (converted to TrackedUserField)
-//   - field => UserField
-//   - value => str
-//   - validation => EmberObject
+function failedResult(attrs) {
+  return {
+    failed: true,
+    ok: false,
+    ...attrs,
+  };
+}
+
+function validResult(attrs) {
+  return { ok: true, ...attrs };
+}
+
 class TrackedUserField {
   @tracked value;
-  @tracked validation;
   field;
+  validation;
 
   constructor(field) {
     this.field = field;
@@ -47,11 +54,11 @@ export default class UserFieldsValidationHelper {
 
   get userFieldsValidation() {
     if (!this.userFields) {
-      return EmberObject.create({ ok: true });
+      return validResult();
     }
 
     this.userFields.forEach((userField) => {
-      let validation = EmberObject.create({ ok: true });
+      let validation = validResult();
 
       if (
         userField.field.required &&
@@ -61,8 +68,7 @@ export default class UserFieldsValidationHelper {
           userField.field.field_type === "confirm"
             ? "user_fields.required_checkbox"
             : "user_fields.required";
-        validation = EmberObject.create({
-          failed: true,
+        validation = failedResult({
           reason: i18n(reasonKey, {
             name: userField.field.name,
           }),
@@ -76,8 +82,7 @@ export default class UserFieldsValidationHelper {
           .toLowerCase()
           .includes(this.owner.accountPassword.toLowerCase())
       ) {
-        validation = EmberObject.create({
-          failed: true,
+        validation = failedResult({
           reason: i18n("user_fields.same_as_password"),
           element: userField.field.element,
         });
@@ -98,6 +103,6 @@ export default class UserFieldsValidationHelper {
       return invalidUserField.validation;
     }
 
-    return EmberObject.create({ ok: true });
+    return { ok: true };
   }
 }
