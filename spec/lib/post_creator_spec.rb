@@ -13,7 +13,16 @@ RSpec.describe PostCreator do
   describe "new topic" do
     fab!(:category) { Fabricate(:category, user: user) }
     let(:basic_topic_params) do
-      { title: "hello world topic", raw: "my name is fred", archetype_id: 1, advance_draft: true }
+      {
+        title: "hello world topic",
+        raw: "my name is fred",
+        archetype_id: 1,
+        advance_draft: true,
+        writing_device: "linux",
+        user_agent:
+          "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+        composer_version: 2,
+      }
     end
     let(:image_sizes) do
       { "http://an.image.host/image.jpg" => { "width" => 111, "height" => 222 } }
@@ -365,6 +374,11 @@ RSpec.describe PostCreator do
           post = creator.create
           expect(post.post_stat.typing_duration_msecs).to eq(0)
           expect(post.post_stat.drafts_saved).to eq(2)
+          expect(post.post_stat.writing_device).to eq("linux")
+          expect(post.post_stat.writing_device_user_agent).to eq(
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+          )
+          expect(post.post_stat.composer_version).to eq(2)
           expect(user.reload.user_stat.draft_count).to eq(0)
         ensure
           PostCreator.track_post_stats = false

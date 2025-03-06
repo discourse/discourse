@@ -1597,13 +1597,6 @@ bs_BA:
       password_label: "Lozinka"
     password_reset:
       continue: "Nastavi ka %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Samo kategorije"
       categories_with_featured_topics: "Kategorije s istaknutim temama"
@@ -2359,6 +2352,10 @@ bs_BA:
         one: "tebi i još %{count} se sviđa objava"
         few: "tebi i još %{count} se sviđa objava"
         other: "tebi i još %{count} se sviđa objava"
+      sr_post_like_count_button:
+        one: "Objava se sviđa %{count} osobi."
+        few: "%{count} se sviđa objava."
+        other: "%{count} se sviđa objava."
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2879,6 +2876,9 @@ bs_BA:
         title: "Meni za pretragu"
         prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
         insert_url: "%{shortcut} Umetnite odabir u otvoreni skladatelj"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
     badges:
       earned_n_times:
         one: "Zaradio / la sam ovu oznaku %{count} time"
@@ -3163,6 +3163,12 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              mobile: "Mobilno"
+              email: "Email"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3171,7 +3177,7 @@ bs_BA:
           title: "Onebox"
         other:
           title: "Other"
-        search:
+        search_everything:
           title: "Pretraži"
         security:
           title: "Security"
@@ -3234,6 +3240,7 @@ bs_BA:
         embedding:
           title: "Embedding"
       search:
+        title: "Pretraži"
         result_types:
           theme:
             one: "Izgled"
@@ -3641,7 +3648,6 @@ bs_BA:
           desktop: "Desktop"
           mobile: "Mobilno"
           preview: "Pregled"
-          hide_unused_fields: "Sakrij neiskorišćena polja"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
@@ -3675,9 +3681,6 @@ bs_BA:
           unsaved_changes_alert: "Još niste spremili promjene, želite li ih odbaciti i krenuti dalje?"
           discard: "Odbaci"
           stay: "Ostani"
-          css_html: "Custom CSS / HTML"
-          edit_css_html: "Uredite CSS / HTML"
-          edit_css_html_help: "Niste uredili nijedan CSS ili HTML"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
           import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
@@ -3719,24 +3722,12 @@ bs_BA:
           repo_unreachable: "Nije moguće kontaktirati Git repozitorij ove teme. Poruka o grešci:"
           scss:
             text: "Stylesheet"
-            title: "Unesite prilagođeni CSS, prihvaćamo sve važeće CSS i SCSS stilove"
-          header:
-            text: "Header"
-            title: "Unesite HTML za prikaz iznad zaglavlja stranice"
           after_header:
             text: "After Header"
-            title: "Unesite HTML za prikaz na svim stranicama nakon zaglavlja"
           footer:
             text: "Footer"
-            title: "Unesite HTML za prikaz na podnožju stranice"
           embedded_scss:
             text: "Ugrađeni CSS"
-            title: "Unesite prilagođeni CSS za isporuku s ugrađenom verzijom komentara"
-          body_tag:
-            text: "Tijelo"
-          yaml:
-            text: "YAML"
-            title: "Definirajte postavke teme u YAML formatu"
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"

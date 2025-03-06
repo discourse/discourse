@@ -63,8 +63,6 @@ export default class FKField extends Component {
       );
     }
 
-    field.type = component.controlType;
-
     return curryComponent(FKControlWrapper, baseArguments, getOwner(this));
   }
 
@@ -90,6 +88,7 @@ export default class FKField extends Component {
       @descriptionFormat={{@descriptionFormat}}
       @disabled={{@disabled}}
       @parentName={{@parentName}}
+      @placeholderUrl={{@placeholderUrl}}
       as |field|
     >
       <this.wrapper @size={{@size}}>

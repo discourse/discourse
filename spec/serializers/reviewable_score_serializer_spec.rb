@@ -63,6 +63,51 @@ RSpec.describe ReviewableScoreSerializer do
         expect(serialized.reason).to eq(custom)
       end
     end
+
+    context "with watched words" do
+      let(:link) do
+        "<a href=\"#{Discourse.base_url}/admin/customize/watched_words\">#{I18n.t("reviewables.reasons.links.watched_word")}</a>"
+      end
+      it "tries to guess the watched words if they weren't recorded at the time of flagging" do
+        reviewable.target =
+          Fabricate(:post, raw: "I'm a post with some bad words like 'bad' and 'words'.")
+
+        score = serialized_score("watched_word")
+
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "bad")
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "words")
+
+        expect(score.reason).to include("bad, words")
+      end
+
+      it "handles guessing the watched words when the post hasn't been created yet" do
+        queued_reviewable = Fabricate(:reviewable_queued_post_topic)
+        reviewable_score =
+          ReviewableScore.new(reviewable: queued_reviewable, reason: "watched_word")
+
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "contents")
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "title")
+
+        result = described_class.new(reviewable_score, scope: Guardian.new(admin), root: nil)
+        expect(result.reason).to include("contents, title")
+      end
+
+      it "uses the no-context message if the post has no watched words" do
+        reviewable.target = Fabricate(:post, raw: "This post contains no bad words.")
+
+        score = serialized_score("watched_word")
+
+        Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "superbad")
+
+        expect(score.reason).to eq(
+          I18n.t(
+            "reviewables.reasons.no_context.watched_word",
+            link: link,
+            default: "watched_word",
+          ),
+        )
+      end
+    end
   end
 
   describe "#setting_name_for_reason" do

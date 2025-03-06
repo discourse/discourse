@@ -23,6 +23,7 @@
 /public/plugins
 /public/tombstone
 /public/uploads
+/public/images/emoji
 
 # Ignore the default SQLite database and db dumps
 *.sql

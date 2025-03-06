@@ -17,13 +17,6 @@ import { i18n } from "discourse-i18n";
         assert
           .dom("#post_2 button.like-count")
           .hasAria("pressed", "false", "show likes button isn't pressed");
-        assert
-          .dom("#post_2 button.like-count")
-          .hasAria(
-            "label",
-            i18n("post.sr_post_like_count_button", { count: 4 }),
-            "show likes button has aria-label"
-          );
 
         await click("#post_2 button.like-count");
         assert
@@ -33,16 +26,6 @@ import { i18n } from "discourse-i18n";
         assert
           .dom("#post_2 .small-user-list.who-liked .small-user-list-content")
           .hasAttribute("role", "list", "likes container has list role");
-        assert
-          .dom("#post_2 .small-user-list.who-liked .small-user-list-content")
-          .hasAria(
-            "label",
-            i18n("post.actions.people.sr_post_likers_list_description"),
-            "likes container has aria-label"
-          );
-        assert
-          .dom("#post_2 .small-user-list.who-liked .list-description")
-          .hasAria("hidden", "true", "list description is aria-hidden");
 
         assert
           .dom("#post_2 .small-user-list.who-liked a.trigger-user-card")

@@ -77,10 +77,6 @@ el:
               label: Ετικέτες
             restricted_category:
               label: Κατηγορία
-            restricted_group:
-              label: Ομάδα
-            restricted_groups:
-              label: Ομάδες
           created: Δημιουργήθηκε
         category_created_edited:
           fields:

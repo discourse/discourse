@@ -10,9 +10,8 @@ module("Unit | Columns", function (hooks) {
   });
 
   test("works", function (assert) {
-    document.getElementById(
-      "qunit-fixture"
-    ).innerHTML = `<div class="d-image-grid">
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
 <p><img src="/images/avatar.png" alt role="presentation"><br>
 <img src="/images/avatar.png" alt role="presentation"><br>
 <img src="/images/avatar.png" alt role="presentation"></p>
@@ -36,9 +35,8 @@ module("Unit | Columns", function (hooks) {
   });
 
   test("disabled if items < minCount", function (assert) {
-    document.getElementById(
-      "qunit-fixture"
-    ).innerHTML = `<div class="d-image-grid">
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
 <p><img src="/images/avatar.png" alt role="presentation"><br>
 <img src="/images/avatar.png" alt role="presentation"></p>
 </div>`;
@@ -61,9 +59,8 @@ module("Unit | Columns", function (hooks) {
   });
 
   test("4 items shown in 2x2 grid", function (assert) {
-    document.getElementById(
-      "qunit-fixture"
-    ).innerHTML = `<div class="d-image-grid">
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
@@ -103,9 +100,8 @@ module("Unit | Columns", function (hooks) {
   });
 
   test("non-image elements", function (assert) {
-    document.getElementById(
-      "qunit-fixture"
-    ).innerHTML = `<div class="d-image-grid">
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
 <img src="/images/avatar.png" width="20" height="20" role="presentation">
@@ -156,9 +152,8 @@ module("Unit | Columns", function (hooks) {
   });
 
   test("renders a single item in a P tag", function (assert) {
-    document.getElementById(
-      "qunit-fixture"
-    ).innerHTML = `<div class="d-image-grid">
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
 <p><img src="/images/avatar.png" alt role="presentation"></p>
 </div>`;
 

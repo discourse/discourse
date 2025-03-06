@@ -167,11 +167,10 @@ zh_CN:
             restricted_category:
               label: 类别
               description: 可选，仅在帖子所属话题属于此类别时触发
-            restricted_group:
-              label: 群组
-              description: 可选，仅在帖子的话题是此群组收件箱中的个人消息时触发
+            restricted_user_group:
+              label: 受限用户组
+              description: 可选，仅当发帖用户属于此组时才会触发
             restricted_groups:
-              label: 群组
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
             ignore_group_members:
               label: 忽略群组成员

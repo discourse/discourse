@@ -2451,13 +2451,6 @@ pl_PL:
       password_label: "Hasło"
     password_reset:
       continue: "Przejdź do %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Międzynarodowy"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tylko kategorie"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
@@ -3820,15 +3813,10 @@ pl_PL:
         many: "ty i %{count} innych osób polubiło ten wpis"
         other: "ty i %{count} innych osób polubiło ten wpis"
       sr_post_like_count_button:
-        one: "%{count} osoba polubiła ten post. Kliknij, aby zobaczyć"
-        few: "%{count} osoby polubiły ten post. Kliknij, aby zobaczyć"
-        many: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
-        other: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
-      sr_post_read_count_button:
-        one: "%{count} osoba przeczytała ten post. Kliknij, aby wyświetlić"
-        few: "%{count} osoby przeczytały ten post. Kliknij, aby wyświetlić"
-        many: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
-        other: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
+        one: "%{count} osoba lajkuje ten wpis."
+        few: "%{count} osoby lajkują ten wpis."
+        many: "%{count} osób lajkuje ten wpis."
+        other: "%{count} osób polubiło ten wpis."
       filtered_replies_hint:
         one: "Zobacz ten post i jego odpowiedź"
         few: "Zobacz ten post i jego %{count} odpowiedzi"
@@ -3959,8 +3947,6 @@ pl_PL:
             few: "i %{count} innych przeczytało to"
             many: "i %{count} innych przeczytało to"
             other: "i %{count} innych przeczytało to"
-          sr_post_likers_list_description: "użytkownicy, którzy polubili ten post"
-          sr_post_readers_list_description: "użytkownicy, którzy przeczytali ten post"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -4570,6 +4556,9 @@ pl_PL:
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
         insert_url: "%{shortcut} Wstaw zaznaczenie do otwartego edytora"
         full_page_search: "%{shortcut} Uruchamia wyszukiwanie na całej stronie"
+      admin:
+        title: "Administratorzy"
+        search_prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
     badges:
       earned_n_times:
         one: "Otrzymano tę odznakę %{count} raz"
@@ -5184,6 +5173,18 @@ pl_PL:
         logo:
           title: "Logo witryny"
           header_description: "Dostosuj warianty logo swojej witryny"
+        branding:
+          title: "Brandowanie"
+          logo:
+            form:
+              logo:
+                title: "Podstawowe logo"
+              mobile: "Mobilnie"
+              email: "E-mail"
+              manifest_screenshots:
+                description: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
+              opengraph_image:
+                description: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon."
         navigation:
           title: "Nawigacja"
           header_description: "Skonfiguruj łącza nawigacyjne i elementy menu dla swojej witryny. Obejmuje to lokalizację i zachowanie głównego menu nawigacyjnego, szybkich linków u góry strony głównej, a także paska bocznego administratora"
@@ -5200,8 +5201,9 @@ pl_PL:
           title: "Ograniczenia szybkości"
           header_description: "Skonfiguruj, jak często użytkownicy mogą wykonywać określone czynności, takie jak tworzenie tematów, wysyłanie wiadomości i publikowanie odpowiedzi."
         search:
-          title: "Szukaj"
           header_description: "Skonfiguruj ustawienia wyszukiwania, w tym rejestrowanie i tokenizację dla języków chińskiego i japońskiego."
+        search_everything:
+          title: "Szukaj"
         security:
           title: "Bezpieczeństwo"
           header_description: "Skonfiguruj ustawienia zabezpieczeń, w tym uwierzytelnianie dwuskładnikowe, uprawnienia moderatora i zasady bezpieczeństwa treści."
@@ -5301,6 +5303,7 @@ pl_PL:
           title: "Osadzanie"
           header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
       search:
+        title: "Szukaj"
         result_types:
           theme:
             one: "Motyw"
@@ -6038,7 +6041,6 @@ pl_PL:
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
           settings_editor: "Edytor ustawień"
-          hide_unused_fields: "Ukryj nieużywane pola"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
@@ -6096,9 +6098,6 @@ pl_PL:
           unsaved_parent_themes: "Nie przypisałeś/łaś komponentu do motywów, czy chcesz przejść dalej?"
           discard: "Odrzuć"
           stay: "Zostań"
-          css_html: "Własny CSS/HTML"
-          edit_css_html: "Edytuj CSS/HTML"
-          edit_css_html_help: "Nie modyfikowałeś/łaś CSS ani HTML"
           delete_upload_confirm: "Czy usunąć ten plik? (CSS motywu może przestać działać!)"
           component_on_themes: "Dołącz komponent do tych motywów"
           included_components: "Dołączone komponenty"
@@ -6159,22 +6158,14 @@ pl_PL:
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
           scss:
             text: "CSS"
-            title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"
-          header:
-            text: "Nagłówek"
-            title: "Wstaw kod HTML do wyświetlenia powyżej nagłówka"
           after_header:
             text: "Po nagłówku"
-            title: "Wstaw kod HTML do wyświetlenia po nagłówku"
           footer:
             text: "Stopka"
-            title: "Wstaw kod HTML do wyświetlenia w stopce strony"
           embedded_scss:
             text: "Osadzony CSS"
-            title: "Podaj spersonalizowany kod CSS dostarczany w ramkowej wersji komentarzy"
           embedded_header:
             text: "Wbudowany nagłówek"
-            title: "Wprowadź HTML, aby wyświetlić nad osadzoną wersją komentarzy"
           color_definitions:
             text: "Definicje kolorów"
             title: "Określ własne kolory (tylko dla zaawansowanych użytkowników)"
@@ -6187,15 +6178,6 @@ pl_PL:
               %{example}
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
-          head_tag:
-            text: "Nagłówek"
-            title: "HTML, który zostanie wstawiony przed tagiem head"
-          body_tag:
-            text: "Body"
-            title: "HTML, który zostanie wstawiony przed tagiem body"
-          yaml:
-            text: "YAML"
-            title: "Zdefiniuj ustawienia motywu w formacie YAML"
           scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
           scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
           all_filter: "Wszystkie"

@@ -185,7 +185,7 @@ RSpec.describe "Chat channel", type: :system do
     before do
       SiteSetting.enable_user_status = true
       current_user.set_status!("off to dentist", "tooth")
-      other_user.set_status!("surfing", "surfing_man")
+      other_user.set_status!("surfing", "man_surfing")
       channel_1.add(other_user)
     end
 
@@ -424,6 +424,6 @@ RSpec.describe "Chat channel", type: :system do
     channel_1.update!(name: ":dog: Dogs")
     chat_page.visit_channel(channel_1)
 
-    expect(page).to have_title("#🐶 Dogs - Chat - Discourse")
+    expect(page).to have_title("#🐕 Dogs - Chat - Discourse")
   end
 end

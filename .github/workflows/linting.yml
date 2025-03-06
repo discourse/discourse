@@ -44,15 +44,26 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
+          bundle config --local lockfile_checksums true
           bundle install --jobs 4
           bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: Bundler checksums
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          bundle lock --add-checksums
+          bundle lock --normalize-platforms
+          if [[ $(git status -s Gemfile.lock) ]]; then
+            echo "Gemfile.lock is not up to date. Please run 'bundle lock --add-checksums' and 'bundle lock --normalize-platforms'." && false
+          fi
+
       - name: Rubocop
         if: ${{ !cancelled() }}
-        run: bundle exec rubocop --parallel .
+        run: bundle exec rubocop
 
       - name: syntax_tree
         if: ${{ !cancelled() }}

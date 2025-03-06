@@ -737,8 +737,8 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
             this.singleSelect && this.value
               ? this.itemForValue(this.value, this.mainCollection)
               : isEmpty(this.selectKit.filter)
-              ? null
-              : this.mainCollection.firstObject,
+                ? null
+                : this.mainCollection.firstObject,
           isLoading: false,
           hasNoContent,
         });

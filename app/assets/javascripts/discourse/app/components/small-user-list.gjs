@@ -42,15 +42,23 @@ export default class SmallUserList extends Component {
     }
   }
 
+  get shouldShow() {
+    return this.users.length && this.args.isVisible;
+  }
+
   <template>
-    {{#if this.users}}
-      <PluginOutlet @name="small-user-list-internal" @outletArgs={{this.args}}>
-        <div class="clearfix small-user-list" ...attributes>
-          <span
-            class="small-user-list-content"
-            aria-label={{@ariaLabel}}
-            role="list"
-          >
+    <PluginOutlet @name="small-user-list-internal" @outletArgs={{this.args}}>
+      <div
+        class="small-user-list {{if this.shouldShow '--expanded'}}"
+        ...attributes
+      >
+        <span
+          class="small-user-list-content"
+          role="list"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {{#if this.shouldShow}}
             {{#each this.users key="username" as |user|}}
               {{#if user.unknown}}
                 <div
@@ -74,19 +82,19 @@ export default class SmallUserList extends Component {
             {{#if @description}}
               {{#if this.postUrl}}
                 <a href={{this.postUrl}}>
-                  <span aria-hidden="true" class="list-description">
+                  <span class="list-description">
                     {{i18n @description count=@count}}
                   </span>
                 </a>
               {{else}}
-                <span aria-hidden="true" class="list-description">
+                <span class="list-description">
                   {{i18n @description count=@count}}
                 </span>
               {{/if}}
             {{/if}}
-          </span>
-        </div>
-      </PluginOutlet>
-    {{/if}}
+          {{/if}}
+        </span>
+      </div>
+    </PluginOutlet>
   </template>
 }

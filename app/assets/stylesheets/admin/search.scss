@@ -9,6 +9,7 @@
 .admin-search {
   &__input-container {
     display: flex;
+    margin-bottom: var(--space-1);
   }
 
   &__input-group {
@@ -64,8 +65,13 @@
     cursor: pointer;
     transition: background-color 0.2s;
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: var(--primary-low-mid);
+    }
+
+    &:focus {
+      outline: auto;
     }
 
     &.is-active {
@@ -74,6 +80,10 @@
 
       .d-icon {
         color: var(--tertiary-low);
+      }
+
+      &:focus {
+        outline: auto;
       }
     }
 
@@ -126,4 +136,18 @@
     color: var(--primary-high);
     margin-top: var(--space-1);
   }
+
+  a {
+    display: inline-block;
+    width: 100%;
+    pointer-events: auto;
+
+    &:focus {
+      outline: auto;
+    }
+  }
+}
+
+.admin-search-modal {
+  --modal-max-width: 700px;
 }

@@ -50,7 +50,25 @@ module PageObjects
         page.has_no_selector?(".search-menu .search-menu-panel")
       end
 
+      SEARCH_ICON_SELECTOR = "#search-button.btn-icon"
+      SEARCH_FIELD_SELECTOR = ".floating-search-input .search-menu"
       SEARCH_RESULT_SELECTOR = ".search-results .fps-result"
+
+      def has_search_icon?
+        page.has_selector?(SEARCH_ICON_SELECTOR, visible: true)
+      end
+
+      def has_no_search_icon?
+        page.has_no_selector?(SEARCH_ICON_SELECTOR)
+      end
+
+      def has_search_field?
+        page.has_selector?(SEARCH_FIELD_SELECTOR, visible: true)
+      end
+
+      def has_no_search_field?
+        page.has_no_selector?(SEARCH_FIELD_SELECTOR)
+      end
 
       def has_topic_title_for_first_search_result?(title)
         page.has_css?(".search-menu .results .search-result-topic", text: title)

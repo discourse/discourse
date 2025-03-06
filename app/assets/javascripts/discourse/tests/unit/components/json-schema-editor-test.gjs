@@ -27,13 +27,15 @@ module("Unit | Component | <JsonSchemaEditor />", function (hooks) {
 
     const closeModal = () => {};
 
-    await render(<template>
-      <JsonSchemaEditor
-        @inline={{true}}
-        @model={{model}}
-        @closeModal={{closeModal}}
-      />
-    </template>);
+    await render(
+      <template>
+        <JsonSchemaEditor
+          @inline={{true}}
+          @model={{model}}
+          @closeModal={{closeModal}}
+        />
+      </template>
+    );
 
     await click(".json-editor-btn-add");
     await fillIn("[name='root[0][color]']", "red");
