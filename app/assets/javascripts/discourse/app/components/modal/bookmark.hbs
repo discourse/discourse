@@ -11,14 +11,21 @@
   <:headerPrimaryAction>
     <DButton
       @label="bookmarks.save"
-      @action={{this.saveAndClose}}
+      @action={{this.formApi.submit}}
       @title="modal.close"
       class="btn-transparent btn-primary"
     />
   </:headerPrimaryAction>
 
   <:body>
-    <div class="control-group bookmark-name-wrap">
+    <BookmarkForm
+      @registerFormApi={{this.registerFormApi}}
+      @submit={{this.saveAndClose}}
+      @bookmark={{this.bookmark}}
+      @targetModel={{this.targetModel}}
+    />
+
+    {{!-- <div class="control-group bookmark-name-wrap">
       <Input
         id="bookmark-name"
         @value={{this.bookmark.name}}
@@ -81,13 +88,13 @@
             (i18n "bookmarks.no_timezone" basePath=(base-path))
           }}</div>
       {{/if}}
-    </div>
+    </div> --}}
   </:body>
 
   <:footer>
     <DButton
       @label="bookmarks.save"
-      @action={{this.saveAndClose}}
+      @action={{this.formApi.submit}}
       id="save-bookmark"
       class="btn-primary"
     />

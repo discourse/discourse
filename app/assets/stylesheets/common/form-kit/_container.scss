@@ -4,6 +4,10 @@
   flex-direction: column;
   align-items: flex-start;
 
+  &.--full {
+    width: 100%;
+  }
+
   &-title {
     display: inline;
     gap: 0.25em;

@@ -21,12 +21,16 @@ export default class ValidationParser {
   dateBeforeOrEqualRule(input) {
     return {
       date: new Date(input),
+      day: moment(input).format("YYYY-MM-DD"),
+      time: moment(input).format("HH:mm"),
     };
   }
 
   dateAfterOrEqualRule(input) {
     return {
       date: new Date(input),
+      day: moment(input).format("YYYY-MM-DD"),
+      time: moment(input).format("HH:mm"),
     };
   }
 

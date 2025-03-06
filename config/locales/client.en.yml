@@ -447,8 +447,10 @@ en:
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
+      remember_preference: Remeber prefernce
+      persist_auto_delete_preference_choice: "set this as default for all future bookmark reminders"
       auto_delete_preference:
-        label: "After you are notified"
+        label: "After reminding you we should..."
         never: "Keep bookmark"
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"

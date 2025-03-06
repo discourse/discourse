@@ -1,8 +1,16 @@
+import { eq } from "truth-helpers";
 import FormText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
 
 const FKContainer = <template>
-  <div class={{concatClass "form-kit__container" @class}} ...attributes>
+  <div
+    class={{concatClass
+      "form-kit__container"
+      @class
+      (if (eq @format "full") "--full")
+    }}
+    ...attributes
+  >
     {{#if @title}}
       <span class="form-kit__container-title">
         {{@title}}

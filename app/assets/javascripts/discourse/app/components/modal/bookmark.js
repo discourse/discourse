@@ -30,6 +30,8 @@ export default class BookmarkModal extends Component {
   @service site;
   @service bookmarkApi;
 
+  @tracked formApi;
+
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;
   @tracked postDetectedLocalTimezone = null;
@@ -62,6 +64,10 @@ export default class BookmarkModal extends Component {
 
   get bookmark() {
     return this.args.model.bookmark;
+  }
+
+  get targetModel() {
+    return this.args.model.targetModel;
   }
 
   get modalTitle() {
@@ -152,7 +158,12 @@ export default class BookmarkModal extends Component {
   }
 
   @action
-  saveAndClose() {
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  saveAndClose(data) {
     this.flash = null;
     if (this._saving || this._deleting) {
       return;
@@ -160,7 +171,7 @@ export default class BookmarkModal extends Component {
 
     this._saving = true;
     this._savingBookmarkManually = true;
-    return this.#saveBookmark()
+    return this.#saveBookmark(data)
       .then(() => this.args.closeModal())
       .catch((error) => this.#handleSaveError(error))
       .finally(() => {
@@ -257,7 +268,16 @@ export default class BookmarkModal extends Component {
     return parsedPostLocalDate;
   }
 
-  #saveBookmark() {
+  #saveBookmark(data) {
+    this.bookmark.reminderAt = data.reminderAt;
+    this.bookmark.name = data.name;
+    this.bookmark.autoDeletePreference = parseInt(
+      data.autoDeletePreference,
+      10
+    );
+
+    console.log(data, this.bookmark);
+
     if (this.bookmark.selectedReminderType === TIME_SHORTCUT_TYPES.CUSTOM) {
       if (!this.bookmark.reminderAtISO) {
         return Promise.reject(i18n("bookmarks.invalid_custom_datetime"));
