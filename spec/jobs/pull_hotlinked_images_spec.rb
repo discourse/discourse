@@ -459,7 +459,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
-        ![Longcat1.gif](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        ![Longcat1](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(%r{<p><img src=.*/uploads})
@@ -481,7 +481,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
         expect(post.raw).to eq(<<~MD.chomp)
         Onebox here:
-        ![Longcat1.gif](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        ![Longcat1](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(%r{<img src=.*/uploads})

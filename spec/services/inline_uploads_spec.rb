@@ -714,18 +714,31 @@ RSpec.describe InlineUploads do
   end
 
   describe ".replace_hotlinked_image_urls" do
-    fab!(:image_upload)
-    it "replaces URL with image markdown and uses filename as alt" do
-      origin = "http://foo.bar/#{image_upload.original_filename}"
-      raw =
-        InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
-          expect(match_src).to eq(origin)
-          image_upload
-        end
+    context "when raw has an image URL" do
+      fab!(:image_upload)
+      it "replaces URL with image markdown and uses filename as alt" do
+        origin = "http://foo.bar/#{image_upload.original_filename}"
+        raw =
+          InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
+            expect(match_src).to eq(origin)
+            image_upload
+          end
 
-      expect(raw).to eq(
-        "look at this:\n![#{image_upload.original_filename}](#{image_upload.short_url})",
-      )
+        expect(raw).to eq("look at this:\n![logo](#{image_upload.short_url})")
+      end
+    end
+    context "when raw has an image URL with a square bracket in filename" do
+      let!(:image_upload) { Fabricate(:image_upload, original_filename: "image]1.jpg") }
+      it "does not make broken markdown" do
+        origin = "http://foo.bar/#{image_upload.original_filename}"
+        raw =
+          InlineUploads.replace_hotlinked_image_urls(raw: "look at this:\n#{origin}") do |match_src|
+            expect(match_src).to eq(origin)
+            image_upload
+          end
+
+        expect(raw).to eq("look at this:\n![image1](#{image_upload.short_url})")
+      end
     end
   end
 end
