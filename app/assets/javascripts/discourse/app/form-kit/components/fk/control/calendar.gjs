@@ -15,6 +15,10 @@ export default class FKControlCalendar extends Component {
   }
 
   get time() {
+    console.log(
+      this.args.field.value,
+      moment(this.args.field.value).format("HH:mm")
+    );
     return this.args.field.value
       ? moment(this.args.field.value).format("HH:mm")
       : null;
@@ -27,10 +31,10 @@ export default class FKControlCalendar extends Component {
   @action
   setTime(time) {
     console.log("set time", time);
-    const [hours, minutes] = time.split(":").map(Number);
-    const updatedDate = this.args.field.value || new Date();
-    updatedDate.setHours(hours, minutes);
-    this.args.field.set(updatedDate);
+    // const [hours, minutes] = time.split(":").map(Number);
+    // const updatedDate = this.args.field.value || new Date();
+    // updatedDate.setHours(hours, minutes);
+    // this.args.field.set(updatedDate);
   }
 
   @action
@@ -47,6 +51,12 @@ export default class FKControlCalendar extends Component {
   @action
   formatForInput(date) {
     return moment(date).format("YYYY-MM-DD");
+  }
+
+  @action
+  formatTimeForInput(date) {
+    console.log(moment(date).format("HH:mm"));
+    return moment(date).format("HH:mm");
   }
 
   get minDate() {
@@ -96,6 +106,7 @@ export default class FKControlCalendar extends Component {
     {{/if}}
 
     {{#if this.includeTime}}
+      {{this.time}}
       <input
         disabled={{@field.disabled}}
         type="time"

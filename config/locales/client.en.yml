@@ -449,6 +449,7 @@ en:
       no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       remember_preference: Remeber prefernce
       persist_auto_delete_preference_choice: "set this as default for all future bookmark reminders"
+      excerpt_title: "%{username} <span class='bookmark-excerpt__separator'>in</span> %{title}"
       auto_delete_preference:
         label: "After reminding you we should..."
         never: "Keep bookmark"

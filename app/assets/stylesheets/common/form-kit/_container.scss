@@ -35,10 +35,6 @@
   }
 
   &-content {
-    display: flex;
-    gap: 0.25em;
-    flex-direction: row;
-    align-items: flex-start;
-    max-width: 100%;
+    display: contents;
   }
 }

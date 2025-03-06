@@ -61,3 +61,36 @@
     }
   }
 }
+
+.bookmark-excerpt {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  padding: 0.5em;
+  background: var(--primary-very-low);
+  border-radius: var(--d-border-radius);
+  box-sizing: border-box;
+  gap: 0.5em;
+}
+
+.bookmark-excerpt__icon {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+
+  .d-icon {
+    color: var(--tertiary);
+  }
+}
+
+.bookmark-excerpt__separator {
+  color: var(--primary-medium);
+}
+
+.bookmark-excerpt__text {
+  p {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin: 0;
+  }
+}

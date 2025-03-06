@@ -1,4 +1,8 @@
 .bookmark-reminder-modal {
+  .d-modal__container {
+    max-width: var(--modal-min-width);
+  }
+
   .d-modal {
     &__body {
       box-sizing: border-box;

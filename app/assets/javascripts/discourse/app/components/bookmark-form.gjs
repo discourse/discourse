@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import Form from "discourse/components/form";
 import avatar from "discourse/helpers/avatar";
+import icon from "discourse/helpers/d-icon";
 import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkForm extends Component {
@@ -27,6 +30,14 @@ export default class BookmarkForm extends Component {
     };
   }
 
+  get title() {
+    if (this.args.targetModel instanceof Post) {
+      return this.args.targetModel.topic.fancyTitle;
+    } else {
+      return "";
+    }
+  }
+
   <template>
     <Form
       @onRegisterApi={{@registerFormApi}}
@@ -34,19 +45,31 @@ export default class BookmarkForm extends Component {
       @data={{this.formData}}
       as |form|
     >
-      <form.Container @format="full" class="bookmark-form__excerpt">
-        <div class="bookmark-form__excerpt-header">
+      <form.Container @format="full" class="bookmark-excerpt">
+        <div class="bookmark-excerpt__icon">
+          {{icon "bookmark"}}
+        </div>
+
+        <div class="bookmark-excerpt__avatar">
           {{avatar
             @targetModel.user
             imageSize="small"
             class="bookmark-form__excerpt-avatar"
           }}
-          <span class="bookmark-form__excerpt-title">
-            {{@targetModel.user.username}}
-          </span>
         </div>
-        <div class="bookmark-form__excerpt__body">
-          {{htmlSafe @targetModel.cooked}}
+
+        <div class="bookmark-excerpt__body">
+          <div class="bookmark-excerpt__info">
+            {{htmlSafe
+              (i18n
+                "bookmarks.excerpt_title"
+                (hash username=@targetModel.user.username title=this.title)
+              )
+            }}
+          </div>
+          <div class="bookmark-excerpt__text">
+            {{htmlSafe @targetModel.cooked}}
+          </div>
         </div>
       </form.Container>
 
@@ -54,6 +77,7 @@ export default class BookmarkForm extends Component {
         @name="name"
         @title={{i18n "post.bookmarks.name_placeholder"}}
         @format="full"
+        @validation="length:0,100"
         as |field|
       >
         <field.Input />
