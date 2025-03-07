@@ -22,12 +22,30 @@ function validResult(attrs) {
 }
 
 class TrackedUserField {
-  @tracked value;
+  @tracked value = null;
+  @tracked failed = false;
+  @tracked reason = null;
+  @tracked element = null;
   field;
-  validation;
 
   constructor(field) {
     this.field = field;
+  }
+
+  get validation() {
+    return {
+      failed: this.failed,
+      reason: this.reason,
+      ok: !this.failed,
+      element: this.element,
+    };
+  }
+
+  // Update validation state
+  updateValidation(validation = {}) {
+    this.failed = !!validation.failed;
+    this.reason = validation.reason || null;
+    this.element = validation.element || null;
   }
 }
 
@@ -95,7 +113,7 @@ export default class UserFieldsValidationHelper {
         }
       });
 
-      userField.validation = validation;
+      userField.updateValidation(validation);
     });
 
     const invalidUserField = this.userFields.find((f) => f.validation.failed);
