@@ -183,7 +183,7 @@ export default class UppyImageUploader extends Component {
           <div class="image-upload-controls">
             <label
               class="btn btn-default btn-small btn-transparent
-                {{if this.disabled 'disabled'}}"
+                {{if this.disabled 'disabled'}} {{if this.uppyUpload.uploading 'hidden'}}"
               title={{this.disabledReason}}
               for={{this.computedId}}
               tabindex="0"
