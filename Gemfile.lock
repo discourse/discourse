@@ -126,7 +126,7 @@ GEM
     diffy (3.4.3)
     digest (3.2.0)
     digest-xxhash (0.2.9)
-    discourse-emojis (1.0.32)
+    discourse-emojis (1.0.37)
     discourse-fonts (0.0.18)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -436,6 +436,7 @@ GEM
     request_store (1.7.0)
       rack (>= 1.4)
     rexml (3.4.1)
+    rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.5.1)
     rqrcode (2.2.0)
@@ -748,6 +749,7 @@ DEPENDENCIES
   redcarpet
   redis (< 5.0)
   redis-namespace
+  rinku
   rotp
   rqrcode
   rrule
@@ -839,7 +841,7 @@ CHECKSUMS
   diffy (3.4.3) sha256=4264b9e7db00d1cd426fcd32e36565779163cedc2340a95b0e6f025e71f9aaa7
   digest (3.2.0) sha256=fa2e7092ec683f65d82fadde5ff4ca3b32e23ee0b19f1fc1a5e09993ad2d3991
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
-  discourse-emojis (1.0.32) sha256=fa2d6adf74593238021eea601fac7b56aee6b5073a6dfbccf977c6f4f942498b
+  discourse-emojis (1.0.37) sha256=cd9d389b407e0866f0e9399c685066a96f0b0cb9c677c56099ec6e786aef5456
   discourse-fonts (0.0.18) sha256=a7d25c13edd3325ae40010ca277530d69fc7952a05aa7b2ff07c1d07412b72a1
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_dev_assets (0.0.5) sha256=a09a801a210aa3f7247dd382dfd73b389d4bd02be86be675eca2d451f9898285
@@ -1002,6 +1004,7 @@ CHECKSUMS
   reline (0.6.0) sha256=57620375dcbe56ec09bac7192bfb7460c716bbf0054dc94345ecaa5438e539d2
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   rexml (3.4.1) sha256=c74527a9a0a04b4ec31dbe0dc4ed6004b960af943d8db42e539edde3a871abca
+  rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
   rouge (4.5.1) sha256=2ac81c6dee7019bbc6600d4c2d641d730d65c165941400ebd924259067e690dd
   rqrcode (2.2.0) sha256=23eea88bb44c7ee6d6cab9354d08c287f7ebcdc6112e1fe7bcc2d010d1ffefc1
