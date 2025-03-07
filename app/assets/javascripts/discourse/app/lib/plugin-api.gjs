@@ -117,9 +117,10 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
+import { addCustomUserFieldValidationCallback as addCustomUserFieldValidationCallbackDeprecated } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -1572,6 +1573,7 @@ class PluginApi {
    **/
 
   addCustomUserFieldValidationCallback(callback) {
+    addCustomUserFieldValidationCallbackDeprecated(callback);
     addCustomUserFieldValidationCallback(callback);
   }
 
@@ -2130,13 +2132,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
