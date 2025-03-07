@@ -39,6 +39,7 @@ export const DEFAULT_TYPE_FILTER = "exclude_topics";
 export default class SearchMenu extends Component {
   @service search;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service appEvents;
 
