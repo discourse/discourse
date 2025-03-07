@@ -2672,13 +2672,6 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
-  admin_sidebar_enabled_groups:
-    type: group_list
-    list_type: compact
-    default: "1|2"
-    allow_any: false
-    refresh: true
-    area: "group_permissions|navigation"
 
 embedding:
   embed_by_username:
