@@ -465,6 +465,27 @@ RSpec.describe TagsController do
       )
     end
 
+    it "puts the tag description in the meta description" do
+      described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
+      get "/tag/#{described_tag.name}"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"#{described_tag.description}\"",
+      )
+    end
+
+    it "has a default description for tags without a description" do
+      get "/tag/test"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"Topics tagged #{tag.name}\"",
+      )
+    end
+
     it "handles special tag 'none'" do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
