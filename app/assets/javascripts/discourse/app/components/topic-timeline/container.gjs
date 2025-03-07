@@ -224,13 +224,13 @@ export default class TopicTimelineScrollArea extends Component {
     const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
       : this.composer.isPreviewVisible
-      ? desktopMinScrollAreaHeight
-      : DEFAULT_MIN_SCROLLAREA_HEIGHT;
+        ? desktopMinScrollAreaHeight
+        : DEFAULT_MIN_SCROLLAREA_HEIGHT;
     const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
       : this.composer.isPreviewVisible
-      ? desktopMaxScrollAreaHeight
-      : DEFAULT_MAX_SCROLLAREA_HEIGHT;
+        ? desktopMaxScrollAreaHeight
+        : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
   }
