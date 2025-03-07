@@ -3,11 +3,11 @@
 class Reports::List
   include Service::Base
 
-  step :gather_reports
+  model :reports, optional: true
 
   private
 
-  def gather_reports
+  def fetch_reports
     page_view_req_report_methods =
       ["page_view_total_reqs"] +
         ApplicationRequest
@@ -24,7 +24,7 @@ class Reports::List
       page_view_req_report_methods +
         Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
 
-    context[:reports] = reports_methods
+    reports_methods
       .reduce([]) do |reports_acc, name|
         type = name.to_s.gsub("report_", "")
         description = I18n.t("reports.#{type}.description", default: "")
