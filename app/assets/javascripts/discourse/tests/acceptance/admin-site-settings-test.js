@@ -109,12 +109,12 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.dom(".row.setting").exists({ count: 1 });
 
     // navigate away to the "Dashboard" page
-    await click(".nav.nav-pills li:nth-child(1) a");
+    await click(".sidebar-section-link-wrapper:nth-child(1) a");
     assert.dom(".row.setting").exists({ count: 0 });
 
     // navigate back to the "Settings" page, the title filter
     // has been removed from navigation
-    await click(".nav.nav-pills li:nth-child(2) a");
+    await click(".sidebar-section-link-wrapper:nth-child(5) a");
     assert.dom(".row.setting").exists({ count: 4 });
   });
 
@@ -184,7 +184,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await click("button.ok");
 
     assert.strictEqual(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
+      pretender.handledRequests.find((request) => request.method === "PUT")
         .requestBody,
       "blocked_onebox_domains=proper.com"
     );
