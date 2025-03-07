@@ -129,8 +129,9 @@
   flex-wrap: nowrap;
   gap: var(--space-4);
   flex-direction: column;
-  width: 100%;
+  width: calc(100% - 1em);
   border: 1px solid var(--primary-low);
+  padding: 0.5em;
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -140,7 +141,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 0.5em;
+
+    &.collapsable {
+      cursor: pointer;
+    }
   }
 
   &__title {
@@ -150,7 +154,6 @@
   &__content {
     margin-top: 0.5rem;
     padding-right: 1em;
-    padding-left: 0.5em;
     padding-bottom: 1em;
     gap: 1.5em;
     display: flex;
@@ -163,6 +166,12 @@
     .form-kit__container {
       padding-left: 1em;
       width: calc(100% - 1em) !important;
+      border-left: 1px solid var(--primary-low);
     }
+  }
+
+  .form-kit__field-toggle .form-kit__container-content.--full {
+    // avoid label wrapping
+    width: var(--form-kit-small-input) !important;
   }
 }

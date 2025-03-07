@@ -12,13 +12,8 @@ import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 module("Integration | Component | prosemirror-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    clearRichEditorExtensions();
-  });
-
-  hooks.afterEach(function () {
-    resetRichEditorExtensions();
-  });
+  hooks.beforeEach(() => clearRichEditorExtensions());
+  hooks.afterEach(() => resetRichEditorExtensions());
 
   test("renders the editor", async function (assert) {
     await render(<template><ProsemirrorEditor /></template>);

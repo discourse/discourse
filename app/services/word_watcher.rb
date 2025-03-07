@@ -223,6 +223,17 @@ class WordWatcher
     match_list
   end
 
+  def word_matches_across_all_actions
+    WatchedWord
+      .actions
+      .keys
+      .filter_map { |action| word_matches_for_action?(action, all_matches: true) }
+      .flatten
+      .compact
+      .uniq
+      .sort
+  end
+
   def word_matches?(word, case_sensitive: false)
     options = case_sensitive ? nil : Regexp::IGNORECASE
     Regexp.new(WordWatcher.word_to_regexp(word), options).match?(@raw)
