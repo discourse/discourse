@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
 import EmberObject from "@ember/object";
@@ -37,6 +38,29 @@ export default class ColorScheme extends EmberObject {
       return colorSchemes;
     });
   }
+
+  static async find(id) {
+    const json = await ajax(`/admin/config/color-palettes/${id}`);
+    return ColorScheme.create({
+      id: json.id,
+      name: json.name,
+      is_base: json.is_base,
+      theme_id: json.theme_id,
+      theme_name: json.theme_name,
+      base_scheme_id: json.base_scheme_id,
+      user_selectable: json.user_selectable,
+      colors: json.colors.map((c) => {
+        return ColorSchemeColor.create({
+          name: c.name,
+          hex: c.hex,
+          default_hex: c.default_hex,
+          is_advanced: c.is_advanced,
+        });
+      }),
+    });
+  }
+
+  @tracked name;
 
   @not("id") newRecord;
   init() {
@@ -132,15 +156,7 @@ export default class ColorScheme extends EmberObject {
       });
     }
 
-    return ajax(
-      "/admin/color_schemes" + (this.id ? "/" + this.id : "") + ".json",
-      {
-        data: JSON.stringify({ color_scheme: data }),
-        type: this.id ? "PUT" : "POST",
-        dataType: "json",
-        contentType: "application/json",
-      }
-    ).then((result) => {
+    return this.performSave(data).then((result) => {
       if (result.id) {
         this.set("id", result.id);
       }
@@ -153,6 +169,18 @@ export default class ColorScheme extends EmberObject {
       this.setProperties({ savingStatus: i18n("saved"), saving: false });
       this.notifyPropertyChange("description");
     });
+  }
+
+  async performSave(data) {
+    return await ajax(
+      `/admin/color_schemes${this.id ? `/${this.id}` : ""}.json`,
+      {
+        data: JSON.stringify({ color_scheme: data }),
+        type: this.id ? "PUT" : "POST",
+        dataType: "json",
+        contentType: "application/json",
+      }
+    );
   }
 
   updateUserSelectable(value) {

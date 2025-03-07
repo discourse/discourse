@@ -335,6 +335,11 @@ export default function () {
         this.route("user-api", function () {
           this.route("settings", { path: "/" });
         });
+
+        this.route("color-palettes");
+        this.route("color-palettes-show", {
+          path: "/color-palettes/:palette_id",
+        });
       }
     );
 

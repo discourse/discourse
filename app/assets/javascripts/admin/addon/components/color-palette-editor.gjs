@@ -14,18 +14,12 @@ class Color {
   @tracked lightValue;
   @tracked darkValue;
 
-  constructor({ name, lightValue, darkValue }) {
+  constructor({ name, lightValue, darkValue, description, displayName }) {
     this.name = name;
-    this.lightValue = lightValue;
-    this.darkValue = darkValue;
-  }
-
-  get displayName() {
-    return this.name.replaceAll("_", " ");
-  }
-
-  get description() {
-    return i18n(`admin.customize.colors.${this.name}.description`);
+    this.lightValue = lightValue ?? darkValue;
+    this.darkValue = darkValue ?? lightValue;
+    this.displayName = displayName;
+    this.description = description;
   }
 }
 
@@ -124,6 +118,8 @@ export default class ColorPaletteEditor extends Component {
         name: color.name,
         lightValue: color.hex,
         darkValue: color.dark_hex,
+        description: color.description,
+        displayName: color.displayName,
       });
     });
   }
