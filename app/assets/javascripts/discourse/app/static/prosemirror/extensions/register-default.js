@@ -26,6 +26,10 @@ import underline from "./underline";
 const defaultExtensions = [
   emoji,
   image,
+  link,
+  heading,
+  codeBlock,
+  quote,
   hashtag,
   mention,
   strikethrough,
@@ -33,14 +37,10 @@ const defaultExtensions = [
   htmlInline,
   htmlBlock,
   onebox,
-  link,
-  heading,
-  codeBlock,
-  quote,
   trailingParagraph,
   typographerReplacements,
-  markdownPaste,
   table,
+  markdownPaste,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

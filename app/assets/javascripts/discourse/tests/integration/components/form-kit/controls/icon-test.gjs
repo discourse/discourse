@@ -18,13 +18,15 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     let data = { foo: null };
     const mutateData = (x) => (data = x);
 
-    await render(<template>
-      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Icon />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Icon />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     await formKit().field("foo").select("pencil");
     await formKit().submit();
@@ -34,13 +36,15 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
   });
 
   test("when disabled", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-          <field.Icon />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Icon />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.dom(".form-kit__control-icon.is-disabled").exists();
   });

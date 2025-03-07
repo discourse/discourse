@@ -181,20 +181,17 @@ function initializeDiscourseLocalDates(api) {
     });
   });
 
-  addTextDecorateCallback(function (
-    text,
-    nextElement,
-    _previousElement,
-    metadata
-  ) {
-    if (
-      metadata.discourseLocalDateStartRangeOpts &&
-      nextElement?.attributes.class?.includes("discourse-local-date") &&
-      text === "→"
-    ) {
-      return "";
+  addTextDecorateCallback(
+    function (text, nextElement, _previousElement, metadata) {
+      if (
+        metadata.discourseLocalDateStartRangeOpts &&
+        nextElement?.attributes.class?.includes("discourse-local-date") &&
+        text === "→"
+      ) {
+        return "";
+      }
     }
-  });
+  );
   addTagDecorateCallback(function () {
     if (this.element.attributes.class?.includes("discourse-local-date")) {
       if (this.metadata.discourseLocalDateStartRangeOpts) {

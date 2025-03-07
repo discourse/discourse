@@ -17,7 +17,8 @@
   transition: box-shadow 0.3s ease-in-out;
 
   &.--updating {
-    animation: updating 3s ease-in-out 1,
+    animation:
+      updating 3s ease-in-out 1,
       updatingInfinite 3s ease-in-out 3s infinite;
 
     @keyframes updating {

@@ -49,10 +49,6 @@ et:
               label: Sildid
             restricted_category:
               label: Foorum
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupid
           created: Loodud
         category_created_edited:
           fields:

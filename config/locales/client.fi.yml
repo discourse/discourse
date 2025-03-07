@@ -2344,13 +2344,6 @@ fi:
       password_label: "Salasana"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Kansainvälinen"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vain alueet"
       categories_with_featured_topics: "Alueet, joissa on esiteltyjä ketjuja"
@@ -3561,11 +3554,8 @@ fi:
         one: "Sinä ja %{count} muuta tykkäsitte tästä viestistä"
         other: "Sinä ja %{count} muuta tykkäsitte tästä viestistä"
       sr_post_like_count_button:
-        one: "%{count} henkilö tykkäsi tästä viestistä. Katso klikkaamalla."
-        other: "%{count} henkilöä tykkäsi tästä viestistä. Katso klikkaamalla."
-      sr_post_read_count_button:
-        one: "%{count} henkilö luki tämän viestin. Katso klikkaamalla."
-        other: "%{count} henkilöä luki tämän viestin. Katso klikkaamalla."
+        one: "%{count} käyttäjä tykkäsi tästä viestistä."
+        other: "%{count} käyttäjää tykkäsi tästä viestistä."
       filtered_replies_hint:
         one: "Näytä tämä viesti ja siihen liittyvä vastaus"
         other: "Näytä tämä viesti ja %{count} siihen liittyvää vastausta"
@@ -3682,8 +3672,6 @@ fi:
           read_capped:
             one: "ja %{count} muu lukivat tämän"
             other: "ja %{count} muuta lukivat tämän"
-          sr_post_likers_list_description: "käyttäjät, jotka tykkäsivät tästä viestistä"
-          sr_post_readers_list_description: "käyttäjät, jotka ovat lukeneet tämän viestin"
         by_you:
           off_topic: "Liputit tämän eksyvän aiheesta"
           spam: "Liputit tämän roskapostiksi"
@@ -4273,6 +4261,9 @@ fi:
         prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
         insert_url: "%{shortcut} Lisää valinta avoinna olevaan kirjoitustyökaluun"
         full_page_search: "%{shortcut} Käynnistää koko sivun haun"
+      admin:
+        title: "Ylläpitäjä"
+        search_prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
     badges:
       earned_n_times:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
@@ -4842,6 +4833,18 @@ fi:
         logo:
           title: "Sivuston logo"
           header_description: "Mukauta sivustosi logon muunnelmia"
+        branding:
+          title: "Brändäys"
+          logo:
+            form:
+              logo:
+                title: "Ensisijainen logo"
+              mobile: "Mobiili"
+              email: "Sähköpostiosoite"
+              manifest_screenshots:
+                description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
+              opengraph_image:
+                description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
         navigation:
           title: "Navigointi"
           header_description: "Määritä sivustosi navigointilinkit ja valikon kohteet. Tämä sisältää ensisijaisen navigointivalikon sijainnin ja toiminnan, etusivun yläosassa olevat pikalinkit sekä ylläpitäjän sivupalkin"
@@ -4858,8 +4861,9 @@ fi:
           title: "Rajat"
           header_description: "Määritä, kuinka usein käyttäjät voivat tehdä tiettyjä toimintoja, kuten luoda ketjuja, lähettää viestejä ja lähettää vastauksia"
         search:
-          title: "Hae"
           header_description: "Määritä kiinan ja japanin kielten hakuasetukset, mukaan lukien lokikirjaus ja tokenointi"
+        search_everything:
+          title: "Hae"
         security:
           title: "Tietoturva"
           header_description: "Määritä suojausasetukset, mukaan lukien kaksivaiheinen tunnistus, valvojan oikeudet ja sisällön suojauskäytännöt"
@@ -4972,6 +4976,7 @@ fi:
           title: "Upottaminen"
           header_description: "Discourse voi upottaa kommentit ketjusta etäsivustolla Javascript APIn avulla, joka luo iframen"
       search:
+        title: "Hae"
         result_types:
           theme:
             one: "Värimaailma"
@@ -5734,7 +5739,6 @@ fi:
           extra_files_remote: "Vie teema tai katso git-tietovarasto nähdäksesi nämä tiedostot."
           preview: "Esikatselu"
           settings_editor: "Asetuseditori"
-          hide_unused_fields: "Piilota tyhjät kentät"
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
           color_scheme_user_selectable: "Käyttäjät voivat valita väripaletin"
@@ -5788,9 +5792,6 @@ fi:
           unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
           stay: "Jää"
-          css_html: "Mukautettu CSS/HTML"
-          edit_css_html: "Muokkaa CSS:ää-/HTML:ää"
-          edit_css_html_help: "Et ole muokannut CSS:ää tai HTML:ää"
           delete_upload_confirm: "Poistetaanko ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           component_on_themes: "Sisällytä komponentti näihin teemoihin"
           included_components: "Sisältää komponentit"
@@ -5851,22 +5852,14 @@ fi:
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
           scss:
             text: "CSS"
-            title: "Lisää mukautettua CSS:ää, hyväksymme kaikki kelvolliset CSS- ja SCSS-tyylit"
-          header:
-            text: "Yläpalkki"
-            title: "Lisää HTML:ää, joka näytetään sivuston yläpalkin yläpuolella"
           after_header:
             text: "Yläpalkin jälkeen"
-            title: "Lisää HTML:ää, joka näytetään kaikilla sivuilla yläpalkin jälkeen"
           footer:
             text: "Alatunniste"
-            title: "Lisää HTML:ää, joka näytetään sivun alatunnisteessa"
           embedded_scss:
             text: "Upotettu CSS"
-            title: "Anna mukautettua CSS-koodia, joka toimitetaan kommenttien upotetun version kanssa"
           embedded_header:
             text: "Upotettu yläpalkki"
-            title: "Kirjoita HTML, joka näytetään kommenttien upotetun version yläpuolella"
           color_definitions:
             text: "Värimääritykset"
             title: "Syötä mukautetut värimääritykset (vain kokeneille käyttäjille)"
@@ -5879,15 +5872,6 @@ fi:
               %{example}
 
               Etuliitteen lisääminen CSS-kuvauksiin on erittäin suositeltavaa, jotta vältät ristiriidat lisäosien tai ydinsovelluksen kanssa.
-          head_tag:
-            text: "Head"
-            title: "HTML, joka sijoitetaan ennen head-tunnistetta"
-          body_tag:
-            text: "Leipäteksti"
-            title: "HTML, joka sijoitetaan ennen body-tunnistetta"
-          yaml:
-            text: "YAML"
-            title: "Määritä teeman asetukset YAML-muodossa"
           scss_color_variables_warning: 'Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tästä oppaasta</a>.'
           scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
           all_filter: "Kaikki"

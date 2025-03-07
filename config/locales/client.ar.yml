@@ -2822,13 +2822,6 @@ ar:
       password_label: "كلمة المرور"
     password_reset:
       continue: "المتابعة إلى %{site_name}"
-    emoji_set:
-      apple_international: "Apple/دولي"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "الفئات فقط"
       categories_with_featured_topics: "الفئات ذات الموضوعات المميَّزة"
@@ -4343,19 +4336,12 @@ ar:
         many: "لقد سجَّلت إعجابك أنت و%{count} شخصًا آخر بهذا المنشور"
         other: "لقد سجَّلت إعجابك أنت و%{count} شخص آخر بهذا المنشور"
       sr_post_like_count_button:
-        zero: "%{count} شخص أعجبه هذا المنشور. انقر للعرض"
-        one: "شخص واحد (%{count}) أعجبه هذا المنشور. انقر للعرض"
-        two: "شخصان (%{count}) أعجبهما هذا المنشور. انقر للعرض"
-        few: "%{count} أشخاص أعجبهم هذا المنشور. انقر للعرض"
-        many: "%{count} شخصًا أعجبه هذا المنشور. انقر للعرض"
-        other: "%{count} شخص أعجبه هذا المنشور. انقر للعرض"
-      sr_post_read_count_button:
-        zero: "%{count} شخص قرأ هذا المنشور. انقر للعرض"
-        one: "شخص واحد (%{count}) قرأ هذا المنشور. انقر للعرض"
-        two: "شخصان (%{count}) قرآ هذا المنشور. انقر للعرض"
-        few: "%{count} أشخاص قرؤوا هذا المنشور. انقر للعرض"
-        many: "%{count} شخصًا قرأ هذا المنشور. انقر للعرض"
-        other: "%{count} شخص قرأ هذا المنشور. انقر للعرض"
+        zero: "%{count} شخصًا أعجبه هذا المنشور."
+        one: "شخص واحد (%{count}) أعجبه هذا المنشور."
+        two: "شخصان (%{count}) أعجبهما هذا المنشور."
+        few: "%{count} أشخاص أعجبهم هذا المنشور."
+        many: "%{count} شخصًا أعجبه هذا المنشور."
+        other: "أعجبت هذه المشاركة %{count} شخص."
       filtered_replies_hint:
         zero: "عرض هذا المنشور وردوده %{count}"
         one: "عرض هذا المنشور والرد عليه"
@@ -4512,8 +4498,6 @@ ar:
             few: "و%{count} آخرين قرؤوا ذلك"
             many: "و%{count} آخرين قرؤوا ذلك"
             other: "و%{count} آخرين قرؤوا ذلك"
-          sr_post_likers_list_description: "المستخدمون الذين أعجبهم هذا المنشور"
-          sr_post_readers_list_description: "المستخدمون الذين قرؤوا هذا المنشور"
         by_you:
           off_topic: "لقد أبلغت عن هذا المنشور على أنه خارج الموضوع"
           spam: "لقد أبلغت عن هذا المنشور على أنه غير مرغوب فيه"
@@ -5174,6 +5158,9 @@ ar:
         prev_next: "%{shortcut} نقل التحديد لأعلى ولأسفل"
         insert_url: "%{shortcut} إدخال التحديد في أداة الإنشاء المفتوحة"
         full_page_search: "%{shortcut} يطلق بحثًا في كامل الصفحة"
+      admin:
+        title: "مسؤول"
+        search_prev_next: "%{shortcut} نقل التحديد لأعلى ولأسفل"
     badges:
       earned_n_times:
         zero: "تم منحك هذه الشارة %{count} مرة"
@@ -5847,6 +5834,16 @@ ar:
         logo:
           title: "شعار الموقع"
           header_description: "تخصيص الأشكال المختلفة لشعار موقعك"
+        branding:
+          title: "العلامة التجارية"
+          logo:
+            form:
+              logo:
+                title: "الشعار الرئيسي"
+              mobile: "الجوَّال"
+              email: "البريد الإلكتروني"
+              manifest_screenshots:
+                description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -5863,8 +5860,9 @@ ar:
           title: "حدود المعدل"
           header_description: "تكوين عدد المرات التي يمكن فيها للمستخدمين تنفيذ إجراءات معيَّنة، مثل إنشاء الموضوعات، وإرسال الرسائل، ونشر الردود"
         search:
-          title: "البحث"
           header_description: "تكوين إعدادات البحث، بما في ذلك التسجيل والترميز للغتَين الصينية واليابانية"
+        search_everything:
+          title: "البحث"
         security:
           title: "الأمان"
           header_description: "تكوين إعدادات الأمان، بما في ذلك المصادقة الثنائية، وامتيازات المشرف، وسياسات أمان المحتوى"
@@ -5977,6 +5975,7 @@ ar:
           title: "التضمين"
           header_description: "يتمتع Discourse بالقدرة على تضمين التعليقات من أحد الموضوعات في موقع بعيد باستخدام واجهة برمجة تطبيقات Javascript التي تُنشئ IFRAME"
       search:
+        title: "البحث"
         result_types:
           theme:
             zero: "الواجهة"
@@ -6788,7 +6787,6 @@ ar:
           extra_files_remote: "يجب تصدير السمة أو التحقُّق من مستودع Git لعرض هذه الملفات."
           preview: "معاينة"
           settings_editor: "محرر الإعدادات"
-          hide_unused_fields: "إخفاء الحقول غير المستخدمة"
           is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
           color_scheme_user_selectable: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
@@ -6850,9 +6848,6 @@ ar:
           unsaved_parent_themes: "لم تخصِّص المكوِّن للسمات، هل تريد المضي قدمًا؟"
           discard: "تجاهل"
           stay: "البقاء"
-          css_html: "CSS/HTML مخصَّص"
-          edit_css_html: "تعديل CSS/HTML"
-          edit_css_html_help: "لم تعدِّل CSS أو HTML"
           delete_upload_confirm: "هل تريد حذف هذا الملف؟ (قد يتوقف ملف CSS عن العمل!)"
           component_on_themes: "تضمين العنصر في هذه السمات"
           included_components: "المكوِّنات المضمَّنة"
@@ -6917,22 +6912,14 @@ ar:
           imported_from_archive: "تم استيراد هذه السمة من ملف ‎.zip"
           scss:
             text: "CSS"
-            title: "إدخال نمط CSS مخصَّص، نقبل كل أنماط CSS وSCSS الصالحة"
-          header:
-            text: "الرأس"
-            title: "إدخال HTML للعرض فوق رأس الموقع"
           after_header:
             text: "بعد الرأس"
-            title: "إدخال HTML لعرضه في كل الصفحات بعد الرأس"
           footer:
             text: "التذييل"
-            title: "إدخال HTML للعرض في تذييل الصفحة"
           embedded_scss:
             text: "CSS المدمج"
-            title: "أدخل CSS مخصَّصة لتسليمها مع النسخة المضمَّنة من التعليقات"
           embedded_header:
             text: "رأس مضمَّن"
-            title: "أدخل HTML لعرضه أعلى النسخة المضمَّنة من التعليقات"
           color_definitions:
             text: "تحديدات الألوان"
             title: "إدخال تحديدات الألوان المخصَّصة (للمستخدمين المتقدمين فقط)"
@@ -6945,15 +6932,6 @@ ar:
               %{example}
 
               يوصى بشدة بوضع بادئة لأسماء الخصائص لتجنُّب تعارضها مع المكوِّنات الإضافية أو الأساسية.
-          head_tag:
-            text: "الرأس"
-            title: "HTML الذي سيتم إدراجه قبل وسم الرأس‎‎"
-          body_tag:
-            text: "النص الأساسي"
-            title: "HTML الذي سيتم إدراجه قبل وسم النص الأساسي"
-          yaml:
-            text: "YAML"
-            title: "تحديد إعدادات السمة بتنسيق YAML"
           scss_color_variables_warning: 'تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات. يُرجى استخدام خصائص CSS المخصَّصة بدلًا من ذلك. راجع <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">هذا الدليل</a> لمزيد من التفاصيل.'
           scss_warning_inline: "تم التوقف عن استخدام متغيرات ألوان SCSS الأساسية في السمات."
           all_filter: "الكل"

@@ -32,19 +32,15 @@ module PageObjects
       end
 
       def expand_mobile_section
-        find(
-          ".admin-logo-form__mobile-section .admin-config-area-card-section__toggle-button",
-        ).click
+        find(".admin-logo-form__mobile-section .collapsable").click
       end
 
       def expand_email_section
-        find(".admin-logo-form__email-section .admin-config-area-card-section__toggle-button").click
+        find(".admin-logo-form__email-section .collapsable").click
       end
 
       def expand_social_media_section
-        find(
-          ".admin-logo-form__social-media-section .admin-config-area-card-section__toggle-button",
-        ).click
+        find(".admin-logo-form__social-media-section .collapsable").click
       end
 
       def submit

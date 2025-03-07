@@ -9,11 +9,13 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Actions class="something">Test</form.Actions>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Actions class="something">Test</form.Actions>
+          </Form>
+        </template>
+      );
 
       assert
         .dom(".form-kit__section.form-kit__actions.something")

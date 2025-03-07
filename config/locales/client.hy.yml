@@ -2151,13 +2151,6 @@ hy:
       password_label: "Գաղտնաբառ"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Միայն Կատեգորիաները"
       categories_with_featured_topics: "Հանրահայտ Թեմաներով Կատեգորիաները"
@@ -3006,6 +2999,9 @@ hy:
       has_likes_title_you:
         one: "Դուք և %{count} այլ անձ հավանել եք այս հրապարակումը"
         other: "Դուք և %{count} հոգի հավանել են այս գրառումը"
+      sr_post_like_count_button:
+        one: "%{count} անձ հավանել է այս հրապարակումը."
+        other: "%{count} մարդ հավանել է այս գրառումը."
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3546,6 +3542,9 @@ hy:
         prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
         insert_url: "%{shortcut} Ընտրված հղումը տեղադրել բաց խմբագրի մեջ"
         full_page_search: "%{shortcut} Գործարկում է ամբողջական էջի որոնումը"
+      admin:
+        title: "Ադմին"
+        search_prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
     badges:
       earned_n_times:
         one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
@@ -3843,6 +3842,12 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
+        branding:
+          title: "Բրենդինգ"
+          logo:
+            form:
+              mobile: "Հեռախոսային"
+              email: "Էլ. փոստ"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -3851,7 +3856,7 @@ hy:
           title: "Onebox"
         other:
           title: "Այլ"
-        search:
+        search_everything:
           title: "Որոնում"
         security:
           title: "Անվտանգություն"
@@ -3909,6 +3914,7 @@ hy:
         embedding:
           title: "Զետեղում"
       search:
+        title: "Որոնում"
         result_types:
           theme:
             one: "Թեմա"
@@ -4335,7 +4341,6 @@ hy:
           extra_files_upload: "Արտահանեք թեման՝ այս ֆայլերը դիտելու համար:"
           extra_files_remote: "Արտահանեք թեման կամ բացեք համապատասխան git պահոցը՝ այս ֆայլերը դիտելու համար:"
           preview: "Նախադիտում"
-          hide_unused_fields: "Թաքցնել չօգտագործված դաշտերը"
           is_default: "Թեման լռելյայն միացված է"
           user_selectable: "Թեման կարող է ընտրվել օգտատերերի կողմից"
           color_scheme: "Գունապնակ"
@@ -4376,9 +4381,6 @@ hy:
           unsaved_parent_themes: "Դուք դեռևս բաղադրիչ չեք հատկացրել թեմաներին, Դուք ցանկանու՞մ եք անցնել առաջ: "
           discard: "Չեղարկել"
           stay: "Մնալ"
-          css_html: "Մասնավոր CSS/HTML"
-          edit_css_html: "Խմբագրել CSS/HTML-ը"
-          edit_css_html_help: "Դուք չեք խմբագրել որևէ CSS կամ HTML"
           delete_upload_confirm: "Ջնջե՞լ այս վերբեռնումը (Թեմայի CSS-ը կարող է դադարել աշխատել!):"
           component_on_themes: "Ներառել բաղադրիչը՝ այս թեմաների մեջ"
           included_components: "Ներառված բաղադրիչներ"
@@ -4424,24 +4426,12 @@ hy:
           imported_from_archive: "Այս թեման ներմուծվել է .zip ֆայլից"
           scss:
             text: "CSS"
-            title: "Մուտքագրեք մասնավոր CSS, մենք ընդունում ենք բոլոր վավեր CSS և SCSS ոճերը"
-          header:
-            text: "Վերնամաս"
-            title: "Մուտքագրեք HTML՝ կայքի վերնամասի վերևում ցուցադրվելու համար:"
           after_header:
             text: "Վերնամասից Հետո"
-            title: "Մուտքագրեք HTML՝ բոլոր էջերում վերնամասից հետո ցուցադրվելու համար"
           footer:
             text: "Հատակ"
-            title: "Մուտքագրեք HTML ՝ կայքի հատակում ցուցադրվելու համար"
           embedded_scss:
             text: "Զետեղված CSS"
-            title: "Մուտքագրեք մասնավոր CSS՝ մեկնաբանությունների զետեղված տարբերակի վրա կիրառելու համար"
-          body_tag:
-            text: "Բովանդակություն"
-          yaml:
-            text: "YAML"
-            title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"

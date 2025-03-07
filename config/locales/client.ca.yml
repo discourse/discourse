@@ -1540,13 +1540,6 @@ ca:
       password_label: "Contrasenya"
     password_reset:
       continue: "Continua a %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Només categories"
       categories_with_featured_topics: "Categories amb temes destacats"
@@ -2282,6 +2275,9 @@ ca:
       has_likes_title_you:
         one: "La publicació us agrada a vós i a %{count} persona"
         other: "La publicació us agrada a vós i a %{count} persones"
+      sr_post_like_count_button:
+        one: "La publicació agrada a %{count} persona."
+        other: "La publicació agrada a %{count} persones."
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2765,6 +2761,8 @@ ca:
         mark_tracking: "%{shortcut} Segueix el tema"
         mark_watching: "%{shortcut} Vigila el tema"
         print: "%{shortcut} Imprimeix el tema"
+      admin:
+        title: "Administració"
     badges:
       earned_n_times:
         one: "Ha rebut aquesta insígnia %{count} vegada."
@@ -3017,6 +3015,12 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
+        branding:
+          title: "Brànding"
+          logo:
+            form:
+              mobile: "Mòbil"
+              email: "Correu electrònic"
         navigation:
           title: "Navegació"
         notifications:
@@ -3025,7 +3029,7 @@ ca:
           title: "Onebox"
         other:
           title: "Altres"
-        search:
+        search_everything:
           title: "Cerca"
         security:
           title: "Seguretat"
@@ -3089,6 +3093,7 @@ ca:
         embedding:
           title: "Incrustant"
       search:
+        title: "Cerca"
         result_types:
           theme:
             one: "Aparença"
@@ -3489,7 +3494,6 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
-          hide_unused_fields: "Amaga els camps no utilitzats"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3525,9 +3529,6 @@ ca:
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
           stay: "Roman"
-          css_html: "CSS/HTML personalitzat"
-          edit_css_html: "Edita CSS/HTML"
-          edit_css_html_help: "No heu editat cap CSS o HTML"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"
           import_file_tip: "fitxer .tar.gz, .zip o .dcstyle.json que conté l'aparença"
@@ -3569,24 +3570,12 @@ ca:
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
           scss:
             text: "CSS"
-            title: "Introduïu el CSS personalitzat. Acceptem tots els estils CSS i SCSS vàlids."
-          header:
-            text: "Capçalera"
-            title: "Introduïu l'HTML que es mostrarà sobre la capçalera del lloc web"
           after_header:
             text: "Després de la capçalera"
-            title: "Introduïu l'HTML que es mostrarà en totes les pàgines després de la capçalera"
           footer:
             text: "Peu"
-            title: "Introduïu l'HTML que es mostrarà en el peu de pàgina"
           embedded_scss:
             text: "CSS incrustat"
-            title: "Introduïu el CSS personalitzat que es lliurarà amb la versió incrustada dels comentaris"
-          body_tag:
-            text: "Cos"
-          yaml:
-            text: "YAML"
-            title: "Definiu la configuració de l'aparença en format YAML"
           all_filter: "Tot"
           active_filter: "Actiu"
           inactive_filter: "Inactiu"

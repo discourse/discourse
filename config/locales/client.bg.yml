@@ -1966,13 +1966,6 @@ bg:
       password_label: "Парола"
     password_reset:
       continue: "Продължете към %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Само категории"
       categories_with_featured_topics: "Категории с избрани теми"
@@ -2796,6 +2789,9 @@ bg:
       has_likes_title_you:
         one: "вие и още %{count} човек сте харесали този пост"
         other: "вие и %{count} човека сте харесали този пост"
+      sr_post_like_count_button:
+        one: "%{count} човек харесва тази публикация."
+        other: "%{count} човека харесват тази публикация."
       filtered_replies_hint:
         one: "Вижте тази публикация и нейния отговор"
         other: "Вижте тази публикация и нейните %{count} отговора"
@@ -3239,6 +3235,8 @@ bg:
         mark_muted: "%{shortcut} Заглушете темата"
         mark_tracking: "%{shortcut} Следете темата"
         mark_watching: "%{shortcut} Наблюдаване на темата"
+      admin:
+        title: "Администратор"
     badges:
       granted_on: "Разрешен %{date}"
       title: Значки
@@ -3456,6 +3454,11 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
+        branding:
+          logo:
+            form:
+              mobile: "Мобилен"
+              email: "Имейл "
         navigation:
           title: "Навигация"
         notifications:
@@ -3464,7 +3467,7 @@ bg:
           title: "Onebox"
         other:
           title: "Други"
-        search:
+        search_everything:
           title: "Търсене"
         security:
           title: "Сигурност"
@@ -3512,6 +3515,8 @@ bg:
               header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
         embedding:
           title: "Ембедване"
+      search:
+        title: "Търсене"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3785,14 +3790,10 @@ bg:
           add: "Добави"
           scss:
             text: "CSS"
-          header:
-            text: "Хедър"
           footer:
             text: "Футър"
           embedded_scss:
             text: "ембеднато CSS"
-          body_tag:
-            text: "Тяло"
           all_filter: "Всички"
           active_filter: "Активни"
           schema:

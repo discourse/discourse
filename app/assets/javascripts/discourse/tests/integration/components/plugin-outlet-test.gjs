@@ -373,11 +373,13 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   );
 
   test("Renders wrapped implementation if no connectors are registered", async function (assert) {
-    await render(<template>
-      <PluginOutlet @name="outlet-with-no-registrations">
-        <span class="result">Core implementation</span>
-      </PluginOutlet>
-    </template>);
+    await render(
+      <template>
+        <PluginOutlet @name="outlet-with-no-registrations">
+          <span class="result">Core implementation</span>
+        </PluginOutlet>
+      </template>
+    );
 
     assert.dom(".result").hasText("Core implementation");
   });
@@ -457,14 +459,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("deprecated parameters with default message", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument value=true)
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument value=true)
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -483,20 +487,22 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("deprecated parameters with custom deprecation data", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument
-              value=true
-              message="The 'shouldDisplay' is deprecated on this test"
-              id="discourse.plugin-connector.deprecated-arg.test"
-              since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
-            )
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument
+                value=true
+                message="The 'shouldDisplay' is deprecated on this test"
+                id="discourse.plugin-connector.deprecated-arg.test"
+                since="3.3.0.beta4-dev"
+                dropFrom="3.4.0"
+              )
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -544,17 +550,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         },
       };
 
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument
-              value=deprecatedData.display
-              silence="discourse.deprecation-that-should-not-be-logged"
-            )
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument
+                value=deprecatedData.display
+                silence="discourse.deprecation-that-should-not-be-logged"
+              )
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -583,15 +591,17 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("unused arguments", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @outletArgs={{hash shouldDisplay=true}}
-          @deprecatedArgs={{hash
-            argNotUsed=(deprecatedOutletArgument value=true)
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash shouldDisplay=true}}
+            @deprecatedArgs={{hash
+              argNotUsed=(deprecatedOutletArgument value=true)
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -688,13 +698,15 @@ module(
       await withSilencedDeprecationsAsync(
         "discourse.plugin-outlet-classic-hooks",
         async () => {
-          await render(<template>
-            <PluginOutlet
-              @name="test-name"
-              @outletArgs={{hash hello="world"}}
-              @defaultGlimmer={{true}}
-            />
-          </template>);
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{hash hello="world"}}
+                @defaultGlimmer={{true}}
+              />
+            </template>
+          );
         }
       );
 
@@ -962,7 +974,9 @@ module(
     hooks.beforeEach(function () {
       registerTemporaryModule(
         `${CLASS_PREFIX}/test-name/my-connector`,
-        <template><span class="gjs-test">Hello world</span></template>
+        <template>
+          <span class="gjs-test">Hello world</span>
+        </template>
       );
     });
 
@@ -980,9 +994,12 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      extraConnectorComponent("test-name", <template>
-        <span class="gjs-test">Hello world from gjs</span>
-      </template>);
+      extraConnectorComponent(
+        "test-name",
+        <template>
+          <span class="gjs-test">Hello world from gjs</span>
+        </template>
+      );
     });
 
     test("renders the component in the outlet", async function (assert) {
@@ -992,9 +1009,10 @@ module(
 
     test("throws errors for invalid components", function (assert) {
       assert.throws(() => {
-        extraConnectorComponent("test-name/blah", <template>
-          hello world
-        </template>);
+        extraConnectorComponent(
+          "test-name/blah",
+          <template>hello world</template>
+        );
       }, /invalid outlet name/);
 
       assert.throws(() => {
@@ -1015,9 +1033,9 @@ module("Integration | Component | plugin-outlet | tagName", function (hooks) {
     await withSilencedDeprecationsAsync(
       "discourse.plugin-outlet-tag-name",
       async () =>
-        await render(<template>
-          <PluginOutlet @name="test-name" @tagName="div" />
-        </template>)
+        await render(
+          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
+        )
     );
     assert.dom("div").exists();
   });

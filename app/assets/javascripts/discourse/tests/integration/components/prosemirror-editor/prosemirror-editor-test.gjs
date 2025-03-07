@@ -12,13 +12,8 @@ import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 module("Integration | Component | prosemirror-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    clearRichEditorExtensions();
-  });
-
-  hooks.afterEach(function () {
-    resetRichEditorExtensions();
-  });
+  hooks.beforeEach(() => clearRichEditorExtensions());
+  hooks.afterEach(() => resetRichEditorExtensions());
 
   test("renders the editor", async function (assert) {
     await render(<template><ProsemirrorEditor /></template>);
@@ -30,12 +25,14 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
       { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
     ];
 
-    await render(<template>
-      <ProsemirrorEditor
-        @includeDefault={{false}}
-        @extensions={{minimumExtensions}}
-      />
-    </template>);
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @includeDefault={{false}}
+          @extensions={{minimumExtensions}}
+        />
+      </template>
+    );
 
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });

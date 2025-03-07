@@ -39,10 +39,6 @@ sr:
           fields:
             restricted_category:
               label: Kategorija
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupe
           created: Napravljeno
         category_created_edited:
           fields:

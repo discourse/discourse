@@ -82,9 +82,8 @@ export default class UserPasskeys extends Component {
         name: i18n("user.passkeys.name.default"),
       };
 
-      const registrationResponse = await this.args.model.registerPasskey(
-        credentialParam
-      );
+      const registrationResponse =
+        await this.args.model.registerPasskey(credentialParam);
 
       if (registrationResponse.error) {
         this.dialog.alert(registrationResponse.error);

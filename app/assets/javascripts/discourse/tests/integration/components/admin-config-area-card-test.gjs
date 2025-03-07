@@ -7,10 +7,12 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders admin config area card without toggle button", async function (assert) {
-    await render(<template>
-      <AdminConfigAreaCard @translatedHeading="test heading"><:content
-        >test</:content></AdminConfigAreaCard>
-    </template>);
+    await render(
+      <template>
+        <AdminConfigAreaCard @translatedHeading="test heading"><:content
+          >test</:content></AdminConfigAreaCard>
+      </template>
+    );
 
     assert.dom(".admin-config-area-card__title").exists();
     assert.dom(".admin-config-area-card__content").exists();
@@ -18,12 +20,14 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
   });
 
   test("renders admin config area card with toggle button", async function (assert) {
-    await render(<template>
-      <AdminConfigAreaCard
-        @translatedHeading="test heading"
-        @collapsable={{true}}
-      ><:content>test</:content></AdminConfigAreaCard>
-    </template>);
+    await render(
+      <template>
+        <AdminConfigAreaCard
+          @translatedHeading="test heading"
+          @collapsable={{true}}
+        ><:content>test</:content></AdminConfigAreaCard>
+      </template>
+    );
 
     assert.dom(".admin-config-area-card__title").exists();
     assert.dom(".admin-config-area-card__content").exists();
@@ -37,13 +41,15 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
   });
 
   test("renders admin config area card with toggle button and collapsed by default", async function (assert) {
-    await render(<template>
-      <AdminConfigAreaCard
-        @translatedHeading="test heading"
-        @collapsable={{true}}
-        @collapsed={{true}}
-      ><:content>test</:content></AdminConfigAreaCard>
-    </template>);
+    await render(
+      <template>
+        <AdminConfigAreaCard
+          @translatedHeading="test heading"
+          @collapsable={{true}}
+          @collapsed={{true}}
+        ><:content>test</:content></AdminConfigAreaCard>
+      </template>
+    );
 
     assert.dom(".admin-config-area-card__title").exists();
     assert.dom(".admin-config-area-card__toggle-button").exists();
@@ -51,14 +57,16 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
   });
 
   test("renders admin config area card with header action", async function (assert) {
-    await render(<template>
-      <AdminConfigAreaCard
-        @translatedHeading="test heading"
-        @collapsable={{true}}
-      >
-        <:headerAction><button>test</button></:headerAction>
-        <:content>test</:content></AdminConfigAreaCard>
-    </template>);
+    await render(
+      <template>
+        <AdminConfigAreaCard
+          @translatedHeading="test heading"
+          @collapsable={{true}}
+        >
+          <:headerAction><button>test</button></:headerAction>
+          <:content>test</:content></AdminConfigAreaCard>
+      </template>
+    );
 
     assert.dom(".admin-config-area-card__header-action button").exists();
   });

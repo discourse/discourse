@@ -77,16 +77,20 @@ class ReviewableScoreSerializer < ApplicationSerializer
   def watched_word_reason(link)
     if object.context.nil?
       # If the words weren't recorded, try to guess them based on current settings.
-      words =
-        WordWatcher.new(object.reviewable.post.raw).word_matches_for_action?(
-          :flag,
-          all_matches: true,
-        )
+      if object.reviewable.respond_to?(:post)
+        s = object.reviewable.post.raw
+        s << " #{object.reviewable.post.topic.title}" if object.reviewable.post.post_number == 1
+      elsif object.reviewable.respond_to?(:payload)
+        s = object.reviewable.payload["raw"]
+        s << " #{object.reviewable.payload["title"]}" if object.reviewable.payload.key?("title")
+      end
+
+      words = WordWatcher.new(s).word_matches_across_all_actions
     else
       words = object.context.split(",")
     end
 
-    if words.nil?
+    if words.nil? || words.empty?
       text =
         I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
     else

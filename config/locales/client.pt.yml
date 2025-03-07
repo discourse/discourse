@@ -1861,13 +1861,6 @@ pt:
       password_label: "Palavra-passe"
     password_reset:
       continue: "Continuar para %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Apenas Categorias"
       categories_with_featured_topics: "Categorias com Tópicos Destacados"
@@ -2792,6 +2785,9 @@ pt:
       has_likes_title_you:
         one: "você e %{count} outra pessoa gostaram desta publicação"
         other: "você e %{count} outras pessoas gostaram desta publicação"
+      sr_post_like_count_button:
+        one: "%{count} pessoa gostou desta mensagem."
+        other: "%{count} pessoas gostaram desta mensagem."
       filtered_replies_hint:
         one: "Ver este post e a sua resposta"
         other: "Ver este post e as suas %{count} respostas"
@@ -3342,6 +3338,9 @@ pt:
         title: "Menu de Busca"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
         insert_url: "%{shortcut} Inserir seleção no compositor aberto"
+      admin:
+        title: "Administração"
+        search_prev_next: "%{shortcut} Mover seleção para cima e para baixo"
     badges:
       earned_n_times:
         one: "Ganhou este distintivo %{count} vez"
@@ -3635,6 +3634,13 @@ pt:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        branding:
+          logo:
+            form:
+              mobile: "Móvel"
+              email: "Email"
+              manifest_screenshots:
+                description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
         navigation:
           title: "Navegação"
         notifications:
@@ -3643,7 +3649,7 @@ pt:
           title: "Caixa Única"
         other:
           title: "Outro"
-        search:
+        search_everything:
           title: "Pesquisar"
         security:
           title: "Segurança"
@@ -3706,6 +3712,7 @@ pt:
         embedding:
           title: "Incorporação"
       search:
+        title: "Pesquisar"
         result_types:
           theme:
             one: "Tema"
@@ -4138,7 +4145,6 @@ pt:
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
-          hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
@@ -4185,19 +4191,12 @@ pt:
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
           scss:
             text: "CSS"
-            title: "Insira CSS personalizado, aceitamos todos os estilos CSS e SCSS válidos"
-          header:
-            text: "Cabeçalho"
-            title: "Insira o HTML para exibir acima do cabeçalho do site"
           after_header:
             text: "Depois do Cabeçalho"
-            title: "Insira o HTML para exibir em todas as páginas após o cabeçalho"
           footer:
             text: "Rodapé"
-            title: "Insira o HTML para exibir no rodapé da página"
           embedded_scss:
             text: "CSS incorporado"
-            title: "Insira CSS personalizado para embutir na versão incorporada de comentários"
           color_definitions:
             text: "Definições de Cor"
             title: "Insira as definições de cores personalizadas (somente usuários avançados)"
@@ -4210,11 +4209,6 @@ pt:
               %{example}
 
               Prefixar os nomes das propriedades é altamente recomendado para evitar conflitos com plugins e/ou o core.
-          body_tag:
-            text: "Corpo"
-          yaml:
-            text: "YAML"
-            title: "Defina as configurações do tema no formato YAML"
           all_filter: "Tudo"
           active_filter: "Ativo"
           inactive_filter: "Inativo"

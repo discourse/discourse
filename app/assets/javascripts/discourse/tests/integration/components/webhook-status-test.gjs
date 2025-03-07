@@ -17,12 +17,14 @@ module("Integration | Component | webhook-status", function (hooks) {
 
   test("deliveryStatus", async function (assert) {
     const webhook = new CoreFabricators(getOwner(this)).webhook();
-    await render(<template>
-      <WebhookStatus
-        @deliveryStatuses={{DELIVERY_STATUSES}}
-        @webhook={{webhook}}
-      />
-    </template>);
+    await render(
+      <template>
+        <WebhookStatus
+          @deliveryStatuses={{DELIVERY_STATUSES}}
+          @webhook={{webhook}}
+        />
+      </template>
+    );
 
     assert.dom().hasText("Inactive");
 
@@ -35,12 +37,14 @@ module("Integration | Component | webhook-status", function (hooks) {
 
   test("statusLabelClass", async function (assert) {
     const webhook = new CoreFabricators(getOwner(this)).webhook();
-    await render(<template>
-      <WebhookStatus
-        @deliveryStatuses={{DELIVERY_STATUSES}}
-        @webhook={{webhook}}
-      />
-    </template>);
+    await render(
+      <template>
+        <WebhookStatus
+          @deliveryStatuses={{DELIVERY_STATUSES}}
+          @webhook={{webhook}}
+        />
+      </template>
+    );
 
     assert.dom(".status-label").hasClass("--inactive");
 

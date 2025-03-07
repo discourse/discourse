@@ -2077,13 +2077,6 @@ te:
       password_label: "సంకేతపదం"
     password_reset:
       continue: "%{site_name} కు కొనసాగండి"
-    emoji_set:
-      apple_international: "యాపిల్ , అంతర్జాతీయ"
-      google: "గూగుల్"
-      twitter: "ట్విట్టర్"
-      win10: "విన్ 10"
-      google_classic: "గూగుల్ క్లాసిక్"
-      facebook_messenger: "ఫేస్బుక్ మెసెంజర్"
     category_page_style:
       categories_only: "వర్గాలు మాత్రమే"
       categories_with_featured_topics: "ఫీచర్ చేసిన విషయాలతో వర్గాలు"
@@ -3247,12 +3240,6 @@ te:
       has_likes_title_you:
         one: "మీరు మరియు %{count} ఇతర వ్యక్తి ఈ పోస్ట్‌ను ఇష్టపడ్డారు"
         other: "మీరు మరియు %{count} ఇతర వ్యక్తులు ఈ పోస్ట్‌ను ఇష్టపడ్డారు"
-      sr_post_like_count_button:
-        one: "%{count} వ్యక్తి ఈ పోస్ట్‌ను ఇష్టపడ్డారు. వీక్షించడానికి క్లిక్ చేయండి"
-        other: "%{count} వ్యక్తులు ఈ పోస్ట్‌ను ఇష్టపడ్డారు. వీక్షించడానికి క్లిక్ చేయండి"
-      sr_post_read_count_button:
-        one: "%{count} వ్యక్తి ఈ పోస్ట్‌ని చదివారు. వీక్షించడానికి క్లిక్ చేయండి"
-        other: "%{count} వ్యక్తులు ఈ పోస్ట్‌ని చదివారు. వీక్షించడానికి క్లిక్ చేయండి"
       filtered_replies_hint:
         one: "ఈ పోస్ట్ మరియు దాని ప్రత్యుత్తరాన్ని వీక్షించండి"
         other: "ఈ పోస్ట్ మరియు దాని %{count} ప్రత్యుత్తరాలను వీక్షించండి"
@@ -3361,8 +3348,6 @@ te:
           read_capped:
             one: "మరియు %{count} ఇతరులు దీన్ని చదివారు"
             other: "మరియు %{count} ఇతరులు దీన్ని చదివారు"
-          sr_post_likers_list_description: "ఈ పోస్ట్‌ను ఇష్టపడిన సభ్యులు"
-          sr_post_readers_list_description: "ఈ పోస్ట్ చదివిన సభ్యులు"
         by_you:
           off_topic: "మీరు దీన్ని విషయాంతరంగా ఫిర్యాదు చేసారు"
           spam: "మీరు దీన్ని స్పాముగా ఫిర్యాదు చేసారు"
@@ -3911,6 +3896,9 @@ te:
         prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
         insert_url: "%{shortcut} ఓపెన్ కంపోజర్‌లో ఎంపికను చొప్పించండి"
         full_page_search: "%{shortcut} పూర్తి పేజీ శోధనను ప్రారంభిస్తుంది"
+      admin:
+        title: "నిర్వాహకుడు"
+        search_prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
     badges:
       earned_n_times:
         one: "ఈ బ్యాడ్జ్ %{count} సారి సంపాదించారు"
@@ -4434,6 +4422,16 @@ te:
           title: "చట్టపరమైన"
         logo:
           title: "సైట్ లోగో"
+        branding:
+          title: "బ్రాండింగ్"
+          logo:
+            form:
+              logo:
+                title: "ప్రాథమిక లోగో"
+              mobile: "మొబైల్"
+              email: "మెయిల్"
+              manifest_screenshots:
+                description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
         navigation:
           title: "నావిగేషన్"
         notifications:
@@ -4442,8 +4440,8 @@ te:
           title: "వన్బాక్స్"
         other:
           title: "ఇతర"
-        search:
-          title: "వెతుకు"
+        search_everything:
+          title: "శోధించండి"
         security:
           title: "సెక్యూరిటీ"
         spam:
@@ -4500,6 +4498,7 @@ te:
         embedding:
           title: "పొందుపరచడం"
       search:
+        title: "వెతుకు"
         result_types:
           theme:
             one: "థీమ్"
@@ -5105,7 +5104,6 @@ te:
           extra_files_remote: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి లేదా git రిపోజిటరీని తనిఖీ చేయండి."
           preview: "ప్రివ్యూ"
           settings_editor: "అమరికల ఎడిటర్"
-          hide_unused_fields: "ఉపయోగించని ఫీల్డ్‌లను దాచండి"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
           auto_update: "డిస్కర్స్ నవీకరించబడినప్పుడు ఆటో నవీకరణ"
@@ -5153,9 +5151,6 @@ te:
           unsaved_parent_themes: "మీరు థీమ్లకు భాగాన్ని కేటాయించలేదు, మీరు ముందుకు సాగాలనుకుంటున్నారా?"
           discard: "విస్మరించండి"
           stay: "ఉండండి"
-          css_html: "అనుకూల CSS/HTML"
-          edit_css_html: "CSS/HTMLని సవరించండి"
-          edit_css_html_help: "మీరు ఏ CSS లేదా HTMLని సవరించలేదు"
           delete_upload_confirm: "ఈ అప్‌లోడ్‌ని తొలగించాలా? (థీమ్ CSS పని చేయడం ఆగిపోవచ్చు!)"
           component_on_themes: "ఈ థీమ్‌లపై భాగాన్ని చేర్చండి"
           included_components: "చేర్చబడిన భాగాలు"
@@ -5213,22 +5208,14 @@ te:
           imported_from_archive: "ఈ థీమ్ .zip ఫైల్ నుండి దిగుమతి చేయబడింది"
           scss:
             text: "సీయస్ యస్"
-            title: "అనుకూల CSSని నమోదు చేయండి, మేము అన్ని చెల్లుబాటు అయ్యే CSS మరియు SCSS శైలులను అంగీకరిస్తాము"
-          header:
-            text: "హెడర్"
-            title: "సైట్ హెడర్ పైన ప్రదర్శించడానికి HTMLని నమోదు చేయండి"
           after_header:
             text: "శీర్షిక తర్వాత"
-            title: "హెడర్ తర్వాత అన్ని పేజీలలో ప్రదర్శించడానికి HTMLని నమోదు చేయండి"
           footer:
             text: "ఫుటరు"
-            title: "పేజీ ఫుటర్లో ప్రదర్శించడానికి HTML ను నమోదు చేయండి"
           embedded_scss:
             text: "ఎంబెడెడ్ CSS"
-            title: "పొందుపరిచిన వ్యాఖ్యల సంస్కరణతో బట్వాడా చేయడానికి అనుకూల CSSని నమోదు చేయండి"
           embedded_header:
             text: "పొందుపరిచిన హెడర్"
-            title: "వ్యాఖ్యల యొక్క పొందుపరిచిన సంస్కరణ పైన ప్రదర్శించడానికి HTMLని నమోదు చేయండి"
           color_definitions:
             text: "రంగు నిర్వచనాలు"
             title: "అనుకూల రంగు నిర్వచనాలను నమోదు చేయండి (అధునాతన వినియోగదారులు మాత్రమే)"
@@ -5241,15 +5228,6 @@ te:
               %{example}
 
               ప్లగిన్‌లు మరియు/లేదా కోర్‌తో వైరుధ్యాలను నివారించడానికి ప్రాపర్టీ పేర్లను ప్రిఫిక్స్ చేయడం బాగా సిఫార్సు చేయబడింది.
-          head_tag:
-            text: "Head"
-            title: "హెడ్ ట్యాగ్‌కు ముందు చొప్పించబడే HTML"
-          body_tag:
-            text: "బాడీ"
-            title: "బాడీ ట్యాగ్‌కు ముందు చొప్పించబడే HTML"
-          yaml:
-            text: "YAML"
-            title: "YAML ఫార్మాట్లో థీమ్ సెట్టింగ్లను నిర్వచించండి"
           scss_color_variables_warning: 'థీమ్‌లలో కోర్ SCSS రంగు వేరియబుల్స్ ఉపయోగించడం నిలిపివేయబడింది. దయచేసి బదులుగా CSS అనుకూల లక్షణాలను ఉపయోగించండి. మరిన్ని వివరాల కోసం <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ఈ గైడ్</a> చూడండి.'
           scss_warning_inline: "థీమ్‌లలో కోర్ SCSS రంగు వేరియబుల్స్ ఉపయోగించడం నిలిపివేయబడింది."
           all_filter: "అన్ని"
