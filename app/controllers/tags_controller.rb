@@ -142,6 +142,13 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
+      synonym_tag = Tag.where_name(params[:tag_id]).where.not(target_tag_id: nil).first
+
+      if synonym_tag
+        params[:tag_id] = synonym_tag.target_tag.name
+        return redirect_to url_for(params.to_unsafe_hash)
+      end
+
       @tag_id = params[:tag_id].force_encoding("UTF-8")
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
@@ -178,8 +185,6 @@ class TagsController < ::ApplicationController
   end
 
   def show
-    synonym_tag = Tag.where_name(params[:tag_id]).where.not(target_tag_id: nil).first
-    return redirect_to tag_show_path(synonym_tag.target_tag.name) if synonym_tag
     show_latest
   end
 
