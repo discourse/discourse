@@ -168,6 +168,12 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(" in the middle of text")
 
       expect(rich).to have_css("a.inline-onebox[href='https://example.com']", text: "Example Site")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(
+        "Check out this link https://example.com in the middle of text",
+      )
     end
 
     it "creates a full onebox for standalone links" do
@@ -180,6 +186,10 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
       expect(rich).to have_content("Example Site")
       expect(rich).to have_content("This is an example site")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("https://example.com\n\n")
     end
 
     it "creates an inline onebox for links that are part of a paragraph" do
@@ -192,6 +202,10 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Some text https://example.com more text")
     end
 
     it "does not create oneboxes inside code blocks" do
@@ -200,12 +214,15 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("```")
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content("\n```")
 
       expect(rich).to have_css("pre code")
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_no_css("a.inline-onebox")
       expect(rich).to have_content("https://example.com")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("```\nhttps://example.com\n```")
     end
   end
 

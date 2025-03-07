@@ -73,6 +73,10 @@ module PageObjects
         composer_input.value == content
       end
 
+      def has_value?(value)
+        expect(composer_input.value).to eq(value)
+      end
+
       def has_popup_content?(content)
         composer_popup.has_content?(content)
       end

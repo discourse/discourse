@@ -6,7 +6,7 @@ import { addToLoadingQueue, loadNext } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -48,7 +48,6 @@ const extension = {
       draggable: true,
       parseDOM: [
         {
-          // TODO link marks are still processed before this when pasting
           tag: "a.inline-onebox",
           getAttrs(dom) {
             return { url: dom.getAttribute("href"), title: dom.textContent };
@@ -75,7 +74,7 @@ const extension = {
       state.write(`${node.attrs.url}\n\n`);
     },
     onebox_inline(state, node, parent, index) {
-      if (!isBoundary(state.out, state.out.length - 1)) {
+      if (!isWhiteSpace(state.out, state.out.length - 1)) {
         state.write(" ");
       }
 
@@ -83,9 +82,7 @@ const extension = {
 
       const nextSibling =
         parent.childCount > index + 1 ? parent.child(index + 1) : null;
-      // TODO(renato): differently from emoji/hashtag, some few punct chars
-      //  we don't want to join, like -#%/:@
-      if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+      if (nextSibling?.isText && !isWhiteSpace(nextSibling.text, 0)) {
         state.write(" ");
       }
     },
