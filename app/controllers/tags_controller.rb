@@ -142,10 +142,16 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
-      synonym_tag = Tag.where_name(params[:tag_id]).where.not(target_tag_id: nil).first
+      parent_tag_name =
+        Tag
+          .where_name(params[:tag_id])
+          .where.not(target_tag_id: nil)
+          .joins("JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id")
+          .pluck("parent_tags.name")
+          .first
 
-      if synonym_tag
-        params[:tag_id] = synonym_tag.target_tag.name
+      if parent_tag_name
+        params[:tag_id] = parent_tag_name
         return redirect_to url_for(params.to_unsafe_hash)
       end
 
