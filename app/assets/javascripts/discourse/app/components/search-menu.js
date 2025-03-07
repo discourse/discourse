@@ -32,6 +32,7 @@ export function focusSearchInput() {
 export default class SearchMenu extends Component {
   @service search;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service appEvents;
 
