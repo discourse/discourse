@@ -436,6 +436,7 @@ GEM
     request_store (1.7.0)
       rack (>= 1.4)
     rexml (3.4.1)
+    rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.5.1)
     rqrcode (2.2.0)
@@ -748,6 +749,7 @@ DEPENDENCIES
   redcarpet
   redis (< 5.0)
   redis-namespace
+  rinku
   rotp
   rqrcode
   rrule
@@ -1002,6 +1004,7 @@ CHECKSUMS
   reline (0.6.0) sha256=57620375dcbe56ec09bac7192bfb7460c716bbf0054dc94345ecaa5438e539d2
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   rexml (3.4.1) sha256=c74527a9a0a04b4ec31dbe0dc4ed6004b960af943d8db42e539edde3a871abca
+  rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
   rouge (4.5.1) sha256=2ac81c6dee7019bbc6600d4c2d641d730d65c165941400ebd924259067e690dd
   rqrcode (2.2.0) sha256=23eea88bb44c7ee6d6cab9354d08c287f7ebcdc6112e1fe7bcc2d010d1ffefc1
