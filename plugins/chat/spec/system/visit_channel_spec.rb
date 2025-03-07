@@ -136,6 +136,28 @@ RSpec.describe "Visit channel", type: :system do
             expect(page).to have_content(category_channel_1.name)
             expect(channel_page.messages).to have_message(id: message_1.id)
           end
+
+          context "with a thread" do
+            fab!(:thread) do
+              Fabricate(
+                :chat_thread,
+                channel: category_channel_1,
+                original_message: message_1,
+                with_replies: 1,
+              )
+            end
+
+            before { category_channel_1.update(threading_enabled: true) }
+
+            it "allows to join it" do
+              chat.visit_thread(thread)
+
+              expect(page).to have_content(
+                I18n.t("js.chat.channel_settings.join_channel"),
+                count: 2,
+              )
+            end
+          end
         end
 
         context "when direct message channel" do
