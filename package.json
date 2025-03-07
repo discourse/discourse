@@ -23,6 +23,7 @@
     "ember-template-lint": "7.0.0",
     "esbuild": "^0.25.0",
     "eslint": "9.21.0",
+    "eslint-plugin-import": "^2.31.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.11.2",
     "licensee": "^11.1.1",

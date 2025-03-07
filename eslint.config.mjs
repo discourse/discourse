@@ -1,4 +1,5 @@
 import DiscourseRecommended from "@discourse/lint-configs/eslint";
+import ImportPlugin from "eslint-plugin-import";
 
 export default [
   ...DiscourseRecommended,
@@ -13,6 +14,13 @@ export default [
       "qunit/no-loose-assertions": "error",
       "qunit/no-negated-ok": "error",
       "qunit/no-ok-equality": "error",
+    },
+  },
+  {
+    plugins: { import: ImportPlugin },
+    rules: {
+      "no-duplicate-imports": "off",
+      "import/no-duplicates": "error",
     },
   },
   {
