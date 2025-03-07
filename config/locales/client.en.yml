@@ -6072,6 +6072,19 @@ en:
           delete: "Delete"
           delete_successful: "User field deleted."
           save_successful: "User field saved."
+        color_palettes:
+          palette_name: "Name"
+          color_options:
+            title: "Color options"
+            toggle: "User selectable"
+            toggle_description: "Color palette can be selected by users"
+          colors:
+            title: "Colors"
+          fonts_and_logos_hint: "Looking to update your fonts and logos?"
+          go_to_branding: "Go to Branding"
+          save_changes: "Save changes"
+          unsaved_changes: "You have unsaved changes"
+          copy_of: "Copy of %{name}"
       plugins:
         title: "Plugins"
         name: "Name"
