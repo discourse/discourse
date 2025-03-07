@@ -133,7 +133,10 @@ export default class SidebarState extends Service {
   }
 
   get adminSidebarAllowedWithLegacyNavigationMenu() {
-    return this.siteSettings.navigation_menu === "header dropdown";
+    return (
+      this.currentUser?.staff &&
+      this.siteSettings.navigation_menu === "header dropdown"
+    );
   }
 
   get sanitizedFilter() {
