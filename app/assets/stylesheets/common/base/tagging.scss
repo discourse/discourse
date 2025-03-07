@@ -131,6 +131,13 @@
   &__tag-separator {
     margin-right: 0.25em;
   }
+
+  .box,
+  .bullet {
+    + .discourse-tags__tag-separator {
+      display: none;
+    }
+  }
 }
 
 .fps-result .add-full-page-tags {
