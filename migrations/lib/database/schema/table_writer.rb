@@ -81,11 +81,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      if ::Migrations::Database::Schema::SQLITE_KEYWORDS.include?(identifier)
-        "'#{identifier}'"
-      else
-        identifier
-      end
+      ::Migrations::Database::Schema.escape_identifier(identifier)
     end
 
     def output_indexes(table)

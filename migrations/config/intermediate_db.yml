@@ -10,9 +10,10 @@ schema:
     user_emails:
       columns:
         include:
-          - "user_id"
           - "email"
           - "primary"
+          - "user_id"
+          - "created_at"
       primary_key_column_names: [ "email" ]
     user_options:
       columns:

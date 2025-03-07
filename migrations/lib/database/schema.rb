@@ -163,5 +163,13 @@ module Migrations::Database
       with
       without
     ]
+
+    def self.escape_identifier(identifier)
+      if SQLITE_KEYWORDS.include?(identifier)
+        %Q("#{identifier}")
+      else
+        identifier
+      end
+    end
   end
 end

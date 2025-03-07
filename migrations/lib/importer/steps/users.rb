@@ -24,8 +24,6 @@ module Migrations::Importer::Steps
       updated_at
     ]
 
-    NOW = "NOW()"
-
     SQL = <<~SQL
       SELECT *
       FROM users
@@ -45,29 +43,21 @@ module Migrations::Importer::Steps
 
     private
 
-    def query(sql, *parameters)
-      Enumerator.new do |y|
-        @intermediate_db.query(sql, *parameters) { |row| y << process_row(row) }
-      end
-    end
-
     def process_row(row)
       set_id(row)
       set_dates(row)
+
+      @intermediate_db.insert(INSERT_MAPPING_SQL, [row[:original_id], MAPPING_TYPE, row[:id]])
 
       row[:username] = row[:username].unicode_normalize!
       row[:username_lower] = row[:username].downcase
       row
     end
 
-    def set_id(row)
-      row[:original_id] = row[:id]
-      row[:id] = @last_id += 1
-    end
-
-    def set_dates(row)
-      row[:created_at] ||= NOW
-      row[:updated_at] ||= NOW
-    end
+    INSERT_MAPPING_SQL = <<~SQL
+      INSERT INTO x.mappings (original_id, type, discourse_id)
+      VALUES (?, ?, ?)
+    SQL
+    MAPPING_TYPE = 1
   end
 end

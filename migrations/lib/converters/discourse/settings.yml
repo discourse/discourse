@@ -1,5 +1,5 @@
 intermediate_db:
-  path: "~/intermediate.db"
+  path: "/shared/import/intermediate.db"
 
 source_db:
   host: "127.0.0.1"

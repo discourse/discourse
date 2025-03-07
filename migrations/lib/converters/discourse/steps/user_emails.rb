@@ -14,7 +14,7 @@ module Migrations::Converters::Discourse
 
     def items
       @source_db.query <<~SQL
-        SELECT user_id, email, 'primary'
+        SELECT user_id, email, "primary", created_at
         FROM user_emails
         WHERE user_id >= 0
         ORDER BY user_id, email
@@ -26,6 +26,7 @@ module Migrations::Converters::Discourse
         email: item[:email],
         primary: item[:primary],
         user_id: item[:user_id],
+        created_at: item[:created_at],
       )
     end
   end
