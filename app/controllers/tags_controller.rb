@@ -163,7 +163,7 @@ class TagsController < ::ApplicationController
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
       @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @description_meta = @tag.where(name: @tag_id).pick(:description) || @title
+      @description_meta = Tag.find_by_name(@tag_id)&.description || @title
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
       canonical_method = url_method(canonical_params)
