@@ -5,11 +5,20 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
 
-  test("search", async function (assert) {
+  test("cancel search", async function (assert) {
     await visit("/");
-
     await click("#search-button");
+    await click('[data-test-button="cancel-search-mobile"]');
 
+    assert
+      .dom('[data-test-selector="menu-panel"]')
+      .doesNotExist("cancel button should close search panel");
+  });
+
+  test("full page search", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await click('[data-test-button="show-advanced-search"]');
     assert
       .dom("input.full-page-search")
       .exists("it shows the full page search form");
