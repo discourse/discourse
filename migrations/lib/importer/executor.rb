@@ -17,11 +17,12 @@ module Migrations::Importer
 
     def step_classes
       steps_module = ::Migrations::Importer::Steps
-      steps_module
-        .constants
-        .map { |c| steps_module.const_get(c) }
-        .select { |klass| klass.is_a?(Class) }
-        .sort_by(&:to_s)
+      classes =
+        steps_module
+          .constants
+          .map { |c| steps_module.const_get(c) }
+          .select { |klass| klass.is_a?(Class) && klass < ::Migrations::Importer::Step }
+      TopologicalSorter.sort(classes)
     end
 
     def execute_steps
