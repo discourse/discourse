@@ -109,6 +109,7 @@ CRITICAL_HOST_ENV_VARS = %w{
 DEFAULT_DB_NAME = "discourse"
 DEFAULT_DB_PORT = 5432
 DEFAULT_REDIS_PORT = 6379
+DEFAULT_REDIS_USERNAME = "default"
 
 HOST_RESOLVER_CACHE = {}
 HOST_HEALTHY_CACHE = {}
@@ -283,11 +284,12 @@ class HealthyCache
   end
 end
 
-def redis_healthcheck(host:, password:, port: DEFAULT_REDIS_PORT)
+def redis_healthcheck(host:, port: DEFAULT_REDIS_PORT, username: DEFAULT_REDIS_USERNAME, password:)
   client_opts = {
     host: host,
-    password: password,
     port: port,
+    username: username,
+    password: password,
     timeout: 1,
   }
   if !nilempty(ENV['DISCOURSE_REDIS_USE_SSL']).nil? then
@@ -342,21 +344,27 @@ HEALTH_CHECKS = Hash.new(
   "DISCOURSE_REDIS_HOST": lambda { |addr|
     redis_healthcheck(
       host: addr,
+      port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
+      username: ENV["DISCOURSE_REDIS_USERNAME"] || DEFAULT_REDIS_USERNAME,
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
   "DISCOURSE_REDIS_REPLICA_HOST": lambda { |addr|
     redis_healthcheck(
       host: addr,
+      port: env_as_int("DISCOURSE_REDIS_PORT", DEFAULT_REDIS_PORT),
+      username: ENV["DISCOURSE_REDIS_USERNAME"] || DEFAULT_REDIS_USERNAME,
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
   "DISCOURSE_MESSAGE_BUS_REDIS_HOST": lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_PORT", DEFAULT_REDIS_PORT),
+      username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_USERNAME"] || DEFAULT_REDIS_USERNAME,
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
   "DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST": lambda { |addr|
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PORT", DEFAULT_REDIS_PORT),
-      password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
+      username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_USERNAME"] || DEFAULT_REDIS_USERNAME,
+      password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PASSWORD"])},
 })
 
 def log(msg)
