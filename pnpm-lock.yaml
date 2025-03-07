@@ -95,8 +95,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
       lint-to-the-future:
-        specifier: ^2.6.2
-        version: 2.6.2(encoding@0.1.13)
+        specifier: ^2.6.3
+        version: 2.6.3(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.0.0
         version: 3.0.0(ember-template-lint@7.0.0(@babel/core@7.26.9))
@@ -6026,8 +6026,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  lint-to-the-future@2.6.2:
-    resolution: {integrity: sha512-l8fmDddu7Gqp/gzIyYU+dVUDonaH/GIH9SnldoG+5bNqpdwQE+p4xS6sLuFo+N7MNTMXdq7HBUa9J3nrDkAzQg==}
+  lint-to-the-future@2.6.3:
+    resolution: {integrity: sha512-SGApqILnOK0buxMe2J2PLATxBrvi/p0CryULFddWFmJZ+ZDdFtAjPKPj78NJkAZkFuM+CBdLSURv+Gx/KJ2BBw==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -15113,7 +15113,7 @@ snapshots:
       import-cwd: 3.0.0
       walk-sync: 3.0.0
 
-  lint-to-the-future@2.6.2(encoding@0.1.13):
+  lint-to-the-future@2.6.3(encoding@0.1.13):
     dependencies:
       commander: 9.5.0
       fs-extra: 7.0.1
