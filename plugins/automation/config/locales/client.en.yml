@@ -162,7 +162,7 @@ en:
             restricted_categories:
               label: Categories
               description: Optional, will trigger only if the post's topic is in these categories
-            exclude_categories:
+            exclude_subcategories:
               label: Exclude subcategories
               description: Optional, will only trigger if the post's topic is exactly in the categories specified above
             restricted_archetype:
