@@ -16,6 +16,7 @@ describe "Composer - ProseMirror editor", type: :system do
     page.visit "/new-topic"
     expect(composer).to be_opened
     composer.toggle_rich_editor
+    composer.focus
   end
 
   it "hides the Composer container's preview button" do
@@ -143,20 +144,36 @@ describe "Composer - ProseMirror editor", type: :system do
     let(:cdp) { PageObjects::CDP.new }
 
     before do
-      stub_request(:head, "https://example.com").to_return(status: 200)
-      stub_request(:get, "https://example.com").to_return(status: 200, body: <<~HTML)
+      def body(title)
+        <<~HTML
           <html>
             <head>
-              <title>Example Site</title>
-              <meta property="og:title" content="Example Site">
+              <title>#{title}</title>
+              <meta property="og:title" content="#{title}">
               <meta property="og:description" content="This is an example site">
             </head>
             <body>
-              <h1>Example Site</h1>
+              <h1>#{title}</h1>
               <p>This domain is for use in examples.</p>
             </body>
           </html>
         HTML
+      end
+
+      stub_request(:head, "https://example.com").to_return(status: 200)
+      stub_request(:get, "https://example.com").to_return(status: 200, body: body("Example Site 1"))
+
+      stub_request(:head, "https://example2.com").to_return(status: 200)
+      stub_request(:get, "https://example2.com").to_return(
+        status: 200,
+        body: body("Example Site 2"),
+      )
+
+      stub_request(:head, "https://example3.com").to_return(status: 200)
+      stub_request(:get, "https://example3.com").to_return(
+        status: 200,
+        body: body("Example Site 3"),
+      )
     end
 
     it "creates an inline onebox for links within text" do
@@ -167,7 +184,10 @@ describe "Composer - ProseMirror editor", type: :system do
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       composer.type_content(" in the middle of text")
 
-      expect(rich).to have_css("a.inline-onebox[href='https://example.com']", text: "Example Site")
+      expect(rich).to have_css(
+        "a.inline-onebox[href='https://example.com']",
+        text: "Example Site 1",
+      )
 
       composer.toggle_rich_editor
 
@@ -184,7 +204,7 @@ describe "Composer - ProseMirror editor", type: :system do
       page.send_keys(:enter, :enter)
 
       expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
-      expect(rich).to have_content("Example Site")
+      expect(rich).to have_content("Example Site 1")
       expect(rich).to have_content("This is an example site")
 
       composer.toggle_rich_editor
@@ -201,7 +221,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(" more text")
 
       expect(rich).to have_no_css("div.onebox-wrapper")
-      expect(rich).to have_css("a.inline-onebox", text: "Example Site")
+      expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
 
       composer.toggle_rich_editor
 
@@ -223,6 +243,61 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value("```\nhttps://example.com\n```")
+    end
+
+    it "creates oneboxes for mixed content" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      markdown = <<~MARKDOWN
+        https://example.com
+
+        Check this https://example.com and see if it fits you
+
+        https://example2.com
+
+        An inline to https://example2.com with text around it
+
+        https://example3.com
+
+        Another one for https://example3.com then
+
+        https://example.com
+
+        Phew, repeating https://example.com now
+
+        https://example2.com
+
+        And some text again https://example2.com
+
+        https://example3.com
+
+        Ok, that is it https://example3.com
+      MARKDOWN
+      cdp.write_clipboard(markdown)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      expect(rich).to have_css("a.inline-onebox", count: 6)
+      expect(rich).to have_css(
+        "a.inline-onebox[href='https://example.com']",
+        text: "Example Site 1",
+      )
+      expect(rich).to have_css(
+        "a.inline-onebox[href='https://example2.com']",
+        text: "Example Site 2",
+      )
+      expect(rich).to have_css(
+        "a.inline-onebox[href='https://example3.com']",
+        text: "Example Site 3",
+      )
+
+      expect(rich).to have_css("div.onebox-wrapper", count: 6)
+      expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
+      expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example2.com']")
+      expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example3.com']")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(markdown[0..-2])
     end
   end
 
@@ -319,9 +394,9 @@ describe "Composer - ProseMirror editor", type: :system do
 
       # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
       cdp.write_clipboard <<~MARKDOWN
-      ```
-      puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
-      ```
+        ```
+        puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
+        ```
       MARKDOWN
       composer.type_content("This is a test\n\n")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])

@@ -2,8 +2,7 @@ import {
   applyCachedInlineOnebox,
   cachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import { addToLoadingQueue, loadNext } from "pretty-text/oneboxer";
-import { lookupCache } from "pretty-text/oneboxer-cache";
+import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
@@ -381,25 +380,29 @@ async function loadInlineOneboxes(urls, { categoryId, topicId }) {
   return allOneboxes;
 }
 
-async function loadFullOnebox(url, { categoryId, topicId }) {
-  const cached = lookupCache(url);
-  if (cached) {
-    return cached;
-  }
-
-  return new Promise((onResolve) => {
-    addToLoadingQueue({ url, categoryId, topicId, onResolve });
-    loadNext(ajax);
+// A dummy element to pass to the oneboxer, we're relying on onResolve
+// But this re-uses the queuing/loading logic from the oneboxer
+const dummyElement = {
+  replaceWith() {},
+  classList: { remove() {}, add() {}, contains: () => false },
+  dataset: {},
+};
+async function processOnebox(href, { topicId, categoryId }) {
+  const html = await new Promise((onResolve) => {
+    load({
+      topicId,
+      categoryId,
+      elem: { ...dummyElement, href },
+      onResolve,
+      ajax,
+      refresh: false,
+    });
   });
-}
-
-async function processOnebox(url, context) {
-  const html = await loadFullOnebox(url, context);
 
   // naive check that this is not a <a href="url">url</a> onebox response
   if (
     new RegExp(
-      `<a href=["']${escapeRegExp(url)}["'].*>${escapeRegExp(url)}</a>`
+      `<a href=["']${escapeRegExp(href)}["'].*>${escapeRegExp(href)}</a>`
     ).test(html)
   ) {
     return;
