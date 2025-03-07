@@ -5,6 +5,8 @@ module Migrations::Importer
     def initialize(config)
       @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
+
+      attach_mappings_db(config[:mappings_db])
     end
 
     def start
@@ -14,6 +16,15 @@ module Migrations::Importer
     end
 
     private
+
+    def attach_mappings_db(db_path)
+      ::Migrations::Database.reset!(db_path)
+      ::Migrations::Database.migrate(
+        db_path,
+        migrations_path: ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,
+      )
+      @intermediate_db.execute("ATTACH DATABASE ? AS x", db_path)
+    end
 
     def step_classes
       steps_module = ::Migrations::Importer::Steps

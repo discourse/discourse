@@ -1,1 +1,2 @@
-intermediate_db: ~/intermediate.db
+intermediate_db: /shared/import/intermediate.db
+mappings_db: /shared/import/mappings.db

@@ -63,6 +63,10 @@ module Migrations::Database
       @db.query(sql, *parameters, &block)
     end
 
+    def execute(sql, *parameters)
+      @db.execute(sql, *parameters)
+    end
+
     private
 
     def begin_transaction
