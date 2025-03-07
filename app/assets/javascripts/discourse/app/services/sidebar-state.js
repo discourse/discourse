@@ -132,15 +132,8 @@ export default class SidebarState extends Service {
     return this.currentPanelKey === MAIN_PANEL;
   }
 
-  get currentUserUsingAdminSidebar() {
-    return this.currentUser?.use_admin_sidebar;
-  }
-
   get adminSidebarAllowedWithLegacyNavigationMenu() {
-    return (
-      this.currentUserUsingAdminSidebar &&
-      this.siteSettings.navigation_menu === "header dropdown"
-    );
+    return this.siteSettings.navigation_menu === "header dropdown";
   }
 
   get sanitizedFilter() {
