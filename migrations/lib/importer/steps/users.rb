@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class Users
+  class Users < ::Migrations::Importer::Step
     TABLE_NAME = :users
     COLUMN_NAMES = %i[
       id
@@ -33,8 +33,7 @@ module Migrations::Importer::Steps
     SQL
 
     def initialize(intermediate_db, discourse_db)
-      @intermediate_db = intermediate_db
-      @discourse_db = discourse_db
+      super
       @last_id = discourse_db.last_id_of(TABLE_NAME)
     end
 

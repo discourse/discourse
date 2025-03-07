@@ -13,13 +13,17 @@ module Migrations::Importer
     def copy_data(table_name, column_names, rows)
       sql = "COPY #{table_name} (#{column_names.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
-      rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
-        @connection.copy_data(sql, @encoder) do
-          sliced_rows.each do |row|
-            data = column_names.map { |c| row[c] }
-            @connection.put_copy_data(data)
+      @connection.transaction do
+        rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
+          @connection.copy_data(sql, @encoder) do
+            sliced_rows.each do |row|
+              data = column_names.map { |c| row[c] }
+              @connection.put_copy_data(data)
+            end
           end
         end
+
+        raise PG::RollbackTransaction
       end
     end
 
@@ -35,7 +39,8 @@ module Migrations::Importer
       table_name = PG::Connection.quote_ident(table_name.to_s)
       query = <<~SQL
         SELECT SETVAL(PG_GET_SERIAL_SEQUENCE('#{table_name}', 'id'), MAX(id))
-          FROM #{table_name};
+          FROM #{table_name}
+        HAVING MAX(id) > 0
       SQL
 
       @connection.exec(query)
@@ -59,8 +64,8 @@ module Migrations::Importer
       {
         host: db_config[:host],
         port: db_config[:port],
-        username: username || db_config[:username],
-        password: password || db_config[:password],
+        username: db_config[:username] || username,
+        password: db_config[:password] || password,
         dbname: db_config[:database],
       }.compact
     end
