@@ -20,8 +20,15 @@ $search-pad-horizontal: 0.5em;
     overflow-y: auto;
   }
 
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .search-input {
     position: relative;
+    flex-grow: 1;
     display: flex;
     align-items: center;
     background: var(--d-input-bg-color);
