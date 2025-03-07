@@ -159,9 +159,15 @@ en:
             restricted_tags:
               label: Tags
               description: Optional, will trigger only if the post has any of these tags
-            restricted_category:
-              label: Category
-              description: Optional, will trigger only if the post's topic is in this category
+            restricted_categories:
+              label: Categories
+              description: Optional, will trigger only if the post's topic is in these categories
+            exclude_categories:
+              label: Exclude subcategories
+              description: Optional, will only trigger if the post's topic is exactly in the categories specified above
+            restricted_archetype:
+              label: Topic Type
+              description: Optional, allow to trigger only on topics or personal messages
             restricted_user_group:
               label: Restricted user group
               description: Optional, will trigger only if the post user is in this group
@@ -185,6 +191,8 @@ en:
               description: "Skip the trigger if the post was created via email"
           created: Created
           edited: Edited
+          topics: Topics
+          personal_messages: Personal Messages
         user_updated:
           fields:
             user_profile:

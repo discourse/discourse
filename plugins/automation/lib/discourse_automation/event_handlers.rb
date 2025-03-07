@@ -12,6 +12,12 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          restricted_archetype = automation.trigger_field("restricted_archetype")["value"]
+          if restricted_archetype.present?
+            topic_archetype = topic.archetype
+            next if restricted_archetype != topic_archetype
+          end
+
           original_post_only = automation.trigger_field("original_post_only")
           if original_post_only["value"]
             next if topic.posts_count > 1
@@ -38,15 +44,21 @@ module DiscourseAutomation
             next if valid_trust_levels["value"].exclude?(post.user.trust_level)
           end
 
-          restricted_category = automation.trigger_field("restricted_category")
-          if restricted_category["value"]
-            category_ids =
-              if topic.category_id.blank?
-                []
-              else
-                [topic.category_id, topic.category.parent_category_id]
-              end
-            next if !category_ids.include?(restricted_category["value"])
+          restricted_categories = automation.trigger_field("restricted_categories").dup
+          if restricted_category_ids = restricted_categories["value"]
+            exclude_subcategories = automation.trigger_field("exclude_subcategories")["value"]
+
+            if !exclude_subcategories
+              # core api is odd, we only support nesting of 3 anyway, this is efficient
+              restricted_category_ids = restricted_category_ids.to_set
+              # for nesting of 3
+              restricted_category_ids +=
+                Category.where(parent_category_id: restricted_category_ids).pluck(:id)
+              restricted_category_ids +=
+                Category.where(parent_category_id: restricted_category_ids).pluck(:id)
+            end
+
+            next if !restricted_category_ids.include?(topic.category_id)
           end
 
           restricted_tags = automation.trigger_field("restricted_tags")
