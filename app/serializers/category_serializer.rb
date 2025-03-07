@@ -27,7 +27,10 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
-             :default_slow_mode_seconds
+             :default_slow_mode_seconds,
+             :style_type,
+             :style_emoji,
+             :style_icon
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
 

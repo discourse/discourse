@@ -4131,15 +4131,15 @@ en:
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
-      badge_colors: "Badge colors and styles"
-      background_color: "Background color"
+      style: "Styles"
+      background_color: "Color"
       foreground_color: "Foreground color"
-      badge_type:
-        title: "Badge Type"
-        label: "Badge"
-        none: "Select"
+      styles:
+        type: "Style"
+        icon: "Icon"
+        emoji: "Emoji"
         options:
-          color: "Color"
+          square: "Square"
           icon: "Icon"
           emoji: "Emoji"
       color_used: "Color in use"

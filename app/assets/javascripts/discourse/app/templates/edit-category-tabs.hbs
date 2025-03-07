@@ -85,13 +85,15 @@
   {{/if}}
 
   <div class="edit-category-footer">
-    <DButton
-      @disabled={{this.disabled}}
-      @action={{action "saveCategory"}}
-      @label={{this.saveLabel}}
-      id="save-category"
-      class="btn-primary"
-    />
+    {{#if this.showSubmit}}
+      <DButton
+        @disabled={{this.disabled}}
+        @action={{action "saveCategory"}}
+        @label={{this.saveLabel}}
+        id="save-category"
+        class="btn-primary"
+      />
+    {{/if}}
 
     {{#if this.model.can_delete}}
       <DButton

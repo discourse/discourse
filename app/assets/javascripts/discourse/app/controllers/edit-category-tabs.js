@@ -25,6 +25,7 @@ export default class EditCategoryTabsController extends Controller {
   expandedMenu = false;
   parentParams = null;
   validators = [];
+  showSubmit = this.selectedTab !== "general";
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 

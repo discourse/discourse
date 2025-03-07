@@ -12,6 +12,7 @@ import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
+import { i18n } from "discourse-i18n";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -38,6 +39,18 @@ export default class Category extends RestModel {
 
   static isUncategorized(categoryId) {
     return categoryId === Site.currentProp("uncategorized_category_id");
+  }
+
+  static styleTypes() {
+    if (!this._styleTypes) {
+      this._styleTypes = [
+        { id: "square", name: i18n("category.styles.options.square") },
+        { id: "icon", name: i18n("category.styles.options.icon") },
+        { id: "emoji", name: i18n("category.styles.options.emoji") },
+      ];
+    }
+
+    return this._styleTypes;
   }
 
   static slugEncoded() {
@@ -761,8 +774,9 @@ export default class Category extends RestModel {
         moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
-        thumbnail_type: this.thumbnail_type,
-        thumbnail_value: this.thumbnail_value,
+        style_type: this.style_type,
+        style_emoji: this.style_emoji,
+        style_icon: this.style_icon,
       }),
       type: id ? "PUT" : "POST",
     });

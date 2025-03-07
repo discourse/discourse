@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { helperContext, registerRawHelper } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -151,6 +152,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
+  if (opts.styleType) {
+    classNames += ` --style-${opts.styleType}`;
+  }
+
   html += `<span
     ${dataAttributes}
     data-drop-close="true"
@@ -162,6 +167,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
     }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
+
+  if (["icon", "emoji"].includes(opts.styleType)) {
+    html +=
+      opts.styleType === "icon"
+        ? iconHTML(opts.styleIcon)
+        : replaceEmoji(`:${opts.styleEmoji}:`);
+  }
 
   // not ideal as we have to call it manually and we pass a fake category object
   // but there's not way around it for now
