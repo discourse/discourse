@@ -40,6 +40,7 @@
         @closeSearchMenu={{this.close}}
         @openSearchMenu={{this.open}}
         @autofocus={{@autofocusInput}}
+        data-test-input="search-term"
       />
 
       {{#if this.loading}}
@@ -59,7 +60,12 @@
       {{/if}}
     </div>
     {{#if (and this.site.mobileView this.site.isMobileDevice)}}
-      <DButton @action={{this.close}} @label="cancel" class="btn-flat" />
+      <DButton
+        @action={{this.close}}
+        @label="cancel"
+        class="btn-flat"
+        data-test-button="cancel-search-mobile"
+      />
     {{/if}}
   </div>
 
