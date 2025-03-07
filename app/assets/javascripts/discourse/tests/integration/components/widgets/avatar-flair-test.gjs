@@ -7,18 +7,14 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
   setupRenderingTest(hooks);
 
   test("avatar flair with an icon", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       flair_url: "bars",
       flair_bg_color: "CC0000",
       flair_color: "FFFFFF",
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="avatar-flair" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="avatar-flair" @args={{args}} /></template>
     );
 
     assert.dom(".avatar-flair").exists("has the tag");
@@ -30,16 +26,12 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
   });
 
   test("avatar flair with an image", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       flair_url: "/images/avatar.png",
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="avatar-flair" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="avatar-flair" @args={{args}} /></template>
     );
 
     assert.dom(".avatar-flair").exists("has the tag");

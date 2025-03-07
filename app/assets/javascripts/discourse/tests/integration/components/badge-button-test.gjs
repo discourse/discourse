@@ -7,31 +7,25 @@ module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
 
   test("disabled badge", async function (assert) {
-    const self = this;
+    const badge = { enabled: false };
 
-    this.set("badge", { enabled: false });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.disabled").exists();
   });
 
   test("enabled badge", async function (assert) {
-    const self = this;
+    const badge = { enabled: true };
 
-    this.set("badge", { enabled: true });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.disabled").doesNotExist();
   });
 
   test("data-badge-name", async function (assert) {
-    const self = this;
+    const badge = { name: "foo" };
 
-    this.set("badge", { name: "foo" });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom('.user-badge[data-badge-name="foo"]').exists();
   });
@@ -59,23 +53,19 @@ module("Integration | Component | badge-button", function (hooks) {
   });
 
   test("icon", async function (assert) {
-    const self = this;
+    const badge = { icon: "xmark" };
 
-    this.set("badge", { icon: "xmark" });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".d-icon.d-icon-xmark").exists();
   });
 
   test("accepts block", async function (assert) {
-    const self = this;
-
-    this.set("badge", {});
+    const badge = {};
 
     await render(
       <template>
-        <BadgeButton @badge={{self.badge}}>
+        <BadgeButton @badge={{badge}}>
           <span class="test"></span>
         </BadgeButton>
       </template>
@@ -85,35 +75,27 @@ module("Integration | Component | badge-button", function (hooks) {
   });
 
   test("badgeTypeClassName", async function (assert) {
-    const self = this;
+    const badge = { badgeTypeClassName: "foo" };
 
-    this.set("badge", { badgeTypeClassName: "foo" });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".user-badge.foo").exists();
   });
 
   test("setting showName to false hides the name", async function (assert) {
-    const self = this;
-
-    this.set("badge", { name: "foo" });
+    const badge = { name: "foo" };
 
     await render(
-      <template>
-        <BadgeButton @badge={{self.badge}} @showName={{false}} />
-      </template>
+      <template><BadgeButton @badge={{badge}} @showName={{false}} /></template>
     );
 
     assert.dom(".badge-display-name").doesNotExist();
   });
 
   test("showName defaults to true", async function (assert) {
-    const self = this;
+    const badge = { name: "foo" };
 
-    this.set("badge", { name: "foo" });
-
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{badge}} /></template>);
 
     assert.dom(".badge-display-name").exists();
   });

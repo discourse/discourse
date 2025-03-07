@@ -3,10 +3,6 @@ import { module, test } from "qunit";
 import DateTimeInput from "discourse/components/date-time-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-function setDate(date) {
-  this.set("date", date);
-}
-
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
 module("Integration | Component | date-time-input", function (hooks) {
@@ -41,7 +37,7 @@ module("Integration | Component | date-time-input", function (hooks) {
     const self = this;
 
     this.setProperties({ date: DEFAULT_DATE_TIME });
-    this.set("onChange", setDate);
+    this.set("onChange", (date) => this.set("date", date));
 
     await render(
       <template>
@@ -75,7 +71,7 @@ module("Integration | Component | date-time-input", function (hooks) {
     this.setProperties({
       date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
       timezone: "Europe/London",
-      onChange: setDate,
+      onChange: (date) => this.set("date", date),
     });
 
     await render(

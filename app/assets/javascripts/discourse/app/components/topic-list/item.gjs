@@ -19,7 +19,10 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -134,35 +137,45 @@ export default class Item extends Component {
 
   @action
   click(e) {
-    if (
-      e.target.classList.contains("raw-topic-link") ||
-      e.target.classList.contains("post-activity") ||
-      e.target.classList.contains("badge-posts")
-    ) {
-      if (wantsNewWindow(e)) {
-        return;
+    applyBehaviorTransformer(
+      "topic-list-item-click",
+      () => {
+        if (
+          e.target.classList.contains("raw-topic-link") ||
+          e.target.classList.contains("post-activity") ||
+          e.target.classList.contains("badge-posts")
+        ) {
+          if (wantsNewWindow(e)) {
+            return;
+          }
+
+          e.preventDefault();
+          this.navigateToTopic(this.args.topic, e.target.href);
+          return;
+        }
+
+        // make full row click target on mobile, due to size constraints
+        if (
+          this.site.mobileView &&
+          e.target.matches(
+            ".topic-list-data, .main-link, .right, .topic-item-stats, .topic-item-stats__category-tags, .discourse-tags"
+          )
+        ) {
+          if (wantsNewWindow(e)) {
+            return;
+          }
+
+          e.preventDefault();
+          this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
+          return;
+        }
+      },
+      {
+        topic: this.args.topic,
+        event: e,
+        navigateToTopic: this.navigateToTopic,
       }
-
-      e.preventDefault();
-      this.navigateToTopic(this.args.topic, e.target.href);
-      return;
-    }
-
-    // make full row click target on mobile, due to size constraints
-    if (
-      this.site.mobileView &&
-      e.target.matches(
-        ".topic-list-data, .main-link, .right, .topic-item-stats, .topic-item-stats__category-tags, .discourse-tags"
-      )
-    ) {
-      if (wantsNewWindow(e)) {
-        return;
-      }
-
-      e.preventDefault();
-      this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
-      return;
-    }
+    );
   }
 
   @action
@@ -373,13 +386,18 @@ export default class Item extends Component {
                 </span>
 
                 <div class="num activity last">
-                  <span title={{@topic.bumpedAtTitle}} class="age activity">
-                    <a href={{@topic.lastPostUrl}}>{{formatDate
-                        @topic.bumpedAt
-                        format="tiny"
-                        noTitle="true"
-                      }}</a>
-                  </span>
+                  <PluginOutlet
+                    @name="topic-list-item-mobile-bumped-at"
+                    @outletArgs={{hash topic=@topic}}
+                  >
+                    <span title={{@topic.bumpedAtTitle}} class="age activity">
+                      <a href={{@topic.lastPostUrl}}>{{formatDate
+                          @topic.bumpedAt
+                          format="tiny"
+                          noTitle="true"
+                        }}</a>
+                    </span>
+                  </PluginOutlet>
                 </div>
               </div>
             </div>
