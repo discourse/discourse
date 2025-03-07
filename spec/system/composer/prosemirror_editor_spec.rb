@@ -127,11 +127,7 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "supports typographer replacements" do
-      page.visit "/new-topic"
-
-      expect(composer).to be_opened
-
-      composer.toggle_rich_editor
+      open_composer_and_toggle_rich_editor
       composer.type_content(
         "foo +- bar.. test???? wow!!!! x,, y-- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
       )
@@ -140,6 +136,76 @@ describe "Composer - ProseMirror editor", type: :system do
         "p",
         text: "foo ± bar… test??? wow!!! x, y– a–> b←- c→ d← e←> f←→ ™ ¶",
       )
+    end
+  end
+
+  context "with oneboxing" do
+    let(:cdp) { PageObjects::CDP.new }
+
+    before do
+      stub_request(:head, "https://example.com").to_return(status: 200)
+      stub_request(:get, "https://example.com").to_return(status: 200, body: <<~HTML)
+          <html>
+            <head>
+              <title>Example Site</title>
+              <meta property="og:title" content="Example Site">
+              <meta property="og:description" content="This is an example site">
+            </head>
+            <body>
+              <h1>Example Site</h1>
+              <p>This domain is for use in examples.</p>
+            </body>
+          </html>
+        HTML
+    end
+
+    it "creates an inline onebox for links within text" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Check out this link ")
+      cdp.write_clipboard("https://example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content(" in the middle of text")
+
+      expect(rich).to have_css("a.inline-onebox[href='https://example.com']", text: "Example Site")
+    end
+
+    it "creates a full onebox for standalone links" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      cdp.write_clipboard("https://example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      page.send_keys(:enter, :enter)
+
+      expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
+      expect(rich).to have_content("Example Site")
+      expect(rich).to have_content("This is an example site")
+    end
+
+    it "creates an inline onebox for links that are part of a paragraph" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Some text ")
+      cdp.write_clipboard("https://example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content(" more text")
+
+      expect(rich).to have_no_css("div.onebox-wrapper")
+      expect(rich).to have_css("a.inline-onebox", text: "Example Site")
+    end
+
+    it "does not create oneboxes inside code blocks" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      composer.type_content("```")
+      cdp.write_clipboard("https://example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content("\n```")
+
+      expect(rich).to have_css("pre code")
+      expect(rich).to have_no_css("div.onebox-wrapper")
+      expect(rich).to have_no_css("a.inline-onebox")
+      expect(rich).to have_content("https://example.com")
     end
   end
 
@@ -162,7 +228,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     xit "supports Ctrl + K to create a link" do
-      open_composer_and_toggle_rich_editor page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
+      open_composer_and_toggle_rich_editor
+      page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
       page.send_keys("https://www.example.com\t")
       page.send_keys("This is a link")
       page.send_keys(:enter)
