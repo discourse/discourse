@@ -1,5 +1,5 @@
 import {
-  applyCachedInlineOnebox,
+  applyInlineOneboxes,
   cachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import { load } from "pretty-text/oneboxer";
@@ -118,15 +118,15 @@ const extension = {
                   meta.inlineOneboxes.hasOwnProperty(spec.oneboxUrl)
               );
 
-              const newDecorations = decosToUpdate.map((dec) =>
+              const newDecorations = decosToUpdate.map((decoration) =>
                 Decoration.inline(
-                  dec.from,
-                  dec.to,
+                  decoration.from,
+                  decoration.to,
                   { class: "onebox-loading", nodeName: "span" },
                   {
-                    oneboxUrl: dec.spec.oneboxUrl,
-                    oneboxType: dec.spec.oneboxType,
-                    oneboxTitle: meta.inlineOneboxes[dec.spec.oneboxUrl],
+                    oneboxUrl: decoration.spec.oneboxUrl,
+                    oneboxType: decoration.spec.oneboxType,
+                    oneboxTitle: meta.inlineOneboxes[decoration.spec.oneboxUrl],
                     oneboxDataLoaded: true,
                   }
                 )
@@ -144,14 +144,14 @@ const extension = {
                 (spec) => spec.oneboxType === "full" && spec.oneboxUrl === url
               );
 
-              const newDecorations = decosToUpdate.map((dec) => {
+              const newDecorations = decosToUpdate.map((decoration) => {
                 return Decoration.inline(
-                  dec.from,
-                  dec.to,
+                  decoration.from,
+                  decoration.to,
                   { class: "onebox-loading", nodeName: "span" },
                   {
-                    oneboxUrl: dec.spec.oneboxUrl,
-                    oneboxType: dec.spec.oneboxType,
+                    oneboxUrl: decoration.spec.oneboxUrl,
+                    oneboxType: decoration.spec.oneboxType,
                     oneboxDataLoaded: true,
                     oneboxHtml: html,
                   }
@@ -350,41 +350,36 @@ const extension = {
   },
 };
 
-async function loadInlineOneboxes(urls, { categoryId, topicId }) {
-  const allOneboxes = {};
-
-  const uncachedUrls = [];
-  for (const url of urls) {
-    const cached = cachedInlineOnebox(url);
-    if (cached) {
-      allOneboxes[url] = cached.title;
-    } else {
-      uncachedUrls.push(url);
-    }
-  }
-
-  if (uncachedUrls.length === 0) {
-    return allOneboxes;
-  }
-
-  const { "inline-oneboxes": oneboxes } = await ajax("/inline-onebox", {
-    data: { urls: uncachedUrls, categoryId, topicId },
-  });
-
-  oneboxes.forEach((onebox) => {
-    applyCachedInlineOnebox(onebox.url, onebox);
-    allOneboxes[onebox.url] = onebox.title;
-  });
-
-  return allOneboxes;
-}
-
 // Dummy element to pass to the oneboxer
+// To avoid this, we need to refactor both oneboxer APIs
 const dummyElement = {
   replaceWith() {},
   classList: { remove() {}, add() {}, contains: () => false },
   dataset: {},
 };
+
+async function loadInlineOneboxes(urls, { categoryId, topicId }) {
+  const oneboxes = {};
+  const elems = {};
+
+  for (const url of urls) {
+    const cached = cachedInlineOnebox(url);
+    if (cached) {
+      oneboxes[url] = cached.title;
+    } else {
+      elems[url] = [{ ...dummyElement }];
+    }
+  }
+
+  await applyInlineOneboxes(elems, ajax, { categoryId, topicId });
+
+  for (const [url, [onebox]] of Object.entries(elems)) {
+    oneboxes[url] = onebox.innerText;
+  }
+
+  return oneboxes;
+}
+
 async function processOnebox(href, { topicId, categoryId }) {
   const html = await new Promise((onResolve) => {
     load({
@@ -400,7 +395,7 @@ async function processOnebox(href, { topicId, categoryId }) {
   // Not a <a href="url">url</a> onebox response
   if (
     new RegExp(
-      `<a href=["']${escapeRegExp(href)}["'].*>${escapeRegExp(href)}</a>`
+      `^<a href=["']${escapeRegExp(href)}["'].*>${escapeRegExp(href)}</a>$`
     ).test(html)
   ) {
     return;

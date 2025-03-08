@@ -299,6 +299,26 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value(markdown[0..-2])
     end
+
+    it "creates inline oneboxes for repeated links in different paste events" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Hey")
+      cdp.write_clipboard("https://example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content("and")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      expect(rich).to have_css(
+        "a.inline-onebox[href='https://example.com']",
+        text: "Example Site 1",
+        count: 2,
+      )
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Hey https://example.com and https://example.com")
+    end
   end
 
   context "with keymap" do
