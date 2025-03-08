@@ -253,13 +253,9 @@ describe "Composer - ProseMirror editor", type: :system do
     it "maintains exactly one trailing paragraph when typing and deleting text" do
       open_composer_and_toggle_rich_editor
 
-      # Initially there should be one empty paragraph
       expect(rich).to have_css("p", count: 1)
-
-      # Type some text
       composer.type_content("This is a test")
 
-      # Should have two paragraphs now (content + trailing)
       expect(rich).to have_css("p", count: 2)
       expect(rich).to have_css("p", text: "This is a test", count: 1)
     end
