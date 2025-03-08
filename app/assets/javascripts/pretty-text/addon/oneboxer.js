@@ -54,7 +54,7 @@ function _handleLoadingOneboxImages() {
   this.removeEventListener("load", _handleLoadingOneboxImages);
 }
 
-export function loadNext(ajax) {
+function loadNext(ajax) {
   if (loadingQueue.length === 0) {
     timeout = null;
     return;
