@@ -35,24 +35,36 @@ const extension = {
       },
     },
     local_date_range: {
-      attrs: { from: {}, to: { default: null }, timezone: { default: null } },
+      attrs: {
+        fromDate: {},
+        toDate: { default: null },
+        fromTime: {},
+        toTime: {},
+        timezone: { default: null },
+      },
       content: "text*",
       group: "inline",
       atom: true,
       inline: true,
       parseDOM: [
         {
-          tag: "span.discourse-local-date[data-from]",
+          tag: "span.discourse-local-date-wrapper",
           getAttrs: (dom) => {
             return {
-              from: dom.getAttribute("data-from"),
-              to: dom.getAttribute("data-to"),
-              timezone: dom.getAttribute("data-timezone"),
+              fromDate: dom.dataset.fromDate,
+              toDate: dom.dataset.toDate,
+              fromTime: dom.dataset.fromTime,
+              toTime: dom.dataset.toTime,
+              timezone: dom.dataset.timezone,
             };
           },
         },
       ],
       toDOM: (node) => {
+        const fromTimeStr = node.attrs.fromTime
+          ? ` ${node.attrs.fromTime}`
+          : "";
+        const toTimeStr = node.attrs.toTime ? ` ${node.attrs.toTime}` : "";
         return [
           "span",
           { class: "discourse-local-date-wrapper" },
@@ -61,10 +73,11 @@ const extension = {
             {
               class: "discourse-local-date cooked-date",
               "data-range": "from",
-              "data-date": node.attrs.from,
+              "data-date": node.attrs.fromDate,
+              "data-time": node.attrs.fromTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.from}`,
+            `${node.attrs.fromDate}${fromTimeStr}`,
           ],
           " → ",
           [
@@ -72,10 +85,11 @@ const extension = {
             {
               class: "discourse-local-date cooked-date",
               "data-range": "to",
-              "data-date": node.attrs.to,
+              "data-date": node.attrs.toDate,
+              "data-time": node.attrs.toTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.to}`,
+            `${node.attrs.toDate}${toTimeStr}`,
           ],
         ];
       },
@@ -89,8 +103,8 @@ const extension = {
 
       if (token.attrGet("data-range") === "from") {
         state.openNode(state.schema.nodes.local_date_range, {
-          from: token.attrGet("data-date"),
-          to: token.attrGet("data-date"),
+          fromDate: token.attrGet("data-date"),
+          fromTime: token.attrGet("data-time"),
           timezone: token.attrGet("data-timezone"),
         });
         state.__localDateRange = true;
@@ -100,7 +114,8 @@ const extension = {
       if (token.attrGet("data-range") === "to") {
         // In our markdown-it tokens, a range is a series of span_open/span_close/span_open/span_close
         // We skip opening a node for `to` and set it on the top node
-        state.top().attrs.to = token.attrGet("data-date");
+        state.top().attrs.toDate = token.attrGet("data-date");
+        state.top().attrs.toTime = token.attrGet("data-time");
         delete state.__localDateRange;
         return true;
       }
@@ -121,44 +136,52 @@ const extension = {
       }
     },
   },
-  serializeNode: {
-    local_date(state, node) {
-      // TODO isBoundary
-      // if (!isBoundary(state.out, state.out.length - 1)) {
-      //   state.write(" ");
-      // }
+  serializeNode({ utils: { isBoundary } }) {
+    return {
+      local_date(state, node, parent, index) {
+        if (!isBoundary(state.out, state.out.length - 1)) {
+          state.write(" ");
+        }
 
-      const optionalTime = node.attrs.time ? ` time=${node.attrs.time}` : "";
-      const optionalTimezone = node.attrs.timezone
-        ? ` timezone="${node.attrs.timezone}"`
-        : "";
+        const optionalTime = node.attrs.time ? ` time=${node.attrs.time}` : "";
+        const optionalTimezone = node.attrs.timezone
+          ? ` timezone="${node.attrs.timezone}"`
+          : "";
 
-      state.write(
-        `[date=${node.attrs.date}${optionalTime}${optionalTimezone}]`
-      );
+        state.write(
+          `[date=${node.attrs.date}${optionalTime}${optionalTimezone}]`
+        );
 
-      // TODO isBoundary
-      // const nextSibling =
-      //   parent.childCount > index + 1 ? parent.child(index + 1) : null;
-      // if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
-      //   state.write(" ");
-      // }
-    },
-    local_date_range(state, node) {
-      const optionalTimezone = node.attrs.timezone
-        ? ` timezone="${node.attrs.timezone}"`
-        : "";
-      state.write(
-        `[date-range from=${node.attrs.from} to=${node.attrs.to}${optionalTimezone}]`
-      );
+        const nextSibling =
+          parent.childCount > index + 1 ? parent.child(index + 1) : null;
+        if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+          state.write(" ");
+        }
+      },
+      local_date_range(state, node, parent, index) {
+        if (!isBoundary(state.out, state.out.length - 1)) {
+          state.write(" ");
+        }
 
-      // TODO isBoundary
-      // const nextSibling =
-      //   parent.childCount > index + 1 ? parent.child(index + 1) : null;
-      // if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
-      //   state.write(" ");
-      // }
-    },
+        const optionalTimezone = node.attrs.timezone
+          ? ` timezone="${node.attrs.timezone}"`
+          : "";
+
+        const from =
+          node.attrs.fromDate +
+          (node.attrs.fromTime ? `T${node.attrs.fromTime}` : "");
+        const to =
+          node.attrs.toDate +
+          (node.attrs.toTime ? `T${node.attrs.toTime}` : "");
+        state.write(`[date-range from=${from} to=${to}${optionalTimezone}]`);
+
+        const nextSibling =
+          parent.childCount > index + 1 ? parent.child(index + 1) : null;
+        if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+          state.write(" ");
+        }
+      },
+    };
   },
 };
 
