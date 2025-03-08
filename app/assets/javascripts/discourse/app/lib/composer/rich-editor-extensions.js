@@ -53,6 +53,7 @@
 /** @typedef {((params: PluginParams) => KeymapSpec)} RichKeymapFn */
 /** @typedef {KeymapSpec | RichKeymapFn} RichKeymap */
 
+// @ts-ignore MarkSerializerSpec not currently exported
 /** @typedef {import('prosemirror-markdown').MarkSerializerSpec} MarkSerializerSpec */
 
 /**
@@ -68,7 +69,6 @@
  *   can be a function returning an array or an array of input rules
  * @property {(params: PluginParams) => Record<string, SerializeNodeFn> | Record<string, SerializeNodeFn>} [serializeNode]
  *   Node serialization definition
- * @ts-ignore MarkSerializerSpec not currently exported
  * @property {(params: PluginParams) => Record<string, MarkSerializerSpec> | Record<string, MarkSerializerSpec>} [serializeMark]
  *   Mark serialization definition
  * @property {Record<string, RichParseSpec>} [parse]
