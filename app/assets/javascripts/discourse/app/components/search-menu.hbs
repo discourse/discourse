@@ -61,7 +61,7 @@
     </div>
     {{#if (and this.site.mobileView this.site.isMobileDevice)}}
       <DButton
-        @action={{this.close}}
+        @action={{this.cancelSearchMobile}}
         @label="cancel"
         class="btn-flat"
         data-test-button="cancel-search-mobile"

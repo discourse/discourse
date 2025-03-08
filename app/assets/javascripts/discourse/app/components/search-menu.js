@@ -211,6 +211,17 @@ export default class SearchMenu extends Component {
     this.search.inTopicContext = false;
   }
 
+  @action
+  cancelSearchMobile() {
+    this.close();
+
+    // clears search value if present
+    if (this.search.activeGlobalSearchTerm) {
+      this.search.activeGlobalSearchTerm = "";
+      this.triggerSearch();
+    }
+  }
+
   // for cancelling debounced search
   cancel() {
     if (this._activeSearch) {
