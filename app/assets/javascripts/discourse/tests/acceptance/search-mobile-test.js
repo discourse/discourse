@@ -1,18 +1,42 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { click, fillIn, findAll, visit } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
 
-  test("cancel search", async function (assert) {
-    await visit("/");
-    await click("#search-button");
-    await click('[data-test-button="cancel-search-mobile"]');
+  module("cancel search", function () {
+    test("with empty input search", async function (assert) {
+      await visit("/");
+      await click("#search-button");
+      await click('[data-test-button="cancel-search-mobile"]');
 
-    assert
-      .dom('[data-test-selector="menu-panel"]')
-      .doesNotExist("cancel button should close search panel");
+      assert
+        .dom('[data-test-selector="menu-panel"]')
+        .doesNotExist("cancel button should close search panel");
+    });
+
+    test("with search term present", async function (assert) {
+      await visit("/");
+      await click("#search-button");
+      await fillIn('[data-test-input="search-term"]', "search");
+
+      assert.strictEqual(
+        findAll('[data-test-item^="search-result-"]').length,
+        5,
+        "search results are listed on search value present"
+      );
+
+      await click('[data-test-button="cancel-search-mobile"]');
+      await click("#search-button");
+
+      assert.dom('[data-test-input="search-term"]').hasNoValue();
+      assert.strictEqual(
+        findAll('[data-test-item^="search-result-"]').length,
+        0,
+        "search results are reset"
+      );
+    });
   });
 
   test("full page search", async function (assert) {
