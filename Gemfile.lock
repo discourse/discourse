@@ -117,7 +117,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    css_parser (1.21.0)
+    css_parser (1.21.1)
       addressable
     csv (3.3.2)
     date (3.4.1)
@@ -833,7 +833,7 @@ CHECKSUMS
   cppjieba_rb (0.4.4) sha256=319a7ab57b6ec28a8d1b223487ecd114432f1930d7740db2f99c1991e6c8faaf
   crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
-  css_parser (1.21.0) sha256=6753f5b8b49dd6d5c6a90f300d5a82af8399c19dbba56d886081740ec7014518
+  css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
   csv (3.3.2) sha256=6ff0c135e65e485d1864dde6c1703b60d34cc9e19bed8452834a0b28a519bd4e
   date (3.4.1) sha256=bf268e14ef7158009bfeaec40b5fa3c7271906e88b196d958a89d4b408abe64f
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
