@@ -6,7 +6,7 @@ const extension = {
         type: { default: null },
         results: { default: null },
         public: { default: null },
-        name: {},
+        name: { default: null },
         chartType: { default: null },
         close: { default: null },
         groups: { default: null },
@@ -67,7 +67,10 @@ const extension = {
         type: token.attrGet("data-poll-type"),
         results: token.attrGet("data-poll-results"),
         public: token.attrGet("data-poll-public"),
-        name: token.attrGet("data-poll-name"),
+        name:
+          token.attrGet("data-poll-name") === "poll"
+            ? undefined
+            : token.attrGet("data-poll-name"),
         chartType: token.attrGet("data-poll-chart-type"),
         close: token.attrGet("data-poll-close"),
         groups: token.attrGet("data-poll-groups"),
