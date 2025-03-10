@@ -166,6 +166,9 @@
 }
 
 #topic-title {
+  z-index: z("base");
+  margin-bottom: 1em;
+
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -173,11 +176,33 @@
     @media screen and (min-width: 925px) {
       width: 90%; // topic title isn't full-width on wide screens
     }
+
+    input#edit-title {
+      width: 100%;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      .topic-category {
+        margin-top: 0.25em;
+      }
+    }
   }
 
   h1 {
     margin-bottom: 0;
+    font-size: var(--font-up-4);
+    line-height: var(--line-height-medium);
+    overflow-wrap: break-word;
     width: 100%;
+    z-index: z("base");
+
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-up-3);
+    }
+
+    a {
+      color: var(--primary);
+    }
   }
 
   a.edit-topic .d-icon {
@@ -424,4 +449,36 @@ a.topic-featured-link {
 
 a[data-clicks]::after {
   @include click-counter-badge;
+}
+
+.post-info a {
+  color: var(--primary-medium);
+}
+
+.topic-error {
+  padding: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: var(--font-up-4);
+  line-height: var(--line-height-medium);
+  width: 60%;
+
+  @include breakpoint("mobile-extra-large") {
+    width: 90%;
+  }
+
+  @include breakpoint("mobile-extra-large", min-width) {
+    text-align: center;
+  }
+
+  .topic-retry {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 28px;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-top: 20px;
+    }
+  }
 }
