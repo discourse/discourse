@@ -5,7 +5,9 @@
         href={{this.userPath}}
         data-user-card={{@user.username}}
         aria-hidden="true"
-      >{{avatar @user imageSize="large"}}</a>
+      >
+        {{avatar @user imageSize="large"}}
+      </a>
       <UserAvatarFlair @user={{@user}} />
     </div>
   </div>

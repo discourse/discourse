@@ -101,7 +101,7 @@ function postStreamTest(name, attrs) {
           assert.dom(".post-stream").exists({ count: 1 });
           assert.dom(".topic-post").exists({ count: 1 }, "renders all posts");
           assert
-            .dom(".topic-post:nth-of-type(1) button.hot-coffee")
+            .dom(".topic-post-shim:nth-of-type(1) button.hot-coffee")
             .exists("it transforms posts");
           assert.strictEqual(
             lastTransformedPost.topic.id,
@@ -171,25 +171,25 @@ function postStreamTest(name, attrs) {
 
           // look for special class bindings
           assert
-            .dom(".topic-post:nth-of-type(1).topic-owner")
+            .dom(".topic-post-shim:nth-of-type(1).topic-owner")
             .exists({ count: 1 }, "applies the topic owner class");
           assert
-            .dom(".topic-post:nth-of-type(1).group-trout")
+            .dom(".topic-post-shim:nth-of-type(1).group-trout")
             .exists({ count: 1 }, "applies the primary group class");
           assert
-            .dom(".topic-post:nth-of-type(1).regular")
+            .dom(".topic-post-shim:nth-of-type(1).regular")
             .exists({ count: 1 }, "applies the regular class");
           assert
-            .dom(".topic-post:nth-of-type(2).moderator")
+            .dom(".topic-post-shim:nth-of-type(2).moderator")
             .exists({ count: 1 }, "applies the moderator class");
           assert
-            .dom(".topic-post:nth-of-type(3).post-hidden")
+            .dom(".topic-post-shim:nth-of-type(3).post-hidden")
             .exists({ count: 1 }, "applies the hidden class");
           assert
-            .dom(".topic-post:nth-of-type(4).whisper")
+            .dom(".topic-post-shim:nth-of-type(4).whisper")
             .exists({ count: 1 }, "applies the whisper class");
           assert
-            .dom(".topic-post:nth-of-type(5).wiki")
+            .dom(".topic-post-shim:nth-of-type(5).wiki")
             .exists({ count: 1 }, "applies the wiki class");
 
           // it renders an article for the body with appropriate attributes
