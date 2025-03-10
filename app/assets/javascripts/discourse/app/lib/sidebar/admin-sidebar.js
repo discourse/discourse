@@ -278,6 +278,9 @@ function pluginAdminRouteLinks(router) {
         if (pluginNavLinks.length) {
           pluginNavLinks = pluginNavLinks
             .map((link) => {
+              if (!link.icon) {
+                link.icon = "gear";
+              }
               if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
                 link.routeModels = [plugin.name];
                 return link;
