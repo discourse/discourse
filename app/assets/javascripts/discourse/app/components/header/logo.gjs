@@ -6,20 +6,13 @@ import getURL from "discourse/lib/get-url";
 export default class Logo extends Component {
   @service interfaceColor;
 
-  get darkMediaQuery() {
-    if (this.interfaceColor.darkModeForced) {
-      return "all";
-    } else if (this.interfaceColor.lightModeForced) {
-      return "none";
-    } else {
-      return "(prefers-color-scheme: dark)";
-    }
-  }
-
   <template>
     {{#if (and @darkUrl (notEq @url @darkUrl))}}
       <picture>
-        <source srcset={{getURL @darkUrl}} media={{this.darkMediaQuery}} />
+        <source
+          srcset={{getURL @darkUrl}}
+          media={{this.interfaceColor.darkMediaQuery}}
+        />
         <img
           id="site-logo"
           class={{@key}}
