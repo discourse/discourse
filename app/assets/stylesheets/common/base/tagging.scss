@@ -118,15 +118,6 @@
   }
 }
 
-.discourse-tags,
-.list-tags,
-.search-category {
-  .discourse-tag.simple:not(:last-child)::after {
-    content: ",\00a0";
-    margin-left: 1px;
-  }
-}
-
 .d-header .topic-header-extra {
   .discourse-tags {
     font-size: var(--font-down-1);
@@ -136,6 +127,17 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+
+  &__tag-separator {
+    margin-right: 0.25em;
+  }
+
+  .box,
+  .bullet {
+    + .discourse-tags__tag-separator {
+      display: none;
+    }
+  }
 }
 
 .fps-result .add-full-page-tags {
