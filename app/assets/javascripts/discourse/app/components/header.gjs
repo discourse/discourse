@@ -9,7 +9,6 @@ import { and, eq, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
-import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
@@ -148,20 +147,13 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleSearchMenu() {
-    if (this.site.mobileView) {
-      const context = this.search.searchContext;
-      let params = "";
-      if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.skipSearchContext}`;
-      }
-
-      if (this.router.currentRouteName === "full-page-search") {
-        scrollTop();
-        document.querySelector(".full-page-search").focus();
-        return false;
-      } else {
-        return DiscourseURL.routeTo("/search" + params);
-      }
+    if (
+      this.site.mobileView &&
+      this.router.currentRouteName === "full-page-search"
+    ) {
+      scrollTop();
+      document.querySelector(".full-page-search").focus();
+      return false;
     }
 
     this.search.visible = !this.search.visible;

@@ -1,9 +1,10 @@
 <MenuPanel
   @animationClass={{this.animationClass}}
-  @panelClass="search-menu-panel"
+  @panelClass="search-menu-panel {{if this.isEmpty 'empty'}}"
 >
   <SearchMenu
     @onClose={{@closeSearchMenu}}
+    @onLoading={{fn (mut this.loading)}}
     @inlineResults={{true}}
     @autofocusInput={{true}}
   />

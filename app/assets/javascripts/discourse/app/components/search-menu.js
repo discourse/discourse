@@ -32,6 +32,7 @@ export function focusSearchInput() {
 export default class SearchMenu extends Component {
   @service search;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service appEvents;
 
@@ -103,6 +104,10 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  get hideInMobileView() {
+    return !(this.site.mobileView && this.site.isMobileDevice);
   }
 
   @action
@@ -196,6 +201,12 @@ export default class SearchMenu extends Component {
   }
 
   @action
+  mobileSearch() {
+    this.updateTypeFilter(null);
+    this.triggerSearch();
+  }
+
+  @action
   updateTypeFilter(value) {
     this.typeFilter = value;
   }
@@ -208,6 +219,17 @@ export default class SearchMenu extends Component {
   @action
   clearTopicContext() {
     this.search.inTopicContext = false;
+  }
+
+  @action
+  cancelSearchMobile() {
+    this.close();
+
+    // clears search value if present
+    if (this.search.activeGlobalSearchTerm) {
+      this.search.activeGlobalSearchTerm = "";
+      this.triggerSearch();
+    }
   }
 
   // for cancelling debounced search
@@ -274,19 +296,17 @@ export default class SearchMenu extends Component {
     this.suggestionKeyword = false;
 
     if (!this.search.activeGlobalSearchTerm) {
-      this.search.noResults = false;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = false;
+      this.abortPerform({
+        noResults: this.site.mobileView && this.site.isMobileDevice,
+        invalidTerm: false,
+      });
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
-      this.search.noResults = true;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = true;
+      this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
+      this.args.onLoading(this.loading);
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
@@ -313,6 +333,7 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
+          this.args.onLoading(this.loading);
           this.appEvents.trigger("search:search_result_view", {
             searchMenu: true, // delineate between search menu and full page search
           });
@@ -323,7 +344,8 @@ export default class SearchMenu extends Component {
   matchesSuggestions() {
     if (
       this.search.activeGlobalSearchTerm === undefined ||
-      this.includesTopics
+      this.includesTopics ||
+      this.hideInMobileView
     ) {
       return false;
     }
@@ -346,6 +368,14 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  abortPerform({ noResults, invalidTerm }) {
+    this.search.noResults = noResults;
+    this.invalidTerm = invalidTerm;
+    this.search.results = {};
+    this.loading = false;
+    this.typeFilter = DEFAULT_TYPE_FILTER;
   }
 
   @action
