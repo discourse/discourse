@@ -23,29 +23,65 @@ function validResult(attrs) {
 
 class TrackedUserField {
   @tracked value = null;
-  @tracked failed = false;
-  @tracked reason = null;
-  @tracked element = null;
+  owner;
   field;
 
-  constructor(field) {
+  constructor(owner, field) {
+    this.owner = owner;
     this.field = field;
   }
 
   get validation() {
-    return {
-      failed: this.failed,
-      reason: this.reason,
-      ok: !this.failed,
-      element: this.element,
-    };
+    let validation = validResult();
+    if (this.field.required && (!this.value || isEmpty(this.value))) {
+      const reasonKey =
+        this.field.field_type === "confirm"
+          ? "user_fields.required_checkbox"
+          : "user_fields.required";
+      validation = failedResult({
+        reason: i18n(reasonKey, {
+          name: this.field.name,
+        }),
+        element: this.field.element,
+      });
+    } else if (
+      this.owner.accountPassword &&
+      this.field.field_type === "text" &&
+      this.value &&
+      this.value
+        .toLowerCase()
+        .includes(this.owner.accountPassword.toLowerCase())
+    ) {
+      validation = failedResult({
+        reason: i18n("user_fields.same_as_password"),
+        element: this.field.element,
+      });
+    }
+
+    addCustomUserFieldValidationCallbacks.forEach((callback) => {
+      const customUserFieldValidationObject = callback(this);
+      if (customUserFieldValidationObject) {
+        validation = customUserFieldValidationObject;
+      }
+    });
+
+    return validation;
   }
 
-  // Update validation state
-  updateValidation(validation = {}) {
-    this.failed = !!validation.failed;
-    this.reason = validation.reason || null;
-    this.element = validation.element || null;
+  get failed() {
+    return !!this.validation.failed;
+  }
+
+  get ok() {
+    return !!this.validation.ok;
+  }
+
+  get reason() {
+    return this.validation.reason || null;
+  }
+
+  get element() {
+    return this.validation.element || null;
   }
 }
 
@@ -65,7 +101,9 @@ export default class UserFieldsValidationHelper {
     let userFields = this.owner.site.get("user_fields");
     if (userFields) {
       this.userFields = new TrackedArray(
-        userFields.sortBy("position").map((f) => new TrackedUserField(f))
+        userFields
+          .sortBy("position")
+          .map((f) => new TrackedUserField(this.owner, f))
       );
     }
   }
@@ -74,53 +112,7 @@ export default class UserFieldsValidationHelper {
     if (!this.userFields) {
       return validResult();
     }
-
-    this.userFields.forEach((userField) => {
-      let validation = validResult();
-
-      if (
-        userField.field.required &&
-        (!userField.value || isEmpty(userField.value))
-      ) {
-        const reasonKey =
-          userField.field.field_type === "confirm"
-            ? "user_fields.required_checkbox"
-            : "user_fields.required";
-        validation = failedResult({
-          reason: i18n(reasonKey, {
-            name: userField.field.name,
-          }),
-          element: userField.field.element,
-        });
-      } else if (
-        this.owner.accountPassword &&
-        userField.field.field_type === "text" &&
-        userField.value &&
-        userField.value
-          .toLowerCase()
-          .includes(this.owner.accountPassword.toLowerCase())
-      ) {
-        validation = failedResult({
-          reason: i18n("user_fields.same_as_password"),
-          element: userField.field.element,
-        });
-      }
-
-      addCustomUserFieldValidationCallbacks.forEach((callback) => {
-        const customUserFieldValidationObject = callback(userField);
-        if (customUserFieldValidationObject) {
-          validation = customUserFieldValidationObject;
-        }
-      });
-
-      userField.updateValidation(validation);
-    });
-
     const invalidUserField = this.userFields.find((f) => f.validation.failed);
-    if (invalidUserField) {
-      return invalidUserField.validation;
-    }
-
-    return { ok: true };
+    return invalidUserField ? invalidUserField.validation : validResult();
   }
 }
