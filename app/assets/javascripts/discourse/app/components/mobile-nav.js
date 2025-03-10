@@ -10,6 +10,7 @@ import $ from "jquery";
 @classNames("mobile-nav")
 export default class MobileNav extends Component {
   @service router;
+
   selectedHtml = null;
 
   @on("init")

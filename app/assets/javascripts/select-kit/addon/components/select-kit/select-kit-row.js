@@ -39,6 +39,7 @@ export default class SelectKitRow extends Component.extend(UtilsMixin) {
   role = "menuitemradio";
 
   @reads("item.lang") lang;
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 

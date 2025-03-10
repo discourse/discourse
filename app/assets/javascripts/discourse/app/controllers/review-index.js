@@ -14,6 +14,7 @@ export default class ReviewIndexController extends Controller {
   @service currentUser;
   @service dialog;
   @service toasts;
+
   queryParams = [
     "priority",
     "type",

@@ -21,6 +21,7 @@ export default class CategorySelector extends MultiSelectComponent {
   blockedCategories = null;
 
   @mapBy("categories", "id") value;
+
   init() {
     super.init(...arguments);
 

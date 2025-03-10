@@ -6,6 +6,7 @@ import { i18n } from "discourse-i18n";
 
 export default class StartBackup extends Component {
   @service siteSettings;
+
   @tracked includeUploads = true;
 
   get canManageUploadsInBackup() {

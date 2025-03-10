@@ -4,6 +4,7 @@ import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 
 export default class AdminPluginNavManager extends Service {
   @service currentUser;
+
   @tracked currentPlugin;
 
   // NOTE (martin) This is a temporary solution so we know whether to

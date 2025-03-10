@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 export default class ColorSchemeColor extends EmberObject {
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
+
   @on("init")
   startTrackingChanges() {
     this.set("originals", { hex: this.hex || "FFFFFF" });

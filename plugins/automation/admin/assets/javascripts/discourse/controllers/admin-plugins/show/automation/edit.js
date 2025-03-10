@@ -10,6 +10,7 @@ import { i18n } from "discourse-i18n";
 export default class AutomationEdit extends Controller {
   @service dialog;
   @service router;
+
   error = null;
   isUpdatingAutomation = false;
   isTriggeringAutomation = false;

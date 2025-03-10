@@ -18,6 +18,7 @@ export default class SelectKitFilter extends Component.extend(UtilsMixin) {
   tabIndex = -1;
 
   @not("isHidden") isExpanded;
+
   @computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
     "content.[]"

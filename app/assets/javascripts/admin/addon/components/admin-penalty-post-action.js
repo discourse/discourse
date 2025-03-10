@@ -12,6 +12,7 @@ export default class AdminPenaltyPostAction extends Component {
   postEdit = null;
 
   @equal("postAction", "edit") editing;
+
   @discourseComputed
   penaltyActions() {
     return ACTIONS.map((id) => {

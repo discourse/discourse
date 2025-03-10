@@ -14,6 +14,7 @@ export default class AdminRoute extends DiscourseRoute {
   @service currentUser;
   @service adminSidebarStateManager;
   @service modal;
+
   @tracked initialSidebarState;
 
   titleToken() {

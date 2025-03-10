@@ -13,6 +13,7 @@ import AdminSectionLandingWrapper from "admin/components/admin-section-landing-w
 
 export default class AdminReports extends Component {
   @service siteSettings;
+
   @tracked reports;
   @tracked filter = "";
 

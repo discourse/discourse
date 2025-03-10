@@ -6,6 +6,7 @@ import IncomingEmailModal from "../components/modal/incoming-email";
 
 export default class AdminEmailRejectedRoute extends AdminEmailIncomings {
   @service modal;
+
   status = "rejected";
 
   @action

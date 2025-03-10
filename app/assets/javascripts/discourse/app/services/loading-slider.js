@@ -62,6 +62,7 @@ class Timer {
 @disableImplicitInjections
 export default class LoadingSlider extends Service.extend(Evented) {
   @service siteSettings;
+
   @tracked loading = false;
   @tracked stillLoading = false;
 

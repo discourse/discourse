@@ -6,6 +6,7 @@ import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
+
 const DEFAULT_GROUP = "default";
 
 export default class EmojiUploader extends Component {

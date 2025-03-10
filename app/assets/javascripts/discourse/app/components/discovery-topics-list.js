@@ -11,6 +11,7 @@ import LoadMore from "discourse/mixins/load-more";
 export default class DiscoveryTopicsList extends Component.extend(LoadMore) {
   @service appEvents;
   @service documentTitle;
+
   eyelineSelector = ".topic-list-item";
 
   @on("didInsertElement")
