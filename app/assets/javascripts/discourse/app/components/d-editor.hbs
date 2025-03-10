@@ -71,22 +71,10 @@
     </div>
   </div>
 
-  {{! template-lint-disable no-invalid-interactive }}
-  <div
-    class="d-editor-preview-wrapper {{if this.forcePreview 'force-preview'}}"
-    {{on "click" this.handlePreviewClick}}
-  >
-    <DecoratedHtml
-      @className="d-editor-preview"
-      @html={{html-safe this.preview}}
-      @decorate={{this.previewUpdated}}
-    />
-    <span class="d-editor-plugin">
-      <PluginOutlet
-        @name="editor-preview"
-        @connectorTagName="div"
-        @outletArgs={{this.outletArgs}}
-      />
-    </span>
-  </div>
+  <DEditorPreview
+    @preview={{this.preview}}
+    @forcePreview={{this.forcePreview}}
+    @onPreviewUpdated={{this.previewUpdated}}
+    @outletArgs={{this.outletArgs}}
+  />
 </div>

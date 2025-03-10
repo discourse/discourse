@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -12,6 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
@@ -23,6 +25,7 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { generateCookFunction } from "discourse/lib/text";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -86,6 +89,7 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+  @tracked preview;
 
   composerEventPrefix = "composer";
   shouldBuildScrollMap = true;
@@ -933,6 +937,26 @@ export default class ComposerEditor extends Component {
 
   set selectedFormTemplateId(value) {
     this._selectedFormTemplateId = value;
+  }
+
+  @action
+  async updatePreviewFromForm() {
+    const formTemplateData = prepareFormTemplateData(
+      document.querySelector("#form-template-form"),
+      this.composer.selectedFormTemplate
+    );
+
+    if (formTemplateData) {
+      this.preview = await this.cachedCookAsync(
+        formTemplateData,
+        this.markdownOptions
+      );
+    }
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
   }
 
   @action
