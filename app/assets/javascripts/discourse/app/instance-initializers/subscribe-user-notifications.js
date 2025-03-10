@@ -153,15 +153,6 @@ class SubscribeUserNotificationsInit {
       oldAllUnread !== data.all_unread_notifications_count
     ) {
       this.appEvents.trigger("notifications:changed");
-
-      if (
-        this.site.mobileView &&
-        (data.unread_notifications - oldUnread > 0 ||
-          data.unread_high_priority_notifications - oldHighPriority > 0 ||
-          data.all_unread_notifications_count - oldAllUnread > 0)
-      ) {
-        this.appEvents.trigger("header:update-topic", null, 5000);
-      }
     }
 
     const stale = this.store.findStale(
