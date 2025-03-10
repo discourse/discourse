@@ -60,7 +60,9 @@ export async function testMarkdown(
     .replace('<img class="ProseMirror-separator" alt="">', "")
     .replace('<br class="ProseMirror-trailingBreak">', "")
     // or artifacts
-    .replace(' class=""', "");
+    .replace(' class=""', "")
+    // or a trailing-paragraph with an optional <br class="ProseMirror-trailingBreak"> inside
+    .replace(/<p>(<br class="ProseMirror-trailingBreak">)?<\/p>$/, "");
 
   assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
