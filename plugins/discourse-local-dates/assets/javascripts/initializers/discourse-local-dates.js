@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -142,6 +143,8 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  api.registerRichEditorExtension(richEditorExtension);
+
   const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
   const defaultTitle = i18n("discourse_local_dates.default_title", {
