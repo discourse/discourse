@@ -218,6 +218,12 @@ export default class SearchMenu extends Component {
   }
 
   @action
+  mobileSearch() {
+    this.updateTypeFilter(null);
+    this.triggerSearch();
+  }
+
+  @action
   updateTypeFilter(value) {
     this.typeFilter = value;
   }
