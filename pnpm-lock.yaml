@@ -318,8 +318,8 @@ importers:
         specifier: ^10.1.1
         version: 10.1.1
       jspreadsheet-ce:
-        specifier: ^4.15.0
-        version: 4.15.0
+        specifier: ^5.0.0
+        version: 5.0.0
       morphlex:
         specifier: ^0.0.16
         version: 0.0.16
@@ -5883,8 +5883,8 @@ packages:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
     engines: {'0': node >= 0.2.0}
 
-  jspreadsheet-ce@4.15.0:
-    resolution: {integrity: sha512-1A1q7uxICxzXRiql3ZhXldFPjdt5VcFcoHSEvfvBFw9DcU7bq/gAEaqyKMJPeG+6zibpO4r+b8Dk88nIR7NKng==}
+  jspreadsheet-ce@5.0.0:
+    resolution: {integrity: sha512-+xDWPD47vcZ+A0Iu3t+q89dzGBRoLILi06qetvycXGQrxR1/PCyXJ+5nyfZMERDG4NhkbZPxMRmUfo7dKs6+hg==}
 
   jsuites@5.9.1:
     resolution: {integrity: sha512-ieENBfcfTP2gn59urXGks7vLrxLIY/wT/H8NGpNetGDLTH6x7Q+bLkTJm/VjLJSTvbq99DkwpkxXsqSWKPT83w==}
@@ -14965,7 +14965,7 @@ snapshots:
 
   jsonparse@1.3.1: {}
 
-  jspreadsheet-ce@4.15.0:
+  jspreadsheet-ce@5.0.0:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
       jsuites: 5.9.1
