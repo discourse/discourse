@@ -11,6 +11,7 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class EmbeddableHost extends Component {
   @service dialog;
+
   @tracked category = null;
   @tracked tags = null;
   @tracked user = null;

@@ -57,9 +57,7 @@ export default class TopicNavigation extends Component {
       const verticalSpace =
         window.innerHeight - composerHeight - headerOffset();
 
-      if (this.composer.allowPreview) {
-        this._checkSize();
-
+      if (this.composer.isPreviewVisible) {
         this.info.set(
           "renderTimeline",
           this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
@@ -243,6 +241,7 @@ export default class TopicNavigation extends Component {
       this.appEvents.on("composer:opened", this, this.composerOpened);
       this.appEvents.on("composer:resize-ended", this, this.composerOpened);
       this.appEvents.on("composer:closed", this, this.composerClosed);
+      this.appEvents.on("composer:preview-toggled", this._checkSize);
       $("#reply-control").on("div-resized", this._checkSize);
     }
 
@@ -272,6 +271,7 @@ export default class TopicNavigation extends Component {
       this.appEvents.off("composer:opened", this, this.composerOpened);
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
+      this.appEvents.off("composer:preview-toggled", this._checkSize);
       $("#reply-control").off("div-resized", this._checkSize);
     }
     if (this.site.mobileView) {

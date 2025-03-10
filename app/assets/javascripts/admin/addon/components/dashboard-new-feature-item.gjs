@@ -16,6 +16,7 @@ import DTooltip from "float-kit/components/d-tooltip";
 export default class DiscourseNewFeatureItem extends Component {
   @service siteSettings;
   @service toasts;
+
   @tracked experimentEnabled = this.args.item.experiment_enabled;
   @tracked toggleExperimentDisabled = false;
 
