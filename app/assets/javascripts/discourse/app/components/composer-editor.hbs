@@ -18,10 +18,17 @@
             @id={{this.selectedFormTemplateId}}
             @initialValues={{this.composer.formTemplateInitialValues}}
             @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
+            @onChange={{this.updatePreviewFromForm}}
           />
         </form>
       </div>
     </div>
+    <DEditorPreview
+      @preview={{this.preview}}
+      @forcePreview={{this.forcePreview}}
+      @onPreviewUpdated={{this.previewUpdated}}
+      @outletArgs={{this.outletArgs}}
+    />
   </div>
 {{else}}
   <DEditor
