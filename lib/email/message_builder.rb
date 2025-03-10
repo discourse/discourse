@@ -319,8 +319,12 @@ module Email
       else
         if @opts[:only_reply_by_email]
           respond_instructions_key = +"user_notifications.only_reply_by_email"
-          if @opts[:private_reply] && @opts[:username] != Discourse.system_user.username
-            respond_instructions_key << "_pm"
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
+            else
+              respond_instructions_key << "_pm"
+            end
           end
         else
           respond_instructions_key =
@@ -331,12 +335,21 @@ module Email
                 +@visit_link_to_respond_key
               end
             )
-          if @opts[:private_reply] && @opts[:username] != Discourse.system_user.username
-            respond_instructions_key << "_pm"
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
+            else
+              respond_instructions_key << "_pm"
+            end
           end
         end
-        @template_args[:respond_instructions] = INSTRUCTIONS_SEPARATOR +
-          I18n.t(respond_instructions_key, @template_args)
+        @template_args[:respond_instructions] = (
+          if respond_instructions_key != ""
+            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, @template_args)
+          else
+            ""
+          end
+        )
       end
 
       if @opts[:add_unsubscribe_link]

@@ -189,10 +189,13 @@ RSpec.describe Email::MessageBuilder do
             }
           end
 
-          it "includes the correct instructions" do
+          it "only includes a button for respond_instructions" do
             expect(builder.template_args[:respond_instructions]).to eq(
               Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t("user_notifications.only_reply_by_email", builder.template_args),
+                I18n.t(
+                  "user_notifications.only_reply_by_email_pm_button_only",
+                  builder.template_args,
+                ),
             )
           end
         end
@@ -231,10 +234,13 @@ RSpec.describe Email::MessageBuilder do
         context "for private_reply to system users" do
           let(:other_opts) { { private_reply: true, username: Discourse.system_user.username } }
 
-          it "includes the correct instructions" do
+          it "only includes a button for respond_instructions" do
             expect(builder.template_args[:respond_instructions]).to eq(
               Email::MessageBuilder::INSTRUCTIONS_SEPARATOR +
-                I18n.t("user_notifications.visit_link_to_respond", builder.template_args),
+                I18n.t(
+                  "user_notifications.visit_link_to_respond_pm_button_only",
+                  builder.template_args,
+                ),
             )
           end
         end
