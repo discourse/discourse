@@ -150,6 +150,8 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
+  @tracked customShare = null;
+
   // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
   // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
   // the standard tracked method because these properties are added to the class prototype and are not enumarated by
@@ -197,8 +199,6 @@ export default class Post extends RestModel {
   @trackedPostProperty link_counts;
   @trackedPostProperty can_view_edit_history;
 
-  customShare = null;
-
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
@@ -218,9 +218,8 @@ export default class Post extends RestModel {
     });
   }
 
-  @discourseComputed("url", "customShare")
-  shareUrl(url) {
-    return this.customShare || resolveShareUrl(url, this.currentUser);
+  get shareUrl() {
+    return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
   @discourseComputed("name", "username")

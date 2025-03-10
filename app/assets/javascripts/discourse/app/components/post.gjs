@@ -125,7 +125,6 @@ export default class Post extends Component {
           @toggleLike={{this.toggleLike}}
           @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
-          @toggleReplies={{@toggleReplies}}
           @toggleReplyAbove={{@toggleReplyAbove}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}

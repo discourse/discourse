@@ -106,13 +106,13 @@ export default class PostMetaDataPosterName extends Component {
 
   #trackUserStatus() {
     if (this.userStatus.isEnabled) {
-      this.user.statusManager.trackStatus();
+      this.user?.statusManager?.trackStatus();
     }
   }
 
   #stopTrackingUserStatus() {
     if (this.userStatus.isEnabled) {
-      this.user.statusManager.stopTrackingStatus();
+      this.user?.statusManager?.stopTrackingStatus();
     }
   }
 

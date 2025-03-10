@@ -13,7 +13,6 @@ export default class PostEmbedded extends Component {
 
   @bind
   decoratePostContentBeforeAdopt(element, helper) {
-    // TODO (glimmer-post-stream): Should this be considered in stream rendering?
     this.appEvents.trigger(
       "decorate-non-stream-cooked-element",
       element,

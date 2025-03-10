@@ -21,20 +21,25 @@ import { i18n } from "discourse-i18n";
 import PostCookedHtml from "./cooked-html";
 import PostEmbedded from "./embedded";
 import PostMenu from "./menu";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export default class PostContents extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
+  @service store;
 
   @controller("topic") topicController;
 
   @tracked expandedFirstPost = false;
-  @tracked repliesBelow = [];
-  @tracked
-  filteredRepliesShown =
-    this.topicController.replies_to_post_number ===
-    this.args.post.post_number.toString();
+  @tracked repliesBelow = new TrackedArray();
+
+  get filteredRepliesShown() {
+    return (
+      this.topicController.replies_to_post_number ===
+      this.args.post.post_number.toString()
+    );
+  }
 
   get filteredRepliesView() {
     return this.siteSettings.enable_filtered_replies_view;
@@ -79,14 +84,17 @@ export default class PostContents extends Component {
   }
 
   @action
-  loadMoreReplies(after = 1) {
-    return this.store
-      .find("post-reply", { postId: this.args.post.id, after })
-      .then((replies) => {
-        replies.forEach((reply) => {
-          this.repliesBelow.push(reply);
-        });
-      });
+  async loadMoreReplies(after = 1) {
+    const replies = await this.store.find("post-reply", {
+      postId: this.args.post.id,
+      after,
+    });
+
+    replies.forEach((reply) => {
+      // the components expect a post model instance
+      const replyAsPost = this.store.createRecord("post", reply);
+      this.repliesBelow.push(replyAsPost);
+    });
   }
 
   @action
@@ -141,7 +149,9 @@ export default class PostContents extends Component {
   @action
   toggleRepliesBelow(goToPost = false) {
     if (this.repliesBelow.length) {
-      this.repliesBelow = [];
+      // since repliesBelow is a tracked array, let's truncate it instead of creating another one
+      this.repliesBelow.length = 0;
+
       if (goToPost === true) {
         const { topicUrl, post_number } = this.args.post;
         DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
@@ -207,7 +217,7 @@ export default class PostContents extends Component {
           @showReadIndicator={{@showReadIndicator}}
           @toggleLike={{@toggleLike}}
           @togglePostType={{@togglePostType}}
-          @toggleReplies={{@toggleReplies}}
+          @toggleReplies={{this.toggleReplies}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}
           @unlockPost={{@unlockPost}}
@@ -227,16 +237,16 @@ export default class PostContents extends Component {
                 post_number=@post.post_number
                 username=reply.username
               }}
-              @post={{@reply}}
+              @post={{reply}}
             />
           {{/each}}
 
           <DButton
             class="collapse-up"
-            @title="post.collapse"
-            @icon="chevron-up"
             @action={{this.toggleRepliesBelow}}
-            @translatedAriaLabel={{i18n "post.collapse_replies"}}
+            @ariaLabel="post.sr_collapse_replies"
+            @icon="chevron-up"
+            @title="post.collapse"
           />
 
           {{#if (lt this.repliesBelow @post.replies_count)}}

@@ -151,7 +151,6 @@ export default class PostArticle extends Component {
           @toggleLike={{@toggleLike}}
           @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
-          @toggleReplies={{@toggleReplies}}
           @toggleReplyAbove={{@toggleReplyAbove}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}

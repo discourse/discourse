@@ -43,7 +43,6 @@ const PostBody = <template>
       @showReadIndicator={{@showReadIndicator}}
       @toggleLike={{@toggleLike}}
       @togglePostType={{@togglePostType}}
-      @toggleReplies={{@toggleReplies}}
       @toggleWiki={{@toggleWiki}}
       @unhidePost={{@unhidePost}}
       @unlockPost={{@unlockPost}}
