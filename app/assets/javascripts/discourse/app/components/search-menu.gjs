@@ -303,17 +303,14 @@ export default class SearchMenu extends Component {
     this.suggestionKeyword = false;
 
     if (!this.search.activeGlobalSearchTerm) {
-      this.search.noResults = false;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = false;
+      this.abortPerform({
+        noResults: this.site.mobileView && this.site.isMobileDevice,
+        invalidTerm: false,
+      });
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
-      this.search.noResults = true;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = true;
+      this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
       this.invalidTerm = false;
@@ -373,6 +370,14 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  abortPerform({ noResults, invalidTerm }) {
+    this.search.noResults = noResults;
+    this.invalidTerm = invalidTerm;
+    this.search.results = {};
+    this.loading = false;
+    this.typeFilter = DEFAULT_TYPE_FILTER;
   }
 
   @action
