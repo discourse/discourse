@@ -72,7 +72,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :use_admin_sidebar,
              :use_experimental_admin_search,
              :can_view_raw_email,
              :login_method,
@@ -134,16 +133,8 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
-  def use_admin_sidebar
-    object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
-  end
-
   def use_experimental_admin_search
     object.staff? && object.in_any_groups?(SiteSetting.experimental_admin_search_enabled_groups_map)
-  end
-
-  def include_use_admin_sidebar?
-    object.staff?
   end
 
   def has_unseen_features
