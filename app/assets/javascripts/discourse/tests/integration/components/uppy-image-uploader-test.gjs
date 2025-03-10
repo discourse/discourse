@@ -18,7 +18,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").exists("displays the trash icon");
 
     assert
@@ -37,7 +37,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
@@ -56,7 +56,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       </template>
     );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
