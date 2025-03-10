@@ -19,6 +19,8 @@ const CHAT_ATTRS = [
   "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
   "chat_send_shortcut",
+  "chat_quick_reaction_type",
+  "chat_quick_reactions_custom",
 ];
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
@@ -31,6 +33,17 @@ export default class PreferencesChatController extends Controller {
   @service siteSettings;
 
   subpageTitle = i18n("chat.admin.title");
+
+  chatQuickReactionTypes = [
+    {
+      label: i18n("chat.quick_reaction_type.options.frequent"),
+      value: "frequent",
+    },
+    {
+      label: i18n("chat.quick_reaction_type.options.custom"),
+      value: "custom",
+    },
+  ];
 
   chatSendShortcutOptions = [
     {

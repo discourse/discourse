@@ -11,10 +11,52 @@
   </label>
 </div>
 
+<fieldset
+  class="control-group other"
+  data-setting-name="user_chat_quick_reaction_type"
+>
+  <legend class="control-label">{{i18n
+      "chat.quick_reaction_type.title"
+    }}</legend>
+  <div class="radio-group">
+    {{#each this.chatQuickReactionTypes as |option|}}
+      <div class="radio-group-option">
+        <label class="controls">
+          <input
+            type="radio"
+            name="user_chat_quick_reaction_type"
+            id={{concat "user_chat_quick_reaction_type_" option.value}}
+            value={{option.value}}
+            checked={{eq
+              this.model.user_option.chat_quick_reaction_type
+              option.value
+            }}
+            {{on
+              "change"
+              (withEventValue
+                (fn (mut this.model.user_option.chat_quick_reaction_type))
+              )
+            }}
+          />
+          {{option.label}}
+        </label>
+      </div>
+    {{/each}}
+  </div>
+  {{#if (eq this.model.user_option.chat_quick_reaction_type "custom")}}
+    <div class="controls tracking-controls">
+      <EmojiPicker @emoji="heart" />
+      <EmojiPicker @emoji="+1" />
+      <EmojiPicker @emoji="grin" />
+    </div>
+  {{/if}}
+</fieldset>
+
 <div
   class="control-group chat-setting"
   data-setting-name="user_chat_only_push_notifications"
 >
+  <legend class="control-label">{{i18n "user.other_settings"}}</legend>
   <label class="controls">
     <Input
       id="user_chat_only_push_notifications"
