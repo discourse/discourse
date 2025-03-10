@@ -235,7 +235,7 @@ export default class UppyImageUploader extends Component {
             @action={{@onUploadDeleted}}
             @icon="trash-can"
             @disabled={{this.disabled}}
-            @label="delete"
+            @label="upload_selector.delete"
             class="btn-danger btn-small"
           />
         </div>

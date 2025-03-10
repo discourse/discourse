@@ -533,7 +533,6 @@ en:
     preview: "preview"
     cancel: "cancel"
 
-    delete: "Delete"
     deleting: "Deleting…"
 
     save: "Save Changes"
@@ -2974,6 +2973,7 @@ en:
 
     upload_selector:
       change: "Change"
+      delete: "Delete"
       uploading: "Uploading"
       processing: "Processing upload"
       select_file: "Click to upload or drag & drop file"
