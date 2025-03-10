@@ -142,6 +142,18 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
+      parent_tag_name =
+        Tag
+          .where_name(params[:tag_id])
+          .where.not(target_tag_id: nil)
+          .joins("JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id")
+          .pick("parent_tags.name")
+
+      if parent_tag_name
+        params[:tag_id] = parent_tag_name
+        return redirect_to url_for(params.to_unsafe_hash)
+      end
+
       @tag_id = params[:tag_id].force_encoding("UTF-8")
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }

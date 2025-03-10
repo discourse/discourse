@@ -427,8 +427,9 @@ RSpec.describe TagsController do
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tag/#{synonym.name}"
-      expect(response.status).to eq(200)
+      get "/tag/#{synonym.name}/l/top.json?period=daily"
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
     end
 
     it "does not show staff-only tags" do
