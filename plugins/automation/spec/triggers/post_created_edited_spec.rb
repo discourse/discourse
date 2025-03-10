@@ -414,99 +414,75 @@ describe "PostCreatedEdited" do
       end
     end
 
-    context "when category is restricted" do
+    context "when using restricted_categories with deeply nested categories" do
+      before_all { SiteSetting.max_category_nesting = 3 }
+
+      fab!(:top_category) { Fabricate(:category) }
+      fab!(:mid_category) { Fabricate(:category, parent_category_id: top_category.id) }
+      fab!(:bottom_category) { Fabricate(:category, parent_category_id: mid_category.id) }
+      fab!(:another_category) { Fabricate(:category) }
+
       before do
         automation.upsert_field!(
-          "restricted_category",
-          "category",
-          { value: Category.first.id },
+          "restricted_categories",
+          "categories",
+          { value: [top_category.id] },
           target: "trigger",
         )
       end
 
-      context "when category is allowed" do
-        it "fires the trigger" do
-          list =
-            capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: Category.first.id }))
-            end
+      it "fires the trigger for posts in any grand child category" do
+        list =
+          capture_contexts do
+            PostCreator.create(user, basic_topic_params.merge({ category: bottom_category.id }))
+          end
 
-          expect(list.length).to eq(1)
-          expect(list[0]["kind"]).to eq("post_created_edited")
-        end
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
       end
 
-      context "when restricted to a subcategory" do
+      it "will not fire on unrelated categories" do
+        list =
+          capture_contexts do
+            PostCreator.create(user, basic_topic_params.merge({ category: another_category.id }))
+          end
+        expect(list.length).to eq(0)
+      end
+
+      it "fires the trigger for posts in any child category" do
+        list =
+          capture_contexts do
+            PostCreator.create(user, basic_topic_params.merge({ category: mid_category.id }))
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      context "when exclude_subcategories is enabled" do
         before do
           automation.upsert_field!(
-            "restricted_category",
-            "category",
-            { value: subcategory.id },
+            "exclude_subcategories",
+            "boolean",
+            { value: true },
             target: "trigger",
           )
         end
 
-        it "fires the trigger" do
+        it "does not fire for children" do
           list =
             capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: subcategory.id }))
+              PostCreator.create(user, basic_topic_params.merge({ category: bottom_category.id }))
             end
-
-          expect(list.length).to eq(1)
-          expect(list[0]["kind"]).to eq("post_created_edited")
-        end
-
-        it "does not fire the trigger for the parent" do
-          list =
-            capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: parent_category.id }))
-            end
-
           expect(list.length).to eq(0)
         end
-      end
 
-      context "when restricted to a parent category" do
-        before do
-          automation.upsert_field!(
-            "restricted_category",
-            "category",
-            { value: parent_category.id },
-            target: "trigger",
-          )
-        end
-
-        it "fires the trigger for a subcategory" do
+        it "fires for the exact category match" do
           list =
             capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: subcategory.id }))
+              PostCreator.create(user, basic_topic_params.merge({ category: top_category.id }))
             end
-
           expect(list.length).to eq(1)
-          expect(list[0]["kind"]).to eq("post_created_edited")
-        end
-
-        it "fires the trigger for the parent" do
-          list =
-            capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: parent_category.id }))
-            end
-
-          expect(list.length).to eq(1)
-          expect(list[0]["kind"]).to eq("post_created_edited")
-        end
-      end
-
-      context "when category is not allowed" do
-        fab!(:category)
-
-        it "doesn’t fire the trigger" do
-          list =
-            capture_contexts do
-              PostCreator.create(user, basic_topic_params.merge({ category: category.id }))
-            end
-
-          expect(list).to be_blank
         end
       end
     end
@@ -528,6 +504,74 @@ describe "PostCreatedEdited" do
         list = capture_contexts { post.revise(post.user, raw: "this is another cool topic") }
 
         expect(list.length).to eq(0)
+      end
+    end
+
+    context "when archetype is restricted" do
+      context "when only regular topics are allowed" do
+        before do
+          automation.upsert_field!(
+            "restricted_archetype",
+            "choices",
+            { value: "regular" },
+            target: "trigger",
+          )
+        end
+
+        it "fires the trigger for regular topics" do
+          list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+
+        it "doesn't fire the trigger for private messages" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  archetype: Archetype.private_message,
+                  target_usernames: [Fabricate(:user).username],
+                ),
+              )
+            end
+
+          expect(list.length).to eq(0)
+        end
+      end
+
+      context "when only private messages are allowed" do
+        before do
+          automation.upsert_field!(
+            "restricted_archetype",
+            "choices",
+            { value: "private_message" },
+            target: "trigger",
+          )
+        end
+
+        it "fires the trigger for private messages" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  archetype: Archetype.private_message,
+                  target_usernames: [Fabricate(:user).username],
+                ),
+              )
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+
+        it "doesn't fire the trigger for regular topics" do
+          list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+          expect(list.length).to eq(0)
+        end
       end
     end
 

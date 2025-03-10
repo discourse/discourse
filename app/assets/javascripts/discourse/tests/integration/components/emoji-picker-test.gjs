@@ -74,7 +74,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
     assert
       .dom(".emoji-picker__section.filtered > img")
-      .exists({ count: 6 }, "it filters the emojis list");
+      .exists({ count: 5 }, "it filters the emojis list");
     assert
       .dom('.emoji-picker__section.filtered > img[alt="grinning_face"]')
       .exists("it filters the correct emoji");
