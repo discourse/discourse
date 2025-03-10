@@ -11,7 +11,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {
@@ -131,7 +130,6 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
-    use_admin_sidebar: true,
   });
 
   needs.hooks.beforeEach(() => {
@@ -254,7 +252,6 @@ acceptance(
     needs.user({
       admin: true,
       groups: [AUTO_GROUPS.admins],
-      use_admin_sidebar: true,
     });
 
     needs.hooks.beforeEach(() => {
