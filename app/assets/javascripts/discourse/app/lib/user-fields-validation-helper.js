@@ -71,22 +71,6 @@ class TrackedUserField {
 
     return validation;
   }
-
-  get failed() {
-    return !!this.validation.failed;
-  }
-
-  get ok() {
-    return !!this.validation.ok;
-  }
-
-  get reason() {
-    return this.validation.reason || null;
-  }
-
-  get element() {
-    return this.validation.element || null;
-  }
 }
 
 export default class UserFieldsValidationHelper {
