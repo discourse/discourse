@@ -5,6 +5,7 @@
   <SearchMenu
     @onClose={{@closeSearchMenu}}
     @onLoading={{fn (mut this.loading)}}
+    @isEmpty={{this.isEmpty}}
     @inlineResults={{true}}
     @autofocusInput={{true}}
   />

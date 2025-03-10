@@ -2,7 +2,10 @@
   <SearchMenu::BrowserSearchTip />
 {{else}}
   <ConditionalLoadingSection @isLoading={{this.loading}}>
-    <div class="results" data-test-selector="search-menu-results">
+    <div
+      class="results {{unless @isEmpty 'with-data'}}"
+      data-test-selector="search-menu-results"
+    >
       <PluginOutlet
         @name="search-menu-results-top"
         @outletArgs={{hash
