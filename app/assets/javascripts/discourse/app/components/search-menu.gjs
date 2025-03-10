@@ -114,6 +114,10 @@ export default class SearchMenu extends Component {
     return false;
   }
 
+  get hideInMobileView() {
+    return !(this.site.mobileView && this.site.isMobileDevice);
+  }
+
   @action
   onKeydown(event) {
     if (event.key === "Escape") {
@@ -345,7 +349,8 @@ export default class SearchMenu extends Component {
   matchesSuggestions() {
     if (
       this.search.activeGlobalSearchTerm === undefined ||
-      this.includesTopics
+      this.includesTopics ||
+      this.hideInMobileView
     ) {
       return false;
     }
