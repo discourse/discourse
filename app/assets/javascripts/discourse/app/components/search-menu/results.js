@@ -22,6 +22,7 @@ export default class Results extends Component {
   @service search;
   @service site;
 
+  // TODO: unused local prop `searchTopics`
   @tracked searchTopics = this.args.searchTopics;
 
   get showInDesktopView() {
@@ -59,6 +60,7 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
+  // TODO: unused action `updateSearchTopics`
   @action
   updateSearchTopics(value) {
     this.searchTopics = value;
