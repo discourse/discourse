@@ -428,7 +428,7 @@ GEM
       psych (>= 4.0.0)
     redcarpet (3.6.1)
     redis (4.8.1)
-    redis-client (0.23.2)
+    redis-client (0.24.0)
       connection_pool
     redis-namespace (1.11.0)
       redis (>= 4)
@@ -1005,7 +1005,7 @@ CHECKSUMS
   rdoc (6.12.0) sha256=7d6f706e070bffa5d18a448f24076cbfb34923a99c1eab842aa18e6ca69f56e0
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   redis (4.8.1) sha256=387ee086694fffc9632aaeb1efe4a7b1627ca783bf373320346a8a20cd93333a
-  redis-client (0.23.2) sha256=e33bab6682c8155cfef95e6dd296936bb9c2981a89fb578ace27a076fa2836fa
+  redis-client (0.24.0) sha256=ee65ee39cb2c38608b734566167fd912384f3c1241f59075e22858f23a085dbb
   redis-namespace (1.11.0) sha256=e91a1aa2b2d888b6dea1d4ab8d39e1ae6fac3426161feb9d91dd5cca598a2239
   regexp_parser (2.10.0) sha256=cb6f0ddde88772cd64bff1dbbf68df66d376043fe2e66a9ef77fcb1b0c548c61
   reline (0.6.0) sha256=57620375dcbe56ec09bac7192bfb7460c716bbf0054dc94345ecaa5438e539d2
