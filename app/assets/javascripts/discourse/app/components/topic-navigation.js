@@ -108,11 +108,6 @@ export default class TopicNavigation extends Component {
     this._checkSize();
   }
 
-  @observes("composer.allowPreview")
-  _handleAllowPreviewChange() {
-    this._checkSize();
-  }
-
   composerOpened() {
     this.set("composerOpen", true);
     this._checkSize();
