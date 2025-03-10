@@ -33,7 +33,7 @@ RSpec.describe Admin::ReportsController do
         get "/admin/reports.json"
         expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include("site_traffic")
         expect(response.parsed_body["reports"].map { |r| r[:type] }).to include(
-          *Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
+          *Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
         )
       end
     end
@@ -45,7 +45,7 @@ RSpec.describe Admin::ReportsController do
         get "/admin/reports.json"
         expect(response.parsed_body["reports"].map { |r| r[:type] }).to include("site_traffic")
         expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include(
-          *Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
+          *Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
         )
       end
     end
@@ -385,7 +385,7 @@ RSpec.describe Admin::ReportsController do
       end
 
       it "does not allow running site_traffic report" do
-        Admin::ReportsController::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -405,7 +405,7 @@ RSpec.describe Admin::ReportsController do
       end
 
       it "does not allow running legacy pageview reports" do
-        Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
