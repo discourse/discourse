@@ -4,7 +4,7 @@ class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
   def index
-    Reports::List.call { on_success { |reports:| render_json_dump(reports: reports) } }
+    render_json_dump(reports: Reports::ListQuery.call)
   end
 
   def bulk
