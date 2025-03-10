@@ -5704,6 +5704,7 @@ en:
         key: "Key"
         keys: "Keys"
         created: Created by
+        scope: Scope
         updated: Updated
         last_used: Last used
         never_used: Never
