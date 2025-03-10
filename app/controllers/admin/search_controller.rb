@@ -4,8 +4,10 @@ class Admin::SearchController < Admin::AdminController
   RESULT_TYPES = %w[page setting theme component report].freeze
 
   def index
-    # TODO (martin) Include reports here too, need to refact
-    # the reports controller into a reusable lookup service first.
+    all_reports = []
+
+    Reports::List.call { on_success { |reports:| all_reports = reports } }
+
     respond_to do |format|
       format.json do
         render_json_dump(
@@ -20,6 +22,7 @@ class Admin::SearchController < Admin::AdminController
             ),
           themes_and_components:
             serialize_data(Theme.include_relations.order(:name), BasicThemeSerializer),
+          reports: all_reports,
         )
       end
 
