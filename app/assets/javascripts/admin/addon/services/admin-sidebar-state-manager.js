@@ -5,6 +5,7 @@ import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
+
   @alias("sidebarState.isForcingAdminSidebar") isForcingAdminSidebar;
 
   keywords = {};
