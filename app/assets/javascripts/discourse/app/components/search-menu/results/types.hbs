@@ -13,7 +13,7 @@
         {{! template-lint-disable no-invalid-interactive }}
         <li
           class="item"
-          data-test-item="search-result-{{resultType.type}}-{{index}}"
+          data-test-type-item="search-result-{{resultType.type}}-{{index}}"
           {{on
             "keydown"
             (fn this.onKeydown (hash resultType=resultType result=result))

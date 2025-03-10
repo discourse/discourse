@@ -1,4 +1,7 @@
-<ul class="search-menu-initial-options">
+<ul
+  class="search-menu-initial-options"
+  data-test-selector="search-menu-initial-options"
+>
   <PluginOutlet
     @name="search-menu-initial-options"
     @outletArgs={{hash
@@ -21,6 +24,7 @@
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{this.contextTypeKeyword}}
+        data-test-assistant-item="search-with-modifier"
       />
     {{else}}
       {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
@@ -32,6 +36,7 @@
             @extraHint={{true}}
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{this.contextTypeKeyword}}
+            data-test-assistant-item="search-in-topics-posts"
           />
         {{/if}}
 
