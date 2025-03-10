@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
@@ -36,11 +35,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.mobile-templates",
   "discourse.component-template-overrides",
 ];
-
-if (DEBUG) {
-  // used in system specs
-  CRITICAL_DEPRECATIONS.push("fake-deprecation");
-}
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
 // handlers and link them up to the application lifecycle using module-local state.
