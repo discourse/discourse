@@ -6,14 +6,14 @@ import {
 export default class Serializer {
   #pmSerializer;
 
-  constructor(extensions, includeDefault = true) {
+  constructor(extensions, pluginParams, includeDefault = true) {
     this.nodes = includeDefault ? { ...defaultMarkdownSerializer.nodes } : {};
     this.nodes.hard_break = (state) => state.write("\n");
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
 
-    this.#extractNodeSerializers(extensions);
-    this.#extractMarkSerializers(extensions);
+    this.#extractNodeSerializers(extensions, pluginParams);
+    this.#extractMarkSerializers(extensions, pluginParams);
 
     this.#pmSerializer = new MarkdownSerializer(this.nodes, this.marks);
   }
@@ -22,15 +22,23 @@ export default class Serializer {
     return this.#pmSerializer.serialize(doc);
   }
 
-  #extractNodeSerializers(extensions) {
+  #extractNodeSerializers(extensions, pluginParams) {
     for (const { serializeNode } of extensions) {
-      Object.assign(this.nodes, serializeNode);
+      const serializer =
+        typeof serializeNode === "function"
+          ? serializeNode(pluginParams)
+          : serializeNode;
+      Object.assign(this.nodes, serializer);
     }
   }
 
-  #extractMarkSerializers(extensions) {
+  #extractMarkSerializers(extensions, pluginParams) {
     for (const { serializeMark } of extensions) {
-      Object.assign(this.marks, serializeMark);
+      const serializer =
+        typeof serializeMark === "function"
+          ? serializeMark(pluginParams)
+          : serializeMark;
+      Object.assign(this.marks, serializer);
     }
   }
 }
