@@ -32,6 +32,10 @@ class TrackedUserField {
   }
 
   get validation() {
+    if (!this.owner.validationVisible) {
+      return validResult();
+    }
+
     let validation = validResult();
     if (this.field.required && (!this.value || isEmpty(this.value))) {
       const reasonKey =
@@ -87,9 +91,11 @@ class TrackedUserField {
 
 export default class UserFieldsValidationHelper {
   @tracked userFields = new TrackedArray();
+  @tracked validationVisible = true;
 
-  constructor(owner) {
+  constructor({ owner, showValidationOnInit = true }) {
     this.owner = owner;
+    this.validationVisible = showValidationOnInit;
     this.initializeUserFields();
   }
 
@@ -101,11 +107,13 @@ export default class UserFieldsValidationHelper {
     let userFields = this.owner.site.get("user_fields");
     if (userFields) {
       this.userFields = new TrackedArray(
-        userFields
-          .sortBy("position")
-          .map((f) => new TrackedUserField(this.owner, f))
+        userFields.sortBy("position").map((f) => new TrackedUserField(this, f))
       );
     }
+  }
+
+  get accountPassword() {
+    return this.owner.accountPassword;
   }
 
   get userFieldsValidation() {
