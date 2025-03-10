@@ -6,6 +6,7 @@ import { bind } from "discourse/lib/decorators";
 
 export default class HorizontalOverflowNav extends Component {
   @service site;
+
   @tracked hasScroll;
   @tracked hideRightScroll = false;
   @tracked hideLeftScroll = true;

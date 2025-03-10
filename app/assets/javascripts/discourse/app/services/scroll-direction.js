@@ -17,6 +17,7 @@ export const UNSCROLLED = Symbol("unscrolled"),
 @disableImplicitInjections
 export default class ScrollDirection extends Service {
   @service router;
+
   @tracked lastScrollDirection = UNSCROLLED;
 
   #lastScroll = null;

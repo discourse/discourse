@@ -8,6 +8,7 @@ export default class AdminEmbeddingIndexController extends Controller {
   @service router;
   @service site;
   @controller adminEmbedding;
+
   @alias("adminEmbedding.embedding") embedding;
 
   get showEmbeddingCode() {

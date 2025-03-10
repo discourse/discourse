@@ -10,6 +10,7 @@ import { cook } from "discourse/lib/text";
 
 export default class CookText extends Component {
   @service siteSettings;
+
   @tracked cooked = null;
 
   constructor(owner, args) {
