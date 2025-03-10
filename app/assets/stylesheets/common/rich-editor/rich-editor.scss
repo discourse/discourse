@@ -162,6 +162,29 @@
       z-index: 1;
     }
   }
+
+  .onebox-loading {
+    border-radius: var(--d-border-radius);
+    padding: 0 0.125rem;
+    background: linear-gradient(
+      90deg,
+      var(--primary-very-low) 0%,
+      var(--primary-low) 50%,
+      var(--primary-very-low) 100%
+    );
+    background-size: 200% 100%;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loading-pulse {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
 
 /*********************************************************

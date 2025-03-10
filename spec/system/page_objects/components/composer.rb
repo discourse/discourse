@@ -34,6 +34,11 @@ module PageObjects
         self
       end
 
+      def focus
+        find(COMPOSER_INPUT_SELECTOR).click
+        self
+      end
+
       def fill_title(title)
         find("#{COMPOSER_ID} #reply-title").fill_in(with: title)
         self
@@ -71,6 +76,10 @@ module PageObjects
 
       def has_content?(content)
         composer_input.value == content
+      end
+
+      def has_value?(value)
+        expect(composer_input.value).to eq(value)
       end
 
       def has_popup_content?(content)
