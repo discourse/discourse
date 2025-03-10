@@ -4524,6 +4524,30 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_see_ip?" do
+    let(:guardian_admin) { Guardian.new(admin) }
+    let(:guardian_moderator) { Guardian.new(moderator) }
+
+    context "when user is an admin" do
+      it "returns true" do
+        expect(guardian_admin.can_see_ip?).to eq(true)
+      end
+    end
+
+    context "when user is a moderator" do
+      before { SiteSetting.moderators_view_ips = true }
+
+      it "returns true if moderators_view_ips is enabled" do
+        expect(guardian_moderator.can_see_ip?).to eq(true)
+      end
+
+      it "returns false if moderators_view_ips is disabled" do
+        SiteSetting.moderators_view_ips = false
+        expect(guardian_moderator.can_see_ip?).to eq(false)
+      end
+    end
+  end
+
   describe "#is_developer?" do
     after { Developer.rebuild_cache }
 
