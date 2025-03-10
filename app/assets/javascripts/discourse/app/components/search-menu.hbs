@@ -29,6 +29,10 @@
         @outletArgs={{hash openSearchMenu=this.open}}
       />
 
+      {{#unless this.hideInMobileView}}
+        <SearchMenu::MobileSearchButton @onTap={{this.mobileSearch}} />
+      {{/unless}}
+
       <SearchMenu::SearchTerm
         @searchTermChanged={{this.searchTermChanged}}
         @typeFilter={{this.typeFilter}}
