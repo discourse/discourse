@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import { eq, gt, has } from "truth-helpers";
+import { eq, gt, has, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
@@ -70,41 +70,6 @@ function splitWhere(elements, f) {
   }, []);
 }
 
-// categories must be topologically sorted so that the parents appear before
-// the children
-function findPartialCategories(categories) {
-  const categoriesById = new Map(
-    categories.map((category) => [category.id, category])
-  );
-  const subcategoryCounts = new Map();
-  const subcategoryCountsRecursive = new Map();
-  const partialCategoryInfos = new Map();
-
-  for (const category of categories.slice().reverse()) {
-    const count = subcategoryCounts.get(category.parent_category_id) || 0;
-    subcategoryCounts.set(category.parent_category_id, count + 1);
-
-    const recursiveCount =
-      subcategoryCountsRecursive.get(category.parent_category_id) || 0;
-
-    subcategoryCountsRecursive.set(
-      category.parent_category_id,
-      recursiveCount + (subcategoryCountsRecursive.get(category.id) || 0) + 1
-    );
-  }
-
-  for (const [id, count] of subcategoryCounts) {
-    if (count === 5 && categoriesById.has(id)) {
-      partialCategoryInfos.set(id, {
-        level: categoriesById.get(id).level + 1,
-        offset: subcategoryCountsRecursive.get(id),
-      });
-    }
-  }
-
-  return partialCategoryInfos;
-}
-
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
@@ -116,13 +81,14 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   selectedCategoryIds = new TrackedSet([
     ...this.currentUser.sidebar_category_ids,
   ]);
+  @tracked loadAnotherPage = false;
+  @tracked loadingSubcategories = new TrackedSet();
   selectedFilter = "";
   selectedMode = "everything";
   loadedFilter;
   loadedMode;
   loadedPage;
   saving = false;
-  loadAnotherPage = false;
   unseenCategoryIdsChanged = false;
   observer = new IntersectionObserver(
     ([entry]) => {
@@ -143,6 +109,20 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   recomputeGroupings() {
+    const categoriesById = new Map();
+    const categoriesCountByParentId = new Map();
+
+    this.fetchedCategories.forEach((category) => {
+      categoriesById.set(category.id, category);
+
+      if (category.parent_category_id !== undefined) {
+        categoriesCountByParentId.set(
+          category.parent_category_id,
+          (categoriesCountByParentId.get(category.parent_category_id) || 0) + 1
+        );
+      }
+    });
+
     const categoriesWithShowMores = this.fetchedCategories.flatMap((el, i) => {
       const result = [{ type: "category", category: el }];
 
@@ -156,20 +136,21 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       if (
         !nextIsSibling &&
         !nextIsChild &&
-        this.partialCategoryInfos.has(elParentID)
+        elParentID &&
+        categoriesCountByParentId.get(elParentID) <
+          categoriesById.get(elParentID).subcategory_count
       ) {
-        const { level, offset } = this.partialCategoryInfos.get(elParentID);
-
         result.push({
           type: "show-more",
           id: elParentID,
-          level,
-          offset,
+          level: el.level,
+          offset: categoriesCountByParentId.get(elParentID),
+          loading: false,
         });
       }
 
       return result;
-    }, []);
+    });
 
     this.fetchedCategoriesGroupings = splitWhere(
       categoriesWithShowMores,
@@ -180,7 +161,6 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   setFetchedCategories(categories) {
     this.fetchedCategories = categories;
-    this.partialCategoryInfos = findPartialCategories(categories);
     this.recomputeGroupings();
   }
 
@@ -199,18 +179,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       categories = [...this.fetchedCategories.slice(index), ...categories];
     }
 
-    this.partialCategoryInfos = new Map([
-      ...this.partialCategoryInfos,
-      ...findPartialCategories(categories),
-    ]);
-
     this.recomputeGroupings();
   }
 
-  substituteInFetchedCategories(id, subcategories, offset) {
-    this.partialCategoryInfos.delete(id);
-    this.recomputeGroupings();
-
+  substituteInFetchedCategories(id, subcategories) {
     if (subcategories.length !== 0) {
       const index =
         this.fetchedCategories.findLastIndex(
@@ -222,18 +194,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         ...subcategories,
         ...this.fetchedCategories.slice(index),
       ];
-
-      this.partialCategoryInfos = new Map([
-        ...this.partialCategoryInfos,
-        ...findPartialCategories(subcategories),
-      ]);
-
-      this.partialCategoryInfos.set(id, {
-        offset: offset + subcategories.length,
-      });
-
-      this.recomputeGroupings();
     }
+
+    this.recomputeGroupings();
+    this.loadingSubcategories.delete(id);
   }
 
   @action
@@ -296,7 +260,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
           opts
         );
 
-        this.substituteInFetchedCategories(id, subcategories, offset);
+        this.substituteInFetchedCategories(id, subcategories);
       }
     } else {
       // The shown categories are stale, refresh everything
@@ -327,6 +291,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   async loadSubcategories(id, offset) {
+    this.loadingSubcategories.add(id);
     this.subcategoryLoadList.push({ id, offset });
     this.debouncedSendRequest();
   }
@@ -428,11 +393,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       class="sidebar__edit-navigation-menu__categories-modal"
     >
       <form class="sidebar-categories-form">
-        {{#if this.initialLoad}}
-          <div class="sidebar-categories-form__loading">
-            {{loadingSpinner size="small"}}
-          </div>
-        {{else}}
+        {{#unless this.initialLoad}}
           {{#each this.fetchedCategoriesGroupings as |categories|}}
             <div
               style={{borderColor (get categories "0.category.color") "left"}}
@@ -491,11 +452,19 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     <label class="sidebar-categories-form__category-label">
                       <div class="sidebar-categories-form__category-wrapper">
                         <div class="sidebar-categories-form__category-badge">
-                          <DButton
-                            @label="sidebar.categories_form_modal.show_more"
-                            @action={{fn this.loadSubcategories c.id c.offset}}
-                            class="btn-flat"
-                          />
+                          {{#if (has this.loadingSubcategories c.id)}}
+                            {{loadingSpinner size="small"}}
+                          {{else}}
+                            <DButton
+                              @label="sidebar.categories_form_modal.show_more"
+                              @action={{fn
+                                this.loadSubcategories
+                                c.id
+                                c.offset
+                              }}
+                              class="btn-flat"
+                            />
+                          {{/if}}
                         </div>
                       </div>
                     </label>
@@ -508,6 +477,11 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
               {{i18n "sidebar.categories_form_modal.no_categories"}}
             </div>
           {{/each}}
+        {{/unless}}
+        {{#if (or this.initialLoad this.loadAnotherPage)}}
+          <div class="sidebar-categories-form__loading">
+            {{loadingSpinner}}
+          </div>
         {{/if}}
       </form>
     </EditNavigationMenuModal>
