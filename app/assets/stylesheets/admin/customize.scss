@@ -853,6 +853,18 @@
   }
 }
 
+.theme-install-card {
+  &__external-links {
+    display: flex;
+    margin-bottom: 1em;
+    flex-direction: column;
+  }
+
+  &__install-button {
+    width: 100%;
+  }
+}
+
 .add-upload-modal {
   input[type="file"] {
     display: block;
@@ -1194,6 +1206,10 @@
     padding-left: 2%;
     width: 68%;
 
+    &--with-sidebar {
+      padding-left: 0;
+    }
+
     .title {
       input {
         width: 80%;
@@ -1203,6 +1219,10 @@
 
   .themes-list {
     width: 28%;
+  }
+
+  .back-to-themes-and-components {
+    margin-bottom: 1em;
   }
 }
 
