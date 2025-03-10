@@ -35,6 +35,24 @@ acceptance("Search - Mobile", function (needs) {
         .dom('[data-test-anchor="show-more"]')
         .exists("should show 'Show more' link");
     });
+
+    test("on search term clear", async function (assert) {
+      await visit("/");
+      await click("#search-button");
+      await fillIn('[data-test-input="search-term"]', "find");
+
+      assert.strictEqual(
+        findAll('[data-test-type-item^="search-result-topic-"]').length,
+        5,
+        "search results are listed on search value present"
+      );
+
+      await click('[data-test-anchor="clear-search-input"]');
+
+      assert
+        .dom('[data-test-selector="search-menu-results"]')
+        .hasNoText("search results should be empty");
+    });
   });
 
   module("cancel search", function () {
