@@ -44,7 +44,10 @@ export default class CreateAccount extends Component {
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
   passwordValidationHelper = new PasswordValidationHelper(this);
-  userFieldsValidationHelper = new UserFieldsValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    owner: this,
+    showValidationOnInit: false,
+  });
 
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
@@ -514,6 +517,7 @@ export default class CreateAccount extends Component {
   createAccount() {
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
+    this.userFieldsValidationHelper.validationVisible = true;
     this.set("emailValidationVisible", true);
 
     const validation = [
@@ -540,6 +544,7 @@ export default class CreateAccount extends Component {
       return;
     }
 
+    this.userFieldsValidationHelper.validationVisible = false;
     this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
