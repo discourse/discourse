@@ -1,9 +1,5 @@
 .search-menu {
-  .mobile-search-button {
-    padding-right: $hpad / 2;
-  }
-
   input#search-term {
-    padding-left: $hpad / 2;
+    padding-left: 0;
   }
 }
