@@ -15,16 +15,14 @@ import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default class CreateAccount extends Component.extend(
-  UserFieldsValidation
-) {
+export default class CreateAccount extends Component {
   @service site;
   @service siteSettings;
   @service login;
@@ -41,12 +39,15 @@ export default class CreateAccount extends Component.extend(
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
-  userFields = null;
   maskPassword = true;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
   passwordValidationHelper = new PasswordValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    owner: this,
+    showValidationOnInit: false,
+  });
 
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
@@ -65,6 +66,16 @@ export default class CreateAccount extends Component.extend(
         () => (this.skipConfirmation = false)
       );
     }
+  }
+
+  @dependentKeyCompat
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
+  }
+
+  @dependentKeyCompat
+  get userFieldsValidation() {
+    return this.userFieldsValidationHelper.userFieldsValidation;
   }
 
   @action
@@ -415,9 +426,7 @@ export default class CreateAccount extends Component.extend(
     // Add the userFields to the data
     if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
-      this.userFields.forEach(
-        (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
-      );
+      this.userFields.forEach((f) => (attrs.userFields[f.field.id] = f.value));
     }
 
     this.set("formSubmitted", true);
@@ -508,6 +517,7 @@ export default class CreateAccount extends Component.extend(
   createAccount() {
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
+    this.userFieldsValidationHelper.validationVisible = true;
     this.set("emailValidationVisible", true);
 
     const validation = [
@@ -534,6 +544,7 @@ export default class CreateAccount extends Component.extend(
       return;
     }
 
+    this.userFieldsValidationHelper.validationVisible = false;
     this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
