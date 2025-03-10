@@ -20,11 +20,20 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
+  @service site;
 
   @tracked searchTopics = this.args.searchTopics;
 
+  get showInDesktopView() {
+    return !(this.site.mobileView && this.site.isMobileDevice);
+  }
+
   get renderInitialOptions() {
-    return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
+    return (
+      !this.search.activeGlobalSearchTerm &&
+      !this.args.inPMInboxContext &&
+      this.showInDesktopView
+    );
   }
 
   get noTopicResults() {
