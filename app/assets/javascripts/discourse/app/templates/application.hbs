@@ -42,9 +42,13 @@
   <div id="main-outlet-wrapper" class="wrap" role="main">
     <div class="sidebar-wrapper">
       {{! empty div allows for animation }}
-      {{#if (and this.sidebarEnabled this.showSidebar)}}
-        <Sidebar @toggleSidebar={{action "toggleSidebar"}} />
-      {{/if}}
+      <PluginOutlet @name="sidebar-ignore-settings">
+        {{#if (and this.sidebarEnabled this.showSidebar)}}
+        <PluginOutlet @name="sidebar">
+          <Sidebar @toggleSidebar={{action "toggleSidebar"}} />
+        </PluginOutlet>
+        {{/if}}
+      </PluginOutlet>
     </div>
 
     <LoadingSliderFallbackSpinner />
