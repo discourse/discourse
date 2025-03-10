@@ -591,6 +591,12 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
+  async removePassword() {
+    return ajax(userPath(`${this.username}/remove-password`), {
+      type: "PUT",
+    });
+  }
+
   loadSecondFactorCodes() {
     return ajax("/u/second_factors.json", {
       type: "POST",
