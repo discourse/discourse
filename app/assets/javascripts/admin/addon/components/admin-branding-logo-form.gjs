@@ -15,6 +15,7 @@ import SimpleList from "admin/components/simple-list";
 export default class AdminBrandingLogoForm extends Component {
   @service siteSettings;
   @service toasts;
+
   @tracked placeholders = {};
   @tracked loading = false;
 

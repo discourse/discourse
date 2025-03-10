@@ -15,6 +15,7 @@ import SiteSetting from "admin/models/site-setting";
 export default class AdminAreaSettings extends Component {
   @service siteSettings;
   @service router;
+
   @tracked settings = [];
   @tracked loading = false;
   @tracked showBreadcrumb = this.args.showBreadcrumb ?? true;

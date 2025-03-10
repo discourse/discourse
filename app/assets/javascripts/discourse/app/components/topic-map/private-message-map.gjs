@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 
 export default class PrivateMessageMap extends Component {
   @service site;
+
   @tracked isEditing = false;
 
   get participantsClasses() {

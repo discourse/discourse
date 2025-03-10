@@ -10,6 +10,7 @@ acceptance("Acceptance | decorateCookedElement", function () {
   test("decorator with renderGlimmer works", async function (assert) {
     class DemoComponent extends Component {
       static eventLog = [];
+
       constructor() {
         DemoComponent.eventLog.push("created");
         super(...arguments);

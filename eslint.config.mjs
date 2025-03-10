@@ -4,15 +4,8 @@ export default [
   ...DiscourseRecommended,
   {
     rules: {
-      "ember/no-classic-classes": "error",
-      "discourse/i18n-import-location": "error",
-      "discourse/i18n-t": "error",
-      "discourse/discourse-common-imports": "error",
-      "qunit/no-assert-equal-boolean": "error",
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
-      "qunit/no-negated-ok": "error",
-      "qunit/no-ok-equality": "error",
     },
   },
   {

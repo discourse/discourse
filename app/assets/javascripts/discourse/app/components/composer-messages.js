@@ -16,6 +16,7 @@ let _messagesCache = {};
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
   @service modal;
+
   @tracked showShareModal;
 
   checkedMessages = false;
