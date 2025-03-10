@@ -362,7 +362,7 @@ RSpec.describe Discourse do
     class TempSidekiqLogger
       attr_accessor :exception, :context
 
-      def call(ex, ctx)
+      def call(ex, ctx, _config)
         self.exception = ex
         self.context = ctx
       end
@@ -370,9 +370,9 @@ RSpec.describe Discourse do
 
     let!(:logger) { TempSidekiqLogger.new }
 
-    before { Sidekiq.error_handlers << logger }
+    before { Sidekiq.default_configuration.error_handlers << logger }
 
-    after { Sidekiq.error_handlers.delete(logger) }
+    after { Sidekiq.default_configuration.error_handlers.delete(logger) }
 
     describe "#job_exception_stats" do
       class FakeTestError < StandardError

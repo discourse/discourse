@@ -115,7 +115,7 @@ module BackupRestore
 
     def sidekiq_has_running_jobs?
       Sidekiq::Workers.new.each do |_, _, work|
-        args = work&.dig("payload", "args")&.first
+        args = work.job.args&.first
         current_site_id = args["current_site_id"] if args.present?
 
         return true if current_site_id.blank? || current_site_id == @current_db
