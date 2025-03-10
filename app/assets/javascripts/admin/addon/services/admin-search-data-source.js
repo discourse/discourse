@@ -52,7 +52,7 @@ export default class AdminSearchDataSource extends Service {
 
     // TODO (martin) Handle plugin enabling/disabling via MessageBus for this
     // and the setting list?
-    (PreloadStore.get("visiblePlugins") || {}).forEach((plugin) => {
+    (PreloadStore.get("visiblePlugins") || []).forEach((plugin) => {
       if (
         plugin.admin_route &&
         plugin.enabled &&

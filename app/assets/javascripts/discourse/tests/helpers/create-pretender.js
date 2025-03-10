@@ -78,6 +78,14 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/admin/plugins", () => response({ plugins: [] }));
 
+  pretender.get("/admin/search/all.json", () => {
+    return response(cloneJSON(fixturesByUrl["/admin/search/all.json"]));
+  });
+
+  pretender.get("/admin/reports.json", () => {
+    return response(cloneJSON(fixturesByUrl["/admin/reports.json"]));
+  });
+
   pretender.get("/composer_messages", () =>
     response({ composer_messages: [] })
   );
