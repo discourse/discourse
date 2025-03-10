@@ -6,10 +6,13 @@ acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
 
   module("search behaviour", function () {
-    test("with empty input search", async function (assert) {
+    test("on initial render (empty input search)", async function (assert) {
       await visit("/");
       await click("#search-button");
 
+      assert
+        .dom('[data-test-button="mobile-search"]')
+        .isVisible("should show search button");
       assert
         .dom('[data-test-item="random-quick-tip"]')
         .doesNotExist("should not show random quick tip");
