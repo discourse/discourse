@@ -2,7 +2,7 @@
   <SearchMenu::BrowserSearchTip />
 {{else}}
   <ConditionalLoadingSection @isLoading={{this.loading}}>
-    <div class="results">
+    <div class="results" data-test-selector="search-menu-results">
       <PluginOutlet
         @name="search-menu-results-top"
         @outletArgs={{hash
@@ -29,7 +29,11 @@
           @searchTermChanged={{@searchTermChanged}}
         />
       {{else}}
-        {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
+        {{#if
+          (and
+            (not @searchTopics) (not @inPMInboxContext) this.showInDesktopView
+          )
+        }}
           {{! render the first couple suggestions before a search has been performed}}
           <SearchMenu::Results::InitialOptions
             @closeSearchMenu={{@closeSearchMenu}}

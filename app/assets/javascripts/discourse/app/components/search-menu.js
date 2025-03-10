@@ -32,6 +32,7 @@ export function focusSearchInput() {
 export default class SearchMenu extends Component {
   @service search;
   @service currentUser;
+  @service site;
   @service siteSettings;
   @service appEvents;
 
@@ -103,6 +104,10 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  get hideInMobileView() {
+    return !(this.site.mobileView && this.site.isMobileDevice);
   }
 
   @action
@@ -210,6 +215,17 @@ export default class SearchMenu extends Component {
     this.search.inTopicContext = false;
   }
 
+  @action
+  cancelSearchMobile() {
+    this.close();
+
+    // clears search value if present
+    if (this.search.activeGlobalSearchTerm) {
+      this.search.activeGlobalSearchTerm = "";
+      this.triggerSearch();
+    }
+  }
+
   // for cancelling debounced search
   cancel() {
     if (this._activeSearch) {
@@ -274,17 +290,14 @@ export default class SearchMenu extends Component {
     this.suggestionKeyword = false;
 
     if (!this.search.activeGlobalSearchTerm) {
-      this.search.noResults = false;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = false;
+      this.abortPerform({
+        noResults: this.site.mobileView && this.site.isMobileDevice,
+        invalidTerm: false,
+      });
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
-      this.search.noResults = true;
-      this.search.results = {};
-      this.loading = false;
-      this.invalidTerm = true;
+      this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
       this.invalidTerm = false;
@@ -323,7 +336,8 @@ export default class SearchMenu extends Component {
   matchesSuggestions() {
     if (
       this.search.activeGlobalSearchTerm === undefined ||
-      this.includesTopics
+      this.includesTopics ||
+      this.hideInMobileView
     ) {
       return false;
     }
@@ -346,6 +360,14 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  abortPerform({ noResults, invalidTerm }) {
+    this.search.noResults = noResults;
+    this.invalidTerm = invalidTerm;
+    this.search.results = {};
+    this.loading = false;
+    this.typeFilter = DEFAULT_TYPE_FILTER;
   }
 
   @action
