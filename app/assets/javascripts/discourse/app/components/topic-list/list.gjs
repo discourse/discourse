@@ -216,12 +216,19 @@ export default class TopicList extends Component {
       <PluginOutlet
         @name="before-topic-list-body"
         @outletArgs={{hash
+          columns=this.columns
           topics=@topics
-          selected=this.selected
+          bulkSelectHelper=@bulkSelectHelper
           bulkSelectEnabled=this.bulkSelectEnabled
-          lastVisitedTopic=this.lastVisitedTopic
-          discoveryList=@discoveryList
+          showTopicPostBadges=this.showTopicPostBadges
           hideCategory=@hideCategory
+          expandGloballyPinned=@expandGloballyPinned
+          expandAllPinned=@expandAllPinned
+          lastVisitedTopic=this.lastVisitedTopic
+          selected=this.selected
+          tagsForUser=@tagsForUser
+          focusLastVisitedTopic=@focusLastVisitedTopic
+          discoveryList=@discoveryList
         }}
       />
 
@@ -264,12 +271,19 @@ export default class TopicList extends Component {
       <PluginOutlet
         @name="after-topic-list-body"
         @outletArgs={{hash
+          columns=this.columns
           topics=@topics
-          selected=this.selected
+          bulkSelectHelper=@bulkSelectHelper
           bulkSelectEnabled=this.bulkSelectEnabled
-          lastVisitedTopic=this.lastVisitedTopic
-          discoveryList=@discoveryList
+          showTopicPostBadges=this.showTopicPostBadges
           hideCategory=@hideCategory
+          expandGloballyPinned=@expandGloballyPinned
+          expandAllPinned=@expandAllPinned
+          lastVisitedTopic=this.lastVisitedTopic
+          selected=this.selected
+          tagsForUser=@tagsForUser
+          focusLastVisitedTopic=@focusLastVisitedTopic
+          discoveryList=@discoveryList
         }}
       />
     </table>
