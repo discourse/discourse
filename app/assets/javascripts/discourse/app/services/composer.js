@@ -147,6 +147,11 @@ export default class ComposerService extends Service {
     return this.showPreview && this.allowPreview;
   }
 
+  @observes("showPreview", "allowPreview")
+  previewVisibilityChanged() {
+    this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
+  }
+
   get isOpen() {
     return this.model?.composeState === Composer.OPEN;
   }
