@@ -5,6 +5,38 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
 
+  module("search behaviour", function () {
+    test("with empty input search", async function (assert) {
+      await visit("/");
+      await click("#search-button");
+
+      assert
+        .dom('[data-test-item="random-quick-tip"]')
+        .doesNotExist("should not show random quick tip");
+      assert
+        .dom('[data-test-assistant-item^="recent-search-"]')
+        .doesNotExist("should not show recent search suggestions");
+      assert
+        .dom('[data-test-selector="search-menu-initial-options"]')
+        .doesNotExist("should not show initial options");
+    });
+
+    test("with search term present", async function (assert) {
+      await visit("/");
+      await click("#search-button");
+      await fillIn('[data-test-input="search-term"]', "find");
+
+      assert.strictEqual(
+        findAll('[data-test-type-item^="search-result-topic-"]').length,
+        5,
+        "search results are listed on search value present"
+      );
+      assert
+        .dom('[data-test-anchor="show-more"]')
+        .exists("should show 'Show more' link");
+    });
+  });
+
   module("cancel search", function () {
     test("with empty input search", async function (assert) {
       await visit("/");

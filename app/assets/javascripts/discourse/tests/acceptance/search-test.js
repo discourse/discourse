@@ -63,10 +63,15 @@ acceptance("Search - Anonymous", function (needs) {
   test("random quick tips", async function (assert) {
     await visit("/");
     await click("#search-button");
+
+    assert
+      .dom('[data-test-item="random-quick-tip"]')
+      .isVisible("quick tip is shown by default");
+
     await fillIn("#icon-search-input", "dev");
 
     assert
-      .dom(".search-menu .results ul li.search-random-quick-tip")
+      .dom('[data-test-item="random-quick-tip"]')
       .doesNotExist("quick tip is no longer shown");
   });
 
