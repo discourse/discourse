@@ -1,13 +1,13 @@
 import Component from "@ember/component";
-import { on as on0 } from "@ember/modifier";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
-import { htmlSafe } from "@ember/template";
 
 @tagName("ul")
 @classNames("mobile-nav")
@@ -16,7 +16,7 @@ export default class MobileNav extends Component {
 
   selectedHtml = null;
 
-  @on("init")
+  @onEvent("init")
   _init() {
     if (this.site.desktopView) {
       let classes = this.desktopClass;
@@ -83,7 +83,7 @@ export default class MobileNav extends Component {
     {{#if this.site.mobileView}}
       {{#if this.selectedHtml}}
         <li>
-          <a href {{on0 "click" this.toggleExpanded}} class="expander">
+          <a href {{on "click" this.toggleExpanded}} class="expander">
             <span class="selection">{{htmlSafe this.selectedHtml}}</span>
             {{icon "caret-down"}}
           </a>

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import { on as on0 } from "@ember/modifier";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { on } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
 import i18n from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -25,7 +25,7 @@ export default class SignupCta extends Component {
     discourseLater(() => this.session.set("showSignupCta", false), 20 * 1000);
   }
 
-  @on("willDestroyElement")
+  @onEvent("willDestroyElement")
   _turnOffIfHidden() {
     if (this.session.get("hideSignupCta")) {
       this.session.set("showSignupCta", false);
@@ -54,7 +54,7 @@ export default class SignupCta extends Component {
             @label="signup_cta.hide_session"
             class="no-icon"
           />
-          <a href {{on0 "click" this.neverShow}}>{{i18n
+          <a href {{on "click" this.neverShow}}>{{i18n
               "signup_cta.hide_forever"
             }}</a>
         </div>

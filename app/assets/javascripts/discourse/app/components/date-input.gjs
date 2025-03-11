@@ -1,10 +1,10 @@
 /* global Pikaday:true */
 import Component, { Input } from "@ember/component";
-import { on as on0 } from "@ember/modifier";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import discourseComputed from "discourse/lib/decorators";
 import loadScript from "discourse/lib/load-script";
@@ -145,7 +145,7 @@ export default class DateInput extends Component {
     }
   }
 
-  @on("willDestroyElement")
+  @onEvent("willDestroyElement")
   _destroy() {
     if (this._picker) {
       this._picker.destroy();
@@ -178,7 +178,7 @@ export default class DateInput extends Component {
       placeholder={{this.placeholder}}
       @value={{readonly this.value}}
       id={{this.inputId}}
-      {{on0 "input" (action "onChangeDate")}}
+      {{on "input" (action "onChangeDate")}}
     />
 
     {{#unless this.useGlobalPickerContainer}}

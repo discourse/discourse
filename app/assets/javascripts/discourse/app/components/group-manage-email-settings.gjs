@@ -1,14 +1,14 @@
 import Component, { Input } from "@ember/component";
-import { on as on0 } from "@ember/modifier";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { onEvent } from "@ember-decorators/object";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -21,7 +21,7 @@ export default class GroupManageEmailSettings extends Component {
   imapSettingsValid = false;
   smtpSettingsValid = false;
 
-  @on("init")
+  @onEvent("init")
   _determineSettingsValid() {
     this.set(
       "imapSettingsValid",
@@ -131,7 +131,7 @@ export default class GroupManageEmailSettings extends Component {
           @checked={{this.group.smtp_enabled}}
           id="enable_smtp"
           tabindex="1"
-          {{on0 "input" this.smtpEnabledChange}}
+          {{on "input" this.smtpEnabledChange}}
         />
         {{i18n0 "groups.manage.email.enable_smtp"}}
       </label>
@@ -164,7 +164,7 @@ export default class GroupManageEmailSettings extends Component {
               @checked={{this.group.imap_enabled}}
               id="enable_imap"
               tabindex="8"
-              {{on0 "input" this.imapEnabledChange}}
+              {{on "input" this.imapEnabledChange}}
             />
             {{i18n0 "groups.manage.email.enable_imap"}}
           </label>

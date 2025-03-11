@@ -1,16 +1,17 @@
 import { array, fn, hash } from "@ember/helper";
-import { on as on0 } from "@ember/modifier";
+import { on } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
+import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
 import DButton from "discourse/components/d-button";
 import HtmlWithLinks from "discourse/components/html-with-links";
@@ -22,7 +23,6 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
-import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
@@ -228,12 +228,12 @@ export default class UserCardContents extends CardContentsBase {
     return profileHidden || inactive;
   }
 
-  @on("didInsertElement")
+  @onEvent("didInsertElement")
   _inserted() {
     this.appEvents.on("dom:clean", this, this.cleanUp);
   }
 
-  @on("didDestroyElement")
+  @onEvent("didDestroyElement")
   _destroyed() {
     this.appEvents.off("dom:clean", this, this.cleanUp);
   }
@@ -381,7 +381,7 @@ export default class UserCardContents extends CardContentsBase {
                     }}</span>
                 {{else}}
                   <a
-                    {{on0 "click" this.handleShowUser}}
+                    {{on "click" this.handleShowUser}}
                     href={{this.user.path}}
                     class="card-huge-avatar"
                     tabindex="-1"
@@ -415,7 +415,7 @@ export default class UserCardContents extends CardContentsBase {
                     </span>
                   {{else}}
                     <a
-                      {{on0 "click" this.handleShowUser}}
+                      {{on "click" this.handleShowUser}}
                       href={{this.user.path}}
                       class="user-profile-link"
                       aria-label={{i18n0
@@ -728,7 +728,7 @@ export default class UserCardContents extends CardContentsBase {
                               <LinkTo
                                 @route="users"
                                 @query={{hash name=v}}
-                                {{on0 "click" (fn this.refreshRoute v)}}
+                                {{on "click" (fn this.refreshRoute v)}}
                               >{{v}}</LinkTo>
                             {{else}}
                               {{v}}
