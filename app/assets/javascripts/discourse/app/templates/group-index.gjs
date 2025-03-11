@@ -180,7 +180,7 @@ export default RouteTemplate(
                         <Input
                           @type="checkbox"
                           class="bulk-select"
-                          {{on "click" (fn this.selectMember m)}}
+                          {{on "click" (fn @controller.selectMember m)}}
                         />
                       {{/if}}
                     {{/if}}
