@@ -68,9 +68,14 @@ export async function testMarkdown(
   assert,
   markdown,
   expectedHtml,
-  expectedMarkdown
+  expectedMarkdown,
+  multiToggle = false
 ) {
-  const [editorClass, html] = await setupRichEditor(assert, markdown);
+  const [editorClass, html] = await setupRichEditor(
+    assert,
+    markdown,
+    multiToggle
+  );
 
   assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
