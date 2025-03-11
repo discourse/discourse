@@ -23,9 +23,9 @@ module("Integration | Component | TopicTracking", function (hooks) {
   setupRenderingTest(hooks);
 
   test("regular topic notification level descriptions", async function (assert) {
-    await render(<template>
-      <TopicNotificationsTracking @levelId={{1}} />
-    </template>);
+    await render(
+      <template><TopicNotificationsTracking @levelId={{1}} /></template>
+    );
 
     await click(".notifications-tracking-trigger");
 
@@ -50,12 +50,14 @@ module("Integration | Component | TopicTracking", function (hooks) {
   });
 
   test("PM topic notification level descriptions", async function (assert) {
-    await render(<template>
-      <TopicNotificationsTracking
-        @levelId={{1}}
-        @topic={{hash archetype="private_message"}}
-      />
-    </template>);
+    await render(
+      <template>
+        <TopicNotificationsTracking
+          @levelId={{1}}
+          @topic={{hash archetype="private_message"}}
+        />
+      </template>
+    );
 
     await click(".notifications-tracking-trigger");
 

@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class CustomizeFormTemplateViewModal extends Component {
   @service router;
   @service dialog;
+
   @tracked showPreview = false;
 
   @action

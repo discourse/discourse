@@ -407,6 +407,7 @@ zh_CN:
       remove_confirmation: "确定要删除此草稿吗？"
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
+      edit_topic: "编辑话题草稿"
       abandon:
         confirm: "您已经有一个正在进行的草稿。您想对它做什么？"
         yes_value: "舍弃"
@@ -476,6 +477,8 @@ zh_CN:
         title:
           other: "你有来自已禁用插件的待审核内容："
         instruction: "除非你启用相关插件，否则它们无法正确显示。请启用插件并刷新页面。或者，你可以忽略它们。 <a href='%{url}' target='_blank'>了解更多...</a>"
+        reviewable_unknown_source: "%{reviewableType} （未知插件）"
+        reviewable_known_source: "%{reviewableType} （来自'%{pluginName}'插件）"
         ignore_all: "全部忽略"
         enable_plugins: "启用插件"
         delete_confirm: "你确定要删除所有由禁用插件创建的评论吗？"
@@ -1968,6 +1971,8 @@ zh_CN:
       dirty_form: "您没有提交更改！确定要离开吗？"
       errors:
         required: "必选"
+        date_before_or_equal: "必须早于或等于 %{date}"
+        date_after_or_equal: "必须晚于或等于 %{date}"
         invalid_url: "必须是有效的 URL"
         not_an_integer: "必须是一个整数"
         not_accepted: "必须被接受"
@@ -2214,13 +2219,6 @@ zh_CN:
       password_label: "密码"
     password_reset:
       continue: "继续访问 %{site_name}"
-    emoji_set:
-      apple_international: "Apple/国际"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "仅类别"
       categories_with_featured_topics: "包含精选话题的类别"
@@ -2234,6 +2232,10 @@ zh_CN:
       required_at_signup: "必选"
       optional_at_signup: "可选"
       hidden_at_signup: "可选，注册时隐藏"
+    interface_color_selector:
+      disabled: "不显示"
+      sidebar_footer: "在侧边栏页脚中显示"
+      header: "在页眉中显示"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3354,9 +3356,7 @@ zh_CN:
       has_likes_title_you:
         other: "您和其他 %{count} 人赞了此帖子"
       sr_post_like_count_button:
-        other: "%{count} 人赞过此帖子。点击查看"
-      sr_post_read_count_button:
-        other: "%{count} 人读过此帖子。点击查看"
+        other: "%{count} 人赞了此帖子."
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
       filtered_replies_viewing:
@@ -3463,8 +3463,6 @@ zh_CN:
             other: "还有其他 %{count} 人赞了此帖子"
           read_capped:
             other: "还有其他 %{count} 人阅读了此帖子"
-          sr_post_likers_list_description: "赞过此帖子的用户"
-          sr_post_readers_list_description: "读过此帖子的用户"
         by_you:
           off_topic: "您将此帖子举报为偏离话题"
           spam: "您将此帖子举报为垃圾信息"
@@ -3709,6 +3707,7 @@ zh_CN:
       description: "要举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "感谢您维护社区的文明！"
+      review_process_description: "版主已收到所有举报，将尽快进行审核。"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
@@ -4037,6 +4036,10 @@ zh_CN:
         prev_next: "%{shortcut} 上下移动所选内容"
         insert_url: "%{shortcut} 将所选内容插入到打开的编辑器"
         full_page_search: "%{shortcut} 启动完整页面搜索"
+      admin:
+        title: "管理员"
+        search_prev_next: "%{shortcut} 上下移动所选内容"
+        search_open: "%{shortcut} 打开管理员界面的搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -4418,6 +4421,7 @@ zh_CN:
         interface_color_selector:
           light: "亮"
           dark: "深色"
+          auto: "自动"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4561,9 +4565,11 @@ zh_CN:
           header_description: "切换网站的实验性功能，其中大部分功能可按组进行控制"
         emojis:
           title: "表情符号"
+          header_description: "添加可供所有人使用的新表情符号。选择多个文件，使用其文件名创建表情符号。所选群组将用于同时添加的所有文件"
         flags:
           title: "审核"
           header_description: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
+          keywords: "标记|评论|垃圾|非法"
         font_style:
           title: "字体样式"
           header_description: "自定义您的主题使用的字体样式"
@@ -4582,6 +4588,16 @@ zh_CN:
         logo:
           title: "网站徽标"
           header_description: "自定义您的网站徽标的变体"
+        branding:
+          title: "品牌化"
+          logo:
+            form:
+              logo:
+                title: "主要徽标"
+              mobile: "移动"
+              email: "电子邮件"
+              manifest_screenshots:
+                description: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -4598,8 +4614,9 @@ zh_CN:
           title: "速率限值"
           header_description: "配置用户执行特定操作（例如创建话题、发送消息和发布回复）的频率"
         search:
-          title: "搜索"
           header_description: "配置中文和日语搜索设置，包括日志记录和词例化"
+        search_everything:
+          title: "搜索"
         security:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
@@ -4617,14 +4634,19 @@ zh_CN:
           header_description: "所有基于群组的应用权限都在这里管理，这些权限控制 Discourse 中各种功能的访问权限"
         dashboard:
           title: "信息中心"
+          header_description: "信息中心提供社区健康状况的快照，包括流量、用户活动和其他关键指标"
         users:
           title: "用户"
+          header_description: "查看与管理用户、发送邀请以及导出用户数据"
         groups:
           title: "群组"
+          header_description: "创建与管理群组、设置群组权限以及查看群组活动和收件箱"
         site_settings:
           title: "所有网站设置"
+          header_description: "配置您的 Discourse 网站的所有设置以自定义其外观、功能和用户体验"
         whats_new:
           title: "最新变化"
+          header_description: "随时了解 Discourse 的最新功能和改进"
           keywords: "更新日志|功能|发布"
         backups:
           title: "备份"
@@ -4692,16 +4714,24 @@ zh_CN:
               title: "搜索日志"
         plugins:
           title: "安装的插件"
+          header_description: "您安装的任何 Discourse 插件，或由 Discourse 托管预安装的插件都将出现在此列表中"
         api_keys:
           title: "API 密钥"
           header_description: "API 密钥功能可让您安全地将 Discourse 与外部系统集成并自动执行操作。管理员可以创建具有特定范围的密钥来控制对资源和敏感数据的访问。范围限制功能，确保增强的安全性。"
+          keywords: "令牌|作用域"
         webhooks:
           title: "网络钩子"
+          header_description: "网络钩子让 Discourse 可以在您的网站发生特定事件时通知外部服务。当网络钩子被触发时，将向提供的 URL 发送一个 POST 请求。"
+          keywords: "事件|负载|网址"
         embedding:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
       search:
+        modal_title: "搜索管理员页面中的任何内容"
+        title: "搜索"
         result_types:
+          page:
+            other: "页面"
           report:
             other: "举报"
           setting:
@@ -4735,6 +4765,7 @@ zh_CN:
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
+          only_experiments: "只显示实验性功能"
           experiment_enabled: "您已启用实验性功能。"
           experiment_disabled: "您已禁用实验性功能。"
           experiment_toggled_too_fast: "您切换实验性功能的频率过快。请稍等几秒钟后再试。"
@@ -5183,6 +5214,8 @@ zh_CN:
           community_title: "社区标题"
           community_title_help: "浏览器标签页中显示的类别和话题列表等关键页面的简短描述。"
           banner_image: "横幅图片"
+          banner_image_help: |
+            建议使用大小：1100x300px （像素）。支持文件格式：JPG、PNG、SVG（文件最大 10MB）。
           contact_information: "联系信息"
           community_owner: "社区所有者"
           community_owner_placeholder: "Johnny Smith"
@@ -5457,7 +5490,6 @@ zh_CN:
           extra_files_remote: "导出主题或检查 git 仓库以查看这些文件。"
           preview: "预览"
           settings_editor: "设置编辑器"
-          hide_unused_fields: "隐藏未使用的字段"
           is_default: "主题默认启用"
           user_selectable: "用户可以选择主题"
           color_scheme_user_selectable: "用户可以选择调色板"
@@ -5509,9 +5541,6 @@ zh_CN:
           unsaved_parent_themes: "您尚未将组件分配给主题，要继续吗？"
           discard: "舍弃"
           stay: "保留"
-          css_html: "自定义 CSS/HTML"
-          edit_css_html: "编辑 CSS/HTML"
-          edit_css_html_help: "您尚未编辑任何 CSS 或 HTML"
           delete_upload_confirm: "删除此上传？（主题 CSS 可能会停止工作！）"
           component_on_themes: "包含这些主题的组件"
           included_components: "包含的组件"
@@ -5571,22 +5600,14 @@ zh_CN:
           imported_from_archive: "此主题是从一个 .zip 文件导入的"
           scss:
             text: "CSS"
-            title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
-          header:
-            text: "页眉"
-            title: "输入要显示在网站标头上方的 HTML"
           after_header:
             text: "页眉后"
-            title: "输入要显示在所有页面的页眉后的 HTML"
           footer:
             text: "页脚"
-            title: "输入需要显示在页面页脚的 HTML"
           embedded_scss:
             text: "嵌入式 CSS"
-            title: "输入要随嵌入式版本的注释传送的自定义 CSS"
           embedded_header:
             text: "嵌入式标头"
-            title: "输入在嵌入式评论的上方显示的 HTML"
           color_definitions:
             text: "颜色定义"
             title: "输入自定义颜色定义（仅限高级用户）"
@@ -5599,15 +5620,8 @@ zh_CN:
               %{example}
 
               强烈建议为属性名称添加前缀以避免与插件和/或核心冲突。
-          head_tag:
-            text: "Head"
-            title: "将在 head 标记之前插入的 HTML"
-          body_tag:
-            text: "正文"
-            title: "将在正文标记之前插入的 HTML"
-          yaml:
-            text: "YAML"
-            title: "使用 YAML 格式定义主题设置"
+          js:
+            text: "JS"
           scss_color_variables_warning: '在主题中使用核心 SCSS 颜色变量已弃用。请改用 CSS 自定义属性。请参阅<a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">本指南</a>，了解更多详细信息。'
           scss_warning_inline: "在主题中使用核心 SCSS 颜色变量已弃用。"
           all_filter: "所有"

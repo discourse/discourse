@@ -2193,13 +2193,6 @@ hr:
       password_label: "Lozinka"
     password_reset:
       continue: "Nastavite na %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Samo kategorije"
       categories_with_featured_topics: "Kategorije s istaknutim temama"
@@ -3419,13 +3412,9 @@ hr:
         few: "tebi i još %{count} se sviđa objava"
         other: "tebi i još %{count} se sviđa objava"
       sr_post_like_count_button:
-        one: "Ovaj post se svidio %{count} osobi. Kliknite za pregled"
-        few: "Ovaj post se svidio %{count} osobi. Kliknite za pregled"
-        other: "Ovaj post se svidio %{count} ljudi. Kliknite za pregled"
-      sr_post_read_count_button:
-        one: "%{count} osoba je pročitalo ovaj post. Kliknite za pregled"
-        few: "%{count} osoba je pročitalo ovaj post. Kliknite za pregled"
-        other: "%{count} ljudi je pročitalo ovaj post. Kliknite za pregled"
+        one: "Objava se sviđa %{count} osobi."
+        few: "%{count} se sviđa objava."
+        other: "%{count} se sviđa objava."
       filtered_replies_hint:
         one: "Pogledajte ovaj post i njegov odgovor"
         few: "Pogledajte ovaj post i %{count} odgovora"
@@ -3537,8 +3526,6 @@ hr:
             one: "i %{count} je ovo pročitao/la"
             few: "i %{count} drugih ovo su pročitali"
             other: "i %{count} drugih ovo su pročitali"
-          sr_post_likers_list_description: "korisnika kojima se ovaj post svidio"
-          sr_post_readers_list_description: "korisnika koji čitaju ovaj post"
         by_you:
           off_topic: "Označili ste ovo kao van teme"
           spam: "Označili ste ovo kao neželjeno"
@@ -4068,6 +4055,9 @@ hr:
         prev_next: "%{shortcut} Premještanje odabira gore i dolje"
         insert_url: "%{shortcut} Umetnite odabir u otvoreni skladatelj"
         full_page_search: "%{shortcut} Pokreće pretraživanje cijele stranice"
+      admin:
+        title: "Administrator"
+        search_prev_next: "%{shortcut} Premještanje odabira gore i dolje"
     badges:
       earned_n_times:
         one: "Dobio ovu značku %{count} put"
@@ -4488,6 +4478,12 @@ hr:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        branding:
+          title: "Brendiranje"
+          logo:
+            form:
+              mobile: "Mobilni"
+              email: "E-mail"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4496,7 +4492,7 @@ hr:
           title: "Onebox"
         other:
           title: "Ostalo"
-        search:
+        search_everything:
           title: "Pretraživanje"
         security:
           title: "Sigurnost"
@@ -4562,6 +4558,7 @@ hr:
         embedding:
           title: "Ugrađivanje"
       search:
+        title: "Pretraživanje"
         result_types:
           theme:
             one: "Tema"
@@ -5060,7 +5057,6 @@ hr:
           extra_files_upload: "Izvezite temu za pregled ovih datoteka."
           extra_files_remote: "Izvezite temu ili provjerite git spremište za pregled ovih datoteka."
           preview: "Pregled"
-          hide_unused_fields: "Sakrij neiskorištena polja"
           is_default: "Tema je omogućena prema zadanim postavkama"
           user_selectable: "Temu mogu odabrati korisnici"
           auto_update: "Automatsko ažuriranje kada se diskurs ažurira"
@@ -5107,9 +5103,6 @@ hr:
           unsaved_parent_themes: "Niste dodijelili komponentu temama, želite li krenuti dalje?"
           discard: "Odbaci"
           stay: "Ostanite"
-          css_html: "Prilagođeni CSS/HTML"
-          edit_css_html: "Uredite CSS/HTML"
-          edit_css_html_help: "Niste uredili nijedan CSS ili HTML"
           delete_upload_confirm: "Izbrisati ovaj prijenos? (CSS teme može prestati raditi!)"
           component_on_themes: "Uključite komponentu na ove teme"
           included_components: "Uključene komponente"
@@ -5165,19 +5158,12 @@ hr:
           imported_from_archive: "Ova je tema uvezena iz .zip datoteke"
           scss:
             text: "CSS"
-            title: "Unesite prilagođeni CSS, prihvaćamo sve važeće CSS i SCSS stilove"
-          header:
-            text: "Uzglavlje"
-            title: "Unesite HTML za prikaz iznad zaglavlja web-mjesta"
           after_header:
             text: "Nakon zaglavlja"
-            title: "Unesite HTML za prikaz na svim stranicama nakon zaglavlja"
           footer:
             text: "Podnožje"
-            title: "Unesite HTML za prikaz u podnožju stranice"
           embedded_scss:
             text: "Ugrađeni CSS"
-            title: "Unesite prilagođeni CSS za isporuku s ugrađenom verzijom komentara"
           color_definitions:
             text: "Definicije boja"
             title: "Unesite prilagođene definicije boja (samo napredni korisnici)"
@@ -5190,15 +5176,6 @@ hr:
               %{example}
 
               Prefiksiranje imena svojstava preporučuje se kako bi se izbjegli sukobi s dodacima i/ili jezgrom.
-          head_tag:
-            text: "Glava"
-            title: "HTML koji će biti umetnut prije oznake head"
-          body_tag:
-            text: "Tijelo"
-            title: "HTML koji će biti umetnut prije oznake tijela"
-          yaml:
-            text: "YAML"
-            title: "Definirajte postavke teme u YAML formatu"
           scss_color_variables_warning: 'Korištenje jezgrenih SCSS varijabli boja u temama je zastarjelo. Umjesto toga koristite prilagođena svojstva CSS -a. Za više pojedinosti <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ovaj vodič</a>'
           scss_warning_inline: "Korištenje jezgrenih SCSS varijabli boja u temama je zastarjelo."
           all_filter: "Sve"

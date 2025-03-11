@@ -164,11 +164,7 @@ pt_BR:
             restricted_category:
               label: Categoria
               description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
-            restricted_group:
-              label: Grupo
-              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal na caixa de mensagens deste grupo
             restricted_groups:
-              label: Grupos
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
             ignore_group_members:
               label: Ignorar membros de grupo

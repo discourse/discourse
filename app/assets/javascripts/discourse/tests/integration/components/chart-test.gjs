@@ -54,7 +54,11 @@ module("Integration | Component | Chart", function (hooks) {
     };
 
     const chartConfig = generateChartConfig(this.model);
-    await render(<template><canvas class="empty-canvas"></canvas></template>);
+    await render(
+      <template>
+        <canvas class="empty-canvas"></canvas>
+      </template>
+    );
     const emptyCanvasDataURL = await renderAsPNGURL(
       document.querySelector("canvas.empty-canvas")
     );
@@ -81,9 +85,9 @@ module("Integration | Component | Chart", function (hooks) {
 
     testState.chartConfig = generateChartConfig(this.model);
 
-    await render(<template>
-      <Chart @chartConfig={{testState.chartConfig}} />
-    </template>);
+    await render(
+      <template><Chart @chartConfig={{testState.chartConfig}} /></template>
+    );
     const firstCanvasDataURL = await renderAsPNGURL(
       document.querySelector("canvas.chart-canvas")
     );

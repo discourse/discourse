@@ -777,7 +777,7 @@ acceptance("Search - with tagging enabled", function (needs) {
 
     assert
       .dom(".search-menu .results ul li:nth-of-type(1) .discourse-tags")
-      .hasText("devslow", "tags displayed in search results");
+      .hasText("dev,slow", "tags displayed in search results");
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {

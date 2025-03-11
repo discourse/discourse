@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import GroupFixtures from "discourse/tests/fixtures/group-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -174,6 +175,41 @@ acceptance("Group - Authenticated", function (needs) {
         });
       }
     );
+
+    server.get("/groups/discourse/members.json", (request) => {
+      if (request.queryParams.filter === "somefilter") {
+        return helper.response({
+          members: [
+            {
+              id: 2770,
+              username: "awesomerobot",
+              uploaded_avatar_id: 33872,
+              avatar_template:
+                "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
+              name: "",
+              last_seen_at: "2015-01-23T15:53:17.844Z",
+            },
+            {
+              id: 32,
+              username: "codinghorror",
+              uploaded_avatar_id: 5297,
+              avatar_template:
+                "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
+              name: "Jeff Atwood",
+              last_seen_at: "2015-01-23T06:05:25.457Z",
+            },
+          ],
+          meta: {
+            total: 7,
+            limit: 50,
+            offset: 0,
+          },
+          owners: [],
+        });
+      } else {
+        return helper.response(GroupFixtures["/groups/discourse/members.json"]);
+      }
+    });
   });
 
   test("User Viewing Group", async function (assert) {
@@ -274,6 +310,21 @@ acceptance("Group - Authenticated", function (needs) {
         "/u/awesomerobot",
         "avatar link contains href (is tabbable)"
       );
+  });
+
+  test("Admin group delete confirmation", async function (assert) {
+    await visit("/g/discourse");
+
+    await fillIn(".group-username-filter", "somefilter");
+
+    await click(".group-details-button button.btn-danger");
+
+    assert.dom(".dialog-body p:nth-of-type(1)").hasText(
+      i18n("admin.groups.delete_details", {
+        count: 7,
+      }),
+      "it shows the total members count"
+    );
   });
 
   test("Moderator Viewing Group", async function (assert) {

@@ -23,14 +23,41 @@
     li a:focus-visible {
       outline: 0;
     }
-  }
 
-  li > .btn,
-  li > a {
-    padding: 0.75em 1rem;
-  }
+    &__item {
+      .btn {
+        border-radius: 0; // overruling the general border-radius var on all btns
+        // all specific overrules to make sure touch devices dont show focus states, which we apply on opening of the menu
+        &:focus-visible,
+        &:active {
+          .discourse-touch & {
+            background: transparent;
+            color: var(--primary);
 
-  li > a {
-    display: block;
+            .d-icon {
+              color: inherit;
+            }
+
+            &.btn-danger {
+              background: transparent;
+              color: var(--danger);
+
+              .d-icon {
+                color: var(--danger-hover);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    li > .btn,
+    li > a {
+      padding: 0.75em 1rem;
+    }
+
+    li > a {
+      display: block;
+    }
   }
 }

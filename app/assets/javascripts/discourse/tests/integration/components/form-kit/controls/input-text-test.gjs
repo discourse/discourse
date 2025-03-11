@@ -13,13 +13,15 @@ module(
       let data = { foo: "" };
       const mutateData = (x) => (data = x);
 
-      await render(<template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Input />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Input />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.form().field("foo").hasValue("");
 
@@ -33,13 +35,15 @@ module(
     });
 
     test("when disabled", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-            <field.Input />
-          </form.Field>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+              <field.Input />
+            </form.Field>
+          </Form>
+        </template>
+      );
 
       assert.dom(".form-kit__control-input").hasAttribute("disabled");
     });

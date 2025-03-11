@@ -1697,13 +1697,6 @@ gl:
       password_label: "Contrasinal"
     password_reset:
       continue: "Continuar en %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Só categorías"
       categories_with_featured_topics: "Categorías con temas de actualidade"
@@ -2569,6 +2562,9 @@ gl:
       has_likes_title_you:
         one: "vostede e %{count} máis apreciaron esta publicación"
         other: "vostede %{count} máis apreciaron esta publicación"
+      sr_post_like_count_button:
+        one: "A %{count} persoa gustoulle esta publicación."
+        other: "A %{count} persoas gustoulles esta publicación."
       filtered_replies_hint:
         one: "Ver esta publicación e a súa resposta"
         other: "Ver esta publicación e as súas %{count} respostas"
@@ -3142,6 +3138,9 @@ gl:
         title: "Menú de busca"
         prev_next: "%{shortcut} Mover a selección arriba e abaixo"
         insert_url: "%{shortcut} Introducir selección no panel de composición"
+      admin:
+        title: "Administrador"
+        search_prev_next: "%{shortcut} Mover a selección arriba e abaixo"
     badges:
       earned_n_times:
         one: "Gañou esta insignia %{count} vez"
@@ -3432,6 +3431,16 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        branding:
+          title: "Logo"
+          logo:
+            form:
+              mobile: "Móbil"
+              email: "Enderezo de correo"
+              manifest_screenshots:
+                description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
+              opengraph_image:
+                description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
         navigation:
           title: "Navegación"
         notifications:
@@ -3440,7 +3449,7 @@ gl:
           title: "Onebox"
         other:
           title: "Outro"
-        search:
+        search_everything:
           title: "Buscar"
         security:
           title: "Seguranza"
@@ -3505,6 +3514,7 @@ gl:
         embedding:
           title: "Incorporando"
       search:
+        title: "Buscar"
         result_types:
           theme:
             one: "Tema"
@@ -3943,7 +3953,6 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
@@ -3985,9 +3994,6 @@ gl:
           unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
           stay: "Deixar"
-          css_html: "Personalizar CSS/HTML"
-          edit_css_html: "Editar CSS/HTML"
-          edit_css_html_help: "Non editou ningún CSS ou HTML"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"
           included_components: "Compoñentes incluídos"
@@ -4037,19 +4043,12 @@ gl:
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
           scss:
             text: "CSS"
-            title: "Escriba CSS personalizado, aceptamos todo CSS válido e estilos SCSS"
-          header:
-            text: "Cabeceira"
-            title: "Escriba o HTML que se presentará enriba da cabeceira do sitio"
           after_header:
             text: "Despois da cabeceira"
-            title: "Escriba HTML que se presentará en todas as páxinas despois da cabeceira do sitio"
           footer:
             text: "Rodapé"
-            title: "Escriba HTML que se presentará no rodapé"
           embedded_scss:
             text: "CSS encaixado"
-            title: "Escriba CSS personalizado para entregar coa versión incorporada dos comentarios"
           color_definitions:
             text: "Definicións de cor"
             title: "Escriba definicións de cor personalizadas (só para usuarios avanzados)"
@@ -4064,11 +4063,6 @@ gl:
               }
 
               Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
-          body_tag:
-            text: "Corpo"
-          yaml:
-            text: "YAML"
-            title: "Definir os axustes do tema en formato YAML"
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"

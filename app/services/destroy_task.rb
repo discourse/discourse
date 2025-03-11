@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "highline/import"
+
 class DestroyTask
   def initialize(io = STDOUT)
     @io = io
@@ -44,6 +46,32 @@ class DestroyTask
   def destroy_topics_all_categories
     categories = Category.all
     categories.each { |c| @io.puts destroy_topics(c.slug, c.parent_category&.slug) }
+  end
+
+  def destroy_posts(post_ids, require_confirmation: true)
+    posts = Post.with_deleted.where(id: post_ids)
+
+    @io.puts "There are #{posts.count} posts to delete"
+
+    if posts.count < post_ids.size
+      @io.puts "Couldn't find the following posts:"
+      @io.puts "  #{post_ids.map(&:to_i) - posts.pluck(:id)}"
+    end
+
+    if require_confirmation
+      confirm_destroy = ask("Are you sure? (Y/n)")
+      exit 1 if confirm_destroy.downcase != "y"
+    end
+
+    posts.find_each do |post|
+      @io.puts "Destroying post #{post.id}"
+      @io.puts PostDestroyer.new(
+                 Discourse.system_user,
+                 post,
+                 context: I18n.t("staff_action_logs.cli_bulk_post_delete"),
+                 force_destroy: true,
+               ).destroy
+    end
   end
 
   def destroy_private_messages

@@ -1,9 +1,9 @@
+import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { helperContext } from "discourse/lib/helpers";
@@ -13,8 +13,6 @@ import {
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
 
-const PARENT_VIEW_DEPRECATION_MSG =
-  "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
 const TAG_NAME_DEPRECATION_MSG =
@@ -49,13 +47,11 @@ const ARGS_DEPRECATION_MSG =
 
 **/
 
-export default class PluginOutletComponent extends GlimmerComponentWithDeprecatedParentView {
+export default class PluginOutletComponent extends Component {
   @service clientErrorHandler;
+
   context = {
     ...helperContext(),
-    get parentView() {
-      return this.parentView;
-    },
     get() {
       deprecated(GET_DEPRECATION_MSG, {
         id: "discourse.plugin-outlet-context-get",
@@ -63,8 +59,6 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       return get(this, ...arguments);
     },
   };
-
-  #parentView;
 
   constructor() {
     const result = super(...arguments);
@@ -135,45 +129,10 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     );
   }
 
-  get parentView() {
-    deprecated(`${PARENT_VIEW_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
-      id: "discourse.plugin-outlet-parent-view",
-    });
-    return this.#parentView;
-  }
-
-  set parentView(value) {
-    this.#parentView = value;
-  }
-
-  get _parentView() {
-    return this.parentView;
-  }
-
   // Older plugin outlets have a `tagName` which we need to preserve for backwards-compatibility
   get wrapperComponent() {
     return PluginOutletWithTagNameWrapper;
   }
 }
 
-class PluginOutletWithTagNameWrapper extends ClassicComponent {
-  #parentView;
-
-  // Overridden parentView to make this wrapper 'transparent'
-  // Calling this will trigger the deprecation notice in PluginOutletComponent
-  get parentView() {
-    // init() of CoreView calls `this.parentView`. That would trigger the deprecation notice,
-    // so skip it until this component is initialized.
-    if (this._state) {
-      return this.#parentView.parentView;
-    }
-  }
-
-  set parentView(value) {
-    this.#parentView = value;
-  }
-
-  get _parentView() {
-    return this.parentView;
-  }
-}
+class PluginOutletWithTagNameWrapper extends ClassicComponent {}

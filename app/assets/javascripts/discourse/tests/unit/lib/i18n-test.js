@@ -327,9 +327,7 @@ module("Unit | Utility | i18n", function (hooks) {
         i18n("with_multiple_interpolate_arguments", {
           username: "username",
         });
-      }, new I18nMissingInterpolationArgument(
-        "with_multiple_interpolate_arguments: [missing %{username2} value]"
-      ));
+      }, new I18nMissingInterpolationArgument("with_multiple_interpolate_arguments: [missing %{username2} value]"));
     } finally {
       I18n.testing = false;
     }

@@ -28,30 +28,34 @@ module("Integration | Component | DPageHeader", function (hooks) {
   });
 
   test("@titleLabel", async function (assert) {
-    await render(<template>
-      <DPageHeader @titleLabel={{i18n "admin.title"}} />
-    </template>);
+    await render(
+      <template><DPageHeader @titleLabel={{i18n "admin.title"}} /></template>
+    );
     assert.dom(".d-page-header__title").exists().hasText(i18n("admin.title"));
   });
 
   test("@shouldDisplay", async function (assert) {
-    await render(<template>
-      <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
-    </template>);
+    await render(
+      <template>
+        <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
+      </template>
+    );
     assert.dom(".d-page-header").doesNotExist();
   });
 
   test("renders base breadcrumbs and yielded <:breadcrumbs>", async function (assert) {
-    await render(<template>
-      <DPageHeader @titleLabel={{i18n "admin.titile"}}>
-        <:breadcrumbs>
-          <DBreadcrumbsItem
-            @path="/admin/badges"
-            @label={{i18n "admin.badges.title"}}
-          />
-        </:breadcrumbs>
-      </DPageHeader>
-    </template>);
+    await render(
+      <template>
+        <DPageHeader @titleLabel={{i18n "admin.titile"}}>
+          <:breadcrumbs>
+            <DBreadcrumbsItem
+              @path="/admin/badges"
+              @label={{i18n "admin.badges.title"}}
+            />
+          </:breadcrumbs>
+        </DPageHeader>
+      </template>
+    );
 
     assert
       .dom(".d-page-header__breadcrumbs .d-breadcrumbs__item")
@@ -67,9 +71,11 @@ module("Integration | Component | DPageHeader", function (hooks) {
   });
 
   test("@descriptionLabel", async function (assert) {
-    await render(<template>
-      <DPageHeader @descriptionLabel={{i18n "admin.badges.description"}} />
-    </template>);
+    await render(
+      <template>
+        <DPageHeader @descriptionLabel={{i18n "admin.badges.description"}} />
+      </template>
+    );
     assert
       .dom(".d-page-header__description")
       .exists()
@@ -82,12 +88,14 @@ module("Integration | Component | DPageHeader", function (hooks) {
   });
 
   test("@learnMoreUrl", async function (assert) {
-    await render(<template>
-      <DPageHeader
-        @descriptionLabel={{i18n "admin.badges.description"}}
-        @learnMoreUrl="https://meta.discourse.org/t/96331"
-      />
-    </template>);
+    await render(
+      <template>
+        <DPageHeader
+          @descriptionLabel={{i18n "admin.badges.description"}}
+          @learnMoreUrl="https://meta.discourse.org/t/96331"
+        />
+      </template>
+    );
     assert.dom(".d-page-header__learn-more").exists();
     assert
       .dom(".d-page-header__learn-more a")
@@ -96,17 +104,19 @@ module("Integration | Component | DPageHeader", function (hooks) {
   });
 
   test("renders nav tabs in yielded <:tabs>", async function (assert) {
-    await render(<template>
-      <DPageHeader>
-        <:tabs>
-          <NavItem
-            @route="admin.backups.settings"
-            @label="settings"
-            class="d-backups-tabs__settings"
-          />
-        </:tabs>
-      </DPageHeader>
-    </template>);
+    await render(
+      <template>
+        <DPageHeader>
+          <:tabs>
+            <NavItem
+              @route="admin.backups.settings"
+              @label="settings"
+              class="d-backups-tabs__settings"
+            />
+          </:tabs>
+        </DPageHeader>
+      </template>
+    );
     assert
       .dom(".d-nav-submenu__tabs .d-backups-tabs__settings")
       .exists()
@@ -119,35 +129,37 @@ module("Integration | Component | DPageHeader", function (hooks) {
       actionCalled = true;
     };
 
-    await render(<template>
-      <DPageHeader>
-        <:actions as |actions|>
-          <actions.Primary
-            @route="adminBadges.show"
-            @routeModels="new"
-            @icon="plus"
-            @label="admin.badges.new"
-            class="new-badge"
-          />
+    await render(
+      <template>
+        <DPageHeader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              class="new-badge"
+            />
 
-          <actions.Default
-            @route="adminBadges.award"
-            @routeModels="new"
-            @icon="upload"
-            @label="admin.badges.mass_award.title"
-            class="award-badge"
-          />
+            <actions.Default
+              @route="adminBadges.award"
+              @routeModels="new"
+              @icon="upload"
+              @label="admin.badges.mass_award.title"
+              class="award-badge"
+            />
 
-          <actions.Danger
-            @action={{someAction}}
-            @title="admin.badges.group_settings"
-            @label="admin.badges.group_settings"
-            @icon="gear"
-            class="edit-groupings-btn"
-          />
-        </:actions>
-      </DPageHeader>
-    </template>);
+            <actions.Danger
+              @action={{someAction}}
+              @title="admin.badges.group_settings"
+              @label="admin.badges.group_settings"
+              @icon="gear"
+              class="edit-groupings-btn"
+            />
+          </:actions>
+        </DPageHeader>
+      </template>
+    );
 
     assert
       .dom(
@@ -170,9 +182,13 @@ module("Integration | Component | DPageHeader", function (hooks) {
   });
 
   test("@headerActionComponent is rendered with actions arg", async function (assert) {
-    await render(<template>
-      <DPageHeader @headerActionComponent={{DPageHeaderActionsTestComponent}} />
-    </template>);
+    await render(
+      <template>
+        <DPageHeader
+          @headerActionComponent={{DPageHeaderActionsTestComponent}}
+        />
+      </template>
+    );
 
     assert.dom(".d-page-header-actions-test-component .award-badge").exists();
   });
@@ -186,27 +202,29 @@ module("Integration | Component | DPageHeader | Mobile", function (hooks) {
   setupRenderingTest(hooks);
 
   test("action buttons become a dropdown on mobile", async function (assert) {
-    await render(<template>
-      <DPageHeader>
-        <:actions as |actions|>
-          <actions.Primary
-            @route="adminBadges.show"
-            @routeModels="new"
-            @icon="plus"
-            @label="admin.badges.new"
-            class="new-badge"
-          />
+    await render(
+      <template>
+        <DPageHeader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              class="new-badge"
+            />
 
-          <actions.Default
-            @route="adminBadges.award"
-            @routeModels="new"
-            @icon="upload"
-            @label="admin.badges.mass_award.title"
-            class="award-badge"
-          />
-        </:actions>
-      </DPageHeader>
-    </template>);
+            <actions.Default
+              @route="adminBadges.award"
+              @routeModels="new"
+              @icon="upload"
+              @label="admin.badges.mass_award.title"
+              class="award-badge"
+            />
+          </:actions>
+        </DPageHeader>
+      </template>
+    );
 
     assert
       .dom(

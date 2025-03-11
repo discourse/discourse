@@ -97,11 +97,12 @@ gem "rake"
 
 gem "thor", require: false
 gem "diffy", require: false
+gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.18.pre1"
+gem "mini_racer"
 
 gem "highline", require: false
 
