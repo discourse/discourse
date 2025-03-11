@@ -60,6 +60,8 @@ pt_BR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
+    too_many_urls: "Não é possível incorporar com onebox mais de 10 URLs numa única solicitação."
+    concurrency_not_allowed: "Solicitações simultâneas de inline-oneboxing não são permitidas. Envie uma solicitação por vez."
   components:
     enabled_filter: "Ativado(a)"
     disabled_filter: "Desativado(a)"
@@ -1631,6 +1633,7 @@ pt_BR:
     delete_old_hidden_posts: "Exclua automaticamente todas as postagens ocultas que permanecerem ocultas por mais de 30 dias."
     default_locale: "O idioma padrão desta instância do Discourse. Você pode substituir o texto das categorias e tópicos gerados pelo sistema em <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar/texto</a>."
     allow_user_locale: "Permitir que os(as) usuários(as) escolham suas próprias preferências de idioma da interface"
+    set_locale_from_accept_language_header: "Definir idioma de interface para usuários(as) anônimos(as) nos cabeçalhos de idioma do seu navegador"
     set_locale_from_cookie: "Permite a definição da localização do(a) usuário(a) anônimo(a) através do cookie \"locale\" do navegador"
     set_locale_from_param: "Permite a definição da localização do(a) usuário(a) anônimo(a) através do parâmetro da URL \"lang\", por exemplo: ?lang=es"
     support_mixed_text_direction: "É compatível com direções de texto mescladas da esquerda para a direita e da direita para a esquerda"
@@ -2453,6 +2456,7 @@ pt_BR:
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
+    use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugerir nomes e nomes de usuário(a). Aviso: isso pode facilitar que atores inescrupulosos descubram o endereço de e-mail dos seus membros (já que muita gente usa provedores comuns de e-mail, como o \"gmail.com\")."
     use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     show_bottom_topic_map: "Mostra o mapa de tópico na parte inferior do tópico quando tiver pelo menos dez respostas."
