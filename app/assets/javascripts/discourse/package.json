@@ -28,7 +28,6 @@
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.39.0",
     "decorator-transforms": "^2.3.0",
-    "discourse": "link:",
     "discourse-hbr": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-curry-component": "^0.3.0",
