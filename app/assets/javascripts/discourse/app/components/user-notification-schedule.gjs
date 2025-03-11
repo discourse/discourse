@@ -2,7 +2,6 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import UserNotificationScheduleDay from "discourse/components/user-notification-schedule-day";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -145,7 +144,7 @@ export default class UserNotificationSchedule extends Component {
       class="control-group notification-schedule"
       data-setting-name="user-notification-schedule"
     >
-      <label class="control-label">{{i18n0
+      <label class="control-label">{{i18n
           "user.notification_schedule.title"
         }}</label>
       <PreferenceCheckbox
@@ -154,9 +153,7 @@ export default class UserNotificationSchedule extends Component {
       />
 
       {{#if this.model.user_notification_schedule.enabled}}
-        <div class="instruction">{{i18n0
-            "user.notification_schedule.tip"
-          }}</div>
+        <div class="instruction">{{i18n "user.notification_schedule.tip"}}</div>
 
         <table class="notification-schedule-table">
           <tbody class="notification-schedule-tbody">

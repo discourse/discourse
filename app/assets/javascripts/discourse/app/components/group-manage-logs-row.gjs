@@ -5,7 +5,7 @@ import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
 import boundDate from "discourse/helpers/bound-date";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 @tagName("")
 export default class GroupManageLogsRow extends Component {

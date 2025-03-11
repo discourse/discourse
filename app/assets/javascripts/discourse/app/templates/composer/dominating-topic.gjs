@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
 import DButton from "discourse/components/d-button";
-import { htmlSafe } from "@ember/template";
 
 export default RouteTemplate(
   <template>

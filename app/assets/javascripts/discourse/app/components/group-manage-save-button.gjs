@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
-import i18n0 from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -120,7 +119,7 @@ export default class GroupManageSaveButton extends Component {
         class="btn-primary group-manage-save"
       />
       {{#if this.saved}}
-        <span>{{i18n0 "saved"}}</span>
+        <span>{{i18n "saved"}}</span>
       {{/if}}
     </div>
   </template>

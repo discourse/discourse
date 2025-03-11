@@ -1,6 +1,6 @@
-import getUrl from "discourse/helpers/get-url";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import getUrl from "discourse/helpers/get-url";
+import { i18n } from 'discourse-i18n';
 
 const LikesListEmptyState = <template>
   <div class="empty-state">

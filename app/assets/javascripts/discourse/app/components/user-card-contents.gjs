@@ -23,7 +23,6 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
-import i18n0 from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -418,7 +417,7 @@ export default class UserCardContents extends CardContentsBase {
                       {{on "click" this.handleShowUser}}
                       href={{this.user.path}}
                       class="user-profile-link"
-                      aria-label={{i18n0
+                      aria-label={{i18n
                         "user.profile_link"
                         username=this.user.username
                       }}
@@ -457,7 +456,7 @@ export default class UserCardContents extends CardContentsBase {
                   <div class="names__secondary">{{this.user.title}}</div>
                 {{/if}}
                 {{#if this.user.staged}}
-                  <div class="names__secondary staged">{{i18n0
+                  <div class="names__secondary staged">{{i18n
                       "user.staged"
                     }}</div>
                 {{/if}}
@@ -540,13 +539,13 @@ export default class UserCardContents extends CardContentsBase {
           {{#if this.user.profile_hidden}}
             <div class="card-row second-row">
               <div class="profile-hidden">
-                <span role="alert">{{i18n0 "user.profile_hidden"}}</span>
+                <span role="alert">{{i18n "user.profile_hidden"}}</span>
               </div>
             </div>
           {{else if this.user.inactive}}
             <div class="card-row second-row">
               <div class="inactive-user">
-                <span role="alert">{{i18n0 "user.inactive_user"}}</span>
+                <span role="alert">{{i18n "user.inactive_user"}}</span>
               </div>
             </div>
           {{/if}}
@@ -558,16 +557,16 @@ export default class UserCardContents extends CardContentsBase {
                   <div class="suspension-date">
                     {{icon "ban"}}
                     {{#if this.user.suspendedForever}}
-                      {{i18n0 "user.suspended_permanently"}}
+                      {{i18n "user.suspended_permanently"}}
                     {{else}}
-                      {{i18n0
+                      {{i18n
                         "user.suspended_notice"
                         date=this.user.suspendedTillDate
                       }}
                     {{/if}}
                   </div>
                   <div class="suspension-reason">
-                    <span class="suspension-reason-title">{{i18n0
+                    <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
                     <span
@@ -590,7 +589,7 @@ export default class UserCardContents extends CardContentsBase {
           {{#if this.showFeaturedTopic}}
             <div class="card-row">
               <div class="featured-topic">
-                <span class="desc">{{i18n0 "user.featured_topic"}}</span>
+                <span class="desc">{{i18n "user.featured_topic"}}</span>
                 <LinkTo
                   @route="topic"
                   @models={{array
@@ -635,7 +634,7 @@ export default class UserCardContents extends CardContentsBase {
                   </span>
                 {{/if}}
                 {{#if this.showUserLocalTime}}
-                  <span class="local-time" title={{i18n0 "local_time"}}>
+                  <span class="local-time" title={{i18n "local_time"}}>
                     {{icon "far-clock"}}
                     <span>{{this.formattedUserLocalTime}}</span>
                   </span>
@@ -656,25 +655,25 @@ export default class UserCardContents extends CardContentsBase {
               <div class="metadata">
                 {{#if this.user.last_posted_at}}
                   <div class="metadata__last-posted">
-                    <span class="desc">{{i18n0 "last_post"}}</span>
+                    <span class="desc">{{i18n "last_post"}}</span>
                     {{formatDate
                       this.user.last_posted_at
                       leaveAgo="true"
                     }}</div>
                 {{/if}}
                 <div class="metadata__user-created">
-                  <span class="desc">{{i18n0 "joined"}}</span>
+                  <span class="desc">{{i18n "joined"}}</span>
                   {{formatDate this.user.created_at leaveAgo="true"}}</div>
                 {{#if this.user.time_read}}
                   <div
                     class="metadata__time-read"
                     title={{this.timeReadTooltip}}
                   >
-                    <span class="desc">{{i18n0 "time_read"}}</span>
+                    <span class="desc">{{i18n "time_read"}}</span>
                     {{formatDuration this.user.time_read}}
                     {{#if this.showRecentTimeRead}}
                       <span>
-                        ({{i18n0
+                        ({{i18n
                           "time_read_recently"
                           time_read=this.recentTimeRead
                         }})
@@ -765,7 +764,7 @@ export default class UserCardContents extends CardContentsBase {
                     {{#if this.showMoreBadges}}
                       <span class="more-user-badges">
                         <LinkTo @route="user.badges" @model={{this.user}}>
-                          {{i18n0
+                          {{i18n
                             "badges.more_badges"
                             count=this.moreBadgesCount
                           }}

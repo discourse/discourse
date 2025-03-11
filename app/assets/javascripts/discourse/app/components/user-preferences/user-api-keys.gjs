@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
 import boundDate from "discourse/helpers/bound-date";
-import i18n from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
 
 const UserApiKeys = <template>
   {{#if @model.userApiKeys}}

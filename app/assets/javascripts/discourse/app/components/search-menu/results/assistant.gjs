@@ -3,7 +3,7 @@ import { concat, get, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import eq from "truth-helpers/helpers/eq";
 
 const suggestionShortcuts = [

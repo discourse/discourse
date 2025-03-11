@@ -1,5 +1,6 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -10,10 +11,9 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

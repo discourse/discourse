@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import ActivationControls from "discourse/components/activation-controls";
 import DModal from "discourse/components/d-modal";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import { resendActivationEmail } from "discourse/lib/user-activation";
+import { i18n } from 'discourse-i18n';
 import ActivationEdit from "./activation-edit";
 import ActivationResent from "./activation-resent";
 

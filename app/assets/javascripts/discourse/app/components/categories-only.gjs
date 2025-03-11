@@ -6,8 +6,8 @@ import { tagName } from "@ember-decorators/component";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 @tagName("")
 export default class CategoriesOnly extends Component {

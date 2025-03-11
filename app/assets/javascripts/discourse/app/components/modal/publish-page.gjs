@@ -8,9 +8,9 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
-import i18n from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { i18n } from 'discourse-i18n';
 
 const States = {
   initializing: "initializing",

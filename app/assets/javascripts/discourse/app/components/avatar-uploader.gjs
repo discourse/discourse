@@ -5,7 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
@@ -72,7 +71,7 @@ export default class AvatarUploader extends Component {
     />
 
     {{#if this.imageIsNotASquare}}
-      <div class="warning">{{i18n0
+      <div class="warning">{{i18n
           "user.change_avatar.image_is_not_a_square"
         }}</div>
     {{/if}}

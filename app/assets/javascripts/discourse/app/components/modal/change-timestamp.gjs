@@ -8,7 +8,6 @@ import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DatePickerPast from "discourse/components/date-picker-past";
-import i18n0 from "discourse/helpers/i18n";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -54,14 +53,14 @@ export default class ChangeTimestamp extends Component {
       @bodyClass="change-timestamp"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
-      @title={{i18n0 "topic.change_timestamp.title"}}
+      @title={{i18n "topic.change_timestamp.title"}}
     >
       <:body>
         <p>
-          {{i18n0 "topic.change_timestamp.instructions"}}
+          {{i18n "topic.change_timestamp.instructions"}}
         </p>
         <p class="alert alert-error {{unless this.validTimestamp 'hidden'}}">
-          {{i18n0 "topic.change_timestamp.invalid_timestamp"}}
+          {{i18n "topic.change_timestamp.invalid_timestamp"}}
         </p>
         <form>
           <DatePickerPast

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import i18n0 from "discourse/helpers/i18n";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -14,7 +13,7 @@ export default class BrowserSearchTip extends Component {
         {{this.translatedLabel}}
       </span>
       <span class="tip-description">
-        {{i18n0 "search.browser_tip_description"}}
+        {{i18n "search.browser_tip_description"}}
       </span>
     </div>
   </template>

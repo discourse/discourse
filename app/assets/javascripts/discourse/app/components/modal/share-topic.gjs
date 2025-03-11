@@ -10,7 +10,6 @@ import DModal from "discourse/components/d-modal";
 import CreateInvite from "discourse/components/modal/create-invite";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ShareSource from "discourse/components/share-source";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -126,8 +125,8 @@ export default class ShareTopicModal extends Component.extend(
     <DModal
       @title={{if
         this.post
-        (i18n0 "post.share.title" post_number=this.post.post_number)
-        (i18n0 "topic.share.title")
+        (i18n "post.share.title" post_number=this.post.post_number)
+        (i18n "topic.share.title")
       }}
       @subtitle={{if this.post this.displayDate}}
       @closeModal={{@closeModal}}
@@ -140,10 +139,8 @@ export default class ShareTopicModal extends Component.extend(
           <label for="invite-link">
             {{if
               this.post
-              (i18n0
-                "post.share.instructions" post_number=this.post.post_number
-              )
-              (i18n0 "topic.share.instructions")
+              (i18n "post.share.instructions" post_number=this.post.post_number)
+              (i18n "topic.share.instructions")
             }}
           </label>
           <div class="link-share-container">

@@ -4,12 +4,11 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import SecondFactorInput from "discourse/components/second-factor-input";
-import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
   MAX_SECOND_FACTOR_NAME_LENGTH,
@@ -86,7 +85,7 @@ export default class SecondFactorAddTotp extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      @title={{i18n0 "user.second_factor.totp.add"}}
+      @title={{i18n "user.second_factor.totp.add"}}
       {{didInsert this.totpRequested}}
     >
       <:body>
@@ -101,7 +100,7 @@ export default class SecondFactorAddTotp extends Component {
 
           <div class="control-group">
             <div class="controls">
-              {{htmlSafe (i18n0 "user.second_factor.enable_description")}}
+              {{htmlSafe (i18n "user.second_factor.enable_description")}}
             </div>
           </div>
 
@@ -120,14 +119,14 @@ export default class SecondFactorAddTotp extends Component {
                     href
                     class="show-second-factor-key"
                     {{on "click" this.enableShowSecondFactorKey}}
-                  >{{i18n0 "user.second_factor.show_key_description"}}</a>
+                  >{{i18n "user.second_factor.show_key_description"}}</a>
                 {{/if}}
               </p>
             </div>
           </div>
 
           <div class="control-group">
-            <label class="control-label input-prepend">{{i18n0
+            <label class="control-label input-prepend">{{i18n
                 "user.second_factor.name"
               }}</label>
             <div class="controls">
@@ -135,14 +134,14 @@ export default class SecondFactorAddTotp extends Component {
                 {{on "input" (withEventValue (fn (mut this.secondFactorName)))}}
                 value={{this.secondFactorName}}
                 type="text"
-                placeholder={{i18n0 "user.second_factor.totp.default_name"}}
+                placeholder={{i18n "user.second_factor.totp.default_name"}}
                 maxlength={{this.maxSecondFactorNameLength}}
                 id="second-factor-name"
               />
             </div>
 
             <label class="control-label input-prepend">
-              {{i18n0 "user.second_factor.label"}}
+              {{i18n "user.second_factor.label"}}
             </label>
             <div class="controls">
               <SecondFactorInput

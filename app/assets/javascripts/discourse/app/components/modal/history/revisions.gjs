@@ -1,12 +1,12 @@
 import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { htmlSafe } from "@ember/template";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
-import { htmlSafe } from "@ember/template";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";

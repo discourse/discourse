@@ -2,12 +2,12 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 @classNameBindings("docked")
 export default class TopicProgress extends Component {

@@ -6,7 +6,6 @@ export default [
     rules: {
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
-      "discourse/i18n-import-location": "off",
     },
   },
   {

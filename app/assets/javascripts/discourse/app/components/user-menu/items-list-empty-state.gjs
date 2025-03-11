@@ -1,4 +1,4 @@
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 const ItemsListEmptyState = <template>
   <div class="empty-state">

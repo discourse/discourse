@@ -8,9 +8,9 @@ import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
 import { debounce } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { i18n } from 'discourse-i18n';
 import and from "truth-helpers/helpers/and";
 import or from "truth-helpers/helpers/or";
 

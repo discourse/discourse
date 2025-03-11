@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import { htmlSafe } from "@ember/template";
 import number from "discourse/helpers/number";
 
 @tagName("li")

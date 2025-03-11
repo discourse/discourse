@@ -1,6 +1,6 @@
 import DModal from "discourse/components/d-modal";
 import FastEdit from "discourse/components/fast-edit";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 const FastEdit0 = <template>
   <DModal @title={{i18n "post.quote_edit"}} @closeModal={{@closeModal}}>

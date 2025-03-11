@@ -4,8 +4,8 @@ import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import i18n from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
+import { i18n } from 'discourse-i18n';
 import gt from "truth-helpers/helpers/gt";
 import or from "truth-helpers/helpers/or";
 

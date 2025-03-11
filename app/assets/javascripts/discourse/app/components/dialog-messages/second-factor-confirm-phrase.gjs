@@ -3,9 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TextField from "discourse/components/text-field";
 import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
+import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorConfirmPhrase extends Component {
@@ -25,7 +24,7 @@ export default class SecondFactorConfirmPhrase extends Component {
   }
 
   <template>
-    {{i18n0 "user.second_factor.delete_confirm_header"}}
+    {{i18n "user.second_factor.delete_confirm_header"}}
 
     <ul>
       {{#each @model.totps as |totp|}}
@@ -37,13 +36,13 @@ export default class SecondFactorConfirmPhrase extends Component {
       {{/each}}
 
       {{#if this.currentUser.second_factor_backup_enabled}}
-        <li>{{i18n0 "user.second_factor_backup.title"}}</li>
+        <li>{{i18n "user.second_factor_backup.title"}}</li>
       {{/if}}
     </ul>
 
     <p>
       {{htmlSafe
-        (i18n0
+        (i18n
           "user.second_factor.delete_confirm_instruction"
           confirm=this.disabledString
         )

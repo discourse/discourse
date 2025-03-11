@@ -10,7 +10,6 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
 import icon from "discourse/helpers/d-icon";
-import i18n0 from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -540,7 +539,7 @@ export default class SidebarSectionForm extends Component {
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
-      @title={{i18n0 this.header}}
+      @title={{i18n this.header}}
       class="sidebar-section-form-modal"
     >
       <:body>
@@ -548,7 +547,7 @@ export default class SidebarSectionForm extends Component {
           {{#unless this.transformedModel.hideTitleInput}}
             <div class="sidebar-section-form__input-wrapper">
               <label for="section-name">
-                {{i18n0 "sidebar.sections.custom.title.label"}}
+                {{i18n "sidebar.sections.custom.title.label"}}
               </label>
 
               <Input
@@ -582,7 +581,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
-                <label>{{i18n0
+                <label>{{i18n
                     "sidebar.sections.custom.links.icon.label"
                   }}</label>
               </div>
@@ -592,7 +591,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
-                <label>{{i18n0
+                <label>{{i18n
                     "sidebar.sections.custom.links.name.label"
                   }}</label>
               </div>
@@ -602,7 +601,7 @@ export default class SidebarSectionForm extends Component {
                 role="columnheader"
                 aria-sort="none"
               >
-                <label>{{i18n0
+                <label>{{i18n
                     "sidebar.sections.custom.links.value.label"
                   }}</label>
               </div>
@@ -629,7 +628,7 @@ export default class SidebarSectionForm extends Component {
 
           {{#if this.transformedModel.sectionType}}
             <hr />
-            <h3>{{i18n0 "sidebar.sections.custom.more_menu"}}</h3>
+            <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
             {{#each this.activeSecondaryLinks as |link|}}
               <SectionFormLink
                 @link={{link}}
@@ -666,12 +665,12 @@ export default class SidebarSectionForm extends Component {
             <label class="checkbox-label">
               {{#if this.transformedModel.sectionType}}
                 <DTooltip
-                  @content={{i18n0 "sidebar.sections.custom.always_public"}}
+                  @content={{i18n "sidebar.sections.custom.always_public"}}
                   class="always-public-tooltip"
                 >
                   <:trigger>
                     {{icon "square-check"}}
-                    <span>{{i18n0 "sidebar.sections.custom.public"}}</span>
+                    <span>{{i18n "sidebar.sections.custom.public"}}</span>
                   </:trigger>
                 </DTooltip>
               {{else}}
@@ -681,7 +680,7 @@ export default class SidebarSectionForm extends Component {
                   class="mark-public"
                   disabled={{this.transformedModel.sectionType}}
                 />
-                <span>{{i18n0 "sidebar.sections.custom.public"}}</span>
+                <span>{{i18n "sidebar.sections.custom.public"}}</span>
               {{/if}}
             </label>
           </div>

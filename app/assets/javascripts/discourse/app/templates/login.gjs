@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import FlashMessage from "discourse/components/flash-message";
@@ -11,10 +12,9 @@ import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";

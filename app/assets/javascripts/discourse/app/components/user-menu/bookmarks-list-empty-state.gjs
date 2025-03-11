@@ -1,6 +1,6 @@
-import icon from "discourse/helpers/d-icon";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
 
 const BookmarksListEmptyState = <template>
   <div class="empty-state">

@@ -2,10 +2,9 @@ import Component, { Input, Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { and, equal } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
-import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { i18n } from "discourse-i18n";
@@ -93,7 +92,7 @@ export default class FlagActionType extends Component {
                   name="message"
                   class="flag-message"
                   placeholder={{this.customPlaceholder}}
-                  aria-label={{i18n0 "flagging.notify_user_textarea_label"}}
+                  aria-label={{i18n "flagging.notify_user_textarea_label"}}
                   @value={{this.message}}
                 />
                 <div
@@ -110,7 +109,7 @@ export default class FlagActionType extends Component {
         </div>
         {{#if this.staffFlagsAvailable}}
           <hr />
-          <h3>{{i18n0 "flagging.notify_staff"}}</h3>
+          <h3>{{i18n "flagging.notify_staff"}}</h3>
         {{/if}}
       {{else}}
         <div class="controls {{this.flag.name_key}}">
@@ -130,7 +129,7 @@ export default class FlagActionType extends Component {
                   name="message"
                   class="flag-message"
                   placeholder={{this.customPlaceholder}}
-                  aria-label={{i18n0
+                  aria-label={{i18n
                     "flagging.notify_moderators_textarea_label"
                   }}
                   @value={{this.message}}
@@ -153,7 +152,7 @@ export default class FlagActionType extends Component {
                 @type="checkbox"
                 @checked={{this.isConfirmed}}
               />
-              <span>{{i18n0 "flagging.confirmation_illegal"}}</span>
+              <span>{{i18n "flagging.confirmation_illegal"}}</span>
             </label>
           {{/if}}
         </div>

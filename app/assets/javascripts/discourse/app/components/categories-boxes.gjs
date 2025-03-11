@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
@@ -10,7 +11,6 @@ import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
-import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")

@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import BackupCodes from "discourse/components/backup-codes";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
 import { debounce } from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -71,7 +70,7 @@ export default class SecondFactorBackupEdit extends Component {
 
   <template>
     <DModal
-      @title={{i18n0 "user.second_factor_backup.title"}}
+      @title={{i18n "user.second_factor_backup.title"}}
       @closeModal={{@closeModal}}
       class="second-factor-backup-edit-modal"
     >
@@ -90,8 +89,8 @@ export default class SecondFactorBackupEdit extends Component {
 
         <ConditionalLoadingSection @isLoading={{this.loading}}>
           {{#if this.backupCodes}}
-            <h3>{{i18n0 "user.second_factor_backup.codes.title"}}</h3>
-            <p>{{i18n0 "user.second_factor_backup.codes.description"}}</p>
+            <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
+            <p>{{i18n "user.second_factor_backup.codes.description"}}</p>
             <BackupCodes
               @copyBackupCode={{this.copyBackupCode}}
               @backupCodes={{this.backupCodes}}
@@ -101,13 +100,13 @@ export default class SecondFactorBackupEdit extends Component {
 
         {{#if this.backupEnabled}}
           {{htmlSafe
-            (i18n0
+            (i18n
               "user.second_factor_backup.remaining_codes"
               count=this.remainingCodes
             )
           }}
         {{else}}
-          {{htmlSafe (i18n0 "user.second_factor_backup.not_enabled")}}
+          {{htmlSafe (i18n "user.second_factor_backup.not_enabled")}}
         {{/if}}
       </:body>
       <:footer>

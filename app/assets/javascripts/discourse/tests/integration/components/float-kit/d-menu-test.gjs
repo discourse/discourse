@@ -1,15 +1,15 @@
-import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DDefaultToast from "float-kit/components/d-default-toast";
-import DMenuInstance from "float-kit/lib/d-menu-instance";
-import DMenu from "float-kit/components/d-menu";
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
+import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import element_ from "discourse/helpers/element";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DDefaultToast from "float-kit/components/d-default-toast";
+import DMenu from "float-kit/components/d-menu";
+import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);

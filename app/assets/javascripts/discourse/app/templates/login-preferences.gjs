@@ -1,7 +1,7 @@
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

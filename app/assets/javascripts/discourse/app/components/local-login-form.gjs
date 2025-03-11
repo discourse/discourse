@@ -15,7 +15,6 @@ import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import icon from "discourse/helpers/d-icon";
-import i18n0 from "discourse/helpers/i18n";
 import valueEntered from "discourse/helpers/value-entered";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -173,7 +172,7 @@ export default class LocalLoginForm extends Component {
             {{on "keydown" this.loginOnEnter}}
           />
           <label class="alt-placeholder" for="login-account-name">
-            {{i18n0 "login.email_placeholder"}}
+            {{i18n "login.email_placeholder"}}
           </label>
           {{#if @canLoginLocalWithEmail}}
             <a
@@ -183,7 +182,7 @@ export default class LocalLoginForm extends Component {
               id="email-login-link"
               {{on "click" this.emailLogin}}
             >
-              {{i18n0 "email_login.login_link"}}
+              {{i18n "email_login.login_link"}}
             </a>
           {{/if}}
         </div>
@@ -202,7 +201,7 @@ export default class LocalLoginForm extends Component {
             class={{valueEntered @loginPassword}}
           />
           <label class="alt-placeholder" for="login-account-password">
-            {{i18n0 "login.password"}}
+            {{i18n "login.password"}}
           </label>
           {{#if @loginPassword}}
             <TogglePasswordMask
@@ -218,12 +217,12 @@ export default class LocalLoginForm extends Component {
               tabindex="2"
               {{on "click" this.handleForgotPassword}}
             >
-              {{i18n0 "forgot_password.action"}}
+              {{i18n "forgot_password.action"}}
             </a>
           </div>
           <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
             {{icon "triangle-exclamation"}}
-            {{i18n0 "login.caps_lock_warning"}}</div>
+            {{i18n "login.caps_lock_warning"}}</div>
         </div>
       </div>
       {{#if this.showSecondFactorForm}}

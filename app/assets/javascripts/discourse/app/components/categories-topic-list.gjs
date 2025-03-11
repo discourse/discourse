@@ -3,7 +3,7 @@ import { concat } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import getUrl from "discourse/helpers/get-url";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import eq from "truth-helpers/helpers/eq";
 
 // Exists so plugins can use it

@@ -3,9 +3,9 @@ import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { i18n } from 'discourse-i18n';
 
 @classNames("google-search-form")
 @classNameBindings("hidden:hidden")

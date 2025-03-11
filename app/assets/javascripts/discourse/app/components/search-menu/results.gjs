@@ -10,7 +10,7 @@ import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import CategoryViewComponent from "./results/type/category";

@@ -6,8 +6,8 @@ import $ from "jquery";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import TopicList from "discourse/components/topic-list";
 import List from "discourse/components/topic-list/list";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed, { bind } from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 export default class BasicTopicList extends Component {
   @service site;

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -9,8 +10,6 @@ import FutureDateInput from "discourse/components/future-date-input";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
-import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
@@ -189,7 +188,7 @@ export default class FeatureTopic extends Component {
   <template>
     <DModal
       class="feature-topic"
-      @title={{i18n0 "topic.feature_topic.title"}}
+      @title={{i18n "topic.feature_topic.title"}}
       @closeModal={{@closeModal}}
     >
       <:body>
@@ -204,19 +203,19 @@ export default class FeatureTopic extends Component {
                   >
                     {{#if this.pinnedGloballyCount}}
                       {{htmlSafe
-                        (i18n0
+                        (i18n
                           "topic.feature_topic.already_pinned_globally"
                           count=this.pinnedGloballyCount
                         )
                       }}
                     {{else}}
                       {{htmlSafe
-                        (i18n0 "topic.feature_topic.not_pinned_globally")
+                        (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
                   </ConditionalLoadingSpinner>
                 </p>
-                <p>{{i18n0 "topic.feature_topic.global_pin_note"}}</p>
+                <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
               {{else}}
                 <p>
                   <ConditionalLoadingSpinner
@@ -226,7 +225,7 @@ export default class FeatureTopic extends Component {
                     {{htmlSafe this.alreadyPinnedMessage}}
                   </ConditionalLoadingSpinner>
                 </p>
-                <p>{{i18n0 "topic.feature_topic.pin_note"}}</p>
+                <p>{{i18n "topic.feature_topic.pin_note"}}</p>
               {{/if}}
               <p>{{htmlSafe this.unPinMessage}}</p>
               <p><DButton
@@ -249,7 +248,7 @@ export default class FeatureTopic extends Component {
                 </ConditionalLoadingSpinner>
               </p>
               <p>
-                {{i18n0 "topic.feature_topic.pin_note"}}
+                {{i18n "topic.feature_topic.pin_note"}}
               </p>
               {{#if this.site.isMobileDevice}}
                 <p>
@@ -310,24 +309,24 @@ export default class FeatureTopic extends Component {
                   >
                     {{#if this.pinnedGloballyCount}}
                       {{htmlSafe
-                        (i18n0
+                        (i18n
                           "topic.feature_topic.already_pinned_globally"
                           count=this.pinnedGloballyCount
                         )
                       }}
                     {{else}}
                       {{htmlSafe
-                        (i18n0 "topic.feature_topic.not_pinned_globally")
+                        (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
                   </ConditionalLoadingSpinner>
                 </p>
                 <p>
-                  {{i18n0 "topic.feature_topic.global_pin_note"}}
+                  {{i18n "topic.feature_topic.global_pin_note"}}
                 </p>
                 {{#if this.site.isMobileDevice}}
                   <p>
-                    {{i18n0 "topic.feature_topic.pin_globally"}}
+                    {{i18n "topic.feature_topic.pin_globally"}}
                   </p>
                   <p class="with-validation">
                     <FutureDateInput
@@ -345,7 +344,7 @@ export default class FeatureTopic extends Component {
                   </p>
                 {{else}}
                   <p class="with-validation">
-                    {{i18n0 "topic.feature_topic.pin_globally"}}
+                    {{i18n "topic.feature_topic.pin_globally"}}
                     <span>
                       {{icon "far-clock"}}
                       <FutureDateInput
@@ -385,20 +384,20 @@ export default class FeatureTopic extends Component {
                   @condition={{this.loading}}
                 >
                   {{#if this.bannerCount}}
-                    {{htmlSafe (i18n0 "topic.feature_topic.banner_exists")}}
+                    {{htmlSafe (i18n "topic.feature_topic.banner_exists")}}
                   {{else}}
-                    {{htmlSafe (i18n0 "topic.feature_topic.no_banner_exists")}}
+                    {{htmlSafe (i18n "topic.feature_topic.no_banner_exists")}}
                   {{/if}}
                 </ConditionalLoadingSpinner>
               </p>
               <p>
-                {{i18n0 "topic.feature_topic.banner_note"}}
+                {{i18n "topic.feature_topic.banner_note"}}
               </p>
               <p>
                 {{#if @model.topic.isBanner}}
-                  {{i18n0 "topic.feature_topic.remove_banner"}}
+                  {{i18n "topic.feature_topic.remove_banner"}}
                 {{else}}
-                  {{i18n0 "topic.feature_topic.make_banner"}}
+                  {{i18n "topic.feature_topic.make_banner"}}
                 {{/if}}
               </p>
               <p>

@@ -7,7 +7,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import ScoreValue from "discourse/components/score-value";
 import float from "discourse/helpers/float";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default class ExplainReviewable extends Component {
   @service store;

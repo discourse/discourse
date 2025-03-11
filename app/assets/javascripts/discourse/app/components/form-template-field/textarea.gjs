@@ -1,6 +1,6 @@
 import { Textarea } from "@ember/component";
-import icon from "discourse/helpers/d-icon";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 
 const Textarea0 = <template>
   <div class="control-group form-template-field" data-field-type="textarea">

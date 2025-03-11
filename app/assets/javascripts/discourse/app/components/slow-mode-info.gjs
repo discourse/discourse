@@ -2,11 +2,11 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import Topic from "discourse/models/topic";
+import { i18n } from 'discourse-i18n';
 
 export default class SlowModeInfo extends Component {
   @discourseComputed("topic.slow_mode_seconds")

@@ -11,12 +11,12 @@ import {
 import { observes, on } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListItem from "discourse/components/topic-list-item";
-import i18n from "discourse/helpers/i18n";
 import raw from "discourse/helpers/raw";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import LoadMore from "discourse/mixins/load-more";
+import { i18n } from 'discourse-i18n';
 
 @tagName("table")
 @classNames("topic-list")

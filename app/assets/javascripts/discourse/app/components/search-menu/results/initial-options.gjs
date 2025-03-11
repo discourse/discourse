@@ -6,7 +6,6 @@ import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
-import i18n0 from "discourse/helpers/i18n";
 import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import or from "truth-helpers/helpers/or";
@@ -180,7 +179,7 @@ export default class InitialOptions extends Component {
           }}
             {{#if this.search.activeGlobalSearchTerm}}
               <AssistantItem
-                @suffix={{i18n0 "search.in_topics_posts"}}
+                @suffix={{i18n "search.in_topics_posts"}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchAllTopics={{true}}
                 @extraHint={{true}}

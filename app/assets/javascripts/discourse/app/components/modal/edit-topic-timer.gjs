@@ -7,7 +7,6 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
-import i18n0 from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { i18n } from "discourse-i18n";
@@ -233,7 +232,7 @@ export default class EditTopicTimer extends Component {
 
   <template>
     <DModal
-      @title={{i18n0 "topic.topic_status_update.title"}}
+      @title={{i18n "topic.topic_status_update.title"}}
       @flash={{this.flash}}
       @closeModal={{@closeModal}}
       autoFocus="false"

@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -6,7 +7,6 @@ import {
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import formatAge from "discourse/helpers/format-age";
-import { htmlSafe } from "@ember/template";
 import raw from "discourse/helpers/raw";
 
 @classNameBindings(":featured-topic")

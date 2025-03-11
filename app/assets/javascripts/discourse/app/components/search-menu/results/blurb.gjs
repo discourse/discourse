@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import formatAge from "discourse/helpers/format-age";
-import { htmlSafe } from "@ember/template";
 
 export default class Blurb extends Component {
   @service siteSettings;

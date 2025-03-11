@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 @classNames("controls", "save-button")
 export default class SaveControls extends Component {

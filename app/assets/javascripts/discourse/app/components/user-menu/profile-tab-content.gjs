@@ -9,11 +9,11 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import emoji from "discourse/helpers/emoji";
 import formatAge from "discourse/helpers/format-age";
-import i18n from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import { userPath } from "discourse/lib/url";
+import { i18n } from 'discourse-i18n';
 
 const _extraItems = [];
 

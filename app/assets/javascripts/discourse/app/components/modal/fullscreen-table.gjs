@@ -1,5 +1,5 @@
 import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 const FullscreenTable = <template>
   <DModal

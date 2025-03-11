@@ -1,6 +1,6 @@
-import DModal from "discourse/components/d-modal";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import DModal from "discourse/components/d-modal";
+import { i18n } from 'discourse-i18n';
 
 const ActivationResent = <template>
   <DModal @title={{i18n "log_in"}} @closeModal={{@closeModal}}>

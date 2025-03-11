@@ -9,7 +9,6 @@ import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TapTile from "discourse/components/tap-tile";
 import TapTileGrid from "discourse/components/tap-tile-grid";
 import icon from "discourse/helpers/d-icon";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import {
   defaultTimeShortcuts,
@@ -297,7 +296,7 @@ export default class TimeShortcutPicker extends Component {
             @onChange={{action "selectShortcut"}}
           >
 
-            <div class="tap-tile-title">{{i18n0 option.label}}</div>
+            <div class="tap-tile-title">{{i18n option.label}}</div>
             <div class="tap-tile-date">{{option.timeFormatted}}</div>
           </TapTile>
         {{/unless}}
@@ -329,7 +328,7 @@ export default class TimeShortcutPicker extends Component {
               class="control-group custom-date-time-wrap custom-relative-wrap"
             >
               <label class="control-label" for="bookmark-relative-time-picker">
-                {{i18n0 "relative_time_picker.relative"}}
+                {{i18n "relative_time_picker.relative"}}
               </label>
               <RelativeTimePicker
                 @durationMinutes={{this.selectedDurationMins}}

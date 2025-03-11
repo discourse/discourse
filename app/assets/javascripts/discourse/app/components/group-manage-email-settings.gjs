@@ -9,7 +9,6 @@ import { onEvent } from "@ember-decorators/object";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import not from "truth-helpers/helpers/not";
@@ -122,8 +121,8 @@ export default class GroupManageEmailSettings extends Component {
 
   <template>
     <div class="group-manage-email-settings">
-      <h3>{{i18n0 "groups.manage.email.smtp_title"}}</h3>
-      <p>{{i18n0 "groups.manage.email.smtp_instructions"}}</p>
+      <h3>{{i18n "groups.manage.email.smtp_title"}}</h3>
+      <p>{{i18n "groups.manage.email.smtp_instructions"}}</p>
 
       <label for="enable_smtp">
         <Input
@@ -133,7 +132,7 @@ export default class GroupManageEmailSettings extends Component {
           tabindex="1"
           {{on "input" this.smtpEnabledChange}}
         />
-        {{i18n0 "groups.manage.email.enable_smtp"}}
+        {{i18n "groups.manage.email.enable_smtp"}}
       </label>
 
       {{#if this.group.smtp_enabled}}
@@ -148,12 +147,12 @@ export default class GroupManageEmailSettings extends Component {
         <div class="group-manage-email-imap-wrapper">
           <br />
 
-          <h3>{{i18n0 "groups.manage.email.imap_title"}}</h3>
+          <h3>{{i18n "groups.manage.email.imap_title"}}</h3>
           <p>
-            {{htmlSafe (i18n0 "groups.manage.email.imap_instructions")}}
+            {{htmlSafe (i18n "groups.manage.email.imap_instructions")}}
           </p>
 
-          <div class="alert alert-warning">{{i18n0
+          <div class="alert alert-warning">{{i18n
               "groups.manage.email.imap_alpha_warning"
             }}</div>
 
@@ -166,7 +165,7 @@ export default class GroupManageEmailSettings extends Component {
               tabindex="8"
               {{on "input" this.imapEnabledChange}}
             />
-            {{i18n0 "groups.manage.email.enable_imap"}}
+            {{i18n "groups.manage.email.enable_imap"}}
           </label>
 
           {{#if this.group.imap_enabled}}
@@ -180,7 +179,7 @@ export default class GroupManageEmailSettings extends Component {
 
       <div class="group-manage-email-additional-settings-wrapper">
         <div class="control-group">
-          <h3>{{i18n0 "groups.manage.email.imap_additional_settings"}}</h3>
+          <h3>{{i18n "groups.manage.email.imap_additional_settings"}}</h3>
           <label
             class="control-group-inline"
             for="allow_unknown_sender_topic_replies"
@@ -192,11 +191,11 @@ export default class GroupManageEmailSettings extends Component {
               @checked={{this.group.allow_unknown_sender_topic_replies}}
               tabindex="13"
             />
-            <span>{{i18n0
+            <span>{{i18n
                 "groups.manage.email.settings.allow_unknown_sender_topic_replies"
               }}</span>
           </label>
-          <p>{{i18n0
+          <p>{{i18n
               "groups.manage.email.settings.allow_unknown_sender_topic_replies_hint"
             }}</p>
         </div>

@@ -1,6 +1,6 @@
+import { htmlSafe } from "@ember/template";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { htmlSafe } from "@ember/template";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | html-safe", function (hooks) {

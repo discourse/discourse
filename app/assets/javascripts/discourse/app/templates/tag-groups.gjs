@@ -3,7 +3,7 @@ import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/helpers/get-url";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

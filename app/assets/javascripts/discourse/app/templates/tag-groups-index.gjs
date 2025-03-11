@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

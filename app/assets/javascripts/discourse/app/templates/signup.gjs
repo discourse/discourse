@@ -1,6 +1,7 @@
 import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import FlashMessage from "discourse/components/flash-message";
 import FullnameInput from "discourse/components/fullname-input";
@@ -19,11 +20,10 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
+import { i18n } from 'discourse-i18n';
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 

@@ -9,7 +9,6 @@ import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
-import i18n0 from "discourse/helpers/i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -123,9 +122,7 @@ export default class GroupsFormProfileFields extends Component {
     {{#if this.canEdit}}
       {{#if this.currentUser.can_create_group}}
         <div class="control-group">
-          <label class="control-label" for="name">{{i18n0
-              "groups.name"
-            }}</label>
+          <label class="control-label" for="name">{{i18n "groups.name"}}</label>
 
           <TextField
             @name="name"
@@ -139,7 +136,7 @@ export default class GroupsFormProfileFields extends Component {
       {{/if}}
 
       <div class="control-group">
-        <label class="control-label" for="full_name">{{i18n0
+        <label class="control-label" for="full_name">{{i18n
             "groups.manage.full_name"
           }}</label>
 
@@ -152,7 +149,7 @@ export default class GroupsFormProfileFields extends Component {
     {{/if}}
 
     <div class="control-group">
-      <label class="control-label" for="bio">{{i18n0 "groups.bio"}}</label>
+      <label class="control-label" for="bio">{{i18n "groups.bio"}}</label>
       <DEditor
         @value={{this.model.bio_raw}}
         class="group-form-bio input-xxlarge"

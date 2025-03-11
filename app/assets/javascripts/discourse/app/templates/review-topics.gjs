@@ -4,8 +4,8 @@ import RouteTemplate from "ember-route-template";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

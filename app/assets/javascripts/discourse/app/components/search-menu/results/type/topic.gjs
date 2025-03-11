@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
-import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import and from "truth-helpers/helpers/and";
 

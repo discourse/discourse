@@ -9,7 +9,6 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
-import i18n0 from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
@@ -53,7 +52,7 @@ export default class RequestGroupMembershipForm extends Component {
       <:body>
         <div class="control-group">
           <label>
-            {{i18n0 "groups.membership_request.reason"}}
+            {{i18n "groups.membership_request.reason"}}
           </label>
 
           <ExpandingTextArea

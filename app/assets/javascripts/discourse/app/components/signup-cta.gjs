@@ -3,10 +3,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { on as onEvent } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
+import { i18n } from 'discourse-i18n';
 
 export default class SignupCta extends Component {
   action = "showCreateAccount";

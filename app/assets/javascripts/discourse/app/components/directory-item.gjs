@@ -12,8 +12,8 @@ import directoryColumnIsUserField from "discourse/helpers/directory-column-is-us
 import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
 import formatDuration from "discourse/helpers/format-duration";
-import i18n from "discourse/helpers/i18n";
 import { propertyEqual } from "discourse/lib/computed";
+import { i18n } from 'discourse-i18n';
 
 @tagName("div")
 @classNames("directory-table__row")

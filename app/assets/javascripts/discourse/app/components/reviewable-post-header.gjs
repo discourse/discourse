@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default class ReviewablePostHeader extends Component {
   <template>

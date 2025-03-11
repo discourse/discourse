@@ -1,5 +1,6 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import CategoryUnread from "discourse/components/category-unread";
@@ -11,8 +12,7 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import gt from "truth-helpers/helpers/gt";
 
 export default class ParentCategoryRow extends CategoryListItem {

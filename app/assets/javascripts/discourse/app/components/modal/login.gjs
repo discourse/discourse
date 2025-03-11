@@ -14,7 +14,6 @@ import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import WelcomeHeader from "discourse/components/welcome-header";
-import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -402,13 +401,13 @@ export default class Login extends Component {
         {{#if this.hasNoLoginOptions}}
           <div class={{if this.site.desktopView "login-left-side"}}>
             <div class="login-welcome-header no-login-methods-configured">
-              <h1 class="login-title">{{i18n0
+              <h1 class="login-title">{{i18n
                   "login.no_login_methods.title"
                 }}</h1>
               <img />
               <p class="login-subheader">
                 {{htmlSafe
-                  (i18n0
+                  (i18n
                     "login.no_login_methods.description"
                     (hash adminLoginPath=this.adminLoginPath)
                   )
@@ -418,7 +417,7 @@ export default class Login extends Component {
           </div>
         {{else}}
           {{#if this.site.mobileView}}
-            <WelcomeHeader @header={{i18n0 "login.header_title"}}>
+            <WelcomeHeader @header={{i18n "login.header_title"}}>
               <PluginOutlet
                 @name="login-header-bottom"
                 @outletArgs={{hash createAccount=this.createAccount}}
@@ -436,7 +435,7 @@ export default class Login extends Component {
           {{#if this.canLoginLocal}}
             <div class={{if this.site.desktopView "login-left-side"}}>
               {{#if this.site.desktopView}}
-                <WelcomeHeader @header={{i18n0 "login.header_title"}}>
+                <WelcomeHeader @header={{i18n "login.header_title"}}>
                   <PluginOutlet
                     @name="login-header-bottom"
                     @outletArgs={{hash createAccount=this.createAccount}}
@@ -486,7 +485,7 @@ export default class Login extends Component {
           {{#if (and this.showLoginButtons this.site.desktopView)}}
             {{#unless this.canLoginLocal}}
               <div class="login-left-side">
-                <WelcomeHeader @header={{i18n0 "login.header_title"}} />
+                <WelcomeHeader @header={{i18n "login.header_title"}} />
               </div>
             {{/unless}}
             {{#if this.hasAtLeastOneLoginButton}}

@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import DateTimeInput from "discourse/components/date-time-input";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 @classNames("d-date-time-input-range")
 export default class DateTimeInputRange extends Component {

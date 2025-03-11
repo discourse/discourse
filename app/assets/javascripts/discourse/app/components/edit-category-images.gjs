@@ -1,8 +1,8 @@
 import EmberObject, { action } from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 export default class EditCategoryImages extends buildCategoryPanel("images") {
   @discourseComputed("category.uploaded_background.url")

@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 @tagName("span")
 @classNames("category__badges")

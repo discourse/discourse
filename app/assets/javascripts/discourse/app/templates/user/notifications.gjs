@@ -9,7 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

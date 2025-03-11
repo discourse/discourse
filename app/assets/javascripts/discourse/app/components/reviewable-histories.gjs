@@ -3,8 +3,8 @@ import { filterBy } from "@ember/object/computed";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
-import i18n from "discourse/helpers/i18n";
 import reviewableHistoryDescription from "discourse/helpers/reviewable-history-description";
+import { i18n } from 'discourse-i18n';
 
 export default class ReviewableHistories extends Component {
   @filterBy("histories", "created", false) filteredHistories;

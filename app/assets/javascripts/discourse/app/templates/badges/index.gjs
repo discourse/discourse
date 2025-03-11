@@ -2,7 +2,7 @@ import RouteTemplate from "ember-route-template";
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

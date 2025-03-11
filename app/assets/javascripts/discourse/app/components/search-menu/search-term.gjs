@@ -8,8 +8,8 @@ import {
   DEFAULT_TYPE_FILTER,
   SEARCH_INPUT_ID,
 } from "discourse/components/search-menu";
-import i18n from "discourse/helpers/i18n";
 import { isiPad } from "discourse/lib/utilities";
+import { i18n } from 'discourse-i18n';
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 

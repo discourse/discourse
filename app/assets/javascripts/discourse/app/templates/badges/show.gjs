@@ -1,5 +1,6 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import BadgeCard from "discourse/components/badge-card";
 import BadgeTitle from "discourse/components/badge-title";
@@ -10,8 +11,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserInfo from "discourse/components/user-info";
 import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

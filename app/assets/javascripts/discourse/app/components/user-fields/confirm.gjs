@@ -1,8 +1,8 @@
 import { Input } from "@ember/component";
 import { concat } from "@ember/helper";
-import InputTip from "discourse/components/input-tip";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import InputTip from "discourse/components/input-tip";
+import { i18n } from 'discourse-i18n';
 import UserFieldBase from "./base";
 
 export default class UserFieldConfirm extends UserFieldBase {

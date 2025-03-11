@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { computed } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import ExpandPost from "discourse/components/expand-post";
@@ -10,7 +11,6 @@ import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";

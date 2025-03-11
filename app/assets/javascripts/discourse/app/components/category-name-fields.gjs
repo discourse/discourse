@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default class CategoryNameFields extends Component {
   <template>

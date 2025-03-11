@@ -1,5 +1,6 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -12,9 +13,8 @@ import UserSummaryUser from "discourse/components/user-summary-user";
 import UserSummaryUsersList from "discourse/components/user-summary-users-list";
 import bodyClass from "discourse/helpers/body-class";
 import categoryLink from "discourse/helpers/category-link";
-import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
 import shortenUrl from "discourse/helpers/shorten-url";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

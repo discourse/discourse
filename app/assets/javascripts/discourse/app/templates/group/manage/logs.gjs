@@ -4,7 +4,7 @@ import GroupManageLogsFilter from "discourse/components/group-manage-logs-filter
 import GroupManageLogsRow from "discourse/components/group-manage-logs-row";
 import LoadMore from "discourse/components/load-more";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 export default RouteTemplate(
   <template>

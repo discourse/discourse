@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -23,8 +24,6 @@ import UserField from "discourse/components/user-field";
 import WelcomeHeader from "discourse/components/welcome-header";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { htmlSafe } from "@ember/template";
-import i18n0 from "discourse/helpers/i18n";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
@@ -588,7 +587,7 @@ export default class CreateAccount extends Component.extend(
           <SignupProgressBar @step="signup" />
           <WelcomeHeader
             id="create-account-title"
-            @header={{i18n0 "create_account.header_title"}}
+            @header={{i18n "create_account.header_title"}}
           >
             <PluginOutlet
               @name="create-account-header-bottom"
@@ -617,7 +616,7 @@ export default class CreateAccount extends Component.extend(
                   class={{valueEntered this.accountEmail}}
                 />
                 <label class="alt-placeholder" for="new-account-email">
-                  {{i18n0 "user.email.title"}}
+                  {{i18n "user.email.title"}}
                 </label>
                 {{#if this.showEmailValidation}}
                   <InputTip
@@ -632,7 +631,7 @@ export default class CreateAccount extends Component.extend(
                     {{#if
                       this.siteSettings.show_signup_form_email_instructions
                     }}
-                      {{i18n0 "user.email.instructions"}}
+                      {{i18n "user.email.instructions"}}
                     {{/if}}
                   </span>
                 {{/if}}
@@ -654,12 +653,12 @@ export default class CreateAccount extends Component.extend(
                   class={{valueEntered this.accountUsername}}
                 />
                 <label class="alt-placeholder" for="new-account-username">
-                  {{i18n0 "user.username.title"}}
+                  {{i18n "user.username.title"}}
                 </label>
 
                 {{#if this.showUsernameInstructions}}
                   <span class="more-info" id="username-validation-more-info">
-                    {{i18n0 "user.username.instructions"}}
+                    {{i18n "user.username.instructions"}}
                   </span>
 
                 {{else}}
@@ -706,7 +705,7 @@ export default class CreateAccount extends Component.extend(
                     class={{valueEntered this.accountPassword}}
                   />
                   <label class="alt-placeholder" for="new-account-password">
-                    {{i18n0 "user.password.title"}}
+                    {{i18n "user.password.title"}}
                   </label>
                   <TogglePasswordMask
                     @maskPassword={{this.maskPassword}}
@@ -736,7 +735,7 @@ export default class CreateAccount extends Component.extend(
                         }}
                       >
                         {{icon "triangle-exclamation"}}
-                        {{i18n0 "login.caps_lock_warning"}}
+                        {{i18n "login.caps_lock_warning"}}
                       </div>
                     </div>
                   </div>
@@ -744,7 +743,7 @@ export default class CreateAccount extends Component.extend(
 
                 <div class="password-confirmation">
                   <label for="new-account-password-confirmation">
-                    {{i18n0 "user.password_confirmation.title"}}
+                    {{i18n "user.password_confirmation.title"}}
                   </label>
                   <HoneypotInput
                     @id="new-account-confirmation"
@@ -767,10 +766,10 @@ export default class CreateAccount extends Component.extend(
                     class={{valueEntered this.inviteCode}}
                   />
                   <label class="alt-placeholder" for="invite-code">
-                    {{i18n0 "user.invite_code.title"}}
+                    {{i18n "user.invite_code.title"}}
                   </label>
                   <span class="more-info">
-                    {{i18n0 "user.invite_code.instructions"}}
+                    {{i18n "user.invite_code.instructions"}}
                   </span>
                 </div>
               {{/if}}
@@ -849,7 +848,7 @@ export default class CreateAccount extends Component.extend(
         {{#if this.hasAtLeastOneLoginButton}}
           {{#if this.site.mobileView}}
             <div class="login-or-separator"><span>
-                {{i18n0 "login.or"}}</span></div>{{/if}}
+                {{i18n "login.or"}}</span></div>{{/if}}
           <div class="login-right-side">
             <LoginButtons
               @externalLogin={{this.externalLogin}}

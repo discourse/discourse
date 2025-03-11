@@ -7,7 +7,6 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
@@ -95,7 +94,7 @@ export default class ForgotPassword extends Component {
 
   <template>
     <DModal
-      @title={{i18n0 "forgot_password.title"}}
+      @title={{i18n "forgot_password.title"}}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType="error"
@@ -106,26 +105,26 @@ export default class ForgotPassword extends Component {
           {{htmlSafe this.offerHelp}}
         {{else if this.siteSettings.hide_email_address_taken}}
           <label for="username-or-email">
-            {{i18n0 "forgot_password.invite_no_username"}}
+            {{i18n "forgot_password.invite_no_username"}}
           </label>
           <input
             {{on "input" this.updateEmailOrUsername}}
             value={{this.emailOrUsername}}
-            placeholder={{i18n0 "email"}}
+            placeholder={{i18n "email"}}
             type="text"
             id="username-or-email"
             autocorrect="off"
             autocapitalize="off"
           />
         {{else}}
-          <p>{{i18n0 "forgot_password.invite"}}</p>
+          <p>{{i18n "forgot_password.invite"}}</p>
           <label for="username-or-email">
-            {{i18n0 "forgot_password.email-username"}}
+            {{i18n "forgot_password.email-username"}}
           </label>
           <input
             {{on "input" this.updateEmailOrUsername}}
             value={{this.emailOrUsername}}
-            placeholder={{i18n0 "login.email_placeholder"}}
+            placeholder={{i18n "login.email_placeholder"}}
             type="text"
             id="username-or-email"
             autocorrect="off"

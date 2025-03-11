@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 const OtherNotificationsListEmptyState = <template>
   <div class="empty-state">

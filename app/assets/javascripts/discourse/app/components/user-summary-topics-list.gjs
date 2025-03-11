@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
-import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 // should be kept in sync with 'UserSummary::MAX_SUMMARY_RESULTS'
 const MAX_SUMMARY_RESULTS = 6;

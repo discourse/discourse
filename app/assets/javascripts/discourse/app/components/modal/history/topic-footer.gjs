@@ -1,6 +1,6 @@
+import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import { htmlSafe } from "@ember/template";
 import and from "truth-helpers/helpers/and";
 
 const TopicFooter = <template>

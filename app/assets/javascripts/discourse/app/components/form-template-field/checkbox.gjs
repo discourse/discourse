@@ -1,6 +1,6 @@
 import { Input } from "@ember/component";
-import icon from "discourse/helpers/d-icon";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 
 const Checkbox = <template>
   <div class="control-group form-template-field" data-field-type="checkbox">

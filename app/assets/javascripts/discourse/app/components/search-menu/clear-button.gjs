@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import icon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 
 const ClearButton = <template>
   <a

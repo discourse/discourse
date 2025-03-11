@@ -16,11 +16,11 @@ import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import i18n from "discourse/helpers/i18n";
 import raw from "discourse/helpers/raw";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 
 @attributeBindings("topic.id:data-topic-id")
 @classNameBindings(":latest-topic-list-item", "unboundClassNames")

@@ -10,7 +10,6 @@ import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import dasherize from "discourse/helpers/dasherize";
-import i18n0 from "discourse/helpers/i18n";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -365,7 +364,7 @@ export default class History extends Component {
 
   <template>
     <DModal
-      @title={{i18n0 this.modalTitleKey}}
+      @title={{i18n this.modalTitleKey}}
       @closeModal={{@closeModal}}
       class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
     >
