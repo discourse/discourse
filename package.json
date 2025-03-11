@@ -79,7 +79,7 @@
         "lint-to-the-future-eslint>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
         "lint-to-the-future-ember-template>ember-template-lint": "*",
-        "ember-this-fallback>ember-source": "*"
+        "ember-this-fallback>ember-source": "^5.0.0"
       },
       "ignoreMissing": [
         "webpack"
