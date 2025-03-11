@@ -2,7 +2,6 @@
 
 describe "Composer - ProseMirror editor - Local Dates extension", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:tag)
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
