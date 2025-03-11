@@ -58,7 +58,10 @@ export default class LoginRoute extends DiscourseRoute {
       this.internalReferrer ||
       DiscourseURL.isInternalTopic(document.referrer)
     ) {
-      controller.set("referrerUrl", this.internalReferrer || document.referrer);
+      controller.set(
+        "referrerTopicUrl",
+        this.internalReferrer || document.referrer
+      );
     }
 
     if (this.siteSettings.login_required) {

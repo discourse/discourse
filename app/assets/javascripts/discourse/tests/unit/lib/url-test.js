@@ -92,6 +92,7 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
     assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/categories")
     );

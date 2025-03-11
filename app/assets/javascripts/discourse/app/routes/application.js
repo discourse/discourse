@@ -283,7 +283,7 @@ export default class ApplicationRoute extends DiscourseRoute {
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
             canSignUp: this.controller.canSignUp,
-            referrerUrl: DiscourseURL.isInternalTopic(document.referrer)
+            referrerTopicUrl: DiscourseURL.isInternalTopic(document.referrer)
               ? document.referrer
               : null,
           },
