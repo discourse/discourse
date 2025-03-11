@@ -89,7 +89,7 @@ export default class Post extends Component {
           "moderator"
           "regular"
         )
-        (if @post.userSuspended "user-suspended")
+        (if @post.user_suspended "user-suspended")
         this.additionalClasses
       }}
     >
