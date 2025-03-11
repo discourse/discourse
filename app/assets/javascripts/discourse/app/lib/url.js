@@ -314,6 +314,15 @@ class DiscourseURL extends EmberObject {
     return true;
   }
 
+  isInternalTopic(url) {
+    if (!this.isInternal(url)) {
+      return false;
+    }
+
+    const internalPath = url.replace(this.origin, "");
+    return /^\/t\//.test(internalPath);
+  }
+
   /**
     If the URL is in the topic form, /t/something/:topic_id/:post_number
     then we want to apply some special logic. If the post_number changes within the
