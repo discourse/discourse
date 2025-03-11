@@ -117,20 +117,23 @@
       }
 
       &:hover,
-      &:focus {
-        background: var(--d-hover);
-        color: var(--primary);
-
-        .d-icon {
-          color: inherit;
-        }
-
-        &.btn-danger {
-          background: var(--danger-low);
-          color: var(--danger);
+      &:focus,
+      &:focus-visible {
+        .discourse-no-touch & {
+          background: var(--d-hover);
+          color: var(--primary);
 
           .d-icon {
-            color: var(--danger-hover);
+            color: inherit;
+          }
+
+          &.btn-danger {
+            background: var(--danger-low);
+            color: var(--danger);
+
+            .d-icon {
+              color: var(--danger-hover);
+            }
           }
         }
       }
