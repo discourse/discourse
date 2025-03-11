@@ -23,7 +23,7 @@ const CHAT_ATTRS = [
   "chat_quick_reactions_custom",
 ];
 
-export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|grin";
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";

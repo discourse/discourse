@@ -12,7 +12,7 @@
 </div>
 
 <fieldset
-  class="control-group other"
+  class="control-group chat-setting"
   data-setting-name="user_chat_quick_reaction_type"
 >
   <legend class="control-label">{{i18n
@@ -44,7 +44,7 @@
     {{/each}}
   </div>
   {{#if (eq this.model.user_option.chat_quick_reaction_type "custom")}}
-    <div class="controls tracking-controls">
+    <div class="controls tracking-controls emoji-pickers">
       {{#each this.chatQuickReactionsCustom as |reaction index|}}
         <EmojiPicker
           @emoji={{reaction}}
