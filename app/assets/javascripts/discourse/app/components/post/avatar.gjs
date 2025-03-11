@@ -53,9 +53,7 @@ export default class PostAvatar extends Component {
           <UserAvatarFlair @user={{@post}} />
         {{/if}}
         {{#if @displayPosterName}}
-          <div class="post-avatar-user-info">
-
-          </div>
+          <div class="post-avatar-user-info"></div>
         {{/if}}
       </div>
     </div>

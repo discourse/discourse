@@ -126,6 +126,7 @@ function postStreamTest(name, attrs) {
               topic,
               id: 1,
               post_number: 1,
+              username: "eviltrout",
               user_id: 123,
               primary_group_name: "trout",
               avatar_template: "/images/avatar.png",
@@ -165,31 +166,31 @@ function postStreamTest(name, attrs) {
           ];
         },
 
-        test(assert) {
+        async test(assert) {
           assert.dom(".post-stream").exists({ count: 1 });
           assert.dom(".topic-post").exists({ count: 6 }, "renders all posts");
 
           // look for special class bindings
           assert
-            .dom(".topic-post-shim:nth-of-type(1).topic-owner")
+            .dom(".topic-post-shim:nth-of-type(1) .topic-post.topic-owner")
             .exists({ count: 1 }, "applies the topic owner class");
           assert
-            .dom(".topic-post-shim:nth-of-type(1).group-trout")
+            .dom(".topic-post-shim:nth-of-type(1) .topic-post.group-trout")
             .exists({ count: 1 }, "applies the primary group class");
           assert
-            .dom(".topic-post-shim:nth-of-type(1).regular")
+            .dom(".topic-post-shim:nth-of-type(1) .topic-post.regular")
             .exists({ count: 1 }, "applies the regular class");
           assert
-            .dom(".topic-post-shim:nth-of-type(2).moderator")
+            .dom(".topic-post-shim:nth-of-type(2) .topic-post.moderator")
             .exists({ count: 1 }, "applies the moderator class");
           assert
-            .dom(".topic-post-shim:nth-of-type(3).post-hidden")
+            .dom(".topic-post-shim:nth-of-type(3) .topic-post.post-hidden")
             .exists({ count: 1 }, "applies the hidden class");
           assert
-            .dom(".topic-post-shim:nth-of-type(4).whisper")
+            .dom(".topic-post-shim:nth-of-type(4) .topic-post.whisper")
             .exists({ count: 1 }, "applies the whisper class");
           assert
-            .dom(".topic-post-shim:nth-of-type(5).wiki")
+            .dom(".topic-post-shim:nth-of-type(5) .topic-post.wiki")
             .exists({ count: 1 }, "applies the wiki class");
 
           // it renders an article for the body with appropriate attributes
