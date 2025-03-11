@@ -6,7 +6,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { helperContext } from "discourse/lib/helpers";
+import { helperContext, makeArray } from "discourse/lib/helpers";
 import {
   buildArgsWithDeprecations,
   connectorsExist,
@@ -79,13 +79,24 @@ export default class PluginOutletComponent extends Component {
   }
 
   @bind
-  getConnectors({ hasBlock } = {}) {
-    const connectors = renderedConnectorsFor(
-      this.args.name,
+  renderedConnectorsFor(name) {
+    return renderedConnectorsFor(
+      name,
       this.outletArgsWithDeprecations,
       this.context,
       getOwner(this)
     );
+  }
+
+  @bind
+  getConnectors({ hasBlock } = {}) {
+    const connectors = [
+      this.renderedConnectorsFor(this.args.name),
+      ...makeArray(this.args.alias).map((alias) =>
+        this.renderedConnectorsFor(alias)
+      ),
+    ].flat();
+
     if (connectors.length > 1 && hasBlock) {
       const message = `Multiple connectors were registered for the ${this.args.name} outlet. Using the first.`;
       this.clientErrorHandler.displayErrorNotice(message);
@@ -100,12 +111,22 @@ export default class PluginOutletComponent extends Component {
   }
 
   @bind
+  connectorsExistFor(name, hasBlock) {
+    return (
+      connectorsExist(name) ||
+      (hasBlock &&
+        (connectorsExist(name + "__before") ||
+          connectorsExist(name + "__after")))
+    );
+  }
+
+  @bind
   connectorsExist({ hasBlock } = {}) {
     return (
-      connectorsExist(this.args.name) ||
-      (hasBlock &&
-        (connectorsExist(this.args.name + "__before") ||
-          connectorsExist(this.args.name + "__after")))
+      this.connectorsExistFor(this.args.name, hasBlock) ||
+      makeArray(this.args.alias).some((alias) =>
+        this.connectorsExistFor(alias, hasBlock)
+      )
     );
   }
 
