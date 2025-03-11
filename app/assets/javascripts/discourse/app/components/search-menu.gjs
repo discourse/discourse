@@ -355,8 +355,7 @@ export default class SearchMenu extends Component {
   matchesSuggestions() {
     if (
       this.search.activeGlobalSearchTerm === undefined ||
-      this.includesTopics ||
-      this.hideInMobileView
+      this.includesTopics
     ) {
       return false;
     }
