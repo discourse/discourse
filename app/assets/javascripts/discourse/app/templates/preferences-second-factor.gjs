@@ -1,6 +1,7 @@
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
@@ -8,7 +9,6 @@ import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdo
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 
 export default RouteTemplate(
   <template>

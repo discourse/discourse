@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and , or } from "truth-helpers";
 import { focusSearchInput } from "discourse/components/search-menu";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
@@ -11,8 +12,6 @@ import icon from "discourse/helpers/d-icon";
 import { debounce } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import or from "truth-helpers/helpers/or";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {

@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and , not , or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FlashMessage from "discourse/components/flash-message";
 import LocalLoginForm from "discourse/components/local-login-form";
@@ -15,9 +16,6 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

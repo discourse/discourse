@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import { eq } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
-import eq from "truth-helpers/helpers/eq";
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">

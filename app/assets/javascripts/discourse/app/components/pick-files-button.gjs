@@ -4,6 +4,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -12,7 +13,6 @@ import {
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
-import or from "truth-helpers/helpers/or";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered

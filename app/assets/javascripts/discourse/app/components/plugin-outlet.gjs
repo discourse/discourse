@@ -5,6 +5,7 @@ import { concat } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import PluginConnector from "discourse/components/plugin-connector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { bind } from "discourse/lib/decorators";
@@ -15,7 +16,6 @@ import {
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
-import or from "truth-helpers/helpers/or";
 
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";

@@ -4,15 +4,13 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { and , eq , not } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import boundDate from "discourse/helpers/bound-date";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
 
 export default class Revision extends Component {
   @service site;

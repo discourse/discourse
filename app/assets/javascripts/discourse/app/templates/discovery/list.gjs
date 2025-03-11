@@ -1,10 +1,10 @@
 import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
 import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import Topics from "discourse/components/discovery/topics";
 import TagInfo from "discourse/components/tag-info";
-import and from "truth-helpers/helpers/and";
 
 export default RouteTemplate(
   <template>

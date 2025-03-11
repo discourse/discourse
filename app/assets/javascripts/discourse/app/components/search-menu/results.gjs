@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and , not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
@@ -11,8 +12,6 @@ import InitialOptions from "discourse/components/search-menu/results/initial-opt
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
 import PostViewComponent from "./results/type/post";

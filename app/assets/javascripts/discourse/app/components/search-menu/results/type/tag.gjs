@@ -1,6 +1,6 @@
+import { or } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
-import or from "truth-helpers/helpers/or";
 
 const Tag = <template>
   {{icon "tag"}}

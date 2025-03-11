@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
 import CountI18n from "discourse/components/count-i18n";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
 import Layout from "discourse/components/discovery/layout";
@@ -8,7 +9,6 @@ import Navigation from "discourse/components/discovery/navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
-import and from "truth-helpers/helpers/and";
 
 export default RouteTemplate(
   <template>

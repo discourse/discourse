@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -12,7 +13,6 @@ import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
-import and from "truth-helpers/helpers/and";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;

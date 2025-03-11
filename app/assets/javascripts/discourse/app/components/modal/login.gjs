@@ -8,6 +8,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { and } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
@@ -28,7 +29,6 @@ import {
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 import ForgotPassword from "./forgot-password";
 
 export default class Login extends Component {

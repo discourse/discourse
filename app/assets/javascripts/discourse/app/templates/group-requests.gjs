@@ -1,5 +1,6 @@
 import { fn } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
+import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
@@ -10,7 +11,6 @@ import UserInfo from "discourse/components/user-info";
 import boundDate from "discourse/helpers/bound-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { i18n } from "discourse-i18n";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

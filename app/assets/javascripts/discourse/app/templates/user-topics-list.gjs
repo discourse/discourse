@@ -1,5 +1,6 @@
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
+import { or } from "truth-helpers";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
@@ -9,7 +10,6 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

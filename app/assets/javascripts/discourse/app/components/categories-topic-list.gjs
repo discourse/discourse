@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
+import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import getUrl from "discourse/helpers/get-url";
 import { i18n } from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
 
 // Exists so plugins can use it
 export default class CategoriesTopicList extends Component {

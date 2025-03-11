@@ -5,6 +5,7 @@ import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
+import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserStatusMessage from "discourse/components/user-status-message";
@@ -13,7 +14,6 @@ import formatUsername from "discourse/helpers/format-username";
 import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import and from "truth-helpers/helpers/and";
 
 @classNameBindings(":user-info", "size")
 @attributeBindings("dataUsername:data-username")

@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -29,7 +30,6 @@ import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 import DToasts from "float-kit/components/d-toasts";
 import DTooltips from "float-kit/components/d-tooltips";
-import and from "truth-helpers/helpers/and";
 
 export default RouteTemplate(
   <template>

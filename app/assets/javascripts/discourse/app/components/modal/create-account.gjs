@@ -10,6 +10,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import { and , not } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
@@ -41,8 +42,6 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 
 export default class CreateAccount extends Component.extend(
   UserFieldsValidation

@@ -6,12 +6,12 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
+import { not } from "truth-helpers";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import not from "truth-helpers/helpers/not";
 
 @tagName("")
 export default class GroupManageEmailSettings extends Component {

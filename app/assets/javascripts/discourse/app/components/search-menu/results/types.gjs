@@ -3,12 +3,12 @@ import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import or from "truth-helpers/helpers/or";
 
 export default class Types extends Component {
   @service search;

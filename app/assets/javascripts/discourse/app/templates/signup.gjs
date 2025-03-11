@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and , not } from "truth-helpers";
 import FlashMessage from "discourse/components/flash-message";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
@@ -24,8 +25,6 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 
 export default RouteTemplate(
   <template>

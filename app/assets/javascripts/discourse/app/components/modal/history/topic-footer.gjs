@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
+import { and } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import and from "truth-helpers/helpers/and";
 
 const TopicFooter = <template>
   <div id="revision-controls">

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat, get, hash } from "@ember/helper";
 import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import { i18n } from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
 
 const suggestionShortcuts = [
   "in:title",

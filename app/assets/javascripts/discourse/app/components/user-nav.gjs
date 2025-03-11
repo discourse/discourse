@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
+import { and } from "truth-helpers";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 
 const UserNav = <template>
   <section class="user-navigation user-navigation-primary">

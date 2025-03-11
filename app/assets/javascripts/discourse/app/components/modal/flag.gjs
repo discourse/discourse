@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import FlagActionType from "discourse/components/flag-action-type";
@@ -15,7 +16,6 @@ import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import not from "truth-helpers/helpers/not";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
 

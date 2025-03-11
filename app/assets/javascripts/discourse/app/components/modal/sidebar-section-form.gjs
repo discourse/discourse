@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { and , not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
@@ -18,8 +19,6 @@ import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 
 class Section {
   @tracked title;

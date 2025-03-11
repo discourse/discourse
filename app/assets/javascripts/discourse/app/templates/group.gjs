@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { and, or } from "truth-helpers";
 import AvatarFlair from "discourse/components/avatar-flair";
 import DButton from "discourse/components/d-button";
 import GroupInfo from "discourse/components/group-info";
@@ -11,8 +12,6 @@ import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
-import and from "truth-helpers/helpers/and";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

@@ -1,12 +1,12 @@
 import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
+import { gt } from "truth-helpers";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import gt from "truth-helpers/helpers/gt";
 
 export default RouteTemplate(
   <template>
