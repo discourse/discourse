@@ -7,7 +7,7 @@ import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import and from "truth-helpers/helpers/and";
 

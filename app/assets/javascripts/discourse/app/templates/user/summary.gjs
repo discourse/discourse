@@ -12,7 +12,7 @@ import UserSummaryUser from "discourse/components/user-summary-user";
 import UserSummaryUsersList from "discourse/components/user-summary-users-list";
 import bodyClass from "discourse/helpers/body-class";
 import categoryLink from "discourse/helpers/category-link";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import shortenUrl from "discourse/helpers/shorten-url";
 

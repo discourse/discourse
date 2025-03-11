@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 
 export default class SubcategoriesWithFeaturedTopics extends Component {

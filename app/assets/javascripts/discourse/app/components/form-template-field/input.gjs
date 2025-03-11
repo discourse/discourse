@@ -1,6 +1,6 @@
 import { Input } from "@ember/component";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 const Input0 = <template>
   <div class="control-group form-template-field" data-field-type="input">

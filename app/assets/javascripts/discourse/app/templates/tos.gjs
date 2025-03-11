@@ -1,7 +1,7 @@
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 export default RouteTemplate(
   <template>

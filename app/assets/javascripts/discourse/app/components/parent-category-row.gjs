@@ -11,7 +11,7 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import gt from "truth-helpers/helpers/gt";
 

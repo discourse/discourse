@@ -6,7 +6,7 @@ import {
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import formatAge from "discourse/helpers/format-age";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import raw from "discourse/helpers/raw";
 
 @classNameBindings(":featured-topic")

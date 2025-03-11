@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import ReviewableConversationPost from "discourse/components/reviewable-conversation-post";
 import ReviewableScore from "discourse/components/reviewable-score";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 
 export default class ReviewableScores extends Component {

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
-import htmlSafe from "discourse/helpers/html-safe";
 import { topicLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 

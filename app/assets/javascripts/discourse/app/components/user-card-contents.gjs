@@ -22,7 +22,7 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";

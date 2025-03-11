@@ -7,7 +7,7 @@ import { classNames, tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 @tagName("ul")
 @classNames("mobile-nav")

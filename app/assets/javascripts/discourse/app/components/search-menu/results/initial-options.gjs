@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import AssistantItem0 from "discourse/components/search-menu/results/assistant-item";
+import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
 import i18n0 from "discourse/helpers/i18n";
@@ -11,7 +11,6 @@ import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import or from "truth-helpers/helpers/or";
 import Assistant from "./assistant";
-import AssistantItem from "./assistant-item";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,
@@ -168,7 +167,7 @@ export default class InitialOptions extends Component {
         }}
       >
         {{#if this.termMatchesContextTypeKeyword}}
-          <AssistantItem0
+          <AssistantItem
             @slug={{this.slug}}
             @extraHint={{true}}
             @closeSearchMenu={{@closeSearchMenu}}
@@ -180,7 +179,7 @@ export default class InitialOptions extends Component {
             (or this.search.activeGlobalSearchTerm this.search.searchContext)
           }}
             {{#if this.search.activeGlobalSearchTerm}}
-              <AssistantItem0
+              <AssistantItem
                 @suffix={{i18n0 "search.in_topics_posts"}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchAllTopics={{true}}

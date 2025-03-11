@@ -1,6 +1,6 @@
 import RouteTemplate from "ember-route-template";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 
 export default RouteTemplate(

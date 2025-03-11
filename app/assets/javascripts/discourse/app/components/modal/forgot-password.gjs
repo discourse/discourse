@@ -7,7 +7,6 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import htmlSafe0 from "discourse/helpers/html-safe";
 import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -104,7 +103,7 @@ export default class ForgotPassword extends Component {
     >
       <:body>
         {{#if this.offerHelp}}
-          {{htmlSafe0 this.offerHelp}}
+          {{htmlSafe this.offerHelp}}
         {{else if this.siteSettings.hide_email_address_taken}}
           <label for="username-or-email">
             {{i18n0 "forgot_password.invite_no_username"}}

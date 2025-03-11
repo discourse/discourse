@@ -1,5 +1,5 @@
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import eq from "truth-helpers/helpers/eq";
 
 const Dropdown = <template>

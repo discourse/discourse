@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 

@@ -6,7 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";

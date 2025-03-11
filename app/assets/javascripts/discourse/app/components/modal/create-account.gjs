@@ -23,7 +23,7 @@ import UserField from "discourse/components/user-field";
 import WelcomeHeader from "discourse/components/welcome-header";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";

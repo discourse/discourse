@@ -2,7 +2,7 @@ import RouteTemplate from "ember-route-template";
 import ActivationControls from "discourse/components/activation-controls";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
 import WelcomeHeader from "discourse/components/welcome-header";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 export default RouteTemplate(
   <template>

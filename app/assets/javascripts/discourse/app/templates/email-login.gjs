@@ -5,7 +5,7 @@ import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
 

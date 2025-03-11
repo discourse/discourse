@@ -10,7 +10,7 @@ import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";

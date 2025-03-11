@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18n from "discourse/helpers/i18n";
 import { bind } from "discourse/lib/decorators";
 

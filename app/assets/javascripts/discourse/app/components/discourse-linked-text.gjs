@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 

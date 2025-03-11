@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";

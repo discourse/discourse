@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import TopicStatus from "discourse/components/topic-status";
 import categoryBadge from "discourse/helpers/category-badge";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18n from "discourse/helpers/i18n";
 
 export default class ReviewableTopicLink extends Component {

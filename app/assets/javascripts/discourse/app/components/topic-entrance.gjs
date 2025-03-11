@@ -7,7 +7,7 @@ import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";

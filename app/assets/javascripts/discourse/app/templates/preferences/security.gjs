@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import DButton from "discourse/components/d-button";
@@ -8,7 +9,6 @@ import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18n from "discourse/helpers/i18n";
 
 export default RouteTemplate(

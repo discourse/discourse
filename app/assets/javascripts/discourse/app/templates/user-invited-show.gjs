@@ -10,7 +10,7 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";

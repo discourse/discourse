@@ -10,7 +10,7 @@ import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import RadioButton from "discourse/components/radio-button";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";

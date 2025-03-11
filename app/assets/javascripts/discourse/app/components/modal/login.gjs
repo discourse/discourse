@@ -14,7 +14,6 @@ import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import WelcomeHeader from "discourse/components/welcome-header";
-import htmlSafe0 from "discourse/helpers/html-safe";
 import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -408,7 +407,7 @@ export default class Login extends Component {
                 }}</h1>
               <img />
               <p class="login-subheader">
-                {{htmlSafe0
+                {{htmlSafe
                   (i18n0
                     "login.no_login_methods.description"
                     (hash adminLoginPath=this.adminLoginPath)

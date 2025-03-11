@@ -9,7 +9,7 @@ import FutureDateInput from "discourse/components/future-date-input";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";

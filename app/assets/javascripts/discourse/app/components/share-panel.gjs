@@ -4,7 +4,7 @@ import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";

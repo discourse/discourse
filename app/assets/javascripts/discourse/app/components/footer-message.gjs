@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 @classNames("footer-message")
 export default class FooterMessage extends Component {

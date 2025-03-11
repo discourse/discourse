@@ -8,7 +8,7 @@ import { on } from "@ember-decorators/object";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";

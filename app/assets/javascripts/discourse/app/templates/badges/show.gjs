@@ -10,7 +10,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserInfo from "discourse/components/user-info";
 import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 
 export default RouteTemplate(

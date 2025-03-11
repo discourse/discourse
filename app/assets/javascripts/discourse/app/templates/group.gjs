@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import AvatarFlair from "discourse/components/avatar-flair";
 import DButton from "discourse/components/d-button";
@@ -7,7 +8,6 @@ import GroupMembershipButton from "discourse/components/group-membership-button"
 import GroupNavigation from "discourse/components/group-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18n from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
 import DTooltip from "float-kit/components/d-tooltip";

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { gte } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 export default class ReviewableConversationPost extends Component {
   @gte("index", 1) showUsername;

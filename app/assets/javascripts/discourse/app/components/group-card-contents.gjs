@@ -9,7 +9,7 @@ import CardContentsBase from "discourse/components/card-contents-base";
 import DButton from "discourse/components/d-button";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import boundAvatar from "discourse/helpers/bound-avatar";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse/helpers/i18n";
 import routeAction from "discourse/helpers/route-action";
 import { setting } from "discourse/lib/computed";
