@@ -76,6 +76,7 @@ RSpec.describe DestroyTask do
     let!(:p1) { Fabricate(:post, topic: t1) }
     let!(:p2) { Fabricate(:post, topic: t1) }
     let!(:p3) { Fabricate(:post, topic: t2) }
+    let!(:p4) { Fabricate(:post, topic: t2) }
 
     before { p2.trash! }
 
@@ -83,13 +84,16 @@ RSpec.describe DestroyTask do
       it "destroys posts listed and creates staff action logs" do
         SiteSetting.can_permanently_delete = true
 
-        expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.to change {
-          Post.with_deleted.count
-        }.by(-2).and change { UserHistory.pluck(:action) }.from([]).to(
-                [
-                  UserHistory.actions[:delete_post_permanently],
-                  UserHistory.actions[:delete_topic_permanently],
-                ],
+        expect {
+          task.destroy_posts([p2.id, p3.id, p4.id], require_confirmation: false)
+        }.to change { Post.with_deleted.count }.by(-3).and change {
+                UserHistory.pluck(:post_id, :topic_id, :action)
+              }.from([]).to(
+                contain_exactly(
+                  [p2.id, nil, UserHistory.actions[:delete_post_permanently]],
+                  [nil, t2.id, UserHistory.actions[:delete_topic_permanently]],
+                  [p4.id, nil, UserHistory.actions[:delete_post_permanently]],
+                ),
               )
       end
     end

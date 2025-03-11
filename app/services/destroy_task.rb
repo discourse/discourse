@@ -51,7 +51,7 @@ class DestroyTask
   def destroy_posts(post_ids, require_confirmation: true)
     if !SiteSetting.can_permanently_delete
       @io.puts "The can_permanently_delete site setting needs to be enabled to destroy posts."
-      exit 1
+      return
     end
 
     posts = Post.with_deleted.where(id: post_ids)
@@ -68,7 +68,10 @@ class DestroyTask
       exit 1 if confirm_destroy.downcase != "y"
     end
 
-    posts.find_each do |post|
+    # Do posts one by one. This is to avoid double deletion, as
+    # `PostDestroyer` will recursively delete all posts in a topic
+    # if we pass it the first post for deletion.
+    posts.find_each(batch_size: 1) do |post|
       @io.puts "Destroying post #{post.id}"
       @io.puts PostDestroyer.new(
                  Discourse.system_user,
