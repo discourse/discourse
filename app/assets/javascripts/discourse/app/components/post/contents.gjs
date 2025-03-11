@@ -5,8 +5,9 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
-import { and, lt, not } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,7 +22,6 @@ import { i18n } from "discourse-i18n";
 import PostCookedHtml from "./cooked-html";
 import PostEmbedded from "./embedded";
 import PostMenu from "./menu";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export default class PostContents extends Component {
   @service capabilities;
@@ -34,6 +34,10 @@ export default class PostContents extends Component {
 
   @tracked expandedFirstPost = false;
   @tracked repliesBelow = new TrackedArray();
+
+  get canLoadMoreRepliesBelow() {
+    return this.repliesBelow.length < this.args.post.reply_count;
+  }
 
   get filteredRepliesShown() {
     return (
@@ -85,7 +89,11 @@ export default class PostContents extends Component {
   }
 
   @action
-  async loadMoreReplies(after = 1) {
+  async loadMoreReplies() {
+    const after = this.repliesBelow.length
+      ? this.repliesBelow.at(-1).post_number
+      : 1;
+
     const replies = await this.store.find("post-reply", {
       postId: this.args.post.id,
       after,
@@ -253,10 +261,10 @@ export default class PostContents extends Component {
             @title="post.collapse"
           />
 
-          {{#if (lt this.repliesBelow @post.replies_count)}}
+          {{#if this.canLoadMoreRepliesBelow}}
             <DButton
               class="load-more-replies"
-              @label={{i18n "post.show_more_replies"}}
+              @label="post.load_more_replies"
               @action={{this.loadMoreReplies}}
             />
           {{/if}}
