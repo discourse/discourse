@@ -25,6 +25,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export default class PostContents extends Component {
   @service capabilities;
+  @service modal;
   @service site;
   @service siteSettings;
   @service store;
@@ -107,9 +108,11 @@ export default class PostContents extends Component {
   @action
   async share() {
     const post = this.args.post;
+
     try {
-      nativeShare(this.capabilities, { url: post.shareUrl });
+      await nativeShare(this.capabilities, { url: post.shareUrl });
     } catch {
+      // if a native share dialog is not available, fallback to our share modal
       const topic = post.topic;
       this.modal.show(ShareTopicModal, {
         model: { category: topic.category, topic, post },
