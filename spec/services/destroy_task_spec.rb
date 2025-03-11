@@ -79,15 +79,29 @@ RSpec.describe DestroyTask do
 
     before { p2.trash! }
 
-    it "destroys posts listed and creates staff action logs" do
-      expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.to change {
-        Post.with_deleted.count
-      }.by(-2).and change { UserHistory.pluck(:action) }.from([]).to(
-              [
-                UserHistory.actions[:delete_post_permanently],
-                UserHistory.actions[:delete_topic_permanently],
-              ],
-            )
+    context "when permanent deletion is enabled" do
+      it "destroys posts listed and creates staff action logs" do
+        SiteSetting.can_permanently_delete = true
+
+        expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.to change {
+          Post.with_deleted.count
+        }.by(-2).and change { UserHistory.pluck(:action) }.from([]).to(
+                [
+                  UserHistory.actions[:delete_post_permanently],
+                  UserHistory.actions[:delete_topic_permanently],
+                ],
+              )
+      end
+    end
+
+    context "when permanent deletion is disabled in site settings" do
+      it "does not do anything" do
+        SiteSetting.can_permanently_delete = false
+
+        expect { task.destroy_posts([p2.id, p3.id], require_confirmation: false) }.not_to change {
+          Post.with_deleted.count
+        }
+      end
     end
   end
 

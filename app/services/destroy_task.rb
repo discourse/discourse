@@ -49,6 +49,11 @@ class DestroyTask
   end
 
   def destroy_posts(post_ids, require_confirmation: true)
+    if !SiteSetting.can_permanently_delete
+      @io.puts "The can_permanently_delete site setting needs to be enabled to destroy posts."
+      exit 1
+    end
+
     posts = Post.with_deleted.where(id: post_ids)
 
     @io.puts "There are #{posts.count} posts to delete"
