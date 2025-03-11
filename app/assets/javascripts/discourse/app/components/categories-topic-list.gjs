@@ -3,10 +3,10 @@ import { concat } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import getUrl from "discourse/helpers/get-url";
-// Exists so plugins can use it
 import i18n from "discourse/helpers/i18n";
 import eq from "truth-helpers/helpers/eq";
 
+// Exists so plugins can use it
 export default class CategoriesTopicList extends Component {
   <template>
     <div role="heading" aria-level="2" class="table-heading">

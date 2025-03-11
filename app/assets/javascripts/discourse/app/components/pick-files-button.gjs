@@ -4,14 +4,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-// This picker is intended to be used with UppyUploadMixin or with
-// ComposerUploadUppy, which is why there are no change events registered
-// for the input. They are handled by the uppy mixins directly.
-//
-// However, if you provide an onFilesPicked action to this component, the change
-// binding will still be added, and the file type will be validated here. This
-// is sometimes useful if you need to do something outside the uppy upload with
-// the file, such as directly using JSON or CSV data from a file in JS.
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -22,6 +14,14 @@ import {
 import { i18n } from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 
+// This picker is intended to be used with UppyUploadMixin or with
+// ComposerUploadUppy, which is why there are no change events registered
+// for the input. They are handled by the uppy mixins directly.
+//
+// However, if you provide an onFilesPicked action to this component, the change
+// binding will still be added, and the file type will be validated here. This
+// is sometimes useful if you need to do something outside the uppy upload with
+// the file, such as directly using JSON or CSV data from a file in JS.
 @classNames("pick-files-button")
 export default class PickFilesButton extends Component {
   @service dialog;
