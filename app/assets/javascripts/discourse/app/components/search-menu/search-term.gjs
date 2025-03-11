@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { DEFAULT_TYPE_FILTER, SEARCH_INPUT_ID } from "discourse/components/search-menu";
-import { isiPad } from "discourse/lib/utilities";
-import i18n from "discourse/helpers/i18n";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
+import {
+  DEFAULT_TYPE_FILTER,
+  SEARCH_INPUT_ID,
+} from "discourse/components/search-menu";
+import i18n from "discourse/helpers/i18n";
+import { isiPad } from "discourse/lib/utilities";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 
@@ -114,4 +117,21 @@ export default class SearchTerm extends Component {
       this.args.searchTermChanged(parsedVal);
     }
   }
-<template><input id={{this.inputId}} type="search" autocomplete="off" enterkeyhint="search" value={{this.search.activeGlobalSearchTerm}} placeholder={{i18n "search.title"}} aria-label={{i18n "search.title"}} {{on "keyup" this.onKeyup}} {{on "keydown" this.onKeydown}} {{on "input" this.updateSearchTerm}} {{on "focus" @openSearchMenu}} {{didInsert this.focus}} /></template>}
+
+  <template>
+    <input
+      id={{this.inputId}}
+      type="search"
+      autocomplete="off"
+      enterkeyhint="search"
+      value={{this.search.activeGlobalSearchTerm}}
+      placeholder={{i18n "search.title"}}
+      aria-label={{i18n "search.title"}}
+      {{on "keyup" this.onKeyup}}
+      {{on "keydown" this.onKeydown}}
+      {{on "input" this.updateSearchTerm}}
+      {{on "focus" @openSearchMenu}}
+      {{didInsert this.focus}}
+    />
+  </template>
+}

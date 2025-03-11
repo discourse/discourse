@@ -277,6 +277,10 @@ export default class TopicNavigation extends Component {
       this._swipeEvents.removeTouchListeners();
     }
   }
-<template>{{#if this.canRender}}
-  {{yield this.info}}
-{{/if}}</template>}
+
+  <template>
+    {{#if this.canRender}}
+      {{yield this.info}}
+    {{/if}}
+  </template>
+}

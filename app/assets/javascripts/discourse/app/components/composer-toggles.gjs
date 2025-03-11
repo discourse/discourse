@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ComposerToggles extends Component {
@@ -50,18 +50,38 @@ export default class ComposerToggles extends Component {
     }
     return !disableTextarea;
   }
-<template><div class="composer-controls">
-  <span>
-    <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
-  </span>
 
-  {{#if this.site.mobileView}}
-    <DButton @icon="bars" @action={{this.toggleToolbar}} @title={{this.toggleToolbarTitle}} @preventFocus={{true}} class="btn-flat toggle-toolbar btn-mini-toggle" />
-  {{/if}}
+  <template>
+    <div class="composer-controls">
+      <span>
+        <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
+      </span>
 
-  {{#if this.showFullScreenButton}}
-    <DButton @icon={{this.fullscreenIcon}} @action={{this.toggleFullscreen}} @title={{this.fullscreenTitle}} class="btn-transparent toggle-fullscreen btn-mini-toggle" />
-  {{/if}}
+      {{#if this.site.mobileView}}
+        <DButton
+          @icon="bars"
+          @action={{this.toggleToolbar}}
+          @title={{this.toggleToolbarTitle}}
+          @preventFocus={{true}}
+          class="btn-flat toggle-toolbar btn-mini-toggle"
+        />
+      {{/if}}
 
-  <DButton @icon={{this.toggleIcon}} @action={{this.toggleComposer}} @title={{this.toggleTitle}} class="btn-transparent toggler toggle-minimize btn-mini-toggle" />
-</div></template>}
+      {{#if this.showFullScreenButton}}
+        <DButton
+          @icon={{this.fullscreenIcon}}
+          @action={{this.toggleFullscreen}}
+          @title={{this.fullscreenTitle}}
+          class="btn-transparent toggle-fullscreen btn-mini-toggle"
+        />
+      {{/if}}
+
+      <DButton
+        @icon={{this.toggleIcon}}
+        @action={{this.toggleComposer}}
+        @title={{this.toggleTitle}}
+        class="btn-transparent toggler toggle-minimize btn-mini-toggle"
+      />
+    </div>
+  </template>
+}

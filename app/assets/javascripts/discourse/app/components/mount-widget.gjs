@@ -202,8 +202,15 @@ export default class MountWidget extends Component {
     super.didUpdateAttrs(...arguments);
     this.queueRerender();
   }
-<template>{{#each this._childComponents as |info|}}
-  {{#in-element info.element insertBefore=null}}
-    <info.component @data={{info.data}} @setWrapperElementAttrs={{info.setWrapperElementAttrs}} />
-  {{/in-element}}
-{{/each}}</template>}
+
+  <template>
+    {{#each this._childComponents as |info|}}
+      {{#in-element info.element insertBefore=null}}
+        <info.component
+          @data={{info.data}}
+          @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
+        />
+      {{/in-element}}
+    {{/each}}
+  </template>
+}

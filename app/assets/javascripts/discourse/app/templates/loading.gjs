@@ -1,5 +1,10 @@
-import RouteTemplate from 'ember-route-template'
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import RouteTemplate from "ember-route-template";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-export default RouteTemplate(<template>{{loadingSpinner}}
-{{hideApplicationFooter}}</template>)
+import loadingSpinner from "discourse/helpers/loading-spinner";
+
+export default RouteTemplate(
+  <template>
+    {{loadingSpinner}}
+    {{hideApplicationFooter}}
+  </template>
+);

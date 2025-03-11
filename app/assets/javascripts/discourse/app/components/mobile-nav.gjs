@@ -1,13 +1,13 @@
 import Component from "@ember/component";
+import { on as on0 } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import { on as on0 } from "@ember/modifier";
-import htmlSafe from "discourse/helpers/html-safe";
 import icon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
 
 @tagName("ul")
 @classNames("mobile-nav")
@@ -78,18 +78,22 @@ export default class MobileNav extends Component {
       }
     });
   }
-<template>{{#if this.site.mobileView}}
-  {{#if this.selectedHtml}}
-    <li>
-      <a href {{on0 "click" this.toggleExpanded}} class="expander">
-        <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-        {{icon "caret-down"}}
-      </a>
-    </li>
-  {{/if}}
-  <ul class="drop {{if this.expanded "expanded"}}">
-    {{yield}}
-  </ul>
-{{else}}
-  {{yield}}
-{{/if}}</template>}
+
+  <template>
+    {{#if this.site.mobileView}}
+      {{#if this.selectedHtml}}
+        <li>
+          <a href {{on0 "click" this.toggleExpanded}} class="expander">
+            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
+            {{icon "caret-down"}}
+          </a>
+        </li>
+      {{/if}}
+      <ul class="drop {{if this.expanded 'expanded'}}">
+        {{yield}}
+      </ul>
+    {{else}}
+      {{yield}}
+    {{/if}}
+  </template>
+}

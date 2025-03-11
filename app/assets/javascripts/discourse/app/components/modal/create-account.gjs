@@ -1,12 +1,33 @@
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component, { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import DModal from "discourse/components/d-modal";
+import FullnameInput from "discourse/components/fullname-input";
+import HoneypotInput from "discourse/components/honeypot-input";
+import InputTip from "discourse/components/input-tip";
+import LoginButtons from "discourse/components/login-buttons";
+import PasswordField from "discourse/components/password-field";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import SignupPageCta from "discourse/components/signup-page-cta";
+import SignupProgressBar from "discourse/components/signup-progress-bar";
+import TogglePasswordMask from "discourse/components/toggle-password-mask";
+import UserField from "discourse/components/user-field";
+import WelcomeHeader from "discourse/components/welcome-header";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import i18n0 from "discourse/helpers/i18n";
+import loadingSpinner from "discourse/helpers/loading-spinner";
+import routeAction from "discourse/helpers/route-action";
+import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -21,29 +42,8 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import { on } from "@ember/modifier";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import SignupProgressBar from "discourse/components/signup-progress-bar";
-import WelcomeHeader from "discourse/components/welcome-header";
-import i18n0 from "discourse/helpers/i18n";
-import { hash } from "@ember/helper";
-import routeAction from "discourse/helpers/route-action";
-import htmlSafe from "discourse/helpers/html-safe";
-import valueEntered from "discourse/helpers/value-entered";
-import InputTip from "discourse/components/input-tip";
 import and from "truth-helpers/helpers/and";
-import FullnameInput from "discourse/components/fullname-input";
-import PasswordField from "discourse/components/password-field";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
-import icon from "discourse/helpers/d-icon";
-import HoneypotInput from "discourse/components/honeypot-input";
 import not from "truth-helpers/helpers/not";
-import UserField from "discourse/components/user-field";
-import SignupPageCta from "discourse/components/signup-page-cta";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import LoginButtons from "discourse/components/login-buttons";
 
 export default class CreateAccount extends Component.extend(
   UserFieldsValidation
@@ -560,152 +560,316 @@ export default class CreateAccount extends Component.extend(
     this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
-<template>{{!-- template-lint-disable no-duplicate-id --}}
-<DModal class="create-account -large" {{on "keydown" this.actionOnEnter}} {{on "click" this.selectKitFocus}} @closeModal={{@closeModal}} @bodyClass={{this.modalBodyClasses}} @flash={{this.flash}} @flashType="error" aria-labelledby="create-account-title">
-  <:body>
-    <PluginOutlet @name="create-account-before-modal-body" @connectorTagName="div" />
 
-    <div class={{concatClass (if this.site.desktopView "login-left-side") this.authOptions?.auth_provider}}>
-      <SignupProgressBar @step="signup" />
-      <WelcomeHeader id="create-account-title" @header={{i18n0 "create_account.header_title"}}>
-        <PluginOutlet @name="create-account-header-bottom" @outletArgs={{hash showLogin=(routeAction "showLogin")}} />
-      </WelcomeHeader>
-      {{#if this.showCreateForm}}
-        <form id="login-form">
-          {{#if this.associateHtml}}
-            <div class="input-group create-account-associate-link">
-              <span>{{htmlSafe this.associateHtml}}</span>
-            </div>
-          {{/if}}
-          <div class="input-group create-account-email">
-            <Input {{on "focusout" this.checkEmailAvailability}} {{on "focusin" this.scrollInputIntoView}} @type="email" @value={{this.accountEmail}} disabled={{this.emailDisabled}} autofocus="autofocus" aria-describedby="account-email-validation account-email-validation-more-info" aria-invalid={{this.emailValidation.failed}} name="email" id="new-account-email" class={{valueEntered this.accountEmail}} />
-            <label class="alt-placeholder" for="new-account-email">
-              {{i18n0 "user.email.title"}}
-            </label>
-            {{#if this.showEmailValidation}}
-              <InputTip @validation={{this.emailValidation}} id="account-email-validation" />
-            {{else}}
-              <span class="more-info" id="account-email-validation-more-info">
-                {{#if this.siteSettings.show_signup_form_email_instructions}}
-                  {{i18n0 "user.email.instructions"}}
+  <template>
+    {{! template-lint-disable no-duplicate-id }}
+    <DModal
+      class="create-account -large"
+      {{on "keydown" this.actionOnEnter}}
+      {{on "click" this.selectKitFocus}}
+      @closeModal={{@closeModal}}
+      @bodyClass={{this.modalBodyClasses}}
+      @flash={{this.flash}}
+      @flashType="error"
+      aria-labelledby="create-account-title"
+    >
+      <:body>
+        <PluginOutlet
+          @name="create-account-before-modal-body"
+          @connectorTagName="div"
+        />
+
+        <div
+          class={{concatClass
+            (if this.site.desktopView "login-left-side")
+            this.authOptions?.auth_provider
+          }}
+        >
+          <SignupProgressBar @step="signup" />
+          <WelcomeHeader
+            id="create-account-title"
+            @header={{i18n0 "create_account.header_title"}}
+          >
+            <PluginOutlet
+              @name="create-account-header-bottom"
+              @outletArgs={{hash showLogin=(routeAction "showLogin")}}
+            />
+          </WelcomeHeader>
+          {{#if this.showCreateForm}}
+            <form id="login-form">
+              {{#if this.associateHtml}}
+                <div class="input-group create-account-associate-link">
+                  <span>{{htmlSafe this.associateHtml}}</span>
+                </div>
+              {{/if}}
+              <div class="input-group create-account-email">
+                <Input
+                  {{on "focusout" this.checkEmailAvailability}}
+                  {{on "focusin" this.scrollInputIntoView}}
+                  @type="email"
+                  @value={{this.accountEmail}}
+                  disabled={{this.emailDisabled}}
+                  autofocus="autofocus"
+                  aria-describedby="account-email-validation account-email-validation-more-info"
+                  aria-invalid={{this.emailValidation.failed}}
+                  name="email"
+                  id="new-account-email"
+                  class={{valueEntered this.accountEmail}}
+                />
+                <label class="alt-placeholder" for="new-account-email">
+                  {{i18n0 "user.email.title"}}
+                </label>
+                {{#if this.showEmailValidation}}
+                  <InputTip
+                    @validation={{this.emailValidation}}
+                    id="account-email-validation"
+                  />
+                {{else}}
+                  <span
+                    class="more-info"
+                    id="account-email-validation-more-info"
+                  >
+                    {{#if
+                      this.siteSettings.show_signup_form_email_instructions
+                    }}
+                      {{i18n0 "user.email.instructions"}}
+                    {{/if}}
+                  </span>
                 {{/if}}
-              </span>
-            {{/if}}
-          </div>
+              </div>
 
-          <div class="input-group create-account__username">
-            <input {{on "focusin" this.scrollInputIntoView}} {{on "input" this.setAccountUsername}} type="text" value={{this.accountUsername}} disabled={{this.usernameDisabled}} maxlength={{this.maxUsernameLength}} aria-describedby="username-validation username-validation-more-info" aria-invalid={{this.usernameValidation.failed}} autocomplete="off" name="username" id="new-account-username" class={{valueEntered this.accountUsername}} />
-            <label class="alt-placeholder" for="new-account-username">
-              {{i18n0 "user.username.title"}}
-            </label>
+              <div class="input-group create-account__username">
+                <input
+                  {{on "focusin" this.scrollInputIntoView}}
+                  {{on "input" this.setAccountUsername}}
+                  type="text"
+                  value={{this.accountUsername}}
+                  disabled={{this.usernameDisabled}}
+                  maxlength={{this.maxUsernameLength}}
+                  aria-describedby="username-validation username-validation-more-info"
+                  aria-invalid={{this.usernameValidation.failed}}
+                  autocomplete="off"
+                  name="username"
+                  id="new-account-username"
+                  class={{valueEntered this.accountUsername}}
+                />
+                <label class="alt-placeholder" for="new-account-username">
+                  {{i18n0 "user.username.title"}}
+                </label>
 
-            {{#if this.showUsernameInstructions}}
-              <span class="more-info" id="username-validation-more-info">
-                {{i18n0 "user.username.instructions"}}
-              </span>
+                {{#if this.showUsernameInstructions}}
+                  <span class="more-info" id="username-validation-more-info">
+                    {{i18n0 "user.username.instructions"}}
+                  </span>
 
-            {{else}}
-              <InputTip @validation={{this.usernameValidation}} id="username-validation" />
-            {{/if}}
-          </div>
+                {{else}}
+                  <InputTip
+                    @validation={{this.usernameValidation}}
+                    id="username-validation"
+                  />
+                {{/if}}
+              </div>
 
-          {{#if (and this.showFullname this.fullnameRequired)}}
-            <FullnameInput @nameValidation={{this.nameValidation}} @nameTitle={{this.nameTitle}} @accountName={{this.accountName}} @nameDisabled={{this.nameDisabled}} @onFocusIn={{this.scrollInputIntoView}} class="input-group create-account__fullname required" />
-          {{/if}}
+              {{#if (and this.showFullname this.fullnameRequired)}}
+                <FullnameInput
+                  @nameValidation={{this.nameValidation}}
+                  @nameTitle={{this.nameTitle}}
+                  @accountName={{this.accountName}}
+                  @nameDisabled={{this.nameDisabled}}
+                  @onFocusIn={{this.scrollInputIntoView}}
+                  class="input-group create-account__fullname required"
+                />
+              {{/if}}
 
-          <PluginOutlet @name="create-account-before-password" @outletArgs={{hash accountName=this.accountName accountUsername=this.accountUsername accountPassword=this.accountPassword userFields=this.userFields authOptions=this.authOptions}} />
+              <PluginOutlet
+                @name="create-account-before-password"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                  authOptions=this.authOptions
+                }}
+              />
 
-          <div class="input-group create-account__password">
-            {{#if this.passwordRequired}}
-              <PasswordField {{on "focusin" this.scrollInputIntoView}} @value={{this.accountPassword}} @capsLockOn={{this.capsLockOn}} type={{if this.maskPassword "password" "text"}} autocomplete="current-password" aria-describedby="password-validation password-validation-more-info" aria-invalid={{this.passwordValidation.failed}} id="new-account-password" class={{valueEntered this.accountPassword}} />
-              <label class="alt-placeholder" for="new-account-password">
-                {{i18n0 "user.password.title"}}
-              </label>
-              <TogglePasswordMask @maskPassword={{this.maskPassword}} @togglePasswordMask={{this.togglePasswordMask}} />
-              <div class="create-account__password-info">
-                <div class="create-account__password-tip-validation">
-                  {{#if this.showPasswordValidation}}
-                    <InputTip @validation={{this.passwordValidation}} id="password-validation" />
-                  {{else if this.siteSettings.show_signup_form_password_instructions}}
-                    <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordValidationHelper.passwordInstructions}}
-                    </span>
-                  {{/if}}
-                  <div class={{concatClass "caps-lock-warning" (unless this.capsLockOn "hidden")}}>
-                    {{icon "triangle-exclamation"}}
-                    {{i18n0 "login.caps_lock_warning"}}
+              <div class="input-group create-account__password">
+                {{#if this.passwordRequired}}
+                  <PasswordField
+                    {{on "focusin" this.scrollInputIntoView}}
+                    @value={{this.accountPassword}}
+                    @capsLockOn={{this.capsLockOn}}
+                    type={{if this.maskPassword "password" "text"}}
+                    autocomplete="current-password"
+                    aria-describedby="password-validation password-validation-more-info"
+                    aria-invalid={{this.passwordValidation.failed}}
+                    id="new-account-password"
+                    class={{valueEntered this.accountPassword}}
+                  />
+                  <label class="alt-placeholder" for="new-account-password">
+                    {{i18n0 "user.password.title"}}
+                  </label>
+                  <TogglePasswordMask
+                    @maskPassword={{this.maskPassword}}
+                    @togglePasswordMask={{this.togglePasswordMask}}
+                  />
+                  <div class="create-account__password-info">
+                    <div class="create-account__password-tip-validation">
+                      {{#if this.showPasswordValidation}}
+                        <InputTip
+                          @validation={{this.passwordValidation}}
+                          id="password-validation"
+                        />
+                      {{else if
+                        this.siteSettings.show_signup_form_password_instructions
+                      }}
+                        <span
+                          class="more-info"
+                          id="password-validation-more-info"
+                        >
+                          {{this.passwordValidationHelper.passwordInstructions}}
+                        </span>
+                      {{/if}}
+                      <div
+                        class={{concatClass
+                          "caps-lock-warning"
+                          (unless this.capsLockOn "hidden")
+                        }}
+                      >
+                        {{icon "triangle-exclamation"}}
+                        {{i18n0 "login.caps_lock_warning"}}
+                      </div>
+                    </div>
                   </div>
+                {{/if}}
+
+                <div class="password-confirmation">
+                  <label for="new-account-password-confirmation">
+                    {{i18n0 "user.password_confirmation.title"}}
+                  </label>
+                  <HoneypotInput
+                    @id="new-account-confirmation"
+                    @autocomplete="new-password"
+                    @value={{this.accountHoneypot}}
+                  />
+                  <Input
+                    @value={{this.accountChallenge}}
+                    id="new-account-challenge"
+                  />
                 </div>
               </div>
-            {{/if}}
 
-            <div class="password-confirmation">
-              <label for="new-account-password-confirmation">
-                {{i18n0 "user.password_confirmation.title"}}
-              </label>
-              <HoneypotInput @id="new-account-confirmation" @autocomplete="new-password" @value={{this.accountHoneypot}} />
-              <Input @value={{this.accountChallenge}} id="new-account-challenge" />
-            </div>
-          </div>
-
-          {{#if this.requireInviteCode}}
-            <div class="input-group create-account__invite-code">
-              <Input {{on "focusin" this.scrollInputIntoView}} @value={{this.inviteCode}} id="inviteCode" class={{valueEntered this.inviteCode}} />
-              <label class="alt-placeholder" for="invite-code">
-                {{i18n0 "user.invite_code.title"}}
-              </label>
-              <span class="more-info">
-                {{i18n0 "user.invite_code.instructions"}}
-              </span>
-            </div>
-          {{/if}}
-
-          <PluginOutlet @name="create-account-after-password" @outletArgs={{hash accountName=this.accountName accountUsername=this.accountUsername accountPassword=this.accountPassword userFields=this.userFields}} />
-
-          {{#if (and this.showFullname (not this.fullnameRequired))}}
-            <FullnameInput @nameValidation={{this.nameValidation}} @nameTitle={{this.nameTitle}} @accountName={{this.accountName}} @nameDisabled={{this.nameDisabled}} @onFocusIn={{this.scrollInputIntoView}} class="input-group create-account__fullname" />
-          {{/if}}
-
-          {{#if this.userFields}}
-            <div class="user-fields">
-              {{#each this.userFields as |f|}}
-                <div class="input-group">
-                  <UserField {{on "focusin" this.scrollInputIntoView}} @field={{f.field}} @value={{f.value}} @validation={{f.validation}} class={{valueEntered f.value}} />
+              {{#if this.requireInviteCode}}
+                <div class="input-group create-account__invite-code">
+                  <Input
+                    {{on "focusin" this.scrollInputIntoView}}
+                    @value={{this.inviteCode}}
+                    id="inviteCode"
+                    class={{valueEntered this.inviteCode}}
+                  />
+                  <label class="alt-placeholder" for="invite-code">
+                    {{i18n0 "user.invite_code.title"}}
+                  </label>
+                  <span class="more-info">
+                    {{i18n0 "user.invite_code.instructions"}}
+                  </span>
                 </div>
-              {{/each}}
-            </div>
+              {{/if}}
+
+              <PluginOutlet
+                @name="create-account-after-password"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                }}
+              />
+
+              {{#if (and this.showFullname (not this.fullnameRequired))}}
+                <FullnameInput
+                  @nameValidation={{this.nameValidation}}
+                  @nameTitle={{this.nameTitle}}
+                  @accountName={{this.accountName}}
+                  @nameDisabled={{this.nameDisabled}}
+                  @onFocusIn={{this.scrollInputIntoView}}
+                  class="input-group create-account__fullname"
+                />
+              {{/if}}
+
+              {{#if this.userFields}}
+                <div class="user-fields">
+                  {{#each this.userFields as |f|}}
+                    <div class="input-group">
+                      <UserField
+                        {{on "focusin" this.scrollInputIntoView}}
+                        @field={{f.field}}
+                        @value={{f.value}}
+                        @validation={{f.validation}}
+                        class={{valueEntered f.value}}
+                      />
+                    </div>
+                  {{/each}}
+                </div>
+              {{/if}}
+
+              <PluginOutlet
+                @name="create-account-after-user-fields"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                }}
+              />
+            </form>
+
+            {{#if this.site.desktopView}}
+              <div class="d-modal__footer">
+                <SignupPageCta
+                  @formSubmitted={{this.formSubmitted}}
+                  @hasAuthOptions={{this.hasAuthOptions}}
+                  @createAccount={{this.createAccount}}
+                  @submitDisabled={{this.submitDisabled}}
+                  @disclaimerHtml={{this.disclaimerHtml}}
+                />
+              </div>
+
+              <PluginOutlet
+                @name="create-account-after-modal-footer"
+                @connectorTagName="div"
+              />
+            {{/if}}
           {{/if}}
 
-          <PluginOutlet @name="create-account-after-user-fields" @outletArgs={{hash accountName=this.accountName accountUsername=this.accountUsername accountPassword=this.accountPassword userFields=this.userFields}} />
-        </form>
+          {{#if this.skipConfirmation}}
+            {{loadingSpinner size="large"}}
+          {{/if}}
+        </div>
 
-        {{#if this.site.desktopView}}
-          <div class="d-modal__footer">
-            <SignupPageCta @formSubmitted={{this.formSubmitted}} @hasAuthOptions={{this.hasAuthOptions}} @createAccount={{this.createAccount}} @submitDisabled={{this.submitDisabled}} @disclaimerHtml={{this.disclaimerHtml}} />
+        {{#if this.hasAtLeastOneLoginButton}}
+          {{#if this.site.mobileView}}
+            <div class="login-or-separator"><span>
+                {{i18n0 "login.or"}}</span></div>{{/if}}
+          <div class="login-right-side">
+            <LoginButtons
+              @externalLogin={{this.externalLogin}}
+              @context="create-account"
+            />
           </div>
-
-          <PluginOutlet @name="create-account-after-modal-footer" @connectorTagName="div" />
         {{/if}}
-      {{/if}}
+      </:body>
 
-      {{#if this.skipConfirmation}}
-        {{loadingSpinner size="large"}}
-      {{/if}}
-    </div>
-
-    {{#if this.hasAtLeastOneLoginButton}}
-      {{#if this.site.mobileView}}
-        <div class="login-or-separator"><span>
-            {{i18n0 "login.or"}}</span></div>{{/if}}
-      <div class="login-right-side">
-        <LoginButtons @externalLogin={{this.externalLogin}} @context="create-account" />
-      </div>
-    {{/if}}
-  </:body>
-
-  <:footer>
-    {{#if (and this.showCreateForm this.site.mobileView)}}
-      <SignupPageCta @formSubmitted={{this.formSubmitted}} @hasAuthOptions={{this.hasAuthOptions}} @createAccount={{this.createAccount}} @submitDisabled={{this.submitDisabled}} @disclaimerHtml={{this.disclaimerHtml}} />
-    {{/if}}
-  </:footer>
-</DModal></template>}
+      <:footer>
+        {{#if (and this.showCreateForm this.site.mobileView)}}
+          <SignupPageCta
+            @formSubmitted={{this.formSubmitted}}
+            @hasAuthOptions={{this.hasAuthOptions}}
+            @createAccount={{this.createAccount}}
+            @submitDisabled={{this.submitDisabled}}
+            @disclaimerHtml={{this.disclaimerHtml}}
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

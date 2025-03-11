@@ -1,10 +1,10 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 import periodTitle from "discourse/helpers/period-title";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNames("top-title-buttons")
 export default class TopPeriodButtons extends Component {
@@ -17,6 +17,14 @@ export default class TopPeriodButtons extends Component {
   changePeriod(p) {
     this.action(p);
   }
-<template>{{#each this.periods as |p|}}
-  <DButton @action={{fn this.changePeriod p}} @translatedLabel={{periodTitle p}} class="btn-default" />
-{{/each}}</template>}
+
+  <template>
+    {{#each this.periods as |p|}}
+      <DButton
+        @action={{fn this.changePeriod p}}
+        @translatedLabel={{periodTitle p}}
+        class="btn-default"
+      />
+    {{/each}}
+  </template>
+}

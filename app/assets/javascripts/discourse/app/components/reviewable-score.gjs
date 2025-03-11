@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { gt } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
 import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
 import reviewableStatus from "discourse/helpers/reviewable-status";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ReviewableScore extends Component {
@@ -23,46 +23,50 @@ export default class ReviewableScore extends Component {
 
     return title;
   }
-<template><tr class="reviewable-score">
-  <td class="user">
-    <UserLink @user={{this.rs.user}}>
-      {{avatar this.rs.user imageSize="tiny"}}
-      {{this.rs.user.username}}
-    </UserLink>
-  </td>
 
-  <td>
-    {{formatDate this.rs.created_at format="tiny"}}
-  </td>
-
-  <td>
-    {{icon this.rs.score_type.icon}}
-    {{this.title}}
-  </td>
-
-  {{#if this.showStatus}}
-    <td class="reviewed-by">
-      {{#if this.rs.reviewed_by}}
-        <UserLink @user={{this.rs.reviewed_by}}>
-          {{avatar this.rs.reviewed_by imageSize="tiny"}}
-          {{this.rs.reviewed_by.username}}
+  <template>
+    <tr class="reviewable-score">
+      <td class="user">
+        <UserLink @user={{this.rs.user}}>
+          {{avatar this.rs.user imageSize="tiny"}}
+          {{this.rs.user.username}}
         </UserLink>
+      </td>
+
+      <td>
+        {{formatDate this.rs.created_at format="tiny"}}
+      </td>
+
+      <td>
+        {{icon this.rs.score_type.icon}}
+        {{this.title}}
+      </td>
+
+      {{#if this.showStatus}}
+        <td class="reviewed-by">
+          {{#if this.rs.reviewed_by}}
+            <UserLink @user={{this.rs.reviewed_by}}>
+              {{avatar this.rs.reviewed_by imageSize="tiny"}}
+              {{this.rs.reviewed_by.username}}
+            </UserLink>
+          {{else}}
+            &mdash;
+          {{/if}}
+        </td>
+
+        <td>
+          {{#if this.rs.reviewed_by}}
+            {{formatDate this.rs.reviewed_at format="tiny"}}
+          {{/if}}
+        </td>
+
+        <td>
+          {{reviewableStatus this.rs.status this.reviewable.type}}
+        </td>
+
       {{else}}
-        &mdash;
+        <td colspan="4"></td>
       {{/if}}
-    </td>
-
-    <td>
-      {{#if this.rs.reviewed_by}}
-        {{formatDate this.rs.reviewed_at format="tiny"}}
-      {{/if}}
-    </td>
-
-    <td>
-      {{reviewableStatus this.rs.status this.reviewable.type}}
-    </td>
-
-  {{else}}
-    <td colspan="4"></td>
-  {{/if}}
-</tr></template>}
+    </tr>
+  </template>
+}

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import { i18n } from "discourse-i18n";
 import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
+import { i18n } from "discourse-i18n";
 
 const DEFAULT_QUICK_TIPS = [
   {
@@ -73,12 +73,23 @@ export default class RandomQuickTip extends Component {
       e.preventDefault();
     }
   }
-<template><li class="search-random-quick-tip">
-  <button class={{concatClass "tip-label" (if this.randomTip.clickable "tip-clickable")}} {{on "click" this.tipSelected}} aria-describedby="tip-description">
-    {{this.randomTip.label}}
-  </button>
 
-  <span id="tip-description">
-    {{this.randomTip.description}}
-  </span>
-</li></template>}
+  <template>
+    <li class="search-random-quick-tip">
+      <button
+        class={{concatClass
+          "tip-label"
+          (if this.randomTip.clickable "tip-clickable")
+        }}
+        {{on "click" this.tipSelected}}
+        aria-describedby="tip-description"
+      >
+        {{this.randomTip.label}}
+      </button>
+
+      <span id="tip-description">
+        {{this.randomTip.description}}
+      </span>
+    </li>
+  </template>
+}

@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import Post from "discourse/models/post";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
-import eq from "truth-helpers/helpers/eq";
 import { Textarea } from "@ember/component";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import IframedHtml from "discourse/components/iframed-html";
+import i18n from "discourse/helpers/i18n";
+import Post from "discourse/models/post";
+import eq from "truth-helpers/helpers/eq";
 
 export default class RawEmailComponent extends Component {
   @tracked rawEmail = this.args.model.rawEmail || "";
@@ -44,34 +44,60 @@ export default class RawEmailComponent extends Component {
   displayHtmlPart() {
     this.tab = "html_part";
   }
-<template><DModal @title={{i18n "raw_email.title"}} class="incoming-email-modal" @closeModal={{@closeModal}}>
-  <:body>
-    <div class="incoming-email-tabs">
-      <DButton @action={{this.displayRaw}} @label="post.raw_email.displays.raw.button" @title="post.raw_email.displays.raw.title" class={{if (eq this.tab "raw") "active"}} />
 
-      {{#if this.textPart}}
-        <DButton @action={{this.displayTextPart}} @label="post.raw_email.displays.text_part.button" @title="post.raw_email.displays.text_part.title" class={{if (eq this.tab "text_part") "active"}} />
-      {{/if}}
+  <template>
+    <DModal
+      @title={{i18n "raw_email.title"}}
+      class="incoming-email-modal"
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        <div class="incoming-email-tabs">
+          <DButton
+            @action={{this.displayRaw}}
+            @label="post.raw_email.displays.raw.button"
+            @title="post.raw_email.displays.raw.title"
+            class={{if (eq this.tab "raw") "active"}}
+          />
 
-      {{#if this.htmlPart}}
-        <DButton @action={{this.displayHtmlPart}} @label="post.raw_email.displays.html_part.button" @title="post.raw_email.displays.html_part.title" class={{if (eq this.tab "html_part") "active"}} />
-      {{/if}}
-    </div>
+          {{#if this.textPart}}
+            <DButton
+              @action={{this.displayTextPart}}
+              @label="post.raw_email.displays.text_part.button"
+              @title="post.raw_email.displays.text_part.title"
+              class={{if (eq this.tab "text_part") "active"}}
+            />
+          {{/if}}
 
-    <div class="incoming-email-content">
-      {{#if (eq this.tab "raw")}}
-        {{#if this.rawEmail}}
-          <Textarea @value={{this.rawEmail}} />
-        {{else}}
-          {{i18n "raw_email.not_available"}}
-        {{/if}}
-      {{/if}}
-      {{#if (eq this.tab "text_part")}}
-        <Textarea @value={{this.textPart}} />
-      {{/if}}
-      {{#if (eq this.tab "html_part")}}
-        <IframedHtml @html={{this.htmlPart}} class="incoming-email-html-part" />
-      {{/if}}
-    </div>
-  </:body>
-</DModal></template>}
+          {{#if this.htmlPart}}
+            <DButton
+              @action={{this.displayHtmlPart}}
+              @label="post.raw_email.displays.html_part.button"
+              @title="post.raw_email.displays.html_part.title"
+              class={{if (eq this.tab "html_part") "active"}}
+            />
+          {{/if}}
+        </div>
+
+        <div class="incoming-email-content">
+          {{#if (eq this.tab "raw")}}
+            {{#if this.rawEmail}}
+              <Textarea @value={{this.rawEmail}} />
+            {{else}}
+              {{i18n "raw_email.not_available"}}
+            {{/if}}
+          {{/if}}
+          {{#if (eq this.tab "text_part")}}
+            <Textarea @value={{this.textPart}} />
+          {{/if}}
+          {{#if (eq this.tab "html_part")}}
+            <IframedHtml
+              @html={{this.htmlPart}}
+              class="incoming-email-html-part"
+            />
+          {{/if}}
+        </div>
+      </:body>
+    </DModal>
+  </template>
+}

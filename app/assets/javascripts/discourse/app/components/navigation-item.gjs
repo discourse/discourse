@@ -1,7 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 
@@ -92,9 +96,17 @@ export default class NavigationItem extends Component {
 
     this.set("activeClass", this.active ? "active" : "");
   }
-<template><a href={{this.hrefLink}} class={{this.activeClass}} aria-current={{if this.activeClass "page"}}>
-  {{#if this.hasIcon}}
-    <span class={{this.content.name}}></span>
-  {{/if}}
-  {{this.content.displayName}}
-</a></template>}
+
+  <template>
+    <a
+      href={{this.hrefLink}}
+      class={{this.activeClass}}
+      aria-current={{if this.activeClass "page"}}
+    >
+      {{#if this.hasIcon}}
+        <span class={{this.content.name}}></span>
+      {{/if}}
+      {{this.content.displayName}}
+    </a>
+  </template>
+}

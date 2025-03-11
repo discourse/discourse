@@ -11,6 +11,17 @@ export default class SearchMenuPanel extends Component {
       ? "slide-in"
       : "drop-down";
   }
-<template><MenuPanel @animationClass={{this.animationClass}} @panelClass="search-menu-panel">
-  <SearchMenu @onClose={{@closeSearchMenu}} @inlineResults={{true}} @autofocusInput={{true}} />
-</MenuPanel></template>}
+
+  <template>
+    <MenuPanel
+      @animationClass={{this.animationClass}}
+      @panelClass="search-menu-panel"
+    >
+      <SearchMenu
+        @onClose={{@closeSearchMenu}}
+        @inlineResults={{true}}
+        @autofocusInput={{true}}
+      />
+    </MenuPanel>
+  </template>
+}

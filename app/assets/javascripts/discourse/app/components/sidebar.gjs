@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { bind } from "discourse/lib/decorators";
-import bodyClass from "discourse/helpers/body-class";
-import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import Sections from "discourse/components/sidebar/sections";
 import ApiPanels from "discourse/components/sidebar/api-panels";
 import Footer from "discourse/components/sidebar/footer";
+import Sections from "discourse/components/sidebar/sections";
+import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
+import bodyClass from "discourse/helpers/body-class";
+import { bind } from "discourse/lib/decorators";
 
 export default class Sidebar extends Component {
   @service appEvents;
@@ -68,26 +68,37 @@ export default class Sidebar extends Component {
       this.args.toggleSidebar();
     }
   }
-<template>{{bodyClass "has-sidebar-page"}}
 
-<section id="d-sidebar" class="sidebar-container">
-  {{#if this.showSwitchPanelButtonsOnTop}}
-    <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
-  {{/if}}
+  <template>
+    {{bodyClass "has-sidebar-page"}}
 
-  <PluginOutlet @name="before-sidebar-sections" />
+    <section id="d-sidebar" class="sidebar-container">
+      {{#if this.showSwitchPanelButtonsOnTop}}
+        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+      {{/if}}
 
-  {{#if this.sidebarState.showMainPanel}}
-    <Sections @currentUser={{this.currentUser}} @collapsableSections={{true}} @panel={{this.sidebarState.currentPanel}} />
-  {{else}}
-    <ApiPanels @currentUser={{this.currentUser}} @collapsableSections={{true}} />
-  {{/if}}
+      <PluginOutlet @name="before-sidebar-sections" />
 
-  <PluginOutlet @name="after-sidebar-sections" />
+      {{#if this.sidebarState.showMainPanel}}
+        <Sections
+          @currentUser={{this.currentUser}}
+          @collapsableSections={{true}}
+          @panel={{this.sidebarState.currentPanel}}
+        />
+      {{else}}
+        <ApiPanels
+          @currentUser={{this.currentUser}}
+          @collapsableSections={{true}}
+        />
+      {{/if}}
 
-  {{#unless this.showSwitchPanelButtonsOnTop}}
-    <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
-  {{/unless}}
+      <PluginOutlet @name="after-sidebar-sections" />
 
-  <Footer />
-</section></template>}
+      {{#unless this.showSwitchPanelButtonsOnTop}}
+        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+      {{/unless}}
+
+      <Footer />
+    </section>
+  </template>
+}

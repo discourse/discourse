@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
@@ -6,17 +7,16 @@ import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import PopupInputTip from "discourse/components/popup-input-tip";
+import TextField from "discourse/components/text-field";
+import i18n0 from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { i18n } from "discourse-i18n";
-import TextField from "discourse/components/text-field";
-import i18n0 from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import PopupInputTip from "discourse/components/popup-input-tip";
 
 @classNames("title-input")
 export default class ComposerTitle extends Component {
@@ -239,8 +239,24 @@ export default class ComposerTitle extends Component {
       reply === (this.get("composer.category.topic_template") || "")
     );
   }
-<template><TextField @value={{this.composer.title}} @id="reply-title" @maxLength={{this.titleMaxLength}} @placeholderKey={{this.composer.titlePlaceholder}} @aria-label={{i18n0 this.composer.titlePlaceholder}} @disabled={{this.disabled}} @autocomplete="off" />
 
-<PluginOutlet @name="after-composer-title-input" @connectorTagName="div" @outletArgs={{hash composer=this.composer}} />
+  <template>
+    <TextField
+      @value={{this.composer.title}}
+      @id="reply-title"
+      @maxLength={{this.titleMaxLength}}
+      @placeholderKey={{this.composer.titlePlaceholder}}
+      @aria-label={{i18n0 this.composer.titlePlaceholder}}
+      @disabled={{this.disabled}}
+      @autocomplete="off"
+    />
 
-<PopupInputTip @validation={{this.validation}} /></template>}
+    <PluginOutlet
+      @name="after-composer-title-input"
+      @connectorTagName="div"
+      @outletArgs={{hash composer=this.composer}}
+    />
+
+    <PopupInputTip @validation={{this.validation}} />
+  </template>
+}

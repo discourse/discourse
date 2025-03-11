@@ -1,11 +1,11 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import htmlSafe from "discourse/helpers/html-safe";
+import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import htmlSafe from "discourse/helpers/html-safe";
-import { on } from "@ember/modifier";
-import i18n0 from "discourse/helpers/i18n";
 
 export default class SecondFactorForm extends Component {
   @discourseComputed("secondFactorMethod")
@@ -65,20 +65,28 @@ export default class SecondFactorForm extends Component {
       this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
     }
   }
-<template><div id="second-factor">
-  <h3>{{this.secondFactorTitle}}</h3>
 
-  {{#if this.optionalText}}
-    <p>{{htmlSafe this.optionalText}}</p>
-  {{/if}}
+  <template>
+    <div id="second-factor">
+      <h3>{{this.secondFactorTitle}}</h3>
 
-  <p class="second-factor__description">{{this.secondFactorDescription}}</p>
+      {{#if this.optionalText}}
+        <p>{{htmlSafe this.optionalText}}</p>
+      {{/if}}
 
-  {{yield}}
+      <p class="second-factor__description">{{this.secondFactorDescription}}</p>
 
-  {{#if this.showToggleMethodLink}}
-    <p>
-      <a href class="toggle-second-factor-method" {{on "click" this.toggleSecondFactorMethod}}>{{i18n0 this.linkText}}</a>
-    </p>
-  {{/if}}
-</div></template>}
+      {{yield}}
+
+      {{#if this.showToggleMethodLink}}
+        <p>
+          <a
+            href
+            class="toggle-second-factor-method"
+            {{on "click" this.toggleSecondFactorMethod}}
+          >{{i18n0 this.linkText}}</a>
+        </p>
+      {{/if}}
+    </div>
+  </template>
+}

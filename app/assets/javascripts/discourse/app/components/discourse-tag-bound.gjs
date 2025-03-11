@@ -1,5 +1,9 @@
 import Component from "@ember/component";
-import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 
@@ -16,4 +20,6 @@ export default class DiscourseTagBound extends Component {
   href(tagRecordId) {
     return getURL("/tag/" + tagRecordId);
   }
-<template>{{this.tagRecord.id}}</template>}
+
+  <template>{{this.tagRecord.id}}</template>
+}

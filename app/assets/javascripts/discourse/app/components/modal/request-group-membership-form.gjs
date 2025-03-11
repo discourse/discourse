@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
+import ExpandingTextArea from "discourse/components/expanding-text-area";
+import i18n0 from "discourse/helpers/i18n";
+import withEventValue from "discourse/helpers/with-event-value";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
-import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
-import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 
 export default class RequestGroupMembershipForm extends Component {
   @tracked loading = false;
@@ -42,21 +42,39 @@ export default class RequestGroupMembershipForm extends Component {
       this.loading = false;
     }
   }
-<template><DModal @title={{this.title}} @closeModal={{@closeModal}} @inline={{@inline}} class="request-group-membership-form">
-  <:body>
-    <div class="control-group">
-      <label>
-        {{i18n0 "groups.membership_request.reason"}}
-      </label>
 
-      <ExpandingTextArea {{on "input" (withEventValue (fn (mut this.reason)))}} value={{this.reason}} maxlength="5000" />
-    </div>
-  </:body>
+  <template>
+    <DModal
+      @title={{this.title}}
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
+      class="request-group-membership-form"
+    >
+      <:body>
+        <div class="control-group">
+          <label>
+            {{i18n0 "groups.membership_request.reason"}}
+          </label>
 
-  <:footer>
-    <DButton @action={{this.requestMember}} @label="groups.membership_request.submit" @disabled={{this.disableSubmit}} class="btn-primary" />
+          <ExpandingTextArea
+            {{on "input" (withEventValue (fn (mut this.reason)))}}
+            value={{this.reason}}
+            maxlength="5000"
+          />
+        </div>
+      </:body>
 
-    <DModalCancel @close={{@closeModal}} />
-    <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
-  </:footer>
-</DModal></template>}
+      <:footer>
+        <DButton
+          @action={{this.requestMember}}
+          @label="groups.membership_request.submit"
+          @disabled={{this.disableSubmit}}
+          class="btn-primary"
+        />
+
+        <DModalCancel @close={{@closeModal}} />
+        <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+      </:footer>
+    </DModal>
+  </template>
+}

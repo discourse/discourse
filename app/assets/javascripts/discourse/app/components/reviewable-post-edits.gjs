@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
+import icon from "discourse/helpers/d-icon";
+import i18n from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
-import i18n from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
 
 export default class ReviewablePostEdits extends Component {
   @service modal;
@@ -40,8 +40,17 @@ export default class ReviewablePostEdits extends Component {
       });
     });
   }
-<template>{{#if this.hasEdits}}
-  <a href {{on "click" this.showEditHistory}} class="has-edits {{this.historyClass}}" title={{i18n "post.last_edited_on" dateTime=this.editedDate}}>
-    {{icon "pencil"}}
-  </a>
-{{/if}}</template>}
+
+  <template>
+    {{#if this.hasEdits}}
+      <a
+        href
+        {{on "click" this.showEditHistory}}
+        class="has-edits {{this.historyClass}}"
+        title={{i18n "post.last_edited_on" dateTime=this.editedDate}}
+      >
+        {{icon "pencil"}}
+      </a>
+    {{/if}}
+  </template>
+}

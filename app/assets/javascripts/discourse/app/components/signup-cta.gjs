@@ -1,12 +1,12 @@
 import Component from "@ember/component";
+import { on as on0 } from "@ember/modifier";
 import { action } from "@ember/object";
 import { on } from "@ember-decorators/object";
-import discourseLater from "discourse/lib/later";
+import DButton from "discourse/components/d-button";
 import i18n from "discourse/helpers/i18n";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
-import { on as on0 } from "@ember/modifier";
+import discourseLater from "discourse/lib/later";
 
 export default class SignupCta extends Component {
   action = "showCreateAccount";
@@ -31,19 +31,34 @@ export default class SignupCta extends Component {
       this.session.set("showSignupCta", false);
     }
   }
-<template><div class="signup-cta alert alert-info">
-  {{#if this.session.hideSignupCta}}
-    <h3>
-      {{i18n "signup_cta.hidden_for_session"}}
-    </h3>
-  {{else}}
-    <h3>{{replaceEmoji (i18n "signup_cta.intro")}}</h3>
-    <p>{{replaceEmoji (i18n "signup_cta.value_prop")}}</p>
 
-    <div class="buttons">
-      <DButton @action={{routeAction "showCreateAccount"}} @label="signup_cta.sign_up" @icon="user" class="btn-primary" />
-      <DButton @action={{action "hideForSession"}} @label="signup_cta.hide_session" class="no-icon" />
-      <a href {{on0 "click" this.neverShow}}>{{i18n "signup_cta.hide_forever"}}</a>
+  <template>
+    <div class="signup-cta alert alert-info">
+      {{#if this.session.hideSignupCta}}
+        <h3>
+          {{i18n "signup_cta.hidden_for_session"}}
+        </h3>
+      {{else}}
+        <h3>{{replaceEmoji (i18n "signup_cta.intro")}}</h3>
+        <p>{{replaceEmoji (i18n "signup_cta.value_prop")}}</p>
+
+        <div class="buttons">
+          <DButton
+            @action={{routeAction "showCreateAccount"}}
+            @label="signup_cta.sign_up"
+            @icon="user"
+            class="btn-primary"
+          />
+          <DButton
+            @action={{action "hideForSession"}}
+            @label="signup_cta.hide_session"
+            class="no-icon"
+          />
+          <a href {{on0 "click" this.neverShow}}>{{i18n
+              "signup_cta.hide_forever"
+            }}</a>
+        </div>
+      {{/if}}
     </div>
-  {{/if}}
-</div></template>}
+  </template>
+}

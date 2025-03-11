@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import TextField from "discourse/components/text-field";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import TextField from "discourse/components/text-field";
+import i18n from "discourse/helpers/i18n";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const States = {
   initializing: "initializing",
@@ -169,67 +169,112 @@ export default class PublishPageModal extends Component {
       this.publish();
     }
   }
-<template><DModal @closeModal={{@closeModal}} @title={{i18n "topic.publish_page.title"}} class="publish-page-modal">
-  <:body>
-    {{#if this.unpublished}}
-      <p>{{i18n "topic.publish_page.unpublished"}}</p>
-    {{else}}
-      <ConditionalLoadingSpinner @condition={{this.initializing}}>
-        <p class="publish-description">{{i18n "topic.publish_page.description"}}</p>
 
-        <form>
-          <div class="controls">
-            <label>{{i18n "topic.publish_page.slug"}}</label>
-            <TextField @value={{this.publishedPage.slug}} @onChange={{this.checkSlug}} @onChangeImmediate={{this.startCheckSlug}} @disabled={{this.existing}} class="publish-slug" />
-          </div>
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "topic.publish_page.title"}}
+      class="publish-page-modal"
+    >
+      <:body>
+        {{#if this.unpublished}}
+          <p>{{i18n "topic.publish_page.unpublished"}}</p>
+        {{else}}
+          <ConditionalLoadingSpinner @condition={{this.initializing}}>
+            <p class="publish-description">{{i18n
+                "topic.publish_page.description"
+              }}</p>
 
-          <div class="controls">
-            <label>{{i18n "topic.publish_page.public"}}</label>
-
-            <p class="description">
-              <Input @type="checkbox" @checked={{readonly this.publishedPage.public}} {{on "click" this.onChangePublic}} />
-              {{i18n "topic.publish_page.public_description"}}
-            </p>
-          </div>
-        </form>
-
-        <div class="publish-url">
-          <ConditionalLoadingSpinner @condition={{this.checking}} />
-
-          {{#if this.existing}}
-            <div class="current-url">
-              {{i18n "topic.publish_page.publish_url"}}
-              <div>
-                <a href={{this.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{this.publishedPage.url}}</a>
+            <form>
+              <div class="controls">
+                <label>{{i18n "topic.publish_page.slug"}}</label>
+                <TextField
+                  @value={{this.publishedPage.slug}}
+                  @onChange={{this.checkSlug}}
+                  @onChangeImmediate={{this.startCheckSlug}}
+                  @disabled={{this.existing}}
+                  class="publish-slug"
+                />
               </div>
+
+              <div class="controls">
+                <label>{{i18n "topic.publish_page.public"}}</label>
+
+                <p class="description">
+                  <Input
+                    @type="checkbox"
+                    @checked={{readonly this.publishedPage.public}}
+                    {{on "click" this.onChangePublic}}
+                  />
+                  {{i18n "topic.publish_page.public_description"}}
+                </p>
+              </div>
+            </form>
+
+            <div class="publish-url">
+              <ConditionalLoadingSpinner @condition={{this.checking}} />
+
+              {{#if this.existing}}
+                <div class="current-url">
+                  {{i18n "topic.publish_page.publish_url"}}
+                  <div>
+                    <a
+                      href={{this.publishedPage.url}}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >{{this.publishedPage.url}}</a>
+                  </div>
+                </div>
+              {{else}}
+                {{#if this.showUrl}}
+                  <div class="valid-slug">
+                    {{i18n "topic.publish_page.preview_url"}}
+                    <div class="example-url">{{this.publishedPage.url}}</div>
+                  </div>
+                {{/if}}
+
+                {{#if this.invalid}}
+                  {{i18n "topic.publish_page.invalid_slug"}}
+                  <span class="invalid-slug">{{this.reason}}.</span>
+                {{/if}}
+              {{/if}}
+
             </div>
-          {{else}}
-            {{#if this.showUrl}}
-              <div class="valid-slug">
-                {{i18n "topic.publish_page.preview_url"}}
-                <div class="example-url">{{this.publishedPage.url}}</div>
-              </div>
-            {{/if}}
+          </ConditionalLoadingSpinner>
+        {{/if}}
+      </:body>
+      <:footer>
+        {{#if this.showUnpublish}}
+          <DButton
+            @label="topic.publish_page.unpublish"
+            @icon="trash-can"
+            @isLoading={{this.unpublishing}}
+            @action={{this.unpublish}}
+            class="btn-danger"
+          />
 
-            {{#if this.invalid}}
-              {{i18n "topic.publish_page.invalid_slug"}}
-              <span class="invalid-slug">{{this.reason}}.</span>
-            {{/if}}
-          {{/if}}
-
-        </div>
-      </ConditionalLoadingSpinner>
-    {{/if}}
-  </:body>
-  <:footer>
-    {{#if this.showUnpublish}}
-      <DButton @label="topic.publish_page.unpublish" @icon="trash-can" @isLoading={{this.unpublishing}} @action={{this.unpublish}} class="btn-danger" />
-
-      <DButton @icon="xmark" @label="close" @action={{@closeModal}} class="close-publish-page" />
-    {{else if this.unpublished}}
-      <DButton @label="topic.publish_page.publishing_settings" @action={{this.startNew}} />
-    {{else}}
-      <DButton @label="topic.publish_page.publish" @icon="file" @disabled={{this.disabled}} @isLoading={{this.saving}} @action={{this.publish}} class="btn-primary publish-page" />
-    {{/if}}
-  </:footer>
-</DModal></template>}
+          <DButton
+            @icon="xmark"
+            @label="close"
+            @action={{@closeModal}}
+            class="close-publish-page"
+          />
+        {{else if this.unpublished}}
+          <DButton
+            @label="topic.publish_page.publishing_settings"
+            @action={{this.startNew}}
+          />
+        {{else}}
+          <DButton
+            @label="topic.publish_page.publish"
+            @icon="file"
+            @disabled={{this.disabled}}
+            @isLoading={{this.saving}}
+            @action={{this.publish}}
+            class="btn-primary publish-page"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

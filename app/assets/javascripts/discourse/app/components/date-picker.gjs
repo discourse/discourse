@@ -108,4 +108,15 @@ export default class DatePicker extends Component {
   _opts() {
     return null;
   }
-<template><Input @type={{this.inputType}} class="date-picker" placeholder={{this.placeholder}} @value={{this.value}} autocomplete="off" ...attributes /></template>}
+
+  <template>
+    <Input
+      @type={{this.inputType}}
+      class="date-picker"
+      placeholder={{this.placeholder}}
+      @value={{this.value}}
+      autocomplete="off"
+      ...attributes
+    />
+  </template>
+}

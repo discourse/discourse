@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import BulkSelectToggle from "discourse/components/bulk-select-toggle";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
-import bodyClass from "discourse/helpers/body-class";
 import and from "truth-helpers/helpers/and";
-import BulkSelectToggle from "discourse/components/bulk-select-toggle";
-import icon from "discourse/helpers/d-icon";
-import { Input } from "@ember/component";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
@@ -50,30 +50,56 @@ export default class DiscoveryFilterNavigation extends Component {
     this.copyIcon = "link";
     this.copyClass = "btn-default";
   }
-<template>{{bodyClass "navigation-filter"}}
 
-<section class="navigation-container">
-  <div class="topic-query-filter">
-    {{#if (and this.site.mobileView @canBulkSelect)}}
-      <div class="topic-query-filter__bulk-action-btn">
-        <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
-      </div>
-    {{/if}}
+  <template>
+    {{bodyClass "navigation-filter"}}
 
-    <div class="topic-query-filter__input">
-      {{icon "filter" class="topic-query-filter__icon"}}
-      <Input class="topic-query-filter__filter-term" @value={{this.newQueryString}} @enter={{action @updateTopicsListQueryParams this.newQueryString}} @type="text" id="queryStringInput" autocomplete="off" />
-      {{!-- EXPERIMENTAL OUTLET - don't use because it will be removed soon  --}}
-      <PluginOutlet @name="below-filter-input" @outletArgs={{hash updateQueryString=this.updateQueryString newQueryString=this.newQueryString}} />
-    </div>
-    {{#if this.newQueryString}}
-      <div class="topic-query-filter__controls">
-        <DButton @icon="xmark" @action={{this.clearInput}} @disabled={{unless this.newQueryString "true"}} />
+    <section class="navigation-container">
+      <div class="topic-query-filter">
+        {{#if (and this.site.mobileView @canBulkSelect)}}
+          <div class="topic-query-filter__bulk-action-btn">
+            <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
+          </div>
+        {{/if}}
 
-        {{#if this.discoveryFilter.q}}
-          <DButton @icon={{this.copyIcon}} @action={{this.copyQueryString}} @disabled={{unless this.newQueryString "true"}} class={{this.copyClass}} />
+        <div class="topic-query-filter__input">
+          {{icon "filter" class="topic-query-filter__icon"}}
+          <Input
+            class="topic-query-filter__filter-term"
+            @value={{this.newQueryString}}
+            @enter={{action @updateTopicsListQueryParams this.newQueryString}}
+            @type="text"
+            id="queryStringInput"
+            autocomplete="off"
+          />
+          {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
+          <PluginOutlet
+            @name="below-filter-input"
+            @outletArgs={{hash
+              updateQueryString=this.updateQueryString
+              newQueryString=this.newQueryString
+            }}
+          />
+        </div>
+        {{#if this.newQueryString}}
+          <div class="topic-query-filter__controls">
+            <DButton
+              @icon="xmark"
+              @action={{this.clearInput}}
+              @disabled={{unless this.newQueryString "true"}}
+            />
+
+            {{#if this.discoveryFilter.q}}
+              <DButton
+                @icon={{this.copyIcon}}
+                @action={{this.copyQueryString}}
+                @disabled={{unless this.newQueryString "true"}}
+                class={{this.copyClass}}
+              />
+            {{/if}}
+          </div>
         {{/if}}
       </div>
-    {{/if}}
-  </div>
-</section></template>}
+    </section>
+  </template>
+}

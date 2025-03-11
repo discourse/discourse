@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
+import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
+import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
+import i18n from "discourse/helpers/i18n";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
-import loadingSpinner from "discourse/helpers/loading-spinner";
-import { Input } from "@ember/component";
-import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
-import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
-import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 
 const UP = "up";
 const DOWN = "down";
@@ -112,37 +112,72 @@ export default class EditUserDirectoryColumns extends Component {
       a.position > b.position ? 1 : -1
     );
   }
-<template><DModal @closeModal={{@closeModal}} @title={{i18n "directory.edit_columns.title"}} class="edit-user-directory-columns-modal" @flash={{this.flash}}>
-  <:body>
-    {{#if this.loading}}
-      {{loadingSpinner size="large"}}
-    {{else}}
-      <div class="edit-directory-columns-container">
-        {{#each this.columns as |column|}}
-          <div class="edit-directory-column">
-            <div class="left-content">
-              <label class="column-name">
-                <Input @type="checkbox" @checked={{column.enabled}} />
-                {{#if (directoryColumnIsAutomatic column=column)}}
-                  {{directoryTableHeaderTitle field=column.name labelKey=this.labelKey icon=column.icon}}
-                {{else if (directoryColumnIsUserField column=column)}}
-                  {{directoryTableHeaderTitle field=column.user_field.name translated=true}}
-                {{else}}
-                  {{directoryTableHeaderTitle field=(i18n column.name) translated=true}}
-                {{/if}}
-              </label>
-            </div>
-            <div class="right-content">
-              <DButton @icon="arrow-up" @action={{fn this.moveUp column}} class="button-secondary move-column-up" />
-              <DButton @icon="arrow-down" @action={{fn this.moveDown column}} class="button-secondary" />
-            </div>
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "directory.edit_columns.title"}}
+      class="edit-user-directory-columns-modal"
+      @flash={{this.flash}}
+    >
+      <:body>
+        {{#if this.loading}}
+          {{loadingSpinner size="large"}}
+        {{else}}
+          <div class="edit-directory-columns-container">
+            {{#each this.columns as |column|}}
+              <div class="edit-directory-column">
+                <div class="left-content">
+                  <label class="column-name">
+                    <Input @type="checkbox" @checked={{column.enabled}} />
+                    {{#if (directoryColumnIsAutomatic column=column)}}
+                      {{directoryTableHeaderTitle
+                        field=column.name
+                        labelKey=this.labelKey
+                        icon=column.icon
+                      }}
+                    {{else if (directoryColumnIsUserField column=column)}}
+                      {{directoryTableHeaderTitle
+                        field=column.user_field.name
+                        translated=true
+                      }}
+                    {{else}}
+                      {{directoryTableHeaderTitle
+                        field=(i18n column.name)
+                        translated=true
+                      }}
+                    {{/if}}
+                  </label>
+                </div>
+                <div class="right-content">
+                  <DButton
+                    @icon="arrow-up"
+                    @action={{fn this.moveUp column}}
+                    class="button-secondary move-column-up"
+                  />
+                  <DButton
+                    @icon="arrow-down"
+                    @action={{fn this.moveDown column}}
+                    class="button-secondary"
+                  />
+                </div>
+              </div>
+            {{/each}}
           </div>
-        {{/each}}
-      </div>
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton @label="directory.edit_columns.save" @action={{this.save}} class="btn-primary" />
-    <DButton @label="directory.edit_columns.reset_to_default" @action={{this.resetToDefault}} class="btn-secondary reset-to-default" />
-  </:footer>
-</DModal></template>}
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          @label="directory.edit_columns.save"
+          @action={{this.save}}
+          class="btn-primary"
+        />
+        <DButton
+          @label="directory.edit_columns.reset_to_default"
+          @action={{this.resetToDefault}}
+          class="btn-secondary reset-to-default"
+        />
+      </:footer>
+    </DModal>
+  </template>
+}

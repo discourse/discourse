@@ -2,9 +2,13 @@ import Component from "@ember/component";
 import { not, or, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { attributeBindings, classNameBindings, tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("a")
 @classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
@@ -56,4 +60,6 @@ export default class PopupInputTip extends Component {
       this.set("tipReason", null);
     }
   }
-<template>{{this.tipReason}} {{icon "circle-xmark"}}</template>}
+
+  <template>{{this.tipReason}} {{icon "circle-xmark"}}</template>
+}

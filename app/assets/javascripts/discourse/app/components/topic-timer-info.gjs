@@ -3,6 +3,7 @@ import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
+import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -10,7 +11,6 @@ import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import DButton from "discourse/components/d-button";
 
 @classNames("topic-timer-info")
 export default class TopicTimerInfo extends Component {
@@ -161,19 +161,33 @@ export default class TopicTimerInfo extends Component {
 
     return `topic.status_update_notice.auto_${statusType}`;
   }
-<template>{{#if this.showTopicTimer}}
-  <h3 class="topic-timer-heading">
-    <span title={{this.title}}>
-      {{this.clockIcon}}
-      {{this.notice}}
-    </span>
-    <div class="topic-timer-modify">
-      {{#if this.showEdit}}
-        <DButton @title="post.controls.edit_timer" @icon="pencil" @action={{this.showTopicTimerModal}} class="topic-timer-edit no-text" />
-      {{/if}}
-      {{#if this.showTrashCan}}
-        <DButton @title="post.controls.remove_timer" @icon="trash-can" @action={{this.removeTopicTimer}} class="topic-timer-remove no-text" />
-      {{/if}}
-    </div>
-  </h3>
-{{/if}}</template>}
+
+  <template>
+    {{#if this.showTopicTimer}}
+      <h3 class="topic-timer-heading">
+        <span title={{this.title}}>
+          {{this.clockIcon}}
+          {{this.notice}}
+        </span>
+        <div class="topic-timer-modify">
+          {{#if this.showEdit}}
+            <DButton
+              @title="post.controls.edit_timer"
+              @icon="pencil"
+              @action={{this.showTopicTimerModal}}
+              class="topic-timer-edit no-text"
+            />
+          {{/if}}
+          {{#if this.showTrashCan}}
+            <DButton
+              @title="post.controls.remove_timer"
+              @icon="trash-can"
+              @action={{this.removeTopicTimer}}
+              class="topic-timer-remove no-text"
+            />
+          {{/if}}
+        </div>
+      </h3>
+    {{/if}}
+  </template>
+}

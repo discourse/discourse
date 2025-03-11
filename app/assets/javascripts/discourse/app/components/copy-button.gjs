@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
-import DButton from "discourse/components/d-button";
 
 @tagName("")
 export default class CopyButton extends Component {
@@ -47,4 +47,14 @@ export default class CopyButton extends Component {
       discourseDebounce(this._restoreButton, 3000);
     } catch {}
   }
-<template><DButton @icon={{this.copyIcon}} @action={{this.copy}} class="copy-button {{this.copyClass}}" @ariaLabel={{this.ariaLabel}} @translatedLabel={{this.copyTranslatedLabel}} /></template>}
+
+  <template>
+    <DButton
+      @icon={{this.copyIcon}}
+      @action={{this.copy}}
+      class="copy-button {{this.copyClass}}"
+      @ariaLabel={{this.ariaLabel}}
+      @translatedLabel={{this.copyTranslatedLabel}}
+    />
+  </template>
+}

@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import { bind } from "discourse/lib/decorators";
-import concatClass from "discourse/helpers/concat-class";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
-import onResize from "discourse/modifiers/on-resize";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
+import onResize from "discourse/modifiers/on-resize";
 
 export default class HorizontalOverflowNav extends Component {
   @service site;
@@ -131,23 +131,56 @@ export default class HorizontalOverflowNav extends Component {
       siblingTarget.scrollLeft += scrollSpeed;
     }, 50);
   }
-<template>{{!-- template-lint-disable no-pointer-down-event-binding --}}
-{{!-- template-lint-disable no-invalid-interactive --}}
 
-<nav class="horizontal-overflow-nav {{if this.hasScroll "has-scroll"}}" aria-label={{@ariaLabel}}>
-  {{#if this.hasScroll}}
-    <a role="button" {{on "mousedown" this.horizontalScroll}} {{on "mouseup" this.stopScroll}} {{on "mouseleave" this.stopScroll}} data-direction="left" class={{concatClass "horizontal-overflow-nav__scroll-left" (if this.hideLeftScroll "disabled")}}>
-      {{icon "chevron-left"}}
-    </a>
-  {{/if}}
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! template-lint-disable no-invalid-interactive }}
 
-  <ul {{onResize this.onResize}} {{on "scroll" this.onScroll}} {{didInsert this.scrollToActive}} {{on "mousedown" this.scrollDrag}} class="nav-pills action-list {{@className}}" ...attributes>
-    {{yield}}
-  </ul>
+    <nav
+      class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
+      aria-label={{@ariaLabel}}
+    >
+      {{#if this.hasScroll}}
+        <a
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
+          data-direction="left"
+          class={{concatClass
+            "horizontal-overflow-nav__scroll-left"
+            (if this.hideLeftScroll "disabled")
+          }}
+        >
+          {{icon "chevron-left"}}
+        </a>
+      {{/if}}
 
-  {{#if this.hasScroll}}
-    <a role="button" {{on "mousedown" this.horizontalScroll}} {{on "mouseup" this.stopScroll}} {{on "mouseleave" this.stopScroll}} class={{concatClass "horizontal-overflow-nav__scroll-right" (if this.hideRightScroll "disabled")}}>
-      {{icon "chevron-right"}}
-    </a>
-  {{/if}}
-</nav></template>}
+      <ul
+        {{onResize this.onResize}}
+        {{on "scroll" this.onScroll}}
+        {{didInsert this.scrollToActive}}
+        {{on "mousedown" this.scrollDrag}}
+        class="nav-pills action-list {{@className}}"
+        ...attributes
+      >
+        {{yield}}
+      </ul>
+
+      {{#if this.hasScroll}}
+        <a
+          role="button"
+          {{on "mousedown" this.horizontalScroll}}
+          {{on "mouseup" this.stopScroll}}
+          {{on "mouseleave" this.stopScroll}}
+          class={{concatClass
+            "horizontal-overflow-nav__scroll-right"
+            (if this.hideRightScroll "disabled")
+          }}
+        >
+          {{icon "chevron-right"}}
+        </a>
+      {{/if}}
+    </nav>
+  </template>
+}

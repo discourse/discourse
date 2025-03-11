@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import { debounce } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
-import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
-import i18n from "discourse/helpers/i18n";
-import icon from "discourse/helpers/d-icon";
-import or from "truth-helpers/helpers/or";
 import Category from "discourse/components/search-menu/results/type/category";
-import and from "truth-helpers/helpers/and";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import i18n from "discourse/helpers/i18n";
+import { debounce } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {
@@ -131,55 +131,64 @@ export default class AssistantItem extends Component {
     });
     focusSearchInput();
   }
-<template>{{!-- template-lint-disable no-pointer-down-event-binding --}}
-{{!-- template-lint-disable no-invalid-interactive --}}
-<li class={{concatClass @typeClass "search-menu-assistant-item"}} {{on "keydown" this.onKeydown}} {{on "click" this.onClick}} data-usage={{@usage}}>
-  <a class="search-link" href={{this.href}}>
-    <span aria-label={{i18n "search.title"}}>
-      {{icon (or @icon "magnifying-glass")}}
-    </span>
 
-    {{#if this.prefix}}
-      <span class="search-item-prefix">
-        {{this.prefix}}
-      </span>
-    {{/if}}
-
-    {{#if @withInLabel}}
-      <span class="label-suffix">{{i18n "search.in"}}</span>
-    {{/if}}
-
-    {{#if @category}}
-      <Category @result={{@category}} />
-      {{#if (and @tag @isIntersection)}}
-        <span class="search-item-tag">
-          {{icon "tag"}}{{@tag}}
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! template-lint-disable no-invalid-interactive }}
+    <li
+      class={{concatClass @typeClass "search-menu-assistant-item"}}
+      {{on "keydown" this.onKeydown}}
+      {{on "click" this.onClick}}
+      data-usage={{@usage}}
+    >
+      <a class="search-link" href={{this.href}}>
+        <span aria-label={{i18n "search.title"}}>
+          {{icon (or @icon "magnifying-glass")}}
         </span>
-      {{/if}}
-    {{else if @tag}}
-      {{#if (and @isIntersection @additionalTags.length)}}
-        <span class="search-item-tag">{{this.tagsSlug}}</span>
-      {{else}}
-        <span class="search-item-tag">
-          <Tag @result={{@tag}} />
-        </span>
-      {{/if}}
-    {{else if @user}}
-      <span class="search-item-user">
-        <User @result={{@user}} />
-      </span>
-    {{/if}}
 
-    <span class="search-item-slug">
-      {{#if @suffix}}
-        <span class="label-suffix">{{@suffix}}</span>
-      {{/if}}
-      {{@label}}
-    </span>
-    {{#if @extraHint}}
-      <span class="extra-hint">
-        {{i18n "search.enter_hint"}}
-      </span>
-    {{/if}}
-  </a>
-</li></template>}
+        {{#if this.prefix}}
+          <span class="search-item-prefix">
+            {{this.prefix}}
+          </span>
+        {{/if}}
+
+        {{#if @withInLabel}}
+          <span class="label-suffix">{{i18n "search.in"}}</span>
+        {{/if}}
+
+        {{#if @category}}
+          <Category @result={{@category}} />
+          {{#if (and @tag @isIntersection)}}
+            <span class="search-item-tag">
+              {{icon "tag"}}{{@tag}}
+            </span>
+          {{/if}}
+        {{else if @tag}}
+          {{#if (and @isIntersection @additionalTags.length)}}
+            <span class="search-item-tag">{{this.tagsSlug}}</span>
+          {{else}}
+            <span class="search-item-tag">
+              <Tag @result={{@tag}} />
+            </span>
+          {{/if}}
+        {{else if @user}}
+          <span class="search-item-user">
+            <User @result={{@user}} />
+          </span>
+        {{/if}}
+
+        <span class="search-item-slug">
+          {{#if @suffix}}
+            <span class="label-suffix">{{@suffix}}</span>
+          {{/if}}
+          {{@label}}
+        </span>
+        {{#if @extraHint}}
+          <span class="extra-hint">
+            {{i18n "search.enter_hint"}}
+          </span>
+        {{/if}}
+      </a>
+    </li>
+  </template>
+}

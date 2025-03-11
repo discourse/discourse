@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
+import i18n from "discourse/helpers/i18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
-import { concat } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import DModalCancel from "discourse/components/d-modal-cancel";
 
 export default class DeleteThemesConfirmComponent extends Component {
   @action
@@ -23,18 +23,29 @@ export default class DeleteThemesConfirmComponent extends Component {
       })
       .catch(popupAjaxError);
   }
-<template><DModal @closeModal={{@closeModal}} @title={{i18n "admin.customize.bulk_delete"}}>
-  <:body>
-    {{i18n (concat "admin.customize.bulk_" @model.type "_delete_confirm")}}
-    <ul>
-      {{#each @model.selectedThemesOrComponents as |theme|}}
-        <li>{{theme.name}}</li>
-      {{/each}}
-    </ul>
 
-  </:body>
-  <:footer>
-    <DButton class="btn-primary" @action={{this.delete}} @label="yes_value" />
-    <DModalCancel @close={{@closeModal}} />
-  </:footer>
-</DModal></template>}
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.customize.bulk_delete"}}
+    >
+      <:body>
+        {{i18n (concat "admin.customize.bulk_" @model.type "_delete_confirm")}}
+        <ul>
+          {{#each @model.selectedThemesOrComponents as |theme|}}
+            <li>{{theme.name}}</li>
+          {{/each}}
+        </ul>
+
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @action={{this.delete}}
+          @label="yes_value"
+        />
+        <DModalCancel @close={{@closeModal}} />
+      </:footer>
+    </DModal>
+  </template>
+}

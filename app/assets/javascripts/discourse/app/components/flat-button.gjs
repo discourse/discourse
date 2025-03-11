@@ -1,8 +1,12 @@
 import Component from "@ember/component";
-import { attributeBindings, classNames, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import icon from "discourse/helpers/d-icon";
 
 @tagName("button")
 @classNames("btn-flat")
@@ -28,4 +32,6 @@ export default class FlatButton extends Component {
     this.action?.();
     return false;
   }
-<template>{{icon this.icon}}</template>}
+
+  <template>{{icon this.icon}}</template>
+}

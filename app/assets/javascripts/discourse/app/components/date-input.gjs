@@ -1,5 +1,6 @@
 /* global Pikaday:true */
 import Component, { Input } from "@ember/component";
+import { on as on0 } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
@@ -8,7 +9,6 @@ import { Promise } from "rsvp";
 import discourseComputed from "discourse/lib/decorators";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
-import { on as on0 } from "@ember/modifier";
 
 function isInputDateSupported() {
   const input = document.createElement("input");
@@ -170,8 +170,19 @@ export default class DateInput extends Component {
   onChangeDate(event) {
     this._handleSelection(event.target.value);
   }
-<template><Input @type={{this.inputType}} class="date-picker" placeholder={{this.placeholder}} @value={{readonly this.value}} id={{this.inputId}} {{on0 "input" (action "onChangeDate")}} />
 
-{{#unless this.useGlobalPickerContainer}}
-  <div class="picker-container"></div>
-{{/unless}}</template>}
+  <template>
+    <Input
+      @type={{this.inputType}}
+      class="date-picker"
+      placeholder={{this.placeholder}}
+      @value={{readonly this.value}}
+      id={{this.inputId}}
+      {{on0 "input" (action "onChangeDate")}}
+    />
+
+    {{#unless this.useGlobalPickerContainer}}
+      <div class="picker-container"></div>
+    {{/unless}}
+  </template>
+}

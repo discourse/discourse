@@ -1,16 +1,40 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from "ember-route-template";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
-export default RouteTemplate(<template><div class="control-group preferences-navigation-menu-navigation" data-setting-name="user-navigation-menu-navigation">
-  <legend class="control-label">{{i18n "user.experimental_sidebar.navigation_section"}}</legend>
+import i18n from "discourse/helpers/i18n";
 
-  <div class="controls">
-    <label>{{i18n "user.experimental_sidebar.navigation_section_instruction"}}</label>
+export default RouteTemplate(
+  <template>
+    <div
+      class="control-group preferences-navigation-menu-navigation"
+      data-setting-name="user-navigation-menu-navigation"
+    >
+      <legend class="control-label">{{i18n
+          "user.experimental_sidebar.navigation_section"
+        }}</legend>
 
-    <PreferenceCheckbox @labelKey="user.experimental_sidebar.link_to_filtered_list_checkbox_description" @checked={{@controller.newSidebarLinkToFilteredList}} class="pref-link-to-filtered-list" />
-    <PreferenceCheckbox @labelKey="user.experimental_sidebar.show_count_new_items_checkbox_description" @checked={{@controller.newSidebarShowCountOfNewItems}} class="pref-show-count-new-items" />
-  </div>
-</div>
+      <div class="controls">
+        <label>{{i18n
+            "user.experimental_sidebar.navigation_section_instruction"
+          }}</label>
 
-<SaveControls @model={{@controller.model}} @action={{action "save"}} @saved={{@controller.saved}} /></template>)
+        <PreferenceCheckbox
+          @labelKey="user.experimental_sidebar.link_to_filtered_list_checkbox_description"
+          @checked={{@controller.newSidebarLinkToFilteredList}}
+          class="pref-link-to-filtered-list"
+        />
+        <PreferenceCheckbox
+          @labelKey="user.experimental_sidebar.show_count_new_items_checkbox_description"
+          @checked={{@controller.newSidebarShowCountOfNewItems}}
+          class="pref-show-count-new-items"
+        />
+      </div>
+    </div>
+
+    <SaveControls
+      @model={{@controller.model}}
+      @action={{action "save"}}
+      @saved={{@controller.saved}}
+    />
+  </template>
+);

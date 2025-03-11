@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
-import { LinkTo } from "@ember/routing";
-import { hash } from "@ember/helper";
 
 @tagName("")
 export default class UserSummaryCategorySearch extends Component {
@@ -14,10 +14,14 @@ export default class UserSummaryCategorySearch extends Component {
     }
     return query;
   }
-<template>{{#if @count}}
-  <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
-    {{@count}}
-  </LinkTo>
-{{else}}
-  &ndash;
-{{/if}}</template>}
+
+  <template>
+    {{#if @count}}
+      <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
+        {{@count}}
+      </LinkTo>
+    {{else}}
+      &ndash;
+    {{/if}}
+  </template>
+}

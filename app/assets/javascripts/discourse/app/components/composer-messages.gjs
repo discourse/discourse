@@ -1,18 +1,18 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
+import ComposerMessage from "discourse/components/composer-message";
+import ShareTopic from "discourse/components/modal/share-topic";
 import { ajax } from "discourse/lib/ajax";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
 import { i18n } from "discourse-i18n";
-import ComposerMessage from "discourse/components/composer-message";
-import { fn } from "@ember/helper";
-import ShareTopic from "discourse/components/modal/share-topic";
 
 let _messagesCache = {};
 
@@ -341,9 +341,21 @@ export default class ComposerMessages extends Component {
     this.composer.set("targetRecipients", message.reply_username);
     this._removeMessage(message);
   }
-<template>{{#each this.messages as |message|}}
-  <ComposerMessage @message={{message}} @closeMessage={{this.closeMessage}} @shareModal={{fn (mut this.showShareModal) true}} @switchPM={{this.switchPM}} />
-  {{#if this.showShareModal}}
-    <ShareTopic @closeModal={{fn (mut this.showShareModal) false}} @model={{this.shareModalData}} />
-  {{/if}}
-{{/each}}</template>}
+
+  <template>
+    {{#each this.messages as |message|}}
+      <ComposerMessage
+        @message={{message}}
+        @closeMessage={{this.closeMessage}}
+        @shareModal={{fn (mut this.showShareModal) true}}
+        @switchPM={{this.switchPM}}
+      />
+      {{#if this.showShareModal}}
+        <ShareTopic
+          @closeModal={{fn (mut this.showShareModal) false}}
+          @model={{this.shareModalData}}
+        />
+      {{/if}}
+    {{/each}}
+  </template>
+}

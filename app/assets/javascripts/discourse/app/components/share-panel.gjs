@@ -2,15 +2,15 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import DTextarea from "discourse/components/d-textarea";
+import ShareSource from "discourse/components/share-source";
+import htmlSafe from "discourse/helpers/html-safe";
+import i18n0 from "discourse/helpers/i18n";
 import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import htmlSafe from "discourse/helpers/html-safe";
-import DTextarea from "discourse/components/d-textarea";
-import i18n0 from "discourse/helpers/i18n";
-import ShareSource from "discourse/components/share-source";
 
 export default class SharePanel extends Component {
   tagName = null;
@@ -71,16 +71,24 @@ export default class SharePanel extends Component {
       title: this.topic.get("title"),
     });
   }
-<template><div class="header">
-  <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
-</div>
 
-<div class="body">
-  <DTextarea @value={{this.shareUrl}} @aria-label={{i18n0 "share.url"}} class="topic-share-url" />
+  <template>
+    <div class="header">
+      <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
+    </div>
 
-  <div class="sources">
-    {{#each this.sources as |source|}}
-      <ShareSource @source={{source}} @action={{this.share}} />
-    {{/each}}
-  </div>
-</div></template>}
+    <div class="body">
+      <DTextarea
+        @value={{this.shareUrl}}
+        @aria-label={{i18n0 "share.url"}}
+        class="topic-share-url"
+      />
+
+      <div class="sources">
+        {{#each this.sources as |source|}}
+          <ShareSource @source={{source}} @action={{this.share}} />
+        {{/each}}
+      </div>
+    </div>
+  </template>
+}

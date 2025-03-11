@@ -1,10 +1,31 @@
+import { array, fn, hash } from "@ember/helper";
+import { on as on0 } from "@ember/modifier";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
+import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import { attributeBindings, classNameBindings, classNames } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
+import DButton from "discourse/components/d-button";
+import HtmlWithLinks from "discourse/components/html-with-links";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import UserBadge from "discourse/components/user-badge";
+import boundAvatar from "discourse/helpers/bound-avatar";
+import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import formatDuration from "discourse/helpers/format-duration";
+import formatUsername from "discourse/helpers/format-username";
+import htmlSafe from "discourse/helpers/html-safe";
+import i18n0 from "discourse/helpers/i18n";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -16,23 +37,6 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, fn, array } from "@ember/helper";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import { on as on0 } from "@ember/modifier";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import formatUsername from "discourse/helpers/format-username";
-import i18n0 from "discourse/helpers/i18n";
-import userStatus from "discourse/helpers/user-status";
-import htmlSafe from "discourse/helpers/html-safe";
-import formatDate from "discourse/helpers/format-date";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import HtmlWithLinks from "discourse/components/html-with-links";
-import { LinkTo } from "@ember/routing";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import formatDuration from "discourse/helpers/format-duration";
-import UserBadge from "discourse/components/user-badge";
 
 @classNames("user-card")
 @classNameBindings(
@@ -329,291 +333,452 @@ export default class UserCardContents extends CardContentsBase {
   checkEmail(user) {
     user.checkEmail();
   }
-<template>{{#if this.visible}}
-  <PluginOutlet @name="before-user-card-content" @outletArgs={{hash user=this.user}} />
-  <div class="card-content">
-    {{#if this.loading}}
-      <div class="card-row first-row">
-        <div class="user-card-avatar">
-          <div class="card-avatar-placeholder animated-placeholder placeholder-animation"></div>
-        </div>
-      </div>
 
-      <div class="card-row second-row">
-        <div class="animated-placeholder placeholder-animation"></div>
-      </div>
-      <div class="card-row">
-        <div class="animated-placeholder placeholder-animation"></div>
-      </div>
-      <div class="card-row">
-        <div class="animated-placeholder placeholder-animation"></div>
-      </div>
-      <div class="card-row">
-        <div class="animated-placeholder placeholder-animation"></div>
-      </div>
-    {{else}}
-      <div class="card-row first-row">
-        <PluginOutlet @name="user-card-main-info" @outletArgs={{hash user=this.user post=this.post contentHidden=this.contentHidden handleShowUser=this.handleShowUser}}>
-          <div class="user-card-avatar" aria-hidden="true">
-            {{#if this.contentHidden}}
-              <span class="card-huge-avatar">{{boundAvatar this.user "huge"}}</span>
-            {{else}}
-              <a {{on0 "click" this.handleShowUser}} href={{this.user.path}} class="card-huge-avatar" tabindex="-1">{{boundAvatar this.user "huge"}}</a>
-            {{/if}}
-
-            <UserAvatarFlair @user={{this.user}} />
-
-            <div>
-              <PluginOutlet @name="user-card-avatar-flair" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
+  <template>
+    {{#if this.visible}}
+      <PluginOutlet
+        @name="before-user-card-content"
+        @outletArgs={{hash user=this.user}}
+      />
+      <div class="card-content">
+        {{#if this.loading}}
+          <div class="card-row first-row">
+            <div class="user-card-avatar">
+              <div
+                class="card-avatar-placeholder animated-placeholder placeholder-animation"
+              ></div>
             </div>
           </div>
-          <div class="names">
-            <div class="names__primary
-                {{this.staff}}
-                {{this.newUser}}
-                {{if this.nameFirst "full-name" "username"}}">
-              {{#if this.contentHidden}}
-                <span class="name-username-wrapper">
-                  {{if this.nameFirst this.user.name (formatUsername this.user.username)}}
-                </span>
-              {{else}}
-                <a {{on0 "click" this.handleShowUser}} href={{this.user.path}} class="user-profile-link" aria-label={{i18n0 "user.profile_link" username=this.user.username}}>
-                  <span class="name-username-wrapper">
-                    {{if this.nameFirst this.user.name (formatUsername this.user.username)}}
-                  </span>
-                  {{userStatus this.user currentUser=this.currentUser}}
-                </a>
-              {{/if}}
-            </div>
-            <PluginOutlet @name="user-card-after-username" @connectorTagName="div" @outletArgs={{hash user=this.user showUser=this.handleShowUser}} />
-            {{#if this.nameFirst}}
-              <div class="names__secondary username">{{this.user.username}}</div>
-            {{else}}
-              {{#if this.user.name}}
-                <div class="names__secondary full-name">{{this.user.name}}</div>
-              {{/if}}
-            {{/if}}
-            {{#if this.user.title}}
-              <div class="names__secondary">{{this.user.title}}</div>
-            {{/if}}
-            {{#if this.user.staged}}
-              <div class="names__secondary staged">{{i18n0 "user.staged"}}</div>
-            {{/if}}
-            {{#if this.hasStatus}}
-              <div class="user-status">
-                {{htmlSafe this.userStatusEmoji}}
-                <span class="user-status__description">
-                  {{this.user.status.description}}
-                </span>
-                {{formatDate this.user.status.ends_at format="tiny"}}
-              </div>
-            {{/if}}
-            <div>
-              <PluginOutlet @name="user-card-post-names" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
-            </div>
-          </div>
-        </PluginOutlet>
-        <ul class="usercard-controls">
-          {{#if this.user.can_send_private_message_to_user}}
-            <li class="compose-pm">
-              <DButton @action={{fn (action "composePM") this.user this.post}} @icon="envelope" @label="user.private_message" class="btn-primary" />
-            </li>
-          {{/if}}
-          <PluginOutlet @name="user-card-below-message-button" @connectorTagName="li" @outletArgs={{hash user=this.user close=(action "close")}} />
-          {{#if this.showFilter}}
-            <li>
-              <DButton @action={{fn this.handleFilterPosts this.user}} @icon="filter" @translatedLabel={{this.filterPostsLabel}} class="btn-default" />
-            </li>
-          {{/if}}
-          {{#if this.hasUserFilters}}
-            <li>
-              <DButton @action={{action "cancelFilter"}} @icon="xmark" @label="topic.filters.cancel" />
-            </li>
-          {{/if}}
-          {{#if this.showDelete}}
-            <li>
-              <DButton @action={{fn (action "deleteUser") this.user}} @icon="triangle-exclamation" @label="admin.user.delete" class="btn-danger" />
-            </li>
-          {{/if}}
-          <PluginOutlet @name="user-card-additional-buttons" @connectorTagName="li" @outletArgs={{hash user=this.user close=(action "close")}} />
-        </ul>
-        <PluginOutlet @name="user-card-additional-controls" @connectorTagName="div" @outletArgs={{hash user=this.user close=(action "close")}} />
-      </div>
 
-      {{#if this.user.profile_hidden}}
-        <div class="card-row second-row">
-          <div class="profile-hidden">
-            <span role="alert">{{i18n0 "user.profile_hidden"}}</span>
+          <div class="card-row second-row">
+            <div class="animated-placeholder placeholder-animation"></div>
           </div>
-        </div>
-      {{else if this.user.inactive}}
-        <div class="card-row second-row">
-          <div class="inactive-user">
-            <span role="alert">{{i18n0 "user.inactive_user"}}</span>
+          <div class="card-row">
+            <div class="animated-placeholder placeholder-animation"></div>
           </div>
-        </div>
-      {{/if}}
-
-      {{#if this.isSuspendedOrHasBio}}
-        <div class="card-row second-row">
-          {{#if this.user.suspend_reason}}
-            <div class="suspended">
-              <div class="suspension-date">
-                {{icon "ban"}}
-                {{#if this.user.suspendedForever}}
-                  {{i18n0 "user.suspended_permanently"}}
+          <div class="card-row">
+            <div class="animated-placeholder placeholder-animation"></div>
+          </div>
+          <div class="card-row">
+            <div class="animated-placeholder placeholder-animation"></div>
+          </div>
+        {{else}}
+          <div class="card-row first-row">
+            <PluginOutlet
+              @name="user-card-main-info"
+              @outletArgs={{hash
+                user=this.user
+                post=this.post
+                contentHidden=this.contentHidden
+                handleShowUser=this.handleShowUser
+              }}
+            >
+              <div class="user-card-avatar" aria-hidden="true">
+                {{#if this.contentHidden}}
+                  <span class="card-huge-avatar">{{boundAvatar
+                      this.user
+                      "huge"
+                    }}</span>
                 {{else}}
-                  {{i18n0 "user.suspended_notice" date=this.user.suspendedTillDate}}
+                  <a
+                    {{on0 "click" this.handleShowUser}}
+                    href={{this.user.path}}
+                    class="card-huge-avatar"
+                    tabindex="-1"
+                  >{{boundAvatar this.user "huge"}}</a>
                 {{/if}}
-              </div>
-              <div class="suspension-reason">
-                <span class="suspension-reason-title">{{i18n0 "user.suspended_reason"}}</span>
-                <span class="suspension-reason-description">{{this.user.suspend_reason}}</span>
-              </div>
-            </div>
-          {{else}}
-            {{#if this.user.bio_excerpt}}
-              <div class="bio">
-                <HtmlWithLinks>
-                  {{htmlSafe this.user.bio_excerpt}}
-                </HtmlWithLinks>
-              </div>
-            {{/if}}
-          {{/if}}
-        </div>
-      {{/if}}
 
-      {{#if this.showFeaturedTopic}}
-        <div class="card-row">
-          <div class="featured-topic">
-            <span class="desc">{{i18n0 "user.featured_topic"}}</span>
-            <LinkTo @route="topic" @models={{array this.user.featured_topic.slug this.user.featured_topic.id}}>{{replaceEmoji (htmlSafe this.user.featured_topic.fancy_title)}}</LinkTo>
-          </div>
-        </div>
-      {{/if}}
+                <UserAvatarFlair @user={{this.user}} />
 
-      {{#if this.hasLocaleOrWebsite}}
-        <div class="card-row">
-          <div class="location-and-website">
-            {{#if this.user.website_name}}
-              <span class="website-name">
-                {{icon "globe"}}
-                {{#if this.linkWebsite}}
-                  {{!-- template-lint-disable link-rel-noopener --}}
-                  <a href={{this.user.website}} rel="noopener {{unless this.removeNoFollow "nofollow ugc"}}" target="_blank">{{this.user.website_name}}</a>
-                  {{!-- template-lint-enable link-rel-noopener --}}
-                {{else}}
-                  <span title={{this.user.website}}>{{this.user.website_name}}</span>
-                {{/if}}
-              </span>
-            {{/if}}
-            {{#if this.user.location}}
-              <span class="location">
-                {{icon "location-dot"}}
-                <span>{{this.user.location}}</span>
-              </span>
-            {{/if}}
-            {{#if this.showUserLocalTime}}
-              <span class="local-time" title={{i18n0 "local_time"}}>
-                {{icon "far-clock"}}
-                <span>{{this.formattedUserLocalTime}}</span>
-              </span>
-            {{/if}}
-            <span>
-              <PluginOutlet @name="user-card-location-and-website" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
-            </span>
-          </div>
-        </div>
-      {{/if}}
-
-      <div class="card-row metadata-row">
-        {{#unless this.contentHidden}}
-          <div class="metadata">
-            {{#if this.user.last_posted_at}}
-              <div class="metadata__last-posted">
-                <span class="desc">{{i18n0 "last_post"}}</span>
-                {{formatDate this.user.last_posted_at leaveAgo="true"}}</div>
-            {{/if}}
-            <div class="metadata__user-created">
-              <span class="desc">{{i18n0 "joined"}}</span>
-              {{formatDate this.user.created_at leaveAgo="true"}}</div>
-            {{#if this.user.time_read}}
-              <div class="metadata__time-read" title={{this.timeReadTooltip}}>
-                <span class="desc">{{i18n0 "time_read"}}</span>
-                {{formatDuration this.user.time_read}}
-                {{#if this.showRecentTimeRead}}
-                  <span>
-                    ({{i18n0 "time_read_recently" time_read=this.recentTimeRead}})
-                  </span>
-                {{/if}}
-              </div>
-            {{/if}}
-            {{#if this.showCheckEmail}}
-              <div class="metadata__email">
-                {{icon "envelope" title="user.email.title"}}
-                {{#if this.user.email}}
-                  {{this.user.email}}
-                {{else}}
-                  <DButton @action={{fn (action "checkEmail") this.user}} @icon="envelope" @label="admin.users.check_email.text" class="btn-primary" />
-                {{/if}}
-              </div>
-            {{/if}}
-            <PluginOutlet @name="user-card-metadata" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
-          </div>
-        {{/unless}}
-        <PluginOutlet @name="user-card-after-metadata" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
-      </div>
-
-      {{#if this.publicUserFields}}
-        <div class="card-row">
-          <div class="public-user-fields">
-            {{#each this.publicUserFields as |uf|}}
-              {{#if uf.value}}
-                <div class="public-user-field public-user-field__{{uf.field.dasherized_name}}">
-                  <span class="user-field-name">{{uf.field.name}}:</span>
-                  <span class="user-field-value">
-                    {{#each uf.value as |v|}}
-                      {{!-- some values are arrays --}}
-                      <span class="user-field-value-list-item">
-                        {{#if uf.field.searchable}}
-                          <LinkTo @route="users" @query={{hash name=v}} {{on0 "click" (fn this.refreshRoute v)}}>{{v}}</LinkTo>
-                        {{else}}
-                          {{v}}
-                        {{/if}}
-                      </span>
-                    {{else}}
-                      {{uf.value}}
-                    {{/each}}
-                  </span>
+                <div>
+                  <PluginOutlet
+                    @name="user-card-avatar-flair"
+                    @connectorTagName="div"
+                    @outletArgs={{hash user=this.user}}
+                  />
                 </div>
+              </div>
+              <div class="names">
+                <div
+                  class="names__primary
+                    {{this.staff}}
+                    {{this.newUser}}
+                    {{if this.nameFirst 'full-name' 'username'}}"
+                >
+                  {{#if this.contentHidden}}
+                    <span class="name-username-wrapper">
+                      {{if
+                        this.nameFirst
+                        this.user.name
+                        (formatUsername this.user.username)
+                      }}
+                    </span>
+                  {{else}}
+                    <a
+                      {{on0 "click" this.handleShowUser}}
+                      href={{this.user.path}}
+                      class="user-profile-link"
+                      aria-label={{i18n0
+                        "user.profile_link"
+                        username=this.user.username
+                      }}
+                    >
+                      <span class="name-username-wrapper">
+                        {{if
+                          this.nameFirst
+                          this.user.name
+                          (formatUsername this.user.username)
+                        }}
+                      </span>
+                      {{userStatus this.user currentUser=this.currentUser}}
+                    </a>
+                  {{/if}}
+                </div>
+                <PluginOutlet
+                  @name="user-card-after-username"
+                  @connectorTagName="div"
+                  @outletArgs={{hash
+                    user=this.user
+                    showUser=this.handleShowUser
+                  }}
+                />
+                {{#if this.nameFirst}}
+                  <div
+                    class="names__secondary username"
+                  >{{this.user.username}}</div>
+                {{else}}
+                  {{#if this.user.name}}
+                    <div
+                      class="names__secondary full-name"
+                    >{{this.user.name}}</div>
+                  {{/if}}
+                {{/if}}
+                {{#if this.user.title}}
+                  <div class="names__secondary">{{this.user.title}}</div>
+                {{/if}}
+                {{#if this.user.staged}}
+                  <div class="names__secondary staged">{{i18n0
+                      "user.staged"
+                    }}</div>
+                {{/if}}
+                {{#if this.hasStatus}}
+                  <div class="user-status">
+                    {{htmlSafe this.userStatusEmoji}}
+                    <span class="user-status__description">
+                      {{this.user.status.description}}
+                    </span>
+                    {{formatDate this.user.status.ends_at format="tiny"}}
+                  </div>
+                {{/if}}
+                <div>
+                  <PluginOutlet
+                    @name="user-card-post-names"
+                    @connectorTagName="div"
+                    @outletArgs={{hash user=this.user}}
+                  />
+                </div>
+              </div>
+            </PluginOutlet>
+            <ul class="usercard-controls">
+              {{#if this.user.can_send_private_message_to_user}}
+                <li class="compose-pm">
+                  <DButton
+                    @action={{fn (action "composePM") this.user this.post}}
+                    @icon="envelope"
+                    @label="user.private_message"
+                    class="btn-primary"
+                  />
+                </li>
               {{/if}}
-            {{/each}}
+              <PluginOutlet
+                @name="user-card-below-message-button"
+                @connectorTagName="li"
+                @outletArgs={{hash user=this.user close=(action "close")}}
+              />
+              {{#if this.showFilter}}
+                <li>
+                  <DButton
+                    @action={{fn this.handleFilterPosts this.user}}
+                    @icon="filter"
+                    @translatedLabel={{this.filterPostsLabel}}
+                    class="btn-default"
+                  />
+                </li>
+              {{/if}}
+              {{#if this.hasUserFilters}}
+                <li>
+                  <DButton
+                    @action={{action "cancelFilter"}}
+                    @icon="xmark"
+                    @label="topic.filters.cancel"
+                  />
+                </li>
+              {{/if}}
+              {{#if this.showDelete}}
+                <li>
+                  <DButton
+                    @action={{fn (action "deleteUser") this.user}}
+                    @icon="triangle-exclamation"
+                    @label="admin.user.delete"
+                    class="btn-danger"
+                  />
+                </li>
+              {{/if}}
+              <PluginOutlet
+                @name="user-card-additional-buttons"
+                @connectorTagName="li"
+                @outletArgs={{hash user=this.user close=(action "close")}}
+              />
+            </ul>
+            <PluginOutlet
+              @name="user-card-additional-controls"
+              @connectorTagName="div"
+              @outletArgs={{hash user=this.user close=(action "close")}}
+            />
           </div>
-        </div>
-      {{/if}}
 
-      <PluginOutlet @name="user-card-before-badges" @connectorTagName="div" @outletArgs={{hash user=this.user}} />
+          {{#if this.user.profile_hidden}}
+            <div class="card-row second-row">
+              <div class="profile-hidden">
+                <span role="alert">{{i18n0 "user.profile_hidden"}}</span>
+              </div>
+            </div>
+          {{else if this.user.inactive}}
+            <div class="card-row second-row">
+              <div class="inactive-user">
+                <span role="alert">{{i18n0 "user.inactive_user"}}</span>
+              </div>
+            </div>
+          {{/if}}
 
-      {{#if this.showBadges}}
-        <div class="card-row">
-          <PluginOutlet @name="user-card-badges" @outletArgs={{hash user=this.user post=this.post}}>
-            {{#if this.user.featured_user_badges}}
-              <div class="badge-section">
-                {{#each this.user.featured_user_badges as |ub|}}
-                  <UserBadge @badge={{ub.badge}} @user={{this.user}} />
-                {{/each}}
-                {{#if this.showMoreBadges}}
-                  <span class="more-user-badges">
-                    <LinkTo @route="user.badges" @model={{this.user}}>
-                      {{i18n0 "badges.more_badges" count=this.moreBadgesCount}}
-                    </LinkTo>
+          {{#if this.isSuspendedOrHasBio}}
+            <div class="card-row second-row">
+              {{#if this.user.suspend_reason}}
+                <div class="suspended">
+                  <div class="suspension-date">
+                    {{icon "ban"}}
+                    {{#if this.user.suspendedForever}}
+                      {{i18n0 "user.suspended_permanently"}}
+                    {{else}}
+                      {{i18n0
+                        "user.suspended_notice"
+                        date=this.user.suspendedTillDate
+                      }}
+                    {{/if}}
+                  </div>
+                  <div class="suspension-reason">
+                    <span class="suspension-reason-title">{{i18n0
+                        "user.suspended_reason"
+                      }}</span>
+                    <span
+                      class="suspension-reason-description"
+                    >{{this.user.suspend_reason}}</span>
+                  </div>
+                </div>
+              {{else}}
+                {{#if this.user.bio_excerpt}}
+                  <div class="bio">
+                    <HtmlWithLinks>
+                      {{htmlSafe this.user.bio_excerpt}}
+                    </HtmlWithLinks>
+                  </div>
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+
+          {{#if this.showFeaturedTopic}}
+            <div class="card-row">
+              <div class="featured-topic">
+                <span class="desc">{{i18n0 "user.featured_topic"}}</span>
+                <LinkTo
+                  @route="topic"
+                  @models={{array
+                    this.user.featured_topic.slug
+                    this.user.featured_topic.id
+                  }}
+                >{{replaceEmoji
+                    (htmlSafe this.user.featured_topic.fancy_title)
+                  }}</LinkTo>
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if this.hasLocaleOrWebsite}}
+            <div class="card-row">
+              <div class="location-and-website">
+                {{#if this.user.website_name}}
+                  <span class="website-name">
+                    {{icon "globe"}}
+                    {{#if this.linkWebsite}}
+                      {{! template-lint-disable link-rel-noopener }}
+                      <a
+                        href={{this.user.website}}
+                        rel="noopener {{unless
+                          this.removeNoFollow
+                          'nofollow ugc'
+                        }}"
+                        target="_blank"
+                      >{{this.user.website_name}}</a>
+                      {{! template-lint-enable link-rel-noopener }}
+                    {{else}}
+                      <span
+                        title={{this.user.website}}
+                      >{{this.user.website_name}}</span>
+                    {{/if}}
                   </span>
                 {{/if}}
+                {{#if this.user.location}}
+                  <span class="location">
+                    {{icon "location-dot"}}
+                    <span>{{this.user.location}}</span>
+                  </span>
+                {{/if}}
+                {{#if this.showUserLocalTime}}
+                  <span class="local-time" title={{i18n0 "local_time"}}>
+                    {{icon "far-clock"}}
+                    <span>{{this.formattedUserLocalTime}}</span>
+                  </span>
+                {{/if}}
+                <span>
+                  <PluginOutlet
+                    @name="user-card-location-and-website"
+                    @connectorTagName="div"
+                    @outletArgs={{hash user=this.user}}
+                  />
+                </span>
               </div>
-            {{/if}}
-          </PluginOutlet>
-        </div>
-      {{/if}}
+            </div>
+          {{/if}}
+
+          <div class="card-row metadata-row">
+            {{#unless this.contentHidden}}
+              <div class="metadata">
+                {{#if this.user.last_posted_at}}
+                  <div class="metadata__last-posted">
+                    <span class="desc">{{i18n0 "last_post"}}</span>
+                    {{formatDate
+                      this.user.last_posted_at
+                      leaveAgo="true"
+                    }}</div>
+                {{/if}}
+                <div class="metadata__user-created">
+                  <span class="desc">{{i18n0 "joined"}}</span>
+                  {{formatDate this.user.created_at leaveAgo="true"}}</div>
+                {{#if this.user.time_read}}
+                  <div
+                    class="metadata__time-read"
+                    title={{this.timeReadTooltip}}
+                  >
+                    <span class="desc">{{i18n0 "time_read"}}</span>
+                    {{formatDuration this.user.time_read}}
+                    {{#if this.showRecentTimeRead}}
+                      <span>
+                        ({{i18n0
+                          "time_read_recently"
+                          time_read=this.recentTimeRead
+                        }})
+                      </span>
+                    {{/if}}
+                  </div>
+                {{/if}}
+                {{#if this.showCheckEmail}}
+                  <div class="metadata__email">
+                    {{icon "envelope" title="user.email.title"}}
+                    {{#if this.user.email}}
+                      {{this.user.email}}
+                    {{else}}
+                      <DButton
+                        @action={{fn (action "checkEmail") this.user}}
+                        @icon="envelope"
+                        @label="admin.users.check_email.text"
+                        class="btn-primary"
+                      />
+                    {{/if}}
+                  </div>
+                {{/if}}
+                <PluginOutlet
+                  @name="user-card-metadata"
+                  @connectorTagName="div"
+                  @outletArgs={{hash user=this.user}}
+                />
+              </div>
+            {{/unless}}
+            <PluginOutlet
+              @name="user-card-after-metadata"
+              @connectorTagName="div"
+              @outletArgs={{hash user=this.user}}
+            />
+          </div>
+
+          {{#if this.publicUserFields}}
+            <div class="card-row">
+              <div class="public-user-fields">
+                {{#each this.publicUserFields as |uf|}}
+                  {{#if uf.value}}
+                    <div
+                      class="public-user-field public-user-field__{{uf.field.dasherized_name}}"
+                    >
+                      <span class="user-field-name">{{uf.field.name}}:</span>
+                      <span class="user-field-value">
+                        {{#each uf.value as |v|}}
+                          {{! some values are arrays }}
+                          <span class="user-field-value-list-item">
+                            {{#if uf.field.searchable}}
+                              <LinkTo
+                                @route="users"
+                                @query={{hash name=v}}
+                                {{on0 "click" (fn this.refreshRoute v)}}
+                              >{{v}}</LinkTo>
+                            {{else}}
+                              {{v}}
+                            {{/if}}
+                          </span>
+                        {{else}}
+                          {{uf.value}}
+                        {{/each}}
+                      </span>
+                    </div>
+                  {{/if}}
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+
+          <PluginOutlet
+            @name="user-card-before-badges"
+            @connectorTagName="div"
+            @outletArgs={{hash user=this.user}}
+          />
+
+          {{#if this.showBadges}}
+            <div class="card-row">
+              <PluginOutlet
+                @name="user-card-badges"
+                @outletArgs={{hash user=this.user post=this.post}}
+              >
+                {{#if this.user.featured_user_badges}}
+                  <div class="badge-section">
+                    {{#each this.user.featured_user_badges as |ub|}}
+                      <UserBadge @badge={{ub.badge}} @user={{this.user}} />
+                    {{/each}}
+                    {{#if this.showMoreBadges}}
+                      <span class="more-user-badges">
+                        <LinkTo @route="user.badges" @model={{this.user}}>
+                          {{i18n0
+                            "badges.more_badges"
+                            count=this.moreBadgesCount
+                          }}
+                        </LinkTo>
+                      </span>
+                    {{/if}}
+                  </div>
+                {{/if}}
+              </PluginOutlet>
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
     {{/if}}
-  </div>
-{{/if}}</template>}
+  </template>
+}

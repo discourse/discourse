@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { i18n } from "discourse-i18n";
-
+import DButton from "discourse/components/d-button";
 // Modal that displays confirmation text when user deletes a topic
 // The modal will display only if the topic exceeds a certain amount of views
 import DModal from "discourse/components/d-modal";
 import i18n0 from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
+import { i18n } from "discourse-i18n";
+
 export default class DeleteTopicConfirm extends Component {
   @service currentUser;
   @service siteSettings;
@@ -27,14 +27,39 @@ export default class DeleteTopicConfirm extends Component {
       this.deletingTopic = false;
     }
   }
-<template><DModal @title={{i18n0 "topic.actions.delete"}} @closeModal={{@closeModal}} class="delete-topic-confirm-modal" @flash={{this.flash}}>
-  <:body>
-    <p>
-      {{i18n0 "post.controls.delete_topic_confirm_modal" count=this.siteSettings.min_topic_views_for_delete_confirm}}
-    </p>
-  </:body>
-  <:footer>
-    <DButton @action={{this.deleteTopic}} @disabled={{this.deletingTopic}} @label={{if this.deletingTopic "deleting" "post.controls.delete_topic_confirm_modal_yes"}} class="btn-danger" />
-    <DButton @action={{@closeModal}} @label="post.controls.delete_topic_confirm_modal_no" class="btn-primary" />
-  </:footer>
-</DModal></template>}
+
+  <template>
+    <DModal
+      @title={{i18n0 "topic.actions.delete"}}
+      @closeModal={{@closeModal}}
+      class="delete-topic-confirm-modal"
+      @flash={{this.flash}}
+    >
+      <:body>
+        <p>
+          {{i18n0
+            "post.controls.delete_topic_confirm_modal"
+            count=this.siteSettings.min_topic_views_for_delete_confirm
+          }}
+        </p>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.deleteTopic}}
+          @disabled={{this.deletingTopic}}
+          @label={{if
+            this.deletingTopic
+            "deleting"
+            "post.controls.delete_topic_confirm_modal_yes"
+          }}
+          class="btn-danger"
+        />
+        <DButton
+          @action={{@closeModal}}
+          @label="post.controls.delete_topic_confirm_modal_no"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
+}
