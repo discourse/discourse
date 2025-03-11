@@ -14,6 +14,7 @@ export default class ScreenedIpAddress extends EmberObject {
   }
 
   @equal("action_name", "block") isBlocked;
+
   @discourseComputed("action_name")
   actionName(actionName) {
     return i18n(`admin.logs.screened_ips.actions.${actionName}`);

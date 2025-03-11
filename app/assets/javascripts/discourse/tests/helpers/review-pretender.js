@@ -1,4 +1,5 @@
 import { set } from "@ember/object";
+
 export default function (helpers) {
   const { response } = helpers;
 

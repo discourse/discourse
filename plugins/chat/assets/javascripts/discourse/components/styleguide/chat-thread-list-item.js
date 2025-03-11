@@ -7,6 +7,7 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 export default class ChatStyleguideChatThreadListItem extends Component {
   @service currentUser;
+
   @tracked thread;
 
   constructor() {

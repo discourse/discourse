@@ -5,6 +5,7 @@ class ApiKeySerializer < ApplicationSerializer
              :key,
              :truncated_key,
              :description,
+             :scope_mode,
              :last_used_at,
              :created_at,
              :updated_at,

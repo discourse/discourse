@@ -7,10 +7,6 @@ describe "Admin New Features Page", type: :system do
 
   before do
     SiteSetting.navigation_menu = "sidebar"
-    SiteSetting.admin_sidebar_enabled_groups = [
-      Group::AUTO_GROUPS[:admins],
-      Group::AUTO_GROUPS[:moderators],
-    ]
     sign_in(admin)
   end
 

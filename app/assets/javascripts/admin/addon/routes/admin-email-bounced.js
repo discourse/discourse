@@ -7,6 +7,7 @@ import IncomingEmailModal from "../components/modal/incoming-email";
 
 export default class AdminEmailBouncedRoute extends AdminEmailLogs {
   @service modal;
+
   status = "bounced";
 
   @action

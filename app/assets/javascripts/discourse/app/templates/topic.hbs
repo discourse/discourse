@@ -630,11 +630,13 @@
     </div>
   {{/if}}
 
-  <PostTextSelection
-    @quoteState={{this.quoteState}}
-    @selectText={{action "selectText"}}
-    @buildQuoteMarkdown={{this.buildQuoteMarkdown}}
-    @editPost={{action "editPost"}}
-    @topic={{this.model}}
-  />
+  {{#each (array this.model) as |topic|}}
+    <PostTextSelection
+      @quoteState={{this.quoteState}}
+      @selectText={{action "selectText"}}
+      @buildQuoteMarkdown={{this.buildQuoteMarkdown}}
+      @editPost={{action "editPost"}}
+      @topic={{topic}}
+    />
+  {{/each}}
 </DiscourseTopic>

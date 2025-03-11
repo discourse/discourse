@@ -5,6 +5,7 @@ import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
+
 module("Unit | Utility | Grant Badge", function (hooks) {
   setupTest(hooks);
 
