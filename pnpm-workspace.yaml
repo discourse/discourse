@@ -13,5 +13,6 @@ packages:
 - "app/assets/javascripts/float-kit"
 - "app/assets/javascripts/pretty-text"
 - "app/assets/javascripts/select-kit"
+- "app/assets/javascripts/select-kit-reexport"
 - "app/assets/javascripts/theme-transpiler"
 - "app/assets/javascripts/truth-helpers"

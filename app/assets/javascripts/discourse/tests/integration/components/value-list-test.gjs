@@ -1,16 +1,17 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import ValueList from "select-kit/components/value-list";
 
 module("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("adding a value", async function (assert) {
+  test("adding a value", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
 
-    await render(hbs`<ValueList @values={{this.values}} />`);
+    await render(<template><ValueList @values={{self.values}} /></template>);
 
     await selectKit().expand();
     await selectKit().fillInFilter("eviltrout");
@@ -27,10 +28,11 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("changing a value", async function (assert) {
+  test("changing a value", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
 
-    await render(hbs`<ValueList @values={{this.values}} />`);
+    await render(<template><ValueList @values={{self.values}} /></template>);
 
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
     await blur(".values .value[data-index='1'] .value-input");
@@ -39,10 +41,11 @@ module("Integration | Component | value-list", function (hooks) {
     assert.deepEqual(this.values, "vinkas\njarek", "updates the value list");
   });
 
-  test("removing a value", async function (assert) {
+  test("removing a value", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
 
-    await render(hbs`<ValueList @values={{this.values}} />`);
+    await render(<template><ValueList @values={{self.values}} /></template>);
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
@@ -59,14 +62,15 @@ module("Integration | Component | value-list", function (hooks) {
       .hasText("vinkas", "it adds the removed value to choices");
   });
 
-  test("selecting a value", async function (assert) {
+  test("selecting a value", async function (assert) {const self = this;
+
     this.setProperties({
       values: "vinkas\nosama",
       choices: ["maja", "michael"],
     });
 
     await render(
-      hbs`<ValueList @values={{this.values}} @choices={{this.choices}} />`
+      <template><ValueList @values={{self.values}} @choices={{self.choices}} /></template>
     );
 
     await selectKit().expand();
@@ -83,10 +87,11 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("array support", async function (assert) {
+  test("array support", async function (assert) {const self = this;
+
     this.set("values", ["vinkas", "osama"]);
 
-    await render(hbs`<ValueList @values={{this.values}} @inputType="array" />`);
+    await render(<template><ValueList @values={{self.values}} @inputType="array" /></template>);
 
     this.set("values", ["vinkas", "osama"]);
 
@@ -105,11 +110,12 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("delimiter support", async function (assert) {
+  test("delimiter support", async function (assert) {const self = this;
+
     this.set("values", "vinkas|osama");
 
     await render(
-      hbs`<ValueList @values={{this.values}} @inputDelimiter="|" />`
+      <template><ValueList @values={{self.values}} @inputDelimiter="|" /></template>
     );
 
     await selectKit().expand();
