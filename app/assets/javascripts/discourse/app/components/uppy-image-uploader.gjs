@@ -123,7 +123,9 @@ export default class UppyImageUploader extends Component {
     );
 
     if (lightboxElement) {
-      $(lightboxElement).magnificPopup("open");
+      this.applyLightbox(lightboxElement.parentElement).then(() => {
+        $(lightboxElement).magnificPopup("open");
+      });
     }
   }
 
@@ -140,7 +142,6 @@ export default class UppyImageUploader extends Component {
 
   <template>
     <div
-      {{this.applyLightbox}}
       id={{@id}}
       class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
       ...attributes
