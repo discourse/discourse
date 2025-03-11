@@ -50,10 +50,8 @@ export default class AdminRoute extends DiscourseRoute {
       });
     }
 
-    if (this.adminSidebarStateManager.currentUserUsingAdminSidebar) {
-      if (!transition?.to.name.startsWith("admin")) {
-        this.adminSidebarStateManager.stopForcingAdminSidebar();
-      }
+    if (!transition?.to.name.startsWith("admin")) {
+      this.adminSidebarStateManager.stopForcingAdminSidebar();
     }
   }
 
