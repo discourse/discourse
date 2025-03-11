@@ -23,6 +23,8 @@ const CHAT_ATTRS = [
   "chat_quick_reactions_custom",
 ];
 
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|grin";
+
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
 export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
@@ -112,6 +114,13 @@ export default class PreferencesChatController extends Controller {
     return this.model.get("user_option.chat_send_shortcut");
   }
 
+  get chatQuickReactionsCustom() {
+    let emojis =
+      this.model.get("user_option.chat_quick_reactions_custom") ||
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
+    return emojis.split("|");
+  }
+
   @discourseComputed
   chatSounds() {
     return Object.keys(CHAT_SOUNDS).map((value) => {
@@ -125,6 +134,18 @@ export default class PreferencesChatController extends Controller {
       this.chatAudioManager.play(sound);
     }
     this.model.set("user_option.chat_sound", sound);
+  }
+
+  @action
+  didSelectEmoji(selected, index) {
+    let emoji = this.chatQuickReactionsCustom;
+    emoji[index] = selected;
+    this.model.set("user_option.chat_quick_reactions_custom", emoji.join("|"));
+  }
+
+  @action
+  createSelectEmojiCallback(index) {
+    return (emoji) => this.didSelectEmoji(emoji, index);
   }
 
   @action
