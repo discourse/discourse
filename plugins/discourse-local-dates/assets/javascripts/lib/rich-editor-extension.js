@@ -4,7 +4,6 @@ const extension = {
   nodeSpec: {
     local_date: {
       attrs: { date: {}, time: {}, timezone: { default: null } },
-      content: "text*",
       group: "inline",
       atom: true,
       inline: true,
@@ -42,7 +41,6 @@ const extension = {
         toTime: {},
         timezone: { default: null },
       },
-      content: "text*",
       group: "inline",
       atom: true,
       inline: true,
@@ -96,7 +94,7 @@ const extension = {
     },
   },
   parse: {
-    span_open(state, token) {
+    span_open(state, token, tokens, i) {
       if (token.attrGet("class") !== "discourse-local-date") {
         return;
       }
@@ -108,6 +106,13 @@ const extension = {
           timezone: token.attrGet("data-timezone"),
         });
         state.__localDateRange = true;
+        // we depend on the token data being strictly:
+        // [span_open, text, span_close, text, span_open, text, span_close]
+        // removing the text occurrences
+        tokens.splice(i + 1, 1);
+        tokens.splice(i + 2, 1);
+        tokens.splice(i + 3, 1);
+
         return true;
       }
 
@@ -125,6 +130,8 @@ const extension = {
         time: token.attrGet("data-time"),
         timezone: token.attrGet("data-timezone"),
       });
+      // removing the text occurrence
+      tokens.splice(i + 1, 1);
       return true;
     },
     span_close(state) {
