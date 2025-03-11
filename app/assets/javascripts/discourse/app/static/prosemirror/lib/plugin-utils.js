@@ -1,1 +1,1 @@
-export { getLinkify, isBoundary } from "../lib/markdown-it";
+export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
