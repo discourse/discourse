@@ -5,7 +5,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import directoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
+import DirectoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
 import UserInfo from "discourse/components/user-info";
 import icon from "discourse/helpers/d-icon";
 import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
@@ -36,7 +36,7 @@ export default class DirectoryItem extends Component {
           <span class="directory-table__label">
             <span>{{column.name}}</span>
           </span>
-          {{directoryItemUserFieldValue item=this.item column=column}}
+          <DirectoryItemUserFieldValue @item={{this.item}} @column={{column}} />
         </div>
       {{else}}
         <div class="directory-table__cell" role="cell">
