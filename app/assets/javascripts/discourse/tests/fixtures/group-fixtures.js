@@ -55,6 +55,11 @@ export default {
     extras: {
       visible_group_names: ["discourse"],
     },
+    meta: {
+      total: 7,
+      limit: 50,
+      offset: 0,
+    }
   },
   "/groups/support.json": {
     group: {
