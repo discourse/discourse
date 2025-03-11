@@ -2727,9 +2727,8 @@ fr:
         new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
         admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
+      delete: "Supprimer"
       uploading: "En cours d'envoi"
-      processing: "Traitement du téléversement"
-      select_file: "Sélectionner un fichier"
       default_image_alt_text: image
     search:
       sort_by: "Trier par"
@@ -5209,6 +5208,7 @@ fr:
         key: "Clé"
         keys: "Clés"
         created: Créé par 
+        scope: Permissions
         updated: Mis à jour
         last_used: Dernière utilisation
         never_used: Jamais

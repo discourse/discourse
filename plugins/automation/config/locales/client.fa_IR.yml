@@ -91,10 +91,11 @@ fa_IR:
               label: نوع عمل
             restricted_tags:
               label: برچسب‌ها
-            restricted_category:
-              label: دسته‌بندی
+            restricted_categories:
+              label: دسته‌بندی‌ها
           created: ساخته شده
           edited: ویرایش شده
+          topics: موضوعات
         category_created_edited:
           fields:
             restricted_category:

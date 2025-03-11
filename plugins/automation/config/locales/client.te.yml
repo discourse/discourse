@@ -59,9 +59,10 @@ te:
           fields:
             restricted_tags:
               label: ట్యాగులు
-            restricted_category:
-              label: వర్గం
+            restricted_categories:
+              label: వర్గాలు
           created: సృష్టించిన
+          topics: విషయాలు
         category_created_edited:
           fields:
             restricted_category:

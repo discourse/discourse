@@ -3067,9 +3067,11 @@ he:
         new_features: "יכולות חדשות של Discourse יצאו לאור!"
         admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
+      change: "החלפה"
+      delete: "מחיקה"
       uploading: "מעלה"
-      processing: "ההעלאה עוברת עיבוד"
-      select_file: "בחירת קובץ"
+      processing: "ההעלאה מעובדת"
+      select_file: "לחיצה או גרירה תאפשרנה להעלות קובץ"
       default_image_alt_text: תמונה
     search:
       sort_by: "מיון על פי"
@@ -5858,6 +5860,7 @@ he:
         key: "מפתח"
         keys: "מפתחות"
         created: נוצר על ידי
+        scope: היקף
         updated: עודכן
         last_used: שימוש אחרון
         never_used: לעולם לא
