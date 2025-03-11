@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+// Injections don't occur without a class
+export default class TopicCategory extends Component {}
 {{#unless this.topic.isPrivateMessage}}
   {{bound-category-link
     this.topic.category

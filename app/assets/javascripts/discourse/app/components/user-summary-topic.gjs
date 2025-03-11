@@ -1,3 +1,8 @@
+import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
+
+@tagName("li")
+export default class UserSummaryTopic extends Component {}
 <PluginOutlet
   @name="user-summary-topic-wrapper"
   @outletArgs={{hash topic=@topic url=@url}}

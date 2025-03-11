@@ -1,3 +1,6 @@
+import Component from "@ember/component";
+
+export default class CategoryNameFields extends Component {}
 <PluginOutlet
   @name="category-name-fields-details"
   @outletArgs={{hash category=this.category}}

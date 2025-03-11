@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+// Exists so plugins can use it
+export default class CategoriesTopicList extends Component {}
 <div role="heading" aria-level="2" class="table-heading">
   {{i18n (concat "filters." this.filter ".title")}}
   <PluginOutlet

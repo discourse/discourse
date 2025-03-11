@@ -1,3 +1,6 @@
+import UserFieldBase from "./base";
+
+export default class UserFieldConfirm extends UserFieldBase {}
 {{#if this.field.name}}
   <label class="control-label">
     {{this.field.name}}

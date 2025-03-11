@@ -1,3 +1,6 @@
+import Component from "@ember/component";
+
+export default class UserProfileAvatar extends Component {}
 <PluginOutlet
   @name="user-profile-avatar-wrapper"
   @outletArgs={{hash user=@user}}

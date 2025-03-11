@@ -1,3 +1,6 @@
+import CategoryListItem from "discourse/components/category-list-item";
+
+export default class SubCategoryRow extends CategoryListItem {}
 {{#unless this.isHidden}}
   {{#if this.site.mobileView}}
     <tr

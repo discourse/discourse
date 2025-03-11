@@ -1,3 +1,10 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+
+export default class Revision extends Component {
+  @service site;
+  @service siteSettings;
+}
 <div id="revision">
   <div id="revision-details">
     {{d-icon "pencil"}}

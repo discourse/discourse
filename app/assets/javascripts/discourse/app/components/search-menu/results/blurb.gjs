@@ -1,3 +1,10 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+
+export default class Blurb extends Component {
+  @service siteSettings;
+  @service site;
+}
 <span class="blurb">
   {{format-age @result.created_at}}
   <span class="blurb__separator"> - </span>

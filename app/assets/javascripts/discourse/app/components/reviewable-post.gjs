@@ -1,3 +1,6 @@
+import Component from "@ember/component";
+
+export default class ReviewablePost extends Component {}
 <div class="flagged-post-header">
   <ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="" />
   <ReviewablePostEdits @reviewable={{this.reviewable}} @tagName="" />

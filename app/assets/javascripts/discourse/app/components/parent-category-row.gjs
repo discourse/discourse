@@ -1,3 +1,6 @@
+import CategoryListItem from "discourse/components/category-list-item";
+
+export default class ParentCategoryRow extends CategoryListItem {}
 {{#unless this.isHidden}}
   <PluginOutlet
     @name="category-list-above-each-category"
