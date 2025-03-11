@@ -286,13 +286,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
     find(".invitation-cta__sign-in").click
 
-    if page.has_css?(".d-modal.login-modal", wait: 0)
-      if page.has_css?("html.mobile-view", wait: 0)
-        expect(page).to have_css(".d-modal:not(.is-animating)")
-      end
-      find(".d-modal .modal-close").click
-    else
+    if SiteSetting.full_page_login
+      expect(page).to have_css("#login-form")
       page.go_back
+    else
+      find(".d-modal .modal-close").click
     end
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
