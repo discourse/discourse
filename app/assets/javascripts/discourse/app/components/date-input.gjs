@@ -178,7 +178,7 @@ export default class DateInput extends Component {
       placeholder={{this.placeholder}}
       @value={{readonly this.value}}
       id={{this.inputId}}
-      {{on "input" (action "onChangeDate")}}
+      {{on "input" this.onChangeDate}}
     />
 
     {{#unless this.useGlobalPickerContainer}}

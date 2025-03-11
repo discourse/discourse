@@ -482,7 +482,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.user.can_send_private_message_to_user}}
                 <li class="compose-pm">
                   <DButton
-                    @action={{fn (action "composePM") this.user this.post}}
+                    @action={{fn this.composePM this.user this.post}}
                     @icon="envelope"
                     @label="user.private_message"
                     class="btn-primary"
@@ -492,7 +492,7 @@ export default class UserCardContents extends CardContentsBase {
               <PluginOutlet
                 @name="user-card-below-message-button"
                 @connectorTagName="li"
-                @outletArgs={{hash user=this.user close=(action "close")}}
+                @outletArgs={{hash user=this.user close=this.close}}
               />
               {{#if this.showFilter}}
                 <li>
@@ -516,7 +516,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.showDelete}}
                 <li>
                   <DButton
-                    @action={{fn (action "deleteUser") this.user}}
+                    @action={{fn this.deleteUser this.user}}
                     @icon="triangle-exclamation"
                     @label="admin.user.delete"
                     class="btn-danger"
@@ -526,13 +526,13 @@ export default class UserCardContents extends CardContentsBase {
               <PluginOutlet
                 @name="user-card-additional-buttons"
                 @connectorTagName="li"
-                @outletArgs={{hash user=this.user close=(action "close")}}
+                @outletArgs={{hash user=this.user close=this.close}}
               />
             </ul>
             <PluginOutlet
               @name="user-card-additional-controls"
               @connectorTagName="div"
-              @outletArgs={{hash user=this.user close=(action "close")}}
+              @outletArgs={{hash user=this.user close=this.close}}
             />
           </div>
 
@@ -688,7 +688,7 @@ export default class UserCardContents extends CardContentsBase {
                       {{this.user.email}}
                     {{else}}
                       <DButton
-                        @action={{fn (action "checkEmail") this.user}}
+                        @action={{fn this.checkEmail this.user}}
                         @icon="envelope"
                         @label="admin.users.check_email.text"
                         class="btn-primary"

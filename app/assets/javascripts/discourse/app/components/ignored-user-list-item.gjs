@@ -17,7 +17,7 @@ export default class IgnoredUserListItem extends Component {
     <div class="ignored-user-list-item">
       <span class="ignored-user-name">{{this.item}}</span>
       <DButton
-        @action={{fn (action "removeIgnoredUser") this.item}}
+        @action={{fn this.removeIgnoredUser this.item}}
         @icon="xmark"
         class="remove-ignored-user no-text btn-icon"
       />
