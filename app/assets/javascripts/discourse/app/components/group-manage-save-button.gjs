@@ -1,7 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { or } from "@ember/object/computed";
+import { or as computedOr } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,7 +17,7 @@ export default class GroupManageSaveButton extends Component {
   disabled = false;
   updateExistingUsers = null;
 
-  @or("model.flair_icon", "model.flair_upload_id") hasFlair;
+  @computedOr("model.flair_icon", "model.flair_upload_id") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {
@@ -100,22 +102,25 @@ export default class GroupManageSaveButton extends Component {
     });
     this.save();
   }
-}
-{{#if this.privateGroupNameNotice}}
-  <div class="row">
-    <div class="alert alert-warning alert-private-group-name">
-      {{this.privateGroupNameNotice}}
+
+  <template>
+    {{#if this.privateGroupNameNotice}}
+      <div class="row">
+        <div class="alert alert-warning alert-private-group-name">
+          {{this.privateGroupNameNotice}}
+        </div>
+      </div>
+    {{/if}}
+    <div class="control-group buttons group-manage-save-button">
+      <DButton
+        @action={{this.save}}
+        @disabled={{or this.disabled this.saving}}
+        @translatedLabel={{this.savingText}}
+        class="btn-primary group-manage-save"
+      />
+      {{#if this.saved}}
+        <span>{{i18n "saved"}}</span>
+      {{/if}}
     </div>
-  </div>
-{{/if}}
-<div class="control-group buttons group-manage-save-button">
-  <DButton
-    @action={{this.save}}
-    @disabled={{or this.disabled this.saving}}
-    @translatedLabel={{this.savingText}}
-    class="btn-primary group-manage-save"
-  />
-  {{#if this.saved}}
-    <span>{{i18n "saved"}}</span>
-  {{/if}}
-</div>
+  </template>
+}

@@ -1,5 +1,5 @@
 /* global Pikaday:true */
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
@@ -108,12 +108,15 @@ export default class DatePicker extends Component {
   _opts() {
     return null;
   }
+
+  <template>
+    <Input
+      @type={{this.inputType}}
+      class="date-picker"
+      placeholder={{this.placeholder}}
+      @value={{this.value}}
+      autocomplete="off"
+      ...attributes
+    />
+  </template>
 }
-<Input
-  @type={{this.inputType}}
-  class="date-picker"
-  placeholder={{this.placeholder}}
-  @value={{this.value}}
-  autocomplete="off"
-  ...attributes
-/>

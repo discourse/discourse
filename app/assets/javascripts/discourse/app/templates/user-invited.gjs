@@ -1,25 +1,34 @@
-{{#if this.can_see_invite_details}}
-  {{body-class "user-invites-page"}}
+import RouteTemplate from "ember-route-template";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import NavItem from "discourse/components/nav-item";
+import bodyClass from "discourse/helpers/body-class";
 
-  <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - invites">
-      <NavItem
-        @route="userInvited.show"
-        @routeParam="pending"
-        @i18nLabel={{this.pendingLabel}}
-      />
-      <NavItem
-        @route="userInvited.show"
-        @routeParam="expired"
-        @i18nLabel={{this.expiredLabel}}
-      />
-      <NavItem
-        @route="userInvited.show"
-        @routeParam="redeemed"
-        @i18nLabel={{this.redeemedLabel}}
-      />
-    </HorizontalOverflowNav>
-  </div>
-{{/if}}
+export default RouteTemplate(
+  <template>
+    {{#if @controller.can_see_invite_details}}
+      {{bodyClass "user-invites-page"}}
 
-{{outlet}}
+      <div class="user-navigation user-navigation-secondary">
+        <HorizontalOverflowNav @ariaLabel="User secondary - invites">
+          <NavItem
+            @route="userInvited.show"
+            @routeParam="pending"
+            @i18nLabel={{@controller.pendingLabel}}
+          />
+          <NavItem
+            @route="userInvited.show"
+            @routeParam="expired"
+            @i18nLabel={{@controller.expiredLabel}}
+          />
+          <NavItem
+            @route="userInvited.show"
+            @routeParam="redeemed"
+            @i18nLabel={{@controller.redeemedLabel}}
+          />
+        </HorizontalOverflowNav>
+      </div>
+    {{/if}}
+
+    {{outlet}}
+  </template>
+);

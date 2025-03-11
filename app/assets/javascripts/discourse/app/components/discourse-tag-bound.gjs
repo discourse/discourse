@@ -20,5 +20,6 @@ export default class DiscourseTagBound extends Component {
   href(tagRecordId) {
     return getURL("/tag/" + tagRecordId);
   }
+
+  <template>{{this.tagRecord.id}}</template>
 }
-{{this.tagRecord.id}}

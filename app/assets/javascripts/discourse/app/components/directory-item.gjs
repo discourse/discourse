@@ -5,7 +5,15 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
+import directoryItemUserFieldValue from "discourse/components/directory-item-user-field-value";
+import UserInfo from "discourse/components/user-info";
+import icon from "discourse/helpers/d-icon";
+import directoryColumnIsUserField from "discourse/helpers/directory-column-is-user-field";
+import directoryItemLabel from "discourse/helpers/directory-item-label";
+import directoryItemValue from "discourse/helpers/directory-item-value";
+import formatDuration from "discourse/helpers/format-duration";
 import { propertyEqual } from "discourse/lib/computed";
+import { i18n } from "discourse-i18n";
 
 @tagName("div")
 @classNames("directory-table__row")
@@ -16,42 +24,45 @@ export default class DirectoryItem extends Component {
 
   @propertyEqual("item.user.id", "currentUser.id") me;
   columns = null;
-}
-<div class="directory-table__cell" role="rowheader">
-  <UserInfo @user={{this.item.user}} />
-</div>
 
-{{#each this.columns as |column|}}
-  {{#if (directory-column-is-user-field column=column)}}
-    <div class="directory-table__cell--user-field" role="cell">
-      <span class="directory-table__label">
-        <span>{{column.name}}</span>
-      </span>
-      {{directory-item-user-field-value item=this.item column=column}}
+  <template>
+    <div class="directory-table__cell" role="rowheader">
+      <UserInfo @user={{this.item.user}} />
     </div>
-  {{else}}
-    <div class="directory-table__cell" role="cell">
-      <span class="directory-table__label">
-        <span>
-          {{#if column.icon}}
-            {{d-icon column.icon}}
-          {{/if}}
-          {{directory-item-label item=this.item column=column}}
+
+    {{#each this.columns as |column|}}
+      {{#if (directoryColumnIsUserField column=column)}}
+        <div class="directory-table__cell--user-field" role="cell">
+          <span class="directory-table__label">
+            <span>{{column.name}}</span>
+          </span>
+          {{directoryItemUserFieldValue item=this.item column=column}}
+        </div>
+      {{else}}
+        <div class="directory-table__cell" role="cell">
+          <span class="directory-table__label">
+            <span>
+              {{#if column.icon}}
+                {{icon column.icon}}
+              {{/if}}
+              {{directoryItemLabel item=this.item column=column}}
+            </span>
+          </span>
+          {{directoryItemValue item=this.item column=column}}
+        </div>
+      {{/if}}
+
+    {{/each}}
+
+    {{#if this.showTimeRead}}
+      <div class="directory-table__cell time-read" role="cell">
+        <span class="directory-table__label">
+          <span>{{i18n "directory.time_read"}}</span>
         </span>
-      </span>
-      {{directory-item-value item=this.item column=column}}
-    </div>
-  {{/if}}
-
-{{/each}}
-
-{{#if this.showTimeRead}}
-  <div class="directory-table__cell time-read" role="cell">
-    <span class="directory-table__label">
-      <span>{{i18n "directory.time_read"}}</span>
-    </span>
-    <span class="directory-table__value">
-      {{format-duration this.item.time_read}}
-    </span>
-  </div>
-{{/if}}
+        <span class="directory-table__value">
+          {{formatDuration this.item.time_read}}
+        </span>
+      </div>
+    {{/if}}
+  </template>
+}

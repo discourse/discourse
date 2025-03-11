@@ -1,8 +1,12 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import {
   authorizedExtensions,
@@ -119,31 +123,34 @@ export default class PickFilesButton extends Component {
   _fileExtension(fileName) {
     return fileName.split(".").pop();
   }
+
+  <template>
+    {{#if this.showButton}}
+      <DButton
+        @action={{action "openSystemFilePicker"}}
+        @label={{this.label}}
+        @icon={{this.icon}}
+      />
+    {{/if}}
+    {{#if this.acceptsAllFormats}}
+      <input
+        {{didInsert (or @registerFileInput (noop))}}
+        type="file"
+        id={{this.fileInputId}}
+        class={{this.fileInputClass}}
+        multiple={{this.allowMultiple}}
+        disabled={{this.fileInputDisabled}}
+      />
+    {{else}}
+      <input
+        {{didInsert (or @registerFileInput (noop))}}
+        type="file"
+        id={{this.fileInputId}}
+        class={{this.fileInputClass}}
+        accept={{this.acceptedFormats}}
+        multiple={{this.allowMultiple}}
+        disabled={{this.fileInputDisabled}}
+      />
+    {{/if}}
+  </template>
 }
-{{#if this.showButton}}
-  <DButton
-    @action={{action "openSystemFilePicker"}}
-    @label={{this.label}}
-    @icon={{this.icon}}
-  />
-{{/if}}
-{{#if this.acceptsAllFormats}}
-  <input
-    {{did-insert (or @registerFileInput (noop))}}
-    type="file"
-    id={{this.fileInputId}}
-    class={{this.fileInputClass}}
-    multiple={{this.allowMultiple}}
-    disabled={{this.fileInputDisabled}}
-  />
-{{else}}
-  <input
-    {{did-insert (or @registerFileInput (noop))}}
-    type="file"
-    id={{this.fileInputId}}
-    class={{this.fileInputClass}}
-    accept={{this.acceptedFormats}}
-    multiple={{this.allowMultiple}}
-    disabled={{this.fileInputDisabled}}
-  />
-{{/if}}

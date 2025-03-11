@@ -1,77 +1,99 @@
-{{#if this.model.canLoadMore}}
-  {{hide-application-footer}}
-{{/if}}
+import { on } from "@ember/modifier";
+import RouteTemplate from "ember-route-template";
+import { or } from "truth-helpers";
+import BasicTopicList from "discourse/components/basic-topic-list";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import CountI18n from "discourse/components/count-i18n";
+import EmptyState from "discourse/components/empty-state";
+import LoadMore from "discourse/components/load-more";
+import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import loadingSpinner from "discourse/helpers/loading-spinner";
+import routeAction from "discourse/helpers/route-action";
 
-{{#if this.noContent}}
-  <EmptyState
-    @title={{this.model.emptyState.title}}
-    @body={{this.model.emptyState.body}}
-  />
-{{else}}
-  <LoadMore
-    @selector=".paginated-topics-list .topic-list .topic-list-item"
-    @action={{action "loadMore"}}
-    class="paginated-topics-list"
-  >
-    <TopicDismissButtons
-      @position="top"
-      @selectedTopics={{this.bulkSelectHelper.selected}}
-      @model={{this.model}}
-      @showResetNew={{this.showResetNew}}
-      @showDismissRead={{this.showDismissRead}}
-      @resetNew={{action "resetNew"}}
-      @dismissRead={{if
-        this.showDismissRead
-        (route-action "dismissReadTopics")
-      }}
-    />
-
-    {{#if (or this.model.loadingBefore this.incomingCount)}}
-      <div class="show-mores">
-        <a
-          tabindex="0"
-          href
-          {{on "click" this.showInserted}}
-          class="alert alert-info clickable
-            {{if this.model.loadingBefore 'loading'}}"
-        >
-          <CountI18n
-            @key="topic_count_latest"
-            @count={{or this.model.loadingBefore this.incomingCount}}
-          />
-          {{#if @model.loadingBefore}}
-            {{loading-spinner size="small"}}
-          {{/if}}
-        </a>
-      </div>
+export default RouteTemplate(
+  <template>
+    {{#if @controller.model.canLoadMore}}
+      {{hideApplicationFooter}}
     {{/if}}
 
-    <BasicTopicList
-      @topicList={{this.model}}
-      @hideCategory={{this.hideCategory}}
-      @showPosters={{this.showPosters}}
-      @tagsForUser={{this.tagsForUser}}
-      @canBulkSelect={{this.canBulkSelect}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
-      @changeSort={{this.changeSort}}
-      @order={{this.order}}
-      @ascending={{this.ascending}}
-      @focusLastVisitedTopic={{true}}
-    />
+    {{#if @controller.noContent}}
+      <EmptyState
+        @title={{@controller.model.emptyState.title}}
+        @body={{@controller.model.emptyState.body}}
+      />
+    {{else}}
+      <LoadMore
+        @selector=".paginated-topics-list .topic-list .topic-list-item"
+        @action={{@controller.loadMore}}
+        class="paginated-topics-list"
+      >
+        <TopicDismissButtons
+          @position="top"
+          @selectedTopics={{@controller.bulkSelectHelper.selected}}
+          @model={{@controller.model}}
+          @showResetNew={{@controller.showResetNew}}
+          @showDismissRead={{@controller.showDismissRead}}
+          @resetNew={{@controller.resetNew}}
+          @dismissRead={{if
+            @controller.showDismissRead
+            (routeAction "dismissReadTopics")
+          }}
+        />
 
-    <TopicDismissButtons
-      @position="bottom"
-      @selectedTopics={{this.bulkSelectHelper.selected}}
-      @model={{this.model}}
-      @showResetNew={{this.showResetNew}}
-      @showDismissRead={{this.showDismissRead}}
-      @resetNew={{action "resetNew"}}
-      @dismissRead={{if
-        this.showDismissRead
-        (route-action "dismissReadTopics")
-      }}
-    />
+        {{#if (or @controller.model.loadingBefore @controller.incomingCount)}}
+          <div class="show-mores">
+            <a
+              tabindex="0"
+              href
+              {{on "click" @controller.showInserted}}
+              class="alert alert-info clickable
+                {{if @controller.model.loadingBefore 'loading'}}"
+            >
+              <CountI18n
+                @key="topic_count_latest"
+                @count={{or
+                  @controller.model.loadingBefore
+                  @controller.incomingCount
+                }}
+              />
+              {{#if @model.loadingBefore}}
+                {{loadingSpinner size="small"}}
+              {{/if}}
+            </a>
+          </div>
+        {{/if}}
 
-    <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
-  </LoadMore>
-{{/if}}
+        <BasicTopicList
+          @topicList={{@controller.model}}
+          @hideCategory={{@controller.hideCategory}}
+          @showPosters={{@controller.showPosters}}
+          @tagsForUser={{@controller.tagsForUser}}
+          @canBulkSelect={{@controller.canBulkSelect}}
+          @bulkSelectHelper={{@controller.bulkSelectHelper}}
+          @changeSort={{@controller.changeSort}}
+          @order={{@controller.order}}
+          @ascending={{@controller.ascending}}
+          @focusLastVisitedTopic={{true}}
+        />
+
+        <TopicDismissButtons
+          @position="bottom"
+          @selectedTopics={{@controller.bulkSelectHelper.selected}}
+          @model={{@controller.model}}
+          @showResetNew={{@controller.showResetNew}}
+          @showDismissRead={{@controller.showDismissRead}}
+          @resetNew={{@controller.resetNew}}
+          @dismissRead={{if
+            @controller.showDismissRead
+            (routeAction "dismissReadTopics")
+          }}
+        />
+
+        <ConditionalLoadingSpinner
+          @condition={{@controller.model.loadingMore}}
+        />
+      </LoadMore>
+    {{/if}}
+  </template>
+);

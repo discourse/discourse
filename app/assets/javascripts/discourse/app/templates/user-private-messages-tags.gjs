@@ -1,18 +1,31 @@
-<UserNav::MessagesSecondaryNav>
-  <li class="tags">
-    <LinkTo @route="userPrivateMessages.tags.index">
-      {{d-icon "tag"}}
-      <span>{{i18n "user.messages.all_tags"}}</span>
-    </LinkTo>
-  </li>
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from "ember-route-template";
+import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
-  {{#if this.tagName}}
-    <li class="archive">
-      <LinkTo @route="userPrivateMessages.tags.show" @model={{this.tagName}}>
-        {{this.tagName}}
-      </LinkTo>
-    </li>
-  {{/if}}
-</UserNav::MessagesSecondaryNav>
+export default RouteTemplate(
+  <template>
+    <MessagesSecondaryNav>
+      <li class="tags">
+        <LinkTo @route="userPrivateMessages.tags.index">
+          {{icon "tag"}}
+          <span>{{i18n "user.messages.all_tags"}}</span>
+        </LinkTo>
+      </li>
 
-{{outlet}}
+      {{#if @controller.tagName}}
+        <li class="archive">
+          <LinkTo
+            @route="userPrivateMessages.tags.show"
+            @model={{@controller.tagName}}
+          >
+            {{@controller.tagName}}
+          </LinkTo>
+        </li>
+      {{/if}}
+    </MessagesSecondaryNav>
+
+    {{outlet}}
+  </template>
+);

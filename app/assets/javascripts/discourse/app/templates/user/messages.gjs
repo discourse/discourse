@@ -1,51 +1,67 @@
-{{body-class "user-messages-page"}}
+import { hash } from "@ember/helper";
+import RouteTemplate from "ember-route-template";
+import BulkSelectToggle from "discourse/components/bulk-select-toggle";
+import DButton from "discourse/components/d-button";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
+import bodyClass from "discourse/helpers/body-class";
+import routeAction from "discourse/helpers/route-action";
 
-<PluginOutlet
-  @name="user-messages-above-navigation"
-  @outletArgs={{hash model=this.model}}
-/>
+export default RouteTemplate(
+  <template>
+    {{bodyClass "user-messages-page"}}
 
-<div class="user-navigation user-navigation-secondary">
-  <ol class="category-breadcrumb">
-    <li>
-      <UserNav::MessagesDropdown
-        @content={{this.messagesDropdownContent}}
-        @value={{this.messagesDropdownValue}}
-        @onChange={{this.onMessagesDropdownChange}}
-      />
-    </li>
-  </ol>
-
-  <HorizontalOverflowNav
-    @ariaLabel="User secondary - messages"
-    id="user-navigation-secondary__horizontal-nav"
-    class="messages-nav"
-  />
-
-  <div class="navigation-controls">
-    {{#if this.site.mobileView}}
-      {{#if this.currentUser.admin}}
-        <BulkSelectToggle @bulkSelectHelper={{this.bulkSelectHelper}} />
-      {{/if}}
-    {{/if}}
-
-    <span id="navigation-controls__button"></span>
-
-    {{#if this.showNewPM}}
-      <DButton
-        @action={{route-action "composePrivateMessage"}}
-        @icon="envelope"
-        @label="user.new_private_message"
-        class="btn-primary new-private-message"
-      />
-    {{/if}}
     <PluginOutlet
-      @name="user-messages-controls-bottom"
-      @outletArgs={{hash showNewPM=this.showNewPM}}
+      @name="user-messages-above-navigation"
+      @outletArgs={{hash model=@controller.model}}
     />
-  </div>
-</div>
 
-<section class="user-content" id="user-content">
-  {{outlet}}
-</section>
+    <div class="user-navigation user-navigation-secondary">
+      <ol class="category-breadcrumb">
+        <li>
+          <MessagesDropdown
+            @content={{@controller.messagesDropdownContent}}
+            @value={{@controller.messagesDropdownValue}}
+            @onChange={{@controller.onMessagesDropdownChange}}
+          />
+        </li>
+      </ol>
+
+      <HorizontalOverflowNav
+        @ariaLabel="User secondary - messages"
+        id="user-navigation-secondary__horizontal-nav"
+        class="messages-nav"
+      />
+
+      <div class="navigation-controls">
+        {{#if @controller.site.mobileView}}
+          {{#if @controller.currentUser.admin}}
+            <BulkSelectToggle
+              @bulkSelectHelper={{@controller.bulkSelectHelper}}
+            />
+          {{/if}}
+        {{/if}}
+
+        <span id="navigation-controls__button"></span>
+
+        {{#if @controller.showNewPM}}
+          <DButton
+            @action={{routeAction "composePrivateMessage"}}
+            @icon="envelope"
+            @label="user.new_private_message"
+            class="btn-primary new-private-message"
+          />
+        {{/if}}
+        <PluginOutlet
+          @name="user-messages-controls-bottom"
+          @outletArgs={{hash showNewPM=@controller.showNewPM}}
+        />
+      </div>
+    </div>
+
+    <section class="user-content" id="user-content">
+      {{outlet}}
+    </section>
+  </template>
+);

@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
+import { i18n } from "discourse-i18n";
 
 export default class MoreLink extends Component {
   @service search;
@@ -42,25 +45,28 @@ export default class MoreLink extends Component {
 
     this.search.handleArrowUpOrDown(e);
   }
-}
-{{#if this.topicResults}}
-  {{! template-lint-disable no-invalid-interactive }}
-  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
-    {{#if this.moreUrl}}
-      <a
-        href={{this.moreUrl}}
-        {{on "click" this.transitionToMoreUrl}}
-        class="filter search-link"
-      >
-        {{i18n "more"}}...
-      </a>
-    {{else if this.topicResults.more}}
-      <a
-        {{on "click" (fn this.moreOfType this.topicResults.type)}}
-        class="filter search-link"
-      >
-        {{i18n "more"}}...
-      </a>
+
+  <template>
+    {{#if this.topicResults}}
+      {{! template-lint-disable no-invalid-interactive }}
+      <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
+        {{#if this.moreUrl}}
+          <a
+            href={{this.moreUrl}}
+            {{on "click" this.transitionToMoreUrl}}
+            class="filter search-link"
+          >
+            {{i18n "more"}}...
+          </a>
+        {{else if this.topicResults.more}}
+          <a
+            {{on "click" (fn this.moreOfType this.topicResults.type)}}
+            class="filter search-link"
+          >
+            {{i18n "more"}}...
+          </a>
+        {{/if}}
+      </div>
     {{/if}}
-  </div>
-{{/if}}
+  </template>
+}

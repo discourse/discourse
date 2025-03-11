@@ -1,37 +1,49 @@
-<div class="container">
-  {{#if (and this.errorHtml this.isForbidden)}}
-    <div class="not-found">{{html-safe this.errorHtml}}</div>
-  {{else}}
-    <div class="error-page">
-      <div class="face">:(</div>
-      <div class="reason">{{this.reason}}</div>
-      {{#if this.requestUrl}}
-        <div class="url">
-          {{i18n "errors.prev_page"}}
-          <a
-            href={{this.requestUrl}}
-            data-auto-route="true"
-          >{{this.requestUrl}}</a>
+import { htmlSafe } from "@ember/template";
+import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
+
+export default RouteTemplate(
+  <template>
+    <div class="container">
+      {{#if (and @controller.errorHtml @controller.isForbidden)}}
+        <div class="not-found">{{htmlSafe @controller.errorHtml}}</div>
+      {{else}}
+        <div class="error-page">
+          <div class="face">:(</div>
+          <div class="reason">{{@controller.reason}}</div>
+          {{#if @controller.requestUrl}}
+            <div class="url">
+              {{i18n "errors.prev_page"}}
+              <a
+                href={{@controller.requestUrl}}
+                data-auto-route="true"
+              >{{@controller.requestUrl}}</a>
+            </div>
+          {{/if}}
+          <div class="desc">
+            {{#if @controller.networkFixed}}
+              {{icon "circle-check"}}
+            {{/if}}
+
+            {{@controller.desc}}
+          </div>
+          <div class="buttons">
+            {{#each @controller.enabledButtons as |buttonData|}}
+              <DButton
+                @icon={{buttonData.icon}}
+                @action={{buttonData.action}}
+                @label={{buttonData.key}}
+                class={{buttonData.classes}}
+              />
+            {{/each}}
+            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+          </div>
         </div>
       {{/if}}
-      <div class="desc">
-        {{#if this.networkFixed}}
-          {{d-icon "circle-check"}}
-        {{/if}}
-
-        {{this.desc}}
-      </div>
-      <div class="buttons">
-        {{#each this.enabledButtons as |buttonData|}}
-          <DButton
-            @icon={{buttonData.icon}}
-            @action={{buttonData.action}}
-            @label={{buttonData.key}}
-            class={{buttonData.classes}}
-          />
-        {{/each}}
-        <ConditionalLoadingSpinner @condition={{this.loading}} />
-      </div>
     </div>
-  {{/if}}
-</div>
+  </template>
+);

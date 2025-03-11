@@ -1,12 +1,20 @@
-<UserPreferences::Tags
-  @model={{this.model}}
-  @selectedTags={{this.selectedTags}}
-  @save={{action "save"}}
-  @siteSettings={{this.siteSettings}}
-/>
+import RouteTemplate from "ember-route-template";
+import SaveControls from "discourse/components/save-controls";
+import Tags from "discourse/components/user-preferences/tags";
 
-<SaveControls
-  @model={{this.model}}
-  @action={{action "save"}}
-  @saved={{this.saved}}
-/>
+export default RouteTemplate(
+  <template>
+    <Tags
+      @model={{@controller.model}}
+      @selectedTags={{@controller.selectedTags}}
+      @save={{@controller.save}}
+      @siteSettings={{@controller.siteSettings}}
+    />
+
+    <SaveControls
+      @model={{@controller.model}}
+      @action={{@controller.save}}
+      @saved={{@controller.saved}}
+    />
+  </template>
+);

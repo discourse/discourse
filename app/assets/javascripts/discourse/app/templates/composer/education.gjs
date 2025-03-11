@@ -1,7 +1,18 @@
-<ComposerTipCloseButton @action={{fn this.closeMessage this.message}} />
+import { fn } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
+import RouteTemplate from "ember-route-template";
+import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
 
-{{#if this.message.title}}
-  <h3>{{this.message.title}}</h3>
-{{/if}}
+export default RouteTemplate(
+  <template>
+    <ComposerTipCloseButton
+      @action={{fn @controller.closeMessage @controller.message}}
+    />
 
-{{html-safe this.message.body}}
+    {{#if @controller.message.title}}
+      <h3>{{@controller.message.title}}</h3>
+    {{/if}}
+
+    {{htmlSafe @controller.message.body}}
+  </template>
+);

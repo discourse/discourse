@@ -1,111 +1,135 @@
-<span>
-  <PluginOutlet
-    @name="before-group-container"
-    @connectorTagName="div"
-    @outletArgs={{hash group=this.model}}
-  />
-</span>
+import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
+import RouteTemplate from "ember-route-template";
+import { and, or } from "truth-helpers";
+import AvatarFlair from "discourse/components/avatar-flair";
+import DButton from "discourse/components/d-button";
+import GroupInfo from "discourse/components/group-info";
+import GroupMembershipButton from "discourse/components/group-membership-button";
+import GroupNavigation from "discourse/components/group-navigation";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from "discourse-i18n";
+import DTooltip from "float-kit/components/d-tooltip";
 
-<div class="container group group-{{this.model.name}}">
-  {{#if this.showTooltip}}
-    <div class="group-delete-tooltip">
-      <p>{{i18n "admin.groups.delete_automatic_group"}}</p>
-    </div>
-  {{/if}}
+export default RouteTemplate(
+  <template>
+    <span>
+      <PluginOutlet
+        @name="before-group-container"
+        @connectorTagName="div"
+        @outletArgs={{hash group=@controller.model}}
+      />
+    </span>
 
-  <div class="group-details-container">
-    <div class="group-info">
-      {{#if
-        (or
-          this.model.flair_icon this.model.flair_url this.model.flair_bg_color
-        )
-      }}
-        <div class="group-avatar-flair">
-          <AvatarFlair
-            @flairName={{this.model.name}}
-            @flairUrl={{or this.model.flair_icon this.model.flair_url}}
-            @flairBgColor={{this.model.flair_bg_color}}
-            @flairColor={{this.model.flair_color}}
-          />
+    <div class="container group group-{{@controller.model.name}}">
+      {{#if @controller.showTooltip}}
+        <div class="group-delete-tooltip">
+          <p>{{i18n "admin.groups.delete_automatic_group"}}</p>
         </div>
       {{/if}}
 
-      <div class="group-info-names">
-        <GroupInfo @group={{this.model}} />
-
-        {{#if (and this.canManageGroup this.model.automatic)}}
-          <DTooltip class="group-automatic-tooltip">
-            <:trigger>
-              {{d-icon "gear"}}
-              {{i18n "admin.groups.manage.membership.automatic"}}
-            </:trigger>
-            <:content>
-              {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
-            </:content>
-          </DTooltip>
-        {{/if}}
-      </div>
-
-      <div class="group-details-button">
-        <GroupMembershipButton
-          @tagName=""
-          @model={{this.model}}
-          @showLogin={{route-action "showLogin"}}
-        />
-
-        {{#if this.currentUser.admin}}
-          {{#if this.model.automatic}}
-            <DButton
-              @action={{this.toggleDeleteTooltip}}
-              @icon="circle-question"
-              @label="admin.groups.delete"
-              class="btn-default"
-            />
-          {{else}}
-            <DButton
-              @action={{this.destroyGroup}}
-              @disabled={{this.destroying}}
-              @icon="trash-can"
-              @label="admin.groups.delete"
-              class="btn-danger"
-              data-test-selector="delete-group-button"
-            />
+      <div class="group-details-container">
+        <div class="group-info">
+          {{#if
+            (or
+              @controller.model.flair_icon
+              @controller.model.flair_url
+              @controller.model.flair_bg_color
+            )
+          }}
+            <div class="group-avatar-flair">
+              <AvatarFlair
+                @flairName={{@controller.model.name}}
+                @flairUrl={{or
+                  @controller.model.flair_icon
+                  @controller.model.flair_url
+                }}
+                @flairBgColor={{@controller.model.flair_bg_color}}
+                @flairColor={{@controller.model.flair_color}}
+              />
+            </div>
           {{/if}}
-        {{/if}}
 
-        {{#if this.displayGroupMessageButton}}
-          <DButton
-            @action={{this.messageGroup}}
-            @icon="envelope"
-            @label="groups.message"
-            class="btn-primary group-message-button"
+          <div class="group-info-names">
+            <GroupInfo @group={{@controller.model}} />
+
+            {{#if (and @controller.canManageGroup @controller.model.automatic)}}
+              <DTooltip class="group-automatic-tooltip">
+                <:trigger>
+                  {{icon "gear"}}
+                  {{i18n "admin.groups.manage.membership.automatic"}}
+                </:trigger>
+                <:content>
+                  {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
+                </:content>
+              </DTooltip>
+            {{/if}}
+          </div>
+
+          <div class="group-details-button">
+            <GroupMembershipButton
+              @tagName=""
+              @model={{@controller.model}}
+              @showLogin={{routeAction "showLogin"}}
+            />
+
+            {{#if @controller.currentUser.admin}}
+              {{#if @controller.model.automatic}}
+                <DButton
+                  @action={{@controller.toggleDeleteTooltip}}
+                  @icon="circle-question"
+                  @label="admin.groups.delete"
+                  class="btn-default"
+                />
+              {{else}}
+                <DButton
+                  @action={{@controller.destroyGroup}}
+                  @disabled={{@controller.destroying}}
+                  @icon="trash-can"
+                  @label="admin.groups.delete"
+                  class="btn-danger"
+                  data-test-selector="delete-group-button"
+                />
+              {{/if}}
+            {{/if}}
+
+            {{#if @controller.displayGroupMessageButton}}
+              <DButton
+                @action={{@controller.messageGroup}}
+                @icon="envelope"
+                @label="groups.message"
+                class="btn-primary group-message-button"
+              />
+            {{/if}}
+          </div>
+
+          <PluginOutlet
+            @name="group-details-after"
+            @connectorTagName="div"
+            @outletArgs={{hash model=@controller.model}}
           />
+        </div>
+
+        {{#if @controller.model.bio_cooked}}
+          <div class="group-bio">
+            {{htmlSafe @controller.model.bio_cooked}}
+          </div>
         {{/if}}
+
       </div>
 
-      <PluginOutlet
-        @name="group-details-after"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
+      <div class="user-content-wrapper">
+        <section class="user-primary-navigation">
+          <GroupNavigation
+            @group={{@controller.model}}
+            @currentPath={{@controller.currentPath}}
+            @tabs={{@controller.tabs}}
+          />
+        </section>
+        {{outlet}}
+      </div>
     </div>
-
-    {{#if this.model.bio_cooked}}
-      <div class="group-bio">
-        {{html-safe this.model.bio_cooked}}
-      </div>
-    {{/if}}
-
-  </div>
-
-  <div class="user-content-wrapper">
-    <section class="user-primary-navigation">
-      <GroupNavigation
-        @group={{this.model}}
-        @currentPath={{this.currentPath}}
-        @tabs={{this.tabs}}
-      />
-    </section>
-    {{outlet}}
-  </div>
-</div>
+  </template>
+);

@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -19,5 +20,6 @@ export default class DiscourseLinkedText extends Component {
 
     return false;
   }
+
+  <template>{{htmlSafe this.translatedText}}</template>
 }
-{{html-safe this.translatedText}}

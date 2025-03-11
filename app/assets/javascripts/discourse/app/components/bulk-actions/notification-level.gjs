@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
+import RadioButton from "discourse/components/radio-button";
 import { topicLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 
@@ -25,25 +28,28 @@ export default class NotificationLevel extends Component {
       notification_level_id: this.notificationLevelId,
     });
   }
-}
-<div class="bulk-notification-list">
-  {{#each this.notificationLevels as |level|}}
-    <div class="controls">
-      <label class="radio notification-level-radio checkbox-label">
-        <RadioButton
-          @value={{level.id}}
-          @name="notification_level"
-          @selection={{this.notificationLevelId}}
-        />
-        <strong>{{level.name}}</strong>
-        <div class="description">{{html-safe level.description}}</div>
-      </label>
-    </div>
-  {{/each}}
-</div>
 
-<DButton
-  @disabled={{this.disabled}}
-  @action={{this.changeNotificationLevel}}
-  @label="topics.bulk.change_notification_level"
-/>
+  <template>
+    <div class="bulk-notification-list">
+      {{#each this.notificationLevels as |level|}}
+        <div class="controls">
+          <label class="radio notification-level-radio checkbox-label">
+            <RadioButton
+              @value={{level.id}}
+              @name="notification_level"
+              @selection={{this.notificationLevelId}}
+            />
+            <strong>{{level.name}}</strong>
+            <div class="description">{{htmlSafe level.description}}</div>
+          </label>
+        </div>
+      {{/each}}
+    </div>
+
+    <DButton
+      @disabled={{this.disabled}}
+      @action={{this.changeNotificationLevel}}
+      @label="topics.bulk.change_notification_level"
+    />
+  </template>
+}

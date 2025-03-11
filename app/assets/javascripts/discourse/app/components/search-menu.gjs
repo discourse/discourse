@@ -1,9 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
+import DButton from "discourse/components/d-button";
+import MenuPanel from "discourse/components/menu-panel";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import AdvancedButton from "discourse/components/search-menu/advanced-button";
+import ClearButton from "discourse/components/search-menu/clear-button";
+import Results from "discourse/components/search-menu/results";
+import SearchTerm from "discourse/components/search-menu/search-term";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -373,96 +384,97 @@ export default class SearchMenu extends Component {
       }
     }
   }
-}
-<div
-  class={{this.classNames}}
-  {{did-insert this.setupEventListeners}}
-  {{! template-lint-disable no-invalid-interactive }}
-  {{on "keydown" this.onKeydown}}
->
-  <div class="search-input">
-    {{#if this.search.inTopicContext}}
-      <DButton
-        @icon="xmark"
-        @label="search.in_this_topic"
-        @title="search.in_this_topic_tooltip"
-        @action={{this.clearTopicContext}}
-        class="btn-small search-context"
-      />
-    {{else if this.inPMInboxContext}}
-      <DButton
-        @icon="xmark"
-        @label="search.in_messages"
-        @title="search.in_messages_tooltip"
-        @action={{this.clearPMInboxContext}}
-        class="btn-small search-context"
-      />
-    {{/if}}
 
-    <PluginOutlet
-      @name="search-menu-before-term-input"
-      @outletArgs={{hash openSearchMenu=this.open}}
-    />
-
-    <SearchMenu::SearchTerm
-      @searchTermChanged={{this.searchTermChanged}}
-      @typeFilter={{this.typeFilter}}
-      @updateTypeFilter={{this.updateTypeFilter}}
-      @triggerSearch={{this.triggerSearch}}
-      @fullSearch={{this.fullSearch}}
-      @clearPMInboxContext={{this.clearPMInboxContext}}
-      @clearTopicContext={{this.clearTopicContext}}
-      @closeSearchMenu={{this.close}}
-      @openSearchMenu={{this.open}}
-      @autofocus={{@autofocusInput}}
-    />
-
-    {{#if this.loading}}
-      <div class="searching">
-        {{loading-spinner}}
-      </div>
-    {{else}}
-      <div class="searching">
-        <PluginOutlet @name="search-menu-before-advanced-search" />
-        {{#if this.search.activeGlobalSearchTerm}}
-          <SearchMenu::ClearButton @clearSearch={{this.clearSearch}} />
+  <template>
+    <div
+      class={{this.classNames}}
+      {{didInsert this.setupEventListeners}}
+      {{! template-lint-disable no-invalid-interactive }}
+      {{on "keydown" this.onKeydown}}
+    >
+      <div class="search-input">
+        {{#if this.search.inTopicContext}}
+          <DButton
+            @icon="xmark"
+            @label="search.in_this_topic"
+            @title="search.in_this_topic_tooltip"
+            @action={{this.clearTopicContext}}
+            class="btn-small search-context"
+          />
+        {{else if this.inPMInboxContext}}
+          <DButton
+            @icon="xmark"
+            @label="search.in_messages"
+            @title="search.in_messages_tooltip"
+            @action={{this.clearPMInboxContext}}
+            class="btn-small search-context"
+          />
         {{/if}}
-        <SearchMenu::AdvancedButton
-          @openAdvancedSearch={{this.openAdvancedSearch}}
-        />
-      </div>
-    {{/if}}
-  </div>
 
-  {{#if @inlineResults}}
-    <SearchMenu::Results
-      @loading={{this.loading}}
-      @invalidTerm={{this.invalidTerm}}
-      @suggestionKeyword={{this.suggestionKeyword}}
-      @suggestionResults={{this.suggestionResults}}
-      @searchTopics={{this.includesTopics}}
-      @inPMInboxContext={{this.inPMInboxContext}}
-      @triggerSearch={{this.triggerSearch}}
-      @updateTypeFilter={{this.updateTypeFilter}}
-      @closeSearchMenu={{this.close}}
-      @searchTermChanged={{this.searchTermChanged}}
-      @clearSearch={{this.clearSearch}}
-    />
-  {{else if this.displayMenuPanelResults}}
-    <MenuPanel @panelClass="search-menu-panel">
-      <SearchMenu::Results
-        @loading={{this.loading}}
-        @invalidTerm={{this.invalidTerm}}
-        @suggestionKeyword={{this.suggestionKeyword}}
-        @suggestionResults={{this.suggestionResults}}
-        @searchTopics={{this.includesTopics}}
-        @inPMInboxContext={{this.inPMInboxContext}}
-        @triggerSearch={{this.triggerSearch}}
-        @updateTypeFilter={{this.updateTypeFilter}}
-        @closeSearchMenu={{this.close}}
-        @searchTermChanged={{this.searchTermChanged}}
-        @clearSearch={{this.clearSearch}}
-      />
-    </MenuPanel>
-  {{/if}}
-</div>
+        <PluginOutlet
+          @name="search-menu-before-term-input"
+          @outletArgs={{hash openSearchMenu=this.open}}
+        />
+
+        <SearchTerm
+          @searchTermChanged={{this.searchTermChanged}}
+          @typeFilter={{this.typeFilter}}
+          @updateTypeFilter={{this.updateTypeFilter}}
+          @triggerSearch={{this.triggerSearch}}
+          @fullSearch={{this.fullSearch}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
+          @clearTopicContext={{this.clearTopicContext}}
+          @closeSearchMenu={{this.close}}
+          @openSearchMenu={{this.open}}
+          @autofocus={{@autofocusInput}}
+        />
+
+        {{#if this.loading}}
+          <div class="searching">
+            {{loadingSpinner}}
+          </div>
+        {{else}}
+          <div class="searching">
+            <PluginOutlet @name="search-menu-before-advanced-search" />
+            {{#if this.search.activeGlobalSearchTerm}}
+              <ClearButton @clearSearch={{this.clearSearch}} />
+            {{/if}}
+            <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
+          </div>
+        {{/if}}
+      </div>
+
+      {{#if @inlineResults}}
+        <Results
+          @loading={{this.loading}}
+          @invalidTerm={{this.invalidTerm}}
+          @suggestionKeyword={{this.suggestionKeyword}}
+          @suggestionResults={{this.suggestionResults}}
+          @searchTopics={{this.includesTopics}}
+          @inPMInboxContext={{this.inPMInboxContext}}
+          @triggerSearch={{this.triggerSearch}}
+          @updateTypeFilter={{this.updateTypeFilter}}
+          @closeSearchMenu={{this.close}}
+          @searchTermChanged={{this.searchTermChanged}}
+          @clearSearch={{this.clearSearch}}
+        />
+      {{else if this.displayMenuPanelResults}}
+        <MenuPanel @panelClass="search-menu-panel">
+          <Results
+            @loading={{this.loading}}
+            @invalidTerm={{this.invalidTerm}}
+            @suggestionKeyword={{this.suggestionKeyword}}
+            @suggestionResults={{this.suggestionResults}}
+            @searchTopics={{this.includesTopics}}
+            @inPMInboxContext={{this.inPMInboxContext}}
+            @triggerSearch={{this.triggerSearch}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @closeSearchMenu={{this.close}}
+            @searchTermChanged={{this.searchTermChanged}}
+            @clearSearch={{this.clearSearch}}
+          />
+        </MenuPanel>
+      {{/if}}
+    </div>
+  </template>
+}

@@ -5,6 +5,7 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import { propertyEqual } from "discourse/lib/computed";
 
 @classNames("tap-tile")
@@ -32,8 +33,11 @@ export default class TapTile extends Component {
       this.onChange(this.tileId);
     }
   }
+
+  <template>
+    {{#if this.icon}}
+      {{icon this.icon}}
+    {{/if}}
+    {{yield}}
+  </template>
 }
-{{#if this.icon}}
-  {{d-icon this.icon}}
-{{/if}}
-{{yield}}

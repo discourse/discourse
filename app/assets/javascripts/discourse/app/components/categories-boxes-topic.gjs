@@ -1,5 +1,7 @@
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import { attributeBindings, tagName } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("li")
@@ -15,9 +17,12 @@ export default class CategoriesBoxesTopic extends Component {
     }
     return "far-file-lines";
   }
-}
-{{d-icon this.topicStatusIcon}}
 
-<a href={{this.topic.lastUnreadUrl}} class="title">
-  {{html-safe this.topic.fancyTitle}}
-</a>
+  <template>
+    {{icon this.topicStatusIcon}}
+
+    <a href={{this.topic.lastUnreadUrl}} class="title">
+      {{htmlSafe this.topic.fancyTitle}}
+    </a>
+  </template>
+}

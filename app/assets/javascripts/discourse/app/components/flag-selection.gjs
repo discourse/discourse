@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { next } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
+import { i18n } from "discourse-i18n";
 
 // Mostly hacks because `flag.hbs` didn't use `radio-button`
 export default class FlagSelection extends Component {
@@ -22,9 +23,12 @@ export default class FlagSelection extends Component {
   selectedChanged() {
     next(this, this._selectRadio);
   }
+
+  <template>
+    {{#each this.flags as |f|}}
+      {{yield f}}
+    {{else}}
+      {{i18n "flagging.cant"}}
+    {{/each}}
+  </template>
 }
-{{#each this.flags as |f|}}
-  {{yield f}}
-{{else}}
-  {{i18n "flagging.cant"}}
-{{/each}}

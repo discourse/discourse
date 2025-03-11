@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { tagName } from "@ember-decorators/component";
@@ -31,15 +32,18 @@ export default class CreateInviteUploader extends Component {
   startUpload() {
     this.uppyUpload.startUpload();
   }
+
+  <template>
+    {{yield
+      (hash
+        data=this.data
+        uploading=this.uploading
+        uploadProgress=this.uploadProgress
+        uploaded=this.uploaded
+        submitDisabled=this.submitDisabled
+        startUpload=this.startUpload
+      )
+      this.uppyUpload.setup
+    }}
+  </template>
 }
-{{yield
-  (hash
-    data=this.data
-    uploading=this.uploading
-    uploadProgress=this.uploadProgress
-    uploaded=this.uploaded
-    submitDisabled=this.submitDisabled
-    startUpload=this.startUpload
-  )
-  this.uppyUpload.setup
-}}

@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import DatePickerPast from "discourse/components/date-picker-past";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -42,36 +47,39 @@ export default class ChangeTimestamp extends Component {
       this.saving = false;
     }
   }
+
+  <template>
+    <DModal
+      @bodyClass="change-timestamp"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{i18n "topic.change_timestamp.title"}}
+    >
+      <:body>
+        <p>
+          {{i18n "topic.change_timestamp.instructions"}}
+        </p>
+        <p class="alert alert-error {{unless this.validTimestamp 'hidden'}}">
+          {{i18n "topic.change_timestamp.invalid_timestamp"}}
+        </p>
+        <form>
+          <DatePickerPast
+            @value={{readonly this.date}}
+            @containerId="date-container"
+            @onSelect={{fn (mut this.date)}}
+          />
+          <Input @type="time" @value={{this.time}} />
+        </form>
+        <div id="date-container"></div>
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @disabled={{this.buttonDisabled}}
+          @action={{this.changeTimestamp}}
+          @label={{if this.saving "saving" "topic.change_timestamp.action"}}
+        />
+      </:footer>
+    </DModal>
+  </template>
 }
-<DModal
-  @bodyClass="change-timestamp"
-  @closeModal={{@closeModal}}
-  @flash={{this.flash}}
-  @title={{i18n "topic.change_timestamp.title"}}
->
-  <:body>
-    <p>
-      {{i18n "topic.change_timestamp.instructions"}}
-    </p>
-    <p class="alert alert-error {{unless this.validTimestamp 'hidden'}}">
-      {{i18n "topic.change_timestamp.invalid_timestamp"}}
-    </p>
-    <form>
-      <DatePickerPast
-        @value={{readonly this.date}}
-        @containerId="date-container"
-        @onSelect={{fn (mut this.date)}}
-      />
-      <Input @type="time" @value={{this.time}} />
-    </form>
-    <div id="date-container"></div>
-  </:body>
-  <:footer>
-    <DButton
-      class="btn-primary"
-      @disabled={{this.buttonDisabled}}
-      @action={{this.changeTimestamp}}
-      @label={{if this.saving "saving" "topic.change_timestamp.action"}}
-    />
-  </:footer>
-</DModal>

@@ -1,9 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { waitForPromise } from "@ember/test-waiters";
 import { create } from "virtual-dom";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { iconNode } from "discourse/lib/icon-library";
+import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;
@@ -60,6 +65,36 @@ export default class JsonSchemaEditorModal extends Component {
       startval: this.value ? JSON.parse(this.value) : null,
     });
   }
+
+  <template>
+    <DModal
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      @closeModal={{@closeModal}}
+      @title={{i18n
+        "admin.site_settings.json_schema.modal_title"
+        name=@model.settingName
+      }}
+      @inline={{@inline}}
+      class="json-schema-editor-modal"
+    >
+      <:body>
+        <div
+          id="json-editor-holder"
+          {{didInsert this.buildJsonEditor}}
+          {{willDestroy this.teardownJsonEditor}}
+        ></div>
+      </:body>
+
+      <:footer>
+        <DButton
+          @action={{this.saveChanges}}
+          @label="save"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }
 
 class DiscourseJsonSchemaEditorIconlib {
@@ -84,26 +119,3 @@ class DiscourseJsonSchemaEditorIconlib {
     return create(iconNode(this.mapping[key]));
   }
 }
-<DModal
-  @flash={{this.flash}}
-  @flashType={{this.flashType}}
-  @closeModal={{@closeModal}}
-  @title={{i18n
-    "admin.site_settings.json_schema.modal_title"
-    name=@model.settingName
-  }}
-  @inline={{@inline}}
-  class="json-schema-editor-modal"
->
-  <:body>
-    <div
-      id="json-editor-holder"
-      {{did-insert this.buildJsonEditor}}
-      {{will-destroy this.teardownJsonEditor}}
-    ></div>
-  </:body>
-
-  <:footer>
-    <DButton @action={{this.saveChanges}} @label="save" class="btn-primary" />
-  </:footer>
-</DModal>

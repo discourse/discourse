@@ -1,20 +1,29 @@
-<Discovery::Layout @model={{this.model}}>
-  <:navigation>
-    <Discovery::FilterNavigation
-      @queryString={{this.q}}
-      @updateTopicsListQueryParams={{this.updateTopicsListQueryParams}}
-      @canBulkSelect={{this.canBulkSelect}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
-    />
-  </:navigation>
-  <:list>
-    <Discovery::Topics
-      @period={{this.period}}
-      @expandAllPinned={{this.expandAllPinned}}
-      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
-      @model={{this.model}}
-      @canBulkSelect={{this.canBulkSelect}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
-    />
-  </:list>
-</Discovery::Layout>
+import RouteTemplate from "ember-route-template";
+import FilterNavigation from "discourse/components/discovery/filter-navigation";
+import Layout from "discourse/components/discovery/layout";
+import Topics from "discourse/components/discovery/topics";
+
+export default RouteTemplate(
+  <template>
+    <Layout @model={{@controller.model}}>
+      <:navigation>
+        <FilterNavigation
+          @queryString={{@controller.q}}
+          @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
+          @canBulkSelect={{@controller.canBulkSelect}}
+          @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        />
+      </:navigation>
+      <:list>
+        <Topics
+          @period={{@controller.period}}
+          @expandAllPinned={{@controller.expandAllPinned}}
+          @expandAllGloballyPinned={{@controller.expandAllGloballyPinned}}
+          @model={{@controller.model}}
+          @canBulkSelect={{@controller.canBulkSelect}}
+          @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        />
+      </:list>
+    </Layout>
+  </template>
+);
