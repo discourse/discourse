@@ -77,12 +77,19 @@ export default function (topic, params) {
 
     if (tags && tags.length > 0) {
       for (let i = 0; i < tags.length; i++) {
-        buffer += renderTag(tags[i], {
-          description:
-            topic.tags_descriptions && topic.tags_descriptions[tags[i]],
+        const tag = tags[i];
+        const tagParams = params ? { ...params } : {};
+
+        if (params?.tagClasses && params?.tagClasses[tag]) {
+          tagParams.extraClass = params.tagClasses[tag];
+        }
+
+        buffer += renderTag(tag, {
+          description: topic.tags_descriptions && topic.tags_descriptions[tag],
           isPrivateMessage,
           tagsForUser,
           tagName,
+          ...tagParams,
         });
 
         // separator after each tag
