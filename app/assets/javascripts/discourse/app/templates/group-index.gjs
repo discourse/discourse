@@ -53,8 +53,8 @@ export default RouteTemplate(
                   @bulkSelection={{@controller.bulkSelection}}
                   @canAdminGroup={{@controller.model.can_admin_group}}
                   @canEditGroup={{@controller.model.can_edit_group}}
-                  @onChange={{action
-                    "actOnSelection"
+                  @onChange={{fn
+                    @controller.actOnSelection
                     @controller.bulkSelection
                   }}
                 />

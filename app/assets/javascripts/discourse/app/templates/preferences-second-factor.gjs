@@ -59,7 +59,7 @@ export default RouteTemplate(
                         @totp={{totp}}
                         @editSecondFactor={{@controller.editSecondFactor}}
                         @disableSingleSecondFactor={{action
-                          "disableSingleSecondFactor"
+                          @controller.disableSingleSecondFactor
                         }}
                       />
                     </div>
@@ -94,9 +94,7 @@ export default RouteTemplate(
                       <SecurityKeyDropdown
                         @securityKey={{security_key}}
                         @editSecurityKey={{@controller.editSecurityKey}}
-                        @disableSingleSecondFactor={{action
-                          "disableSingleSecondFactor"
-                        }}
+                        @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
                       />
                     </div>
                   {{/if}}
@@ -145,12 +143,8 @@ export default RouteTemplate(
                     <div class="actions">
                       <TwoFactorBackupDropdown
                         @secondFactorBackupEnabled={{@controller.model.second_factor_backup_enabled}}
-                        @editSecondFactorBackup={{action
-                          "editSecondFactorBackup"
-                        }}
-                        @disableSecondFactorBackup={{action
-                          "disableSecondFactorBackup"
-                        }}
+                        @editSecondFactorBackup={{@controller.editSecondFactorBackup}}
+                        @disableSecondFactorBackup={{@controller.disableSecondFactorBackup}}
                       />
                     </div>
                   {{/if}}
