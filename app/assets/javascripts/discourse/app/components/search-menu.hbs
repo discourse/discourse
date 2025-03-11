@@ -6,6 +6,10 @@
 >
   <div class="search-input-wrapper">
     <div class="search-input">
+      {{#if this.isMobileViewAndDevice}}
+        <SearchMenu::MobileSearchButton @onTap={{this.mobileSearch}} />
+      {{/if}}
+
       {{#if this.search.inTopicContext}}
         <DButton
           @icon="xmark"
@@ -28,10 +32,6 @@
         @name="search-menu-before-term-input"
         @outletArgs={{hash openSearchMenu=this.open}}
       />
-
-      {{#if this.isMobileViewAndDevice}}
-        <SearchMenu::MobileSearchButton @onTap={{this.mobileSearch}} />
-      {{/if}}
 
       <SearchMenu::SearchTerm
         @searchTermChanged={{this.searchTermChanged}}
