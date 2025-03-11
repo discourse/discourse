@@ -13,6 +13,7 @@ import onebox from "./onebox";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
+import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 
@@ -36,6 +37,7 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
+  trailingParagraph,
   typographerReplacements,
   table,
   markdownPaste,
