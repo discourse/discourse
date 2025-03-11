@@ -38,10 +38,10 @@ export default class FullscreenCode extends Component {
     >
       <:body>
         <pre>
-      <code
+          <code
             class={{@model.codeClasses}}
           >{{@model.code}}</code>
-    </pre>
+        </pre>
       </:body>
     </DModal>
   </template>
