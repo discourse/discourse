@@ -64,18 +64,8 @@ const extension = {
     poll: {
       block: "poll",
       getAttrs: (token) => ({
-        type: token.attrGet("data-poll-type"),
-        results: token.attrGet("data-poll-results"),
-        public: token.attrGet("data-poll-public"),
-        name:
-          token.attrGet("data-poll-name") === "poll"
-            ? undefined
-            : token.attrGet("data-poll-name"),
-        chartType: token.attrGet("data-poll-chart-type"),
-        close: token.attrGet("data-poll-close"),
-        groups: token.attrGet("data-poll-groups"),
-        max: token.attrGet("data-poll-max"),
-        min: token.attrGet("data-poll-min"),
+        ...token.poll_attrs,
+        name: token.poll_attrs.name === "poll" ? null : token.poll_attrs.name,
       }),
     },
     poll_container: { ignore: true },

@@ -41,8 +41,13 @@ module(
       ],
       "poll with name, results, close date, groups": [
         "[poll name=PollName chartType=pie results=always anonymous=true close=2021-01-01 groups=group1,group2]\n* Option 1\n* Option 2\n[/poll]",
-        `<div class="poll" data-poll-results="always" data-poll-name="PollName" data-poll-close="2021-01-01" data-poll-groups="group1,group2"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
-        '[poll results="always" name="PollName" close="2021-01-01" groups="group1,group2"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
+        `<div class="poll" data-poll-results="always" data-poll-name="PollName" data-poll-chart-type="pie" data-poll-close="2021-01-01" data-poll-groups="group1,group2"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
+        '[poll results="always" name="PollName" chartType="pie" close="2021-01-01" groups="group1,group2"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
+      ],
+      "poll with bar chart type": [
+        "[poll chartType=bar]\n* Option 1\n* Option 2\n[/poll]",
+        `<div class="poll" data-poll-chart-type="bar"><ul data-tight="true"><li><p>Option 1</p></li><li><p>Option 2</p></li></ul>${voters}</div>`,
+        '[poll chartType="bar"]\n* Option 1\n* Option 2\n\n[/poll]\n\n',
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
