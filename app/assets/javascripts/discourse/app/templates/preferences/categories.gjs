@@ -10,14 +10,14 @@ export default RouteTemplate(
       @model={{@controller.model}}
       @selectedCategories={{@controller.selectedCategories}}
       @hideMutedTags={{@controller.hideMutedTags}}
-      @save={{action "save"}}
+      @save={{@controller.save}}
       @siteSettings={{@controller.siteSettings}}
     />
 
     {{#if @controller.canSave}}
       <SaveControls
         @model={{@controller.model}}
-        @action={{action "save"}}
+        @action={{@controller.save}}
         @saved={{@controller.saved}}
       />
     {{else}}

@@ -81,8 +81,8 @@ export default RouteTemplate(
               {{#unless token.is_active}}
                 <AuthTokenDropdown
                   @token={{token}}
-                  @revokeAuthToken={{action "revokeAuthToken"}}
-                  @showToken={{action "showToken"}}
+                  @revokeAuthToken={{@controller.revokeAuthToken}}
+                  @showToken={{@controller.showToken}}
                 />
               {{/unless}}
               <div class="auth-token-first">

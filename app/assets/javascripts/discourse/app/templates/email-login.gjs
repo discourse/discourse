@@ -78,7 +78,7 @@ export default RouteTemplate(
               {{#unless @controller.model.security_key_required}}
                 <DButton
                   @label="email_login.confirm_button"
-                  @action={{action "finishLogin"}}
+                  @action={{@controller.finishLogin}}
                   type="submit"
                   class="btn-primary"
                 />

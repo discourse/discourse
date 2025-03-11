@@ -7,13 +7,13 @@ export default RouteTemplate(
     <Tags
       @model={{@controller.model}}
       @selectedTags={{@controller.selectedTags}}
-      @save={{action "save"}}
+      @save={{@controller.save}}
       @siteSettings={{@controller.siteSettings}}
     />
 
     <SaveControls
       @model={{@controller.model}}
-      @action={{action "save"}}
+      @action={{@controller.save}}
       @saved={{@controller.saved}}
     />
   </template>

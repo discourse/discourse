@@ -79,7 +79,7 @@ export default RouteTemplate(
 
             {{#unless @controller.displaySecurityKeyForm}}
               <DButton
-                @action={{action "submit"}}
+                @action={{@controller.submit}}
                 @label="submit"
                 type="submit"
                 class="btn-primary"
@@ -122,7 +122,7 @@ export default RouteTemplate(
             </div>
 
             <DButton
-              @action={{action "submit"}}
+              @action={{@controller.submit}}
               @label="user.change_password.set_password"
               type="submit"
               class="btn-primary"

@@ -80,7 +80,7 @@ export default RouteTemplate(
         <div class="sidebar-wrapper">
           {{! empty div allows for animation }}
           {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}
-            <Sidebar @toggleSidebar={{action "toggleSidebar"}} />
+            <Sidebar @toggleSidebar={{@controller.toggleSidebar}} />
           {{/if}}
         </div>
 

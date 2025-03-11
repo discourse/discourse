@@ -30,7 +30,7 @@ export default RouteTemplate(
       {{#if @controller.hasRequesters}}
         <LoadMore
           @selector=".directory-table .directory-table__cell"
-          @action={{action "loadMore"}}
+          @action={{@controller.loadMore}}
         >
           <ResponsiveTable @className="group-members group-members__requests">
             <:header>

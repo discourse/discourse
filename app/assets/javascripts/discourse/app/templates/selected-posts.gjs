@@ -11,11 +11,11 @@ export default RouteTemplate(
       @canMergeTopic={{@controller.canMergeTopic}}
       @canChangeOwner={{@controller.canChangeOwner}}
       @canMergePosts={{@controller.canMergePosts}}
-      @toggleMultiSelect={{action "toggleMultiSelect"}}
-      @mergePosts={{action "mergePosts"}}
-      @deleteSelected={{action "deleteSelected"}}
-      @deselectAll={{action "deselectAll"}}
-      @selectAll={{action "selectAll"}}
+      @toggleMultiSelect={{@controller.toggleMultiSelect}}
+      @mergePosts={{@controller.mergePosts}}
+      @deleteSelected={{@controller.deleteSelected}}
+      @deselectAll={{@controller.deselectAll}}
+      @selectAll={{@controller.selectAll}}
     />
   </template>
 );

@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import BulkGroupMemberDropdown from "discourse/components/bulk-group-member-dropdown";
@@ -99,7 +99,7 @@ export default RouteTemplate(
       {{#if @controller.hasMembers}}
         <LoadMore
           @selector=".directory-table .directory-table__cell"
-          @action={{action "loadMore"}}
+          @action={{@controller.loadMore}}
         >
           <ResponsiveTable
             @className="group-members
@@ -269,7 +269,7 @@ export default RouteTemplate(
                         @member={{m}}
                         @canAdminGroup={{@controller.model.can_admin_group}}
                         @canEditGroup={{@controller.model.can_edit_group}}
-                        @onChange={{action "actOnGroup" m}}
+                        @onChange={{fn @controller.actOnGroup m}}
                       />
                       {{! group parameter is used by plugins }}
                     </div>
