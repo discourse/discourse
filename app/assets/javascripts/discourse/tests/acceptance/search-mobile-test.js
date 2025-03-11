@@ -75,7 +75,7 @@ acceptance("Search - Mobile", function (needs) {
       await fillIn('[data-test-input="search-term"]', "search");
 
       assert.strictEqual(
-        findAll('[data-test-item^="search-result-"]').length,
+        findAll('[data-test-type-item^="search-result-"]').length,
         5,
         "search results are listed on search value present"
       );
@@ -85,7 +85,7 @@ acceptance("Search - Mobile", function (needs) {
 
       assert.dom('[data-test-input="search-term"]').hasNoValue();
       assert.strictEqual(
-        findAll('[data-test-item^="search-result-"]').length,
+        findAll('[data-test-type-item^="search-result-"]').length,
         0,
         "search results are reset"
       );
