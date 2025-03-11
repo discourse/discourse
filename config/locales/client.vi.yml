@@ -2101,9 +2101,8 @@ vi:
         votes_released: "Phiếu bầu đã được phát hành"
         admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
     upload_selector:
+      delete: "Xóa"
       uploading: "Đang tải lên"
-      processing: "Đang xử lý tải lên"
-      select_file: "Chọn Tài liệu"
       default_image_alt_text: hình ảnh
     search:
       sort_by: "Sắp xếp theo"
@@ -3949,6 +3948,7 @@ vi:
         title: "API"
         key: "Phím"
         created: Tạo bởi
+        scope: Phạm vi
         updated: Đã cập nhật
         never_used: Không bao giờ
         generate: "Khởi tạo"

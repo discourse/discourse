@@ -143,6 +143,8 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  api.registerRichEditorExtension(richEditorExtension);
+
   const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
   const defaultTitle = i18n("discourse_local_dates.default_title", {

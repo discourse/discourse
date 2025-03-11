@@ -11,7 +11,6 @@ import { modifier } from "ember-modifier";
 import $ from "jquery";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
@@ -112,6 +111,11 @@ export default class UppyImageUploader extends Component {
     }
   }
 
+  get progressBarStyle() {
+    let progress = this.uppyUpload.uploadProgress || 0;
+    return htmlSafe(`width: ${progress}%`);
+  }
+
   @action
   toggleLightbox() {
     const lightboxElement = document.querySelector(
@@ -135,7 +139,12 @@ export default class UppyImageUploader extends Component {
   }
 
   <template>
-    <div {{this.applyLightbox}} id={{@id}} class="image-uploader" ...attributes>
+    <div
+      {{this.applyLightbox}}
+      id={{@id}}
+      class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
+      ...attributes
+    >
       <div
         class="uploaded-image-preview input-xxlarge"
         style={{this.backgroundStyle}}
@@ -146,55 +155,6 @@ export default class UppyImageUploader extends Component {
             style={{this.placeholderStyle}}
           ></div>
         {{/if}}
-        <div class="image-upload-controls">
-          <label
-            class="btn btn-default pad-left no-text
-              {{if this.disabled 'disabled'}}"
-            title={{this.disabledReason}}
-            for={{this.computedId}}
-            tabindex="0"
-            {{on "keydown" this.handleKeyboardActivation}}
-          >
-            {{icon "far-image"}}
-            <PickFilesButton
-              @registerFileInput={{this.uppyUpload.setup}}
-              @fileInputDisabled={{this.disabled}}
-              @acceptedFormatsOverride="image/*"
-              @fileInputId={{this.computedId}}
-            />
-          </label>
-
-          {{#if @imageUrl}}
-            <DButton
-              @action={{@onUploadDeleted}}
-              @icon="trash-can"
-              @disabled={{this.disabled}}
-              class="btn-danger pad-left no-text"
-            />
-            <DButton
-              @action={{this.toggleLightbox}}
-              @icon="discourse-expand"
-              @title="expand"
-              class="btn-default image-uploader-lightbox-btn no-text"
-            />
-          {{/if}}
-
-          <span
-            class={{concatClass
-              "btn"
-              (unless this.uppyUpload.uploading "hidden")
-            }}
-          >
-            {{i18n "upload_selector.uploading"}}
-            {{this.uppyUpload.uploadProgress}}%
-          </span>
-          <span
-            class={{concatClass
-              "btn"
-              (unless this.uppyUpload.processing "hidden")
-            }}
-          >{{i18n "upload_selector.processing"}}</span>
-        </div>
 
         {{#if @imageUrl}}
           <a
@@ -203,7 +163,6 @@ export default class UppyImageUploader extends Component {
             rel="nofollow ugc noopener"
             class="lightbox"
           >
-
             <div class="meta">
               <span class="informations">
                 {{this.imageWidth}}x{{this.imageHeight}}
@@ -211,8 +170,76 @@ export default class UppyImageUploader extends Component {
               </span>
             </div>
           </a>
+
+          <div class="expand-overlay">
+            <DButton
+              @action={{this.toggleLightbox}}
+              @icon="discourse-expand"
+              @title="expand"
+              class="btn-default btn-small image-uploader-lightbox-btn"
+            />
+          </div>
+        {{else}}
+          <div class="image-upload-controls">
+            <label
+              class="btn btn-default btn-small btn-transparent
+                {{if this.disabled 'disabled'}}
+                {{if this.uppyUpload.uploading 'hidden'}}"
+              title={{this.disabledReason}}
+              for={{this.computedId}}
+              tabindex="0"
+              {{on "keydown" this.handleKeyboardActivation}}
+            >
+              {{icon "upload"}}
+              <PickFilesButton
+                @registerFileInput={{this.uppyUpload.setup}}
+                @fileInputDisabled={{this.disabled}}
+                @acceptedFormatsOverride="image/*"
+                @fileInputId={{this.computedId}}
+              />
+              {{i18n "upload_selector.select_file"}}
+            </label>
+
+            <div
+              aria-label="{{i18n 'upload_selector.processing'}}
+            {{this.uppyUpload.uploadProgress}}%"
+              role="progressbar"
+              class="progress-bar-container
+                {{unless this.uppyUpload.uploading 'hidden'}}"
+            >
+              <div class="progress-bar" style={{this.progressBarStyle}}></div>
+            </div>
+          </div>
         {{/if}}
       </div>
+
+      {{#if @imageUrl}}
+        <div class="image-upload-controls">
+          <label
+            class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
+            title={{this.disabledReason}}
+            for={{this.computedId}}
+            tabindex="0"
+            {{on "keydown" this.handleKeyboardActivation}}
+          >
+            {{icon "upload"}}
+            <PickFilesButton
+              @registerFileInput={{this.uppyUpload.setup}}
+              @fileInputDisabled={{this.disabled}}
+              @acceptedFormatsOverride="image/*"
+              @fileInputId={{this.computedId}}
+            />
+            {{i18n "upload_selector.change"}}
+          </label>
+          <DButton
+            @action={{@onUploadDeleted}}
+            @icon="trash-can"
+            @disabled={{this.disabled}}
+            @label="upload_selector.delete"
+            class="btn-danger btn-small"
+          />
+        </div>
+      {{/if}}
     </div>
   </template>
 }

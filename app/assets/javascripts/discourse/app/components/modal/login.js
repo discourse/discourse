@@ -137,8 +137,8 @@ export default class Login extends Component {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
-          } else if (this.args.model.referrerUrl) {
-            window.location.assign(this.args.model.referrerUrl);
+          } else if (this.args.model.referrerTopicUrl) {
+            window.location.assign(this.args.model.referrerTopicUrl);
           } else {
             window.location.reload();
           }
@@ -290,8 +290,11 @@ export default class Login extends Component {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
-        } else if (this.args.model.referrerUrl) {
-          applyHiddenFormInputValue(this.args.model.referrerUrl, "redirect");
+        } else if (this.args.model.referrerTopicUrl) {
+          applyHiddenFormInputValue(
+            this.args.model.referrerTopicUrl,
+            "redirect"
+          );
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }

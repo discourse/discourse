@@ -2727,9 +2727,8 @@ fi:
         new_features: "Uusia Discoursen ominaisuuksia on julkaistu!"
         admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
+      delete: "Poista"
       uploading: "Ladataan"
-      processing: "Latausta käsitellään"
-      select_file: "Valitse tiedosto"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -5209,6 +5208,7 @@ fi:
         key: "Avain"
         keys: "Avaimet"
         created: Luonut
+        scope: Näkyvyysalue
         updated: Päivitetty
         last_used: Viimeksi käytetty
         never_used: Ei koskaan

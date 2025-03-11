@@ -26,6 +26,7 @@ import underline from "./underline";
 const defaultExtensions = [
   emoji,
   image,
+  onebox,
   link,
   heading,
   codeBlock,
@@ -36,7 +37,6 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
-  onebox,
   trailingParagraph,
   typographerReplacements,
   table,

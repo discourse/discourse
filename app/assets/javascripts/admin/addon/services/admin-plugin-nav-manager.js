@@ -12,10 +12,6 @@ export default class AdminPluginNavManager extends Service {
   // This will be removed when all plugins follow the new "show route" pattern.
   @tracked viewingPluginsList = false;
 
-  get currentUserUsingAdminSidebar() {
-    return this.currentUser?.use_admin_sidebar;
-  }
-
   get currentConfigNav() {
     const configNav = configNavForPlugin(this.currentPlugin.id);
     const settingsNav = {

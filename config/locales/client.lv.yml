@@ -1764,9 +1764,8 @@ lv:
         post_approved: "ziņa apstiprināta"
         votes_released: "Balsojums tika izveidots"
     upload_selector:
+      delete: "Dzēst"
       uploading: "Augšuplādē"
-      processing: "Augšupielādes apstrāde"
-      select_file: "Izvēlēties failu"
       default_image_alt_text: bilde
     search:
       sort_by: "Kārtot pēc"

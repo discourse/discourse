@@ -19,29 +19,25 @@ const extension = {
       },
       state: {
         init(_, state) {
-          return !isLastChildEmptyParagraph(state);
+          return !isLastChildParagraph(state);
         },
         apply(tr, value) {
           if (!tr.docChanged) {
             return value;
           }
 
-          return !isLastChildEmptyParagraph(tr);
+          return !isLastChildParagraph(tr);
         },
       },
     });
   },
 };
 
-function isLastChildEmptyParagraph(state) {
+function isLastChildParagraph(state) {
   const { doc } = state;
   const lastChild = doc.lastChild;
 
-  return (
-    lastChild.type.name === "paragraph" &&
-    lastChild.nodeSize === 2 &&
-    lastChild.content.size === 0
-  );
+  return lastChild.type.name === "paragraph";
 }
 
 export default extension;

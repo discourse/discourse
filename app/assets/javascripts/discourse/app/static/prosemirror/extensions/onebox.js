@@ -1,12 +1,11 @@
 import {
-  applyCachedInlineOnebox,
+  applyInlineOneboxes,
   cachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import { addToLoadingQueue, loadNext } from "pretty-text/oneboxer";
-import { lookupCache } from "pretty-text/oneboxer-cache";
+import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -48,7 +47,6 @@ const extension = {
       draggable: true,
       parseDOM: [
         {
-          // TODO link marks are still processed before this when pasting
           tag: "a.inline-onebox",
           getAttrs(dom) {
             return { url: dom.getAttribute("href"), title: dom.textContent };
@@ -75,7 +73,7 @@ const extension = {
       state.write(`${node.attrs.url}\n\n`);
     },
     onebox_inline(state, node, parent, index) {
-      if (!isBoundary(state.out, state.out.length - 1)) {
+      if (!isWhiteSpace(state.out, state.out.length - 1)) {
         state.write(" ");
       }
 
@@ -83,9 +81,7 @@ const extension = {
 
       const nextSibling =
         parent.childCount > index + 1 ? parent.child(index + 1) : null;
-      // TODO(renato): differently from emoji/hashtag, some few punct chars
-      //  we don't want to join, like -#%/:@
-      if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+      if (nextSibling?.isText && !isWhiteSpace(nextSibling.text, 0)) {
         state.write(" ");
       }
     },
@@ -96,7 +92,6 @@ const extension = {
     pmView: { Decoration, DecorationSet },
     getContext,
   }) {
-    let updatedView;
     const failedUrls = { full: new Set(), inline: new Set() };
 
     const plugin = new Plugin({
@@ -123,15 +118,15 @@ const extension = {
                   meta.inlineOneboxes.hasOwnProperty(spec.oneboxUrl)
               );
 
-              const newDecorations = decosToUpdate.map((dec) =>
+              const newDecorations = decosToUpdate.map((decoration) =>
                 Decoration.inline(
-                  dec.from,
-                  dec.to,
+                  decoration.from,
+                  decoration.to,
                   { class: "onebox-loading", nodeName: "span" },
                   {
-                    oneboxUrl: dec.spec.oneboxUrl,
-                    oneboxType: dec.spec.oneboxType,
-                    oneboxTitle: meta.inlineOneboxes[dec.spec.oneboxUrl],
+                    oneboxUrl: decoration.spec.oneboxUrl,
+                    oneboxType: decoration.spec.oneboxType,
+                    oneboxTitle: meta.inlineOneboxes[decoration.spec.oneboxUrl],
                     oneboxDataLoaded: true,
                   }
                 )
@@ -149,14 +144,14 @@ const extension = {
                 (spec) => spec.oneboxType === "full" && spec.oneboxUrl === url
               );
 
-              const newDecorations = decosToUpdate.map((dec) => {
+              const newDecorations = decosToUpdate.map((decoration) => {
                 return Decoration.inline(
-                  dec.from,
-                  dec.to,
+                  decoration.from,
+                  decoration.to,
                   { class: "onebox-loading", nodeName: "span" },
                   {
-                    oneboxUrl: dec.spec.oneboxUrl,
-                    oneboxType: dec.spec.oneboxType,
+                    oneboxUrl: decoration.spec.oneboxUrl,
+                    oneboxType: decoration.spec.oneboxType,
                     oneboxDataLoaded: true,
                     oneboxHtml: html,
                   }
@@ -197,42 +192,12 @@ const extension = {
                     pos,
                     pos + node.nodeSize,
                     { class: "onebox-loading", nodeName: "span" },
-                    {
-                      oneboxUrl: node.textContent,
-                      oneboxType,
-                    }
+                    { oneboxUrl: node.textContent, oneboxType }
                   )
                 );
-
-                if (!isInline) {
-                  processOnebox(node.textContent, getContext()).then((html) => {
-                    updatedView?.dispatch(
-                      updatedView.state.tr.setMeta(plugin, {
-                        oneboxContent: { url: node.textContent, html },
-                      })
-                    );
-                  });
-                }
               }
             }
           });
-
-          const urlsToLoad = decorations
-            .filter((dec) => dec.spec.oneboxType === "inline")
-            .map((dec) => dec.spec.oneboxUrl);
-
-          if (urlsToLoad.length) {
-            loadInlineOneboxes(urlsToLoad, getContext()).then(
-              (inlineOneboxes) => {
-                if (!Object.keys(inlineOneboxes).length) {
-                  return;
-                }
-                updatedView?.dispatch(
-                  updatedView.state.tr.setMeta(plugin, { inlineOneboxes })
-                );
-              }
-            );
-          }
 
           return set.add(tr.doc, decorations);
         },
@@ -245,86 +210,116 @@ const extension = {
       },
 
       view() {
+        const pendingUrls = { inline: new Set(), full: new Set() };
+
         return {
           update(view) {
-            updatedView = view;
-
             const decorations = plugin.getState(view.state);
 
-            const loadedDecos = decorations.find(
+            this.processNew(view, decorations);
+            this.processLoaded(view, decorations);
+          },
+
+          processNew(view, allDecorations) {
+            const decorations = allDecorations.find(
+              undefined,
+              undefined,
+              (spec) =>
+                !spec.oneboxDataLoaded &&
+                !pendingUrls[spec.oneboxType].has(spec.oneboxUrl)
+            );
+
+            for (const dec of decorations) {
+              if (failedUrls[dec.spec.oneboxType].has(dec.spec.oneboxUrl)) {
+                continue;
+              }
+
+              pendingUrls[dec.spec.oneboxType].add(dec.spec.oneboxUrl);
+
+              // Full onebox, one by one
+              if (dec.spec.oneboxType === "full") {
+                const { oneboxUrl } = dec.spec;
+                pendingUrls.full.add(oneboxUrl);
+
+                processOnebox(oneboxUrl, getContext()).then((html) => {
+                  pendingUrls.full.delete(oneboxUrl);
+                  if (html) {
+                    view.dispatch(
+                      view.state.tr.setMeta(plugin, {
+                        oneboxContent: { url: oneboxUrl, html },
+                      })
+                    );
+                  } else {
+                    failedUrls.full.add(oneboxUrl);
+                  }
+                });
+              }
+            }
+
+            // Inline oneboxes, batched
+            if (pendingUrls.inline.size) {
+              const inlineUrls = pendingUrls.inline;
+              loadInlineOneboxes(inlineUrls, getContext()).then(
+                (inlineOneboxes) => {
+                  for (const url of inlineUrls) {
+                    pendingUrls.inline.delete(url);
+                  }
+
+                  if (Object.keys(inlineOneboxes).length > 0) {
+                    view.dispatch(
+                      view.state.tr.setMeta(plugin, { inlineOneboxes })
+                    );
+                  }
+                }
+              );
+            }
+          },
+
+          processLoaded(view, allDecorations) {
+            const decorations = allDecorations.find(
               undefined,
               undefined,
               (spec) => spec.oneboxDataLoaded
             );
 
-            if (loadedDecos.length === 0) {
-              return;
-            }
-
+            const removeDecorations = [];
+            const sortedDecos = decorations.sort((a, b) => b.from - a.from);
             const tr = view.state.tr;
-            const decosToRemove = [];
 
-            const sortedDecos = [...loadedDecos].sort(
-              (a, b) => b.from - a.from
-            );
+            for (const decoration of sortedDecos) {
+              const nodeAtPos = view.state.doc.nodeAt(decoration.from);
 
-            for (const dec of sortedDecos) {
-              if (
-                dec.from >= view.state.doc.content.size ||
-                dec.to > view.state.doc.content.size ||
-                dec.from < 0
-              ) {
-                continue;
-              }
-
-              const nodeAtPos = view.state.doc.nodeAt(dec.from);
-
-              if (!nodeAtPos || !nodeAtPos.isText || !nodeAtPos.marks?.length) {
-                continue;
-              }
-
-              const linkMark = nodeAtPos.marks.find(
+              const isTextNode = nodeAtPos?.isText;
+              const hasMatchingLink = nodeAtPos?.marks.find(
                 (mark) =>
                   mark.type.name === "link" &&
-                  mark.attrs.href === dec.spec.oneboxUrl
+                  mark.attrs.href === decoration.spec.oneboxUrl
               );
 
-              if (!linkMark) {
+              if (!isTextNode || !hasMatchingLink) {
                 continue;
               }
 
-              const textEnd = dec.from + nodeAtPos.nodeSize;
-
-              if (textEnd !== dec.to) {
-                continue;
-              }
-
-              if (!dec.spec.oneboxDataLoaded) {
-                continue;
-              }
-
-              if (dec.spec.oneboxType === "inline") {
-                if (dec.spec.oneboxTitle) {
+              if (decoration.spec.oneboxType === "inline") {
+                if (decoration.spec.oneboxTitle) {
                   const oneboxNode =
                     view.state.schema.nodes.onebox_inline.create({
-                      url: dec.spec.oneboxUrl,
-                      title: dec.spec.oneboxTitle,
+                      url: decoration.spec.oneboxUrl,
+                      title: decoration.spec.oneboxTitle,
                     });
 
-                  tr.replaceWith(dec.from, dec.to, oneboxNode);
+                  tr.replaceWith(decoration.from, decoration.to, oneboxNode);
                 } else {
-                  failedUrls.inline.add(dec.spec.oneboxUrl);
+                  failedUrls.inline.add(decoration.spec.oneboxUrl);
                 }
-
-                decosToRemove.push(dec);
-              } else if (dec.spec.oneboxType === "full") {
-                if (dec.spec.oneboxHtml) {
+              } else if (decoration.spec.oneboxType === "full") {
+                if (decoration.spec.oneboxHtml) {
                   const oneboxNode = view.state.schema.nodes.onebox.create({
-                    url: dec.spec.oneboxUrl,
-                    html: dec.spec.oneboxHtml,
+                    url: decoration.spec.oneboxUrl,
+                    html: decoration.spec.oneboxHtml,
                   });
 
-                  const $pos = view.state.doc.resolve(dec.from);
+                  const $pos = view.state.doc.resolve(decoration.from);
                   const paragraph = $pos.parent;
                   if (
                     paragraph.type.name === "paragraph" &&
@@ -332,18 +327,18 @@ const extension = {
                   ) {
                     tr.replaceWith($pos.before(), $pos.after(), oneboxNode);
                   } else {
-                    tr.replaceWith(dec.from, dec.to, oneboxNode);
+                    tr.replaceWith(decoration.from, decoration.to, oneboxNode);
                   }
                 } else {
-                  failedUrls.full.add(dec.spec.oneboxUrl);
+                  failedUrls.full.add(decoration.spec.oneboxUrl);
                 }
-
-                decosToRemove.push(dec);
               }
+
+              removeDecorations.push(decoration);
             }
 
-            if (decosToRemove.length || tr.docChanged) {
-              tr.setMeta(plugin, { removeDecorations: decosToRemove });
+            if (removeDecorations.length || tr.docChanged) {
+              tr.setMeta(plugin, { removeDecorations });
               view.dispatch(tr);
             }
           },
@@ -355,54 +350,52 @@ const extension = {
   },
 };
 
-async function loadInlineOneboxes(urls, { categoryId, topicId }) {
-  const allOneboxes = {};
+// Dummy element to pass to the oneboxer
+// To avoid this, we need to refactor both oneboxer APIs
+const dummyElement = {
+  replaceWith() {},
+  classList: { remove() {}, add() {}, contains: () => false },
+  dataset: {},
+};
 
-  const uncachedUrls = [];
+async function loadInlineOneboxes(urls, { categoryId, topicId }) {
+  const oneboxes = {};
+  const elems = {};
+
   for (const url of urls) {
     const cached = cachedInlineOnebox(url);
     if (cached) {
-      allOneboxes[url] = cached.title;
+      oneboxes[url] = cached.title;
     } else {
-      uncachedUrls.push(url);
+      elems[url] = [{ ...dummyElement }];
     }
   }
 
-  if (uncachedUrls.length === 0) {
-    return allOneboxes;
+  await applyInlineOneboxes(elems, ajax, { categoryId, topicId });
+
+  for (const [url, [onebox]] of Object.entries(elems)) {
+    oneboxes[url] = onebox.innerText;
   }
 
-  const { "inline-oneboxes": oneboxes } = await ajax("/inline-onebox", {
-    data: { urls: uncachedUrls, categoryId, topicId },
-  });
-
-  oneboxes.forEach((onebox) => {
-    applyCachedInlineOnebox(onebox.url, onebox);
-    allOneboxes[onebox.url] = onebox.title;
-  });
-
-  return allOneboxes;
+  return oneboxes;
 }
 
-async function loadFullOnebox(url, { categoryId, topicId }) {
-  const cached = lookupCache(url);
-  if (cached) {
-    return cached;
-  }
-
-  return new Promise((onResolve) => {
-    addToLoadingQueue({ url, categoryId, topicId, onResolve });
-    loadNext(ajax);
+async function processOnebox(href, { topicId, categoryId }) {
+  const html = await new Promise((onResolve) => {
+    load({
+      topicId,
+      categoryId,
+      elem: { ...dummyElement, href },
+      onResolve,
+      ajax,
+      refresh: false,
+    });
   });
-}
 
-async function processOnebox(url, context) {
-  const html = await loadFullOnebox(url, context);
-
-  // naive check that this is not a <a href="url">url</a> onebox response
+  // Not a <a href="url">url</a> onebox response
   if (
     new RegExp(
-      `<a href=["']${escapeRegExp(url)}["'].*>${escapeRegExp(url)}</a>`
+      `^<a href=["']${escapeRegExp(href)}["'].*>${escapeRegExp(href)}</a>$`
     ).test(html)
   ) {
     return;

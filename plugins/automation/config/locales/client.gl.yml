@@ -62,9 +62,10 @@ gl:
           fields:
             restricted_tags:
               label: Etiquetas
-            restricted_category:
-              label: Categoría
+            restricted_categories:
+              label: Categorías
           created: Creado
+          topics: Temas
         category_created_edited:
           fields:
             restricted_category:

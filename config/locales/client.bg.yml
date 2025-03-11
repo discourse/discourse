@@ -2251,9 +2251,8 @@ bg:
         reaction: "нова реакция"
         votes_released: "Гласуването беше публикувано"
     upload_selector:
+      delete: "Изтрий"
       uploading: "Качване "
-      processing: "Обработка на качване"
-      select_file: "Избери файл"
       default_image_alt_text: изображение
     search:
       sort_by: "Сортирай по"

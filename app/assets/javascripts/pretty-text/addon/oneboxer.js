@@ -112,6 +112,7 @@ export function load({
   refresh = true,
   offline = false,
   synchronous = false,
+  onResolve,
 }) {
   // If the onebox has loaded or is loading, return
 
@@ -130,6 +131,7 @@ export function load({
     // If we have it in our cache, return it.
     const cached = lookupCache(url);
     if (cached) {
+      onResolve?.(cached);
       return cached;
     }
 
@@ -148,7 +150,7 @@ export function load({
   elem.classList.add(LOADING_ONEBOX_CSS_CLASS);
 
   // Add to the loading queue
-  loadingQueue.push({ url, refresh, elem, categoryId, topicId });
+  loadingQueue.push({ url, refresh, elem, categoryId, topicId, onResolve });
 
   // Load next url in queue
   if (synchronous) {

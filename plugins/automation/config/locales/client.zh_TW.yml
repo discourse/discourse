@@ -60,9 +60,10 @@ zh_TW:
           fields:
             restricted_tags:
               label: 標記
-            restricted_category:
+            restricted_categories:
               label: 分類
           created: 建立時間
+          topics: 話題
         category_created_edited:
           fields:
             restricted_category:

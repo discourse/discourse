@@ -520,8 +520,21 @@ div.poll-outer {
   }
 }
 
+// hides 0 vote count in crawler and print view
+body.crawler {
+  .poll {
+    .poll-info,
+    .poll-button {
+      display: none;
+    }
+  }
+}
+
 .ProseMirror {
   .poll {
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    padding: 1rem;
     margin-bottom: 1rem;
 
     ul {
@@ -587,20 +600,4 @@ div.poll-outer {
       }
     }
   }
-}
-
-// hides 0 vote count in crawler and print view
-body.crawler {
-  .poll {
-    .poll-info,
-    .poll-button {
-      display: none;
-    }
-  }
-}
-
-.ProseMirror .poll {
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  padding: 1rem;
 }
