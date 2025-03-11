@@ -29,6 +29,19 @@ RSpec.describe "User chat preferences", type: :system do
     end
   end
 
+  it "can change chat quick reaction type to custom selected emoji" do
+    visit("/my/preferences/chat")
+    find("#user_chat_quick_reaction_type_custom").click
+    expect(all(".emoji-picker-trigger", visible: true).count).to eq 3
+    expect(find(".emoji-pickers button:first-of-type")).to have_css("img[title='heart']")    
+    find(".emoji-pickers button:first-of-type").click
+    find(".emoji-picker .emoji[title=':sweat_smile:']").click
+    find(".save-changes").click
+    page.refresh
+    expect(page).to have_checked_field("user_chat_quick_reaction_type_custom")
+    expect(find(".emoji-pickers button:first-of-type")).to have_css("img[title='sweat_smile']")
+  end
+
   it "can select chat sound" do
     visit("/my/preferences")
     find(".user-nav__preferences-chat", visible: :all).click
