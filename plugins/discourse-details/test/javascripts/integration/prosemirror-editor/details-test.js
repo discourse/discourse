@@ -65,13 +65,12 @@ module(
       assert.dom(`${detailsCss}`).hasAttribute("open");
       assert.dom(`${detailsCss} p`).isVisible();
 
-      // NOTE (martin): For some reason this is just refusing to work, the
-      // handleClickOn inside the extension is not being called. If I add
-      // pauseTest() after the click then it works, but await settled(); does
-      // not help...
-      // await click(`${summaryCss}`);
-      // assert.dom(`${detailsCss} p`).isNotVisible();
-      // assert.dom(`${detailsCss}`).doesNotHaveAttribute("open");
+      // click elsewhere first to avoid a double-click being detected
+      await click(`${detailsCss} p`);
+      await click(`${summaryCss}`);
+
+      assert.dom(`${detailsCss} p`).isNotVisible();
+      assert.dom(`${detailsCss}`).doesNotHaveAttribute("open");
     });
   }
 );
