@@ -1,4 +1,4 @@
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { next, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
@@ -319,7 +319,7 @@ export default class ScrollingPostStream extends MountWidget {
     };
     document.addEventListener("touchmove", this._debouncedScroll, opts);
     window.addEventListener("scroll", this._debouncedScroll, opts);
-    this._scrollTriggered();
+    next(() => this._scrollTriggered());
 
     this.appEvents.on("post-stream:posted", this, "_posted");
 
