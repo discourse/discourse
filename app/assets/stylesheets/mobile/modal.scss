@@ -69,7 +69,9 @@ html:not(.keyboard-visible.mobile-view) {
 // legacy
 .modal {
   &.fade {
-    transition: opacity 0.3s linear, top 0.3s ease-out;
+    transition:
+      opacity 0.3s linear,
+      top 0.3s ease-out;
     top: -25%;
   }
 

@@ -105,7 +105,10 @@ describe "Homepage", type: :system do
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+
+      try_until_success(timeout: 5) do
+        expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+      end
 
       click_logo
 

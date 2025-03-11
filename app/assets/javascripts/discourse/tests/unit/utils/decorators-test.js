@@ -217,6 +217,7 @@ module("Unit | Utils | decorators", function (hooks) {
     withSilencedDeprecations("discourse.utils-decorators-observes", () => {
       NativeClassWithObserver = class extends EmberObject {
         counter = 0;
+
         @observes("value")
         incrementCounter() {
           this.set("counter", this.counter + 1);
@@ -257,6 +258,7 @@ module("Unit | Utils | decorators", function (hooks) {
     withSilencedDeprecations("discourse.utils-decorators-on", () => {
       NativeClassWithOn = class extends EmberObject {
         counter = 0;
+
         @on("init")
         incrementCounter() {
           this.set("counter", this.counter + 1);

@@ -427,8 +427,9 @@ RSpec.describe TagsController do
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tag/#{synonym.name}"
-      expect(response.status).to eq(200)
+      get "/tag/#{synonym.name}/l/top.json?period=daily"
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
     end
 
     it "does not show staff-only tags" do
@@ -462,6 +463,27 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
         topic_with_two_tags.id,
+      )
+    end
+
+    it "puts the tag description in the meta description" do
+      described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
+      get "/tag/#{described_tag.name}"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"#{described_tag.description}\"",
+      )
+    end
+
+    it "has a default description for tags without a description" do
+      get "/tag/test"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"Topics tagged #{tag.name}\"",
       )
     end
 

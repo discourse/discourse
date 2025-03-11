@@ -12,7 +12,19 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::POST_CREATED
             { id: "edited", name: "discourse_automation.triggerables.post_created_edited.edited" },
           ],
         }
-  field :restricted_category, component: :category
+  field :restricted_archetype,
+        component: :choices,
+        extra: {
+          content: [
+            { id: "regular", name: "discourse_automation.triggerables.post_created_edited.topics" },
+            {
+              id: "private_message",
+              name: "discourse_automation.triggerables.post_created_edited.personal_messages",
+            },
+          ],
+        }
+  field :restricted_categories, component: :categories
+  field :exclude_subcategories, component: :boolean
   field :restricted_tags, component: :tags
   field :restricted_groups, component: :groups
   field :restricted_user_group, component: :group

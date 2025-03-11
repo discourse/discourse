@@ -21,8 +21,8 @@ export default class ComposerToggles extends Component {
     return composeState === "draft"
       ? "composer.open"
       : composeState === "fullscreen"
-      ? "composer.exit_fullscreen"
-      : "composer.enter_fullscreen";
+        ? "composer.exit_fullscreen"
+        : "composer.enter_fullscreen";
   }
 
   @discourseComputed("composeState")
@@ -37,8 +37,8 @@ export default class ComposerToggles extends Component {
     return composeState === "draft"
       ? "angles-up"
       : composeState === "fullscreen"
-      ? "discourse-compress"
-      : "discourse-expand";
+        ? "discourse-compress"
+        : "discourse-expand";
   }
 
   @discourseComputed("disableTextarea")

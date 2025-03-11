@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   queryAll,
@@ -708,5 +709,39 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
   test("load more footer message is not present", async function (assert) {
     await visit("/tag/planters");
     assert.dom(".topic-list-bottom .footer-message").exists();
+  });
+});
+
+acceptance("Tag separator customization", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", () => {
+      return helper.response({
+        topic_list: {
+          topics: [
+            {
+              id: 42,
+              tags: ["feature", "bug", "dev"],
+              posters: [],
+            },
+          ],
+        },
+      });
+    });
+  });
+
+  test("applying a value transformation for custom tag separator", async function (assert) {
+    withPluginApi("1.34.0", (api) => {
+      api.registerValueTransformer("tag-separator", () => {
+        return " | ";
+      });
+    });
+
+    await visit("/latest");
+
+    assert
+      .dom(
+        ".topic-list .topic-list-item:first-child .discourse-tags__tag-separator"
+      )
+      .hasText(" | ", "custom separator is displayed between tags");
   });
 });

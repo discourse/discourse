@@ -44,6 +44,7 @@ export default class Group extends RestModel {
   requestersOffset = null;
 
   @equal("mentionable_level", 99) canEveryoneMention;
+
   init() {
     super.init(...arguments);
     this.setProperties({ members: [], requesters: [] });

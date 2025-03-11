@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 
 export default class AutomationNew extends Controller {
   @service router;
+
   @tracked filterText = "";
 
   @action

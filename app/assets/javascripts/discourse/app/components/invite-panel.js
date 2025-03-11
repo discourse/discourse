@@ -11,6 +11,7 @@ import { i18n } from "discourse-i18n";
 
 export default class InvitePanel extends Component {
   @service site;
+
   @readOnly("currentUser.staff") isStaff;
   @readOnly("currentUser.admin") isAdmin;
   @alias("inviteModel.id") topicId;

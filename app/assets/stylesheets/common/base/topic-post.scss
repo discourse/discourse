@@ -103,10 +103,6 @@
     max-width: 100%;
   }
 
-  sup sup {
-    top: 0;
-  }
-
   img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
     max-width: 100%;
     height: auto;
@@ -231,12 +227,15 @@
     font-size: 1em;
   }
 
-  sub sub sub {
-    bottom: 0;
+  sup sup,
+  sub sup,
+  sup sub,
+  sub sub {
+    top: 0;
   }
 
-  sup sup sup {
-    top: 0;
+  sub sub sub {
+    bottom: 0;
   }
 }
 
@@ -1682,7 +1681,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   &.--has-overflow,
   &.--editable {
-    box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
+    box-shadow:
+      0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
       0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
   }
 }
@@ -1699,6 +1699,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   &.read {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 1s, opacity ease-out 1s;
+    transition:
+      visibility 1s,
+      opacity ease-out 1s;
   }
 }

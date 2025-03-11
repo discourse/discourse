@@ -66,13 +66,15 @@ module("Integration | Component | AdminAreaSettings", function (hooks) {
 
   test("renders area settings and allows to filter", async function (assert) {
     const callback = () => {};
-    await render(<template>
-      <AdminAreaSettings
-        @area="flags"
-        @adminSettingsFilterChangedCallback={{callback}}
-        @filter=""
-      />
-    </template>);
+    await render(
+      <template>
+        <AdminAreaSettings
+          @area="flags"
+          @adminSettingsFilterChangedCallback={{callback}}
+          @filter=""
+        />
+      </template>
+    );
 
     assert.dom(".admin-site-settings-filter-controls").exists();
     assert.dom(".setting-label").exists({ count: 2 });

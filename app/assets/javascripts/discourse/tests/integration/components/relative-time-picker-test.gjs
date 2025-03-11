@@ -11,9 +11,9 @@ module("Integration | Component | relative-time-picker", function (hooks) {
   test("calls the onChange arg", async function (assert) {
     let updatedValue;
     const update = (value) => (updatedValue = value);
-    await render(<template>
-      <RelativeTimePicker @onChange={{update}} />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @onChange={{update}} /></template>
+    );
 
     // empty and "minutes" by default
     assert.dom(".relative-time-duration").hasValue("");
@@ -78,12 +78,14 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     })();
 
     const update = (value) => (testState.minutes = value);
-    await render(<template>
-      <RelativeTimePicker
-        @onChange={{update}}
-        @durationMinutes={{testState.minutes}}
-      />
-    </template>);
+    await render(
+      <template>
+        <RelativeTimePicker
+          @onChange={{update}}
+          @durationMinutes={{testState.minutes}}
+        />
+      </template>
+    );
 
     // uses the value and selects the right interval
     assert.dom(".relative-time-duration").hasValue("2");
@@ -156,9 +158,11 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     })();
     testState.value = 10;
 
-    await render(<template>
-      <RelativeTimePicker @durationMinutes={{testState.value}} />
-    </template>);
+    await render(
+      <template>
+        <RelativeTimePicker @durationMinutes={{testState.value}} />
+      </template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("10");
@@ -170,108 +174,108 @@ module("Integration | Component | relative-time-picker", function (hooks) {
   });
 
   test("prefills and preselects minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes="5" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes="5" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("5");
   });
 
   test("prefills and preselects null minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes={{null}} />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes={{null}} /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("");
   });
 
   test("prefills and preselects hours based on converted minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes="90" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes="90" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "hours");
     assert.dom(".relative-time-duration").hasValue("1.5");
   });
 
   test("prefills and preselects days based on converted minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes="2880" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes="2880" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "days");
     assert.dom(".relative-time-duration").hasValue("2");
   });
 
   test("prefills and preselects months based on converted minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes="151200" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes="151200" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "months");
     assert.dom(".relative-time-duration").hasValue("3.5");
   });
 
   test("prefills and preselects years based on converted minutes", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationMinutes="525700" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationMinutes="525700" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "years");
     assert.dom(".relative-time-duration").hasValue("1");
   });
 
   test("prefills and preselects hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours="5" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours="5" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "hours");
     assert.dom(".relative-time-duration").hasValue("5");
   });
 
   test("prefills and preselects null hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours={{null}} />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours={{null}} /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "hours");
     assert.dom(".relative-time-duration").hasValue("");
   });
 
   test("prefills and preselects minutes based on converted hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours="0.5" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours="0.5" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("30");
   });
 
   test("prefills and preselects days based on converted hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours="48" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours="48" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "days");
     assert.dom(".relative-time-duration").hasValue("2");
   });
 
   test("prefills and preselects months based on converted hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours="2160" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours="2160" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "months");
     assert.dom(".relative-time-duration").hasValue("3");
   });
 
   test("prefills and preselects years based on converted hours", async function (assert) {
-    await render(<template>
-      <RelativeTimePicker @durationHours="17520" />
-    </template>);
+    await render(
+      <template><RelativeTimePicker @durationHours="17520" /></template>
+    );
 
     assert.strictEqual(selectKit().header().value(), "years");
     assert.dom(".relative-time-duration").hasValue("2");

@@ -8,6 +8,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminCustomizeColorsShowController extends Controller {
   @service dialog;
   @service router;
+
   onlyOverridden = false;
 
   @computed("model.colors.[]", "onlyOverridden")

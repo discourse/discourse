@@ -12,29 +12,33 @@ module("Integration | Component | d-modal", function (hooks) {
   setupRenderingTest(hooks);
 
   test("title and subtitle", async function (assert) {
-    await render(<template>
-      <DModal
-        @inline={{true}}
-        @title="Modal Title"
-        @subtitle="Modal Subtitle"
-      />
-    </template>);
+    await render(
+      <template>
+        <DModal
+          @inline={{true}}
+          @title="Modal Title"
+          @subtitle="Modal Subtitle"
+        />
+      </template>
+    );
     assert.dom(".d-modal .d-modal__title-text").hasText("Modal Title");
     assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
   });
 
   test("named blocks", async function (assert) {
-    await render(<template>
-      <DModal @inline={{true}}>
-        <:aboveHeader>aboveHeaderContent</:aboveHeader>
-        <:headerAboveTitle>headerAboveTitleContent</:headerAboveTitle>
-        <:headerBelowTitle>headerBelowTitleContent</:headerBelowTitle>
-        <:belowHeader>belowHeaderContent</:belowHeader>
-        <:body>bodyContent</:body>
-        <:footer>footerContent</:footer>
-        <:belowFooter>belowFooterContent</:belowFooter>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:aboveHeader>aboveHeaderContent</:aboveHeader>
+          <:headerAboveTitle>headerAboveTitleContent</:headerAboveTitle>
+          <:headerBelowTitle>headerBelowTitleContent</:headerBelowTitle>
+          <:belowHeader>belowHeaderContent</:belowHeader>
+          <:body>bodyContent</:body>
+          <:footer>footerContent</:footer>
+          <:belowFooter>belowFooterContent</:belowFooter>
+        </DModal>
+      </template>
+    );
 
     assert.dom(".d-modal").includesText("aboveHeaderContent");
     assert.dom(".d-modal").includesText("headerAboveTitleContent");
@@ -46,53 +50,67 @@ module("Integration | Component | d-modal", function (hooks) {
   });
 
   test("headerPrimaryAction block", async function (assert) {
-    await render(<template>
-      <DModal @inline={{true}} @title="test">
-        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
 
     assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
 
-    await render(<template>
-      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
-        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
 
     assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
 
     this.site.mobileView = true;
 
-    await render(<template>
-      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
-        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
 
     assert.dom(".d-modal").includesText("headerPrimaryActionContent");
     assert.dom(".d-modal__dismiss-action-button").exists();
 
-    await render(<template>
-      <DModal @inline={{true}} @title="test">
-        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="test">
+          <:headerPrimaryAction
+          >headerPrimaryActionContent</:headerPrimaryAction>
+        </DModal>
+      </template>
+    );
 
     assert.dom(".d-modal__dismiss-action-button").doesNotExist();
   });
 
   test("flash", async function (assert) {
-    await render(<template>
-      <DModal @inline={{true}} @flash="Some message" />
-    </template>);
+    await render(
+      <template><DModal @inline={{true}} @flash="Some message" /></template>
+    );
     assert.dom(".d-modal .alert").hasText("Some message");
   });
 
   test("flash type", async function (assert) {
-    await render(<template>
-      <DModal @inline={{true}} @flash="Some message" @flashType="success" />
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @flash="Some message" @flashType="success" />
+      </template>
+    );
     assert.dom(".d-modal .alert").hasClass("alert-success");
   });
 
@@ -108,13 +126,15 @@ module("Integration | Component | d-modal", function (hooks) {
     const testState = new TestState();
     testState.dismissable = false;
 
-    await render(<template>
-      <DModal
-        @inline={{true}}
-        @closeModal={{testState.closeModal}}
-        @dismissable={{testState.dismissable}}
-      />
-    </template>);
+    await render(
+      <template>
+        <DModal
+          @inline={{true}}
+          @closeModal={{testState.closeModal}}
+          @dismissable={{testState.dismissable}}
+        />
+      </template>
+    );
 
     assert
       .dom(".d-modal .modal-close")
@@ -134,14 +154,16 @@ module("Integration | Component | d-modal", function (hooks) {
   });
 
   test("header and body classes", async function (assert) {
-    await render(<template>
-      <DModal
-        @inline={{true}}
-        @bodyClass="my-body-class"
-        @headerClass="my-header-class"
-        @title="Hello world"
-      />
-    </template>);
+    await render(
+      <template>
+        <DModal
+          @inline={{true}}
+          @bodyClass="my-body-class"
+          @headerClass="my-header-class"
+          @title="Hello world"
+        />
+      </template>
+    );
 
     assert.dom(".d-modal .d-modal__header").hasClass("my-header-class");
     assert.dom(".d-modal .d-modal__body").hasClass("my-body-class");
@@ -154,16 +176,18 @@ module("Integration | Component | d-modal", function (hooks) {
       submittedFormData = new FormData(event.currentTarget);
     };
 
-    await render(<template>
-      <DModal @inline={{true}} @tagName="form" {{on "submit" handleSubmit}}>
-        <:body>
-          <input type="text" name="name" value="John Doe" />
-        </:body>
-        <:footer>
-          <button type="submit">Submit</button>
-        </:footer>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}} @tagName="form" {{on "submit" handleSubmit}}>
+          <:body>
+            <input type="text" name="name" value="John Doe" />
+          </:body>
+          <:footer>
+            <button type="submit">Submit</button>
+          </:footer>
+        </DModal>
+      </template>
+    );
 
     assert.dom("form.d-modal").exists();
     await click(".d-modal button[type=submit]");
@@ -176,20 +200,22 @@ module("Integration | Component | d-modal", function (hooks) {
       actionCalled = true;
     };
 
-    await render(<template>
-      <DModal @inline={{true}}>
-        <:body>
-          body content
-        </:body>
-        <:footer>
-          <DButton
-            @action={{someAction}}
-            @translatedLabel="Perform action"
-            class="btn-primary"
-          />
-        </:footer>
-      </DModal>
-    </template>);
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            body content
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
 
     await triggerKeyEvent(".d-modal__body", "keydown", "Enter");
 

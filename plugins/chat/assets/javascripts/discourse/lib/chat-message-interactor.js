@@ -65,7 +65,7 @@ export default class ChatemojiReactions {
       .filter(Boolean);
 
     return this.emojiStore
-      .favoritesForContext(`channel_${this.message.channel.id}`)
+      .favoritesForContext("chat")
       .concat(defaultReactions)
       .slice(0, 3)
       .map(
@@ -413,7 +413,7 @@ export default class ChatemojiReactions {
         this.interactedChatMessage.emojiPickerOpen = false;
       },
       data: {
-        context: `channel_${this.message.channel.id}`,
+        context: "chat",
         didSelectEmoji: (emoji) => {
           this.selectReaction(emoji);
         },

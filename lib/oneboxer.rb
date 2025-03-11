@@ -30,6 +30,7 @@ module Oneboxer
       "http://vimeo.com",
       "https://www.youtube.com",
       "https://twitter.com",
+      "https://x.com",
       Discourse.base_url,
     ]
   end

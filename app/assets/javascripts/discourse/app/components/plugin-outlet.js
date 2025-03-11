@@ -49,6 +49,7 @@ const ARGS_DEPRECATION_MSG =
 
 export default class PluginOutletComponent extends Component {
   @service clientErrorHandler;
+
   context = {
     ...helperContext(),
     get() {
