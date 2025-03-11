@@ -78,7 +78,7 @@ export default class ReviewableUser extends Component {
             @classes="reviewable-user-details user-field"
             @name={{f.name}}
             @value={{f.value}}
-            @tagName
+            @tagName=""
           />
         {{/each}}
       </div>

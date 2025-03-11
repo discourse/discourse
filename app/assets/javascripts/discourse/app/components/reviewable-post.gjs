@@ -9,8 +9,8 @@ import i18n from "discourse/helpers/i18n";
 export default class ReviewablePost extends Component {
   <template>
     <div class="flagged-post-header">
-      <ReviewableTopicLink @reviewable={{this.reviewable}} @tagName />
-      <ReviewablePostEdits @reviewable={{this.reviewable}} @tagName />
+      <ReviewableTopicLink @reviewable={{this.reviewable}} @tagName="" />
+      <ReviewablePostEdits @reviewable={{this.reviewable}} @tagName="" />
     </div>
 
     <div class="post-contents-wrapper">
@@ -19,7 +19,7 @@ export default class ReviewablePost extends Component {
         <ReviewablePostHeader
           @reviewable={{this.reviewable}}
           @createdBy={{this.reviewable.target_created_by}}
-          @tagName
+          @tagName=""
         />
         <div class="post-body">
           {{#if this.reviewable.blank_post}}

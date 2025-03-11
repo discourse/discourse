@@ -71,7 +71,7 @@ export default RouteTemplate(
 
           <div class="group-details-button">
             <GroupMembershipButton
-              @tagName
+              @tagName=""
               @model={{@controller.model}}
               @showLogin={{routeAction "showLogin"}}
             />

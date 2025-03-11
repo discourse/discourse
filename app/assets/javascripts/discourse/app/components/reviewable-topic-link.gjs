@@ -19,7 +19,7 @@ export default class ReviewableTopicLink extends Component {
             this.reviewable.topic.fancyTitle
           }}</a>
         {{categoryBadge this.reviewable.category}}
-        <ReviewableTags @tags={{this.reviewable.topic_tags}} @tagName />
+        <ReviewableTags @tags={{this.reviewable.topic_tags}} @tagName="" />
       {{else if (has-block)}}
         {{yield}}
       {{else}}

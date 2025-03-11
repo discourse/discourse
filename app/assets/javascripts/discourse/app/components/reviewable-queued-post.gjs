@@ -64,13 +64,13 @@ export default class ReviewableQueuedPost extends Component {
   }
 
   <template>
-    <ReviewableTopicLink @reviewable={{@reviewable}} @tagName>
+    <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
       <div class="title-text">
         {{icon "square-plus" title="review.new_topic"}}
         {{@reviewable.payload.title}}
       </div>
       {{categoryBadge @reviewable.category}}
-      <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName />
+      <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
       {{#if @reviewable.payload.via_email}}
         <a href {{on "click" this.showRawEmail}} class="show-raw-email">
           {{icon "envelope" title="post.via_email"}}
@@ -85,7 +85,7 @@ export default class ReviewableQueuedPost extends Component {
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName
+          @tagName=""
         />
 
         <CookText
