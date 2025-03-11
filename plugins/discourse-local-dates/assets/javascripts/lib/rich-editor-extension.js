@@ -46,7 +46,7 @@ const extension = {
       inline: true,
       parseDOM: [
         {
-          tag: "span.discourse-local-date-wrapper",
+          tag: "span.discourse-local-date-range",
           getAttrs: (dom) => {
             return {
               fromDate: dom.dataset.fromDate,
@@ -65,7 +65,7 @@ const extension = {
         const toTimeStr = node.attrs.toTime ? ` ${node.attrs.toTime}` : "";
         return [
           "span",
-          { class: "discourse-local-date-wrapper" },
+          { class: "discourse-local-date-range" },
           [
             "span",
             {

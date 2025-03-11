@@ -20,12 +20,12 @@ module(
       ],
       "local date range": [
         "[date-range from=2021-01-01 to=2021-01-02]",
-        '<p><span class="discourse-local-date-wrapper" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01">2021-01-01</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02">2021-01-02</span></span></p>',
+        '<p><span class="discourse-local-date-range" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01">2021-01-01</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02">2021-01-02</span></span></p>',
         "[date-range from=2021-01-01 to=2021-01-02]",
       ],
       "local date range with time": [
         '[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone="America/New_York"]',
-        '<p><span class="discourse-local-date-wrapper" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01" data-time="12:00:00" data-timezone="America/New_York">2021-01-01 12:00:00</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02" data-time="13:00:00" data-timezone="America/New_York">2021-01-02 13:00:00</span></span></p>',
+        '<p><span class="discourse-local-date-range" contenteditable="false"><span class="discourse-local-date cooked-date" data-range="from" data-date="2021-01-01" data-time="12:00:00" data-timezone="America/New_York">2021-01-01 12:00:00</span> → <span class="discourse-local-date cooked-date" data-range="to" data-date="2021-01-02" data-time="13:00:00" data-timezone="America/New_York">2021-01-02 13:00:00</span></span></p>',
         '[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone="America/New_York"]',
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
