@@ -10,6 +10,7 @@ import BookmarkModal from "discourse/components/modal/bookmark";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
+  formatTime,
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
@@ -113,14 +114,6 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  reminderShortcutTimeTitle(option) {
-    if (!option.time) {
-      return "";
-    }
-    return option.time.format(i18n(option.timeFormatKey));
-  }
-
-  @action
   onBookmark() {
     this.bookmarkCreatePromise = this.bookmarkManager.create();
     this.bookmarkCreatePromise
@@ -192,9 +185,10 @@ export default class BookmarkMenu extends Component {
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {
+      const time = option.timeFn();
       this.existingBookmark.selectedReminderType = option.id;
-      this.existingBookmark.selectedDatetime = option.time;
-      this.existingBookmark.reminderAt = option.time;
+      this.existingBookmark.selectedDatetime = time;
+      this.existingBookmark.reminderAt = time;
 
       try {
         await this.bookmarkManager.save();
@@ -296,7 +290,7 @@ export default class BookmarkMenu extends Component {
               >
                 <DButton
                   @label={{option.label}}
-                  @translatedTitle={{this.reminderShortcutTimeTitle option}}
+                  @translatedTitle={{formatTime option}}
                   @action={{fn this.onChooseReminderOption option}}
                   class="bookmark-menu__row-btn btn-transparent"
                 />
