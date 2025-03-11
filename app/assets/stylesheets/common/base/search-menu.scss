@@ -41,8 +41,8 @@ $search-pad-horizontal: 0.5em;
       background: none;
       border: 0;
       margin-bottom: 0;
-      width: auto;
-      flex-grow: 1;
+      width: 0;
+      flex: 1 1 auto;
 
       &:focus {
         outline: none;
