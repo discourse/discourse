@@ -56,9 +56,10 @@ lv:
           fields:
             restricted_tags:
               label: Birkas
-            restricted_category:
-              label: Sadaļa
+            restricted_categories:
+              label: Sadaļas
           created: Radīts
+          topics: Tēmas
         category_created_edited:
           fields:
             restricted_category:

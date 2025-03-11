@@ -1837,8 +1837,8 @@ bs_BA:
         liked_consolidated: "novi lajkovi"
         post_approved: "post odobreno"
     upload_selector:
+      delete: "Delete"
       uploading: "Učitavam"
-      select_file: "Izaberi fajl"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"

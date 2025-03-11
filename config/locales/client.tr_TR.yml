@@ -2727,9 +2727,8 @@ tr_TR:
         new_features: "Yeni Discourse özellikleri çıktı!"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
+      delete: "Sil"
       uploading: "Yükleniyor"
-      processing: "Yükleme İşleniyor"
-      select_file: "Dosya seç"
       default_image_alt_text: görüntü
     search:
       sort_by: "Sıralama ölçütü"
@@ -5208,6 +5207,7 @@ tr_TR:
         key: "Anahtar"
         keys: "Anahtarlar"
         created: 'Oluşturan:'
+        scope: Kapsam
         updated: Güncellendi
         last_used: Son kullanılan
         never_used: Asla

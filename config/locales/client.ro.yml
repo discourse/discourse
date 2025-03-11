@@ -2108,8 +2108,11 @@ ro:
         new_features: "Au fost lansate funcționalități Discourse noi!"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
+      change: "Schimbă"
+      delete: "Șterge"
       uploading: "Se încarcă"
-      select_file: "Alege fișier"
+      processing: "Se procesează încărcarea"
+      select_file: "Dă clic pentru a încărca sau trage și plasează fișierul"
       default_image_alt_text: imagine
     search:
       sort_by: "Sortează după"

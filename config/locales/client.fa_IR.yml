@@ -2739,9 +2739,8 @@ fa_IR:
         new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
+      delete: "حذف"
       uploading: "در حال بروز‌رسانی "
-      processing: "پردازش بارگذاری"
-      select_file: "انتخاب فایل"
       default_image_alt_text: تصویر
     search:
       sort_by: "مرتب سازی بر اساس"
@@ -5227,6 +5226,7 @@ fa_IR:
         key: "کلید"
         keys: "کلیدها"
         created: ایجاد شده توسط
+        scope: دامنه
         updated: به روز شده
         last_used: آخرین استفاده
         never_used: هرگز

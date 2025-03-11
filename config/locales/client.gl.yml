@@ -1982,8 +1982,8 @@ gl:
         votes_released: "O voto foi liberado"
         admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
+      delete: "Eliminar"
       uploading: "Cargando"
-      select_file: "Seleccionar ficheiro"
       default_image_alt_text: imaxe
     search:
       sort_by: "Ordenar por"

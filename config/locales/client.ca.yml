@@ -1778,8 +1778,8 @@ ca:
         post_approved: "publicació aprovada"
         admin_problems: "nou consell al tauler de control del vostre lloc web"
     upload_selector:
+      delete: "Suprimeix"
       uploading: "Carregant"
-      select_file: "Tria un fitxer"
       default_image_alt_text: imatge
     search:
       sort_by: "Ordena per"

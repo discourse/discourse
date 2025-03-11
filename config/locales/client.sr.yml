@@ -1813,9 +1813,8 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
+      delete: "Obriši"
       uploading: "Učitavanje"
-      processing: "Obrada uploada"
-      select_file: "Odaberi datoteku"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"

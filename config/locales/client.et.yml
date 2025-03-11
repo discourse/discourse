@@ -1540,8 +1540,8 @@ et:
       titles:
         watching_first_post: "uus teema"
     upload_selector:
+      delete: "Kustuta"
       uploading: "Laen üles"
-      select_file: "Vali fail"
       default_image_alt_text: pilt
     search:
       sort_by: "Järjesta"

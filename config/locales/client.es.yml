@@ -2727,9 +2727,8 @@ es:
         new_features: "¡Se han lanzado nuevas características de Discourse!"
         admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
+      delete: "Eliminar"
       uploading: "Subiendo"
-      processing: "Procesando subida"
-      select_file: "Seleccionar archivo"
       default_image_alt_text: imagen
     search:
       sort_by: "Ordenar por"
@@ -5209,6 +5208,7 @@ es:
         key: "Clave"
         keys: "Claves"
         created: Creado por
+        scope: Ámbito
         updated: Actualizado
         last_used: Usada por última vez
         never_used: Nunca

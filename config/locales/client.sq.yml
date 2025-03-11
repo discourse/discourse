@@ -2720,9 +2720,8 @@ sq:
         new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
+      delete: "Fshij"
       uploading: "Duke ngarkuar"
-      processing: "Ngarkimi po përpunohet"
-      select_file: "Zgjdhni një Skedar"
       default_image_alt_text: imazh
     search:
       sort_by: "Rendit sipas"

@@ -1507,8 +1507,8 @@ th:
         liked_consolidated: "ไลค์ใหม่"
         post_approved: "โพสต์ได้รับอนุมัติ"
     upload_selector:
+      delete: "ลบ"
       uploading: "กำลังอัปโหลด"
-      select_file: "เลือกไฟล์"
       default_image_alt_text: รูปภาพ
     search:
       sort_by: "เรียงโดย"

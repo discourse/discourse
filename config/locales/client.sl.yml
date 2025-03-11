@@ -2176,8 +2176,8 @@ sl:
         post_approved: "prispevek odobren"
         admin_problems: "nov nasvet na vaši nadzorni plošči"
     upload_selector:
+      delete: "Izbriši"
       uploading: "Nalagam"
-      select_file: "Izberite datoteko"
       default_image_alt_text: slika
     search:
       sort_by: "Uredi po"
