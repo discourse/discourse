@@ -1114,10 +1114,6 @@ packages:
     resolution: {integrity: sha512-rRHT8siFIXQrAYOYqZQVsAr8vJ+cBNqcVAY6m5V8/4QqzaPl+zDBe6cLEPRDuNOUf3ww8RfJVlOyQMoSI+5Ang==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/generator@7.26.9':
-    resolution: {integrity: sha512-kEWdzjOAUMW4hAyrzJ0ZaTOu9OmpyDIQicIh0zg0EEcEkYXZb2TjtBhnHi2ViX7PKwZqF4xwqfAm299/QMP3lg==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-annotate-as-pure@7.25.9':
     resolution: {integrity: sha512-gv7320KBUFJz1RnylIg5WWYPRXKZ884AGkYpgpWW02TH66Dl+HaC1t1CKd0z3R4b6hdYEcmrNZHUmfCP+1u3/g==}
     engines: {node: '>=6.9.0'}
@@ -1203,11 +1199,6 @@ packages:
 
   '@babel/parser@7.26.10':
     resolution: {integrity: sha512-6aQR2zGE/QFi8JpDLjUZEPYOs7+mhKXm86VaKFiLP35JQwQb6bwUE+XbvkH0EptsYhbNBSUGaUBLKqxH1xSgsA==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  '@babel/parser@7.26.9':
-    resolution: {integrity: sha512-81NWa1njQblgZbQHxWHpxxCzNsa3ZwvFqpUg7P+NNUU6f3UU2jBEg4OlF/J6rl8+PQGh1q6/zWScd001YwcA5A==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1666,16 +1657,8 @@ packages:
     resolution: {integrity: sha512-k8NuDrxr0WrPH5Aupqb2LCVURP/S0vBEn5mK6iH+GIYob66U5EtoZvcdudR2jQ4cmTwhEwW1DLB+Yyas9zjF6A==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/traverse@7.26.9':
-    resolution: {integrity: sha512-ZYW7L+pL8ahU5fXmNbPF+iZFHCv5scFak7MZ9bwaRPLUhHh7QQEMjZUg0HevihoqCM5iSYHN61EyCoZvqC+bxg==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/types@7.26.10':
     resolution: {integrity: sha512-emqcG3vHrpxUKTrxcblR36dcrcoRDvKmnL/dCL6ZsHaShW80qxCAcNhzQZrpeM765VzEos+xOi4s+r4IXzTwdQ==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.26.9':
-    resolution: {integrity: sha512-Y3IR1cRnOxOCDvMmNiym7XpXQ93iGDDPHx+Zj+NM+rg0fBaShfQLkg+hKPaZCEvg5N/LeCo4+Rj/i3FuJsIQaw==}
     engines: {node: '>=6.9.0'}
 
   '@blueoak/list@15.0.0':
@@ -8816,14 +8799,14 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.9
+      '@babel/generator': 7.26.10
       '@babel/helper-compilation-targets': 7.26.5
       '@babel/helper-module-transforms': 7.26.0(@babel/core@7.26.9)(supports-color@8.1.1)
       '@babel/helpers': 7.26.9
-      '@babel/parser': 7.26.9
+      '@babel/parser': 7.26.10
       '@babel/template': 7.26.9
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
-      '@babel/types': 7.26.9
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
+      '@babel/types': 7.26.10
       convert-source-map: 2.0.0
       debug: 4.4.0(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
@@ -8848,17 +8831,9 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.25
       jsesc: 3.1.0
 
-  '@babel/generator@7.26.9':
-    dependencies:
-      '@babel/parser': 7.26.9
-      '@babel/types': 7.26.9
-      '@jridgewell/gen-mapping': 0.3.8
-      '@jridgewell/trace-mapping': 0.3.25
-      jsesc: 3.1.0
-
   '@babel/helper-annotate-as-pure@7.25.9':
     dependencies:
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
 
   '@babel/helper-compilation-targets@7.26.5':
     dependencies:
@@ -8876,7 +8851,7 @@ snapshots:
       '@babel/helper-optimise-call-expression': 7.25.9
       '@babel/helper-replace-supers': 7.26.5(@babel/core@7.26.9)(supports-color@8.1.1)
       '@babel/helper-skip-transparent-expression-wrappers': 7.25.9(supports-color@8.1.1)
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -8902,14 +8877,14 @@ snapshots:
   '@babel/helper-member-expression-to-functions@7.25.9(supports-color@8.1.1)':
     dependencies:
       '@babel/traverse': 7.26.10(supports-color@8.1.1)
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
     transitivePeerDependencies:
       - supports-color
 
   '@babel/helper-module-imports@7.25.9(supports-color@8.1.1)':
     dependencies:
       '@babel/traverse': 7.26.10(supports-color@8.1.1)
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
     transitivePeerDependencies:
       - supports-color
 
@@ -8918,13 +8893,13 @@ snapshots:
       '@babel/core': 7.26.9(supports-color@8.1.1)
       '@babel/helper-module-imports': 7.25.9(supports-color@8.1.1)
       '@babel/helper-validator-identifier': 7.25.9
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
   '@babel/helper-optimise-call-expression@7.25.9':
     dependencies:
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
 
   '@babel/helper-plugin-utils@7.26.5': {}
 
@@ -8949,7 +8924,7 @@ snapshots:
   '@babel/helper-skip-transparent-expression-wrappers@7.25.9(supports-color@8.1.1)':
     dependencies:
       '@babel/traverse': 7.26.10(supports-color@8.1.1)
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
     transitivePeerDependencies:
       - supports-color
 
@@ -8970,15 +8945,11 @@ snapshots:
   '@babel/helpers@7.26.9':
     dependencies:
       '@babel/template': 7.26.9
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
 
   '@babel/parser@7.26.10':
     dependencies:
       '@babel/types': 7.26.10
-
-  '@babel/parser@7.26.9':
-    dependencies:
-      '@babel/types': 7.26.9
 
   '@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.25.9(@babel/core@7.26.9)(supports-color@8.1.1)':
     dependencies:
@@ -9525,7 +9496,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.9(supports-color@8.1.1)
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/types': 7.26.9
+      '@babel/types': 7.26.10
       esutils: 2.0.3
 
   '@babel/runtime@7.12.18':
@@ -9541,8 +9512,8 @@ snapshots:
   '@babel/template@7.26.9':
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.26.9
-      '@babel/types': 7.26.9
+      '@babel/parser': 7.26.10
+      '@babel/types': 7.26.10
 
   '@babel/traverse@7.26.10(supports-color@8.1.1)':
     dependencies:
@@ -9556,24 +9527,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/traverse@7.26.9(supports-color@8.1.1)':
-    dependencies:
-      '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.9
-      '@babel/parser': 7.26.9
-      '@babel/template': 7.26.9
-      '@babel/types': 7.26.9
-      debug: 4.4.0(supports-color@8.1.1)
-      globals: 11.12.0
-    transitivePeerDependencies:
-      - supports-color
-
   '@babel/types@7.26.10':
-    dependencies:
-      '@babel/helper-string-parser': 7.25.9
-      '@babel/helper-validator-identifier': 7.25.9
-
-  '@babel/types@7.26.9':
     dependencies:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
@@ -9803,7 +9757,7 @@ snapshots:
       '@babel/plugin-transform-runtime': 7.26.9(@babel/core@7.26.9)
       '@babel/preset-env': 7.26.9(@babel/core@7.26.9)(supports-color@8.1.1)
       '@babel/runtime': 7.26.9
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
       '@embroider/core': 3.5.3(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/macros': 1.16.11(@glint/template@1.4.1-unstable.34c4510)
       '@types/babel__code-frame': 7.0.6
@@ -13218,8 +13172,8 @@ snapshots:
 
   ember-router-generator@2.0.0:
     dependencies:
-      '@babel/parser': 7.26.9
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
+      '@babel/parser': 7.26.10
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
       recast: 0.18.10
     transitivePeerDependencies:
       - supports-color
@@ -13290,11 +13244,11 @@ snapshots:
 
   ember-template-lint@7.0.1(@babel/core@7.26.9):
     dependencies:
-      '@babel/generator': 7.26.9
-      '@babel/parser': 7.26.9
+      '@babel/generator': 7.26.10
+      '@babel/parser': 7.26.10
       '@babel/plugin-syntax-typescript': 7.25.9(@babel/core@7.26.9)
       '@babel/plugin-transform-typescript': 7.26.8(@babel/core@7.26.9)
-      '@babel/traverse': 7.26.9(supports-color@8.1.1)
+      '@babel/traverse': 7.26.10(supports-color@8.1.1)
       '@lint-todo/utils': 13.1.1
       aria-query: 5.3.2
       chalk: 5.4.1
@@ -15083,7 +15037,7 @@ snapshots:
 
   jsdoc@4.0.4:
     dependencies:
-      '@babel/parser': 7.26.9
+      '@babel/parser': 7.26.10
       '@jsdoc/salty': 0.2.5
       '@types/markdown-it': 14.1.2
       bluebird: 3.7.2
