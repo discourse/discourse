@@ -74,12 +74,18 @@
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@5.12.0": "patches/ember-source@5.12.0.patch"
     },
+    "packageExtensions": {
+      "ember-this-fallback": {
+        "peerDependencies": {
+          "ember-source": "^5.0.0"
+        }
+      }
+    },
     "peerDependencyRules": {
       "allowedVersions": {
         "lint-to-the-future-eslint>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
-        "lint-to-the-future-ember-template>ember-template-lint": "*",
-        "ember-this-fallback>ember-source": "^5.0.0"
+        "lint-to-the-future-ember-template>ember-template-lint": "*"
       },
       "ignoreMissing": [
         "webpack"
