@@ -12,7 +12,7 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const UP = "up";
 const DOWN = "down";

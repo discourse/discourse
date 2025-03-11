@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import CountI18n from "discourse/components/count-i18n";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class SelectedPosts extends Component {
   <template>

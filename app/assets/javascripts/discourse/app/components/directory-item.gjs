@@ -13,7 +13,7 @@ import directoryItemLabel from "discourse/helpers/directory-item-label";
 import directoryItemValue from "discourse/helpers/directory-item-value";
 import formatDuration from "discourse/helpers/format-duration";
 import { propertyEqual } from "discourse/lib/computed";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 @tagName("div")
 @classNames("directory-table__row")

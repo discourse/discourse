@@ -2,7 +2,7 @@ import { Input } from "@ember/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import InputTip from "discourse/components/input-tip";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
 export default class UserFieldText extends UserFieldBase {

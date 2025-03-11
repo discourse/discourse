@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const ComposerFullscreenPrompt = <template>
   <div

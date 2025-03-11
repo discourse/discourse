@@ -16,7 +16,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import LoadMore from "discourse/mixins/load-more";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 @tagName("table")
 @classNames("topic-list")

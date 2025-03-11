@@ -13,7 +13,7 @@ import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import { userPath } from "discourse/lib/url";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const _extraItems = [];
 

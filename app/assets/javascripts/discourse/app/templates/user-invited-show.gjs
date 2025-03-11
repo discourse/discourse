@@ -13,7 +13,7 @@ import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

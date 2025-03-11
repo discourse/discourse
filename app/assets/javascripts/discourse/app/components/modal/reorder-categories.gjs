@@ -10,7 +10,7 @@ import categoryBadge from "discourse/helpers/category-badge";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";
 

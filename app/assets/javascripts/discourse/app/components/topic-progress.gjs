@@ -7,7 +7,7 @@ import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 @classNameBindings("docked")
 export default class TopicProgress extends Component {

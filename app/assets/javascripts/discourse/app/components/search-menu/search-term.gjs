@@ -9,7 +9,7 @@ import {
   SEARCH_INPUT_ID,
 } from "discourse/components/search-menu";
 import { isiPad } from "discourse/lib/utilities";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 

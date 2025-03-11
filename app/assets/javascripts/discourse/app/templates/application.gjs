@@ -25,7 +25,7 @@ import Sidebar from "discourse/components/sidebar";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 import DToasts from "float-kit/components/d-toasts";
 import DTooltips from "float-kit/components/d-tooltips";

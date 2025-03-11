@@ -16,7 +16,7 @@ import boundDate from "discourse/helpers/bound-date";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(

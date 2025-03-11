@@ -15,7 +15,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class AvatarSelectorModal extends Component {
   @service currentUser;

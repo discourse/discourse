@@ -9,7 +9,7 @@ import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
 import boundDate from "discourse/helpers/bound-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(

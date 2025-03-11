@@ -6,7 +6,7 @@ import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import discourseLater from "discourse/lib/later";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class SignupCta extends Component {
   action = "showCreateAccount";

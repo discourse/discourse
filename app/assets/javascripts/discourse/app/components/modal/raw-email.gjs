@@ -6,7 +6,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import IframedHtml from "discourse/components/iframed-html";
 import Post from "discourse/models/post";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 
 export default class RawEmailComponent extends Component {

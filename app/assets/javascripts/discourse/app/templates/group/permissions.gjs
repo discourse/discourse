@@ -1,6 +1,6 @@
 import RouteTemplate from "ember-route-template";
 import categoryLink from "discourse/helpers/category-link";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

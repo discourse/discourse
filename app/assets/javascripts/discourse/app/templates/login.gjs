@@ -14,7 +14,7 @@ import hideApplicationHeaderButtons from "discourse/helpers/hide-application-hea
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";

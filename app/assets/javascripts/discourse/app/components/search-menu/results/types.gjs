@@ -7,7 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 
 export default class Types extends Component {

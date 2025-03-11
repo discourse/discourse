@@ -12,7 +12,7 @@ import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class AuthTokenComponent extends Component {
   @service currentUser;

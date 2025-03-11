@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

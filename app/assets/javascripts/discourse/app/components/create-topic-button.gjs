@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DTooltip from "float-kit/components/d-tooltip";
 

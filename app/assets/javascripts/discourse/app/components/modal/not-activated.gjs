@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import ActivationControls from "discourse/components/activation-controls";
 import DModal from "discourse/components/d-modal";
 import { resendActivationEmail } from "discourse/lib/user-activation";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ActivationEdit from "./activation-edit";
 import ActivationResent from "./activation-resent";
 

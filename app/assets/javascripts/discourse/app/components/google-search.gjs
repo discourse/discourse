@@ -5,7 +5,7 @@ import { classNameBindings, classNames } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 @classNames("google-search-form")
 @classNameBindings("hidden:hidden")

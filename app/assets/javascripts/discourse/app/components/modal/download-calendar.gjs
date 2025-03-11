@@ -8,7 +8,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import RadioButton from "discourse/components/radio-button";
 import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class DownloadCalendar extends Component {
   @service currentUser;

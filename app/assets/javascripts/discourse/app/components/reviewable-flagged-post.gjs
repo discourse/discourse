@@ -11,7 +11,7 @@ import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
 import { bind } from "discourse/lib/decorators";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableFlaggedPost extends Component {
   @tracked isCollapsed = false;

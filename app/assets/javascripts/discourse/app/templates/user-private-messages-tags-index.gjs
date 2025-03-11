@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import TagList from "discourse/components/tag-list";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

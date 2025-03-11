@@ -7,7 +7,7 @@ import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 
 export default RouteTemplate(

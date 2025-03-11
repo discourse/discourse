@@ -11,7 +11,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserInfo from "discourse/components/user-info";
 import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

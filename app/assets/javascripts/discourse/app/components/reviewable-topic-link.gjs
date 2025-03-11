@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import TopicStatus from "discourse/components/topic-status";
 import categoryBadge from "discourse/helpers/category-badge";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableTopicLink extends Component {
   <template>

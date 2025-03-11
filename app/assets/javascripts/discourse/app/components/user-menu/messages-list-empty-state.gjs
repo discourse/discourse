@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/helpers/get-url";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const MessagesListEmptyState = <template>
   <div class="empty-state">

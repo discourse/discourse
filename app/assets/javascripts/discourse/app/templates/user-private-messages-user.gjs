@@ -3,7 +3,7 @@ import RouteTemplate from "ember-route-template";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
 import icon from "discourse/helpers/d-icon";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>

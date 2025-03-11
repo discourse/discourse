@@ -8,7 +8,7 @@ import { create } from "virtual-dom";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { iconNode } from "discourse/lib/icon-library";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;

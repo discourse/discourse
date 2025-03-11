@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import FlatButton from "discourse/components/flat-button";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import User from "discourse/models/user";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class RecentSearches extends Component {
   @service currentUser;

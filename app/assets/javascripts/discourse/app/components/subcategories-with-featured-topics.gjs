@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class SubcategoriesWithFeaturedTopics extends Component {
   <template>

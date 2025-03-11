@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorEditSecurityKey extends Component {
   @tracked loading = false;

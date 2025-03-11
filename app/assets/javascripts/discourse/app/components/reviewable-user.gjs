@@ -3,7 +3,7 @@ import { concat } from "@ember/helper";
 import ReviewableField from "discourse/components/reviewable-field";
 import getUrl from "discourse/helpers/get-url";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableUser extends Component {
   @discourseComputed("reviewable.user_fields")

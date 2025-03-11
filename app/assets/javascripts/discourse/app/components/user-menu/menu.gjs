@@ -13,7 +13,7 @@ import getUrl from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import UserMenuBookmarksList from "./bookmarks-list";
 import UserMenuLikesNotificationsList from "./likes-notifications-list";
 import UserMenuMessagesList from "./messages-list";

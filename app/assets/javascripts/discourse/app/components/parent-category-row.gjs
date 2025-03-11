@@ -12,7 +12,7 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import gt from "truth-helpers/helpers/gt";
 
 export default class ParentCategoryRow extends CategoryListItem {

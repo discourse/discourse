@@ -4,7 +4,7 @@ import RouteTemplate from "ember-route-template";
 import AboutPage from "discourse/components/about-page";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
