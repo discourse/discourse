@@ -3,22 +3,13 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DecoratedHtml from "discourse/components/decorated-html";
 import icon from "discourse/helpers/d-icon";
-import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import PostAvatar from "./avatar";
 import PostMetaDataPosterName from "./meta-data/poster-name";
+import PostCookedHtml from "./cooked-html";
 
 export default class PostEmbedded extends Component {
   @service appEvents;
-
-  @bind
-  decoratePostContentBeforeAdopt(element, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
-  }
 
   <template>
     <div ...attributes class="reply" data-post-id={{@post.id}}>
@@ -46,11 +37,10 @@ export default class PostEmbedded extends Component {
               </a>
             </div>
           </div>
-          <DecoratedHtml
-            @className="cooked"
-            @decorate={{this.decoratePostContentBeforeAdopt}}
-            @html={{htmlSafe @post.cooked}}
-            @model={{@post}}
+          <PostCookedHtml
+            @post={{@post}}
+            @highlightTerm={{@highlightTerm}}
+            @streamElement={{false}}
           />
         </div>
       </div>

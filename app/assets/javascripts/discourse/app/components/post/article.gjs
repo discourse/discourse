@@ -112,7 +112,11 @@ export default class PostArticle extends Component {
           </section>
         </div>
         {{#each this.repliesAbove key="id" as |reply|}}
-          <PostEmbedded @post={{reply}} @above={{true}} />
+          <PostEmbedded
+            @post={{reply}}
+            @above={{true}}
+            @highlightTerm={{@highlightTerm}}
+          />
         {{/each}}
       {{/if}}
       {{#if (and @post.deleted_at @post.notice)}}
@@ -132,6 +136,7 @@ export default class PostArticle extends Component {
           @deletePost={{@deletePost}}
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
+          @highlightTerm={{@highlightTerm}}
           @lockPost={{@lockPost}}
           @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}

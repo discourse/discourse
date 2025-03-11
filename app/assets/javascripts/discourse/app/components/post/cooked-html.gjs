@@ -31,6 +31,10 @@ export default class PostCookedHtml extends Component {
   #decoratorState = new WeakMap();
   #pendingDecoratorCleanup = [];
 
+  get isStreamElement() {
+    return this.args.streamElement ?? true;
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
     this.#cleanupDecorations();
@@ -78,7 +82,22 @@ export default class PostCookedHtml extends Component {
     );
 
     this.appEvents.trigger(
-      "decorate-post-cooked-element:before-adopt",
+      this.isStreamElement
+        ? "decorate-post-cooked-element:before-adopt"
+        : "decorate-non-stream-cooked-element",
+      element,
+      helper
+    );
+  }
+
+  @bind
+  decorateAfterAdopt(element, helper) {
+    if (this.isStreamElement) {
+      return;
+    }
+
+    this.appEvents.trigger(
+      "decorate-post-cooked-element:after-adopt",
       element,
       helper
     );

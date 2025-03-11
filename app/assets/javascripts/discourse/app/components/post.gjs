@@ -13,6 +13,7 @@ export default class Post extends Component {
   @service currentUser;
   @service dialog;
   @service keyValueStore;
+  @service search;
 
   get id() {
     return `post_${this.args.post.post_number}`;
@@ -104,6 +105,7 @@ export default class Post extends Component {
           @deletePost={{@deletePost}}
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
+          @highlightTerm={{this.search.highlightTerm}}
           @lockPost={{@lockPost}}
           @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}

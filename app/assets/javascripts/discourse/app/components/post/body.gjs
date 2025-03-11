@@ -32,6 +32,7 @@ const PostBody = <template>
       @deletePost={{@deletePost}}
       @editPost={{@editPost}}
       @grantBadge={{@grantBadge}}
+      @highlightTerm={{@highlightTerm}}
       @lockPost={{@lockPost}}
       @permanentlyDeletePost={{@permanentlyDeletePost}}
       @rebakePost={{@rebakePost}}

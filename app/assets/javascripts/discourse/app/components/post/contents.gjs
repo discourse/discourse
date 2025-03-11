@@ -164,7 +164,7 @@ export default class PostContents extends Component {
   <template>
     <div class={{concatClass "regular" (unless this.repliesShown "contents")}}>
       <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
-        <PostCookedHtml @post={{@post}} />
+        <PostCookedHtml @post={{@post}} @highlightTerm={{@highlightTerm}} />
       </PluginOutlet>
 
       {{#if @post.requestedGroupName}}
@@ -238,6 +238,7 @@ export default class PostContents extends Component {
                 username=reply.username
               }}
               @post={{reply}}
+              @highlightTerm={{@highlightTerm}}
             />
           {{/each}}
 
