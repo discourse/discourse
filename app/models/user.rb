@@ -930,6 +930,10 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def remove_password()
+    user_password.destroy if user_password
+  end
+
   def password
     "" # so that validator doesn't complain that a password attribute doesn't exist
   end

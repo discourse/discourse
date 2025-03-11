@@ -1601,6 +1601,8 @@ en:
         choose: "Choose a password"
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
+        remove: "Remove Password"
+        remove_detail: "This completely erases your password. Your account will no longer be accessible by using your password to log in unless you reset it."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
