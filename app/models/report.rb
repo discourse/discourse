@@ -27,6 +27,14 @@ class Report
     storage_stats: :storage_stats,
   }
 
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+
+  HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
+    consolidated_page_views_browser_detection
+    page_view_anon_reqs
+    page_view_logged_in_reqs
+  ]
+
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
