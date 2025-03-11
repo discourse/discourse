@@ -35,6 +35,9 @@ describe "JS Deprecation Handling", type: :system do
 
     page.execute_script <<~JS
       const deprecated = require("discourse/lib/deprecated").default;
+      const { CRITICAL_DEPRECATIONS } = require("discourse/services/deprecation-warning-handler");
+
+      CRITICAL_DEPRECATIONS.push("fake-deprecation");
       deprecated("Fake deprecation message", { id: "fake-deprecation" })
     JS
 
@@ -55,9 +58,14 @@ describe "JS Deprecation Handling", type: :system do
       name: "discourse/connectors/below-footer/my-connector.gjs",
       value: <<~JS,
         import deprecated from "discourse/lib/deprecated";
-        function triggerDeprecation(){
-          deprecated("Fake deprecation message", { id: "fake-deprecation" })
+        import { CRITICAL_DEPRECATIONS } from "discourse/services/deprecation-warning-handler";
+
+        CRITICAL_DEPRECATIONS.push("fake-deprecation");
+
+        function triggerDeprecation() {
+          deprecated("Fake deprecation message", { id: "fake-deprecation" });
         }
+
         export default <template>
           {{triggerDeprecation}}
         </template>

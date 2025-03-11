@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def delete_group
-        page.find("[data-test-selector='delete-group-button']").click
+        page.find(".delete-group-button").click
         page.find(".dialog-footer .btn-danger").click
       end
 
