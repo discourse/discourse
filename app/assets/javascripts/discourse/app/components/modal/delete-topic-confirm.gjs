@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-// Modal that displays confirmation text when user deletes a topic
-// The modal will display only if the topic exceeds a certain amount of views
 import DModal from "discourse/components/d-modal";
 import i18n0 from "discourse/helpers/i18n";
 import { i18n } from "discourse-i18n";
 
+// Modal that displays confirmation text when user deletes a topic
+// The modal will display only if the topic exceeds a certain amount of views
 export default class DeleteTopicConfirm extends Component {
   @service currentUser;
   @service siteSettings;
