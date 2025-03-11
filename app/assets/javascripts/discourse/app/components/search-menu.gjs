@@ -114,8 +114,8 @@ export default class SearchMenu extends Component {
     return false;
   }
 
-  get hideInMobileView() {
-    return !(this.site.mobileView && this.site.isMobileDevice);
+  get isMobileViewAndDevice() {
+    return this.site.mobileView && this.site.isMobileDevice;
   }
 
   @action
