@@ -2,12 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
 import DEditor from "discourse/components/d-editor";
 
-export async function testMarkdown(
-  assert,
-  markdown,
-  expectedHtml,
-  expectedMarkdown
-) {
+export async function setupRichEditor(assert, markdown, multiToggle = false) {
   const self = new (class {
     @tracked value = markdown;
     @tracked view;
@@ -26,10 +21,14 @@ export async function testMarkdown(
     </template>
   );
 
-  // ensure toggling to rich editor and back works
-  await click(".composer-toggle-switch");
-  await click(".composer-toggle-switch");
-  await click(".composer-toggle-switch");
+  if (multiToggle) {
+    // ensure toggling to rich editor and back works
+    await click(".composer-toggle-switch");
+    await click(".composer-toggle-switch");
+    await click(".composer-toggle-switch");
+  } else {
+    await click(".composer-toggle-switch");
+  }
 
   await waitFor(".ProseMirror");
   await settled();
@@ -62,9 +61,20 @@ export async function testMarkdown(
     // or artifacts
     .replace(' class=""', "");
 
+  return [self, html];
+}
+
+export async function testMarkdown(
+  assert,
+  markdown,
+  expectedHtml,
+  expectedMarkdown
+) {
+  const [editorClass, html] = await setupRichEditor(assert, markdown);
+
   assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
-    self.value,
+    editorClass.value,
     expectedMarkdown,
     `Markdown should match for "${markdown}"`
   );

@@ -46,16 +46,24 @@ const extension = {
       state.write("[/details]\n\n");
     },
     summary(state, node, parent) {
-      state.write('[details="');
+      let hasSummary = false;
+      // If the [details] tag has no summary.
       if (node.content.childCount === 0) {
-        state.text(" ");
+        state.write("[details");
+      } else {
+        hasSummary = true;
+        state.write('[details="');
+        node.content.forEach(
+          (child) =>
+            child.text &&
+            state.text(child.text.replace(/"/g, "“"), state.inAutolink)
+        );
       }
-      node.content.forEach(
-        (child) =>
-          child.text &&
-          state.text(child.text.replace(/"/g, "“"), state.inAutolink)
-      );
-      state.write(`"${parent.attrs.open ? " open" : ""}]\n`);
+      let finalState = `${parent.attrs.open ? " open" : ""}]\n`;
+      if (hasSummary) {
+        finalState = `"${finalState}`;
+      }
+      state.write(finalState);
     },
   },
   plugins: {
