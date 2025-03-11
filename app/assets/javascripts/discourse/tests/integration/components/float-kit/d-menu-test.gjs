@@ -1,15 +1,15 @@
 import { getOwner } from "@ember/owner";
-import {
-  click,
-  render,
-  triggerEvent,
-  triggerKeyEvent,
-} from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
+import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
+import DMenu from "float-kit/components/d-menu";
+import { hash } from "@ember/helper";
+import DButton from "discourse/components/d-button";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import element_ from "discourse/helpers/element";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,20 +23,20 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   }
 
   test("@label", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     assert.dom(".fk-d-menu__trigger .d-button-label").hasText(/^label$/);
   });
 
   test("@icon", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @icon="check" />`);
+    await render(<template><DMenu @inline={{true}} @icon="check" /></template>);
 
     assert.dom(".fk-d-menu__trigger .d-icon-check").exists();
   });
 
   test("@content", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @content="content" />`
+      <template><DMenu @inline={{true}} @label="label" @content="content" /></template>
     );
     await open();
 
@@ -47,39 +47,42 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     this.site.mobileView = true;
 
     await render(
-      hbs`<DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}} @content="content" />`
+      <template><DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}} @content="content" /></template>
     );
     await open();
 
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
-  test("@onRegisterApi", async function (assert) {
+  test("@onRegisterApi", async function (assert) {const self = this;
+
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
 
     await render(
-      hbs`<DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+      <template><DMenu @inline={{true}} @onRegisterApi={{self.onRegisterApi}} /></template>
     );
 
     assert.true(this.api instanceof DMenuInstance);
   });
 
-  test("@onShow", async function (assert) {
+  test("@onShow", async function (assert) {const self = this;
+
     this.test = false;
     this.onShow = () => (this.test = true);
 
-    await render(hbs`<DMenu @inline={{true}} @onShow={{this.onShow}} />`);
+    await render(<template><DMenu @inline={{true}} @onShow={{self.onShow}} /></template>);
     await open();
 
     assert.true(this.test);
   });
 
-  test("@onClose", async function (assert) {
+  test("@onClose", async function (assert) {const self = this;
+
     this.test = false;
     this.onClose = () => (this.test = true);
 
-    await render(hbs`<DMenu @inline={{true}} @onClose={{this.onClose}} />`);
+    await render(<template><DMenu @inline={{true}} @onClose={{self.onClose}} /></template>);
     await open();
     await close();
 
@@ -87,7 +90,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("-expanded class", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     assert.dom(".fk-d-menu__trigger").doesNotHaveClass("-expanded");
 
@@ -97,14 +100,14 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("trigger id attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     assert.dom(".fk-d-menu__trigger").hasAttribute("id");
   });
 
   test("@identifier", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @identifier="tip" />`
+      <template><DMenu @inline={{true}} @label="label" @identifier="tip" /></template>
     );
 
     assert.dom(".fk-d-menu__trigger").hasAttribute("data-identifier", "tip");
@@ -115,7 +118,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("aria-expanded attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     assert.dom(".fk-d-menu__trigger").hasAttribute("aria-expanded", "false");
 
@@ -126,7 +129,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:trigger>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>label</:trigger></DMenu>`
+      <template><DMenu @inline={{true}}><:trigger>label</:trigger></DMenu></template>
     );
 
     assert.dom(".fk-d-menu__trigger").containsText("label");
@@ -134,7 +137,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:content>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:content>content</:content></DMenu>`
+      <template><DMenu @inline={{true}}><:content>content</:content></DMenu></template>
     );
 
     await open();
@@ -143,18 +146,19 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("content role attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     await open();
 
     assert.dom(".fk-d-menu").hasAttribute("role", "dialog");
   });
 
-  test("@component", async function (assert) {
+  test("@component", async function (assert) {const self = this;
+
     this.component = DDefaultToast;
 
     await render(
-      hbs`<DMenu @inline={{true}} @label="test" @component={{this.component}} @data={{hash message="content"}}/>`
+      <template><DMenu @inline={{true}} @label="test" @component={{self.component}} @data={{hash message="content"}} /></template>
     );
 
     await open();
@@ -167,7 +171,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("content aria-labelledby attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
 
     await open();
 
@@ -179,7 +183,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@closeOnEscape", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{true}} />`
+      <template><DMenu @inline={{true}} @label="label" @closeOnEscape={{true}} /></template>
     );
     await open();
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
@@ -187,7 +191,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
 
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{false}} />`
+      <template><DMenu @inline={{true}} @label="label" @closeOnEscape={{false}} /></template>
     );
     await open();
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
@@ -197,7 +201,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@closeOnClickOutside", async function (assert) {
     await render(
-      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{true}} />`
+      <template><span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{true}} /></template>
     );
     await open();
     await triggerEvent(".test", "pointerdown");
@@ -205,7 +209,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
 
     await render(
-      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{false}} />`
+      <template><span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{false}} /></template>
     );
     await open();
     await triggerEvent(".test", "pointerdown");
@@ -215,7 +219,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@maxWidth", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @maxWidth={{20}} />`
+      <template><DMenu @inline={{true}} @label="label" @maxWidth={{20}} /></template>
     );
     await open();
 
@@ -223,7 +227,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("applies position", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
+    await render(<template><DMenu @inline={{true}} @label="label" /></template>);
     await open();
 
     assert.dom(".fk-d-menu").hasAttribute("style", /top: [\d.]+?px/);
@@ -232,7 +236,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("content close argument", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu>`
+      <template><DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu></template>
     );
     await open();
 
@@ -242,20 +246,20 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@autofocus", async function (assert) {
-    await render(hbs`
+    await render(<template>
       <DMenu @inline={{true}} @autofocus={{true}}>
         <:content>
           <DButton class="my-button" />
         </:content>
       </DMenu>
-    `);
+    </template>);
     await open();
 
     assert.dom(document.activeElement).hasClass("my-button");
   });
 
   test("a menu can be closed by identifier", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await render(<template><DMenu @inline={{true}} @identifier="test">test</DMenu></template>);
     await open();
 
     await getOwner(this).lookup("service:menu").close("test");
@@ -264,7 +268,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("get a menu by identifier", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await render(<template><DMenu @inline={{true}} @identifier="test">test</DMenu></template>);
     await open();
 
     const activeMenu = getOwner(this)
@@ -278,7 +282,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("opening a menu with the same identifier", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @identifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @identifier="foo" @class="second">2</DMenu>`
+      <template><DMenu @inline={{true}} @identifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @identifier="foo" @class="second">2</DMenu></template>
     );
 
     await click(".first.fk-d-menu__trigger");
@@ -294,7 +298,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@groupIdentifier", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @groupIdentifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @groupIdentifier="foo" @class="second">2</DMenu>`
+      <template><DMenu @inline={{true}} @groupIdentifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @groupIdentifier="foo" @class="second">2</DMenu></template>
     );
 
     await click(".first.fk-d-menu__trigger");
@@ -310,7 +314,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("empty @identifier/@groupIdentifier", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @class="first">1</DMenu><DMenu @inline={{true}} @class="second">2</DMenu>`
+      <template><DMenu @inline={{true}} @class="first">1</DMenu><DMenu @inline={{true}} @class="second">2</DMenu></template>
     );
 
     await click(".first.fk-d-menu__trigger");
@@ -325,7 +329,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@class", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @class="first">1</DMenu>`);
+    await render(<template><DMenu @inline={{true}} @class="first">1</DMenu></template>);
 
     await open();
 
@@ -334,7 +338,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@triggerClass", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @triggerClass="first">1</DMenu>`);
+    await render(<template><DMenu @inline={{true}} @triggerClass="first">1</DMenu></template>);
 
     await open();
 
@@ -343,7 +347,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@contentClass", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @contentClass="first">1</DMenu>`);
+    await render(<template><DMenu @inline={{true}} @contentClass="first">1</DMenu></template>);
 
     await open();
 
@@ -351,15 +355,16 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu.first").exists();
   });
 
-  test("focusTrigger on close", async function (assert) {
+  test("focusTrigger on close", async function (assert) {const self = this;
+
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
     this.close = async () => await this.api.close();
 
     await render(
-      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
-        <DButton @icon="xmark" class="close" @action={{this.close}} />
-      </DMenu>`
+      <template><DMenu @onRegisterApi={{self.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{self.close}} />
+      </DMenu></template>
     );
 
     await click(".fk-d-menu__trigger");
@@ -369,15 +374,16 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu__trigger").isFocused();
   });
 
-  test("focusTrigger=false on close", async function (assert) {
+  test("focusTrigger=false on close", async function (assert) {const self = this;
+
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
     this.close = async () => await this.api.close({ focusTrigger: false });
 
     await render(
-      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
-        <DButton @icon="xmark" class="close" @action={{this.close}} />
-      </DMenu>`
+      <template><DMenu @onRegisterApi={{self.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{self.close}} />
+      </DMenu></template>
     );
 
     await click(".fk-d-menu__trigger");
@@ -387,7 +393,8 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(document.body).isFocused();
   });
 
-  test("traps pointerdown events only when expanded ", async function (assert) {
+  test("traps pointerdown events only when expanded ", async function (assert) {const self = this;
+
     let propagated = false;
 
     const listener = () => {
@@ -401,15 +408,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       element.removeEventListener("pointerdown", listener);
     };
 
-    await render(hbs`
-      <div {{didInsert this.didInsert}} {{will-destroy this.willDestroy}}>
-        <DMenu
-          @inline={{true}}
-          @label="label"
-          @identifier="d-menu-pointerdown-trap-test"
-        />
+    await render(<template>
+      <div {{didInsert self.didInsert}} {{willDestroy self.willDestroy}}>
+        <DMenu @inline={{true}} @label="label" @identifier="d-menu-pointerdown-trap-test" />
       </div>
-    `);
+    </template>);
 
     await triggerEvent(".d-menu-pointerdown-trap-test-trigger", "pointerdown");
 
@@ -430,9 +433,9 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@triggerComponent", async function (assert) {
-    await render(hbs`
-      <DMenu @inline={{true}} @triggerComponent={{element "span"}}>1</DMenu>
-    `);
+    await render(<template>
+      <DMenu @inline={{true}} @triggerComponent={{element_ "span"}}>1</DMenu>
+    </template>);
 
     await open();
 
