@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { and,or  } from "truth-helpers";
+import { and, or } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";

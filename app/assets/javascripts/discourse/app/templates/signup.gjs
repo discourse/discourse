@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
-import { and , not } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import FlashMessage from "discourse/components/flash-message";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";

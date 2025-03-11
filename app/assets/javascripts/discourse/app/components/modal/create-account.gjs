@@ -10,7 +10,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
-import { and , not } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";

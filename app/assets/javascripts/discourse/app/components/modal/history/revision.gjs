@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and , eq , not } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import boundDate from "discourse/helpers/bound-date";
