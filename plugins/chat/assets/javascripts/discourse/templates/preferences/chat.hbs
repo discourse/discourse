@@ -45,9 +45,12 @@
   </div>
   {{#if (eq this.model.user_option.chat_quick_reaction_type "custom")}}
     <div class="controls tracking-controls">
-      <EmojiPicker @emoji="heart" />
-      <EmojiPicker @emoji="+1" />
-      <EmojiPicker @emoji="grin" />
+      {{#each this.chatQuickReactionsCustom as |reaction index|}}
+        <EmojiPicker
+          @emoji={{reaction}}
+          @didSelectEmoji={{this.createSelectEmojiCallback index}}
+        />
+      {{/each}}
     </div>
   {{/if}}
 </fieldset>
