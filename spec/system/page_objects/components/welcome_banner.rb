@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def hidden?
-        has_no_css?(".welcome-banner")
+        has_css?(".welcome-banner", visible: false)
       end
 
       def has_anonymous_title?

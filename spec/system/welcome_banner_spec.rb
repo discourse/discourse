@@ -5,7 +5,7 @@ describe "Welcome banner", type: :system do
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
 
   context "when welcome banner is enabled" do
-    before { SiteSetting.show_welcome_banner = true }
+    before { SiteSetting.enable_welcome_banner = true }
 
     it "shows for logged in and anonymous users" do
       visit "/"
@@ -36,12 +36,30 @@ describe "Welcome banner", type: :system do
       expect(banner).to be_hidden
     end
 
-    xit "hides welcome banner and shows header search on scroll, and vice-versa" do
+    it "hides welcome banner and shows header search on scroll, and vice-versa" do
+      search_page = PageObjects::Pages::Search.new
+      SiteSetting.search_experience = "search_field"
+      Fabricate(:topic)
+
+      sign_in(current_user)
+      visit "/"
+      expect(banner).to be_visible
+      expect(search_page).to have_no_search_field
+
+      page.execute_script("document.querySelector('.topic-list').style.height = '10000px'")
+      page.scroll_to(0, 1000)
+
+      expect(banner).to be_hidden
+      expect(search_page).to have_search_field
+
+      page.scroll_to(0, 0)
+      expect(banner).to be_visible
+      expect(search_page).to have_no_search_field
     end
   end
 
   context "when welcome banner is not enabled" do
-    before { SiteSetting.show_welcome_banner = false }
+    before { SiteSetting.enable_welcome_banner = false }
 
     it "does not show the welcome banner" do
       visit "/"

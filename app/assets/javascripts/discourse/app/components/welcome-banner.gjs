@@ -54,7 +54,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    if (!this.siteSettings.show_welcome_banner) {
+    if (!this.siteSettings.enable_welcome_banner) {
       return false;
     }
 
@@ -64,7 +64,7 @@ export default class WelcomeBanner extends Component {
   <template>
     {{#if this.shouldDisplay}}
       {{#if this.inViewport}}
-        {{bodyClass "welcome-banner-visible"}}
+        {{bodyClass "welcome-banner--visible"}}
       {{/if}}
 
       <div class="welcome-banner" {{this.checkViewport}}>

@@ -3199,7 +3199,7 @@ uncategorized:
     client: true
     default: true
 
-  show_welcome_banner:
+  enable_welcome_banner:
     client: true
     default: true
 

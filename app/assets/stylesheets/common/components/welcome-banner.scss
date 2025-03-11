@@ -6,6 +6,12 @@
   }
 }
 
+.welcome-banner--visible.header-search--visible {
+  .floating-search-input-wrapper {
+    display: none;
+  }
+}
+
 .welcome-banner {
   &__search-menu {
     .menu-panel-results .menu-panel.search-menu-panel {
