@@ -32,6 +32,9 @@ class UserApiKeysController < ApplicationController
       return
     end
 
+    pp "meets_tl? #{meets_tl?}"
+    pp "current_user.groups #{current_user.groups.pluck(:name)}"
+    pp "current_user.username #{current_user.username}"
     unless meets_tl?
       @no_trust_level = true
       return
