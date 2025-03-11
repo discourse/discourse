@@ -4,7 +4,7 @@ import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { onEvent } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import AvatarFlair from "discourse/components/avatar-flair";
 import CardContentsBase from "discourse/components/card-contents-base";
 import DButton from "discourse/components/d-button";
@@ -15,7 +15,7 @@ import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const maxMembersToDisplay = 10;
 

@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import { onEvent } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
