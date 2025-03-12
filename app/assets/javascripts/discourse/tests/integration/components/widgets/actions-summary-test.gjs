@@ -8,8 +8,8 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
 
   test("post deleted", async function (assert) {
     const args = {
-      deleted_at: "2016-01-01",
-      deleted_by: {
+      deletedAt: "2016-01-01",
+      deletedBy: {
         username: "eviltrout",
         avatar_template: "/images/avatar.png",
       },
