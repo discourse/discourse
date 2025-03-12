@@ -52,3 +52,12 @@
     }
   }
 }
+
+.ProseMirror {
+  .spoiled:not(.spoiler-blurred) {
+    box-shadow: 0 0 4px 4px rgba(var(--primary-rgb), 0.2);
+    inline-size: max-content;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}

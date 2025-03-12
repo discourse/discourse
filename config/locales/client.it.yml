@@ -2727,9 +2727,8 @@ it:
         new_features: "Sono state rilasciate nuove funzionalità di Discourse!"
         admin_problems: "nuovo avviso sulla dashboard del tuo sito"
     upload_selector:
+      delete: "Elimina"
       uploading: "In caricamento"
-      processing: "Caricamento in corso"
-      select_file: "Seleziona File"
       default_image_alt_text: immagine
     search:
       sort_by: "Ordina per"
@@ -5211,6 +5210,7 @@ it:
         key: "Chiave"
         keys: "Chiavi"
         created: Creato da
+        scope: Ambito
         updated: Aggiornato
         last_used: Ultimo utilizzo
         never_used: Mai

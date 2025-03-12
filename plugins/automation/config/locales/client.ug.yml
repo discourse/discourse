@@ -165,9 +165,8 @@ ug:
             restricted_tags:
               label: بەلگە
               description: تاللاشچان، يازمىدا بۇ خەتكۈچلەر بولغاندىلا ئاندىن قوزغىلىدۇ
-            restricted_category:
+            restricted_categories:
               label: سەھىپە
-              description: تاللاشچان، يازما تېمىسى بۇ سەھىپىدە بولغاندىلا ئاندىن قوزغىلىدۇ
             restricted_groups:
               description: تاللاشچان، يازما تېمىسى گۇرۇپپا قوبۇللاش ساندۇقىدىكى بىر شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
             ignore_group_members:
@@ -187,6 +186,7 @@ ug:
               description: "ئەگەر يازما ئېلخەت ئارقىلىق قۇرۇلغان بولسا قوزغاتقۇچتىن ئاتلايدۇ"
           created: قۇرغان ۋاقتى
           edited: تەھرىرلەندى
+          topics: تېما
         user_updated:
           fields:
             user_profile:

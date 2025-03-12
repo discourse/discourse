@@ -22,6 +22,7 @@ export default class ChatChannelsManager extends Service {
   @service router;
   @service site;
   @service siteSettings;
+
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {

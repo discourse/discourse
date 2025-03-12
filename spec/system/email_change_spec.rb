@@ -59,11 +59,10 @@ describe "Changing email", type: :system do
     visit generate_confirm_link
 
     find(".confirm-new-email .btn-primary").click
-
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-
     find("button[type=submit]").click
 
+    expect(page).to have_content(I18n.t("js.second_factor_auth.redirect_after_success"))
     expect(page).to have_current_path("/u/#{user.username}/preferences/account")
     expect(user_preferences_page).to have_primary_email(new_email)
   end
@@ -118,11 +117,10 @@ describe "Changing email", type: :system do
     visit confirm_link
 
     find(".confirm-new-email .btn-primary").click
-
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-
     find("button[type=submit]").click
 
+    expect(page).to have_content(I18n.t("js.second_factor_auth.redirect_after_success"))
     expect(page).to have_current_path("/latest")
     expect(user.reload.email).to eq(new_email)
   end

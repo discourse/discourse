@@ -21,6 +21,7 @@ const maxMembersToDisplay = 10;
 )
 export default class GroupCardContents extends CardContentsBase {
   @service composer;
+
   @setting("allow_profile_backgrounds") allowBackgrounds;
   @setting("enable_badges") showBadges;
 

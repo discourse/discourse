@@ -456,6 +456,7 @@ pt_BR:
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Rascunho de novo tópico"
       new_private_message: "Novo rascunho de mensagem"
+      edit_topic: "Editar rascunho do tópico"
       abandon:
         confirm: "Você já tem um rascunho em andamento. O que deseja fazer com ele?"
         yes_value: "Descartar"
@@ -463,6 +464,7 @@ pt_BR:
       dropdown:
         title: "Abrir menu de rascunhos mais recentes"
         untitled: "Rascunho sem título"
+        view_all: "ver todos os rascunhos"
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
@@ -527,6 +529,16 @@ pt_BR:
       date_filter: "Postado entre"
       in_reply_to: "em resposta a"
       filtered_flagged_by: "Sinalizado(a) por"
+      unknown:
+        title:
+          one: "Você tem itens revisáveis pendentes do plugin desativado:"
+          other: "Você tem itens revisáveis pendentes de plugins desativados:"
+        instruction: "Eles não podem ser exibidos corretamente até que você ative o plugin relevante. Ative o plugin e atualize a página. Como alternativa, você pode ignorá-los. <a href='%{url}' target='_blank'>Saiba mais...</a>"
+        reviewable_known_source: "%{reviewableType} (do plugin '%{pluginName}')"
+        ignore_all: "Ignorar tudo"
+        enable_plugins: "Ativar plug-ins"
+        delete_confirm: "Tem certeza de que deseja excluir todas as avaliações criadas por plugins desativados?"
+        ignore_success: "Todas as avaliações criadas por plugins desativados foram excluídas."
       explain:
         why: "explique por que este item foi colocado na fila"
         title: "Pontuação revisável"
@@ -2344,6 +2356,12 @@ pt_BR:
       password_label: "Senha"
     password_reset:
       continue: "Continuar para %{site_name}"
+    emoji_set:
+      openmoji: OpenMoji
+      standard: Padrão
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Apenas categorias"
       categories_with_featured_topics: "Categorias com tópicos em destaque"
@@ -2357,6 +2375,9 @@ pt_BR:
       required_at_signup: "Necessário(a)"
       optional_at_signup: "Opcional"
       hidden_at_signup: "Opcional, oculto(a) no cadastro"
+    interface_color_selector:
+      disabled: "Não exibir"
+      sidebar_footer: "Exibir no rodapé da barra lateral"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2727,9 +2748,8 @@ pt_BR:
         new_features: "Novos recursos do Discourse foram lançados!"
         admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
+      delete: "Excluir"
       uploading: "Enviando"
-      processing: "Processando envio"
-      select_file: "Selecionar arquivo"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"
@@ -2776,6 +2796,8 @@ pt_BR:
       browser_tip_description: "usar novamente pesquisa de navegador"
       recent: "Pesquisas recentes"
       clear_recent: "Remover pesquisas recentes"
+      experience:
+        search_field: "Campo de pesquisa no cabeçalho do site"
       type:
         default: "Tópicos/postagens"
         users: "Usuários(as)"
@@ -3797,6 +3819,7 @@ pt_BR:
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria Modo Escuro"
+      logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
       badge_colors: "Cores do emblema"
@@ -3918,6 +3941,7 @@ pt_BR:
       description: "Para denunciar conteúdo ilegal, entre em contato com <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=Esta postagem %{url} apresenta conteúdo ilegal.'>%{email}</a>"
     flagging:
       title: "Agradecemos por manter a nossa comunidade um ambiente saudável!"
+      review_process_description: "Todas as denúncias são recebidas pelos moderadores e serão analisadas o mais rápido possível."
       action: "Sinalizar resposta"
       take_action: "Tomar medida…"
       take_action_options:
@@ -4170,6 +4194,7 @@ pt_BR:
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
     cannot_render_video: Este vídeo não pode ser renderizado porque o seu navegador não é compatível com o codec.
+    invalid_video_url: Este vídeo não pode ser reproduzido porque a URL é inválida ou está indisponível.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -4264,6 +4289,7 @@ pt_BR:
       admin:
         title: "Administração"
         search_prev_next: "%{shortcut} Mover seleção para cima e para baixo"
+        search_open: "%{shortcut} Abra a pesquisa para a interface de administração"
     badges:
       earned_n_times:
         one: "Emblema obtido %{count} vez"
@@ -4663,10 +4689,12 @@ pt_BR:
       no_results:
         title: "Nenhum resultado"
         description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
+        description_admin_search: 'Não conseguimos encontrar nada correspondente a ''%{filter}''.<br><br>Tente <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">pesquisar em toda a interface de administração</a>.'
       footer:
         interface_color_selector:
           light: "Claro"
           dark: "Escuro"
+          auto: "Automático"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -4818,6 +4846,7 @@ pt_BR:
         flags:
           title: "Moderação"
           header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
+          keywords: "denunciar|revisar|spam|ilegal"
         font_style:
           title: "Estilo de fonte"
           header_description: "Personalize os estilos de fonte usados pelos seus temas"
@@ -4827,6 +4856,10 @@ pt_BR:
         legal:
           title: "Jurídico"
           header_description: "Configure aspectos jurídicos, como termos de serviço, política de privacidade, informações de contato e considerações específicas da UE"
+        localization:
+          title: "Localização"
+          header_description: "Configure o idioma da interface da sua comunidade e outras opções de localização para seus membros"
+          keywords: "local|idioma|fuso_horário|unicode|ltr"
         login_and_authentication:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
@@ -4836,13 +4869,57 @@ pt_BR:
         branding:
           title: "Identidade visual"
           logo:
+            title: "Logotipo"
             form:
+              saved: "As configurações do logotipo foram salvas."
               logo:
                 title: "Logotipo principal"
+                description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+                help_text: "O tamanho recomendado é 600 x 80 pixels."
+              logo_dark:
+                help_text: "O tamanho recomendado é 600 x 80 pixels."
+              large_icon:
+                title: "Ícone quadrado"
+                description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
+                help_text: "O tamanho recomendado é 512 x 512 pixels."
+              square_icon_dark:
+                required: "Usar um ícone quadrado diferente para o modo escuro?"
+                help_text: "O tamanho recomendado é 512 x 512 pixels."
+              favicon:
+                title: "Favicon"
+                description: "O logotipo aparecerá como ícone na aba do navegador e nos favoritos/marcadores do navegador."
+              logo_small:
+                title: "Logotipo pequeno"
+                description: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Se for deixada em branco, um glifo da página inicial será exibido."
+                help_text: "O tamanho recomendado é 120 x 120 pixels."
+              logo_small_dark:
+                required: "Usar um logotipo pequeno diferente para o modo escuro?"
+                help_text: "O tamanho recomendado é 120 x 120 pixels."
               mobile: "Móvel"
               email: "E-mail"
+              social_media: "Redes sociais"
+              mobile_logo:
+                title: "Logotipo móvel"
+                description: "O logotipo usado na versão mobile do seu site. Se deixado em branco, a imagem da configuração \"logo\" será usada."
+                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+              mobile_logo_dark:
+                required: "Usar um logotipo móvel diferente para o modo escuro?"
+                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+              manifest_icon:
+                description: "Imagem usada como logotipo/imagem inicial no Android. Se deixado em branco, large_icon será usado."
+                help_text: "O tamanho recomendado é 512 x 512 pixels."
               manifest_screenshots:
                 description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
+              apple_touch_icon:
+                description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
+                help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
+              digest_logo:
+                description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
+                help_text: "Usar uma imagem retangular larga. Não usar uma imagem SVG."
+              opengraph_image:
+                description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
+              x_summary_large_image:
+                help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4859,9 +4936,11 @@ pt_BR:
           title: "Limites de frequência"
           header_description: "Configure a frequência com a qual os(as) usuários(as) podem realizar certas ações, como criar tópicos, enviar mensagens e postar respostas"
         search:
+          title: "Configurações de pesquisa"
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
+          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -4879,14 +4958,19 @@ pt_BR:
           header_description: "Todas as permissões de aplicativo baseadas em grupo são gerenciadas aqui, controlando o acesso a vários recursos no Discourse"
         dashboard:
           title: "Painel de controle"
+          header_description: "O painel de controle fornece um instantâneo da saúde da sua comunidade, incluindo tráfego, atividade do usuário e outras métricas importantes"
         users:
           title: "Usuários(as)"
+          header_description: "Visualizar e gerenciar usuários, enviar convites e exportar dados de usuários"
         groups:
           title: "Grupos"
+          header_description: "Crie e gerencie grupos, defina permissões de grupo e visualize atividades e caixas de entrada do grupo"
         site_settings:
           title: "Todas as configurações do site"
+          header_description: "Defina as configurações do seu site no Discourse para personalizar a aparência, funcionalidade e experiência do(a) usuário(a)."
         whats_new:
           title: "Novidades?"
+          header_description: "Mantenha-se atualizado(a) com os últimos recursos e melhorias do Discourse"
           keywords: "registro de alterações|recurso|lançamento"
         backups:
           title: "Backups"
@@ -4894,6 +4978,7 @@ pt_BR:
           sub_pages:
             logs:
               title: "Registros"
+              header_description: "Visualizar e gerenciar logs de backups, restaurações e uploads"
         reports:
           title: "Relatórios"
           header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
@@ -4911,6 +4996,7 @@ pt_BR:
           header_description: "Palavras em acompanhamento são ferramentas de moderação que realizam várias ações diferentes, inclusive bloquear, censurar, vincular ou sinalizar postagens que contenham certas palavras"
         color_palettes:
           title: "Paletas de cores"
+          header_description: "As paletas de cores definem as cores usadas na interface do seu site, já os temas fornecem mais estilos, layouts e componentes. Ambos podem funcionar juntos para criar uma aparência e impressão única para seu site, além de serem disponibilizados para os(as) usuários(as) selecionarem sua preferência."
         emoji:
           title: "Emoji"
           header_description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Selecione vários arquivos para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo."
@@ -4920,33 +5006,44 @@ pt_BR:
         components:
           title: "Componentes"
           header_description: "Componentes são personalizações secundárias que podem ser adicionadas aos temas para alterar elementos específicos do estilo de design do seu fórum"
+          keywords: "tema|componente|extensão"
         site_texts:
           title: "Textos do site"
+          header_description: "Personalize qualquer texto usado no Discourse para corresponder à voz e ao tom da sua comunidade"
         email:
           title: "Registros e configurações do servidor"
+          header_description: "Personalize os modelos usados para criar e-mails, pré-visualize e-mails de resumo que serão enviados e visualize logs de e-mail"
           keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
           sub_pages:
             preview_summary:
               title: "Pré-visualizar resumo"
+              header_description: "Pré-visualizar o conteúdo dos e-mails de resumo enviados para usuários(as) inativos(as)."
             advanced_test:
               title: "Teste avançado"
+              header_description: "Veja como o Discourse processa os e-mails recebidos"
             templates:
               title: "Modelos"
+              header_description: "Personalizar os modelos usados para criar e-mails"
             sent:
               title: "Enviado(a)"
+              header_description: "Ver um log de e-mails que foram enviados"
             skipped:
               title: "Ignorado(a)"
+              header_description: "Ver um log de e-mails que foram ignorados"
             bounced:
               title: "Devolvido(a)"
             received:
               title: "Recebido(a)"
+              header_description: "Ver um log de e-mails que foram recebidos"
             rejected:
               title: "Rejeitado(a)"
+              header_description: "Ver um log de e-mails que foram recusados"
         email_appearance:
           title: "Aparência"
           header_description: "Personalize o modelo no qual todos os e-mails em HTML são renderizados e estilize usando CSS"
         staff_action_logs:
           title: "Filtros e registros"
+          header_description: "Com registros e filtros, você pode monitorar e gerenciar sua comunidade, garantindo que a segurança e cortesia sejam mantidos. É possível visualizar registros de todas as ações dos membros da equipe, logs de busca e configurações de triagem de usuários."
           keywords: "registros de erros|ação da equipe|e-mails filtrados|ips filtrados|urls filtradas|registros de pesquisa"
           sub_pages:
             screened_emails:
@@ -4954,11 +5051,13 @@ pt_BR:
               header_description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada"
             screened_ips:
               title: "IPs filtrados"
+              header_description: "Endereços IP que estão sendo monitorados. Endereços IP individuais podem ser incluídos na lista de permissões."
             screened_urls:
               title: "URLs filtradas"
               header_description: "As URLs listadas aqui foram usadas em postagens de usuários(as) que foram identificados como remetentes de spam"
             search_logs:
               title: "Registros de pesquisa"
+              header_description: "Ver um log de pesquisas que foram realizadas"
         plugins:
           title: "Plugins instalados"
           header_description: "Plugins do Discourse instalados ou que já vêm pré-instalados com a hospedagem do Discourse serão mostrados nesta lista"
@@ -4967,12 +5066,23 @@ pt_BR:
           header_description: "Com o recurso de chaves de API, você pode integrar o Discourse com sistemas externos e automatizar ações de forma segura. Os(as) administradores(as) podem criar chaves com escopos específicos para controlar o acesso a recursos e dados confidenciais. Com o escopo, essa funcionalidade é limitada, melhorando a segurança."
         webhooks:
           title: "Webhooks"
+          header_description: "Webhooks permitem que o Discourse notifique serviços externos quando certos eventos acontecem em seu site. Quando o webhook é acionado, uma requisição POST é enviada às URLs informadas."
         embedding:
           title: "Incorporar"
           header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
       search:
         title: "Pesquisar"
+        instructions: "Digite para pesquisar páginas, configurações, relatórios, temas, componentes e mais..."
         result_types:
+          page:
+            one: "Página"
+            other: "Páginas"
+          report:
+            one: "Relatório"
+            other: "Relatórios"
+          setting:
+            one: "Configuração"
+            other: "Configurações"
           theme:
             one: "Tema"
             other: "Temas"
@@ -5204,6 +5314,7 @@ pt_BR:
         key: "Chave"
         keys: "Chaves"
         created: Criado(a) por
+        scope: Escopo
         updated: Atualizado(a)
         last_used: Último uso
         never_used: Nunca
@@ -5234,6 +5345,7 @@ pt_BR:
             Ao usar escopos, é possível restringir uma chave de API a um conjunto específico de pontos de extremidade.
             Você também pode definir quais parâmetros serão permitidos. Use vírgulas para separar diversos valores.
           title: Escopos
+          one_or_more: Pelo menos um escopo deve ser selecionado.
           granular: Ganular
           read_only: Somente leitura
           global: Global
@@ -5461,6 +5573,8 @@ pt_BR:
           community_title: "Título da comunidade"
           community_title_help: "Descrição curta mostrada na aba do navegador, para páginas importantes, como categorias e listas de tópicos."
           banner_image: "Imagem do banner"
+          banner_image_help: |
+            Recomendado: 1100x300px. Formatos: JPG, PNG, SVG (máx. 10 MB).
           contact_information: "Informações de contato"
           community_owner: "Proprietário(a) da Comunidade"
           community_owner_placeholder: "Johnny Smith"
@@ -5788,6 +5902,8 @@ pt_BR:
           unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
           stay: "Permanecer"
+          css_html: "Código personalizado"
+          edit_css_html: "Editar código"
           delete_upload_confirm: "Excluir este envio? (O CSS do tema pode parar de funcionar!)"
           component_on_themes: "Incluir componente nestes temas."
           included_components: "Componentes incluídos"
@@ -5848,14 +5964,21 @@ pt_BR:
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
           scss:
             text: "CSS"
+            title: "Regras CSS personalizadas com suporte para sintaxe SCSS"
+          header:
+            title: "HTML básico a ser renderizado acima do cabeçalho do Discourse"
           after_header:
             text: "Após cabeçalho"
+            title: "HTML básico a ser renderizado abaixo do cabeçalho do Discourse"
           footer:
             text: "Rodapé"
+            title: "HTML básico a ser renderizado na parte inferior da página"
           embedded_scss:
             text: "CSS incorporado"
+            title: "CSS a ser incluído quando comentários do Discourse forem incorporados em outro site"
           embedded_header:
             text: "Cabeçalho Incorporado"
+            title: "HTML básico que será renderizado acima dos comentários do Discourse quando incorporado em outro site"
           color_definitions:
             text: "Definições de cor"
             title: "Digite definições de cor personalizadas (apenas usuários(as) avançados(as))"
@@ -5868,6 +5991,15 @@ pt_BR:
               %{example}
 
               É altamente recomendável adicionar os nomes das propriedades ao prefixo para evitar conflitos com plugins e/ou núcleo.
+          head_tag:
+            text: "<head>"
+            title: "HTML para inserir no final do <head>, com suporte para tags de script"
+          body_tag:
+            text: "<body>"
+            title: "HTML para inserir no final do <body>, com suporte para tags de script"
+          js:
+            text: "JS"
+            title: "Inicializador JavaScript com suporte para a sintaxe 'template tag' do Ember"
           scss_color_variables_warning: 'Usar variáveis de cor SCSS nos temas foi preterido. Use as propriedades personalizadas do CSS. Consulte <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">este guia</a> para obter mais detalhes.'
           scss_warning_inline: "Usar variáveis de cor SCSS nos temas foi preterido."
           all_filter: "Tudo"
@@ -6641,6 +6773,8 @@ pt_BR:
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
         delete_confirm_title: "Você tem certeza de que deseja excluir este usuário(a)? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os(as) usuários(as) em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
+        delete_and_block: "Excluir usuário e bloquear seu e-mail e endereço IP"
+        delete_dont_block: "Excluir usuário(a)"
         deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."
         delete_failed: "Houve um erro ao excluir o(a) usuário(a). Verifique se todas as suas postagens foram excluídas antes de tentar excluí-lo(a)."

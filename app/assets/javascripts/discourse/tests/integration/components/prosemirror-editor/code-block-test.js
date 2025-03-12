@@ -51,7 +51,7 @@ module(
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
-        await testMarkdown(assert, markdown, html, expectedMarkdown);
+        await testMarkdown(assert, markdown, html, expectedMarkdown, true);
       });
     });
   }

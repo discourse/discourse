@@ -43,9 +43,10 @@ be:
           fields:
             restricted_tags:
               label: тэгі
-            restricted_category:
-              label: катэгорыя
+            restricted_categories:
+              label: катэгорыі
           created: створаны
+          topics: тэмы
         category_created_edited:
           fields:
             restricted_category:
