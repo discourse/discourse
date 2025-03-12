@@ -284,7 +284,7 @@ class HealthyCache
   end
 end
 
-def redis_healthcheck(host:, port: DEFAULT_REDIS_PORT, username: DEFAULT_REDIS_USERNAME, password:)
+def redis_healthcheck(host:, port: DEFAULT_REDIS_PORT, username: nil, password: nil)
   client_opts = {
     host: host,
     port: port,
