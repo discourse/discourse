@@ -25,7 +25,10 @@ export default class InvitesShowController extends Controller {
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
   passwordValidationHelper = new PasswordValidationHelper(this);
-  userFieldsValidationHelper = new UserFieldsValidationHelper({ owner: this });
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () => this.site.get("user_fields"),
+    getAccountPassword: () => this.accountPassword,
+  });
   successMessage = null;
   @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;

@@ -23,16 +23,18 @@ function validResult(attrs) {
 
 class TrackedUserField {
   @tracked value = null;
-  owner;
   field;
+  getValidationVisible;
+  getAccountPassword;
 
-  constructor(owner, field) {
-    this.owner = owner;
+  constructor({ field, getValidationVisible, getAccountPassword }) {
     this.field = field;
+    this.getValidationVisible = getValidationVisible;
+    this.getAccountPassword = getAccountPassword;
   }
 
   get validation() {
-    if (!this.owner.validationVisible) {
+    if (!this.getValidationVisible()) {
       return validResult();
     }
 
@@ -49,12 +51,10 @@ class TrackedUserField {
         element: this.field.element,
       });
     } else if (
-      this.owner.accountPassword &&
+      this.getAccountPassword() &&
       this.field.field_type === "text" &&
       this.value &&
-      this.value
-        .toLowerCase()
-        .includes(this.owner.accountPassword.toLowerCase())
+      this.value.toLowerCase().includes(this.getAccountPassword().toLowerCase())
     ) {
       validation = failedResult({
         reason: i18n("user_fields.same_as_password"),
@@ -77,27 +77,31 @@ export default class UserFieldsValidationHelper {
   @tracked userFields = new TrackedArray();
   @tracked validationVisible = true;
 
-  constructor({ owner, showValidationOnInit = true }) {
-    this.owner = owner;
+  constructor({
+    getUserFields,
+    getAccountPassword,
+    showValidationOnInit = true,
+  }) {
+    this.getUserFields = getUserFields;
+    this.getAccountPassword = getAccountPassword;
     this.validationVisible = showValidationOnInit;
     this.initializeUserFields();
   }
 
   initializeUserFields() {
-    if (!this.owner.site) {
-      return;
-    }
-
-    let userFields = this.owner.site.get("user_fields");
+    let userFields = this.getUserFields();
     if (userFields) {
+      const getValidationVisible = () => this.validationVisible;
       this.userFields = new TrackedArray(
-        userFields.sortBy("position").map((f) => new TrackedUserField(this, f))
+        userFields.sortBy("position").map((f) => {
+          return new TrackedUserField({
+            field: f,
+            getValidationVisible,
+            getAccountPassword: this.getAccountPassword,
+          });
+        })
       );
     }
-  }
-
-  get accountPassword() {
-    return this.owner.accountPassword;
   }
 
   get userFieldsValidation() {

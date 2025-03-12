@@ -66,7 +66,8 @@ export default class CreateAccount extends Component {
   usernameValidationHelper = new UsernameValidationHelper(this);
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
-    owner: this,
+    getUserFields: () => this.site.get("user_fields"),
+    getAccountPassword: () => this.accountPassword,
     showValidationOnInit: false,
   });
 
