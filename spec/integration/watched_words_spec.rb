@@ -267,7 +267,7 @@ RSpec.describe WatchedWord do
         ReviewableScore.where(
           reviewable: reviewable,
           reason: "watched_word",
-          context: "#{flag_word.word},#{another_flag_word.word}",
+          context: [flag_word.word, another_flag_word.word].sort.join(","),
         ),
       ).to be_present
     end

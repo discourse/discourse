@@ -161,9 +161,8 @@ nl:
             restricted_tags:
               label: Tags
               description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
-            restricted_category:
-              label: Categorie
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
+            restricted_categories:
+              label: Categorieën
             restricted_groups:
               description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
             ignore_group_members:
@@ -183,6 +182,7 @@ nl:
               description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
           created: Gemaakt
           edited: Bewerkt
+          topics: Topics
         user_updated:
           fields:
             user_profile:

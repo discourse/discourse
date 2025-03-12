@@ -21,6 +21,7 @@ import DTooltip from "float-kit/components/d-tooltip";
 
 export default class SpreadsheetEditor extends Component {
   @service dialog;
+
   @tracked showEditReason = false;
   @tracked loading = true;
   spreadsheet = null;

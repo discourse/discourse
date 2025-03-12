@@ -48,9 +48,10 @@ bs_BA:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
+            restricted_categories:
+              label: Kategorije
           created: Stvoreno
+          topics: Topics
         category_created_edited:
           fields:
             restricted_category:

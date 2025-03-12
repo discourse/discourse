@@ -68,9 +68,10 @@ cs:
           fields:
             restricted_tags:
               label: Štítky
-            restricted_category:
+            restricted_categories:
               label: Kategorie
           created: Vytvořený
+          topics: Témata
         category_created_edited:
           fields:
             restricted_category:

@@ -2747,9 +2747,8 @@ hu:
         new_features: "Új Discourse funkciók jelentek meg!"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
+      delete: "Törlés"
       uploading: "Feltöltés"
-      processing: "Feltöltés feldolgozása"
-      select_file: "Válaszon fájlt"
       default_image_alt_text: kép
     search:
       sort_by: "Rendezés"
@@ -5279,6 +5278,7 @@ hu:
         key: "Kulcs"
         keys: "Kulcs"
         created: Létrehozva
+        scope: Hatókör
         updated: Frissítve
         last_used: Utoljára használva
         never_used: Soha

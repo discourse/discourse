@@ -1220,7 +1220,7 @@ ro:
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
-    svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
+    svg_icon_subset: "Adaugă iconuri FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru iconuri solide, „far-” pentru iconuri obișnuite și „fab-” pentru iconuri de marcă."
     interface_color_selector: "Configurează acolo unde este disponibil selectorul modului luminos sau întunecat pentru culoarea interfeței."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
@@ -2148,6 +2148,14 @@ ro:
       high: "Ridicată"
     reasons:
       group: "Utilizatorii care nu fac parte din grupurile specificate trebuie să aibă răspunsurile aprobate de echipă. Vezi %{link}."
+      watched_word:
+        one: "Această postare a inclus un cuvânt urmărit, cuvântul semnalat este: %{words}. Verifică %{link} pentru mai multe."
+        few: "Această postare a inclus cuvinte urmărite, cuvintele semnalate sunt: %{words}. Verifică %{link} pentru mai multe."
+        other: "Această postare a inclus cuvinte urmărite, cuvintele semnalate sunt: %{words}. Verifică %{link} pentru mai multe."
+      links:
+        watched_word: setări cuvinte urmărite
+      no_context:
+        watched_word: "Această postare a inclus un cuvânt urmărit. Verifică %{link} pentru mai multe."
     actions:
       agree:
         title: "Da"

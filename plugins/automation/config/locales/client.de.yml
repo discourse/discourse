@@ -165,9 +165,15 @@ de:
             restricted_tags:
               label: Schlagwörter
               description: Optional. Wird nur bei Beiträgen mit einem dieser Schlagwörter ausgelöst
-            restricted_category:
-              label: Kategorie
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
+            restricted_categories:
+              label: Kategorien
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags in diese Kategorien fällt
+            exclude_subcategories:
+              label: Unterkategorien ausschließen
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags genau in die oben angegebenen Kategorien fällt
+            restricted_archetype:
+              label: Thementyp
+              description: Optional, nur bei Themen oder persönlichen Nachrichten auslösen lassen
             restricted_user_group:
               label: Eingeschränkte Benutzergruppe
               description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in dieser Gruppe ist
@@ -191,6 +197,8 @@ de:
               description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
           created: Erstellt
           edited: Bearbeitet
+          topics: Themen
+          personal_messages: Persönliche Nachrichten
         user_updated:
           fields:
             user_profile:

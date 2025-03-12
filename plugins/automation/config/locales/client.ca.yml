@@ -56,9 +56,10 @@ ca:
           fields:
             restricted_tags:
               label: Etiquetes
-            restricted_category:
-              label: Categoria
+            restricted_categories:
+              label: Categories
           created: Creat
+          topics: Temes
         category_created_edited:
           fields:
             restricted_category:

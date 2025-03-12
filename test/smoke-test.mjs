@@ -98,12 +98,12 @@ import puppeteer from "puppeteer-core";
   }
 
   const login = async function () {
-    await exec("open login modal", () => {
+    await exec("open login modal or page", () => {
       return page.click(".login-button");
     });
 
-    await exec("login modal is open", () => {
-      return page.waitForSelector(".login-modal", { visible: true });
+    await exec("login form is visible", () => {
+      return page.waitForSelector("#login-form", { visible: true });
     });
 
     await exec("type in credentials & log in", () => {
@@ -120,7 +120,7 @@ import puppeteer from "puppeteer-core";
       });
 
       promise = promise.then(() => {
-        return page.click(".login-modal .btn-primary");
+        return page.click("#login-button");
       });
 
       return promise;

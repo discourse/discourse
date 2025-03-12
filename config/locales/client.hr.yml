@@ -2589,9 +2589,8 @@ hr:
         new_features: "Objavljene su nove značajke za platformu Discourse!"
         admin_problems: "novi savjeti na vašoj nadzornoj ploči"
     upload_selector:
+      delete: "Pobriši"
       uploading: "Učitavanje"
-      processing: "Obrada prijenosa"
-      select_file: "Odaberite datoteku"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"
@@ -4745,6 +4744,7 @@ hr:
         title: "API"
         key: "Ključ"
         created: Napravio
+        scope: Opsezi
         updated: Ažurirano
         never_used: Nikad
         generate: "Generiraj"

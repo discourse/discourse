@@ -144,7 +144,11 @@ export default class ProsemirrorEditor extends Component {
     ];
 
     this.parser = new Parser(this.extensions, this.args.includeDefault);
-    this.serializer = new Serializer(this.extensions, this.args.includeDefault);
+    this.serializer = new Serializer(
+      this.extensions,
+      this.pluginParams,
+      this.args.includeDefault
+    );
 
     const state = EditorState.create({ schema: this.schema, plugins });
 

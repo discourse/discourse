@@ -2219,6 +2219,18 @@ zh_CN:
       password_label: "密码"
     password_reset:
       continue: "继续访问 %{site_name}"
+    emoji_set:
+      apple_international: "苹果/国际（已弃用，转用 Twemoji）"
+      google: "谷歌 (已弃用，改为 Noto Emoji)"
+      twitter: "Twitter（已废弃，改为 Twemoji）"
+      win10: "Win10 (已弃用，改为 Fluent Emoji)"
+      google_classic: "Google Classic（已弃用，改为 Noto Emoji）"
+      facebook_messenger: "Facebook Messenger（已弃用，改为 Standard）"
+      openmoji: OpenMoji
+      standard: Standard
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "仅类别"
       categories_with_featured_topics: "包含精选话题的类别"
@@ -2578,9 +2590,8 @@ zh_CN:
         new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
     upload_selector:
+      delete: "删除"
       uploading: "正在上传"
-      processing: "正在处理上传"
-      select_file: "选择文件"
       default_image_alt_text: 图片
     search:
       sort_by: "排序依据"
@@ -4959,6 +4970,7 @@ zh_CN:
         key: "密钥"
         keys: "密钥"
         created: 创建者
+        scope: 范围
         updated: 更新
         last_used: 最后使用：
         never_used: 永不

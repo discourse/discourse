@@ -2632,9 +2632,8 @@ nb_NO:
         new_features: "Nye Discourse-funksjoner har blitt lansert!"
         admin_problems: "nye råd på dashbordet på nettstedet ditt"
     upload_selector:
+      delete: "Slett"
       uploading: "Laster opp bilde"
-      processing: "Behandler opplasting"
-      select_file: "Velg fil"
       default_image_alt_text: bilde
     search:
       sort_by: "Sorter etter"

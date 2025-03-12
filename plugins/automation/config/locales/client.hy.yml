@@ -62,9 +62,10 @@ hy:
           fields:
             restricted_tags:
               label: Թեգեր
-            restricted_category:
-              label: Կատեգորիա
+            restricted_categories:
+              label: Կատեգորիաներ
           created: Ստեղծված
+          topics: Թեմաներ
         category_created_edited:
           fields:
             restricted_category:

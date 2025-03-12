@@ -60,9 +60,10 @@ vi:
           fields:
             restricted_tags:
               label: Thẻ
-            restricted_category:
+            restricted_categories:
               label: Danh mục
           created: Tạo bởi
+          topics: Các chủ đề
         category_created_edited:
           fields:
             restricted_category:

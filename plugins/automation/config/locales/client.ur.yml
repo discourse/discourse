@@ -62,9 +62,10 @@ ur:
           fields:
             restricted_tags:
               label: ٹیگز
-            restricted_category:
-              label: زمرہ
+            restricted_categories:
+              label: اقسام
           created: بنایا گیا
+          topics: ٹاپک
         category_created_edited:
           fields:
             restricted_category:

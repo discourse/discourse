@@ -103,10 +103,6 @@
     max-width: 100%;
   }
 
-  sup sup {
-    top: 0;
-  }
-
   img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
     max-width: 100%;
     height: auto;
@@ -231,12 +227,15 @@
     font-size: 1em;
   }
 
-  sub sub sub {
-    bottom: 0;
+  sup sup,
+  sub sup,
+  sup sub,
+  sub sub {
+    top: 0;
   }
 
-  sup sup sup {
-    top: 0;
+  sub sub sub {
+    bottom: 0;
   }
 }
 

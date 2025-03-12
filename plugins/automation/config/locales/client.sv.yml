@@ -143,9 +143,10 @@ sv:
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_tags:
               label: Taggar
-            restricted_category:
-              label: Kategori
+            restricted_categories:
+              label: Kategorier
           created: Skapade
+          topics: Ämnen
         category_created_edited:
           fields:
             restricted_category:

@@ -22,6 +22,7 @@ const MIN_HEIGHT_TIMELINE = 325;
 )
 export default class TopicNavigation extends Component {
   @service modal;
+  @service composer;
 
   composerOpen = null;
   info = EmberObject.create();
@@ -56,10 +57,14 @@ export default class TopicNavigation extends Component {
       const verticalSpace =
         window.innerHeight - composerHeight - headerOffset();
 
-      this.info.set(
-        "renderTimeline",
-        this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
-      );
+      if (this.composer.isPreviewVisible) {
+        this.info.set(
+          "renderTimeline",
+          this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
+        );
+      } else {
+        this.info.set("renderTimeline", this.mediaQuery.matches);
+      }
     }
 
     this.info.set(
@@ -231,6 +236,7 @@ export default class TopicNavigation extends Component {
       this.appEvents.on("composer:opened", this, this.composerOpened);
       this.appEvents.on("composer:resize-ended", this, this.composerOpened);
       this.appEvents.on("composer:closed", this, this.composerClosed);
+      this.appEvents.on("composer:preview-toggled", this._checkSize);
       $("#reply-control").on("div-resized", this._checkSize);
     }
 
@@ -260,6 +266,7 @@ export default class TopicNavigation extends Component {
       this.appEvents.off("composer:opened", this, this.composerOpened);
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
+      this.appEvents.off("composer:preview-toggled", this._checkSize);
       $("#reply-control").off("div-resized", this._checkSize);
     }
     if (this.site.mobileView) {

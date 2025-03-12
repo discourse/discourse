@@ -161,9 +161,8 @@ fi:
             restricted_tags:
               label: Tunnisteet
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
-            restricted_category:
-              label: Alue
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
+            restricted_categories:
+              label: Luokat
             restricted_groups:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
             ignore_group_members:
@@ -183,6 +182,7 @@ fi:
               description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
           created: Luotu
           edited: Muokattu
+          topics: Aiheet
         user_updated:
           fields:
             user_profile:

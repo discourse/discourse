@@ -8,6 +8,7 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesAwardController extends Controller {
   @service dialog;
+
   @tracked saving = false;
   @tracked replaceBadgeOwners = false;
   @tracked grantExistingHolders = false;

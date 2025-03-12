@@ -126,10 +126,10 @@ export default class History extends Component {
 
   get previousTagChanges() {
     const previousArray = customTagArray(
-      this.postRevision.tags_changes.previous
+      this.postRevision.tags_changes?.previous
     );
     const currentSet = new Set(
-      customTagArray(this.postRevision.tags_changes.current)
+      customTagArray(this.postRevision.tags_changes?.current)
     );
 
     return previousArray.map((name) => ({
@@ -140,9 +140,11 @@ export default class History extends Component {
 
   get currentTagChanges() {
     const previousSet = new Set(
-      customTagArray(this.postRevision.tags_changes.previous)
+      customTagArray(this.postRevision.tags_changes?.previous)
     );
-    const currentArray = customTagArray(this.postRevision.tags_changes.current);
+    const currentArray = customTagArray(
+      this.postRevision.tags_changes?.current
+    );
 
     return currentArray.map((name) => ({
       name,

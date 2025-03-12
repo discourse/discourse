@@ -165,9 +165,8 @@ ar:
             restricted_tags:
               label: الوسوم
               description: اختياري، لن يتم تشغيله إلا إذا كان المنشور يحتوي على أي هذه الوسوم
-            restricted_category:
-              label: الفئة
-              description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة ضمن هذه الفئة
+            restricted_categories:
+              label: الفئات
             restricted_groups:
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في أحد صناديق البريد الوارد للمجموعة
             ignore_group_members:
@@ -187,6 +186,7 @@ ar:
               description: "تخطي المشغِّل إذا كان المنشور قد تم إنشاؤه عبر البريد الإلكتروني"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
+          topics: الموضوعات
         user_updated:
           fields:
             user_profile:

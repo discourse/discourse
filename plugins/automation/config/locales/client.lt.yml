@@ -62,9 +62,10 @@ lt:
           fields:
             restricted_tags:
               label: Žymos
-            restricted_category:
-              label: Kategorija
+            restricted_categories:
+              label: Kategorijos
           created: Sukurta
+          topics: Temos
         category_created_edited:
           fields:
             restricted_category:

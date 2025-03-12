@@ -76,8 +76,15 @@ ro:
             restricted_tags:
               label: Etichete
               description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
-            restricted_category:
-              label: Categorie
+            restricted_categories:
+              label: Categorii
+              description: Opțional, se va declanșa numai dacă subiectul postării se află în aceste categorii
+            exclude_subcategories:
+              label: Exclude subcategorii
+              description: Opțional, se va declanșa numai dacă subiectul postării este exact în categoriile specificate mai sus
+            restricted_archetype:
+              label: Tip subiect
+              description: Opțional, permite declanșarea numai pe subiecte sau mesaje personale
             restricted_user_group:
               label: Grup de utilizatori restricționat
               description: Opțional, se va declanșa numai dacă utilizatorul postării se află în acest grup
@@ -87,6 +94,8 @@ ro:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"
           created: Creat
+          topics: Subiecte
+          personal_messages: Mesaje personale
         user_updated:
           fields:
             new_users_only:

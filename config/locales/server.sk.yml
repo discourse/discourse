@@ -2443,7 +2443,7 @@ sk:
     auto_handle_queued_age: "Automaticky spracovávať záznamy, ktoré čakajú na kontrolu po týchto mnohých dňoch. Príznaky budú ignorované. Príspevky vo fronte a používatelia budú odmietnutí. Ak chcete túto funkciu vypnúť, nastavte na 0."
     penalty_step_hours: "Predvolené sankcie za umlčanie alebo pozastavenie používateľov v hodinách. Prvý priestupok je predvolený na prvú hodnotu, druhý priestupok je predvolený na druhú hodnotu atď."
     penalty_include_post_message: "Automatické zahrnutie správy s urážlivým príspevkom do šablóny e-mailovej správy pri umlčaní alebo pozastavení používateľa"
-    svg_icon_subset: "Pridajte ďalšie ikony FontAwesome, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony použite prefix \"fa-\", pre bežné ikony \"far-\" a pre ikony značky \"fab-\"."
+    svg_icon_subset: "Pridajte ďalšie ikony FontAwesome, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony nepoužívajte žiadnu predponu, pre bežné ikony použite \"far-\" a pre ikony značky \"fab-\"."
     max_prints_per_hour_per_user: "Maximálny počet výtlačkov /tlačovej strany (nastavením na 0 sa tlač zakáže)"
     full_name_requirement: "Vytvorte pole s celým menom ako povinné, voliteľné alebo voliteľné, ale skryté pole v registračnom formulári."
     interface_color_selector: "Nakonfigurujte, kde je k dispozícii prepínač režimu svetla/tmy pre farbu rozhrania."
@@ -2626,7 +2626,6 @@ sk:
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
-    admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
@@ -5319,6 +5318,7 @@ sk:
       revoked: Odvolané
       restored: Obnovené
     bulk_user_delete: "odstránené v operácii hromadného vymazania"
+    cli_bulk_post_delete: "Hromadné odstránenie z úlohy rake"
   reviewables:
     already_handled: "Ďakujeme, ale tento príspevok sme už preskúmali a rozhodli sme, že ho netreba znova označiť."
     already_handled_and_user_not_exist: "Ďakujem, ale niekto to už preskúmal a tento používateľ už neexistuje."
@@ -5342,6 +5342,11 @@ sk:
       new_topics_unless_trust_level: "Používatelia s nízkou úrovňou dôvery musia mať témy schválené personálom. Pozri %{link}."
       fast_typer: "Nový používateľ napísal svoj prvý príspevok podozrivo rýchlo, podozrenie na správanie bota alebo spamera. Pozri %{link}."
       auto_silence_regex: "Nový používateľ, ktorého prvý príspevok zodpovedá nastaveniu %{link} ."
+      watched_word:
+        one: "Tento príspevok obsahoval sledované slovo, označené slovo je: %{words}. Viac informácií nájdete na stránke %{link} ."
+        few: "Tento príspevok obsahoval sledované slová, označené slová sú: %{words}. Viac informácií nájdete na stránke %{link} ."
+        many: "Tento príspevok obsahoval sledované slová, označené slová sú: %{words}. Viac informácií nájdete na stránke %{link} ."
+        other: "Tento príspevok obsahoval sledované slová, označené slová sú: %{words}. Viac informácií nájdete na stránke %{link} ."
       staged: "Nové témy a príspevky pre nezaktívnených užívateľov musia byť schválené personálom. Pozrite si %{link}."
       category: "Príspevky v tejto kategórii si vyžadujú manuálne schválenie členmi personálu. Pozrite si stránku %{link}."
       must_approve_users: "Všetci noví používatelia musia byť schválení personálom. Pozrite si %{link}."
@@ -5352,7 +5357,10 @@ sk:
       contains_media: "Tento príspevok obsahuje vložené médiá. Pozri %{link}."
       queued_by_staff: "Člen personálu si myslí, že tento príspevok potrebuje revíziu. Dovtedy zostane skrytý."
       links:
+        watched_word: nastavenia sledovaného slova
         category: nastavenia kategórie
+      no_context:
+        watched_word: "Tento príspevok obsahoval sledované slovo. Ďalšie informácie nájdete na %{link} ."
     actions:
       agree:
         title: "Áno"

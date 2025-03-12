@@ -167,9 +167,15 @@ sk:
             restricted_tags:
               label: Značky
               description: Voliteľné, spustí sa iba vtedy, ak má príspevok niektorú z týchto značiek
-            restricted_category:
-              label: Kategória
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
+            restricted_categories:
+              label: Kategórie
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v týchto kategóriách
+            exclude_subcategories:
+              label: Vylúčiť podkategórie
+              description: Voliteľné, spustí sa iba v prípade, že téma príspevku je presne v kategóriách špecifikovaných vyššie
+            restricted_archetype:
+              label: Typ témy
+              description: Voliteľné, umožniť spúšťanie len na témy alebo osobné správy
             restricted_user_group:
               label: Obmedzená skupina používateľov
               description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v tejto skupine
@@ -193,6 +199,8 @@ sk:
               description: "Vynechať spúšťač, ak bol príspevok vytvorený prostredníctvom e-mailu"
           created: Vytvorené
           edited: Upravené
+          topics: Témy
+          personal_messages: Osobné správy
         user_updated:
           fields:
             user_profile:

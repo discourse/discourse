@@ -2619,6 +2619,18 @@ sk:
       password_label: "Heslo"
     password_reset:
       continue: "Pokračujte na %{site_name}"
+    emoji_set:
+      apple_international: "Apple/International (zrušené pre Twemoji)"
+      google: "Google (zrušené na Noto Emoji)"
+      twitter: "Twitter (zrušené na Twemoji)"
+      win10: "Win10 (zrušené na Fluent Emoji)"
+      google_classic: "Google Classic (zrušené na Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (zrušený na štandardný)"
+      openmoji: OpenMoji
+      standard: Štandardné
+      fluentui: Plynulé Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Iba kategórie"
       categories_with_featured_topics: "Kategórie s odporúčanými témami"
@@ -3062,9 +3074,8 @@ sk:
         new_features: "Boli vydané nové funkcie Discourse!"
         admin_problems: "nové rady na informačnom paneli vášho webu"
     upload_selector:
+      delete: "Odstrániť"
       uploading: "Nahrávanie"
-      processing: "Spracováva sa nahrávanie"
-      select_file: "Zvoľte súbor"
       default_image_alt_text: Obrázok
     search:
       sort_by: "Zoradiť podľa"
@@ -4256,6 +4267,7 @@ sk:
       description: "Popis"
       logo: "Logo kategórie"
       logo_dark: "Logo kategórie v tmavom režime"
+      logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
       background_image: "Pozadie kategórie"
       background_image_dark: "Obrázok na pozadí tmavej kategórie"
       badge_colors: "Farby odznakov"
@@ -4763,6 +4775,8 @@ sk:
       admin:
         title: "Admin"
         search_prev_next: "%{shortcut} Presun výberu nahor a nadol"
+        search_open: "%{shortcut} Otvorenie vyhľadávania v rozhraní správcu"
+        search_full_page: "%{shortcut} Otvoriť celú stránku administrátorského vyhľadávania"
     badges:
       earned_n_times:
         one: "Získal tento odkaz %{count}-krát"
@@ -5202,10 +5216,12 @@ sk:
       collapse_all_sections: "Zbaliť všetky sekcie"
       expand_all_sections: "Rozbaľte všetky sekcie"
       filter: "Filter..."
+      filter_links: "Filtrovanie odkazov..."
       clear_filter: "Vymazať filter"
       no_results:
         title: "Žiadne výsledky"
         description: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Chceli ste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prehľadávať nastavenia stránky</a> alebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">zoznam používateľov administrátora?</a>'
+        description_admin_search: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Skúste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prehľadávať celé rozhranie administrátora</a>.'
       footer:
         interface_color_selector:
           light: "Svetlá"
@@ -5393,15 +5409,69 @@ sk:
         branding:
           title: "Branding"
           logo:
+            title: "Logo"
             form:
+              saved: "Nastavenia loga sú uložené."
               logo:
                 title: "Primárne logo"
+                description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
+                help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
+              logo_dark:
+                required: "Použiť iné logo pre tmavý režim?"
+                title: "Primárne logo tmavé"
+                help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
+              large_icon:
+                title: "Štvorcová ikona"
+                description: "V hornej časti administrácie sa zobrazuje štvorcová verzia loga, ktorá je zároveň logom aplikácie na domovskej obrazovke mobilného telefónu."
+                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
+              square_icon_dark:
+                required: "Používanie inej štvorcovej ikony pre tmavý režim?"
+                title: "Štvorcová ikona tmavá"
+                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
+              favicon:
+                title: "Favicon"
+                description: "Logo sa zobrazí ako ikona na karte prehliadača a v obľúbených položkách/záložkách prehliadača."
+              logo_small:
+                title: "Malé logo"
+                description: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Ak zostane prázdny, zobrazí sa domovský glyf."
+                help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
+              logo_small_dark:
+                required: "Použiť iné malé logo pre tmavý režim?"
+                title: "Malé logo tmavé"
+                help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
               mobile: "Mobil"
               email: "Email"
+              social_media: "Sociálne médiá"
+              mobile_logo:
+                title: "Mobilné logo"
+                description: "Logo použité na mobilnej verzii vašej stránky. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
+                help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
+              mobile_logo_dark:
+                required: "Chcete použiť iné mobilné logo pre tmavý režim?"
+                title: "Mobilné logo tmavé"
+                help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
+              manifest_icon:
+                title: "Ikona manifestu"
+                description: "Obrázok použitý ako logo/splash obrázok v systéme Android. Ak zostane prázdny, použije sa large_icon."
+                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
               manifest_screenshots:
+                title: "Snímky obrazovky Manifest"
                 description: "Snímky obrazovky, ktoré prezentujú vlastnosti a funkcie vašej inštancie na stránke s výzvou na inštaláciu. Všetky obrázky by mali byť nahrané lokálne a mali by mať rovnaké rozmery."
+              apple_touch_icon:
+                title: "Ikona Apple touch"
+                description: "Ikona používaná pre dotykové zariadenia Apple. Ak zostane prázdna, použije sa large_icon."
+                help_text: "Odporúčaná veľkosť je 180 x 180 pixelov. Priehľadné pozadie sa neodporúča."
+              digest_logo:
+                title: "Logo Digest"
+                description: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
+                help_text: "Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG."
               opengraph_image:
+                title: "Obrázok OpenGraph"
                 description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
+              x_summary_large_image:
+                title: "X súhrnný veľký obrázok"
+                description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
+                help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
         navigation:
           title: "Navigácia"
           header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
@@ -5418,9 +5488,11 @@ sk:
           title: "Limity sadzieb"
           header_description: "Konfigurácia toho, ako často môžu používatelia vykonávať určité činnosti, napríklad vytvárať témy, posielať správy a odosielať odpovede."
         search:
+          title: "Nastavenia vyhľadávania"
           header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
         search_everything:
           title: "Hľadať"
+          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú."
         security:
           title: "Bezpečnosť"
           header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
@@ -5556,6 +5628,7 @@ sk:
       search:
         modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
         title: "Hľadať"
+        instructions: "Zadajte typ na vyhľadávanie stránok, nastavení, správ, tém, komponentov a ďalších..."
         result_types:
           page:
             one: "Stránka"
@@ -5822,6 +5895,7 @@ sk:
         key: "Kľúč"
         keys: "Kľúče"
         created: Vytvoril
+        scope: Rozsah
         updated: Aktualizované
         last_used: Naposledy použité
         never_used: Nikdy
@@ -6362,6 +6436,7 @@ sk:
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
           settings_editor: "Editor nastavení"
+          show_advanced: "Zobraziť pokročilé"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
           color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
@@ -6419,6 +6494,9 @@ sk:
           unsaved_parent_themes: "Komponent ste nepriradili k témam, chcete pokračovať?"
           discard: "Zahodiť"
           stay: "Ponechať"
+          css_html: "Vlastný kód"
+          edit_css_html: "Upraviť kód"
+          edit_css_html_help: "Zatiaľ ste neupravili žiadny kód."
           delete_upload_confirm: "Odstrániť toto nahrávanie? (Téma CSS môže prestať fungovať!)"
           component_on_themes: "Zahrnúť komponent do týchto tém"
           included_components: "Zahrnuté komponenty"
@@ -6481,14 +6559,22 @@ sk:
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
           scss:
             text: "CSS"
+            title: "Vlastné pravidlá CSS s podporou syntaxe SCSS"
+          header:
+            text: "Pred hlavičkou"
+            title: "Základné HTML, ktoré sa má vykresliť nad hlavičkou Discourse"
           after_header:
             text: "Po hlavičke"
+            title: "Základné HTML, ktoré sa má vykresliť pod hlavičkou Discourse"
           footer:
             text: "Päta"
+            title: "Základné HTML, ktoré sa má vykresliť v spodnej časti stránky"
           embedded_scss:
             text: "Vnorené CSS"
+            title: "CSS, ktorý sa má zahrnúť, keď sú komentáre Discourse vložené do inej stránky"
           embedded_header:
             text: "Vložená hlavička"
+            title: "Základné HTML, ktoré sa zobrazí nad komentármi Discourse pri vložení do inej stránky"
           color_definitions:
             text: "Definície farieb"
             title: "Zadávanie vlastných definícií farieb (len pre pokročilých používateľov)"
@@ -6501,8 +6587,15 @@ sk:
               %{example}
 
               Pred názvami vlastností sa dôrazne odporúča, aby sa predišlo konfliktom s pluginmi a/alebo jadrom.
+          head_tag:
+            text: "<head>"
+            title: "HTML na vloženie na koniec stránky <head>, s podporou značiek skriptov"
+          body_tag:
+            text: "<body>"
+            title: "HTML na vloženie na koniec stránky <body>, s podporou značiek skriptov"
           js:
             text: "JS"
+            title: "Inicializátor JavaScriptu s podporou syntaxe 'template tag' systému Ember"
           scss_color_variables_warning: 'Používanie základných farebných premenných SCSS v témach je zastarané. Namiesto toho používajte vlastné vlastnosti CSS. Viac informácií nájdete v <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tejto príručke</a>.'
           scss_warning_inline: "Používanie základných farebných premenných SCSS v témach je zastarané."
           all_filter: "Všetky"

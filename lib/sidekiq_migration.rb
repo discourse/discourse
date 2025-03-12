@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# TODO (2025-03-03): delete this once the migration is propagated everywhere
-# (in about 6 months or so)
+# TODO: Remove this after the Discourse 3.5 release
 class SidekiqMigration
   delegate :old_pool, to: :Sidekiq
 

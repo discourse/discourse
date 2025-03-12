@@ -2758,9 +2758,11 @@ de:
         new_features: "Neue Discourse-Funktionen wurden veröffentlicht!"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
+      change: "Ändern"
+      delete: "Löschen"
       uploading: "Wird hochgeladen"
       processing: "Upload wird verarbeitet"
-      select_file: "Datei auswählen"
+      select_file: "Klicke zum Hochladen oder ziehe die Datei per Drag & Drop"
       default_image_alt_text: Bild
     search:
       sort_by: "Sortieren nach"
@@ -5348,6 +5350,7 @@ de:
         key: "Schlüssel"
         keys: "Schlüssel"
         created: Erstellt von
+        scope: Bereich
         updated: Aktualisiert
         last_used: Zuletzt verwendet
         never_used: Nie

@@ -10,6 +10,7 @@ export default class InterfaceColor extends Service {
   @service appEvents;
   @service siteSettings;
   @service session;
+
   @tracked forcedColorMode;
 
   get lightModeForced() {

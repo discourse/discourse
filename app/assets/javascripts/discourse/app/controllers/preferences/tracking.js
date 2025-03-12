@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class extends Controller {
   @service currentUser;
   @service siteSettings;
+
   @tracked saved = false;
   @tracked customAttrNames = [];
 

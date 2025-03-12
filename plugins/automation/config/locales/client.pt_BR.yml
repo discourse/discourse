@@ -13,12 +13,16 @@ pt_BR:
             delete_automation: excluir automação
     discourse_automation:
       title: Automação
+      table_title: Automações
+      create: Adicionar automação
+      update: Atualizar automação
       back: Voltar
       edit: Editar
       select_script: Selecione um script
       select_trigger: Selecione um acionador
       confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo. Deseja continuar?
       confirm_automation_trigger: Esta ação acionará a automação. Deseja continuar?
+      no_automation_yet: No momento, não há automações configuradas.
       filter_placeholder: Filtrar por nome ou descrição...
       edit_automation:
         trigger_section:
@@ -161,10 +165,20 @@ pt_BR:
             restricted_tags:
               label: Etiquetas
               description: Opcional, ativação apenas se a postagem tiver alguma destas etiquetas
-            restricted_category:
-              label: Categoria
-              description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
+            restricted_categories:
+              label: Categorias
+              description: Opcional, ativa apenas se o tópico da postagem estiver nestas categorias
+            exclude_subcategories:
+              label: Excluir subcategorias
+              description: Opcional, ativa apenas se o tópico da postagem estiver exatamente nas categorias especificadas acima
+            restricted_archetype:
+              label: Tipo de tópico
+              description: Opcional, permitir a ativação apenas em tópicos ou mensagens pessoais
+            restricted_user_group:
+              label: Grupo de usuários restrito
+              description: Opcional, ativa apenas se o usuário da postagem estiver neste grupo
             restricted_groups:
+              label: Grupos de caixas de entrada restritas
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
             ignore_group_members:
               label: Ignorar membros de grupo
@@ -183,6 +197,8 @@ pt_BR:
               description: "Pule o acionador se a postagem tiver sido criada por e-mail"
           created: Criado(a)
           edited: Editado(a)
+          topics: Tópicos
+          personal_messages: Mensagens pessoais
         user_updated:
           fields:
             user_profile:
@@ -383,6 +399,7 @@ pt_BR:
               label: MPs
             sender:
               label: Remetente de MPs
+              description: "Certifique-se de que o remetente tenha as permissões corretas para enviar mensagens privadas ao destinatário"
         close_topic:
           fields:
             topic:

@@ -75,9 +75,10 @@ el:
               label: Μόνο η αρχική ανάρτηση
             restricted_tags:
               label: Ετικέτες
-            restricted_category:
-              label: Κατηγορία
+            restricted_categories:
+              label: Κατηγορίες
           created: Δημιουργήθηκε
+          topics: Θέματα
         category_created_edited:
           fields:
             restricted_category:

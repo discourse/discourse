@@ -5,9 +5,7 @@ import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
-  @service currentUser;
-  @alias("sidebarState.currentUserUsingAdminSidebar")
-  currentUserUsingAdminSidebar;
+
   @alias("sidebarState.isForcingAdminSidebar") isForcingAdminSidebar;
 
   keywords = {};
@@ -46,11 +44,6 @@ export default class AdminSidebarStateManager extends Service {
 
     const isAdminSidebarActive =
       this.sidebarState.currentPanel?.key === ADMIN_PANEL;
-
-    if (!this.currentUserUsingAdminSidebar) {
-      this.isForcingAdminSidebar = false;
-      return false;
-    }
 
     if (!opts.onlyIfAlreadyActive) {
       return this.#forceAdminSidebar();

@@ -7,15 +7,30 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import avatar from "discourse/helpers/avatar";
+import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
-export default class ApiKeysList extends Component {
+const SCOPE_ICONS = {
+  global: "globe",
+  read_only: "eye",
+  granular: "bullseye",
+};
+
+export default class ApiKeyItem extends Component {
   @service router;
 
   @tracked apiKey = this.args.apiKey;
+
+  get scopeIcon() {
+    return SCOPE_ICONS[this.apiKey.scope_mode];
+  }
+
+  get scopeName() {
+    return i18n(`admin.api.scopes.${this.apiKey.scope_mode}`);
+  }
 
   @action
   onRegisterApi(api) {
@@ -80,6 +95,11 @@ export default class ApiKeysList extends Component {
             "admin.api.created"
           }}</div>
         {{formatDate this.apiKey.created_at}}
+      </td>
+      <td class="d-admin-row__detail key-scope">
+        <div class="d-admin-row__mobile-label">{{i18n "admin.api.scope"}}</div>
+        {{icon this.scopeIcon}}
+        {{this.scopeName}}
       </td>
       <td class="d-admin-row__detail key-last-used">
         <div class="d-admin-row__mobile-label">{{i18n

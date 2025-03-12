@@ -127,15 +127,24 @@ RSpec.describe "List channels | Drawer", type: :system do
       fab!(:dm_channel_4) { Fabricate(:direct_message_channel, users: [current_user, user_3]) }
 
       it "sorts them by latest activity" do
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel_2,
+          user: user_1,
+          use_service: true,
+          created_at: 2.days.ago,
+        )
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel_4,
+          user: user_3,
+          use_service: true,
+          created_at: 1.days.ago,
+        )
+        dm_channel_4.membership_for(current_user).mark_read!
+
         drawer_page.visit_index
         drawer_page.click_direct_messages
-
-        Fabricate(:chat_message, chat_channel: dm_channel_2, user: user_1, use_service: true)
-
-        # last message was read but the created at date is used for sorting
-        message =
-          Fabricate(:chat_message, chat_channel: dm_channel_4, user: user_3, use_service: true)
-        dm_channel_4.membership_for(current_user).mark_read!(message.id)
 
         try_until_success do
           expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)

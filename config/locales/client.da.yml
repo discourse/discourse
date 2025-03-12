@@ -2210,9 +2210,8 @@ da:
         reaction: "ny reaktion"
         votes_released: "Afstemningen blev frigivet"
     upload_selector:
+      delete: "Slet"
       uploading: "Overfører billede"
-      processing: "Behandler Overførsel"
-      select_file: "Vælg fil"
       default_image_alt_text: billede
     search:
       sort_by: "Sorter efter"

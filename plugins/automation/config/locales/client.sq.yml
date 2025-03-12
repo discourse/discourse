@@ -45,9 +45,10 @@ sq:
           fields:
             restricted_tags:
               label: Etiketat
-            restricted_category:
-              label: Kategori
+            restricted_categories:
+              label: Categories
           created: Krijuar
+          topics: Topics
         category_created_edited:
           fields:
             restricted_category:

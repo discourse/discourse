@@ -58,15 +58,6 @@ describe "Navigation menu states", type: :system do
         visit "/admin/reports"
         expect(sidebar_navigation).to be_visible
       end
-
-      context "when the user is not in admin_sidebar_enabled_groups" do
-        before { SiteSetting.admin_sidebar_enabled_groups = "" }
-
-        it "does not show the sidebar" do
-          visit "/admin"
-          expect(sidebar_navigation).to be_not_visible
-        end
-      end
     end
   end
 
@@ -107,21 +98,6 @@ describe "Navigation menu states", type: :system do
       it "does not show the hamburger menu" do
         visit "/admin"
         expect(header_dropdown).to be_not_visible
-      end
-
-      context "when the user is not in admin_sidebar_enabled_groups" do
-        before { SiteSetting.admin_sidebar_enabled_groups = "" }
-
-        it "shows the MAIN_PANEL of the sidebar" do
-          visit "/admin"
-          expect(sidebar_navigation).to have_no_section("admin-root")
-          expect(sidebar_navigation).to have_section("community")
-        end
-
-        it "does show the sidebar toggle" do
-          visit "/admin"
-          expect(page).to have_css(sidebar_navigation.header_toggle_css)
-        end
       end
     end
   end

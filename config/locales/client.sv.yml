@@ -2446,9 +2446,8 @@ sv:
         new_features: "Nya Discourse-funktioner har släppts!"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
+      delete: "Radera"
       uploading: "Laddar upp"
-      processing: "Bearbetar uppladdning"
-      select_file: "Välj fil"
       default_image_alt_text: bild
     search:
       sort_by: "Sortera efter"
@@ -4686,6 +4685,7 @@ sv:
         key: "Key"
         keys: "Nycklar"
         created: Skapad av
+        scope: Omfattning
         updated: Uppdaterad
         never_used: Aldrig
         generate: "Generera"

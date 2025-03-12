@@ -2890,9 +2890,8 @@ pl_PL:
         new_features: "Nowe funkcje Discourse zostały udostępnione!"
         admin_problems: "nowe porady w panelu administratora"
     upload_selector:
+      delete: "Usuń"
       uploading: "Wgrywanie"
-      processing: "Przetwarzanie przesłanego pliku"
-      select_file: "Wybierz plik"
       default_image_alt_text: Obraz
     search:
       sort_by: "Sortuj po"
@@ -5534,6 +5533,7 @@ pl_PL:
         key: "Klucz"
         keys: "Klucze"
         created: Utworzony przez
+        scope: Zakres
         updated: Zaktualizowane
         last_used: Ostatnio używany
         never_used: Nigdy

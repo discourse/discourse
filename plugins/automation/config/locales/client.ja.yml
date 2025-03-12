@@ -160,9 +160,8 @@ ja:
             restricted_tags:
               label: タグ
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
-            restricted_category:
+            restricted_categories:
               label: カテゴリ
-              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
             restricted_groups:
               description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
             ignore_group_members:
@@ -182,6 +181,7 @@ ja:
               description: "投稿がメールで作成された場合はトリガーをスキップします"
           created: 作成
           edited: 編集
+          topics: トピック
         user_updated:
           fields:
             user_profile:

@@ -2148,9 +2148,8 @@ ko:
         votes_released: "투표가 시작되었습니다"
         admin_problems: "사이트 대시 보드에 대한 새로운 조언"
     upload_selector:
+      delete: "삭제하기"
       uploading: "업로드 중"
-      processing: "업로드 처리 중"
-      select_file: "파일 선택"
       default_image_alt_text: 이미지
     search:
       sort_by: "정렬 기준"
@@ -3971,6 +3970,7 @@ ko:
         title: "API"
         key: "키"
         created: 작성자
+        scope: 범위
         updated: 업데이트일
         never_used: 알림 받지 않기
         generate: "생성"

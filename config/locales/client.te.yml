@@ -2441,9 +2441,8 @@ te:
         new_features: "కొత్త డిస్కోర్స్ ఫీచర్‌లు విడుదల చేయబడ్డాయి!"
         admin_problems: "మీ సైట్ డాష్‌బోర్డ్‌లో కొత్త సలహా"
     upload_selector:
+      delete: "తొలగించు"
       uploading: "ఎగుమతవుతోంది"
-      processing: "అప్‌లోడ్‌ను ప్రాసెస్ చేస్తోంది"
-      select_file: "ఫైల్‌ని ఎంచుకోండి"
       default_image_alt_text: చిత్రం
     search:
       sort_by: "క్రమబద్ధీకరించండి"
@@ -4690,6 +4689,7 @@ te:
         key: "కీ"
         keys: "కీలు"
         created: సృష్టికర్త
+        scope: పరిధి
         updated: నవీకరించబడింది
         never_used: ఎప్పటికీ వద్దు
         generate: "ఉత్పత్తించు"

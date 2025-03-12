@@ -65,11 +65,7 @@ export default class AdminSearchDataSource extends Service {
     const allItems = await ajax("/admin/search/all.json");
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
-
-    // TODO (martin) Move this to all.json after refactoring reports controller
-    // into a service.
-    const reportItems = await ajax("/admin/reports.json");
-    this.#processReports(reportItems.reports);
+    this.#processReports(allItems.reports);
     await Promise.resolve();
 
     this._mapCached = true;

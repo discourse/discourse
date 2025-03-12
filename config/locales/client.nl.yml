@@ -2727,9 +2727,8 @@ nl:
         new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
         admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
+      delete: "Verwijderen"
       uploading: "Uploaden"
-      processing: "Upload verwerken"
-      select_file: "Selecteer bestand"
       default_image_alt_text: afbeelding
     search:
       sort_by: "Sorteren op"
@@ -5207,6 +5206,7 @@ nl:
         key: "Sleutel"
         keys: "Sleutels"
         created: Gemaakt door
+        scope: Bereik
         updated: Bijgewerkt
         last_used: Laatst gebruikt
         never_used: Nooit

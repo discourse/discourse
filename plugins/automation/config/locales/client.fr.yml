@@ -161,9 +161,8 @@ fr:
             restricted_tags:
               label: Étiquettes
               description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
-            restricted_category:
-              label: Catégorie
-              description: Facultatif, ne se déclenchera que si le sujet de la publication se trouve dans cette catégorie
+            restricted_categories:
+              label: Catégories
             restricted_groups:
               description: Facultatif, ne se déclenchera que si le sujet de la publication est un message direct dans l'une des boîtes de réception du groupe
             ignore_group_members:
@@ -183,6 +182,7 @@ fr:
               description: "Ignorez le déclencheur si la publication a été créée par e-mail"
           created: Créé
           edited: Modifié
+          topics: Sujets
         user_updated:
           fields:
             user_profile:

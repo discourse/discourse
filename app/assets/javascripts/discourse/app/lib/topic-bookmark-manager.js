@@ -9,6 +9,7 @@ export default class TopicBookmarkManager {
   @service currentUser;
   @service bookmarkApi;
   @controller("topic") topicController;
+
   @tracked trackedBookmark;
   @tracked bookmarkModel;
 

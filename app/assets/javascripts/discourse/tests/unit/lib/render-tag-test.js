@@ -20,4 +20,23 @@ module("Unit | Utility | render-tag", function (hooks) {
       "removes any html tags from description"
     );
   });
+
+  test("renderTag with extraClass", function (assert) {
+    const result = renderTag("foo", {
+      extraClass: "ins del",
+      description: "foo description",
+    });
+
+    const div = document.createElement("div");
+    div.innerHTML = result;
+    const link = div.firstChild;
+
+    assert.true(
+      link.classList.contains("discourse-tag"),
+      "has discourse-tag class"
+    );
+    assert.true(link.classList.contains("simple"), "has default simple class");
+    assert.true(link.classList.contains("ins"), "has ins class");
+    assert.true(link.classList.contains("del"), "has del class");
+  });
 });

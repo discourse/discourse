@@ -59,6 +59,7 @@ pt_BR:
     deleted_chat_username: excluído
     errors:
       users_cant_be_added_to_channel: "Não é possível adicionar usuários(as) a este canal."
+      user_cant_be_removed_from_channel: "O usuário não pode ser removido deste canal"
       channel_exists_for_category: "Já existe um canal para este nome e categoria"
       channel_new_message_disallowed:
         archived: "O canal está arquivado, nenhuma mensagem nova pode ser enviada"
@@ -90,6 +91,7 @@ pt_BR:
       actor_muting_target_user: "Você está silenciando %{username}, então você não pode enviar mensagens para ele(a)."
       actor_disallowed_dms: "Você optou por impedir que os(as) usuários(as) enviem mensagens pessoais e diretas. Portanto, você não pode criar novas mensagens diretas."
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens pessoais e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
+      not_reachable: "Desculpe, %{username} não está usando o chat."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
       over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
       over_chat_max_direct_message_users:
@@ -234,6 +236,12 @@ pt_BR:
         private_email:
           one: "[%{site_name}] Nova mensagem"
           other: "[%{site_name}] Novas mensagens"
+        watched_thread:
+          one: "[%{site_name}] Nova mensagem de thread em %{channel}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
+          other: "[%{site_name}] Novas mensagens de thread em %{channel} e mais %{count}"
         chat_dm_1:
           one: "[%{site_name}] Nova mensagem de %{name}"
           other: "[%{site_name}] Novas mensagens de %{name}"

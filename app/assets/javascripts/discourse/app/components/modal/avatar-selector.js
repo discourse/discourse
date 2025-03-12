@@ -10,6 +10,7 @@ import { allowsImages } from "discourse/lib/uploads";
 export default class AvatarSelectorModal extends Component {
   @service currentUser;
   @service siteSettings;
+
   @tracked gravatarRefreshDisabled = false;
   @tracked gravatarFailed = false;
   @tracked uploading = false;

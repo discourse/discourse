@@ -2134,9 +2134,8 @@ lt:
         votes_released: "Balsavimas buvo išleistas"
         admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
+      delete: "Pašalinti"
       uploading: "Įkeliama"
-      processing: "Apdorojamas įkėlimas"
-      select_file: "Pasirinkti failus"
       default_image_alt_text: pveikslėlis
     search:
       sort_by: "Rūšiuoti pagal"
@@ -3926,6 +3925,7 @@ lt:
         title: "API"
         key: "Raktas"
         created: Sukurta
+        scope: Apimtis
         updated: Atnaujinta
         never_used: Niekada
         generate: "Generuoti"

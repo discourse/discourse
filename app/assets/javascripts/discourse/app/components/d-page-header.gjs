@@ -25,6 +25,7 @@ const HEADLESS_ACTIONS = ["new", "edit"];
 export default class DPageHeader extends Component {
   @service site;
   @service router;
+
   @tracked shouldDisplay = true;
 
   constructor() {

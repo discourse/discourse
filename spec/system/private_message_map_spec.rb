@@ -39,10 +39,7 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "updates the various topic stats, avatars" do
-    skip_on_ci!(
-      "This is flaky because it relies a lot on messagebus events and the counts don't always update in time",
-    )
-
+    Jobs.run_immediately!
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
@@ -58,12 +55,14 @@ describe "Topic Map - Private Message", type: :system do
     page.refresh
     expect(topic_map.users_count).to eq 6
 
-    expect {
-      sign_in(last_post_user)
-      topic_page.visit_topic_and_open_composer(topic)
-      topic_page.send_reply("this is a cool-cat post") # fabricating posts doesn't update the last post details
-      topic_page.visit_topic(topic)
-    }.to change(topic_map, :users_count).by(1)
+    sign_in(last_post_user)
+    topic_page.visit_topic_and_open_composer(topic)
+    # fabricating posts doesn't update the last post details
+    topic_page.send_reply("this is a cool-cat post")
+    selector = topic_page.post_by_number_selector(7)
+    expect(page).to have_css(selector)
+    topic_page.visit_topic(topic)
+    expect(topic_map.users_count).to eq 7
 
     # avatars details with post counts
     2.times { Fabricate(:post, user: user, topic: topic) }
@@ -73,12 +72,12 @@ describe "Topic Map - Private Message", type: :system do
     expect(avatars.length).to eq 5 # max no. of avatars in a collapsed map
 
     expanded_avatars = topic_map.expanded_avatars_details
+    expect(expanded_avatars.length).to eq 7
     expect(expanded_avatars[0]).to have_selector("img[src=\"#{avatar_url(user, 48)}\"]")
     expect(expanded_avatars[0].find(".post-count").text).to eq "3"
     expect(expanded_avatars[1]).to have_selector("img[src=\"#{avatar_url(last_post_user, 48)}\"]")
     expect(expanded_avatars[1].find(".post-count").text).to eq "2"
     expect(expanded_avatars[2]).to have_no_css(".post-count")
-    expect(expanded_avatars.length).to eq 7
 
     # views count
     sign_in(other_user_1)

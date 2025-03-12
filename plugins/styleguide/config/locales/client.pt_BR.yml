@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Guia de estilo Discourse"
   js:
     styleguide:
       title: "Guia de estilo"

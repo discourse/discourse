@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 en_GB:
+  js:
+    discourse_automation:
+      triggerables:
+        post_created_edited:
+          fields:
+            restricted_categories:
+              label: Categories

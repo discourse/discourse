@@ -131,10 +131,11 @@ da:
               label: Gyldige tillidsniveauer
             restricted_tags:
               label: Mærker
-            restricted_category:
-              label: Kategori
+            restricted_categories:
+              label: Kategorier
           created: Oprettet
           edited: Redigeret
+          topics: Emner
         category_created_edited:
           fields:
             restricted_category:

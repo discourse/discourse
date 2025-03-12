@@ -47,9 +47,10 @@ et:
           fields:
             restricted_tags:
               label: Sildid
-            restricted_category:
-              label: Foorum
+            restricted_categories:
+              label: Liigid
           created: Loodud
+          topics: Teemasid
         category_created_edited:
           fields:
             restricted_category:

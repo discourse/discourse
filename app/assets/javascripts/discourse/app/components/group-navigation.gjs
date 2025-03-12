@@ -7,6 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import GroupDropdown from "select-kit/components/group-dropdown";
+
 export default class GroupNavigation extends Component {
   @service site;
 

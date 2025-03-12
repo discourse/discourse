@@ -13,6 +13,7 @@ export default class PostBookmarkManager {
   @service currentUser;
   @service bookmarkApi;
   @controller("topic") topicController;
+
   @tracked trackedBookmark;
   @tracked bookmarkModel;
 

@@ -888,6 +888,11 @@ aside.onebox.xkcd .onebox-body img {
       align-self: center;
     }
   }
+
+  .discourse-tag:not(:last-child)::after {
+    content: ",";
+    margin-right: 0.15em;
+  }
 }
 
 .onebox.gfycat p {

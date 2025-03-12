@@ -163,9 +163,8 @@ ru:
             restricted_tags:
               label: Теги
               description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
-            restricted_category:
-              label: Категория
-              description: Необязательно, срабатывает только в том случае, если тема публикации находится в этой категории
+            restricted_categories:
+              label: Категории
             restricted_groups:
               description: Необязательно, срабатывает только в том случае, если темой публикации является личное сообщение в одном из почтовых ящиков группы
             ignore_group_members:
@@ -185,6 +184,7 @@ ru:
               description: "Пропустить триггер, если публикация была создана по электронной почте"
           created: Создано
           edited: Изменено
+          topics: Новые темы
         user_updated:
           fields:
             user_profile:

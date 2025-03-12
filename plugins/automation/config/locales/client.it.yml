@@ -161,9 +161,8 @@ it:
             restricted_tags:
               label: Etichette
               description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
-            restricted_category:
-              label: Categoria
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
+            restricted_categories:
+              label: Categorie
             restricted_groups:
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
             ignore_group_members:
@@ -183,6 +182,7 @@ it:
               description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
           created: Creato
           edited: Modificato
+          topics: Argomenti
         user_updated:
           fields:
             user_profile:

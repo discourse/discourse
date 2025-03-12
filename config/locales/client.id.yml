@@ -1714,8 +1714,8 @@ id:
         membership_request_consolidated: "permintaan keanggotaan baru"
         admin_problems: "saran baru di dasbor situs Anda"
     upload_selector:
+      delete: "Hapus"
       uploading: "Mengunggah"
-      select_file: "Pilih Berkas"
       default_image_alt_text: gambar
     search:
       most_liked: "Paling Disukai"

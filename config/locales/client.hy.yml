@@ -2420,8 +2420,8 @@ hy:
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
         admin_problems: "նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
     upload_selector:
+      delete: "Ջնջել"
       uploading: "Վերբեռնվում է"
-      select_file: "Ընտրել Ֆայլ"
       default_image_alt_text: նկար
     search:
       sort_by: "Դասավորել ըստ"

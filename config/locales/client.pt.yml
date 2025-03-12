@@ -2160,9 +2160,8 @@ pt:
         reaction: "nova reação"
         votes_released: "O voto foi liberado"
     upload_selector:
+      delete: "Eliminar"
       uploading: "A enviar"
-      processing: "Processando Upload"
-      select_file: "Selecionar Ficheiro"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"

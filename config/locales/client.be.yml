@@ -928,8 +928,8 @@ be:
         watching_first_post: "новая тэма"
         admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     upload_selector:
+      delete: "выдаляць"
       uploading: "загрузка"
-      select_file: "выбраць файл"
       default_image_alt_text: малюнак
     search:
       sort_by: "сартаваць па"

@@ -62,9 +62,10 @@ nb_NO:
           fields:
             restricted_tags:
               label: Stikkord
-            restricted_category:
-              label: Kategori
+            restricted_categories:
+              label: Kategorier
           created: Opprettet
+          topics: Emner
         category_created_edited:
           fields:
             restricted_category:

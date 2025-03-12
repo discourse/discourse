@@ -167,9 +167,15 @@ he:
             restricted_tags:
               label: תגיות
               description: כרשות, יוזנק רק אם לפוסט יש לפחות את אחת מהתגיות האלו
-            restricted_category:
-              label: קטגוריה
-              description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
+            restricted_categories:
+              label: קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא באחת מהקטגוריות האלה
+            exclude_subcategories:
+              label: להחריג תת־קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא בדיוק בקטגוריות שצוינו להלן
+            restricted_archetype:
+              label: סוג נושא
+              description: הגדרת רשות, לאפשר להזניק רק על נושאים או הודעות אישיות
             restricted_user_group:
               label: קבוצת משתמשים מוגבלת
               description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא בקבוצה הזאת
@@ -193,6 +199,8 @@ he:
               description: "לדלג על ההזנקה אם הפוסט נוצר דרך דוא״ל"
           created: נוצר
           edited: נערכו
+          topics: נושאים
+          personal_messages: הודעות פרטיות
         user_updated:
           fields:
             user_profile:

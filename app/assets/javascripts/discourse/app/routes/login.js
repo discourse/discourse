@@ -54,8 +54,14 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("flashType", "");
     controller.set("flash", "");
 
-    if (this.internalReferrer || DiscourseURL.isInternal(document.referrer)) {
-      controller.set("referrerUrl", this.internalReferrer || document.referrer);
+    if (
+      this.internalReferrer ||
+      DiscourseURL.isInternalTopic(document.referrer)
+    ) {
+      controller.set(
+        "referrerTopicUrl",
+        this.internalReferrer || document.referrer
+      );
     }
 
     if (this.siteSettings.login_required) {

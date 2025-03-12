@@ -1290,7 +1290,6 @@ id:
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
     default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
-    admin_sidebar_enabled_groups: "Aktifkan navigasi bilah sisi untuk UI admin untuk grup tertentu, yang menggantikan tombol navigasi admin tingkat atas."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."

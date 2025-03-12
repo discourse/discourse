@@ -3033,9 +3033,8 @@ ru:
         new_features: "Появились новые функции Discourse!"
         admin_problems: "новый совет в панели управления сайта"
     upload_selector:
+      delete: "Удалить"
       uploading: "Загрузка"
-      processing: "Обработка загружаемого контента"
-      select_file: "Выбрать файл"
       default_image_alt_text: изображение
     search:
       sort_by: "Сортировка"
@@ -5739,6 +5738,7 @@ ru:
         key: "Ключ"
         keys: "Ключи"
         created: Создано
+        scope: Область действия ключа API
         updated: Обновлён
         last_used: Последнее использование
         never_used: Никогда

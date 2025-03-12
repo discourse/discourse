@@ -2306,6 +2306,8 @@ cs:
       dirty_form: "Neodeslali jste změny! Opravdu chcete odejít?"
       errors:
         required: "Nezbytnosti"
+        date_before_or_equal: "Musí být před nebo rovno %{date}"
+        date_after_or_equal: "Musí být po nebo rovno %{date}"
         invalid_url: "Musí to být platná adresa URL"
         not_an_integer: "Musí být celé číslo"
         not_accepted: "Musí být akceptováno"
@@ -2615,6 +2617,18 @@ cs:
       password_label: "Heslo"
     password_reset:
       continue: "Pokračovat na %{site_name}"
+    emoji_set:
+      apple_international: "Apple/International (přesunuto do Twemoji)"
+      google: "Google (přesunuto do Noto Emoji)"
+      twitter: "Twitter (přesunuto do Twemoji)"
+      win10: "Win10 (přesunuto do Fluent Emoji)"
+      google_classic: "Google Classic (přesunuto do Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (přesunuto do Standardní)"
+      openmoji: OpenMoji
+      standard: Standardní
+      fluentui: Plynulé Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Pouze kategorie"
       categories_with_featured_topics: "Kategorie a vybrané příspěvky"
@@ -3058,9 +3072,8 @@ cs:
         new_features: "Byly vydány nové funkce Discourse!"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
+      delete: "Smazat"
       uploading: "Nahrávám"
-      processing: "Nahrává se"
-      select_file: "Vyberte soubor"
       default_image_alt_text: obrázek
     search:
       sort_by: "Řadit podle"
@@ -3109,6 +3122,9 @@ cs:
       browser_tip_description: "znovu pro použití vyhledávání pomocí prohlížeče"
       recent: "Nedávná vyhledávání"
       clear_recent: "Vymazat poslední hledání"
+      experience:
+        search_field: "Vyhledávací pole v záhlaví webu"
+        search_icon: "Ikona vyhledávání poblíž avataru profilu"
       type:
         default: "Témata/příspěvky"
         users: "Uživatelé"
@@ -3987,6 +4003,11 @@ cs:
         few: "%{count} lidem se líbí tento příspěvek."
         many: "%{count} lidem se líbí tento příspěvek."
         other: "%{count} lidem se líbí tento příspěvek."
+      sr_post_read_count_button:
+        one: "Tento příspěvek si přečetla %{count} osoba."
+        few: "Tento příspěvek si přečetly %{count} osoby."
+        many: "Tento příspěvek si přečetlo %{count} osob."
+        other: "Tento příspěvek si přečetlo %{count} osob."
       filtered_replies_hint:
         one: "Zobrazit tento příspěvek a jeho odpověď"
         few: "Zobrazit tento příspěvek a jeho %{count} odpovědi"
@@ -4252,6 +4273,7 @@ cs:
       description: "Popis"
       logo: "Logo kategorie"
       logo_dark: "Obrázek loga kategorie (tmavý režim)"
+      logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
       background_image: "Obrázek na pozadí této kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý)"
       badge_colors: "Barvy štítku"
@@ -4763,6 +4785,8 @@ cs:
       admin:
         title: "Administrace"
         search_prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
+        search_open: "%{shortcut} Otevřít vyhledávání pro administrátorské rozhraní"
+        search_full_page: "%{shortcut} Otevřít celoobrazovkové vyhledávání v administraci"
     badges:
       earned_n_times:
         one: "Získal/a tento odznak %{count} krát"
@@ -5202,10 +5226,12 @@ cs:
       collapse_all_sections: "Sbalit všechny sekce"
       expand_all_sections: "Rozbalit všechny sekce"
       filter: "Filtr..."
+      filter_links: "Filtrovat odkazy..."
       clear_filter: "Vymazat filtr"
       no_results:
         title: "Žádné výsledky"
         description: 'Nenašli jsme nic odpovídajícího ''%{filter}''.<br><br>Chtěli jste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prohledávat nastavení webu</a> nebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">v seznamu administrace uživatelů?</a>'
+        description_admin_search: 'Nenašli jsme nic odpovídající ''%{filter}''.<br><br>Zkuste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prohledat celé administrátorské rozhraní</a>.'
       footer:
         interface_color_selector:
           light: "Světlý režim"
@@ -5393,7 +5419,9 @@ cs:
         branding:
           title: "Branding"
           logo:
+            title: "Logo"
             form:
+              saved: "Nastavení loga je uloženo."
               logo:
                 title: "Primární logo"
               mobile: "Mobilní verze"
@@ -5820,6 +5848,7 @@ cs:
         key: "Klíč"
         keys: "Klíče"
         created: Vytvořeno
+        scope: Rozsah
         updated: Aktualizováno
         last_used: Poslední použití
         never_used: Nikdy
