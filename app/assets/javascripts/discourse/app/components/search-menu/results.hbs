@@ -34,7 +34,9 @@
       {{else}}
         {{#if
           (and
-            (not @searchTopics) (not @inPMInboxContext) this.showInDesktopView
+            (not @searchTopics)
+            (not @inPMInboxContext)
+            (not this.site.isMobileViewAndDevice)
           )
         }}
           {{! render the first couple suggestions before a search has been performed}}

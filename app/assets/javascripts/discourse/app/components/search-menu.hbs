@@ -6,7 +6,7 @@
 >
   <div class="search-input-wrapper">
     <div class="search-input">
-      {{#if this.isMobileViewAndDevice}}
+      {{#if this.site.isMobileViewAndDevice}}
         <SearchMenu::MobileSearchButton @onTap={{this.mobileSearch}} />
       {{/if}}
 
@@ -63,7 +63,7 @@
         </div>
       {{/if}}
     </div>
-    {{#if (and this.site.mobileView this.site.isMobileDevice)}}
+    {{#if this.site.isMobileViewAndDevice}}
       <DButton
         @action={{this.cancelSearchMobile}}
         @label="cancel"
