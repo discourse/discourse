@@ -238,7 +238,6 @@ export default class SearchMenu extends Component {
   cancelSearchMobile() {
     this.close();
 
-    // clears search value if present
     if (this.search.activeGlobalSearchTerm) {
       this.search.activeGlobalSearchTerm = "";
       this.triggerSearch();
@@ -319,9 +318,7 @@ export default class SearchMenu extends Component {
       this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
-      if (this.args?.onLoading) {
-        this.args?.onLoading(this.loading);
-      }
+      this.args?.onLoading?.(this.loading);
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
