@@ -1,5 +1,7 @@
 {{#if (and this.search.inTopicContext (not @searchTopics))}}
-  <SearchMenu::BrowserSearchTip />
+  {{#unless this.site.isMobileViewAndDevice}}
+    <SearchMenu::BrowserSearchTip />
+  {{/unless}}
 {{else}}
   <ConditionalLoadingSection @isLoading={{this.loading}}>
     <div

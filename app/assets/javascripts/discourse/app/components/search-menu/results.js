@@ -25,15 +25,17 @@ export default class Results extends Component {
   // TODO: unused local prop `searchTopics`
   @tracked searchTopics = this.args.searchTopics;
 
-  get showInDesktopView() {
-    return !(this.site.mobileView && this.site.isMobileDevice);
+  get isMobileTopicView() {
+    return (
+      this.site.isMobileViewAndDevice && this.search.contextType === "topic"
+    );
   }
 
   get renderInitialOptions() {
     return (
       !this.search.activeGlobalSearchTerm &&
       !this.args.inPMInboxContext &&
-      this.showInDesktopView
+      (!this.site.isMobileViewAndDevice || this.isMobileTopicView)
     );
   }
 
