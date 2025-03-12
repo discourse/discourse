@@ -114,10 +114,6 @@ export default class SearchMenu extends Component {
     return false;
   }
 
-  get isMobileViewAndDevice() {
-    return this.site.mobileView && this.site.isMobileDevice;
-  }
-
   @action
   onKeydown(event) {
     if (event.key === "Escape") {
@@ -310,7 +306,7 @@ export default class SearchMenu extends Component {
 
     if (!this.search.activeGlobalSearchTerm) {
       this.abortPerform({
-        noResults: this.site.mobileView && this.site.isMobileDevice,
+        noResults: this.site.isMobileViewAndDevice,
         invalidTerm: false,
       });
     } else if (
