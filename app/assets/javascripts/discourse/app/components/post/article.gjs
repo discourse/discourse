@@ -114,6 +114,7 @@ export default class PostArticle extends Component {
           >
             <DButton
               class="collapse-down"
+              @action={{this.toggleReplyAbove}}
               @icon="chevron-down"
               @title="post.collapse"
             />
