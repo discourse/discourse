@@ -1,7 +1,10 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import DTextarea from "discourse/components/d-textarea";
+import ShareSource from "discourse/components/share-source";
 import discourseComputed from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
@@ -67,22 +70,24 @@ export default class SharePanel extends Component {
       title: this.topic.get("title"),
     });
   }
+
+  <template>
+    <div class="header">
+      <h3 class="title">{{htmlSafe this.shareTitle}}</h3>
+    </div>
+
+    <div class="body">
+      <DTextarea
+        @value={{this.shareUrl}}
+        @aria-label={{i18n "share.url"}}
+        class="topic-share-url"
+      />
+
+      <div class="sources">
+        {{#each this.sources as |source|}}
+          <ShareSource @source={{source}} @action={{this.share}} />
+        {{/each}}
+      </div>
+    </div>
+  </template>
 }
-
-<div class="header">
-  <h3 class="title">{{html-safe this.shareTitle}}</h3>
-</div>
-
-<div class="body">
-  <DTextarea
-    @value={{this.shareUrl}}
-    @aria-label={{i18n "share.url"}}
-    class="topic-share-url"
-  />
-
-  <div class="sources">
-    {{#each this.sources as |source|}}
-      <ShareSource @source={{source}} @action={{this.share}} />
-    {{/each}}
-  </div>
-</div>

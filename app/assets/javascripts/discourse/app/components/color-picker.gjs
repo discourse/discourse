@@ -1,6 +1,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
+import ColorPickerChoice from "discourse/components/color-picker-choice";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("colors-container")
@@ -20,15 +22,17 @@ export default class ColorPicker extends Component {
       : "";
     return `#${color} ${isUsed}`;
   }
-}
 
-{{#each this.colors as |c|}}
-  <ColorPickerChoice
-    @color={{c}}
-    @usedColors={{this.usedColors}}
-    @selectColor={{action "selectColor"}}
-    @ariaLabel={{this.getColorLabel c}}
-  >
-    {{d-icon "check"}}
-  </ColorPickerChoice>
-{{/each}}
+  <template>
+    {{#each this.colors as |c|}}
+      <ColorPickerChoice
+        @color={{c}}
+        @usedColors={{this.usedColors}}
+        @selectColor={{action "selectColor"}}
+        @ariaLabel={{this.getColorLabel c}}
+      >
+        {{icon "check"}}
+      </ColorPickerChoice>
+    {{/each}}
+  </template>
+}

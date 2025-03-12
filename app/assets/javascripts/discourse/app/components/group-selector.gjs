@@ -63,11 +63,13 @@ export default class GroupSelector extends Component {
       template: findRawTemplate("group-selector-autocomplete"),
     });
   }
-}
 
-<input
-  placeholder={{this.placeholder}}
-  class="group-selector"
-  type="text"
-  name="groups"
-/>
+  <template>
+    <input
+      placeholder={{this.placeholder}}
+      class="group-selector"
+      type="text"
+      name="groups"
+    />
+  </template>
+}

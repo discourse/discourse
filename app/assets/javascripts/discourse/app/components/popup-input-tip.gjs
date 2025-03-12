@@ -7,6 +7,7 @@ import {
   classNameBindings,
   tagName,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("a")
@@ -59,6 +60,6 @@ export default class PopupInputTip extends Component {
       this.set("tipReason", null);
     }
   }
-}
 
-{{this.tipReason}} {{d-icon "circle-xmark"}}
+  <template>{{this.tipReason}} {{icon "circle-xmark"}}</template>
+}

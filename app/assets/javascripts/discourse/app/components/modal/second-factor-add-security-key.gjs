@@ -1,7 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import {
   bufferToBase64,
   isWebauthnSupported,
@@ -154,53 +160,55 @@ export default class SecondFactorAddSecurityKey extends Component {
         }
       );
   }
-}
 
-<DModal
-  @closeModal={{@closeModal}}
-  @title={{i18n "user.second_factor.security_key.add"}}
-  {{did-insert this.securityKeyRequested}}
->
-  <:body>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
-      {{#if this.errorMessage}}
-        <div class="control-group">
-          <div class="controls">
-            <div class="alert alert-error">{{this.errorMessage}}</div>
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "user.second_factor.security_key.add"}}
+      {{didInsert this.securityKeyRequested}}
+    >
+      <:body>
+        <ConditionalLoadingSpinner @condition={{this.loading}}>
+          {{#if this.errorMessage}}
+            <div class="control-group">
+              <div class="controls">
+                <div class="alert alert-error">{{this.errorMessage}}</div>
+              </div>
+            </div>
+          {{/if}}
+
+          <div class="control-group">
+            <div class="controls">
+              {{htmlSafe
+                (i18n "user.second_factor.enable_security_key_description")
+              }}
+            </div>
           </div>
-        </div>
-      {{/if}}
 
-      <div class="control-group">
-        <div class="controls">
-          {{html-safe
-            (i18n "user.second_factor.enable_security_key_description")
-          }}
-        </div>
-      </div>
+          <div class="control-group">
+            <div class="controls">
+              <Input
+                @value={{this.securityKeyName}}
+                id="security-key-name"
+                placeholder="security key name"
+                maxlength={{this.maxSecondFactorNameLength}}
+              />
+            </div>
+          </div>
 
-      <div class="control-group">
-        <div class="controls">
-          <Input
-            @value={{this.securityKeyName}}
-            id="security-key-name"
-            placeholder="security key name"
-            maxlength={{this.maxSecondFactorNameLength}}
-          />
-        </div>
-      </div>
-
-      <div class="control-group">
-        <div class="controls">
-          {{#unless this.webauthnUnsupported}}
-            <DButton
-              class="btn-primary add-security-key"
-              @action={{this.registerSecurityKey}}
-              @label="user.second_factor.security_key.register"
-            />
-          {{/unless}}
-        </div>
-      </div>
-    </ConditionalLoadingSpinner>
-  </:body>
-</DModal>
+          <div class="control-group">
+            <div class="controls">
+              {{#unless this.webauthnUnsupported}}
+                <DButton
+                  class="btn-primary add-security-key"
+                  @action={{this.registerSecurityKey}}
+                  @label="user.second_factor.security_key.register"
+                />
+              {{/unless}}
+            </div>
+          </div>
+        </ConditionalLoadingSpinner>
+      </:body>
+    </DModal>
+  </template>
+}

@@ -1,6 +1,9 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import DateInput from "discourse/components/date-input";
+import TimeInput from "discourse/components/time-input";
 
 @classNames("d-date-time-input")
 export default class DateTimeInput extends Component {
@@ -73,40 +76,42 @@ export default class DateTimeInput extends Component {
   get resolvedTimezone() {
     return this.timezone || moment.tz.guess();
   }
+
+  <template>
+    {{#unless this.timeFirst}}
+      <DateInput
+        @date={{this.date}}
+        @placeholder={{this.placeholder}}
+        @relativeDate={{this.relativeDate}}
+        @onChange={{action "onChangeDate"}}
+        @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+      />
+    {{/unless}}
+
+    {{#if this.showTime}}
+      <TimeInput
+        @date={{this.date}}
+        @relativeDate={{this.relativeDate}}
+        @onChange={{action "onChangeTime"}}
+      />
+    {{/if}}
+
+    {{#if this.timeFirst}}
+      <DateInput
+        @date={{this.date}}
+        @placeholder={{this.placeholder}}
+        @relativeDate={{this.relativeDate}}
+        @onChange={{action "onChangeDate"}}
+        @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
+      />
+    {{/if}}
+
+    {{#if this.clearable}}
+      <DButton
+        @icon="xmark"
+        @action={{this.onClear}}
+        class="btn-default clear-date-time"
+      />
+    {{/if}}
+  </template>
 }
-
-{{#unless this.timeFirst}}
-  <DateInput
-    @date={{this.date}}
-    @placeholder={{this.placeholder}}
-    @relativeDate={{this.relativeDate}}
-    @onChange={{action "onChangeDate"}}
-    @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
-  />
-{{/unless}}
-
-{{#if this.showTime}}
-  <TimeInput
-    @date={{this.date}}
-    @relativeDate={{this.relativeDate}}
-    @onChange={{action "onChangeTime"}}
-  />
-{{/if}}
-
-{{#if this.timeFirst}}
-  <DateInput
-    @date={{this.date}}
-    @placeholder={{this.placeholder}}
-    @relativeDate={{this.relativeDate}}
-    @onChange={{action "onChangeDate"}}
-    @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
-  />
-{{/if}}
-
-{{#if this.clearable}}
-  <DButton
-    @icon="xmark"
-    @action={{this.onClear}}
-    class="btn-default clear-date-time"
-  />
-{{/if}}

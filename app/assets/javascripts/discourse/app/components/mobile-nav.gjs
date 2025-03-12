@@ -1,10 +1,13 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNames, tagName } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
+import icon from "discourse/helpers/d-icon";
 
 @tagName("ul")
 @classNames("mobile-nav")
@@ -13,7 +16,7 @@ export default class MobileNav extends Component {
 
   selectedHtml = null;
 
-  @on("init")
+  @onEvent("init")
   _init() {
     if (this.site.desktopView) {
       let classes = this.desktopClass;
@@ -75,20 +78,22 @@ export default class MobileNav extends Component {
       }
     });
   }
-}
 
-{{#if this.site.mobileView}}
-  {{#if this.selectedHtml}}
-    <li>
-      <a href {{on "click" this.toggleExpanded}} class="expander">
-        <span class="selection">{{html-safe this.selectedHtml}}</span>
-        {{d-icon "caret-down"}}
-      </a>
-    </li>
-  {{/if}}
-  <ul class="drop {{if this.expanded 'expanded'}}">
-    {{yield}}
-  </ul>
-{{else}}
-  {{yield}}
-{{/if}}
+  <template>
+    {{#if this.site.mobileView}}
+      {{#if this.selectedHtml}}
+        <li>
+          <a href {{on "click" this.toggleExpanded}} class="expander">
+            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
+            {{icon "caret-down"}}
+          </a>
+        </li>
+      {{/if}}
+      <ul class="drop {{if this.expanded 'expanded'}}">
+        {{yield}}
+      </ul>
+    {{else}}
+      {{yield}}
+    {{/if}}
+  </template>
+}

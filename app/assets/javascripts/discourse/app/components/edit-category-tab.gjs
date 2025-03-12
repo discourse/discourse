@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
@@ -58,10 +59,12 @@ export default class EditCategoryTab extends Component {
       DiscourseURL.routeTo(this.fullSlug);
     }
   }
-}
 
-<a
-  href
-  {{on "click" this.select}}
-  class={{if this.active "active"}}
->{{this.title}}</a>
+  <template>
+    <a
+      href
+      {{on "click" this.select}}
+      class={{if this.active "active"}}
+    >{{this.title}}</a>
+  </template>
+}

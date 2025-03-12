@@ -1,64 +1,78 @@
-<div class="container">
-  <DiscourseBanner />
-</div>
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from "ember-route-template";
+import DiscourseBanner from "discourse/components/discourse-banner";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TagList from "discourse/components/tag-list";
+import TagsAdminDropdown from "discourse/components/tags-admin-dropdown";
+import { i18n } from "discourse-i18n";
 
-<div class="container tags-index">
-
-  <div class="list-controls">
-    <div class="container tags-controls">
-      {{#if this.canAdminTags}}
-        <TagsAdminDropdown @actionsMapping={{this.actionsMapping}} />
-      {{/if}}
-      <h2>{{i18n "tagging.tags"}}</h2>
+export default RouteTemplate(
+  <template>
+    <div class="container">
+      <DiscourseBanner />
     </div>
-  </div>
 
-  <div>
-    <PluginOutlet
-      @name="tags-below-title"
-      @connectorTagName="div"
-      @outletArgs={{hash model=this.model}}
-    />
-  </div>
+    <div class="container tags-index">
 
-  <div class="tag-sort-options">
-    {{i18n "tagging.sort_by"}}
-    <span class="tag-sort-count {{if this.sortedByCount 'active'}}"><a
-        href
-        {{on "click" this.sortByCount}}
-      >{{i18n "tagging.sort_by_count"}}</a></span>
-    <span class="tag-sort-name {{if this.sortedByName 'active'}}"><a
-        href
-        {{on "click" this.sortById}}
-      >{{i18n "tagging.sort_by_name"}}</a></span>
-  </div>
+      <div class="list-controls">
+        <div class="container tags-controls">
+          {{#if @controller.canAdminTags}}
+            <TagsAdminDropdown @actionsMapping={{@controller.actionsMapping}} />
+          {{/if}}
+          <h2>{{i18n "tagging.tags"}}</h2>
+        </div>
+      </div>
 
-  <hr />
+      <div>
+        <PluginOutlet
+          @name="tags-below-title"
+          @connectorTagName="div"
+          @outletArgs={{hash model=@controller.model}}
+        />
+      </div>
 
-  <div class="all-tag-lists">
-    {{#each this.model.extras.categories as |category|}}
-      <TagList
-        @tags={{category.tags}}
-        @sortProperties={{this.sortProperties}}
-        @categoryId={{category.id}}
-      />
-    {{/each}}
+      <div class="tag-sort-options">
+        {{i18n "tagging.sort_by"}}
+        <span
+          class="tag-sort-count {{if @controller.sortedByCount 'active'}}"
+        ><a href {{on "click" @controller.sortByCount}}>{{i18n
+              "tagging.sort_by_count"
+            }}</a></span>
+        <span class="tag-sort-name {{if @controller.sortedByName 'active'}}"><a
+            href
+            {{on "click" @controller.sortById}}
+          >{{i18n "tagging.sort_by_name"}}</a></span>
+      </div>
 
-    {{#each this.model.extras.tag_groups as |tagGroup|}}
-      <TagList
-        @tags={{tagGroup.tags}}
-        @sortProperties={{this.sortProperties}}
-        @tagGroupName={{tagGroup.name}}
-      />
-    {{/each}}
+      <hr />
 
-    {{#if this.model}}
-      <TagList
-        @tags={{this.model}}
-        @sortProperties={{this.sortProperties}}
-        @titleKey={{this.otherTagsTitleKey}}
-      />
-    {{/if}}
-  </div>
+      <div class="all-tag-lists">
+        {{#each @controller.model.extras.categories as |category|}}
+          <TagList
+            @tags={{category.tags}}
+            @sortProperties={{@controller.sortProperties}}
+            @categoryId={{category.id}}
+          />
+        {{/each}}
 
-</div>
+        {{#each @controller.model.extras.tag_groups as |tagGroup|}}
+          <TagList
+            @tags={{tagGroup.tags}}
+            @sortProperties={{@controller.sortProperties}}
+            @tagGroupName={{tagGroup.name}}
+          />
+        {{/each}}
+
+        {{#if @controller.model}}
+          <TagList
+            @tags={{@controller.model}}
+            @sortProperties={{@controller.sortProperties}}
+            @titleKey={{@controller.otherTagsTitleKey}}
+          />
+        {{/if}}
+      </div>
+
+    </div>
+  </template>
+);

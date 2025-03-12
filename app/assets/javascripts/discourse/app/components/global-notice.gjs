@@ -1,8 +1,10 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { bind } from "discourse/lib/decorators";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
@@ -221,31 +223,33 @@ export default class GlobalNotice extends Component {
 
     this.set("logNotice", logNotice);
   }
+
+  <template>
+    <div class="global-notice">
+      {{#if this.visible}}
+        {{#each this.notices as |notice|}}
+          <div class="row">
+            <div
+              id="global-notice-{{notice.id}}"
+              class="alert alert-{{notice.options.level}} {{notice.id}}"
+            >
+              {{#if notice.options.html}}
+                {{htmlSafe notice.options.html}}
+              {{/if}}
+
+              <span class="text">{{htmlSafe notice.text}}</span>
+
+              {{#if notice.options.dismissable}}
+                <DButton
+                  @icon="xmark"
+                  @action={{fn this.dismissNotice notice}}
+                  class="btn-transparent close"
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+  </template>
 }
-
-<div class="global-notice">
-  {{#if this.visible}}
-    {{#each this.notices as |notice|}}
-      <div class="row">
-        <div
-          id="global-notice-{{notice.id}}"
-          class="alert alert-{{notice.options.level}} {{notice.id}}"
-        >
-          {{#if notice.options.html}}
-            {{html-safe notice.options.html}}
-          {{/if}}
-
-          <span class="text">{{html-safe notice.text}}</span>
-
-          {{#if notice.options.dismissable}}
-            <DButton
-              @icon="xmark"
-              @action={{fn this.dismissNotice notice}}
-              class="btn-transparent close"
-            />
-          {{/if}}
-        </div>
-      </div>
-    {{/each}}
-  {{/if}}
-</div>

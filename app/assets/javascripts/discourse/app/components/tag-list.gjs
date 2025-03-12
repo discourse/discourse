@@ -1,6 +1,9 @@
 import Component from "@ember/component";
 import { sort } from "@ember/object/computed";
 import { classNameBindings } from "@ember-decorators/component";
+import CategoryTitleLink from "discourse/components/category-title-link";
+import icon from "discourse/helpers/d-icon";
+import discourseTag from "discourse/helpers/discourse-tag";
 import discourseComputed from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -41,35 +44,37 @@ export default class TagList extends Component {
       return groupName && `tag-group-${groupName}`;
     }
   }
-}
 
-{{#if this.title}}
-  <h3>{{this.title}}</h3>
-{{/if}}
-{{#if this.category}}
-  <CategoryTitleLink @category={{this.category}} />
-{{/if}}
-{{#if this.tagGroupName}}
-  <h3>{{this.tagGroupName}}</h3>
-{{/if}}
-{{#each this.sortedTags as |tag|}}
-  <div class="tag-box">
-    {{discourse-tag
-      tag.id
-      description=tag.description
-      isPrivateMessage=this.isPrivateMessage
-      pmOnly=tag.pmOnly
-      tagsForUser=this.tagsForUser
-    }}
-    {{#if tag.pmOnly}}
-      {{d-icon "envelope"}}
+  <template>
+    {{#if this.title}}
+      <h3>{{this.title}}</h3>
     {{/if}}
-    {{#if tag.totalCount}}
-      <span class="tag-count">
-        x
-        {{tag.totalCount}}
-      </span>
+    {{#if this.category}}
+      <CategoryTitleLink @category={{this.category}} />
     {{/if}}
-  </div>
-{{/each}}
-<div class="clearfix"></div>
+    {{#if this.tagGroupName}}
+      <h3>{{this.tagGroupName}}</h3>
+    {{/if}}
+    {{#each this.sortedTags as |tag|}}
+      <div class="tag-box">
+        {{discourseTag
+          tag.id
+          description=tag.description
+          isPrivateMessage=this.isPrivateMessage
+          pmOnly=tag.pmOnly
+          tagsForUser=this.tagsForUser
+        }}
+        {{#if tag.pmOnly}}
+          {{icon "envelope"}}
+        {{/if}}
+        {{#if tag.totalCount}}
+          <span class="tag-count">
+            x
+            {{tag.totalCount}}
+          </span>
+        {{/if}}
+      </div>
+    {{/each}}
+    <div class="clearfix"></div>
+  </template>
+}

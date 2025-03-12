@@ -1,5 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
+import PreferenceCheckbox from "discourse/components/preference-checkbox";
+import UserNotificationScheduleDay from "discourse/components/user-notification-schedule-day";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -136,37 +138,39 @@ export default class UserNotificationSchedule extends Component {
     }
     return timeOptions;
   }
+
+  <template>
+    <div
+      class="control-group notification-schedule"
+      data-setting-name="user-notification-schedule"
+    >
+      <label class="control-label">{{i18n
+          "user.notification_schedule.title"
+        }}</label>
+      <PreferenceCheckbox
+        @labelKey="user.notification_schedule.label"
+        @checked={{this.model.user_notification_schedule.enabled}}
+      />
+
+      {{#if this.model.user_notification_schedule.enabled}}
+        <div class="instruction">{{i18n "user.notification_schedule.tip"}}</div>
+
+        <table class="notification-schedule-table">
+          <tbody class="notification-schedule-tbody">
+            {{#each this.days as |day|}}
+              <UserNotificationScheduleDay
+                @day={{day.day}}
+                @startTimeOptions={{day.startTimeOptions}}
+                @startTimeValue={{day.startTimeValue}}
+                @onChangeStartTime={{day.onChangeStartTime}}
+                @endTimeOptions={{day.endTimeOptions}}
+                @endTimeValue={{day.endTimeValue}}
+                @onChangeEndTime={{day.onChangeEndTime}}
+              />
+            {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </div>
+  </template>
 }
-
-<div
-  class="control-group notification-schedule"
-  data-setting-name="user-notification-schedule"
->
-  <label class="control-label">{{i18n
-      "user.notification_schedule.title"
-    }}</label>
-  <PreferenceCheckbox
-    @labelKey="user.notification_schedule.label"
-    @checked={{this.model.user_notification_schedule.enabled}}
-  />
-
-  {{#if this.model.user_notification_schedule.enabled}}
-    <div class="instruction">{{i18n "user.notification_schedule.tip"}}</div>
-
-    <table class="notification-schedule-table">
-      <tbody class="notification-schedule-tbody">
-        {{#each this.days as |day|}}
-          <UserNotificationScheduleDay
-            @day={{day.day}}
-            @startTimeOptions={{day.startTimeOptions}}
-            @startTimeValue={{day.startTimeValue}}
-            @onChangeStartTime={{day.onChangeStartTime}}
-            @endTimeOptions={{day.endTimeOptions}}
-            @endTimeValue={{day.endTimeValue}}
-            @onChangeEndTime={{day.onChangeEndTime}}
-          />
-        {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
-</div>

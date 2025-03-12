@@ -1,7 +1,15 @@
 import Component from "@glimmer/component";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
+import CategoryLogo from "discourse/components/category-logo";
+import DNavigation from "discourse/components/d-navigation";
 import ReorderCategories from "discourse/components/modal/reorder-categories";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
+import dirSpan from "discourse/helpers/dir-span";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
@@ -59,85 +67,87 @@ export default class DiscoveryNavigation extends Component {
   reorderCategories() {
     this.modal.show(ReorderCategories);
   }
-}
 
-<AddCategoryTagClasses
-  @category={{@category}}
-  @tags={{if @tag (array @tag.id)}}
-/>
+  <template>
+    <AddCategoryTagClasses
+      @category={{@category}}
+      @tags={{if @tag (array @tag.id)}}
+    />
 
-{{#if @category}}
-  <PluginOutlet
-    @name="above-category-heading"
-    @outletArgs={{hash category=@category tag=@tag}}
-  />
-
-  <section class="category-heading">
-    {{#if @category.uploaded_logo.url}}
-      <CategoryLogo @category={{@category}} />
-      {{#if @category.description}}
-        <p>{{dir-span @category.description htmlSafe="true"}}</p>
-      {{/if}}
-    {{/if}}
-
-    <span>
+    {{#if @category}}
       <PluginOutlet
-        @name="category-heading"
-        @connectorTagName="div"
+        @name="above-category-heading"
         @outletArgs={{hash category=@category tag=@tag}}
       />
-    </span>
-  </section>
-{{/if}}
 
-{{body-class this.bodyClass}}
+      <section class="category-heading">
+        {{#if @category.uploaded_logo.url}}
+          <CategoryLogo @category={{@category}} />
+          {{#if @category.description}}
+            <p>{{dirSpan @category.description htmlSafe="true"}}</p>
+          {{/if}}
+        {{/if}}
 
-<section
-  class={{concat-class
-    "navigation-container"
-    (if @category "category-navigation")
-  }}
->
-  <DNavigation
-    @category={{@category}}
-    @tag={{@tag}}
-    @additionalTags={{@additionalTags}}
-    @filterMode={{this.filterMode}}
-    @noSubcategories={{@noSubcategories}}
-    @canCreateTopic={{this.canCreateTopic}}
-    @canCreateTopicOnTag={{@canCreateTopicOnTag}}
-    @createTopic={{@createTopic}}
-    @createTopicDisabled={{@createTopicDisabled}}
-    @draftCount={{this.currentUser.draft_count}}
-    @editCategory={{this.editCategory}}
-    @showCategoryAdmin={{@showCategoryAdmin}}
-    @createCategory={{this.createCategory}}
-    @reorderCategories={{this.reorderCategories}}
-    @canBulkSelect={{@canBulkSelect}}
-    @bulkSelectHelper={{@bulkSelectHelper}}
-    @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
-    @toggleInfo={{@toggleTagInfo}}
-    @tagNotification={{@tagNotification}}
-    @model={{@model}}
-    @showDismissRead={{@showDismissRead}}
-    @showResetNew={{@showResetNew}}
-    @dismissRead={{@dismissRead}}
-    @resetNew={{@resetNew}}
-  />
+        <span>
+          <PluginOutlet
+            @name="category-heading"
+            @connectorTagName="div"
+            @outletArgs={{hash category=@category tag=@tag}}
+          />
+        </span>
+      </section>
+    {{/if}}
 
-  {{#if @category}}
-    <PluginOutlet
-      @name="category-navigation"
-      @connectorTagName="div"
-      @outletArgs={{hash category=@category tag=@tag}}
-    />
-  {{/if}}
+    {{bodyClass this.bodyClass}}
 
-  {{#if @tag}}
-    <PluginOutlet
-      @name="tag-navigation"
-      @connectorTagName="div"
-      @outletArgs={{hash category=@category tag=@tag}}
-    />
-  {{/if}}
-</section>
+    <section
+      class={{concatClass
+        "navigation-container"
+        (if @category "category-navigation")
+      }}
+    >
+      <DNavigation
+        @category={{@category}}
+        @tag={{@tag}}
+        @additionalTags={{@additionalTags}}
+        @filterMode={{this.filterMode}}
+        @noSubcategories={{@noSubcategories}}
+        @canCreateTopic={{this.canCreateTopic}}
+        @canCreateTopicOnTag={{@canCreateTopicOnTag}}
+        @createTopic={{@createTopic}}
+        @createTopicDisabled={{@createTopicDisabled}}
+        @draftCount={{this.currentUser.draft_count}}
+        @editCategory={{this.editCategory}}
+        @showCategoryAdmin={{@showCategoryAdmin}}
+        @createCategory={{this.createCategory}}
+        @reorderCategories={{this.reorderCategories}}
+        @canBulkSelect={{@canBulkSelect}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+        @toggleInfo={{@toggleTagInfo}}
+        @tagNotification={{@tagNotification}}
+        @model={{@model}}
+        @showDismissRead={{@showDismissRead}}
+        @showResetNew={{@showResetNew}}
+        @dismissRead={{@dismissRead}}
+        @resetNew={{@resetNew}}
+      />
+
+      {{#if @category}}
+        <PluginOutlet
+          @name="category-navigation"
+          @connectorTagName="div"
+          @outletArgs={{hash category=@category tag=@tag}}
+        />
+      {{/if}}
+
+      {{#if @tag}}
+        <PluginOutlet
+          @name="tag-navigation"
+          @connectorTagName="div"
+          @outletArgs={{hash category=@category tag=@tag}}
+        />
+      {{/if}}
+    </section>
+  </template>
+}

@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import MenuPanel from "discourse/components/menu-panel";
+import SearchMenu from "discourse/components/search-menu";
 
 export default class SearchMenuPanel extends Component {
   @service site;
@@ -9,15 +11,17 @@ export default class SearchMenuPanel extends Component {
       ? "slide-in"
       : "drop-down";
   }
-}
 
-<MenuPanel
-  @animationClass={{this.animationClass}}
-  @panelClass="search-menu-panel"
->
-  <SearchMenu
-    @onClose={{@closeSearchMenu}}
-    @inlineResults={{true}}
-    @autofocusInput={{true}}
-  />
-</MenuPanel>
+  <template>
+    <MenuPanel
+      @animationClass={{this.animationClass}}
+      @panelClass="search-menu-panel"
+    >
+      <SearchMenu
+        @onClose={{@closeSearchMenu}}
+        @inlineResults={{true}}
+        @autofocusInput={{true}}
+      />
+    </MenuPanel>
+  </template>
+}

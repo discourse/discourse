@@ -1,11 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import AvatarUploader from "discourse/components/avatar-uploader";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
+import RadioButton from "discourse/components/radio-button";
+import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
+import { i18n } from "discourse-i18n";
 
 export default class AvatarSelectorModal extends Component {
   @service currentUser;
@@ -156,146 +166,154 @@ export default class AvatarSelectorModal extends Component {
       popupAjaxError(error);
     }
   }
-}
 
-<DModal
-  @bodyClass="avatar-selector"
-  @closeModal={{@closeModal}}
-  @title={{i18n "user.change_avatar.title"}}
-  class="avatar-selector-modal"
->
-  <:body>
-    {{#if this.showSelectableAvatars}}
-      <div class="selectable-avatars">
-        {{#each this.selectableAvatars as |avatar|}}
-          <a
-            href
-            class="selectable-avatar"
-            {{on "click" (fn this.selectAvatar avatar)}}
-          >
-            {{bound-avatar-template avatar "huge"}}
-          </a>
-        {{/each}}
-      </div>
-      {{#if this.showCustomAvatarSelector}}
-        <h4>{{i18n "user.change_avatar.use_custom"}}</h4>
-      {{/if}}
-    {{/if}}
-    {{#if this.showCustomAvatarSelector}}
-      {{#if this.user.use_logo_small_as_avatar}}
-        <div class="avatar-choice">
-          <RadioButton
-            @id="logo-small"
-            @name="logo"
-            @value="logo"
-            @selection={{this.selected}}
-            @onChange={{this.onSelectedChanged}}
-          />
-          <label class="radio" for="logo-small">
-            {{bound-avatar-template
-              this.siteSettings.site_logo_small_url
-              "large"
-            }}
-            {{i18n "user.change_avatar.logo_small"}}
-          </label>
-        </div>
-      {{/if}}
-      <div class="avatar-choice">
-        <RadioButton
-          @id="system-avatar"
-          @name="avatar"
-          @value="system"
-          @selection={{this.selected}}
-          @onChange={{this.onSelectedChanged}}
-        />
-        <label class="radio" for="system-avatar">
-          {{bound-avatar-template this.user.system_avatar_template "large"}}
-          {{i18n "user.change_avatar.letter_based"}}
-        </label>
-      </div>
-      {{#if this.allowAvatarUpload}}
-        <div class="avatar-choice">
-          <RadioButton
-            @id="gravatar"
-            @name="avatar"
-            @value="gravatar"
-            @selection={{this.selected}}
-            @onChange={{this.onSelectedChanged}}
-          />
-          <label class="radio" for="gravatar">
-            {{bound-avatar-template this.user.gravatar_avatar_template "large"}}
-            <span>
-              {{html-safe
-                (i18n
-                  "user.change_avatar.gravatar"
-                  gravatarName=this.siteSettings.gravatar_name
-                  gravatarBaseUrl=this.siteSettings.gravatar_base_url
-                  gravatarLoginUrl=this.siteSettings.gravatar_login_url
-                )
-              }}
-              {{this.user.email}}
-            </span>
-          </label>
-
-          <DButton
-            @action={{this.refreshGravatar}}
-            @translatedTitle={{i18n
-              "user.change_avatar.refresh_gravatar_title"
-              gravatarName=this.siteSettings.gravatar_name
-            }}
-            @disabled={{this.gravatarRefreshDisabled}}
-            @icon="arrows-rotate"
-            class="btn-default avatar-selector-refresh-gravatar"
-          />
-
-          {{#if this.gravatarFailed}}
-            <p class="error">
-              {{i18n
-                "user.change_avatar.gravatar_failed"
-                gravatarName=this.siteSettings.gravatar_name
-              }}
-            </p>
+  <template>
+    <DModal
+      @bodyClass="avatar-selector"
+      @closeModal={{@closeModal}}
+      @title={{i18n "user.change_avatar.title"}}
+      class="avatar-selector-modal"
+    >
+      <:body>
+        {{#if this.showSelectableAvatars}}
+          <div class="selectable-avatars">
+            {{#each this.selectableAvatars as |avatar|}}
+              <a
+                href
+                class="selectable-avatar"
+                {{on "click" (fn this.selectAvatar avatar)}}
+              >
+                {{boundAvatarTemplate avatar "huge"}}
+              </a>
+            {{/each}}
+          </div>
+          {{#if this.showCustomAvatarSelector}}
+            <h4>{{i18n "user.change_avatar.use_custom"}}</h4>
           {{/if}}
-        </div>
-        <div class="avatar-choice">
-          <RadioButton
-            @id="uploaded-avatar"
-            @name="avatar"
-            @value="custom"
-            @selection={{this.selected}}
-            @onChange={{this.onSelectedChanged}}
-          />
-          <label class="radio" for="uploaded-avatar">
-            {{#if this.user.custom_avatar_template}}
-              {{bound-avatar-template this.user.custom_avatar_template "large"}}
-              {{i18n "user.change_avatar.uploaded_avatar"}}
-            {{else}}
-              {{i18n "user.change_avatar.uploaded_avatar_empty"}}
-            {{/if}}
-          </label>
-          <AvatarUploader
-            @user_id={{this.user.id}}
-            @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
-            @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
-            @uploading={{this.uploading}}
-            @id="avatar-uploader"
-            @done={{this.uploadComplete}}
-            class="avatar-uploader"
-          />
-        </div>
-      {{/if}}
-    {{/if}}
-  </:body>
+        {{/if}}
+        {{#if this.showCustomAvatarSelector}}
+          {{#if this.user.use_logo_small_as_avatar}}
+            <div class="avatar-choice">
+              <RadioButton
+                @id="logo-small"
+                @name="logo"
+                @value="logo"
+                @selection={{this.selected}}
+                @onChange={{this.onSelectedChanged}}
+              />
+              <label class="radio" for="logo-small">
+                {{boundAvatarTemplate
+                  this.siteSettings.site_logo_small_url
+                  "large"
+                }}
+                {{i18n "user.change_avatar.logo_small"}}
+              </label>
+            </div>
+          {{/if}}
+          <div class="avatar-choice">
+            <RadioButton
+              @id="system-avatar"
+              @name="avatar"
+              @value="system"
+              @selection={{this.selected}}
+              @onChange={{this.onSelectedChanged}}
+            />
+            <label class="radio" for="system-avatar">
+              {{boundAvatarTemplate this.user.system_avatar_template "large"}}
+              {{i18n "user.change_avatar.letter_based"}}
+            </label>
+          </div>
+          {{#if this.allowAvatarUpload}}
+            <div class="avatar-choice">
+              <RadioButton
+                @id="gravatar"
+                @name="avatar"
+                @value="gravatar"
+                @selection={{this.selected}}
+                @onChange={{this.onSelectedChanged}}
+              />
+              <label class="radio" for="gravatar">
+                {{boundAvatarTemplate
+                  this.user.gravatar_avatar_template
+                  "large"
+                }}
+                <span>
+                  {{htmlSafe
+                    (i18n
+                      "user.change_avatar.gravatar"
+                      gravatarName=this.siteSettings.gravatar_name
+                      gravatarBaseUrl=this.siteSettings.gravatar_base_url
+                      gravatarLoginUrl=this.siteSettings.gravatar_login_url
+                    )
+                  }}
+                  {{this.user.email}}
+                </span>
+              </label>
 
-  <:footer>
-    {{#if this.showCustomAvatarSelector}}
-      <DButton
-        @action={{this.saveAvatarSelection}}
-        @disabled={{this.submitDisabled}}
-        @label="save"
-        class="btn-primary"
-      />
-      <DModalCancel @close={{@closeModal}} />
-    {{/if}}
-  </:footer>
-</DModal>
+              <DButton
+                @action={{this.refreshGravatar}}
+                @translatedTitle={{i18n
+                  "user.change_avatar.refresh_gravatar_title"
+                  gravatarName=this.siteSettings.gravatar_name
+                }}
+                @disabled={{this.gravatarRefreshDisabled}}
+                @icon="arrows-rotate"
+                class="btn-default avatar-selector-refresh-gravatar"
+              />
+
+              {{#if this.gravatarFailed}}
+                <p class="error">
+                  {{i18n
+                    "user.change_avatar.gravatar_failed"
+                    gravatarName=this.siteSettings.gravatar_name
+                  }}
+                </p>
+              {{/if}}
+            </div>
+            <div class="avatar-choice">
+              <RadioButton
+                @id="uploaded-avatar"
+                @name="avatar"
+                @value="custom"
+                @selection={{this.selected}}
+                @onChange={{this.onSelectedChanged}}
+              />
+              <label class="radio" for="uploaded-avatar">
+                {{#if this.user.custom_avatar_template}}
+                  {{boundAvatarTemplate
+                    this.user.custom_avatar_template
+                    "large"
+                  }}
+                  {{i18n "user.change_avatar.uploaded_avatar"}}
+                {{else}}
+                  {{i18n "user.change_avatar.uploaded_avatar_empty"}}
+                {{/if}}
+              </label>
+              <AvatarUploader
+                @user_id={{this.user.id}}
+                @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
+                @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
+                @uploading={{this.uploading}}
+                @id="avatar-uploader"
+                @done={{this.uploadComplete}}
+                class="avatar-uploader"
+              />
+            </div>
+          {{/if}}
+        {{/if}}
+      </:body>
+
+      <:footer>
+        {{#if this.showCustomAvatarSelector}}
+          <DButton
+            @action={{this.saveAvatarSelection}}
+            @disabled={{this.submitDisabled}}
+            @label="save"
+            class="btn-primary"
+          />
+          <DModalCancel @close={{@closeModal}} />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

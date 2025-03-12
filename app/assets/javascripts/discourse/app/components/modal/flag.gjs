@@ -1,7 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { not } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import FlagActionType from "discourse/components/flag-action-type";
+import FlagSelection from "discourse/components/flag-selection";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
@@ -211,92 +221,94 @@ export default class Flag extends Component {
   changePostActionType(actionType) {
     this.selected = actionType;
   }
-}
 
-<DModal
-  class="flag-modal"
-  @bodyClass="flag-modal-body"
-  @title={{i18n this.title}}
-  @submitOnEnter={{false}}
-  @closeModal={{@closeModal}}
-  {{on "keydown" this.onKeydown}}
->
-  <:body>
-    <p>{{html-safe (i18n "flagging.review_process_description")}}</p>
-    <PluginOutlet
-      @name="after-flag-modal-review-process-description"
-      @connectorTagName="div"
-      @outletArgs={{hash post=@model.flagModel}}
-    />
-    <form>
-      <FlagSelection
-        @nameKey={{this.selected.name_key}}
-        @flags={{this.flagsAvailable}}
-        as |f|
-      >
-        <FlagActionType
-          @flag={{f}}
-          @message={{this.message}}
-          @isConfirmed={{this.isConfirmed}}
-          @isWarning={{this.isWarning}}
-          @selectedFlag={{this.selected}}
-          @username={{@model.flagModel.username}}
-          @staffFlagsAvailable={{this.staffFlagsAvailable}}
-          @changePostActionType={{this.changePostActionType}}
+  <template>
+    <DModal
+      class="flag-modal"
+      @bodyClass="flag-modal-body"
+      @title={{i18n this.title}}
+      @submitOnEnter={{false}}
+      @closeModal={{@closeModal}}
+      {{on "keydown" this.onKeydown}}
+    >
+      <:body>
+        <p>{{htmlSafe (i18n "flagging.review_process_description")}}</p>
+        <PluginOutlet
+          @name="after-flag-modal-review-process-description"
+          @connectorTagName="div"
+          @outletArgs={{hash post=@model.flagModel}}
         />
-      </FlagSelection>
-    </form>
-    <PluginOutlet
-      @name="flag-modal-bottom"
-      @connectorTagName="div"
-      @outletArgs={{hash post=@model.flagModel}}
-    />
-  </:body>
-  <:footer>
-    <DButton
-      class="btn-primary flag-modal__create-flag"
-      @action={{this.createFlag}}
-      @disabled={{not this.submitEnabled}}
-      @title="flagging.submit_tooltip"
-      @icon={{if this.selected.is_custom_flag "envelope" "flag"}}
-      @label={{this.submitLabel}}
-    />
+        <form>
+          <FlagSelection
+            @nameKey={{this.selected.name_key}}
+            @flags={{this.flagsAvailable}}
+            as |f|
+          >
+            <FlagActionType
+              @flag={{f}}
+              @message={{this.message}}
+              @isConfirmed={{this.isConfirmed}}
+              @isWarning={{this.isWarning}}
+              @selectedFlag={{this.selected}}
+              @username={{@model.flagModel.username}}
+              @staffFlagsAvailable={{this.staffFlagsAvailable}}
+              @changePostActionType={{this.changePostActionType}}
+            />
+          </FlagSelection>
+        </form>
+        <PluginOutlet
+          @name="flag-modal-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash post=@model.flagModel}}
+        />
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary flag-modal__create-flag"
+          @action={{this.createFlag}}
+          @disabled={{not this.submitEnabled}}
+          @title="flagging.submit_tooltip"
+          @icon={{if this.selected.is_custom_flag "envelope" "flag"}}
+          @label={{this.submitLabel}}
+        />
 
-    {{#if this.canSendWarning}}
-      <DButton
-        class="btn-danger flag-modal__send-warning"
-        @action={{this.createFlagAsWarning}}
-        @disabled={{not this.submitEnabled}}
-        @icon="triangle-exclamation"
-        @label="flagging.official_warning"
-      />
-    {{/if}}
+        {{#if this.canSendWarning}}
+          <DButton
+            class="btn-danger flag-modal__send-warning"
+            @action={{this.createFlagAsWarning}}
+            @disabled={{not this.submitEnabled}}
+            @icon="triangle-exclamation"
+            @label="flagging.official_warning"
+          />
+        {{/if}}
 
-    {{#if this.canTakeAction}}
-      <ReviewableBundledAction
-        class="flag-modal__take-action"
-        @bundle={{this.flagActions}}
-        @performAction={{this.takeAction}}
-        @reviewableUpdating={{not this.submitEnabled}}
-      />
+        {{#if this.canTakeAction}}
+          <ReviewableBundledAction
+            class="flag-modal__take-action"
+            @bundle={{this.flagActions}}
+            @performAction={{this.takeAction}}
+            @reviewableUpdating={{not this.submitEnabled}}
+          />
 
-      <DButton
-        class="btn-danger flag-modal__flag-for-review"
-        @action={{this.flagForReview}}
-        @disabled={{not this.submitEnabled this.notifyModeratorsFlag}}
-        @icon="triangle-exclamation"
-        @label="flagging.flag_for_review"
-      />
-    {{/if}}
+          <DButton
+            class="btn-danger flag-modal__flag-for-review"
+            @action={{this.flagForReview}}
+            @disabled={{not this.submitEnabled this.notifyModeratorsFlag}}
+            @icon="triangle-exclamation"
+            @label="flagging.flag_for_review"
+          />
+        {{/if}}
 
-    {{#if this.showDeleteSpammer}}
-      <DButton
-        class="btn-danger delete-spammer flag-modal__delete-spammer"
-        @action={{this.deleteSpammer}}
-        @disabled={{not this.submitEnabled}}
-        @icon="triangle-exclamation"
-        @label="flagging.delete_spammer"
-      />
-    {{/if}}
-  </:footer>
-</DModal>
+        {{#if this.showDeleteSpammer}}
+          <DButton
+            class="btn-danger delete-spammer flag-modal__delete-spammer"
+            @action={{this.deleteSpammer}}
+            @disabled={{not this.submitEnabled}}
+            @icon="triangle-exclamation"
+            @label="flagging.delete_spammer"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

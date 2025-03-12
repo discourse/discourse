@@ -1,187 +1,224 @@
-{{hide-application-header-buttons "search" "login" "signup" "menu"}}
-{{hide-application-sidebar}}
-{{body-class "login-page"}}
+import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
+import RouteTemplate from "ember-route-template";
+import { and, not, or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import FlashMessage from "discourse/components/flash-message";
+import LocalLoginForm from "discourse/components/local-login-form";
+import LoginButtons from "discourse/components/login-buttons";
+import LoginPageCta from "discourse/components/login-page-cta";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import WelcomeHeader from "discourse/components/welcome-header";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
+import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import loadingSpinner from "discourse/helpers/loading-spinner";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from "discourse-i18n";
 
-{{#if this.isRedirectingToExternalAuth}}
-  {{! Hide the login form if the site has only one external }}
-  {{! authentication method and is being automatically redirected to it }}
-  {{loading-spinner}}
-{{else}}
-  {{#if
-    (and
-      this.siteSettings.full_page_login
-      (or this.showLogin (not this.siteSettings.login_required))
-    )
-  }}
-    {{! Show the full page login form }}
-    <div class="login-fullpage">
-      <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+export default RouteTemplate(
+  <template>
+    {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
+    {{hideApplicationSidebar}}
+    {{bodyClass "login-page"}}
 
-      <div class={{concat-class "login-body" this.bodyClasses}}>
-        <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+    {{#if @controller.isRedirectingToExternalAuth}}
+      {{! Hide the login form if the site has only one external }}
+      {{! authentication method and is being automatically redirected to it }}
+      {{loadingSpinner}}
+    {{else}}
+      {{#if
+        (and
+          @controller.siteSettings.full_page_login
+          (or
+            @controller.showLogin (not @controller.siteSettings.login_required)
+          )
+        )
+      }}
+        {{! Show the full page login form }}
+        <div class="login-fullpage">
+          <FlashMessage
+            @flash={{@controller.flash}}
+            @type={{@controller.flashType}}
+          />
 
-        {{#if this.hasNoLoginOptions}}
-          <div class={{if this.site.desktopView "login-left-side"}}>
-            <div class="login-welcome-header no-login-methods-configured">
-              <h1 class="login-title">{{i18n
-                  "login.no_login_methods.title"
-                }}</h1>
-              <img />
-              <p class="login-subheader">
-                {{html-safe
-                  (i18n
-                    "login.no_login_methods.description"
-                    (hash adminLoginPath=this.adminLoginPath)
-                  )
-                }}
-              </p>
-            </div>
-          </div>
-        {{else}}
-          {{#if this.site.mobileView}}
-            <WelcomeHeader @header={{i18n "login.header_title"}}>
-              <PluginOutlet
-                @name="login-header-bottom"
-                @outletArgs={{hash createAccount=this.createAccount}}
-              />
-            </WelcomeHeader>
-            {{#if this.showLoginButtons}}
-              <LoginButtons
-                @externalLogin={{this.externalLoginAction}}
-                @passkeyLogin={{this.passkeyLogin}}
-                @context="login"
-              />
-            {{/if}}
-          {{/if}}
+          <div class={{concatClass "login-body" @controller.bodyClasses}}>
+            <PluginOutlet
+              @name="login-before-modal-body"
+              @connectorTagName="div"
+            />
 
-          {{#if this.canLoginLocal}}
-            <div class={{if this.site.desktopView "login-left-side"}}>
-              {{#if this.site.desktopView}}
+            {{#if @controller.hasNoLoginOptions}}
+              <div class={{if @controller.site.desktopView "login-left-side"}}>
+                <div class="login-welcome-header no-login-methods-configured">
+                  <h1 class="login-title">{{i18n
+                      "login.no_login_methods.title"
+                    }}</h1>
+                  <img />
+                  <p class="login-subheader">
+                    {{htmlSafe
+                      (i18n
+                        "login.no_login_methods.description"
+                        (hash adminLoginPath=@controller.adminLoginPath)
+                      )
+                    }}
+                  </p>
+                </div>
+              </div>
+            {{else}}
+              {{#if @controller.site.mobileView}}
                 <WelcomeHeader @header={{i18n "login.header_title"}}>
                   <PluginOutlet
                     @name="login-header-bottom"
-                    @outletArgs={{hash createAccount=this.createAccount}}
+                    @outletArgs={{hash createAccount=@controller.createAccount}}
                   />
                 </WelcomeHeader>
+                {{#if @controller.showLoginButtons}}
+                  <LoginButtons
+                    @externalLogin={{@controller.externalLoginAction}}
+                    @passkeyLogin={{@controller.passkeyLogin}}
+                    @context="login"
+                  />
+                {{/if}}
               {{/if}}
-              <LocalLoginForm
-                @loginName={{this.loginName}}
-                @loginNameChanged={{this.loginNameChanged}}
-                @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
-                @canUsePasskeys={{this.canUsePasskeys}}
-                @passkeyLogin={{this.passkeyLogin}}
-                @loginPassword={{this.loginPassword}}
-                @secondFactorMethod={{this.secondFactorMethod}}
-                @secondFactorToken={{this.secondFactorToken}}
-                @backupEnabled={{this.backupEnabled}}
-                @totpEnabled={{this.totpEnabled}}
-                @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
-                @securityKeyChallenge={{this.securityKeyChallenge}}
-                @showSecurityKey={{this.showSecurityKey}}
-                @otherMethodAllowed={{this.otherMethodAllowed}}
-                @showSecondFactor={{this.showSecondFactor}}
-                @handleForgotPassword={{this.handleForgotPassword}}
-                @login={{this.triggerLogin}}
-                @flashChanged={{this.flashChanged}}
-                @flashTypeChanged={{this.flashTypeChanged}}
-                @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
-              />
-              {{#if this.site.desktopView}}
-                <LoginPageCta
-                  @canLoginLocal={{this.canLoginLocal}}
-                  @showSecurityKey={{this.showSecurityKey}}
-                  @login={{this.triggerLogin}}
-                  @loginButtonLabel={{this.loginButtonLabel}}
-                  @loginDisabled={{this.loginDisabled}}
-                  @showSignupLink={{this.showSignupLink}}
-                  @createAccount={{this.createAccount}}
-                  @loggingIn={{this.loggingIn}}
-                  @showSecondFactor={{this.showSecondFactor}}
-                />
+
+              {{#if @controller.canLoginLocal}}
+                <div
+                  class={{if @controller.site.desktopView "login-left-side"}}
+                >
+                  {{#if @controller.site.desktopView}}
+                    <WelcomeHeader @header={{i18n "login.header_title"}}>
+                      <PluginOutlet
+                        @name="login-header-bottom"
+                        @outletArgs={{hash
+                          createAccount=@controller.createAccount
+                        }}
+                      />
+                    </WelcomeHeader>
+                  {{/if}}
+                  <LocalLoginForm
+                    @loginName={{@controller.loginName}}
+                    @loginNameChanged={{@controller.loginNameChanged}}
+                    @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
+                    @canUsePasskeys={{@controller.canUsePasskeys}}
+                    @passkeyLogin={{@controller.passkeyLogin}}
+                    @loginPassword={{@controller.loginPassword}}
+                    @secondFactorMethod={{@controller.secondFactorMethod}}
+                    @secondFactorToken={{@controller.secondFactorToken}}
+                    @backupEnabled={{@controller.backupEnabled}}
+                    @totpEnabled={{@controller.totpEnabled}}
+                    @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
+                    @securityKeyChallenge={{@controller.securityKeyChallenge}}
+                    @showSecurityKey={{@controller.showSecurityKey}}
+                    @otherMethodAllowed={{@controller.otherMethodAllowed}}
+                    @showSecondFactor={{@controller.showSecondFactor}}
+                    @handleForgotPassword={{@controller.handleForgotPassword}}
+                    @login={{@controller.triggerLogin}}
+                    @flashChanged={{@controller.flashChanged}}
+                    @flashTypeChanged={{@controller.flashTypeChanged}}
+                    @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
+                  />
+                  {{#if @controller.site.desktopView}}
+                    <LoginPageCta
+                      @canLoginLocal={{@controller.canLoginLocal}}
+                      @showSecurityKey={{@controller.showSecurityKey}}
+                      @login={{@controller.triggerLogin}}
+                      @loginButtonLabel={{@controller.loginButtonLabel}}
+                      @loginDisabled={{@controller.loginDisabled}}
+                      @showSignupLink={{@controller.showSignupLink}}
+                      @createAccount={{@controller.createAccount}}
+                      @loggingIn={{@controller.loggingIn}}
+                      @showSecondFactor={{@controller.showSecondFactor}}
+                    />
+                  {{/if}}
+                </div>
               {{/if}}
-            </div>
-          {{/if}}
 
-          {{#if (and this.showLoginButtons this.site.desktopView)}}
-            {{#unless this.canLoginLocal}}
-              <div class="login-left-side">
-                <WelcomeHeader @header={{i18n "login.header_title"}} />
-              </div>
-            {{/unless}}
-            {{#if this.hasAtLeastOneLoginButton}}
-              <div class="login-right-side">
-                <LoginButtons
-                  @externalLogin={{this.externalLoginAction}}
-                  @passkeyLogin={{this.passkeyLogin}}
-                  @context="login"
-                />
-              </div>
-            {{/if}}
-          {{/if}}
-        {{/if}}
-
-        {{#if this.site.mobileView}}
-          {{#unless this.hasNoLoginOptions}}
-            <LoginPageCta
-              @canLoginLocal={{this.canLoginLocal}}
-              @showSecurityKey={{this.showSecurityKey}}
-              @login={{this.triggerLogin}}
-              @loginButtonLabel={{this.loginButtonLabel}}
-              @loginDisabled={{this.loginDisabled}}
-              @showSignupLink={{this.showSignupLink}}
-              @createAccount={{this.createAccount}}
-              @loggingIn={{this.loggingIn}}
-              @showSecondFactor={{this.showSecondFactor}}
-            />
-          {{/unless}}
-        {{/if}}
-      </div>
-    </div>
-
-  {{else}}
-    {{! Show the login-required splash screen }}
-    {{body-class "static-login"}}
-    <section class="container">
-      <div class="contents clearfix body-page">
-        <div class="login-welcome">
-          <PluginOutlet
-            @name="above-login"
-            @outletArgs={{hash model=this.model}}
-          />
-          <PluginOutlet @name="above-static" />
-
-          <div class="login-content">
-            {{html-safe this.model.html}}
-          </div>
-
-          <PluginOutlet @name="below-static" />
-          <PluginOutlet
-            @name="below-login"
-            @outletArgs={{hash model=this.model}}
-          />
-
-          <div class="body-page-button-container">
-            {{#if this.application.canSignUp}}
-              <DButton
-                @action={{route-action "showCreateAccount"}}
-                @label="sign_up"
-                class="btn-primary sign-up-button"
-              />
-            {{/if}}
-
-            <DButton
-              @action={{if
-                this.shouldTriggerRouteAction
-                (route-action "showLogin")
-                this.showFullPageLogin
+              {{#if
+                (and @controller.showLoginButtons @controller.site.desktopView)
               }}
-              @icon="user"
-              @label="log_in"
-              class="btn-primary login-button"
-            />
+                {{#unless @controller.canLoginLocal}}
+                  <div class="login-left-side">
+                    <WelcomeHeader @header={{i18n "login.header_title"}} />
+                  </div>
+                {{/unless}}
+                {{#if @controller.hasAtLeastOneLoginButton}}
+                  <div class="login-right-side">
+                    <LoginButtons
+                      @externalLogin={{@controller.externalLoginAction}}
+                      @passkeyLogin={{@controller.passkeyLogin}}
+                      @context="login"
+                    />
+                  </div>
+                {{/if}}
+              {{/if}}
+            {{/if}}
+
+            {{#if @controller.site.mobileView}}
+              {{#unless @controller.hasNoLoginOptions}}
+                <LoginPageCta
+                  @canLoginLocal={{@controller.canLoginLocal}}
+                  @showSecurityKey={{@controller.showSecurityKey}}
+                  @login={{@controller.triggerLogin}}
+                  @loginButtonLabel={{@controller.loginButtonLabel}}
+                  @loginDisabled={{@controller.loginDisabled}}
+                  @showSignupLink={{@controller.showSignupLink}}
+                  @createAccount={{@controller.createAccount}}
+                  @loggingIn={{@controller.loggingIn}}
+                  @showSecondFactor={{@controller.showSecondFactor}}
+                />
+              {{/unless}}
+            {{/if}}
           </div>
         </div>
-      </div>
-    </section>
-  {{/if}}
-{{/if}}
+
+      {{else}}
+        {{! Show the login-required splash screen }}
+        {{bodyClass "static-login"}}
+        <section class="container">
+          <div class="contents clearfix body-page">
+            <div class="login-welcome">
+              <PluginOutlet
+                @name="above-login"
+                @outletArgs={{hash model=@controller.model}}
+              />
+              <PluginOutlet @name="above-static" />
+
+              <div class="login-content">
+                {{htmlSafe @controller.model.html}}
+              </div>
+
+              <PluginOutlet @name="below-static" />
+              <PluginOutlet
+                @name="below-login"
+                @outletArgs={{hash model=@controller.model}}
+              />
+
+              <div class="body-page-button-container">
+                {{#if @controller.application.canSignUp}}
+                  <DButton
+                    @action={{routeAction "showCreateAccount"}}
+                    @label="sign_up"
+                    class="btn-primary sign-up-button"
+                  />
+                {{/if}}
+
+                <DButton
+                  @action={{if
+                    @controller.shouldTriggerRouteAction
+                    (routeAction "showLogin")
+                    @controller.showFullPageLogin
+                  }}
+                  @icon="user"
+                  @label="log_in"
+                  class="btn-primary login-button"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      {{/if}}
+    {{/if}}
+  </template>
+);

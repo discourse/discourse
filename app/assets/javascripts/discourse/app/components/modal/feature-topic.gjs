@@ -2,7 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import FutureDateInput from "discourse/components/future-date-input";
+import PopupInputTip from "discourse/components/popup-input-tip";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
@@ -177,237 +184,243 @@ export default class FeatureTopic extends Component {
     this.args.model.removeBanner();
     this.args.closeModal();
   }
-}
 
-<DModal
-  class="feature-topic"
-  @title={{i18n "topic.feature_topic.title"}}
-  @closeModal={{@closeModal}}
->
-  <:body>
-    {{#if @model.topic.pinned_at}}
-      <div class="feature-section">
-        <div class="desc">
-          {{#if @model.topic.pinned_globally}}
-            <p>
-              <ConditionalLoadingSpinner
-                @size="small"
-                @condition={{this.loading}}
-              >
-                {{#if this.pinnedGloballyCount}}
-                  {{html-safe
-                    (i18n
-                      "topic.feature_topic.already_pinned_globally"
-                      count=this.pinnedGloballyCount
-                    )
-                  }}
-                {{else}}
-                  {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
-                {{/if}}
-              </ConditionalLoadingSpinner>
-            </p>
-            <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
-          {{else}}
-            <p>
-              <ConditionalLoadingSpinner
-                @size="small"
-                @condition={{this.loading}}
-              >
-                {{html-safe this.alreadyPinnedMessage}}
-              </ConditionalLoadingSpinner>
-            </p>
-            <p>{{i18n "topic.feature_topic.pin_note"}}</p>
-          {{/if}}
-          <p>{{html-safe this.unPinMessage}}</p>
-          <p><DButton
-              @action={{this.unpin}}
-              @icon="thumbtack"
-              @label="topic.feature.unpin"
-              class="btn-primary"
-            /></p>
-        </div>
-      </div>
-    {{else}}
-      <div class="feature-section">
-        <div class="desc">
-          <p>
-            <ConditionalLoadingSpinner
-              @size="small"
-              @condition={{this.loading}}
-            >
-              {{html-safe this.alreadyPinnedMessage}}
-            </ConditionalLoadingSpinner>
-          </p>
-          <p>
-            {{i18n "topic.feature_topic.pin_note"}}
-          </p>
-          {{#if this.site.isMobileDevice}}
-            <p>
-              {{html-safe this.pinMessage}}
-            </p>
-            <p class="with-validation">
-              <FutureDateInput
-                class="pin-until"
-                @clearable={{true}}
-                @input={{@model.topic.pinnedInCategoryUntil}}
-                @onChangeInput={{action
-                  (mut @model.topic.pinnedInCategoryUntil)
-                }}
-              />
-              <PopupInputTip
-                @validation={{this.pinInCategoryValidation}}
-                @shownAt={{this.pinInCategoryTipShownAt}}
-              />
-            </p>
-          {{else}}
-            <p class="with-validation">
-              {{html-safe this.pinMessage}}
-              <span>
-                {{d-icon "far-clock"}}
-                <FutureDateInput
-                  class="pin-until"
-                  @clearable={{true}}
-                  @input={{@model.topic.pinnedInCategoryUntil}}
-                  @onChangeInput={{action
-                    (mut @model.topic.pinnedInCategoryUntil)
-                  }}
-                />
-                <PopupInputTip
-                  @validation={{this.pinInCategoryValidation}}
-                  @shownAt={{this.pinInCategoryTipShownAt}}
-                />
-              </span>
-            </p>
-          {{/if}}
-          <p>
-            <DButton
-              @action={{this.pin}}
-              @icon="thumbtack"
-              @label="topic.feature.pin"
-              class="btn-primary"
-            />
-          </p>
-        </div>
-      </div>
-      {{#if this.canPinGlobally}}
-        <hr />
-        <div class="feature-section">
-          <div class="desc">
-            <p>
-              <ConditionalLoadingSpinner
-                @size="small"
-                @condition={{this.loading}}
-              >
-                {{#if this.pinnedGloballyCount}}
-                  {{html-safe
-                    (i18n
-                      "topic.feature_topic.already_pinned_globally"
-                      count=this.pinnedGloballyCount
-                    )
-                  }}
-                {{else}}
-                  {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
-                {{/if}}
-              </ConditionalLoadingSpinner>
-            </p>
-            <p>
-              {{i18n "topic.feature_topic.global_pin_note"}}
-            </p>
-            {{#if this.site.isMobileDevice}}
+  <template>
+    <DModal
+      class="feature-topic"
+      @title={{i18n "topic.feature_topic.title"}}
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        {{#if @model.topic.pinned_at}}
+          <div class="feature-section">
+            <div class="desc">
+              {{#if @model.topic.pinned_globally}}
+                <p>
+                  <ConditionalLoadingSpinner
+                    @size="small"
+                    @condition={{this.loading}}
+                  >
+                    {{#if this.pinnedGloballyCount}}
+                      {{htmlSafe
+                        (i18n
+                          "topic.feature_topic.already_pinned_globally"
+                          count=this.pinnedGloballyCount
+                        )
+                      }}
+                    {{else}}
+                      {{htmlSafe
+                        (i18n "topic.feature_topic.not_pinned_globally")
+                      }}
+                    {{/if}}
+                  </ConditionalLoadingSpinner>
+                </p>
+                <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
+              {{else}}
+                <p>
+                  <ConditionalLoadingSpinner
+                    @size="small"
+                    @condition={{this.loading}}
+                  >
+                    {{htmlSafe this.alreadyPinnedMessage}}
+                  </ConditionalLoadingSpinner>
+                </p>
+                <p>{{i18n "topic.feature_topic.pin_note"}}</p>
+              {{/if}}
+              <p>{{htmlSafe this.unPinMessage}}</p>
+              <p><DButton
+                  @action={{this.unpin}}
+                  @icon="thumbtack"
+                  @label="topic.feature.unpin"
+                  class="btn-primary"
+                /></p>
+            </div>
+          </div>
+        {{else}}
+          <div class="feature-section">
+            <div class="desc">
               <p>
-                {{i18n "topic.feature_topic.pin_globally"}}
+                <ConditionalLoadingSpinner
+                  @size="small"
+                  @condition={{this.loading}}
+                >
+                  {{htmlSafe this.alreadyPinnedMessage}}
+                </ConditionalLoadingSpinner>
               </p>
-              <p class="with-validation">
-                <FutureDateInput
-                  class="pin-until"
-                  @clearable={{true}}
-                  @input={{@model.topic.pinnedGloballyUntil}}
-                  @onChangeInput={{action
-                    (mut @model.topic.pinnedGloballyUntil)
-                  }}
-                />
-                <PopupInputTip
-                  @validation={{this.pinGloballyValidation}}
-                  @shownAt={{this.pinGloballyTipShownAt}}
-                />
+              <p>
+                {{i18n "topic.feature_topic.pin_note"}}
               </p>
-            {{else}}
-              <p class="with-validation">
-                {{i18n "topic.feature_topic.pin_globally"}}
-                <span>
-                  {{d-icon "far-clock"}}
+              {{#if this.site.isMobileDevice}}
+                <p>
+                  {{htmlSafe this.pinMessage}}
+                </p>
+                <p class="with-validation">
                   <FutureDateInput
                     class="pin-until"
                     @clearable={{true}}
-                    @input={{@model.topic.pinnedGloballyUntil}}
+                    @input={{@model.topic.pinnedInCategoryUntil}}
                     @onChangeInput={{action
-                      (mut @model.topic.pinnedGloballyUntil)
+                      (mut @model.topic.pinnedInCategoryUntil)
                     }}
                   />
                   <PopupInputTip
-                    @validation={{this.pinGloballyValidation}}
-                    @shownAt={{this.pinGloballyTipShownAt}}
+                    @validation={{this.pinInCategoryValidation}}
+                    @shownAt={{this.pinInCategoryTipShownAt}}
                   />
-                </span>
-              </p>
-            {{/if}}
-            <p>
-              <DButton
-                @action={{this.pinGlobally}}
-                @icon="thumbtack"
-                @label="topic.feature.pin_globally"
-                class="btn-primary"
-              />
-            </p>
-          </div>
-        </div>
-      {{/if}}
-    {{/if}}
-    <hr />
-    {{#if this.currentUser.staff}}
-      <div class="feature-section">
-        <div class="desc">
-          <p>
-            <ConditionalLoadingSpinner
-              @size="small"
-              @condition={{this.loading}}
-            >
-              {{#if this.bannerCount}}
-                {{html-safe (i18n "topic.feature_topic.banner_exists")}}
+                </p>
               {{else}}
-                {{html-safe (i18n "topic.feature_topic.no_banner_exists")}}
+                <p class="with-validation">
+                  {{htmlSafe this.pinMessage}}
+                  <span>
+                    {{icon "far-clock"}}
+                    <FutureDateInput
+                      class="pin-until"
+                      @clearable={{true}}
+                      @input={{@model.topic.pinnedInCategoryUntil}}
+                      @onChangeInput={{action
+                        (mut @model.topic.pinnedInCategoryUntil)
+                      }}
+                    />
+                    <PopupInputTip
+                      @validation={{this.pinInCategoryValidation}}
+                      @shownAt={{this.pinInCategoryTipShownAt}}
+                    />
+                  </span>
+                </p>
               {{/if}}
-            </ConditionalLoadingSpinner>
-          </p>
-          <p>
-            {{i18n "topic.feature_topic.banner_note"}}
-          </p>
-          <p>
-            {{#if @model.topic.isBanner}}
-              {{i18n "topic.feature_topic.remove_banner"}}
-            {{else}}
-              {{i18n "topic.feature_topic.make_banner"}}
-            {{/if}}
-          </p>
-          <p>
-            {{#if @model.topic.isBanner}}
-              <DButton
-                @action={{this.removeBanner}}
-                @icon="thumbtack"
-                @label="topic.feature.remove_banner"
-                class="btn-primary"
-              />
-            {{else}}
-              <DButton
-                @action={{this.makeBanner}}
-                @icon="thumbtack"
-                @label="topic.feature.make_banner"
-                class="btn-primary make-banner"
-              />
-            {{/if}}
-          </p>
-        </div>
-      </div>
-    {{/if}}
-  </:body>
-</DModal>
+              <p>
+                <DButton
+                  @action={{this.pin}}
+                  @icon="thumbtack"
+                  @label="topic.feature.pin"
+                  class="btn-primary"
+                />
+              </p>
+            </div>
+          </div>
+          {{#if this.canPinGlobally}}
+            <hr />
+            <div class="feature-section">
+              <div class="desc">
+                <p>
+                  <ConditionalLoadingSpinner
+                    @size="small"
+                    @condition={{this.loading}}
+                  >
+                    {{#if this.pinnedGloballyCount}}
+                      {{htmlSafe
+                        (i18n
+                          "topic.feature_topic.already_pinned_globally"
+                          count=this.pinnedGloballyCount
+                        )
+                      }}
+                    {{else}}
+                      {{htmlSafe
+                        (i18n "topic.feature_topic.not_pinned_globally")
+                      }}
+                    {{/if}}
+                  </ConditionalLoadingSpinner>
+                </p>
+                <p>
+                  {{i18n "topic.feature_topic.global_pin_note"}}
+                </p>
+                {{#if this.site.isMobileDevice}}
+                  <p>
+                    {{i18n "topic.feature_topic.pin_globally"}}
+                  </p>
+                  <p class="with-validation">
+                    <FutureDateInput
+                      class="pin-until"
+                      @clearable={{true}}
+                      @input={{@model.topic.pinnedGloballyUntil}}
+                      @onChangeInput={{action
+                        (mut @model.topic.pinnedGloballyUntil)
+                      }}
+                    />
+                    <PopupInputTip
+                      @validation={{this.pinGloballyValidation}}
+                      @shownAt={{this.pinGloballyTipShownAt}}
+                    />
+                  </p>
+                {{else}}
+                  <p class="with-validation">
+                    {{i18n "topic.feature_topic.pin_globally"}}
+                    <span>
+                      {{icon "far-clock"}}
+                      <FutureDateInput
+                        class="pin-until"
+                        @clearable={{true}}
+                        @input={{@model.topic.pinnedGloballyUntil}}
+                        @onChangeInput={{action
+                          (mut @model.topic.pinnedGloballyUntil)
+                        }}
+                      />
+                      <PopupInputTip
+                        @validation={{this.pinGloballyValidation}}
+                        @shownAt={{this.pinGloballyTipShownAt}}
+                      />
+                    </span>
+                  </p>
+                {{/if}}
+                <p>
+                  <DButton
+                    @action={{this.pinGlobally}}
+                    @icon="thumbtack"
+                    @label="topic.feature.pin_globally"
+                    class="btn-primary"
+                  />
+                </p>
+              </div>
+            </div>
+          {{/if}}
+        {{/if}}
+        <hr />
+        {{#if this.currentUser.staff}}
+          <div class="feature-section">
+            <div class="desc">
+              <p>
+                <ConditionalLoadingSpinner
+                  @size="small"
+                  @condition={{this.loading}}
+                >
+                  {{#if this.bannerCount}}
+                    {{htmlSafe (i18n "topic.feature_topic.banner_exists")}}
+                  {{else}}
+                    {{htmlSafe (i18n "topic.feature_topic.no_banner_exists")}}
+                  {{/if}}
+                </ConditionalLoadingSpinner>
+              </p>
+              <p>
+                {{i18n "topic.feature_topic.banner_note"}}
+              </p>
+              <p>
+                {{#if @model.topic.isBanner}}
+                  {{i18n "topic.feature_topic.remove_banner"}}
+                {{else}}
+                  {{i18n "topic.feature_topic.make_banner"}}
+                {{/if}}
+              </p>
+              <p>
+                {{#if @model.topic.isBanner}}
+                  <DButton
+                    @action={{this.removeBanner}}
+                    @icon="thumbtack"
+                    @label="topic.feature.remove_banner"
+                    class="btn-primary"
+                  />
+                {{else}}
+                  <DButton
+                    @action={{this.makeBanner}}
+                    @icon="thumbtack"
+                    @label="topic.feature.make_banner"
+                    class="btn-primary make-banner"
+                  />
+                {{/if}}
+              </p>
+            </div>
+          </div>
+        {{/if}}
+      </:body>
+    </DModal>
+  </template>
+}

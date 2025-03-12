@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
+import AvatarFlair from "discourse/components/avatar-flair";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import discourseComputed from "discourse/lib/decorators";
 
@@ -30,13 +31,15 @@ export default class UserAvatarFlair extends Component {
       };
     }
   }
-}
 
-{{#if this.flair}}
-  <AvatarFlair
-    @flairName={{this.flair.flairName}}
-    @flairUrl={{this.flair.flairUrl}}
-    @flairBgColor={{this.flair.flairBgColor}}
-    @flairColor={{this.flair.flairColor}}
-  />
-{{/if}}
+  <template>
+    {{#if this.flair}}
+      <AvatarFlair
+        @flairName={{this.flair.flairName}}
+        @flairUrl={{this.flair.flairUrl}}
+        @flairBgColor={{this.flair.flairBgColor}}
+        @flairColor={{this.flair.flairColor}}
+      />
+    {{/if}}
+  </template>
+}

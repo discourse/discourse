@@ -1,6 +1,18 @@
 import Component from "@ember/component";
+import { fn, hash } from "@ember/helper";
 import { computed } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import ExpandPost from "discourse/components/expand-post";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicStatus from "discourse/components/topic-status";
+import avatar from "discourse/helpers/avatar";
+import categoryLink from "discourse/helpers/category-link";
+import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -50,126 +62,136 @@ export default class UserStreamItem extends Component {
   userUrl(draftUsername, username) {
     return userPath((draftUsername || username).toLowerCase());
   }
-}
 
-<PluginOutlet @name="user-stream-item-above" @outletArgs={{hash item=@item}} />
-
-<div class="user-stream-item__header info">
-  <a
-    href={{this.userUrl}}
-    data-user-card={{or @item.draft_username @item.username}}
-    class="avatar-link"
-  >
-    <div class="avatar-wrapper">
-      {{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}
-    </div>
-  </a>
-
-  <div class="user-stream-item__details">
-    <div class="stream-topic-title">
-      <TopicStatus @topic={{@item}} @disableActions={{true}} />
-      <span class="title">
-        {{#if @item.postUrl}}
-          <a href={{@item.postUrl}}>{{replace-emoji @item.title}}</a>
-        {{else}}
-          {{replace-emoji @item.title}}
-        {{/if}}
-      </span>
-    </div>
-    <div class="category">{{category-link @item.category}}</div>
-  </div>
-
-  {{#if @item.draftType}}
-    <span class="draft-type">{{html-safe @item.draftType}}</span>
-  {{else}}
-    <ExpandPost @item={{@item}} />
-  {{/if}}
-
-  <div class="user-stream-item__metadata">
-    <span class="time">{{format-date @item.created_at}}</span>
-
-    {{#if @item.deleted_by}}
-      <span class="delete-info">
-        {{d-icon "trash-can"}}
-        {{avatar
-          @item.deleted_by
-          imageSize="tiny"
-          extraClasses="actor"
-          ignoreTitle="true"
-        }}
-        {{format-date @item.deleted_at leaveAgo="true"}}
-      </span>
-    {{/if}}
-  </div>
-
-  <span>
+  <template>
     <PluginOutlet
-      @name="user-stream-item-header"
-      @connectorTagName="div"
+      @name="user-stream-item-above"
       @outletArgs={{hash item=@item}}
     />
-  </span>
-</div>
 
-{{#if this.actionDescription}}
-  <p class="excerpt">{{this.actionDescription}}</p>
-{{/if}}
-
-<p
-  data-topic-id={{@item.topic_id}}
-  data-post-id={{@item.post_id}}
-  data-user-id={{@item.user_id}}
-  class="excerpt"
->
-  {{~#if @item.expandedExcerpt}}
-    {{~html-safe @item.expandedExcerpt~}}
-  {{else}}
-    {{~html-safe @item.excerpt~}}
-  {{/if~}}
-</p>
-
-{{#each @item.children as |child|}}
-  {{! DEPRECATED: 'child-actions' class }}
-  <div class="user-stream-item-actions child-actions">
-    {{d-icon child.icon class="icon"}}
-    {{#each child.items as |grandChild|}}
+    <div class="user-stream-item__header info">
       <a
-        href={{grandChild.userUrl}}
-        data-user-card={{grandChild.username}}
+        href={{this.userUrl}}
+        data-user-card={{or @item.draft_username @item.username}}
         class="avatar-link"
       >
         <div class="avatar-wrapper">
           {{avatar
-            grandChild
-            imageSize="tiny"
+            @item
+            imageSize="large"
             extraClasses="actor"
             ignoreTitle="true"
-            avatarTemplatePath="acting_avatar_template"
           }}
         </div>
       </a>
-      {{#if grandChild.edit_reason}}
-        &mdash;
-        <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+
+      <div class="user-stream-item__details">
+        <div class="stream-topic-title">
+          <TopicStatus @topic={{@item}} @disableActions={{true}} />
+          <span class="title">
+            {{#if @item.postUrl}}
+              <a href={{@item.postUrl}}>{{replaceEmoji @item.title}}</a>
+            {{else}}
+              {{replaceEmoji @item.title}}
+            {{/if}}
+          </span>
+        </div>
+        <div class="category">{{categoryLink @item.category}}</div>
+      </div>
+
+      {{#if @item.draftType}}
+        <span class="draft-type">{{htmlSafe @item.draftType}}</span>
+      {{else}}
+        <ExpandPost @item={{@item}} />
+      {{/if}}
+
+      <div class="user-stream-item__metadata">
+        <span class="time">{{formatDate @item.created_at}}</span>
+
+        {{#if @item.deleted_by}}
+          <span class="delete-info">
+            {{icon "trash-can"}}
+            {{avatar
+              @item.deleted_by
+              imageSize="tiny"
+              extraClasses="actor"
+              ignoreTitle="true"
+            }}
+            {{formatDate @item.deleted_at leaveAgo="true"}}
+          </span>
+        {{/if}}
+      </div>
+
+      <span>
+        <PluginOutlet
+          @name="user-stream-item-header"
+          @connectorTagName="div"
+          @outletArgs={{hash item=@item}}
+        />
+      </span>
+    </div>
+
+    {{#if this.actionDescription}}
+      <p class="excerpt">{{this.actionDescription}}</p>
+    {{/if}}
+
+    <p
+      data-topic-id={{@item.topic_id}}
+      data-post-id={{@item.post_id}}
+      data-user-id={{@item.user_id}}
+      class="excerpt"
+    >
+      {{~#if @item.expandedExcerpt}}
+        {{~htmlSafe @item.expandedExcerpt~}}
+      {{else}}
+        {{~htmlSafe @item.excerpt~}}
+      {{/if~}}
+    </p>
+
+    {{#each @item.children as |child|}}
+      {{! DEPRECATED: 'child-actions' class }}
+      <div class="user-stream-item-actions child-actions">
+        {{icon child.icon class="icon"}}
+        {{#each child.items as |grandChild|}}
+          <a
+            href={{grandChild.userUrl}}
+            data-user-card={{grandChild.username}}
+            class="avatar-link"
+          >
+            <div class="avatar-wrapper">
+              {{avatar
+                grandChild
+                imageSize="tiny"
+                extraClasses="actor"
+                ignoreTitle="true"
+                avatarTemplatePath="acting_avatar_template"
+              }}
+            </div>
+          </a>
+          {{#if grandChild.edit_reason}}
+            &mdash;
+            <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+        {{/each}}
+      </div>
     {{/each}}
-  </div>
-{{/each}}
 
-{{#if @item.editableDraft}}
-  <div class="user-stream-item-draft-actions">
-    <DButton
-      @action={{fn @resumeDraft @item}}
-      @icon="pencil"
-      @label="drafts.resume"
-      class="btn-default resume-draft"
-    />
-    <DButton
-      @action={{fn @removeDraft @item}}
-      @icon="trash-can"
-      @title="drafts.remove"
-      class="btn-danger remove-draft"
-    />
-  </div>
-{{/if}}
+    {{#if @item.editableDraft}}
+      <div class="user-stream-item-draft-actions">
+        <DButton
+          @action={{fn @resumeDraft @item}}
+          @icon="pencil"
+          @label="drafts.resume"
+          class="btn-default resume-draft"
+        />
+        <DButton
+          @action={{fn @removeDraft @item}}
+          @icon="trash-can"
+          @title="drafts.remove"
+          class="btn-danger remove-draft"
+        />
+      </div>
+    {{/if}}
 
-{{yield to="bottom"}}
+    {{yield to="bottom"}}
+  </template>
+}

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { makeArray } from "discourse/lib/helpers";
 
@@ -31,21 +32,23 @@ export default class DNavigationItem extends Component {
   get models() {
     return makeArray(this.args.models || this.args.model);
   }
-}
 
-<li
-  aria-current={{this.ariaCurrent}}
-  title={{@title}}
-  class={{@class}}
-  ...attributes
->
-  {{#if this.models}}
-    <LinkTo @route={{@route}} @models={{this.models}}>
-      {{yield}}
-    </LinkTo>
-  {{else}}
-    <LinkTo @route={{@route}}>
-      {{yield}}
-    </LinkTo>
-  {{/if}}
-</li>
+  <template>
+    <li
+      aria-current={{this.ariaCurrent}}
+      title={{@title}}
+      class={{@class}}
+      ...attributes
+    >
+      {{#if this.models}}
+        <LinkTo @route={{@route}} @models={{this.models}}>
+          {{yield}}
+        </LinkTo>
+      {{else}}
+        <LinkTo @route={{@route}}>
+          {{yield}}
+        </LinkTo>
+      {{/if}}
+    </li>
+  </template>
+}

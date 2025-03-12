@@ -2,8 +2,12 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings("docked")
 export default class TopicProgress extends Component {
@@ -92,38 +96,40 @@ export default class TopicProgress extends Component {
   goBack() {
     this.jumpToPost(this.get("topic.last_read_post_number"));
   }
+
+  <template>
+    {{#unless this.hideProgress}}
+      {{yield}}
+    {{/unless}}
+
+    {{#if this.showBackButton}}
+      <div class="progress-back-container">
+        <DButton
+          @label="topic.timeline.back"
+          @action={{this.goBack}}
+          @icon="arrow-down"
+          class="btn-primary btn-small progress-back"
+        />
+      </div>
+    {{/if}}
+
+    <nav
+      title={{i18n "topic.progress.title"}}
+      aria-label={{i18n "topic.progress.title"}}
+      class={{if this.hideProgress "hidden"}}
+      id="topic-progress"
+      style={{htmlSafe this.progressStyle}}
+    >
+      <div class="nums">
+        <span>{{this.progressPosition}}</span>
+        <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
+        <span
+          class={{if this.hugeNumberOfPosts "hidden"}}
+        >{{this.postStream.filteredPostsCount}}</span>
+      </div>
+      <div class="bg"></div>
+    </nav>
+
+    <PluginOutlet @name="after-topic-progress" @connectorTagName="div" />
+  </template>
 }
-
-{{#unless this.hideProgress}}
-  {{yield}}
-{{/unless}}
-
-{{#if this.showBackButton}}
-  <div class="progress-back-container">
-    <DButton
-      @label="topic.timeline.back"
-      @action={{this.goBack}}
-      @icon="arrow-down"
-      class="btn-primary btn-small progress-back"
-    />
-  </div>
-{{/if}}
-
-<nav
-  title={{i18n "topic.progress.title"}}
-  aria-label={{i18n "topic.progress.title"}}
-  class={{if this.hideProgress "hidden"}}
-  id="topic-progress"
-  style={{html-safe this.progressStyle}}
->
-  <div class="nums">
-    <span>{{this.progressPosition}}</span>
-    <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
-    <span
-      class={{if this.hugeNumberOfPosts "hidden"}}
-    >{{this.postStream.filteredPostsCount}}</span>
-  </div>
-  <div class="bg"></div>
-</nav>
-
-<PluginOutlet @name="after-topic-progress" @connectorTagName="div" />

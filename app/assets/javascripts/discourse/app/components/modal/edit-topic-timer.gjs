@@ -4,6 +4,9 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { i18n } from "discourse-i18n";
@@ -226,41 +229,43 @@ export default class EditTopicTimer extends Component {
     // which will hide the remove timer button from the modal
     this.topicTimer.execute_at = null;
   }
-}
 
-<DModal
-  @title={{i18n "topic.topic_status_update.title"}}
-  @flash={{this.flash}}
-  @closeModal={{@closeModal}}
-  autoFocus="false"
-  id="topic-timer-modal"
-  class="edit-topic-timer-modal"
->
-  <:body>
-    {{#if this.topicTimer}}
-      <EditTopicTimerForm
-        @topic={{@model.topic}}
-        @topicTimer={{this.topicTimer}}
-        @timerTypes={{this.publicTimerTypes}}
-        @onChangeStatusType={{this.onChangeStatusType}}
-        @onChangeInput={{this.onChangeInput}}
-      />
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton
-      class="btn-primary"
-      @disabled={{this.saveDisabled}}
-      @label="topic.topic_status_update.save"
-      @action={{this.saveTimer}}
-      @isLoading={{this.loading}}
-    />
-    {{#if this.topicTimer.execute_at}}
-      <DButton
-        class="btn-danger"
-        @action={{this.removeTimer}}
-        @label="topic.topic_status_update.remove"
-      />
-    {{/if}}
-  </:footer>
-</DModal>
+  <template>
+    <DModal
+      @title={{i18n "topic.topic_status_update.title"}}
+      @flash={{this.flash}}
+      @closeModal={{@closeModal}}
+      autoFocus="false"
+      id="topic-timer-modal"
+      class="edit-topic-timer-modal"
+    >
+      <:body>
+        {{#if this.topicTimer}}
+          <EditTopicTimerForm
+            @topic={{@model.topic}}
+            @topicTimer={{this.topicTimer}}
+            @timerTypes={{this.publicTimerTypes}}
+            @onChangeStatusType={{this.onChangeStatusType}}
+            @onChangeInput={{this.onChangeInput}}
+          />
+        {{/if}}
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @disabled={{this.saveDisabled}}
+          @label="topic.topic_status_update.save"
+          @action={{this.saveTimer}}
+          @isLoading={{this.loading}}
+        />
+        {{#if this.topicTimer.execute_at}}
+          <DButton
+            class="btn-danger"
+            @action={{this.removeTimer}}
+            @label="topic.topic_status_update.remove"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

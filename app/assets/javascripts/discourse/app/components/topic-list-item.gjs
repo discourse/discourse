@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
@@ -11,6 +12,7 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -405,10 +407,12 @@ export default class TopicListItem extends Component {
   _titleElement() {
     return this.element.querySelector(".main-link .title");
   }
-}
 
-<PluginOutlet
-  @name="above-topic-list-item"
-  @outletArgs={{hash topic=this.topic}}
-/>
-{{this.topicListItemContents}}
+  <template>
+    <PluginOutlet
+      @name="above-topic-list-item"
+      @outletArgs={{hash topic=this.topic}}
+    />
+    {{this.topicListItemContents}}
+  </template>
+}

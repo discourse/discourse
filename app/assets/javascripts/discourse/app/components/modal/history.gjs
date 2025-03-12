@@ -1,8 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DModal from "discourse/components/d-modal";
+import Revision from "discourse/components/modal/history/revision";
+import Revisions from "discourse/components/modal/history/revisions";
+import TopicFooter from "discourse/components/modal/history/topic-footer";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import dasherize from "discourse/helpers/dasherize";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -356,67 +363,69 @@ export default class History extends Component {
   revertToVersion() {
     this.revert(this.args.model.post, this.postRevision.current_revision);
   }
-}
 
-<DModal
-  @title={{i18n this.modalTitleKey}}
-  @closeModal={{@closeModal}}
-  class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
->
-  <:body>
-    <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
-      <Modal::History::Revision
-        @model={{this.postRevision}}
-        @previousCategory={{this.previousCategory}}
-        @currentCategory={{this.currentCategory}}
-        @displayInline={{this.displayInline}}
-        @displaySideBySide={{this.displaySideBySide}}
-        @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
-        @viewMode={{this.viewMode}}
-      />
-      <Modal::History::Revisions
-        @model={{this.postRevision}}
-        @hiddenClasses={{this.hiddenClasses}}
-        @mobileView={{this.site.mobileView}}
-        @userChanges={{this.user_changes}}
-        @previousCategory={{this.previousCategory}}
-        @currentCategory={{this.currentCategory}}
-        @previousTagChanges={{this.previousTagChanges}}
-        @currentTagChanges={{this.currentTagChanges}}
-        @bodyDiffHTML={{this.bodyDiffHTML}}
-        @bodyDiff={{this.bodyDiff}}
-        @calculateBodyDiff={{this.calculateBodyDiff}}
-        @titleDiff={{this.titleDiff}}
-        @viewMode={{this.viewMode}}
-      />
-    </ConditionalLoadingSpinner>
-  </:body>
-  <:footer>
-    {{#if @model.editPost}}
-      <Modal::History::TopicFooter
-        @model={{this.postRevision}}
-        @loadFirstVersion={{this.loadFirstVersion}}
-        @loadPreviousVersion={{this.loadPreviousVersion}}
-        @loadNextVersion={{this.loadNextVersion}}
-        @loadLastVersion={{this.loadLastVersion}}
-        @displayEdit={{this.displayEdit}}
-        @editPost={{this.editPost}}
-        @editButtonLabel={{this.editButtonLabel}}
-        @revertToVersion={{this.revertToVersion}}
-        @hideVersion={{this.hideVersion}}
-        @showVersion={{this.showVersion}}
-        @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
-        @loading={{this.loading}}
-        @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
-        @loadFirstDisabled={{this.loadFirstDisabled}}
-        @loadPreviousDisabled={{this.loadPreviousDisabled}}
-        @displayRevisions={{this.displayRevisions}}
-        @revisionsText={{this.revisionsText}}
-        @loadNextDisabled={{this.loadNextDisabled}}
-        @loadLastDisabled={{this.loadLastDisabled}}
-        @revertToRevisionText={{this.revertToRevisionText}}
-        @isStaff={{this.currentUser.staff}}
-      />
-    {{/if}}
-  </:footer>
-</DModal>
+  <template>
+    <DModal
+      @title={{i18n this.modalTitleKey}}
+      @closeModal={{@closeModal}}
+      class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
+    >
+      <:body>
+        <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+          <Revision
+            @model={{this.postRevision}}
+            @previousCategory={{this.previousCategory}}
+            @currentCategory={{this.currentCategory}}
+            @displayInline={{this.displayInline}}
+            @displaySideBySide={{this.displaySideBySide}}
+            @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+            @viewMode={{this.viewMode}}
+          />
+          <Revisions
+            @model={{this.postRevision}}
+            @hiddenClasses={{this.hiddenClasses}}
+            @mobileView={{this.site.mobileView}}
+            @userChanges={{this.user_changes}}
+            @previousCategory={{this.previousCategory}}
+            @currentCategory={{this.currentCategory}}
+            @previousTagChanges={{this.previousTagChanges}}
+            @currentTagChanges={{this.currentTagChanges}}
+            @bodyDiffHTML={{this.bodyDiffHTML}}
+            @bodyDiff={{this.bodyDiff}}
+            @calculateBodyDiff={{this.calculateBodyDiff}}
+            @titleDiff={{this.titleDiff}}
+            @viewMode={{this.viewMode}}
+          />
+        </ConditionalLoadingSpinner>
+      </:body>
+      <:footer>
+        {{#if @model.editPost}}
+          <TopicFooter
+            @model={{this.postRevision}}
+            @loadFirstVersion={{this.loadFirstVersion}}
+            @loadPreviousVersion={{this.loadPreviousVersion}}
+            @loadNextVersion={{this.loadNextVersion}}
+            @loadLastVersion={{this.loadLastVersion}}
+            @displayEdit={{this.displayEdit}}
+            @editPost={{this.editPost}}
+            @editButtonLabel={{this.editButtonLabel}}
+            @revertToVersion={{this.revertToVersion}}
+            @hideVersion={{this.hideVersion}}
+            @showVersion={{this.showVersion}}
+            @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+            @loading={{this.loading}}
+            @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
+            @loadFirstDisabled={{this.loadFirstDisabled}}
+            @loadPreviousDisabled={{this.loadPreviousDisabled}}
+            @displayRevisions={{this.displayRevisions}}
+            @revisionsText={{this.revisionsText}}
+            @loadNextDisabled={{this.loadNextDisabled}}
+            @loadLastDisabled={{this.loadLastDisabled}}
+            @revertToRevisionText={{this.revertToRevisionText}}
+            @isStaff={{this.currentUser.staff}}
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
+}

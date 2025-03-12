@@ -1,14 +1,19 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import MenuTab from "discourse/components/user-menu/menu-tab";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
+import { i18n } from "discourse-i18n";
 import UserMenuBookmarksList from "./bookmarks-list";
 import UserMenuLikesNotificationsList from "./likes-notifications-list";
 import UserMenuMessagesList from "./messages-list";
@@ -323,56 +328,58 @@ export default class UserMenu extends Component {
   focusFirstTab(topTabsContainerElement) {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
-}
 
-<div
-  class={{this.classNames}}
-  data-tab-id={{this.currentTabId}}
-  data-max-width="320"
-  {{did-insert this.triggerRenderedAppEvent}}
->
-  <div class="panel-body">
-    <div class="panel-body-contents">
-      <div
-        class="menu-tabs-container"
-        role="tablist"
-        aria-orientation="vertical"
-        aria-label={{i18n "user_menu.sr_menu_tabs"}}
-      >
-        <div class="top-tabs tabs-list" {{did-insert this.focusFirstTab}}>
-          {{#each this.topTabs as |tab|}}
-            <UserMenu::MenuTab
-              @tab={{tab}}
-              @currentTabId={{this.currentTabId}}
-              @onTabClick={{fn this.handleTabClick tab}}
-            />
-          {{/each}}
-        </div>
-        <div class="bottom-tabs tabs-list">
-          {{#each this.bottomTabs as |tab|}}
-            <UserMenu::MenuTab
-              @tab={{tab}}
-              @currentTabId={{this.currentTabId}}
-              @onTabClick={{fn this.handleTabClick tab}}
-            />
-          {{/each}}
-        </div>
+  <template>
+    <div
+      class={{this.classNames}}
+      data-tab-id={{this.currentTabId}}
+      data-max-width="320"
+      {{didInsert this.triggerRenderedAppEvent}}
+    >
+      <div class="panel-body">
+        <div class="panel-body-contents">
+          <div
+            class="menu-tabs-container"
+            role="tablist"
+            aria-orientation="vertical"
+            aria-label={{i18n "user_menu.sr_menu_tabs"}}
+          >
+            <div class="top-tabs tabs-list" {{didInsert this.focusFirstTab}}>
+              {{#each this.topTabs as |tab|}}
+                <MenuTab
+                  @tab={{tab}}
+                  @currentTabId={{this.currentTabId}}
+                  @onTabClick={{fn this.handleTabClick tab}}
+                />
+              {{/each}}
+            </div>
+            <div class="bottom-tabs tabs-list">
+              {{#each this.bottomTabs as |tab|}}
+                <MenuTab
+                  @tab={{tab}}
+                  @currentTabId={{this.currentTabId}}
+                  @onTabClick={{fn this.handleTabClick tab}}
+                />
+              {{/each}}
+            </div>
 
-        <PluginOutlet
-          @name="user-menu-tabs-list__after"
-          @outletArgs={{hash user=this.currentUser}}
-        />
-      </div>
-      <div
-        id={{concat "quick-access-" this.currentTabId}}
-        class="quick-access-panel"
-      >
-        <this.currentPanelComponent
-          @closeUserMenu={{@closeUserMenu}}
-          @filterByTypes={{this.currentNotificationTypes}}
-          @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
-        />
+            <PluginOutlet
+              @name="user-menu-tabs-list__after"
+              @outletArgs={{hash user=this.currentUser}}
+            />
+          </div>
+          <div
+            id={{concat "quick-access-" this.currentTabId}}
+            class="quick-access-panel"
+          >
+            <this.currentPanelComponent
+              @closeUserMenu={{@closeUserMenu}}
+              @filterByTypes={{this.currentNotificationTypes}}
+              @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </template>
+}

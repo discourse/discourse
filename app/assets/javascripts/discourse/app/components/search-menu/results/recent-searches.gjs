@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import FlatButton from "discourse/components/flat-button";
+import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import User from "discourse/models/user";
+import { i18n } from "discourse-i18n";
 
 export default class RecentSearches extends Component {
   @service currentUser;
@@ -44,30 +47,32 @@ export default class RecentSearches extends Component {
       this.currentUser.set("recent_searches", result.recent_searches);
     }
   }
+
+  <template>
+    {{#if this.currentUser.recent_searches}}
+      <div class="search-menu-recent">
+        <div class="heading">
+          <h4>{{i18n "search.recent"}}</h4>
+          <FlatButton
+            @title="search.clear_recent"
+            @icon="xmark"
+            @action={{this.clearRecent}}
+            class="clear-recent-searches"
+          />
+        </div>
+
+        {{#each this.currentUser.recent_searches as |slug|}}
+          <AssistantItem
+            @icon="clock-rotate-left"
+            @label={{slug}}
+            @slug={{slug}}
+            @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
+            @usage="recent-search"
+            @concatSlug={{true}}
+          />
+        {{/each}}
+      </div>
+    {{/if}}
+  </template>
 }
-
-{{#if this.currentUser.recent_searches}}
-  <div class="search-menu-recent">
-    <div class="heading">
-      <h4>{{i18n "search.recent"}}</h4>
-      <FlatButton
-        @title="search.clear_recent"
-        @icon="xmark"
-        @action={{this.clearRecent}}
-        class="clear-recent-searches"
-      />
-    </div>
-
-    {{#each this.currentUser.recent_searches as |slug|}}
-      <SearchMenu::Results::AssistantItem
-        @icon="clock-rotate-left"
-        @label={{slug}}
-        @slug={{slug}}
-        @closeSearchMenu={{@closeSearchMenu}}
-        @searchTermChanged={{@searchTermChanged}}
-        @usage="recent-search"
-        @concatSlug={{true}}
-      />
-    {{/each}}
-  </div>
-{{/if}}

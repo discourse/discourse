@@ -1,56 +1,75 @@
-{{hide-application-sidebar}}
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import RouteTemplate from "ember-route-template";
+import { gt, or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import SecondFactorInput from "discourse/components/second-factor-input";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import withEventValue from "discourse/helpers/with-event-value";
+import { i18n } from "discourse-i18n";
 
-{{#if this.message}}
-  <div class="alert {{this.alertClass}}">{{this.message}}</div>
-{{/if}}
-{{#unless this.loadError}}
-  <h3>{{this.secondFactorTitle}}</h3>
-  {{#if this.customDescription}}
-    <p class="action-description">{{this.customDescription}}</p>
-  {{/if}}
-  <p>{{this.secondFactorDescription}}</p>
-  {{#if this.showSecurityKeyForm}}
-    <div id="security-key">
-      <DButton
-        @action={{this.authenticateSecurityKey}}
-        @icon="key"
-        @label="login.security_key_authenticate"
-        id="security-key-authenticate-button"
-        class="btn-large btn-primary"
-      />
-    </div>
-  {{else if (or this.showTotpForm this.showBackupCodesForm)}}
-    <form class={{this.inputFormClass}}>
-      <SecondFactorInput
-        {{on "input" (with-event-value (fn (mut this.secondFactorToken)))}}
-        @secondFactorMethod={{this.shownSecondFactorMethod}}
-        value={{this.secondFactorToken}}
-      />
-      <DButton
-        @action={{this.authenticateToken}}
-        @label="submit"
-        type="submit"
-        class="btn-primary"
-      />
-    </form>
-  {{/if}}
+export default RouteTemplate(
+  <template>
+    {{hideApplicationSidebar}}
 
-  {{#if this.alternativeMethods.length}}
-    <p>
-      {{#each this.alternativeMethods as |method index|}}
-        {{#if (gt index 0)}}
-          <span>&middot;</span>
-        {{/if}}
-        <span>
-          <a
-            href
-            class="toggle-second-factor-method {{method.class}}"
-            {{on "click" (fn this.useAnotherMethod method.id)}}
-          >
-            {{i18n method.translationKey}}
-          </a>
-        </span>
-      {{/each}}
-    </p>
-  {{/if}}
-{{/unless}}
+    {{#if @controller.message}}
+      <div
+        class="alert {{@controller.alertClass}}"
+      >{{@controller.message}}</div>
+    {{/if}}
+    {{#unless @controller.loadError}}
+      <h3>{{@controller.secondFactorTitle}}</h3>
+      {{#if @controller.customDescription}}
+        <p class="action-description">{{@controller.customDescription}}</p>
+      {{/if}}
+      <p>{{@controller.secondFactorDescription}}</p>
+      {{#if @controller.showSecurityKeyForm}}
+        <div id="security-key">
+          <DButton
+            @action={{@controller.authenticateSecurityKey}}
+            @icon="key"
+            @label="login.security_key_authenticate"
+            id="security-key-authenticate-button"
+            class="btn-large btn-primary"
+          />
+        </div>
+      {{else if (or @controller.showTotpForm @controller.showBackupCodesForm)}}
+        <form class={{@controller.inputFormClass}}>
+          <SecondFactorInput
+            {{on
+              "input"
+              (withEventValue (fn (mut @controller.secondFactorToken)))
+            }}
+            @secondFactorMethod={{@controller.shownSecondFactorMethod}}
+            value={{@controller.secondFactorToken}}
+          />
+          <DButton
+            @action={{@controller.authenticateToken}}
+            @label="submit"
+            type="submit"
+            class="btn-primary"
+          />
+        </form>
+      {{/if}}
+
+      {{#if @controller.alternativeMethods.length}}
+        <p>
+          {{#each @controller.alternativeMethods as |method index|}}
+            {{#if (gt index 0)}}
+              <span>&middot;</span>
+            {{/if}}
+            <span>
+              <a
+                href
+                class="toggle-second-factor-method {{method.class}}"
+                {{on "click" (fn @controller.useAnotherMethod method.id)}}
+              >
+                {{i18n method.translationKey}}
+              </a>
+            </span>
+          {{/each}}
+        </p>
+      {{/if}}
+    {{/unless}}
+  </template>
+);

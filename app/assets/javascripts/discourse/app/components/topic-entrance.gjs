@@ -2,9 +2,12 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
+import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -199,30 +202,32 @@ export default class TopicEntrance extends Component {
   enterBottom() {
     this._jumpTo(this.get("topic.lastPostUrl"));
   }
+
+  <template>
+    <DButton
+      @action={{action "enterTop"}}
+      @translatedAriaLabel={{i18n
+        "topic_entrance.sr_jump_top_button"
+        date=this.topDate
+      }}
+      title={{i18n "topic_entrance.jump_top_button_title"}}
+      class="btn-default full jump-top"
+    >
+      {{icon "backward-step"}}
+      {{htmlSafe this.topDate}}
+    </DButton>
+
+    <DButton
+      @action={{action "enterBottom"}}
+      @translatedAriaLabel={{i18n
+        "topic_entrance.sr_jump_bottom_button"
+        date=this.bottomDate
+      }}
+      title={{i18n "topic_entrance.jump_bottom_button_title"}}
+      class="btn-default full jump-bottom"
+    >
+      {{htmlSafe this.bottomDate}}
+      {{icon "forward-step"}}
+    </DButton>
+  </template>
 }
-
-<DButton
-  @action={{action "enterTop"}}
-  @translatedAriaLabel={{i18n
-    "topic_entrance.sr_jump_top_button"
-    date=this.topDate
-  }}
-  title={{i18n "topic_entrance.jump_top_button_title"}}
-  class="btn-default full jump-top"
->
-  {{d-icon "backward-step"}}
-  {{html-safe this.topDate}}
-</DButton>
-
-<DButton
-  @action={{action "enterBottom"}}
-  @translatedAriaLabel={{i18n
-    "topic_entrance.sr_jump_bottom_button"
-    date=this.bottomDate
-  }}
-  title={{i18n "topic_entrance.jump_bottom_button_title"}}
-  class="btn-default full jump-bottom"
->
-  {{html-safe this.bottomDate}}
-  {{d-icon "forward-step"}}
-</DButton>

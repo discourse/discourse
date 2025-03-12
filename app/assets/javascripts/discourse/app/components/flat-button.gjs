@@ -4,6 +4,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -31,6 +32,6 @@ export default class FlatButton extends Component {
     this.action?.();
     return false;
   }
-}
 
-{{d-icon this.icon}}
+  <template>{{icon this.icon}}</template>
+}
