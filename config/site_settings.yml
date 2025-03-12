@@ -691,7 +691,6 @@ login:
   full_page_login:
     default: true
     client: true
-    hidden: true
   show_signup_form_email_instructions:
     client: true
     default: true
