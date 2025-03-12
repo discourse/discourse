@@ -8,21 +8,21 @@ class MethodProfiler
         .map do |method_name|
           recurse_protection = ""
           recurse_protection = <<~RUBY if no_recurse
-          return #{method_name}__mp_unpatched(*args, &blk) if @mp_recurse_protect_#{method_name}
+          return #{method_name}__mp_unpatched(*args, **kwargs, &blk) if @mp_recurse_protect_#{method_name}
           @mp_recurse_protect_#{method_name} = true
         RUBY
 
           <<~RUBY
       unless defined?(#{method_name}__mp_unpatched)
         alias_method :#{method_name}__mp_unpatched, :#{method_name}
-        def #{method_name}(*args, &blk)
+        def #{method_name}(*args, **kwargs, &blk)
           unless prof = Thread.current[:_method_profiler]
-            return #{method_name}__mp_unpatched(*args, &blk)
+            return #{method_name}__mp_unpatched(*args, **kwargs, &blk)
           end
           #{recurse_protection}
           begin
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-            #{method_name}__mp_unpatched(*args, &blk)
+            #{method_name}__mp_unpatched(*args, **kwargs, &blk)
           ensure
             data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
             data[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
@@ -44,14 +44,14 @@ class MethodProfiler
         .map do |method_name|
           recurse_protection = ""
           recurse_protection = <<~RUBY if no_recurse
-          return #{method_name}__mp_unpatched_debug_sql(*args, &blk) if @mp_recurse_protect_#{method_name}
+          return #{method_name}__mp_unpatched_debug_sql(*args, **kwargs, &blk) if @mp_recurse_protect_#{method_name}
           @mp_recurse_protect_#{method_name} = true
         RUBY
 
           <<~RUBY
       unless defined?(#{method_name}__mp_unpatched_debug_sql)
         alias_method :#{method_name}__mp_unpatched_debug_sql, :#{method_name}
-        def #{method_name}(*args, &blk)
+        def #{method_name}(*args, **kwargs, &blk)
           #{recurse_protection}
 
           query = args[0]
@@ -63,7 +63,7 @@ class MethodProfiler
 
           begin
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-            #{method_name}__mp_unpatched_debug_sql(*args, &blk)
+            #{method_name}__mp_unpatched_debug_sql(*args, **kwargs, &blk)
           ensure
             duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
 
@@ -144,7 +144,8 @@ class MethodProfiler
           :sql,
         )
 
-        MethodProfiler.patch(Redis::Client, %i[call call_pipeline], :redis)
+        MethodProfiler.patch(Redis::Client, %i[call_v], :redis)
+        MethodProfiler.patch(RedisClient::RubyConnection, %i[call_pipelined], :redis)
 
         MethodProfiler.patch(Net::HTTP, [:request], :net, no_recurse: true)
 
