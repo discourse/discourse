@@ -221,7 +221,6 @@ export default class SearchMenu extends Component {
   cancelSearchMobile() {
     this.close();
 
-    // clears search value if present
     if (this.search.activeGlobalSearchTerm) {
       this.search.activeGlobalSearchTerm = "";
       this.triggerSearch();
@@ -302,9 +301,7 @@ export default class SearchMenu extends Component {
       this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
-      if (this.args?.onLoading) {
-        this.args?.onLoading(this.loading);
-      }
+      this.args?.onLoading?.(this.loading);
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
@@ -331,9 +328,7 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
-          if (this.args?.onLoading) {
-            this.args?.onLoading(this.loading);
-          }
+          this.args?.onLoading?.(this.loading);
           this.appEvents.trigger("search:search_result_view", {
             searchMenu: true, // delineate between search menu and full page search
           });

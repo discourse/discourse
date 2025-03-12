@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -21,9 +19,6 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 export default class Results extends Component {
   @service search;
   @service site;
-
-  // TODO: unused local prop `searchTopics`
-  @tracked searchTopics = this.args.searchTopics;
 
   get isMobileTopicView() {
     return (
@@ -60,11 +55,5 @@ export default class Results extends Component {
 
   get searchLogId() {
     return this.search.results.grouped_search_result?.search_log_id;
-  }
-
-  // TODO: unused action `updateSearchTopics`
-  @action
-  updateSearchTopics(value) {
-    this.searchTopics = value;
   }
 }
