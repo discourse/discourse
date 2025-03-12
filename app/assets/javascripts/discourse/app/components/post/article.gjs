@@ -131,7 +131,7 @@ export default class PostArticle extends Component {
           </section>
         </div>
       {{/if}}
-      {{#if (and @post.deleted_at @post.notice)}}
+      {{#if (and @post.deletedAt @post.notice)}}
         <div class="row">
           <PostNotice @post={{@post}} />
         </div>

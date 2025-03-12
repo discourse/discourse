@@ -7,22 +7,22 @@ const PostActionsSummary = <template>
     <div class="post-action">{{actionSummary.description}}</div>
     <div class="clearfix"></div>
   {{/each}}
-  {{#if @post.deleted_at}}
+  {{#if @post.deletedAt}}
     <div class="post-action deleted-post">
       {{icon "trash-can"}}
       <a
         class="trigger-user-card"
-        post-user-card={{@post.deletedByUsername}}
-        title={{@post.deletedByUsername}}
+        post-user-card={{@post.deletedBy.username}}
+        title={{@post.deletedBy.username}}
         aria-hidden="true"
       >
         {{avatar
-          @post.deletedByAvatarTemplate
+          @post.deletedBy.avatar_template
           "tiny"
-          title=@post.deletedByUsername
+          title=@post.deletedBy.username
         }}
       </a>
-      {{formatDate @post.deleted_at format="tiny"}}
+      {{formatDate @post.deletedAt format="tiny"}}
     </div>
   {{/if}}
 </template>;

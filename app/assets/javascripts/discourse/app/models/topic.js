@@ -301,6 +301,9 @@ export default class Topic extends RestModel {
   @service currentUser;
   @service siteSettings;
 
+  @tracked deleted_by;
+  @tracked deleted_at;
+
   message = null;
   errorLoading = false;
 

@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -200,6 +200,8 @@ export default class Post extends RestModel {
   @trackedPostProperty can_view_edit_history;
   @trackedPostProperty user_suspended;
   @trackedPostProperty read;
+  @trackedPostProperty deleted_by;
+  @trackedPostProperty actions_summary;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -210,6 +212,8 @@ export default class Post extends RestModel {
   @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
+  @alias("deletedBy") postDeletedBy; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
+  @alias("deletedAt") postDeletedAt; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
 
   constructor() {
     super(...arguments);
@@ -229,14 +233,12 @@ export default class Post extends RestModel {
     return name && name !== username && this.siteSettings.display_name_on_posts;
   }
 
-  @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
-  postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
-    return firstPost ? topicDeletedBy : deletedBy;
+  get deletedBy() {
+    return this.firstPost ? this.topic.deleted_by : this.deleted_by;
   }
 
-  @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
-  postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
-    return firstPost ? topicDeletedAt : deletedAt;
+  get deletedAt() {
+    return this.firstPost ? this.topic.deleted_at : this.deleted_at;
   }
 
   @discourseComputed("post_number", "topic_id", "topic.slug")
@@ -723,5 +725,28 @@ export default class Post extends RestModel {
 
   get topicUrl() {
     return this.topic?.url;
+  }
+
+  @cached
+  get actionsSummary() {
+    return this.actions_summary
+      .filter((postAction) => {
+        return postAction.actionType.name_key !== "like" && postAction.acted;
+      })
+      .map((postAction) => {
+        const action = postAction.actionType.name_key;
+
+        return {
+          id: postAction.id,
+          postId: this.id,
+          action,
+          canUndo: postAction.can_undo,
+          description: i18n(`post.actions.by_you.${action}`, {
+            defaultValue: i18n(`post.actions.by_you.custom`, {
+              custom: postAction.actionType.name,
+            }),
+          }),
+        };
+      });
   }
 }
