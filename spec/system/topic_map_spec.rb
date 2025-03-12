@@ -16,6 +16,7 @@ describe "Topic Map", type: :system do
   end
 
   it "updates the various topic stats, avatars" do
+    Jobs.run_immediately!
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
@@ -39,13 +40,15 @@ describe "Topic Map", type: :system do
     expect(topic_map.users_count).to eq 6
 
     # user count
-    expect {
-      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
-      sign_in(last_post_user)
-      topic_page.visit_topic_and_open_composer(topic)
-      topic_page.send_reply("this is a cool-cat post") # fabricating posts doesn't update the last post details
-      topic_page.visit_topic(topic)
-    }.to change(topic_map, :users_count).by(1)
+    Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
+    sign_in(last_post_user)
+    topic_page.visit_topic_and_open_composer(topic)
+    # fabricating posts doesn't update the last post details
+    topic_page.send_reply("this is a cool-cat post")
+    selector = topic_page.post_by_number_selector(6)
+    expect(page).to have_css(selector)
+    topic_page.visit_topic(topic)
+    expect(topic_map.users_count).to eq 7
 
     Fabricate(:post, topic: topic)
     Fabricate(:post, user: user, topic: topic)
@@ -58,24 +61,23 @@ describe "Topic Map", type: :system do
     expect(avatars.length).to eq 5 # max no. of avatars in a collapsed map
 
     expanded_avatars = topic_map.expanded_avatars_details
+    expect(expanded_avatars.length).to eq 8
     expect(expanded_avatars[0]).to have_selector("img[src=\"#{avatar_url(user, 48)}\"]")
     expect(expanded_avatars[0].find(".post-count").text).to eq "3"
     expect(expanded_avatars[1]).to have_selector("img[src=\"#{avatar_url(last_post_user, 48)}\"]")
     expect(expanded_avatars[1].find(".post-count").text).to eq "2"
     expect(expanded_avatars[2]).to have_no_css(".post-count")
-    expect(expanded_avatars.length).to eq 8
 
     # views count
-    # TODO (martin) Investigate flakiness
-    # sign_in(other_user)
-    # topic_page.visit_topic(topic)
-    # try_until_success { expect(TopicViewItem.count).to eq(2) }
-    # page.refresh
-    # expect(topic_map.views_count).to eq(2)
+    sign_in(other_user)
+    topic_page.visit_topic(topic)
+    try_until_success { expect(TopicViewItem.count).to eq(2) }
+    page.refresh
+    expect(topic_map.views_count).to eq(2)
 
     # likes count
-    # expect(topic_map).to have_no_likes
-    # topic_page.click_like_reaction_for(original_post)
-    # expect(topic_map.likes_count).to eq 6
+    expect(topic_map).to have_no_likes
+    topic_page.click_like_reaction_for(original_post)
+    expect(topic_map.likes_count).to eq 6
   end
 end
