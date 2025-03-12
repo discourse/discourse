@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { inject as controller } from "@ember/controller";
 import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { Promise } from "rsvp";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import TopicMap from "discourse/components/topic-map";
@@ -15,7 +17,13 @@ import PostEmbedded from "./embedded";
 import PostNotice from "./notice";
 
 export default class PostArticle extends Component {
+  @service site;
   @service siteSettings;
+  @service store;
+
+  @controller("topic") topicController;
+
+  @tracked repliesAbove = new TrackedArray();
 
   get shouldShowTopicMap() {
     if (this.args.post.post_number !== 1) {
@@ -36,45 +44,45 @@ export default class PostArticle extends Component {
   }
 
   @action
-  toggleReplyAbove(goToPost = false) {
+  async toggleReplyAbove(goToPost = false) {
     const replyPostNumber = this.args.post.reply_to_post_number;
 
     if (this.siteSettings.enable_filtered_replies_view) {
-      const post = this.findAncestorModel();
-      const controller = this.register.lookup("controller:topic");
-
-      return post
-        .get("topic.postStream")
-        .filterUpwards(this.args.post.id)
-        .then(() => {
-          controller.updateQueryParams();
-        });
+      await this.args.post.topic?.postStream?.filterUpwards?.(
+        this.args.post.id
+      );
+      this.topicController.updateQueryParams();
     }
 
+    const topicUrl = this.args.post.topicUrl;
+
     // jump directly on mobile
-    if (this.args.post.mobileView) {
-      const topicUrl = this._getTopicUrl();
+    if (this.site.mobileView) {
       if (topicUrl) {
         DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);
       }
-      return Promise.resolve();
+
+      return;
     }
 
     if (this.repliesAbove.length) {
-      this.repliesAbove = [];
+      // since repliesAbove is a tracked array, let's truncate it instead of creating another one
+      this.repliesAbove.length = 0;
+
       if (goToPost === true) {
-        const { topicUrl, post_number } = this.args.post;
+        const { post_number } = this.args.post;
         DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
       }
-      return Promise.resolve();
     } else {
-      return this.store
-        .find("post-reply-history", { postId: this.args.post.id })
-        .then((posts) => {
-          posts.forEach((post) => {
-            this.repliesAbove.push(post);
-          });
-        });
+      const replies = await this.store.find("post-reply-history", {
+        postId: this.args.post.id,
+      });
+
+      replies.forEach((reply) => {
+        // the components expect a post model instance
+        const replyAsPost = this.store.createRecord("post", reply);
+        this.repliesAbove.push(replyAsPost);
+      });
     }
   }
 
@@ -109,15 +117,15 @@ export default class PostArticle extends Component {
               @icon="chevron-down"
               @title="post.collapse"
             />
+            {{#each this.repliesAbove key="id" as |reply|}}
+              <PostEmbedded
+                @post={{reply}}
+                @above={{true}}
+                @highlightTerm={{@highlightTerm}}
+              />
+            {{/each}}
           </section>
         </div>
-        {{#each this.repliesAbove key="id" as |reply|}}
-          <PostEmbedded
-            @post={{reply}}
-            @above={{true}}
-            @highlightTerm={{@highlightTerm}}
-          />
-        {{/each}}
       {{/if}}
       {{#if (and @post.deleted_at @post.notice)}}
         <div class="row">
@@ -137,6 +145,7 @@ export default class PostArticle extends Component {
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
           @highlightTerm={{@highlightTerm}}
+          @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
           @lockPost={{@lockPost}}
           @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
@@ -156,7 +165,7 @@ export default class PostArticle extends Component {
           @toggleLike={{@toggleLike}}
           @togglePostSelection={{@togglePostSelection}}
           @togglePostType={{@togglePostType}}
-          @toggleReplyAbove={{@toggleReplyAbove}}
+          @toggleReplyAbove={{this.toggleReplyAbove}}
           @toggleWiki={{@toggleWiki}}
           @unhidePost={{@unhidePost}}
           @unlockPost={{@unlockPost}}

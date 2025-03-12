@@ -11,6 +11,7 @@ const PostBody = <template>
       <PostMetaData
         @post={{@post}}
         @editPost={{@editPost}}
+        @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
         @multiSelect={{@multiSelect}}
         @repliesAbove={{@repliesAbove}}
         @selectBelow={{@selectBelow}}

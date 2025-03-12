@@ -33,6 +33,15 @@ export default class Post extends Component {
     });
   }
 
+  get isReplyingDirectlyToPostAbove() {
+    return (
+      this.args.prevPost &&
+      this.args.post.reply_to_post_number === this.args.prevPost.post_number &&
+      this.args.post.id !==
+        this.args.post.topic?.postStream?.filterUpwardsPostID
+    );
+  }
+
   @action
   async toggleLike() {
     const post = this.args.post;
@@ -106,6 +115,7 @@ export default class Post extends Component {
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
           @highlightTerm={{this.search.highlightTerm}}
+          @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
           @lockPost={{@lockPost}}
           @multiSelect={{@multiSelect}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}

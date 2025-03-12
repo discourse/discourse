@@ -12,8 +12,8 @@ export default class PostMetaDataReplyToTab extends Component {
     const siteSettings = owner.lookup("service:site-settings");
 
     return (
-      args.post.replyToUsername &&
-      (!args.post.replyDirectlyAbove ||
+      args.post.reply_to_user?.username &&
+      (!args.isReplyingDirectlyToPostAbove ||
         !siteSettings.suppress_reply_directly_above)
     );
   }

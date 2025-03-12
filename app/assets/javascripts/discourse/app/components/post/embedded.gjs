@@ -1,20 +1,18 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PostAvatar from "./avatar";
-import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostCookedHtml from "./cooked-html";
+import PostMetaDataPosterName from "./meta-data/poster-name";
 
 export default class PostEmbedded extends Component {
   @service appEvents;
 
   <template>
     <div ...attributes class="reply" data-post-id={{@post.id}}>
-      <PostAvatar @post={{@post}} />
       <div class="row">
+        <PostAvatar @post={{@post}} />
         <div class="topic-body">
           <div class="topic-meta-data embedded-reply">
             <PostMetaDataPosterName @post={{@post}} />

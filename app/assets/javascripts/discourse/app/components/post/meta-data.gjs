@@ -19,11 +19,7 @@ export default class PostMetaData extends Component {
   }
 
   get shouldDisplayReplyToTab() {
-    return PostMetaDataReplyToTab.shouldRender(
-      { post: this.args.post },
-      null,
-      getOwner(this)
-    );
+    return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
   }
 
   <template>
@@ -69,6 +65,7 @@ export default class PostMetaData extends Component {
         {{#if this.shouldDisplayReplyToTab}}
           <PostMetaDataReplyToTab
             @post={{@post}}
+            @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
             @repliesAbove={{@repliesAbove}}
             @toggleReplyAbove={{@toggleReplyAbove}}
           />
