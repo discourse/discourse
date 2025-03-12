@@ -9,8 +9,10 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
   test("post deleted", async function (assert) {
     const args = {
       deleted_at: "2016-01-01",
-      deletedByUsername: "eviltrout",
-      deletedByAvatarTemplate: "/images/avatar.png",
+      deleted_by: {
+        username: "eviltrout",
+        avatar_template: "/images/avatar.png",
+      },
     };
 
     await render(
