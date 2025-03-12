@@ -112,7 +112,7 @@ export default class Site extends RestModel {
       settingValue === "disabled" &&
       this.currentUser?.use_glimmer_post_stream_mode_auto_mode
     ) {
-      settingValue = "auto";
+      settingValue = "enabled"; // TODO (glimmer-post-stream) this needs to be changed to auto before merging the code
     }
 
     if (settingValue === "disabled") {
@@ -121,9 +121,11 @@ export default class Site extends RestModel {
       if (settingValue === "enabled") {
         if (havePostStreamWidgetExtensions) {
           console.log(
-            "⚠️  Using the new 'glimmer' post stream, even though some themes/plugins are not ready.\n" +
-              "The following plugins and/or themes are using deprecated APIs and may have broken customizations: \n",
-            ...Array.from(havePostStreamWidgetExtensions).sort()
+            [
+              "⚠️  Using the new 'glimmer' post stream, even though some themes/plugins are not ready.\n" +
+                "The following plugins and/or themes are using deprecated APIs and may have broken customizations: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
           );
         } else {
           if (!isTesting() && !isRailsTesting()) {
