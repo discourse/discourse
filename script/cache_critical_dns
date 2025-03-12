@@ -357,7 +357,7 @@ HEALTH_CHECKS = Hash.new(
     redis_healthcheck(
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_PORT", DEFAULT_REDIS_PORT),
-      username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_USERNAME"] || DEFAULT_REDIS_USERNAME,
+      username: ENV["DISCOURSE_MESSAGE_BUS_REDIS_USERNAME"],
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
   "DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST": lambda { |addr|
     redis_healthcheck(
