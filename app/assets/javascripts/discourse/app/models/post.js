@@ -199,6 +199,7 @@ export default class Post extends RestModel {
   @trackedPostProperty link_counts;
   @trackedPostProperty can_view_edit_history;
   @trackedPostProperty user_suspended;
+  @trackedPostProperty read;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;

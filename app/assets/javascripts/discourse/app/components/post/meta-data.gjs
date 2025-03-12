@@ -5,6 +5,7 @@ import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
 import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
+import PostMetaDataReadIndicator from "./meta-data/read-indicator";
 import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
 import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
@@ -73,6 +74,8 @@ export default class PostMetaData extends Component {
         {{/if}}
 
         <PostMetaDataDate @post={{@post}} />
+
+        <PostMetaDataReadIndicator @post={{@post}} />
       </div>
     </div>
   </template>
