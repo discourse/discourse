@@ -194,6 +194,7 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "posts-filtered-notice",
   "reply-to-tab",
   "select-post",
+  "topic-post-visited-line",
 ];
 
 const DEPRECATED_POST_MENU_WIDGETS = [

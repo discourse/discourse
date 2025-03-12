@@ -409,9 +409,19 @@ export default createWidget("post-stream", {
         attrs.lastReadPostNumber === post.post_number
       ) {
         result.push(
-          this.attach("topic-post-visited-line", {
-            post_number: post.post_number,
-          })
+          this.site.useGlimmerPostStream
+            ? new RenderGlimmer(
+                this,
+                "div.post-visited-line-shim.glimmer-post-stream",
+                hbs`
+                    <Post::VisitedLine @post={{@data.post}} />`,
+                {
+                  post,
+                }
+              )
+            : this.attach("topic-post-visited-line", {
+                post_number: post.post_number,
+              })
         );
       }
 
