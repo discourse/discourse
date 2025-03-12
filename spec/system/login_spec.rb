@@ -226,14 +226,14 @@ shared_examples "login scenarios" do |login_page_object|
       before do
         OmniAuth.config.test_mode = true
         SiteSetting.auth_skip_create_confirm = true
-        SiteSetting.enable_facebook_logins = true
+        SiteSetting.enable_google_oauth2_logins = true
         SiteSetting.enable_local_logins = false
       end
 
-      after { reset_omniauth_config(:facebook) }
+      after { reset_omniauth_config(:google_oauth2) }
 
       it "completes signup and redirects to the user api key authorization form" do
-        mock_facebook_auth
+        mock_google_auth
         visit("/user-api-key/new?#{args.to_query}")
 
         expect(page).to have_css(".authorize-api-key .scopes")

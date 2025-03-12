@@ -177,7 +177,6 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
-  after_create :trigger_user_automatic_group_refresh
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
