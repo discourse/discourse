@@ -3,8 +3,8 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminConfigThemesAndComponentsComponentsRoute extends DiscourseRoute {
   async model() {
-    const themes = await this.store.findAll("theme");
-    return themes.reject((t) => !t.component);
+    const components = await this.store.findAll("theme");
+    return components.reject((t) => !t.component);
   }
 
   titleToken() {

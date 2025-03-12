@@ -4,7 +4,7 @@ describe "Admin Customize Config Area Page", type: :system do
   fab!(:admin)
 
   let(:config_area) { PageObjects::Pages::AdminCustomizeConfigArea.new }
-  let(:install_modal) { PageObjects::Modals::Base.new }
+  let(:install_modal) { PageObjects::Modals::InstallTheme.new }
 
   before { sign_in(admin) }
 
@@ -18,6 +18,7 @@ describe "Admin Customize Config Area Page", type: :system do
 
       config_area.install_card.find(".btn-primary").click
       expect(install_modal).to be_open
+      expect(install_modal.popular_options.first).to have_text("Air")
     end
   end
 
@@ -31,6 +32,7 @@ describe "Admin Customize Config Area Page", type: :system do
 
       config_area.install_card.find(".btn-primary").click
       expect(install_modal).to be_open
+      expect(install_modal.popular_options.first).to have_text("Brand Header")
     end
   end
 end

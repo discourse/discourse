@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import InstallThemeCard from "admin/components/admin-config-area-cards/install-theme-card";
-import InstallThemeModal from "admin/components/modal/install-theme";
+import InstallComponentModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
 import { COMPONENTS } from "admin/models/theme";
 
@@ -14,8 +14,8 @@ export default class AdminConfigAreasComponents extends Component {
 
   @action
   installModal() {
-    this.modal.show(InstallThemeModal, {
-      model: { ...this.installThemeOptions() },
+    this.modal.show(InstallComponentModal, {
+      model: { ...this.installOptions() },
     });
   }
 
@@ -23,24 +23,24 @@ export default class AdminConfigAreasComponents extends Component {
   // are incomplete or have stubbed or omitted properties. We may want
   // to move this to the new config route or a dedicated component
   // that sits in the route.
-  installThemeOptions() {
+  installOptions() {
     return {
       selectedType: COMPONENTS,
       userId: null,
       content: [],
       installedThemes: this.args.components,
-      addTheme: this.addTheme,
+      addTheme: this.addComponent,
       updateSelectedType: () => {},
       showComponentsOnly: true,
     };
   }
 
   @action
-  addTheme(theme) {
+  addComponent(component) {
     this.toasts.success({
       data: {
         message: i18n("admin.customize.theme.install_success", {
-          theme: theme.name,
+          theme: component.name,
         }),
       },
       duration: 2000,
