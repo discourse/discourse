@@ -12,6 +12,10 @@ export default {
     site.set("mobileView", Mobile.mobileView);
     site.set("desktopView", !Mobile.mobileView);
     site.set("isMobileDevice", Mobile.isMobileDevice);
+    site.set(
+      "isMobileViewAndDevice",
+      Mobile.mobileView && Mobile.isMobileDevice
+    );
 
     setResolverOption("mobileView", Mobile.mobileView);
   },
