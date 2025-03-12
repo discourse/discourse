@@ -14,7 +14,7 @@
 // (r) (R) → ®
 // (p) (P) -> §
 
-export const RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
+export const RARE_RE = /\+-|\.\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
 
 export const SCOPED_ABBR_RE = /\((tm|pa)\)/gi;
 let SCOPED_ABBR = {
