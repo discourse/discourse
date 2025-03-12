@@ -88,6 +88,7 @@ export default class PostMetaDataPosterName extends Component {
     this.#trackUserStatus();
   }
 
+  @bind
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
     badge.description = i18n("post.badge_granted_tooltip", {

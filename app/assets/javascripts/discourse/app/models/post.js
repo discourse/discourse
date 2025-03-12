@@ -234,11 +234,11 @@ export default class Post extends RestModel {
   }
 
   get deletedBy() {
-    return this.firstPost ? this.topic.deleted_by : this.deleted_by;
+    return this.firstPost ? this.topic?.deleted_by : this.deleted_by;
   }
 
   get deletedAt() {
-    return this.firstPost ? this.topic.deleted_at : this.deleted_at;
+    return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
   @discourseComputed("post_number", "topic_id", "topic.slug")
@@ -711,6 +711,7 @@ export default class Post extends RestModel {
     }
   }
 
+  @cached
   get badgesGranted() {
     return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
   }
