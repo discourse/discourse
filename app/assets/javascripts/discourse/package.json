@@ -66,7 +66,7 @@
     "@ember/render-modifiers": "^3.0.0",
     "@ember/string": "^4.0.1",
     "@ember/test-helpers": "^5.1.0",
-    "@ember/test-waiters": "^4.0.0",
+    "@ember/test-waiters": "^4.1.0",
     "@embroider/compat": "^3.8.3",
     "@embroider/core": "^3.5.3",
     "@embroider/macros": "^1.16.11",
