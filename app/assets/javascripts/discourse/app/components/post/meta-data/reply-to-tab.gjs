@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
@@ -23,21 +22,18 @@ export default class PostMetaDataReplyToTab extends Component {
   <template>
     <a
       class="reply-to-tab"
-      disabled={{@repliesAbove.loading}}
-      role={{if this.site.mobileView "button"}}
+      disabled={{@repliesAbove.isPending}}
+      role={{if this.site.desktopView "button"}}
       aria-controls={{if
-        this.site.mobileView
+        this.site.desktopView
         (concat "embedded-posts__top--" @post.post_number)
       }}
-      aria-expanded={{if
-        this.site.mobileView
-        (gt @repliesAbove.value.length 0)
-      }}
+      aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
       tabindex="0"
       title="post.in_reply_to"
       {{on "click" @toggleReplyAbove}}
     >
-      {{#if @repliesAbove.loading}}
+      {{#if @repliesAbove.isPending}}
         <div class="spinner small"></div>
       {{else}}
         {{icon "share"}}

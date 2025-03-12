@@ -65,6 +65,7 @@ export default class PostMetaData extends Component {
         {{#if this.shouldDisplayReplyToTab}}
           <PostMetaDataReplyToTab
             @post={{@post}}
+            @hasRepliesAbove={{@hasRepliesAbove}}
             @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
             @repliesAbove={{@repliesAbove}}
             @toggleReplyAbove={{@toggleReplyAbove}}

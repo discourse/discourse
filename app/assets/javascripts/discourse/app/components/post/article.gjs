@@ -4,7 +4,7 @@ import { inject as controller } from "@ember/controller";
 import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedAsyncData } from "ember-async-data";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import TopicMap from "discourse/components/topic-map";
@@ -23,7 +23,11 @@ export default class PostArticle extends Component {
 
   @controller("topic") topicController;
 
-  @tracked repliesAbove = new TrackedArray();
+  @tracked repliesAbove;
+
+  get hasRepliesAbove() {
+    return this.repliesAbove?.isResolved && this.repliesAbove.value.length > 0;
+  }
 
   get shouldShowTopicMap() {
     if (this.args.post.post_number !== 1) {
@@ -65,25 +69,24 @@ export default class PostArticle extends Component {
       return;
     }
 
-    if (this.repliesAbove.length) {
-      // since repliesAbove is a tracked array, let's truncate it instead of creating another one
-      this.repliesAbove.length = 0;
+    if (this.repliesAbove?.value.length) {
+      this.repliesAbove = null;
 
       if (goToPost === true) {
         const { post_number } = this.args.post;
         DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
       }
     } else {
-      const replies = await this.store.find("post-reply-history", {
-        postId: this.args.post.id,
-      });
-
-      replies.forEach((reply) => {
-        // the components expect a post model instance
-        const replyAsPost = this.store.createRecord("post", reply);
-        this.repliesAbove.push(replyAsPost);
-      });
+      this.repliesAbove = new TrackedAsyncData(this.#loadRepliesAbove());
     }
+  }
+
+  async #loadRepliesAbove() {
+    const replies = await this.store.find("post-reply-history", {
+      postId: this.args.post.id,
+    });
+
+    return replies.map((reply) => this.store.createRecord("post", reply));
   }
 
   <template>
@@ -93,7 +96,7 @@ export default class PostArticle extends Component {
       class={{concatClass
         "boxed"
         "onscreen-post"
-        (if this.repliesAbove "replies-above")
+        (if this.hasRepliesAbove "replies-above")
         (if @post.is_auto_generated "is-auto-generated")
         (if @post.via_email "via-email")
       }}
@@ -106,7 +109,7 @@ export default class PostArticle extends Component {
       data-topic-id={{@post.topicId}}
       data-user-id={{@post.user_id}}
     >
-      {{#if this.repliesAbove}}
+      {{#if this.hasRepliesAbove}}
         <div class="row">
           <section
             id={{concat "embedded-posts__top--" @post.post_number}}
@@ -118,7 +121,7 @@ export default class PostArticle extends Component {
               @icon="chevron-down"
               @title="post.collapse"
             />
-            {{#each this.repliesAbove key="id" as |reply|}}
+            {{#each this.repliesAbove.value key="id" as |reply|}}
               <PostEmbedded
                 @post={{reply}}
                 @above={{true}}
@@ -145,6 +148,7 @@ export default class PostArticle extends Component {
           @deletePost={{@deletePost}}
           @editPost={{@editPost}}
           @grantBadge={{@grantBadge}}
+          @hasRepliesAbove={{this.hasRepliesAbove}}
           @highlightTerm={{@highlightTerm}}
           @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
           @lockPost={{@lockPost}}
