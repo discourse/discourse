@@ -33,7 +33,7 @@ RSpec.describe "User chat preferences", type: :system do
     visit("/my/preferences/chat")
     find("#user_chat_quick_reaction_type_custom").click
     expect(all(".emoji-picker-trigger", visible: true).count).to eq 3
-    expect(find(".emoji-pickers button:first-of-type")).to have_css("img[title='heart']")    
+    expect(find(".emoji-pickers button:first-of-type")).to have_css("img[title='heart']")
     find(".emoji-pickers button:first-of-type").click
     find(".emoji-picker .emoji[title=':sweat_smile:']").click
     find(".save-changes").click
