@@ -71,6 +71,24 @@ RSpec.describe Migration::SafeMigrate do
     expect { User.first.username }.not_to raise_error
   end
 
+  it "allows running a migration that creates an index concurrently if it drops the index first" do
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_safe"
+    output = capture_stdout { expect do migrate_up(path) end.to raise_error(StandardError) }
+
+    expect(output).not_to include(described_class::UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
+  end
+
+  it "bans running a migration that creates an index concurrently without first dropping the index if it exists" do
+    Migration::SafeMigrate.enable!
+
+    path =
+      File.expand_path("#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_unsafe")
+
+    output = capture_stdout { expect do migrate_up(path) end.to raise_error(StandardError) }
+
+    expect(output).to include(described_class::UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
+  end
+
   it "allows dropping NOT NULL" do
     Migration::SafeMigrate.enable!
 

@@ -77,6 +77,8 @@ class Migration::SafeMigrate
     return if PG::Connection.method_defined?(:exec_migrator_unpatched)
     return if ENV["RAILS_ENV"] == "production"
 
+    @@migration_sqls = []
+
     PG::Connection.class_eval do
       alias_method :exec_migrator_unpatched, :exec
       alias_method :async_exec_migrator_unpatched, :async_exec
@@ -97,6 +99,8 @@ class Migration::SafeMigrate
     return if !PG::Connection.method_defined?(:exec_migrator_unpatched)
     return if ENV["RAILS_ENV"] == "production"
 
+    @@migration_sqls = []
+
     PG::Connection.class_eval do
       alias_method :exec, :exec_migrator_unpatched
       alias_method :async_exec, :async_exec_migrator_unpatched
@@ -116,7 +120,24 @@ class Migration::SafeMigrate
     end
   end
 
+  UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING = <<~TEXT
+  WARNING
+  -------------------------------------------------------------------------------------
+  An attempt was made to create an index concurrently in a migration without first dropping the index.
+
+  Per postgres documentation:
+
+    If a problem arises while scanning the table, such as a deadlock or a uniqueness violation in a unique index,
+    the CREATE INDEX command will fail but leave behind an “invalid” index. This index will be ignored for querying
+    purposes because it might be incomplete; however it will still consume update overhead. The recommended recovery
+    method in such cases is to drop the index and try again to perform CREATE INDEX CONCURRENTLY .
+
+  Please update the migration to first drop the index if it exists before creating it concurrently.
+  TEXT
+
   def self.protect!(sql)
+    @@migration_sqls << sql
+
     if sql =~ /\A\s*(?:drop\s+table|alter\s+table.*rename\s+to)\s+/i
       $stdout.puts("", <<~TEXT)
         WARNING
@@ -147,6 +168,16 @@ class Migration::SafeMigrate
         in use by live applications.
       TEXT
       raise Discourse::InvalidMigration, "Attempt was made to rename or delete column"
+    elsif sql =~ /\A\s*create\s+(?:unique\s+)?index\s+concurrently\s+/i
+      match = sql.match(/\bON\s+(?:ONLY\s+)?(?:"([^"]+)"|([a-zA-Z0-9_\.]+))/i)
+      table_name = match[1] || match[2]
+
+      if !@@migration_sqls.any? { |migration_sql|
+           migration_sql =~ /\A\s*drop\s+index\s+(?:concurrently\s+)?if\s+exists\s+/i &&
+             migration_sql.include?(table_name)
+         }
+        $stdout.puts("", UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
+      end
     end
   end
 
