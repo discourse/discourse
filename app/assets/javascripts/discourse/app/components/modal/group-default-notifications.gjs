@@ -1,3 +1,20 @@
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+
+export default class GroupDefaultNotifications extends Component {
+  @action
+  updateExistingUsers() {
+    this.args.model.setUpdateExistingUsers(true);
+    this.args.closeModal();
+  }
+
+  @action
+  cancel() {
+    this.args.model.setUpdateExistingUsers(false);
+    this.args.closeModal();
+  }
+}
+
 <DModal
   @title={{i18n "groups.default_notifications.modal_title"}}
   @closeModal={{@closeModal}}

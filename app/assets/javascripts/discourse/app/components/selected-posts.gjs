@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class SelectedPosts extends Component {}
+
 <p>
   <CountI18n
     @key="topic.multi_select.description"

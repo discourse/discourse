@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class SubcategoriesWithFeaturedTopics extends Component {}
+
 {{#each this.categories as |category|}}
   {{#if this.site.mobileView}}
     <PluginOutlet

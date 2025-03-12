@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class ReviewablePostHeader extends Component {}
+
 <div class="reviewable-post-header">
   <ReviewableCreatedByName @user={{this.createdBy}} />
   {{#if this.reviewable.reply_to_post_number}}

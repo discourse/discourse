@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class UserSummaryUsersList extends Component {}
+
 {{#if this.users}}
   <ul>
     {{#each this.users as |user|}}

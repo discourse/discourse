@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class ReviewableField extends Component {}
+
 {{#if this.value}}
   <div class={{this.classes}}>
     <div class="name">{{this.name}}</div>

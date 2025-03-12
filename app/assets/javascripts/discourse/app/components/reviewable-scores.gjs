@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class ReviewableScores extends Component {}
+
 {{#if this.reviewable.reviewable_scores}}
   <div class="reviewable-scores__table-wrapper">
     <table class="reviewable-scores">

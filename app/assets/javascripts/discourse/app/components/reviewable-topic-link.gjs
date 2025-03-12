@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class ReviewableTopicLink extends Component {}
+
 <div class="post-topic">
   {{#if this.reviewable.topic}}
     <TopicStatus

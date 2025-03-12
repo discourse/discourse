@@ -1,3 +1,7 @@
+import UserFieldBase from "./base";
+
+export default class UserFieldText extends UserFieldBase {}
+
 <div class="controls">
   <Input
     id={{concat "user-" this.elementId}}
