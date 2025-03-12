@@ -3,12 +3,21 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class ComposerToggleSwitch extends Component {
   @action
   mouseDown(event) {
     if (this.args.preventFocus) {
       event.preventDefault();
+    }
+  }
+
+  get label() {
+    if (this.args.state) {
+      return i18n("composer.switch_to_markdown");
+    } else {
+      return i18n("composer.switch_to_rich_text");
     }
   }
 
@@ -22,6 +31,8 @@ export default class ComposerToggleSwitch extends Component {
       type="button"
       role="switch"
       aria-checked={{if @state "true" "false"}}
+      aria-label={{this.label}}
+      title={{this.label}}
       {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
       ...attributes
