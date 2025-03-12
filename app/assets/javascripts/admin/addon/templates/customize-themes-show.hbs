@@ -1,32 +1,25 @@
 {{#if this.editingThemeSetting}}
   {{outlet}}
 {{else}}
-  {{#if this.currentUser.use_admin_sidebar}}
-    <div class="back-to-themes-and-components">
-      <LinkTo
-        @route={{if
+  <div class="back-to-themes-and-components">
+    <LinkTo
+      @route={{if
+        this.model.component
+        "adminConfig.customize.components"
+        "adminConfig.customize.themes"
+      }}
+    >
+      {{dIcon "angle-left"}}
+      {{i18n
+        (if
           this.model.component
-          "adminConfig.customize.components"
-          "adminConfig.customize.themes"
-        }}
-      >
-        {{dIcon "angle-left"}}
-        {{i18n
-          (if
-            this.model.component
-            "admin.config_areas.themes_and_components.components.back"
-            "admin.config_areas.themes_and_components.themes.back"
-          )
-        }}
-      </LinkTo>
-    </div>
-  {{/if}}
-  <div
-    class={{concatClass
-      "show-current-style"
-      (if this.currentUser.use_admin_sidebar "show-current-style--with-sidebar")
-    }}
-  >
+          "admin.config_areas.themes_and_components.components.back"
+          "admin.config_areas.themes_and_components.themes.back"
+        )
+      }}
+    </LinkTo>
+  </div>
+  <div class="show-current-style">
     <span>
       <PluginOutlet
         @name="admin-customize-themes-show-top"
