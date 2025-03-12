@@ -29,6 +29,7 @@ const DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES = [
 
 export default class InitialOptions extends Component {
   @service search;
+  @service site;
   @service siteSettings;
   @service currentUser;
 
