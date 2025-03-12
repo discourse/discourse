@@ -20,7 +20,83 @@ module Email
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
 
-      initialize_template_args_and_instructions!
+      return if @template_args[:url].blank?
+
+      @template_args[:header_instructions] ||= I18n.t(
+        "user_notifications.header_instructions",
+        @template_args,
+      )
+      @visit_link_to_respond_key =
+        DiscoursePluginRegistry.apply_modifier(
+          :message_builder_visit_link_to_respond,
+          "user_notifications.visit_link_to_respond",
+          @opts,
+          @to,
+        )
+      @reply_by_email_key =
+        DiscoursePluginRegistry.apply_modifier(
+          :message_builder_reply_by_email,
+          "user_notifications.reply_by_email",
+          @opts,
+          @to,
+        )
+
+      if @opts[:include_respond_instructions] == false
+        if @opts[:private_reply]
+          @template_args[:respond_instructions] = I18n.t(
+            "user_notifications.pm_participants",
+            @template_args,
+          )
+        else
+          @template_args[:respond_instructions] = ""
+        end
+      else
+        if @opts[:only_reply_by_email]
+          respond_instructions_key = +"user_notifications.only_reply_by_email"
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
+            else
+              respond_instructions_key << "_pm"
+            end
+          end
+        else
+          respond_instructions_key =
+            (
+              if allow_reply_by_email?
+                +@reply_by_email_key
+              else
+                +@visit_link_to_respond_key
+              end
+            )
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
+            else
+              respond_instructions_key << "_pm"
+            end
+          end
+        end
+        @template_args[:respond_instructions] = (
+          if respond_instructions_key != ""
+            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, @template_args)
+          else
+            ""
+          end
+        )
+      end
+
+      if @opts[:add_unsubscribe_link]
+        unsubscribe_string =
+          if @opts[:mailing_list_mode]
+            "unsubscribe_mailing_list"
+          elsif SiteSetting.unsubscribe_via_email_footer
+            "unsubscribe_link_and_mail"
+          else
+            "unsubscribe_link"
+          end
+        @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
+      end
     end
 
     def subject
@@ -283,86 +359,6 @@ module Email
     def site_alias_email(source)
       from_alias = Email.site_title
       %Q|"#{Email.cleanup_alias(from_alias)}" <#{source}>|
-    end
-
-    def initialize_template_args_and_instructions!
-      return if @template_args[:url].blank?
-
-      @template_args[:header_instructions] ||= I18n.t(
-        "user_notifications.header_instructions",
-        @template_args,
-      )
-      @visit_link_to_respond_key =
-        DiscoursePluginRegistry.apply_modifier(
-          :message_builder_visit_link_to_respond,
-          "user_notifications.visit_link_to_respond",
-          @opts,
-          @to,
-        )
-      @reply_by_email_key =
-        DiscoursePluginRegistry.apply_modifier(
-          :message_builder_reply_by_email,
-          "user_notifications.reply_by_email",
-          @opts,
-          @to,
-        )
-
-      if @opts[:include_respond_instructions] == false
-        if @opts[:private_reply]
-          @template_args[:respond_instructions] = I18n.t(
-            "user_notifications.pm_participants",
-            @template_args,
-          )
-        else
-          @template_args[:respond_instructions] = ""
-        end
-      else
-        if @opts[:only_reply_by_email]
-          respond_instructions_key = +"user_notifications.only_reply_by_email"
-          if @opts[:private_reply]
-            if @opts[:username] == Discourse.system_user.username
-              respond_instructions_key << "_pm_button_only"
-            else
-              respond_instructions_key << "_pm"
-            end
-          end
-        else
-          respond_instructions_key =
-            (
-              if allow_reply_by_email?
-                +@reply_by_email_key
-              else
-                +@visit_link_to_respond_key
-              end
-            )
-          if @opts[:private_reply]
-            if @opts[:username] == Discourse.system_user.username
-              respond_instructions_key << "_pm_button_only"
-            else
-              respond_instructions_key << "_pm"
-            end
-          end
-        end
-        @template_args[:respond_instructions] = (
-          if respond_instructions_key != ""
-            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, @template_args)
-          else
-            ""
-          end
-        )
-      end
-
-      if @opts[:add_unsubscribe_link]
-        unsubscribe_string =
-          if @opts[:mailing_list_mode]
-            "unsubscribe_mailing_list"
-          elsif SiteSetting.unsubscribe_via_email_footer
-            "unsubscribe_link_and_mail"
-          else
-            "unsubscribe_link"
-          end
-        @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
-      end
     end
   end
 end
