@@ -124,7 +124,8 @@ class Auth::Result
       AssociatedGroup.where(id: associated_group_ids).update_all("last_used = CURRENT_TIMESTAMP")
     end
 
-    Group.user_trust_level_change!(user.id, user.trust_level) if user && !user.staged
+    # refreshes automatic group membership (despite the name, it doesn't change TLs)
+    Group.user_trust_level_change!(user.id, user.trust_level) if user
   end
 
   def can_edit_name
