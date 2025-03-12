@@ -10,7 +10,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserStatusMessage from "discourse/components/user-status-message";
 import avatar from "discourse/helpers/avatar";
-import formatUsername from "discourse/helpers/formatUsername";
+import formatUsername from "discourse/helpers/format-username";
 import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
