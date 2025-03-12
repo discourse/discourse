@@ -70,9 +70,10 @@ ko:
           fields:
             restricted_tags:
               label: 태그
-            restricted_category:
+            restricted_categories:
               label: 카테고리
           created: 생성됨
+          topics: 글
         category_created_edited:
           fields:
             restricted_category:

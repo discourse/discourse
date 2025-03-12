@@ -19,15 +19,12 @@ module(
     });
 
     test("renders a checkbox with a label", async function (assert) {
-      const self = this;
-
       const attributes = {
         label: "Click this box",
       };
-      this.set("attributes", attributes);
 
       await render(
-        <template><Checkbox @attributes={{self.attributes}} /></template>
+        <template><Checkbox @attributes={{attributes}} /></template>
       );
 
       assert

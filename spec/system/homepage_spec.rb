@@ -86,13 +86,13 @@ describe "Homepage", type: :system do
       homepage_picker.expand
       # user overrides theme custom homepage
       homepage_picker.select_row_by_name("Hot")
-      page.find(".btn-primary.save-changes").click
+      page.find(".save-changes").click
 
-      # Wait for the save to complete
-      find(".btn-primary.save-changes:not([disabled])", wait: 5)
+      expect(page).to have_content(I18n.t("js.saved"))
       expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("hot"))
 
       click_logo
+
       expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
       visit "/u/#{user.username}/preferences/interface"
@@ -105,7 +105,10 @@ describe "Homepage", type: :system do
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+
+      try_until_success(timeout: 5) do
+        expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+      end
 
       click_logo
 

@@ -2972,9 +2972,11 @@ en:
         admin_problems: "new advice on your site dashboard"
 
     upload_selector:
+      change: "Change"
+      delete: "Delete"
       uploading: "Uploading"
-      processing: "Processing Upload"
-      select_file: "Select File"
+      processing: "Processing upload"
+      select_file: "Click to upload or drag & drop file"
       default_image_alt_text: image
 
     search:
@@ -5704,6 +5706,7 @@ en:
         key: "Key"
         keys: "Keys"
         created: Created by
+        scope: Scope
         updated: Updated
         last_used: Last used
         never_used: Never

@@ -1354,8 +1354,8 @@ sw:
         watching_first_post: "mada mpya"
         post_approved: "Chapisho Limepitishwa"
     upload_selector:
+      delete: "Futa"
       uploading: "Inapakiwa"
-      select_file: "Chagua Faili"
       default_image_alt_text: picha
     search:
       sort_by: "Panga kwa"

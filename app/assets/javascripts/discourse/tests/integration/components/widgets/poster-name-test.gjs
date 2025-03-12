@@ -9,19 +9,15 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
 
   test("basic rendering", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
       name: "Robin Ward",
       user_title: "Trout Master",
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="poster-name" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="poster-name" @args={{args}} /></template>
     );
 
     assert.dom(".names").exists();
@@ -32,9 +28,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
   });
 
   test("extra classes and glyphs", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
       staff: true,
@@ -42,12 +36,10 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       moderator: true,
       new_user: true,
       primary_group_name: "fish",
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="poster-name" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="poster-name" @args={{args}} /></template>
     );
 
     assert.dom("span.staff").exists();
@@ -59,40 +51,30 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
   });
 
   test("disable display name on posts", async function (assert) {
-    const self = this;
-
     this.siteSettings.display_name_on_posts = false;
-    this.set("args", { username: "eviltrout", name: "Robin Ward" });
+    const args = { username: "eviltrout", name: "Robin Ward" };
 
     await render(
-      <template>
-        <MountWidget @widget="poster-name" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="poster-name" @args={{args}} /></template>
     );
 
     assert.dom(".full-name").doesNotExist();
   });
 
   test("doesn't render a name if it's similar to the username", async function (assert) {
-    const self = this;
-
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.display_name_on_posts = true;
-    this.set("args", { username: "eviltrout", name: "evil-trout" });
+    const args = { username: "eviltrout", name: "evil-trout" };
 
     await render(
-      <template>
-        <MountWidget @widget="poster-name" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="poster-name" @args={{args}} /></template>
     );
 
     assert.dom(".second").doesNotExist();
   });
 
   test("renders badges that are passed in", async function (assert) {
-    const self = this;
-
-    this.set("args", {
+    const args = {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
       user: User.create({
@@ -102,12 +84,10 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
         { id: 1, icon: "heart", slug: "badge1", name: "Badge One" },
         { id: 2, icon: "target", slug: "badge2", name: "Badge Two" },
       ].map((badge) => Badge.createFromJson({ badges: [badge] })[0]),
-    });
+    };
 
     await render(
-      <template>
-        <MountWidget @widget="poster-name" @args={{self.args}} />
-      </template>
+      <template><MountWidget @widget="poster-name" @args={{args}} /></template>
     );
 
     // Check that the custom CSS classes are set

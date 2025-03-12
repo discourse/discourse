@@ -329,9 +329,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
-    if (!currentUser.use_admin_sidebar) {
-      return [];
-    }
 
     this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-state-manager"

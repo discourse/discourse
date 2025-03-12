@@ -17,16 +17,13 @@ module(
     });
 
     test("renders a text input with attributes", async function (assert) {
-      const self = this;
-
       const attributes = {
         label: "My text label",
         placeholder: "Enter text here",
       };
-      this.set("attributes", attributes);
 
       await render(
-        <template><FormInput @attributes={{self.attributes}} /></template>
+        <template><FormInput @attributes={{attributes}} /></template>
       );
 
       assert
@@ -40,45 +37,36 @@ module(
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {
-      const self = this;
-
       const attributes = {
         placeholder: "Enter text here",
       };
-      this.set("attributes", attributes);
 
       await render(
-        <template><FormInput @attributes={{self.attributes}} /></template>
+        <template><FormInput @attributes={{attributes}} /></template>
       );
 
       assert.dom(".form-template-field__label").doesNotExist();
     });
 
     test("renders a description if present", async function (assert) {
-      const self = this;
-
       const attributes = {
         description: "Your full name",
       };
-      this.set("attributes", attributes);
 
       await render(
-        <template><FormInput @attributes={{self.attributes}} /></template>
+        <template><FormInput @attributes={{attributes}} /></template>
       );
 
       assert.dom(".form-template-field__description").hasText("Your full name");
     });
 
     test("renders a description if present", async function (assert) {
-      const self = this;
-
       const attributes = {
         description: "Write your bio here",
       };
-      this.set("attributes", attributes);
 
       await render(
-        <template><FormInput @attributes={{self.attributes}} /></template>
+        <template><FormInput @attributes={{attributes}} /></template>
       );
 
       assert

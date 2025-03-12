@@ -8,33 +8,21 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders a toggle button in a disabled state", async function (assert) {
-    const self = this;
-
-    this.set("state", false);
-
-    await render(<template><DToggleSwitch @state={{self.state}} /></template>);
+    await render(<template><DToggleSwitch @state={{false}} /></template>);
 
     assert.dom(".d-toggle-switch").exists("renders a toggle switch");
     assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "false");
   });
 
   test("it renders a toggle button in a enabled state", async function (assert) {
-    const self = this;
-
-    this.set("state", true);
-
-    await render(<template><DToggleSwitch @state={{self.state}} /></template>);
+    await render(<template><DToggleSwitch @state={{true}} /></template>);
 
     assert.dom(".d-toggle-switch").exists("renders a toggle switch");
     assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "true");
   });
 
   test("it renders a checkmark icon when enabled", async function (assert) {
-    const self = this;
-
-    this.set("state", true);
-
-    await render(<template><DToggleSwitch @state={{self.state}} /></template>);
+    await render(<template><DToggleSwitch @state={{true}} /></template>);
     assert.dom(".d-toggle-switch__checkbox-slider .d-icon-check").exists();
   });
 

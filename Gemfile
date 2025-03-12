@@ -97,6 +97,7 @@ gem "rake"
 
 gem "thor", require: false
 gem "diffy", require: false
+gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 

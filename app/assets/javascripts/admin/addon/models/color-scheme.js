@@ -39,6 +39,7 @@ export default class ColorScheme extends EmberObject {
   }
 
   @not("id") newRecord;
+
   init() {
     super.init(...arguments);
 

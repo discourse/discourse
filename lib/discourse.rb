@@ -210,7 +210,7 @@ module Discourse
     return if ex.class == Jobs::HandledExceptionWrapper
 
     context ||= {}
-    parent_logger ||= Sidekiq
+    parent_logger ||= Sidekiq.default_configuration
 
     job = context[:job]
 
@@ -930,10 +930,7 @@ module Discourse
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
-    # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |conn| conn.disconnect! }
-    # re-establish
-    Sidekiq.redis = sidekiq_redis_config
+    Sidekiq.redis_pool.reload(&:close)
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
@@ -1048,9 +1045,11 @@ module Discourse
   SIDEKIQ_NAMESPACE = "sidekiq"
 
   def self.sidekiq_redis_config(old: false)
-    redis_config = GlobalSetting.redis_config.dup
-    return redis_config.merge(namespace: SIDEKIQ_NAMESPACE) if old
-    redis_config.merge(db: redis_config[:db].to_i + 1)
+    GlobalSetting
+      .redis_config
+      .dup
+      .except(:connector, :replica_host, :replica_port)
+      .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
   end
 
   def self.static_doc_topic_ids

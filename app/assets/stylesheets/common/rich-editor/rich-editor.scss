@@ -134,10 +134,6 @@
     white-space: normal;
   }
 
-  .code-block {
-    position: relative;
-  }
-
   .code-language-select {
     position: absolute;
     right: 0.25rem;
@@ -149,8 +145,11 @@
     font-size: var(--font-down-1-rem);
   }
 
-  .html-block {
+  pre {
     position: relative;
+  }
+
+  .html-block {
     border: 1px dashed var(--primary-low-mid);
 
     &::after {
@@ -163,19 +162,43 @@
       z-index: 1;
     }
   }
+
+  .onebox-loading {
+    border-radius: var(--d-border-radius);
+    padding: 0 0.125rem;
+    background: linear-gradient(
+      90deg,
+      var(--primary-very-low) 0%,
+      var(--primary-low) 50%,
+      var(--primary-very-low) 100%
+    );
+    background-size: 200% 100%;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loading-pulse {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
 
 /*********************************************************
  Section below from prosemirror-view/style/prosemirror.css
  ********************************************************/
 
-/* stylelint-disable-next-line no-duplicate-selectors */
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
   position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }
 
+// stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror pre {
   white-space: pre-wrap;
 }

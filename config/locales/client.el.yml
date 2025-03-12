@@ -2325,8 +2325,8 @@ el:
         reaction: "νέα αντίδραση"
         votes_released: "Η ψηφοφορία κυκλοφόρησε"
     upload_selector:
+      delete: "Σβήσιμο"
       uploading: "Ανεβαίνει"
-      select_file: "Επιλογή Αρχείου"
       default_image_alt_text: εικόνα
     search:
       sort_by: "Ταξινόμηση κατά"

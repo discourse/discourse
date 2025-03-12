@@ -3317,9 +3317,8 @@ ar:
         new_features: "تم إطلاق ميزات جديدة في Discourse!"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
     upload_selector:
+      delete: "حذف"
       uploading: "جارٍ التحميل"
-      processing: "التحميل قيد المعالجة"
-      select_file: "تحديد الملف"
       default_image_alt_text: صورة
     search:
       sort_by: "الترتيب حسب"
@@ -6244,6 +6243,7 @@ ar:
         key: "المفتاح"
         keys: "المفاتيح"
         created: تم إنشاؤها بواسطة
+        scope: المجال
         updated: تاريخ التحديث
         last_used: آخر استخدام
         never_used: أبدًا

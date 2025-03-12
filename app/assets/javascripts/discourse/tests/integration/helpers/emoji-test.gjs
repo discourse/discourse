@@ -12,12 +12,9 @@ module("Integration | Helper | emoji", function (hooks) {
   });
 
   test("it renders custom title", async function (assert) {
-    const self = this;
-
     const title = "custom title";
-    this.set("title", title);
 
-    await render(<template>{{emoji "tada" title=self.title}}</template>);
+    await render(<template>{{emoji "tada" title=title}}</template>);
 
     assert.dom(`.emoji[title="${title}"]`).exists();
   });

@@ -13,6 +13,7 @@ import SiteSetting from "admin/components/site-setting";
 
 export default class AdminFilteredSiteSettings extends Component {
   @service currentUser;
+
   @tracked visibleSettings;
   @tracked loading = true;
 

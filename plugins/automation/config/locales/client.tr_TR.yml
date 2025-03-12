@@ -161,9 +161,8 @@ tr_TR:
             restricted_tags:
               label: Etiketler
               description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
-            restricted_category:
-              label: Kategori
-              description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
+            restricted_categories:
+              label: Kategoriler
             restricted_groups:
               description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birindeki kişisel bir mesajsa tetiklenir
             ignore_group_members:
@@ -183,6 +182,7 @@ tr_TR:
               description: "Gönderi e-posta yoluyla oluşturulmuşsa tetikleyiciyi atla"
           created: Oluşturulma
           edited: Düzenlendi
+          topics: Konular
         user_updated:
           fields:
             user_profile:

@@ -2574,9 +2574,8 @@ ja:
         new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
+      delete: "削除"
       uploading: "アップロード中"
-      processing: "アップロードを処理中"
-      select_file: "ファイル選択"
       default_image_alt_text: 画像
     search:
       sort_by: "並べ替え"
@@ -4935,6 +4934,7 @@ ja:
         key: "キー"
         keys: "キー"
         created: 作成者
+        scope: 範囲
         updated: 更新
         last_used: 最後の使用
         never_used: 未使用

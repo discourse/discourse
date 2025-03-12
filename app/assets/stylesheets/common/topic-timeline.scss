@@ -72,8 +72,14 @@
       display: table;
       touch-action: none;
 
+      .topic-category {
+        margin-bottom: 0.5rem;
+      }
+
       .timeline-date-wrapper {
         text-align: right;
+
+        @include ellipsis;
       }
 
       .post-excerpt {
@@ -180,6 +186,11 @@
       content: "";
       display: table;
       clear: both;
+    }
+
+    .start-date,
+    .now-date {
+      padding: 0.5em 0;
     }
   }
 

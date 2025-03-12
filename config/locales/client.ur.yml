@@ -2094,9 +2094,8 @@ ur:
         votes_released: "ووٹ جاری کر دیا گیا"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
+      delete: "مٹائیں"
       uploading: "اَپ لوڈ کیا جا رہا ہے"
-      processing: "پروسیسنگ اپ لوڈ"
-      select_file: "فائل منتخب کریں"
       default_image_alt_text: تصویر
     search:
       sort_by: "ترتیب بہ"
@@ -3930,6 +3929,7 @@ ur:
         title: "API"
         key: "کی"
         created: بنائی گئی
+        scope: دائرہ کار
         updated: اپ ڈیٹ
         never_used: کبھی نہیں
         generate: "تخلیق کریں"

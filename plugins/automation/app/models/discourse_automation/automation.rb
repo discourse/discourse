@@ -130,12 +130,7 @@ module DiscourseAutomation
 
     def trigger!(context = {})
       if enabled
-        if active_id = DiscourseAutomation.get_active_automation
-          Rails.logger.warn(<<~TEXT.strip)
-            [automation] potential automations infinite loop detected: skipping automation #{self.id} because automation #{active_id} is still executing.")
-          TEXT
-          return
-        end
+        return if active_id = DiscourseAutomation.get_active_automation
 
         begin
           DiscourseAutomation.set_active_automation(self.id)
