@@ -31,6 +31,7 @@ export default class PostMetaDataEmailIndicator extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <div
       class={{concatClass
         "post-info"

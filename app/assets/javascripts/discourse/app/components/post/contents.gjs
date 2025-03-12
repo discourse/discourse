@@ -185,6 +185,7 @@ export default class PostContents extends Component {
       {{/if}}
 
       {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
+        {{! template-lint-disable no-invalid-interactive }}
         <a class="expand-hidden" {{on "click" @expandHidden}}>
           {{i18n "post.show_hidden"}}
         </a>

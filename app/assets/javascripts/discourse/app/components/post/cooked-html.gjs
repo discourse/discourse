@@ -31,13 +31,13 @@ export default class PostCookedHtml extends Component {
   #decoratorState = new WeakMap();
   #pendingDecoratorCleanup = [];
 
-  get isStreamElement() {
-    return this.args.streamElement ?? true;
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
     this.#cleanupDecorations();
+  }
+
+  get isStreamElement() {
+    return this.args.streamElement ?? true;
   }
 
   @bind
