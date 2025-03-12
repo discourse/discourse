@@ -8,6 +8,10 @@ module PageObjects
       end
 
       def hidden?
+        has_no_css?(".welcome-banner")
+      end
+
+      def invisible?
         has_css?(".welcome-banner", visible: false)
       end
 

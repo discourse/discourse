@@ -4,7 +4,7 @@
   {{! template-lint-disable no-invalid-interactive }}
   {{on "keydown" this.onKeydown}}
 >
-  <div class="search-input">
+  <div class={{concatClass "search-input" (concat "search-input--" @location)}}>
     {{#if this.search.inTopicContext}}
       <DButton
         @icon="xmark"

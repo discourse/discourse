@@ -50,7 +50,7 @@ describe "Welcome banner", type: :system do
       page.execute_script("document.querySelector('.topic-list').style.height = '10000px'")
       page.scroll_to(0, 1000)
 
-      expect(banner).to be_hidden
+      expect(banner).to be_invisible
       expect(search_page).to have_search_field
 
       page.scroll_to(0, 0)

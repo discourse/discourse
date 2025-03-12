@@ -46,7 +46,7 @@ export default class HeaderSearch extends Component {
                   @href={{this.advancedSearchButtonHref}}
                 />
 
-                <SearchMenu />
+                <SearchMenu @location="header" />
               </div>
             </div>
           </div>
