@@ -730,10 +730,10 @@ export default class Post extends RestModel {
   @cached
   get actionsSummary() {
     return this.actions_summary
-      .filter((postAction) => {
+      ?.filter((postAction) => {
         return postAction.actionType.name_key !== "like" && postAction.acted;
       })
-      .map((postAction) => {
+      ?.map((postAction) => {
         const action = postAction.actionType.name_key;
 
         return {
