@@ -86,6 +86,13 @@ export default class AdminConfigAreasColorPalette extends Component {
     });
     await copy.save();
     this.router.replaceWith("adminConfig.color-palettes-show", copy);
+    this.toasts.success({
+      data: {
+        message: i18n("admin.config_areas.color_palettes.copy_created", {
+          name: this.args.colorPalette.name,
+        }),
+      },
+    });
   }
 
   @action

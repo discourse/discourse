@@ -87,6 +87,9 @@ describe "Admin Color Palettes Config Area Page", type: :system do
     expect(config_area.name_heading.text).to eq(
       I18n.t("admin_js.admin.config_areas.color_palettes.copy_of", name: color_scheme.name),
     )
+    expect(toasts).to have_success(
+      I18n.t("admin_js.admin.config_areas.color_palettes.copy_created", name: color_scheme.name),
+    )
     expect(config_area.user_selectable_field.value).to eq(false)
   end
 end
