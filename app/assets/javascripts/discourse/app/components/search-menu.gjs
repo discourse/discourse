@@ -318,7 +318,6 @@ export default class SearchMenu extends Component {
       this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
-      this.args?.onLoading?.(this.loading);
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
