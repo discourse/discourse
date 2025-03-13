@@ -194,9 +194,9 @@ export default class ProsemirrorTextManipulation {
   emojiSelected(code) {
     let index = 0;
 
-    const lastIndex = this.autocompleteHandler.getValue().lastIndexOf(":");
-    if (lastIndex !== -1) {
-      index = this.autocompleteHandler.getValue().length - lastIndex;
+    const match = this.autocompleteHandler.getValue().match(/\B:(\w*)$/);
+    if (match) {
+      index = this.autocompleteHandler.getValue().length - match.index;
     }
 
     const { from, to } = this.view.state.selection;
