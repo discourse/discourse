@@ -94,8 +94,6 @@ module("Unit | Component | post-menu", function (hooks) {
         api.registerValueTransformer(
           "post-menu-buttons",
           ({ context: { collapsedButtons } }) => {
-            console.log("aqui");
-
             collapsedButtons.default("like");
             collapsedButtons.show("bookmark");
             collapsedButtons.hide("share");
