@@ -8,24 +8,24 @@
     <div class="search-input">
       {{#if this.site.isMobileViewAndDevice}}
         <SearchMenu::MobileSearchButton @onTap={{this.mobileSearch}} />
-      {{/if}}
-
-      {{#if this.search.inTopicContext}}
-        <DButton
-          @icon="xmark"
-          @label="search.in_this_topic"
-          @title="search.in_this_topic_tooltip"
-          @action={{this.clearTopicContext}}
-          class="btn-small search-context"
-        />
-      {{else if this.inPMInboxContext}}
-        <DButton
-          @icon="xmark"
-          @label="search.in_messages"
-          @title="search.in_messages_tooltip"
-          @action={{this.clearPMInboxContext}}
-          class="btn-small search-context"
-        />
+      {{else}}
+        {{#if this.search.inTopicContext}}
+          <DButton
+            @icon="xmark"
+            @label="search.in_this_topic"
+            @title="search.in_this_topic_tooltip"
+            @action={{this.clearTopicContext}}
+            class="btn-small search-context"
+          />
+        {{else if this.inPMInboxContext}}
+          <DButton
+            @icon="xmark"
+            @label="search.in_messages"
+            @title="search.in_messages_tooltip"
+            @action={{this.clearPMInboxContext}}
+            class="btn-small search-context"
+          />
+        {{/if}}
       {{/if}}
 
       <PluginOutlet
