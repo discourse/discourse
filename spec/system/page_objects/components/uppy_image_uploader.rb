@@ -33,6 +33,14 @@ module PageObjects
         delete_button = @element.find(".btn-danger")
         delete_button.send_keys(:enter)
       end
+
+      def toggle_lightbox_preview
+        @element.find(".image-uploader-lightbox-btn").click
+      end
+
+      def has_lighbox_preview?
+        has_css?(".mfp-container")
+      end
     end
   end
 end

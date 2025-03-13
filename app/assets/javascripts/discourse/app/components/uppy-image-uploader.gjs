@@ -48,7 +48,12 @@ export default class UppyImageUploader extends Component {
     },
   });
 
-  applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
+  applyLightbox = modifier(() =>
+    lightbox(
+      document.querySelector(`#${this.args.id}.image-uploader`),
+      this.siteSettings
+    )
+  );
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -140,7 +145,6 @@ export default class UppyImageUploader extends Component {
 
   <template>
     <div
-      {{this.applyLightbox}}
       id={{@id}}
       class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
       ...attributes
@@ -158,6 +162,7 @@ export default class UppyImageUploader extends Component {
 
         {{#if @imageUrl}}
           <a
+            {{this.applyLightbox}}
             href={{this.imageCdnUrl}}
             title={{this.imageFilename}}
             rel="nofollow ugc noopener"
