@@ -426,6 +426,25 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("pre code", wait: 1)
       expect(rich).to have_css("select.code-language-select", wait: 1)
     end
+
+    it "parses images copied from cooked with base62-sha1" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard(
+        '<img src="image.png" alt="alt text" data-base62-sha1="1234567890">',
+        html: true,
+      )
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      within(rich) do
+        image = find("img")
+
+        expect(image[:src]).to end_with("image.png")
+        expect(image[:alt]).to eq("alt text")
+        expect(image["data-orig-src"]).to eq("upload://1234567890")
+      end
+    end
   end
 
   describe "trailing paragraph" do
