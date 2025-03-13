@@ -437,13 +437,9 @@ describe "Composer - ProseMirror editor", type: :system do
       )
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
-      within(rich) do
-        image = find("img")
-
-        expect(image[:src]).to end_with("image.png")
-        expect(image[:alt]).to eq("alt text")
-        expect(image["data-orig-src"]).to eq("upload://1234567890")
-      end
+      expect(page).to have_css(
+        "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
+      )
     end
   end
 
