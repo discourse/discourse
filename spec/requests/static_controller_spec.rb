@@ -339,7 +339,7 @@ RSpec.describe StaticController do
     it "works" do
       get "/service-worker.js"
       expect(response.status).to eq(200)
-      expect(response.content_type).to start_with("application/javascript")
+      expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
     end
   end
