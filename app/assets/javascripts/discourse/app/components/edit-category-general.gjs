@@ -2,11 +2,8 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { isEmpty } from "@ember/utils";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
@@ -101,7 +98,7 @@ export default class EditCategoryGeneral extends Component {
     const category = this.args.category;
 
     const c = Category.create({
-      name: this.name || "Untitled Category",
+      name: this.name || i18n("category.untitled"),
       color: this.color,
       id: category.id,
       text_color: category.text_color,
@@ -176,8 +173,6 @@ export default class EditCategoryGeneral extends Component {
   @bind
   async create(data) {
     try {
-      // this.args.category.setProperties(data);
-      // const response = await this.args.category.save();
       const response = await ajax("/categories", {
         type: "POST",
         data,
@@ -212,12 +207,6 @@ export default class EditCategoryGeneral extends Component {
     this[name] = value;
   }
 
-  @action
-  updateColor(newColor) {
-    this.color = newColor.replace("#", "");
-    this.args.category.set("color", newColor.replace("#", ""));
-  }
-
   get categoryDescription() {
     if (this.args.category.description) {
       return htmlSafe(this.args.category.description);
@@ -230,211 +219,217 @@ export default class EditCategoryGeneral extends Component {
     return !this.args.category.isUncategorizedCategory;
   }
 
-  <template>
-    {{#if this.showWarning}}
-      <p class="warning">
-        {{icon "triangle-exclamation"}}
-        {{htmlSafe
-          (i18n
-            "category.uncategorized_general_warning"
-            settingLink=this.uncategorizedSiteSettingLink
-            customizeLink=this.customizeTextContentLink
-          )
-        }}
-      </p>
-    {{/if}}
+  get panelClass() {
+    const isActive = this.args.selectedTab === "general" ? "active" : "";
+    return "edit-category-tab edit-category-general " + isActive;
+  }
 
-    <Form
-      @onSubmit={{this.save}}
-      @data={{this.formData}}
-      as |form transientData|
-    >
-      <PluginOutlet
-        @name="category-name-fields-details"
-        @outletArgs={{hash category=@category}}
+  <template>
+    <div class={{this.panelClass}}>
+      {{#if this.showWarning}}
+        <p class="warning">
+          {{icon "triangle-exclamation"}}
+          {{htmlSafe
+            (i18n
+              "category.uncategorized_general_warning"
+              settingLink=this.uncategorizedSiteSettingLink
+              customizeLink=this.customizeTextContentLink
+            )
+          }}
+        </p>
+      {{/if}}
+
+      <Form
+        @onSubmit={{this.save}}
+        @data={{this.formData}}
+        as |form transientData|
       >
-        <form.Row as |row|>
-          {{#unless @category.isUncategorizedCategory}}
+        <PluginOutlet
+          @name="category-name-fields-details"
+          @outletArgs={{hash category=@category}}
+        >
+          <form.Row as |row|>
+            {{#unless @category.isUncategorizedCategory}}
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="name"
+                  @title={{i18n "category.name"}}
+                  @format="large"
+                  @validation="required"
+                  @onSet={{fn this.updateField "name"}}
+                  as |field|
+                >
+                  <field.Input
+                    @value={{@category.name}}
+                    @placeholderKey="category.name_placeholder"
+                    @maxlength="50"
+                    class="category-name"
+                  />
+                </form.Field>
+              </row.Col>
+            {{/unless}}
+
             <row.Col @size={{6}}>
               <form.Field
-                @name="name"
-                @title={{i18n "category.name"}}
+                @name="slug"
+                @title={{i18n "category.slug"}}
                 @format="large"
                 @validation="required"
-                @onSet={{fn this.updateField "name"}}
                 as |field|
               >
                 <field.Input
-                  @value={{@category.name}}
-                  @placeholderKey="category.name_placeholder"
-                  @maxlength="50"
-                  class="category-name"
+                  @value={{@category.slug}}
+                  @placeholderKey="category.slug_placeholder"
+                  @maxlength="255"
                 />
               </form.Field>
             </row.Col>
-          {{/unless}}
+          </form.Row>
+        </PluginOutlet>
 
-          <row.Col @size={{6}}>
-            <form.Field
-              @name="slug"
-              @title={{i18n "category.slug"}}
-              @format="large"
-              @validation="required"
-              as |field|
-            >
-              <field.Input
-                @value={{@category.slug}}
-                @placeholderKey="category.slug_placeholder"
-                @maxlength="255"
+        {{#if this.canSelectParentCategory}}
+          <form.Field
+            @name="parent_category_id"
+            @title={{i18n "category.parent"}}
+            class="parent-category"
+            as |field|
+          >
+            <field.Custom>
+              <CategoryChooser
+                @value={{@category.parent_category_id}}
+                @allowSubCategories={{true}}
+                @allowRestrictedCategories={{true}}
+                @onChange={{fn (mut @category.parent_category_id)}}
+                @options={{hash
+                  allowUncategorized=false
+                  excludeCategoryId=@category.id
+                  autoInsertNoneItem=true
+                  none=true
+                }}
               />
-            </form.Field>
-          </row.Col>
-        </form.Row>
-      </PluginOutlet>
-
-      {{#if this.canSelectParentCategory}}
-        <form.Field
-          @name="parent_category_id"
-          @title={{i18n "category.parent"}}
-          class="parent-category"
-          as |field|
-        >
-          <field.Custom>
-            <CategoryChooser
-              @value={{@category.parent_category_id}}
-              @allowSubCategories={{true}}
-              @allowRestrictedCategories={{true}}
-              @onChange={{fn (mut @category.parent_category_id)}}
-              @options={{hash
-                allowUncategorized=false
-                excludeCategoryId=@category.id
-                autoInsertNoneItem=true
-                none=true
-              }}
-            />
-          </field.Custom>
-        </form.Field>
-      {{/if}}
-
-      {{#if this.subCategories}}
-        <form.Container @title={{i18n "categories.subcategories"}}>
-          {{#each this.subCategories as |s|}}
-            {{categoryBadge s hideParent="true"}}
-          {{/each}}
-        </form.Container>
-      {{/if}}
-
-      {{#if this.showDescription}}
-        <form.Section
-          @title={{i18n "category.description"}}
-          @subtitle={{this.categoryDescription}}
-        >
-          {{#if @category.topic_url}}
-            <DButton
-              @action={{this.showCategoryTopic}}
-              @icon="pencil"
-              @label="category.change_in_category_topic"
-              class="btn-default edit-category-description"
-            />
-          {{/if}}
-        </form.Section>
-      {{/if}}
-
-      <form.Section @title={{i18n "category.style"}} class="category-style">
-        {{htmlSafe this.categoryBadgePreview}}
-
-        <form.Field
-          @name="style_type"
-          @title={{i18n "category.styles.type"}}
-          @format="large"
-          @validation="required"
-          @onSet={{fn this.updateField "style_type"}}
-          as |field|
-        >
-          <field.Select as |select|>
-            {{#each this.styleTypes as |styleType|}}
-              <select.Option @value={{styleType.id}}>
-                {{styleType.name}}
-              </select.Option>
-            {{/each}}
-          </field.Select>
-        </form.Field>
-
-        {{#if (eq transientData.style_type "emoji")}}
-          <form.Field
-            @name="style_emoji"
-            @title={{i18n "category.styles.emoji"}}
-            @format="small"
-            @validation="required"
-            @onSet={{fn this.updateField "style_emoji"}}
-            as |field|
-          >
-            <field.Emoji />
-          </form.Field>
-        {{else if (eq transientData.style_type "icon")}}
-          <form.Field
-            @name="style_icon"
-            @title={{i18n "category.styles.icon"}}
-            @format="small"
-            @validation="required"
-            @onSet={{fn this.updateField "style_icon"}}
-            as |field|
-          >
-            <field.Icon />
+            </field.Custom>
           </form.Field>
         {{/if}}
 
-        <div class="category-color-editor">
-          <form.Field
-            @name="color"
-            @title={{i18n "category.background_color"}}
-            @format="full"
-            @validation="required"
-            as |field|
+        {{#if this.subCategories}}
+          <form.Container @title={{i18n "categories.subcategories"}}>
+            {{#each this.subCategories as |s|}}
+              {{categoryBadge s hideParent="true"}}
+            {{/each}}
+          </form.Container>
+        {{/if}}
+
+        {{#if this.showDescription}}
+          <form.Section
+            @title={{i18n "category.description"}}
+            @subtitle={{this.categoryDescription}}
           >
-            <field.Custom>
-              <div class="colorpicker-wrapper edit-background-color">
-                <ColorInput
-                  @hexValue={{@category.color}}
-                  @valid={{@category.colorValid}}
-                  @ariaLabelledby="background-color-label"
-                  @onChangeColor={{this.updateColor}}
-                />
-                <ColorPicker
-                  @colors={{this.backgroundColors}}
-                  @usedColors={{this.usedBackgroundColors}}
-                  @value={{@category.color}}
-                  @ariaLabel={{i18n "category.predefined_colors"}}
-                />
-              </div>
-            </field.Custom>
-          </form.Field>
+            {{#if @category.topic_url}}
+              <DButton
+                @action={{this.showCategoryTopic}}
+                @icon="pencil"
+                @label="category.change_in_category_topic"
+                class="btn-default edit-category-description"
+              />
+            {{/if}}
+          </form.Section>
+        {{/if}}
+
+        <form.Section @title={{i18n "category.style"}} class="category-style">
+          {{htmlSafe this.categoryBadgePreview}}
 
           <form.Field
-            @name="text_color"
-            @title={{i18n "category.foreground_color"}}
-            @format="full"
+            @name="style_type"
+            @title={{i18n "category.styles.type"}}
+            @format="large"
             @validation="required"
+            @onSet={{fn this.updateField "style_type"}}
             as |field|
           >
-            <field.Custom>
-              <div class="colorpicker-wrapper edit-text-color">
-                <ColorInput
-                  @hexValue={{@category.text_color}}
-                  @ariaLabelledby="foreground-color-label"
-                />
-                <ColorPicker
-                  @colors={{this.foregroundColors}}
-                  @value={{@category.text_color}}
-                  @ariaLabel={{i18n "category.predefined_colors"}}
-                />
-              </div>
-            </field.Custom>
+            <field.Select as |select|>
+              {{#each this.styleTypes as |styleType|}}
+                <select.Option @value={{styleType.id}}>
+                  {{styleType.name}}
+                </select.Option>
+              {{/each}}
+            </field.Select>
           </form.Field>
-        </div>
-      </form.Section>
 
-      <form.Submit @label="category.save" />
-    </Form>
+          {{#if (eq transientData.style_type "emoji")}}
+            <form.Field
+              @name="style_emoji"
+              @title={{i18n "category.styles.emoji"}}
+              @format="small"
+              @validation="required"
+              @onSet={{fn this.updateField "style_emoji"}}
+              as |field|
+            >
+              <field.Emoji />
+            </form.Field>
+          {{else if (eq transientData.style_type "icon")}}
+            <form.Field
+              @name="style_icon"
+              @title={{i18n "category.styles.icon"}}
+              @format="small"
+              @validation="required"
+              @onSet={{fn this.updateField "style_icon"}}
+              as |field|
+            >
+              <field.Icon />
+            </form.Field>
+          {{/if}}
+
+          <div class="category-color-editor">
+            <form.Field
+              @name="color"
+              @title={{i18n "category.background_color"}}
+              @format="full"
+              @validation="required"
+              as |field|
+            >
+              <field.Custom>
+                <div class="colorpicker-wrapper edit-background-color">
+                  <ColorInput
+                    @hexValue={{this.color}}
+                    @valid={{@category.colorValid}}
+                    @ariaLabelledby="background-color-label"
+                  />
+                  <ColorPicker
+                    @colors={{this.backgroundColors}}
+                    @usedColors={{this.usedBackgroundColors}}
+                    @value={{this.color}}
+                    @ariaLabel={{i18n "category.predefined_colors"}}
+                  />
+                </div>
+              </field.Custom>
+            </form.Field>
+
+            <form.Field
+              @name="text_color"
+              @title={{i18n "category.foreground_color"}}
+              @format="full"
+              @validation="required"
+              as |field|
+            >
+              <field.Custom>
+                <div class="colorpicker-wrapper edit-text-color">
+                  <ColorInput
+                    @hexValue={{@category.text_color}}
+                    @ariaLabelledby="foreground-color-label"
+                  />
+                  <ColorPicker
+                    @colors={{this.foregroundColors}}
+                    @value={{@category.text_color}}
+                    @ariaLabel={{i18n "category.predefined_colors"}}
+                  />
+                </div>
+              </field.Custom>
+            </form.Field>
+          </div>
+        </form.Section>
+
+        <form.Submit @label="category.save" />
+      </Form>
+    </div>
   </template>
 }

@@ -25,7 +25,6 @@ export default class EditCategoryTabsController extends Controller {
   expandedMenu = false;
   parentParams = null;
   validators = [];
-  showSubmit = this.selectedTab !== "general";
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
@@ -74,6 +73,11 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("selectedTab")
   selectedTabTitle(tab) {
     return i18n(`category.${underscore(tab)}`);
+  }
+
+  @discourseComputed("selectedTab")
+  showSubmit(tab) {
+    return tab !== "general";
   }
 
   @action

@@ -112,15 +112,6 @@ export function categoryLinkHTML(category, options) {
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
     }
-    if (options.styleType) {
-      categoryOptions.styleType = options.styleType;
-    }
-    if (options.styleIcon) {
-      categoryOptions.styleIcon = options.styleIcon;
-    }
-    if (options.styleEmoji) {
-      categoryOptions.styleEmoji = options.styleEmoji;
-    }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
