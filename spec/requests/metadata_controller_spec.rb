@@ -165,7 +165,7 @@ RSpec.describe MetadataController do
       get "/apple-app-site-association"
       expect(response.status).to eq(404)
 
-      get "/.well-knowm/apple-app-site-association"
+      get "/.well-known/apple-app-site-association"
       expect(response.status).to eq(404)
     end
 
