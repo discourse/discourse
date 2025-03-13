@@ -2,6 +2,7 @@ import { click, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ColorPaletteEditor from "admin/components/color-palette-editor";
+import ColorSchemeColor from "admin/models/color-scheme-color";
 
 function editor() {
   return {
@@ -98,7 +99,7 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
         hex: "473921",
         dark_hex: "f2cca9",
       },
-    ];
+    ].map((data) => ColorSchemeColor.create(data));
 
     await render(
       <template><ColorPaletteEditor @colors={{colors}} /></template>
@@ -166,27 +167,17 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
   });
 
-  test("replacing underscores in color name with spaces for display", async function (assert) {
+  test("uses the i18n string for the color name", async function (assert) {
     const colors = [
-      {
-        name: "my_awesome_color",
-        hex: "aaaaaa",
-        dark_hex: "1e3c8a",
-      },
       {
         name: "header_background",
         hex: "473921",
         dark_hex: "f2cca9",
       },
-    ];
+    ].map((data) => ColorSchemeColor.create(data));
 
     await render(
       <template><ColorPaletteEditor @colors={{colors}} /></template>
-    );
-
-    assert.strictEqual(
-      this.subject.color("my_awesome_color").displayName(),
-      "my awesome color"
     );
 
     assert.strictEqual(
@@ -207,7 +198,7 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
         hex: "473921",
         dark_hex: "f2cca9",
       },
-    ];
+    ].map((data) => ColorSchemeColor.create(data));
 
     const lightChanges = [];
     const darkChanges = [];
@@ -385,6 +376,44 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       this.subject.color("header_background").displayedValue(),
       "99aaff",
       "the dark color for the header_background color is remembered after switching tabs"
+    );
+  });
+
+  test("converting 3 digits hex values to 6 digits", async function (assert) {
+    const colors = [
+      {
+        name: "primary",
+        hex: "a8c",
+        dark_hex: "971",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
+
+    assert.strictEqual(
+      this.subject.color("primary").input().value,
+      "#aa88cc",
+      "the input field has the equivalent 6 digits value"
+    );
+    assert.strictEqual(
+      this.subject.color("primary").displayedValue(),
+      "aa88cc",
+      "the displayed value shows the 6 digits format"
+    );
+
+    await this.subject.switchToDarkTab();
+
+    assert.strictEqual(
+      this.subject.color("primary").input().value,
+      "#997711",
+      "the input field has the equivalent 6 digits value"
+    );
+    assert.strictEqual(
+      this.subject.color("primary").displayedValue(),
+      "997711",
+      "the displayed value shows the 6 digits format"
     );
   });
 });

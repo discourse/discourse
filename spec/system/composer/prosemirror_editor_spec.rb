@@ -130,7 +130,7 @@ describe "Composer - ProseMirror editor", type: :system do
     it "supports typographer replacements" do
       open_composer_and_toggle_rich_editor
       composer.type_content(
-        "foo +- bar.. test???? wow!!!! x,, y-- --- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
+        "foo +- bar... test???? wow!!!! x,, y-- --- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
       )
 
       expect(rich).to have_css(

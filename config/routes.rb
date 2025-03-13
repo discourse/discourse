@@ -414,6 +414,7 @@ Discourse::Application.routes.draw do
         get "group-permissions" => "site_settings#index"
         get "branding" => "branding#index"
         put "branding/logo" => "branding#logo"
+        get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
