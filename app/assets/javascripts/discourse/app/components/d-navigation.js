@@ -27,14 +27,14 @@ export default class DNavigation extends Component {
   }
 
   get showBulkSelectInNavControls() {
-    const mobileViewRequired = applyValueTransformer(
+    const enableOnDesktop = applyValueTransformer(
       "bulk-select-in-nav-controls",
-      true,
+      false,
       { site: this.site }
     );
 
     return (
-      (mobileViewRequired ? this.site.mobileView : true) &&
+      (this.site.mobileView || enableOnDesktop) &&
       this.notCategoriesRoute &&
       this.canBulkSelect
     );
