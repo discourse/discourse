@@ -1,0 +1,57 @@
+
+name: Version Bump Helper
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    paths: ['lib/version.rb']
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: plan-bump
+  cancel-in-progress: true
+
+jobs:
+  force-draft:
+    if: github.event_name == 'pull_request' && github.head_ref == 'version_bump/beta' && github.event.action == 'ready_for_review'
+    name: force draft
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Set to draft"
+        run: gh pr ready ${{ github.event.number }} --undo --repo ${{ github.repository }}
+      - name: "Post comment"
+        run: gh pr comment ${{ github.event.number }} --repo ${{ github.repository }} -b "Do not use the GitHub UI to merge this PR. When ready to perform the version bump, approve the PR, and make a comment with the text '@discoursebot merge version bump'"
+
+  trigger-version-bump:
+    if: | 
+      github.event_name == 'issue_comment' &&
+        github.event.action == 'created' &&
+        github.event.issue.pull_request &&
+        github.event.comment.body == '@discoursebot merge version bump' &&
+        (github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'OWNER')
+    name: trigger version bump
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Confirm"
+        run: |
+          branch=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName -q '.headRefName')
+          if [ "$branch" != "version_bump/beta" ]; then
+            gh pr comment ${{ github.event.issue.number }} --repo ${{ github.repository }} -b "Sorry, I don't recognize this PR"
+            exit 1
+          fi
+          gh pr comment ${{ github.event.issue.number }} --repo ${{ github.repository }} -b "Starting merge. Follow progress [here](https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}) 🚀"
+  call-version-bump-merge:
+    needs: trigger-version-bump
+    uses: ./.github/workflows/prepare-version-bump.yml
+    with:
+      merge: true
