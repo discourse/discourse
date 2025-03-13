@@ -443,4 +443,20 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("p", count: 2) # New paragraph inserted after the ruler
     end
   end
+
+  describe "uploads" do
+    it "handles uploads and disables the editor toggle while uploading" do
+      open_composer_and_toggle_rich_editor
+
+      file_path = file_from_fixtures("logo.png", "images").path
+      cdp.with_slow_upload do
+        attach_file(file_path) { composer.click_toolbar_button("upload") }
+        expect(composer).to have_in_progress_uploads
+        expect(composer.editor_toggle_switch).to be_disabled
+      end
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(rich).to have_css("img", count: 1)
+    end
+  end
 end

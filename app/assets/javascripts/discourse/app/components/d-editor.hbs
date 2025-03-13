@@ -11,6 +11,7 @@
         {{#if this.siteSettings.rich_editor}}
           <Composer::ToggleSwitch
             @preventFocus={{true}}
+            @disabled={{@isUploading}}
             @state={{this.isRichEditorEnabled}}
             {{on "click" this.toggleRichEditor}}
           />
