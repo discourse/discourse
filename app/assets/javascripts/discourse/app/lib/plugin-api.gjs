@@ -14,12 +14,13 @@ import {
   addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
-  addComposerUploadPreProcessor,
+  addComposerUploadPreProcessor
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
+import {
+  forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
@@ -28,29 +29,33 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
-  registerReviewableActionModal,
+  registerReviewableActionModal
 } from "discourse/components/reviewable-item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion } from "discourse/components/search-menu/results/assistant";
-import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
+import {
+  addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
 import {
   addQuickSearchRandomTip,
-  removeDefaultQuickSearchRandomTips,
+  removeDefaultQuickSearchRandomTips
 } from "discourse/components/search-menu/results/random-quick-tip";
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
-import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
+import {
+  REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
-import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
+import {
+  setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
+import {
+  addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
   addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
+  replaceCategoryLinkRenderer
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
@@ -59,7 +64,7 @@ import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
-  withPrependsRolledBack,
+  withPrependsRolledBack
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
@@ -71,22 +76,22 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import {
   registerHighlightJSLanguage,
-  registerHighlightJSPlugin,
+  registerHighlightJSPlugin
 } from "discourse/lib/highlight-syntax";
 import {
   iconNode,
   registerIconRenderer,
-  replaceIcon,
+  replaceIcon
 } from "discourse/lib/icon-library";
 import KeyboardShortcuts, {
-  disableDefaultKeyboardShortcuts,
+  disableDefaultKeyboardShortcuts
 } from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import {
   extraConnectorClass,
-  extraConnectorComponent,
+  extraConnectorComponent
 } from "discourse/lib/plugin-connectors";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -95,19 +100,19 @@ import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import {
   addLogSearchLinkClickedCallbacks,
-  addSearchResultsCallback,
+  addSearchResultsCallback
 } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
-  addSidebarSection,
+  addSidebarSection
 } from "discourse/lib/sidebar/custom-sections";
 import {
   registerCustomCategoryLockIcon,
   registerCustomCategorySectionLinkPrefix,
-  registerCustomCountable as registerUserCategorySectionLinkCountable,
+  registerCustomCountable as registerUserCategorySectionLinkCountable
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
@@ -115,21 +120,20 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import {
   _addTransformerName,
   _registerTransformer,
-  transformerTypes,
+  transformerTypes
 } from "discourse/lib/transformer";
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback as addCustomUserFieldValidationCallbackDeprecated } from "discourse/mixins/user-fields-validation";
 import Composer, {
-  registerCustomizationCallback,
+  registerCustomizationCallback
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
 import { _addTrackedPostProperty } from "discourse/models/post";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import {
   addSaveableUserField,
-  addSaveableUserOptionField,
+  addSaveableUserOptionField
 } from "discourse/models/user";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
@@ -140,16 +144,16 @@ import {
   addButton,
   apiExtraButtons,
   removeButton,
-  replaceButton,
+  replaceButton
 } from "discourse/widgets/post-menu";
 import {
   addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
-  addPostSmallActionIcon,
+  addPostSmallActionIcon
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
-  preventCloak,
+  preventCloak
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import {
@@ -157,7 +161,7 @@ import {
   createWidget,
   decorateWidget,
   queryRegistry,
-  reopenWidget,
+  reopenWidget
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
@@ -166,19 +170,19 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 const DEPRECATED_POST_MENU_WIDGETS = [
   "post-menu",
   "post-user-tip-shim",
-  "small-user-list",
+  "small-user-list"
 ];
 
 const POST_MENU_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta3-dev",
   id: "discourse.post-menu-widget-overrides",
-  url: "https://meta.discourse.org/t/341014",
+  url: "https://meta.discourse.org/t/341014"
 };
 
 export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta4-dev",
   id: "discourse.hbr-topic-list-overrides",
-  url: "https://meta.discourse.org/t/343404",
+  url: "https://meta.discourse.org/t/343404"
 };
 
 const appliedModificationIds = new WeakMap();
@@ -217,7 +221,7 @@ function wrapWithErrorHandler(func, messageKey) {
     } catch (error) {
       document.dispatchEvent(
         new CustomEvent("discourse-error", {
-          detail: { messageKey, error },
+          detail: { messageKey, error }
         })
       );
       if (isTesting()) {
@@ -742,7 +746,7 @@ class PluginApi {
             "span.poster-icon",
             {
               className: result.className,
-              attributes: { title: result.title },
+              attributes: { title: result.title }
             },
             iconBody
           );
@@ -1069,7 +1073,7 @@ class PluginApi {
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
         since: "3.2",
-        dropFrom: "3.3",
+        dropFrom: "3.3"
       }
     );
 
@@ -1573,7 +1577,6 @@ class PluginApi {
    **/
 
   addCustomUserFieldValidationCallback(callback) {
-    addCustomUserFieldValidationCallbackDeprecated(callback);
     addCustomUserFieldValidationCallback(callback);
   }
 
@@ -2132,13 +2135,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
@@ -2561,7 +2567,7 @@ class PluginApi {
         didInsertElement() {
           this._super();
           this.dispatch(appEvent, widgetKey);
-        },
+        }
       },
       { ignoreMissing: true }
     );
@@ -2699,20 +2705,20 @@ class PluginApi {
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
    */
   registerUserCategorySectionLinkCountable({
-    badgeTextFunction,
-    route,
-    routeQuery,
-    shouldRegister,
-    refreshCountFunction,
-    prioritizeOverDefaults,
-  }) {
+                                             badgeTextFunction,
+                                             route,
+                                             routeQuery,
+                                             shouldRegister,
+                                             refreshCountFunction,
+                                             prioritizeOverDefaults
+                                           }) {
     registerUserCategorySectionLinkCountable({
       badgeTextFunction,
       route,
       routeQuery,
       shouldRegister,
       refreshCountFunction,
-      prioritizeOverDefaults,
+      prioritizeOverDefaults
     });
   }
 
@@ -2750,16 +2756,16 @@ class PluginApi {
    * @param {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
    */
   registerCustomCategorySectionLinkPrefix({
-    categoryId,
-    prefixType,
-    prefixValue,
-    prefixColor,
-  }) {
+                                            categoryId,
+                                            prefixType,
+                                            prefixValue,
+                                            prefixColor
+                                          }) {
     registerCustomCategorySectionLinkPrefix({
       categoryId,
       prefixType,
       prefixValue,
-      prefixColor,
+      prefixColor
     });
   }
 
@@ -2783,14 +2789,14 @@ class PluginApi {
    * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
-    tagName,
-    prefixValue,
-    prefixColor,
-  }) {
+                                           tagName,
+                                           prefixValue,
+                                           prefixColor
+                                         }) {
     registerCustomTagSectionLinkPrefixIcon({
       tagName,
       prefixValue,
-      prefixColor,
+      prefixColor
     });
   }
 
@@ -3447,7 +3453,7 @@ function getPluginApi(version) {
     if (!pluginApi) {
       pluginApi = new PluginApi(version, owner);
       owner.registry.register("plugin-api:main", pluginApi, {
-        instantiate: false,
+        instantiate: false
       });
     } else {
       // If we are re-using an instance, make sure the container is correct
