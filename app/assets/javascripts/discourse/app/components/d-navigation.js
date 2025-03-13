@@ -9,12 +9,14 @@ import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 
 @tagName("")
 export default class DNavigation extends Component {
   @service router;
   @service dialog;
+  @service site;
 
   @tracked filterMode;
 
@@ -22,6 +24,20 @@ export default class DNavigation extends Component {
 
   get createTopicLabel() {
     return this.site.desktopView ? "topic.create" : "";
+  }
+
+  get showBulkSelectInNavControls() {
+    const mobileViewRequired = applyValueTransformer(
+      "bulk-select-in-nav-controls",
+      true,
+      { site: this.site }
+    );
+
+    return (
+      (mobileViewRequired ? this.site.mobileView : true) &&
+      this.notCategoriesRoute &&
+      this.canBulkSelect
+    );
   }
 
   @dependentKeyCompat
