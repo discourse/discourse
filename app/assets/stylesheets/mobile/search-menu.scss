@@ -11,6 +11,11 @@
     &.is-closing {
       animation: slideout 0.3s ease-in forwards;
     }
+
+    .search-menu-container .search-context {
+      margin: 0.25em 0 0 0;
+      padding: 0.25em 0.5em;
+    }
   }
 
   @keyframes slidein {
