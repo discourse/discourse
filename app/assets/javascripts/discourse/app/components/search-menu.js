@@ -221,6 +221,10 @@ export default class SearchMenu extends Component {
   cancelSearchMobile() {
     this.close();
 
+    if (this.search.inTopicContext) {
+      this.clearTopicContext();
+    }
+
     if (this.search.activeGlobalSearchTerm) {
       this.search.activeGlobalSearchTerm = "";
       this.triggerSearch();
