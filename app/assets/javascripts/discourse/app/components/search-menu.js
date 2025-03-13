@@ -305,7 +305,6 @@ export default class SearchMenu extends Component {
       this.abortPerform({ noResults: true, invalidTerm: true });
     } else {
       this.loading = true;
-      this.args?.onLoading?.(this.loading);
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
@@ -332,7 +331,6 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
-          this.args?.onLoading?.(this.loading);
           this.appEvents.trigger("search:search_result_view", {
             searchMenu: true, // delineate between search menu and full page search
           });

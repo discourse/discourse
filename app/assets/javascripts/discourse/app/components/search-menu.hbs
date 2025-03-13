@@ -75,7 +75,6 @@
 
   {{#if @inlineResults}}
     <SearchMenu::Results
-      @isEmpty={{@isEmpty}}
       @loading={{this.loading}}
       @invalidTerm={{this.invalidTerm}}
       @suggestionKeyword={{this.suggestionKeyword}}
@@ -91,7 +90,6 @@
   {{else if this.displayMenuPanelResults}}
     <MenuPanel @panelClass="search-menu-panel">
       <SearchMenu::Results
-        @isEmpty={{@isEmpty}}
         @loading={{this.loading}}
         @invalidTerm={{this.invalidTerm}}
         @suggestionKeyword={{this.suggestionKeyword}}
