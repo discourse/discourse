@@ -120,7 +120,6 @@ import {
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback as addCustomUserFieldValidationCallbackDeprecated } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -1573,7 +1572,6 @@ class PluginApi {
    **/
 
   addCustomUserFieldValidationCallback(callback) {
-    addCustomUserFieldValidationCallbackDeprecated(callback);
     addCustomUserFieldValidationCallback(callback);
   }
 
