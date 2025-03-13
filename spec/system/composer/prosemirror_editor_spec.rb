@@ -51,6 +51,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_emoji_autocomplete
     end
+
+    it "strips partially written emoji when using 'more' emoji modal" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Why :repeat_single")
+
+      expect(composer).to have_emoji_autocomplete
+
+      # "more" emoji picker
+      composer.send_keys(:arrow_down, :enter)
+
+      find("img[data-emoji='repeat_single_button']").click
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Why :repeat_single_button: ")
+    end
   end
 
   context "with inputRules" do
