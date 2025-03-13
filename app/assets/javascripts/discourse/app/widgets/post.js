@@ -98,6 +98,7 @@ export function avatarImg(wanted, attrs) {
   return h("img", properties);
 }
 
+// glimmer-post-stream: has glimmer version
 export function avatarFor(wanted, attrs, linkAttrs) {
   const attributes = {
     href: attrs.url,
