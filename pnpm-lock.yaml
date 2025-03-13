@@ -98,8 +98,8 @@ importers:
         specifier: ^2.6.3
         version: 2.6.3(encoding@0.1.13)
       lint-to-the-future-ember-template:
-        specifier: ^3.0.0
-        version: 3.0.0(ember-template-lint@7.0.1(@babel/core@7.26.10))
+        specifier: ^3.1.0
+        version: 3.1.0(ember-template-lint@7.0.1(@babel/core@7.26.10))
       lint-to-the-future-eslint:
         specifier: ^3.0.0
         version: 3.0.0(eslint@9.22.0)
@@ -6076,8 +6076,8 @@ packages:
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
 
-  lint-to-the-future-ember-template@3.0.0:
-    resolution: {integrity: sha512-gFtm2jTnOslVoYPpgkcGk+lAKHZa/WHugU0kMJOR6H3b/mib0MYM8buXctSfnrTMqbWcp/XcCs74zUycJeWxiA==}
+  lint-to-the-future-ember-template@3.1.0:
+    resolution: {integrity: sha512-MtSKzKEJqbORwnKjaezhdfBby+0w5sXnbCUKMzobvD+kjwoiVX2N1fiHVmno7j54uy2z2YmWGdz+26hAwQO+wQ==}
     engines: {node: 18.* || 20.* || >= 22.*}
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
@@ -15269,11 +15269,14 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@3.0.0(ember-template-lint@7.0.1(@babel/core@7.26.10)):
+  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.0.1(@babel/core@7.26.10)):
     dependencies:
       content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      debug: 4.4.0(supports-color@8.1.1)
       ember-template-lint: 7.0.1(@babel/core@7.26.10)
-      walk-sync: 2.2.0
+      globby: 14.1.0
+    transitivePeerDependencies:
+      - supports-color
 
   lint-to-the-future-eslint@3.0.0(eslint@9.22.0):
     dependencies:
