@@ -138,6 +138,13 @@ describe "Composer - ProseMirror editor", type: :system do
         text: "foo ± bar… test??? wow!!! x, y– a–> b←- c→ d← e←> f←→ ™ ¶",
       )
     end
+
+    it "supports --- to create a horizontal rule" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("---")
+
+      expect(rich).to have_css("hr")
+    end
   end
 
   context "with oneboxing" do
