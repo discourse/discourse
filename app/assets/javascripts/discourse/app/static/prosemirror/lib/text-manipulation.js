@@ -103,11 +103,26 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const text = head + i18n(`composer.${exampleKey}`) + tail;
-    const doc = this.convertFromMarkdown(text);
+    let text;
+    if (this.view.state.selection.empty) {
+      text = head + i18n(`composer.${exampleKey}`) + tail;
+    } else {
+      // NOTE: We need to add IGNORE here otherwise the convertFromMarkdown
+      // markdown parser will parse the text as a block instead of inline.
+      text =
+        "IGNORE " +
+        head +
+        this.view.state.doc.textBetween(sel.start, sel.end) +
+        tail;
+    }
 
+    const doc = this.convertFromMarkdown(text);
     this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
+      this.view.state.tr.replaceRangeWith(
+        sel.start,
+        sel.end,
+        doc.content.firstChild.content.lastChild
+      )
     );
   }
 
