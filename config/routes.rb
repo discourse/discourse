@@ -1571,7 +1571,10 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    # Apple accepts either of these paths for the apple-app-site-association file
+    # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     scope "/tag/:tag_id" do
