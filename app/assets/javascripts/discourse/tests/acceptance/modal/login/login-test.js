@@ -4,7 +4,11 @@ import sinon from "sinon";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Modal - Login", function () {
+acceptance("Modal - Login", function (needs) {
+  needs.settings({
+    full_page_login: false,
+  });
+
   chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
@@ -19,6 +23,7 @@ acceptance("Modal - Login", function () {
 acceptance("Modal - Login - With 2FA", function (needs) {
   needs.settings({
     enable_local_logins_via_email: true,
+    full_page_login: false,
   });
 
   needs.pretender((server, helper) => {
@@ -46,7 +51,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
   });
 });
 
-acceptance("Modal - Login - With Passkeys enabled", function () {
+acceptance("Login - With Passkeys enabled", function () {
   test("Includes passkeys button and conditional UI", async function (assert) {
     await visit("/");
     await click("header .login-button");
@@ -73,7 +78,7 @@ acceptance("Modal - Login - With Passkeys disabled", function (needs) {
   });
 });
 
-acceptance("Modal - Login - Passkeys on mobile", function (needs) {
+acceptance("Login - Passkeys on mobile", function (needs) {
   needs.mobileView();
 
   test("Includes passkeys button and conditional UI", async function (assert) {
@@ -96,7 +101,7 @@ acceptance("Modal - Login - Passkeys on mobile", function (needs) {
   });
 });
 
-acceptance("Modal - Login - With no way to login", function (needs) {
+acceptance("Login - With no way to login", function (needs) {
   needs.settings({
     enable_local_logins: false,
     enable_facebook_logins: false,

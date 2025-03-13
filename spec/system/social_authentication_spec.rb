@@ -455,12 +455,14 @@ describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
   context "when desktop" do
+    before { SiteSetting.full_page_login = false }
     include_examples "social authentication scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new
   end
 
   context "when mobile", mobile: true do
+    before { SiteSetting.full_page_login = false }
     include_examples "social authentication scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new

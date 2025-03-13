@@ -360,10 +360,12 @@ end
 
 describe "Login", type: :system do
   context "when desktop" do
+    before { SiteSetting.full_page_login = false }
     include_examples "login scenarios", PageObjects::Modals::Login.new
   end
 
   context "when mobile", mobile: true do
+    before { SiteSetting.full_page_login = false }
     include_examples "login scenarios", PageObjects::Modals::Login.new
   end
 

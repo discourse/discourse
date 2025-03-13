@@ -9,7 +9,7 @@ acceptance("New Message - Anonymous", function () {
       "/new-message?username=charlie&title=message%20title&body=message%20body"
     );
 
-    assert.dom(".modal.login-modal").exists("shows the login modal");
+    assert.dom(".login-fullpage").exists("shows the login page");
   });
 });
 
