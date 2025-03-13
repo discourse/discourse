@@ -1,7 +1,7 @@
 'use strict';
 
 var chatRegex = /\/chat\/channel\/(\d+)\//;
-var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
+var inlineReplyIcon = "<%= ::UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 
 function showNotification(title, body, icon, badge, tag, baseUrl, url) {
   var notificationOptions = {
