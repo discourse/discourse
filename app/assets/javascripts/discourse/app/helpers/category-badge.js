@@ -10,5 +10,8 @@ export default function categoryBadge(cat, options = {}) {
     allowUncategorized: options.allowUncategorized,
     categoryStyle: options.categoryStyle,
     link: isPresent(options.link) ? options.link : false,
+    styleType: cat.style_type,
+    styleEmoji: cat.style_emoji,
+    styleIcon: cat.style_icon,
   });
 }

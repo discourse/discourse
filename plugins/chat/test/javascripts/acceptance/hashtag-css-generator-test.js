@@ -68,7 +68,7 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
     assert
       .dom("style#hashtag-css-generator", document.head)
       .hasHtml(
-        ".hashtag-category-badge { background-color: var(--primary-medium); }\n" +
+        ".hashtag-category-square { background-color: var(--primary-medium); }\n" +
           ".hashtag-color--category-1 { background-color: #ff0000; }\n" +
           ".hashtag-color--category-2 { background-color: #333; }\n" +
           ".hashtag-color--category-4 { background: linear-gradient(-90deg, #2B81AF 50%, #ff0000 50%); }"

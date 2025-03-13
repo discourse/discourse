@@ -49,6 +49,19 @@ export function categoryBadgeHTML(category, opts) {
     return "";
   }
 
+  if (!opts.styleType) {
+    opts.styleType = category.style_type;
+
+    switch (opts.styleType) {
+      case "icon":
+        opts.styleIcon = category.style_icon;
+        break;
+      case "emoji":
+        opts.styleEmoji = category.style_emoji;
+        break;
+    }
+  }
+
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
     const { ancestors, ...otherOpts } = opts;
@@ -98,6 +111,15 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
+    }
+    if (options.styleType) {
+      categoryOptions.styleType = options.styleType;
+    }
+    if (options.styleIcon) {
+      categoryOptions.styleIcon = options.styleIcon;
+    }
+    if (options.styleEmoji) {
+      categoryOptions.styleEmoji = options.styleEmoji;
     }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
@@ -168,11 +190,12 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  if (["icon", "emoji"].includes(opts.styleType)) {
-    html +=
-      opts.styleType === "icon"
-        ? iconHTML(opts.styleIcon)
-        : replaceEmoji(`:${opts.styleEmoji}:`);
+  if (opts.styleType === "icon" && opts.styleIcon) {
+    html += iconHTML(opts.styleIcon);
+  }
+
+  if (opts.styleType === "emoji" && opts.styleEmoji) {
+    html += replaceEmoji(`:${opts.styleEmoji}:`);
   }
 
   // not ideal as we have to call it manually and we pass a fake category object
