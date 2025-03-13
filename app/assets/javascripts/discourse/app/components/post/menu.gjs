@@ -228,10 +228,10 @@ export default class PostMenu extends Component {
         },
         collapsedButtons: {
           hide(key) {
-            collapsedButtons.set(key, false);
+            collapsedButtons.set(key, true);
           },
           show(key) {
-            collapsedButtons.set(key, true);
+            collapsedButtons.set(key, false);
           },
           default(key) {
             return collapsedButtons.delete(key);
