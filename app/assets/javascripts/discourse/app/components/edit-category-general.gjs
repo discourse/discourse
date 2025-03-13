@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-// import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -13,9 +13,11 @@ import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import ColorInput from "admin/components/color-input";
@@ -23,14 +25,15 @@ import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
 
 export default class EditCategoryGeneral extends Component {
+  @service router;
   @service site;
   @service siteSettings;
 
-  // @tracked textColor = this.args.category.text_color;
-  @tracked categoryColor = this.args.category.color;
-  @tracked styleType = this.args.category.style_type;
-  @tracked styleEmoji = this.args.category.style_emoji;
-  @tracked styleIcon = this.args.category.style_icon;
+  @tracked name = this.args.category.name;
+  @tracked color = this.args.category.color;
+  @tracked style_type = this.args.category.style_type;
+  @tracked style_emoji = this.args.category.style_emoji;
+  @tracked style_icon = this.args.category.style_icon;
 
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
@@ -46,6 +49,10 @@ export default class EditCategoryGeneral extends Component {
 
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
+  }
+
+  get isUpdate() {
+    return !this.args.category.isNew;
   }
 
   // background colors are available as a pipe-separated string
@@ -71,7 +78,7 @@ export default class EditCategoryGeneral extends Component {
     const categoryId = this.args.category.id;
     const categoryColor = this.args.category.color;
 
-    // If editing a category, don't include its color:
+    // if editing a category, don't include its color:
     return categories
       .map(function (c) {
         return categoryId &&
@@ -93,33 +100,28 @@ export default class EditCategoryGeneral extends Component {
   get categoryBadgePreview() {
     const category = this.args.category;
 
-    const parentCategoryId = category.parent_category_id;
-    const name = category.name;
-    const color = category.color;
-    const textColor = category.text_color;
-
     const c = Category.create({
-      name,
-      color,
+      name: this.name || "Untitled Category",
+      color: this.color,
       id: category.id,
-      text_color: textColor,
-      parent_category_id: parseInt(parentCategoryId, 10),
+      text_color: category.text_color,
+      parent_category_id: parseInt(category.parent_category_id, 10),
       read_restricted: category.get("read_restricted"),
     });
 
     return categoryBadgeHTML(c, {
       link: false,
       previewColor: true,
-      styleType: this.styleType,
-      styleEmoji: this.styleEmoji,
-      styleIcon: this.styleIcon,
+      styleType: this.style_type,
+      styleEmoji: this.style_emoji,
+      styleIcon: this.style_icon,
     });
   }
 
   // We can change the parent if there are no children
   @cached
   get subCategories() {
-    if (isEmpty(this.args.category)) {
+    if (!this.isUpdate) {
       return null;
     }
     return Category.list().filterBy(
@@ -142,35 +144,21 @@ export default class EditCategoryGeneral extends Component {
     return false;
   }
 
-  _focusCategoryName() {
-    discourseLater(() => {
-      const categoryName = document.querySelector(".category-name");
-      categoryName && categoryName.focus();
-    }, 25);
-  }
-
   @action
-  updatePreview(newColor) {
-    console.log("updatePreview", newColor);
-    this.categoryColor = newColor.replace("#", "");
-  }
-
-  @action
-  async saveData() {
-    // const data = {
-    //   style_type: this.styleType,
-    //   style_emoji: this.styleEmoji,
-    //   style_icon: this.styleIcon,
-    //   color: this.categoryColor,
-    // };
-
-    await this.args.category.save();
+  async save(data) {
+    if (this.isUpdate) {
+      this.update(data);
+    } else {
+      this.create(data);
+    }
   }
 
   get formData() {
-    // if (!this.isEditing) {
-    //   return {};
-    // }
+    // set the badge preview styles for new categories
+    if (!this.isUpdate) {
+      this.style_type = "square";
+      return { style_type: "square", color: "0088CC", text_color: "FFFFFF" };
+    }
 
     return getProperties(this.args.category, [
       "name",
@@ -185,22 +173,49 @@ export default class EditCategoryGeneral extends Component {
     ]);
   }
 
-  @action
-  updateStyle(value) {
-    this.styleType = value;
-    this.args.category.set("style_type", value);
+  @bind
+  async create(data) {
+    try {
+      // this.args.category.setProperties(data);
+      // const response = await this.args.category.save();
+      const response = await ajax("/categories", {
+        type: "POST",
+        data,
+      });
+      this.router.transitionTo("discovery.category", response.category.slug);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @bind
+  async update(data) {
+    try {
+      await ajax(`/categories/${this.args.category.id}`, {
+        type: "PUT",
+        data,
+      });
+
+      this.router.transitionTo("discovery.categories");
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
-  updateEmoji(value) {
-    this.styleEmoji = value;
-    this.args.category.set("style_emoji", value);
+  updateField(name, value, { set }) {
+    if (value) {
+      set(name, value);
+    } else {
+      set(name, undefined);
+    }
+    this[name] = value;
   }
 
   @action
-  updateIcon(value) {
-    this.styleIcon = value;
-    this.args.category.set("style_icon", value);
+  updateColor(newColor) {
+    this.color = newColor.replace("#", "");
+    this.args.category.set("color", newColor.replace("#", ""));
   }
 
   get categoryDescription() {
@@ -211,10 +226,14 @@ export default class EditCategoryGeneral extends Component {
     return i18n("category.no_description");
   }
 
+  get canSelectParentCategory() {
+    return !this.args.category.isUncategorizedCategory;
+  }
+
   <template>
     {{#if this.showWarning}}
       <p class="warning">
-        {{dIcon "triangle-exclamation"}}
+        {{icon "triangle-exclamation"}}
         {{htmlSafe
           (i18n
             "category.uncategorized_general_warning"
@@ -226,72 +245,83 @@ export default class EditCategoryGeneral extends Component {
     {{/if}}
 
     <Form
-      @onSubmit={{this.saveData}}
+      @onSubmit={{this.save}}
       @data={{this.formData}}
-      {{didInsert this._focusCategoryName}}
       as |form transientData|
     >
       <PluginOutlet
         @name="category-name-fields-details"
         @outletArgs={{hash category=@category}}
       >
-        {{#unless @category.isUncategorizedCategory}}
-          <form.Field
-            @name="name"
-            @title={{i18n "category.name"}}
-            @format="large"
-            @validation="required"
-            as |field|
-          >
-            <field.Input
-              @value={{@category.name}}
-              @placeholderKey="category.name_placeholder"
-              @maxlength="50"
-              class="category-name"
-            />
-          </form.Field>
-        {{/unless}}
+        <form.Row as |row|>
+          {{#unless @category.isUncategorizedCategory}}
+            <row.Col @size={{6}}>
+              <form.Field
+                @name="name"
+                @title={{i18n "category.name"}}
+                @format="large"
+                @validation="required"
+                @onSet={{fn this.updateField "name"}}
+                as |field|
+              >
+                <field.Input
+                  @value={{@category.name}}
+                  @placeholderKey="category.name_placeholder"
+                  @maxlength="50"
+                  class="category-name"
+                />
+              </form.Field>
+            </row.Col>
+          {{/unless}}
 
-        <form.Field
-          @name="slug"
-          @title={{i18n "category.slug"}}
-          @format="large"
-          @validation="required"
-          as |field|
-        >
-          <field.Input
-            @value={{@category.slug}}
-            @placeholderKey="category.slug_placeholder"
-            @maxlength="255"
-          />
-        </form.Field>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="slug"
+              @title={{i18n "category.slug"}}
+              @format="large"
+              @validation="required"
+              as |field|
+            >
+              <field.Input
+                @value={{@category.slug}}
+                @placeholderKey="category.slug_placeholder"
+                @maxlength="255"
+              />
+            </form.Field>
+          </row.Col>
+        </form.Row>
       </PluginOutlet>
 
       {{#if this.canSelectParentCategory}}
-        <section class="field parent-category">
-          <label>{{i18n "category.parent"}}</label>
-          <CategoryChooser
-            @value={{@category.parent_category_id}}
-            @allowSubCategories={{true}}
-            @allowRestrictedCategories={{true}}
-            @onChange={{fn (mut @category.parent_category_id)}}
-            @options={{hash
-              allowUncategorized=false
-              excludeCategoryId=@category.id
-              autoInsertNoneItem=true
-              none=true
-            }}
-          />
-        </section>
+        <form.Field
+          @name="parent_category_id"
+          @title={{i18n "category.parent"}}
+          class="parent-category"
+          as |field|
+        >
+          <field.Custom>
+            <CategoryChooser
+              @value={{@category.parent_category_id}}
+              @allowSubCategories={{true}}
+              @allowRestrictedCategories={{true}}
+              @onChange={{fn (mut @category.parent_category_id)}}
+              @options={{hash
+                allowUncategorized=false
+                excludeCategoryId=@category.id
+                autoInsertNoneItem=true
+                none=true
+              }}
+            />
+          </field.Custom>
+        </form.Field>
       {{/if}}
 
       {{#if this.subCategories}}
-        <section class="field subcategories">
-          <label>{{i18n "categories.subcategories"}}</label>
+        <form.Container @title={{i18n "categories.subcategories"}}>
           {{#each this.subCategories as |s|}}
             {{categoryBadge s hideParent="true"}}
           {{/each}}
-        </section>
+        </form.Container>
       {{/if}}
 
       {{#if this.showDescription}}
@@ -316,9 +346,9 @@ export default class EditCategoryGeneral extends Component {
         <form.Field
           @name="style_type"
           @title={{i18n "category.styles.type"}}
-          @format="small"
+          @format="large"
           @validation="required"
-          @onSet={{this.updateStyle}}
+          @onSet={{fn this.updateField "style_type"}}
           as |field|
         >
           <field.Select as |select|>
@@ -336,8 +366,7 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.emoji"}}
             @format="small"
             @validation="required"
-            @context="category-style"
-            @onSet={{this.updateEmoji}}
+            @onSet={{fn this.updateField "style_emoji"}}
             as |field|
           >
             <field.Emoji />
@@ -348,7 +377,7 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.icon"}}
             @format="small"
             @validation="required"
-            @onSet={{this.updateIcon}}
+            @onSet={{fn this.updateField "style_icon"}}
             as |field|
           >
             <field.Icon />
@@ -369,7 +398,7 @@ export default class EditCategoryGeneral extends Component {
                   @hexValue={{@category.color}}
                   @valid={{@category.colorValid}}
                   @ariaLabelledby="background-color-label"
-                  @onChangeColor={{this.updatePreview}}
+                  @onChangeColor={{this.updateColor}}
                 />
                 <ColorPicker
                   @colors={{this.backgroundColors}}

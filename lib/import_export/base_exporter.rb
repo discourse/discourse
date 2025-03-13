@@ -13,6 +13,9 @@ module ImportExport
       slug
       description
       text_color
+      style_type
+      style_icon
+      style_emoji
       auto_close_hours
       position
       parent_category_id

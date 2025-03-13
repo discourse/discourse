@@ -127,13 +127,24 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
 
-        const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML({
+        let opts = {
           preloaded: true,
           colors: result.colors,
           icon: result.icon,
           id: result.id,
-        });
+          style_type: result.style_type,
+        };
+
+        if (result.style_type === "icon") {
+          opts.style_icon = result.style_icon;
+        }
+
+        if (result.style_type === "emoji") {
+          opts.style_emoji = result.style_emoji;
+        }
+
+        const hashtagType = getHashtagTypeClassesNew()[result.type];
+        result.icon = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })

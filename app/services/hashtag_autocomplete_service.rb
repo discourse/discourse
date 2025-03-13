@@ -104,6 +104,15 @@ class HashtagAutocompleteService
     # e.g. category.id, tag.id
     attr_accessor :id
 
+    # Display style for the item, e.g. square, icon, emoji
+    attr_accessor :style_type
+
+    # The icon name to display in the category prefix
+    attr_accessor :style_icon
+
+    # The emoji to display in the category prefix (without colons)
+    attr_accessor :style_emoji
+
     def initialize(params = {})
       @relative_url = params[:relative_url]
       @text = params[:text]
@@ -114,10 +123,13 @@ class HashtagAutocompleteService
       @ref = params[:ref]
       @slug = params[:slug]
       @id = params[:id]
+      @style_type = params[:style_type]
+      @style_icon = params[:style_icon] if params[:style_type] == "icon"
+      @style_emoji = params[:style_emoji] if params[:style_type] == "emoji"
     end
 
     def to_h
-      {
+      opts = {
         relative_url: self.relative_url,
         text: self.text,
         description: self.description,
@@ -127,7 +139,17 @@ class HashtagAutocompleteService
         ref: self.ref,
         slug: self.slug,
         id: self.id,
+        style_type: self.style_type,
+        style_icon: self.style_icon,
+        style_emoji: self.style_emoji,
       }
+      # if self.style_type == "icon"
+      #   opts[:style_icon] = self.style_icon
+      # elsif self.style_type == "emoji"
+      #   opts[:style_emoji] = self.style_emoji
+      # end
+
+      opts
     end
   end
 

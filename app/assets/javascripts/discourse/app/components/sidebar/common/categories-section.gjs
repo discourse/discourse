@@ -67,8 +67,6 @@ export default class SidebarCommonCategoriesSection extends Component {
         category,
         topicTrackingState: this.topicTrackingState,
         currentUser: this.currentUser,
-        // prefixType: "icon",
-        // prefixValue: "folder",
       });
     });
   }
