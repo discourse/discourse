@@ -16,6 +16,7 @@ import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
 import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
+import discourseLater from "discourse/lib/later";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
@@ -47,7 +48,7 @@ export default class GlimmerHeader extends Component {
   @service appEvents;
   @service header;
 
-  @tracked skipSearchContext = this.site.mobileView;
+  @tracked hasClosingAnimation = false;
 
   appEventsListeners = modifierFn(() => {
     this.appEvents.on(
@@ -161,7 +162,16 @@ export default class GlimmerHeader extends Component {
       return false;
     }
 
-    this.search.visible = !this.search.visible;
+    if (this.site.isMobileViewAndDevice && this.search.visible) {
+      this.hasClosingAnimation = true;
+
+      discourseLater(() => {
+        this.hasClosingAnimation = false;
+        this.search.visible = false;
+      }, 300);
+    } else {
+      this.search.visible = !this.search.visible;
+    }
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
@@ -287,6 +297,7 @@ export default class GlimmerHeader extends Component {
 
           {{#if this.search.visible}}
             <SearchMenuWrapper
+              @hasClosingAnimation={{this.hasClosingAnimation}}
               @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
               @searchInputId="icon-search-input"

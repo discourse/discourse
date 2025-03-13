@@ -2,4 +2,31 @@
   .mobile-search-button + input#search-term {
     padding-left: 0;
   }
+
+  .search-menu-panel {
+    &.slide-in {
+      animation: slidein 0.3s ease-out forwards;
+    }
+
+    &.is-closing {
+      animation: slideout 0.3s ease-in forwards;
+    }
+  }
+
+  @keyframes slidein {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes slideout {
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
 }
