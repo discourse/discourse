@@ -267,6 +267,11 @@ class ListController < ApplicationController
   def hot_feed
     discourse_expires_in 1.minute
 
+    @title = "#{SiteSetting.title} - #{I18n.t("rss_description.hot")}"
+    @link = "#{Discourse.base_url}/hot"
+    @atom_link = "#{Discourse.base_url}/hot.rss"
+    @description = I18n.t("rss_description.hot")
+
     @topic_list = TopicQuery.new(nil).list_hot
 
     render "list", formats: [:rss]

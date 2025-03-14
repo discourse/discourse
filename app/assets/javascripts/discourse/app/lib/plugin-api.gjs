@@ -117,9 +117,9 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";

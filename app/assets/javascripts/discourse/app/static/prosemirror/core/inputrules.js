@@ -5,6 +5,7 @@ import {
   textblockTypeInputRule,
   wrappingInputRule,
 } from "prosemirror-inputrules";
+import { TextSelection } from "prosemirror-state";
 
 export function buildInputRules(extensions, schema, includeDefault = true) {
   const rules = [];
@@ -29,6 +30,8 @@ export function buildInputRules(extensions, schema, includeDefault = true) {
         markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
         markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
         markInputRule(/`([^`]+)`$/, schema.marks.code),
+
+        new InputRule(/^(\u2013-|___\s|\*\*\*\s)$/, horizontalRuleHandler),
       ]
     );
   }
@@ -125,4 +128,14 @@ function markInputRule(regexp, markType, getAttrs) {
 
     return tr;
   });
+}
+
+function horizontalRuleHandler(state, match, start, end) {
+  const tr = state.tr;
+  tr.replaceRangeWith(start, end, [
+    state.schema.nodes.horizontal_rule.create(),
+    state.schema.nodes.paragraph.create(),
+  ]);
+  tr.setSelection(TextSelection.create(tr.doc, start + 1));
+  return tr;
 }

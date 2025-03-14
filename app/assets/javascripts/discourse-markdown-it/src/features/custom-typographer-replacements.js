@@ -14,7 +14,7 @@
 // (r) (R) → ®
 // (p) (P) -> §
 
-export const RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
+export const RARE_RE = /\+-|\.\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
 
 export const SCOPED_ABBR_RE = /\((tm|pa)\)/gi;
 let SCOPED_ABBR = {
@@ -49,9 +49,9 @@ export function replaceRareStr(str) {
       .replace(/(^|\s)-{1,2}>(\s|$)/gm, "\u0020\u2192\u0020")
       .replace(/(^|\s)<-{1,2}(\s|$)/gm, "\u0020\u2190\u0020")
       .replace(/(^|\s)<-{1,2}>(\s|$)/gm, "\u0020\u2194\u0020")
-      // .., ..., ....... -> …
+      // ..., ....... -> …
       // but ?..... & !..... -> ?.. & !..
-      .replace(/\.{2,}/g, "…")
+      .replace(/\.{3,}/g, "…")
       .replace(/([?!])…/g, "$1..")
       .replace(/([?!]){4,}/g, "$1$1$1")
       .replace(/,{2,}/g, ",")

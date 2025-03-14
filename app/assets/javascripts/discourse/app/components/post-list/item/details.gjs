@@ -115,7 +115,7 @@ export default class PostListItemDetails extends Component {
 
           <PluginOutlet
             @name="post-list-additional-member-info"
-            @outletArgs={{hash user=@user}}
+            @outletArgs={{hash user=@user post=@post}}
           />
 
           {{!

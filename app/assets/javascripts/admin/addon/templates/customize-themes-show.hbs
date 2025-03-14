@@ -1,6 +1,24 @@
 {{#if this.editingThemeSetting}}
   {{outlet}}
 {{else}}
+  <div class="back-to-themes-and-components">
+    <LinkTo
+      @route={{if
+        this.model.component
+        "adminConfig.customize.components"
+        "adminConfig.customize.themes"
+      }}
+    >
+      {{dIcon "angle-left"}}
+      {{i18n
+        (if
+          this.model.component
+          "admin.config_areas.themes_and_components.components.back"
+          "admin.config_areas.themes_and_components.themes.back"
+        )
+      }}
+    </LinkTo>
+  </div>
   <div class="show-current-style">
     <span>
       <PluginOutlet

@@ -414,6 +414,7 @@ Discourse::Application.routes.draw do
         get "group-permissions" => "site_settings#index"
         get "branding" => "branding#index"
         put "branding/logo" => "branding#logo"
+        get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -425,11 +426,14 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
 
-        resources :look_and_feel,
-                  path: "look-and-feel",
+        resources :customize,
+                  path: "customize",
                   constraints: AdminConstraint.new,
                   only: %i[index] do
-          collection { get "/themes" => "look_and_feel#themes" }
+          collection do
+            get "/themes" => "customize#themes"
+            get "/components" => "customize#components"
+          end
         end
       end
 
@@ -1570,7 +1574,10 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    # Apple accepts either of these paths for the apple-app-site-association file
+    # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     scope "/tag/:tag_id" do

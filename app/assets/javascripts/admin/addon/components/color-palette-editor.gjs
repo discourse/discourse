@@ -7,25 +7,19 @@ import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const LIGHT = "light";
-const DARK = "dark";
+export const LIGHT = "light";
+export const DARK = "dark";
 
 class Color {
   @tracked lightValue;
   @tracked darkValue;
 
-  constructor({ name, lightValue, darkValue }) {
+  constructor({ name, lightValue, darkValue, description, translatedName }) {
     this.name = name;
     this.lightValue = lightValue;
     this.darkValue = darkValue;
-  }
-
-  get displayName() {
-    return this.name.replaceAll("_", " ");
-  }
-
-  get description() {
-    return i18n(`admin.customize.colors.${this.name}.description`);
+    this.displayName = translatedName;
+    this.description = description;
   }
 }
 
@@ -68,24 +62,36 @@ const Picker = class extends Component {
   }
 
   get displayedColor() {
+    let color;
     if (this.args.showDark) {
-      return this.args.color.darkValue;
+      color = this.args.color.darkValue ?? this.args.color.lightValue;
     } else {
-      return this.args.color.lightValue;
+      color = this.args.color.lightValue ?? this.args.color.darkValue;
     }
+    return this.ensureSixDigitsHex(color);
   }
 
   get activeValue() {
     let color;
     if (this.args.showDark) {
-      color = this.args.color.darkValue;
+      color = this.args.color.darkValue ?? this.args.color.lightValue;
     } else {
-      color = this.args.color.lightValue;
+      color = this.args.color.lightValue ?? this.args.color.darkValue;
     }
 
     if (color) {
-      return `#${color}`;
+      return `#${this.ensureSixDigitsHex(color)}`;
     }
+  }
+
+  ensureSixDigitsHex(hex) {
+    if (hex.length === 3) {
+      return hex
+        .split("")
+        .map((digit) => `${digit}${digit}`)
+        .join("");
+    }
+    return hex;
   }
 
   <template>
@@ -124,6 +130,8 @@ export default class ColorPaletteEditor extends Component {
         name: color.name,
         lightValue: color.hex,
         darkValue: color.dark_hex,
+        description: color.description,
+        translatedName: color.translatedName,
       });
     });
   }
@@ -134,7 +142,11 @@ export default class ColorPaletteEditor extends Component {
       event.type === "click" ||
       (event.type === "keydown" && event.keyCode === 13)
     ) {
-      this.selectedMode = newMode;
+      if (this.args.onTabSwitch) {
+        this.args.onTabSwitch(newMode);
+      } else {
+        this.selectedMode = newMode;
+      }
     }
   }
 

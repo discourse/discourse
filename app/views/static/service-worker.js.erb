@@ -1,0 +1,148 @@
+'use strict';
+
+var chatRegex = /\/chat\/channel\/(\d+)\//;
+var inlineReplyIcon = "<%= ::UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
+
+function showNotification(title, body, icon, badge, tag, baseUrl, url) {
+  var notificationOptions = {
+    body: body,
+    icon: icon,
+    badge: badge,
+    data: { url: url, baseUrl: baseUrl },
+    tag: tag
+  }
+
+  if (chatRegex.test(url)) {
+    notificationOptions['actions'] = [{
+      action: "reply",
+      title: "Reply",
+      placeholder: "reply",
+      type: "text",
+      icon: inlineReplyIcon
+    }];
+  }
+
+  return self.registration.showNotification(title, notificationOptions);
+}
+
+self.addEventListener('push', function(event) {
+  var payload = event.data.json();
+
+  event.waitUntil(
+    showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url)
+  );
+});
+
+self.addEventListener('notificationclick', function(event) {
+  // Android doesn't close the notification when you click on it
+  // See: http://crbug.com/463146
+  event.notification.close();
+  var url = event.notification.data.url;
+  var baseUrl = event.notification.data.baseUrl;
+
+  if (event.action === "reply") {
+    let csrf;
+    fetch("/session/csrf", {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not OK");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        csrf = data.csrf;
+
+        let chatTest = url.match(chatRegex);
+        if (chatTest.length > 0) {
+          let chatChannel = chatTest[1];
+
+          fetch(`${baseUrl}/chat/${chatChannel}.json`, {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "X-CSRF-Token": csrf,
+            },
+            body: `message=${event.reply}`,
+            method: "POST",
+            mode: "cors",
+          });
+        }
+      });
+  } else {
+    // This looks to see if the current window is already open and
+    // focuses if it is
+    event.waitUntil(
+      clients.matchAll({ type: "window" }).then(function (clientList) {
+        var reusedClientWindow = clientList.some(function (client) {
+          if (client.url === baseUrl + url && "focus" in client) {
+            client.focus();
+            return true;
+          }
+
+          if ("postMessage" in client && "focus" in client) {
+            client.focus();
+            client.postMessage({ url: url });
+            return true;
+          }
+          return false;
+        });
+
+        if (!reusedClientWindow && clients.openWindow)
+          return clients.openWindow(baseUrl + url);
+      })
+    );
+  }
+});
+
+self.addEventListener('pushsubscriptionchange', function(event) {
+  event.waitUntil(
+    Promise.all(
+      fetch('<%= Discourse.base_url %>/push_notifications/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.newSubscription.endpoint,
+          "subscription[keys][auth]": event.newSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.newSubscription.toJSON().keys.p256dh,
+          "send_confirmation": false
+        })
+      }),
+      fetch('<%= Discourse.base_url %>/push_notifications/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams({
+          "subscription[endpoint]": event.oldSubscription.endpoint,
+          "subscription[keys][auth]": event.oldSubscription.toJSON().keys.auth,
+          "subscription[keys][p256dh]": event.oldSubscription.toJSON().keys.p256dh
+        })
+      })
+    )
+  );
+});
+
+self.addEventListener('message', function(event) {
+  if (event.data?.action !== "primaryTab") {
+    return;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll().then(function(clients) {
+      const activeClient = clients.find(client => client.focused) || clients.find(client => client.visibilityState === "visible");
+
+      clients.forEach(function(client) {
+        client.postMessage({
+          primaryTab: client.id === activeClient?.id
+        });
+      });
+    })
+  );
+ });
+
+<% DiscoursePluginRegistry.service_workers.each do |js| %>
+<%=raw "#{File.read(js)}" %>
+<% end %>

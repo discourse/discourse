@@ -147,6 +147,17 @@ export default class Site extends RestModel {
     return map;
   }
 
+  @computed("categories.@each.parent_category_id")
+  get categoriesByParentId() {
+    const map = new Map();
+    for (const category of this.categories) {
+      const siblings = map.get(category.parent_category_id) || [];
+      siblings.push(category);
+      map.set(category.parent_category_id, siblings);
+    }
+    return map;
+  }
+
   @discourseComputed("notification_types")
   notificationLookup(notificationTypes) {
     const result = [];

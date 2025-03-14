@@ -359,12 +359,6 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Enter") {
-      // if we are inside a code block just insert newline
-      const { pre } = this.composer.textarea.getSelected({ lineVal: true });
-      if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
-        return;
-      }
-
       const shortcutPreference =
         this.currentUser.user_option.chat_send_shortcut;
       const send =

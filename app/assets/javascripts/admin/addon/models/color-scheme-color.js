@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -5,24 +6,33 @@ import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
+  @tracked hex;
+  @tracked dark_hex;
+
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
 
   @on("init")
   startTrackingChanges() {
-    this.set("originals", { hex: this.hex || "FFFFFF" });
+    this.set("originals", {
+      hex: this.hex || "FFFFFF",
+      darkHex: this.dark_hex,
+    });
 
     // force changed property to be recalculated
     this.notifyPropertyChange("hex");
   }
 
   // Whether value has changed since it was last saved.
-  @discourseComputed("hex")
-  changed(hex) {
+  @discourseComputed("hex", "dark_hex")
+  changed(hex, darkHex) {
     if (!this.originals) {
       return false;
     }
     if (hex !== this.originals.hex) {
+      return true;
+    }
+    if (darkHex !== this.originals.darkHex) {
       return true;
     }
 

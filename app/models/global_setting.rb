@@ -214,6 +214,7 @@ class GlobalSetting
           c[:connector] = RailsFailover::Redis::Connector
         end
 
+        c[:username] = redis_username if redis_username.present?
         c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
@@ -238,6 +239,7 @@ class GlobalSetting
           c[:connector] = RailsFailover::Redis::Connector
         end
 
+        c[:username] = message_bus_redis_username if message_bus_redis_username.present?
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
         c[:db] = 1 if Rails.env == "test"

@@ -1,0 +1,38 @@
+.admin-config.color-palettes-show {
+  .admin-config-color-palettes {
+    &__name-control {
+      display: flex;
+
+      h2 {
+        margin-bottom: 0;
+      }
+    }
+
+    &__top-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1em;
+    }
+
+    &__fonts-and-logos-hint {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__unsaved-changes {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      align-self: center;
+    }
+
+    &__save-card {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1em;
+    }
+  }
+
+  .alert {
+    margin-bottom: 1em;
+  }
+}

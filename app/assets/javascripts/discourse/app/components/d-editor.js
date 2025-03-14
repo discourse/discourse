@@ -293,7 +293,7 @@ export default class DEditor extends Component {
         }
       },
 
-      transformComplete: (v, event) => {
+      transformComplete: (v) => {
         if (v.code) {
           this.emojiStore.trackEmojiForContext(v.code, "topic");
           return `${v.code}:`;
@@ -312,18 +312,10 @@ export default class DEditor extends Component {
             },
           };
 
-          let virtualElement;
-          if (event instanceof KeyboardEvent) {
-            // when user selects more by pressing enter
-            virtualElement = virtualElementFromTextRange();
-          } else {
-            // when user selects more by clicking on it
-            // using textarea as a fallback as it's hard to have a good position
-            // given the autocomplete menu will be gone by the time we are here
-            virtualElement = this.textManipulation.textarea;
-          }
-
-          this.menuInstance = this.menu.show(virtualElement, menuOptions);
+          this.menuInstance = this.menu.show(
+            virtualElementFromTextRange(),
+            menuOptions
+          );
           return "";
         }
       },

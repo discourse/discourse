@@ -39,7 +39,11 @@ const extension = {
               alt: dom.getAttribute("alt"),
               width: dom.getAttribute("width"),
               height: dom.getAttribute("height"),
-              originalSrc: dom.dataset.origSrc,
+              originalSrc:
+                dom.dataset.origSrc ??
+                (dom.dataset.base62Sha1
+                  ? `upload://${dom.dataset.base62Sha1}`
+                  : undefined),
               extras: dom.hasAttribute("data-thumbnail")
                 ? "thumbnail"
                 : undefined,

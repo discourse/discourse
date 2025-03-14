@@ -276,8 +276,9 @@ export default function () {
             path: "/",
           });
         });
-        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+        this.route("customize", function () {
           this.route("themes");
+          this.route("components");
         });
         this.route(
           "adminPermalinks",
@@ -334,6 +335,10 @@ export default function () {
         });
         this.route("user-api", function () {
           this.route("settings", { path: "/" });
+        });
+
+        this.route("color-palettes-show", {
+          path: "/colors/:palette_id",
         });
       }
     );

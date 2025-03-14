@@ -25,7 +25,6 @@ Rails.application.config.assets.precompile += [
 
 Rails.application.config.assets.precompile += %w[
   break_string.js
-  service-worker.js
   locales/i18n.js
   scripts/discourse-test-listen-boot
 ]

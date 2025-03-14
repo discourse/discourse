@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import { and, or } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";

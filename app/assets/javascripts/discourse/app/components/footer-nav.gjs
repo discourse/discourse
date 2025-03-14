@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
-import not from "truth-helpers/helpers/not";
 
 export default class FooterNav extends Component {
   @service appEvents;
