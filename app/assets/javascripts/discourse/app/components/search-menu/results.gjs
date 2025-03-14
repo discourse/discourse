@@ -31,18 +31,8 @@ export default class Results extends Component {
   @service search;
   @service site;
 
-  get isMobileTopicView() {
-    return (
-      this.site.isMobileViewAndDevice && this.search.contextType === "topic"
-    );
-  }
-
   get renderInitialOptions() {
-    return (
-      !this.search.activeGlobalSearchTerm &&
-      !this.args.inPMInboxContext &&
-      (!this.site.isMobileViewAndDevice || this.isMobileTopicView)
-    );
+    return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
   }
 
   get noTopicResults() {
@@ -112,13 +102,7 @@ export default class Results extends Component {
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
-            {{#if
-              (and
-                (not @searchTopics)
-                (not @inPMInboxContext)
-                (not this.site.isMobileViewAndDevice)
-              )
-            }}
+            {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
                 @closeSearchMenu={{@closeSearchMenu}}
