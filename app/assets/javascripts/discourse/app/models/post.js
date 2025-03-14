@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -15,6 +15,7 @@ import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
+import Badge from "discourse/models/badge";
 import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -149,6 +150,8 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
+  @tracked customShare = null;
+
   // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
   // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
   // the standard tracked method because these properties are added to the class prototype and are not enumarated by
@@ -167,8 +170,43 @@ export default class Post extends RestModel {
   @trackedPostProperty yours;
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty excerpt;
-
-  customShare = null;
+  @trackedPostProperty notice_created_by_user;
+  @trackedPostProperty created_at;
+  @trackedPostProperty notice;
+  @trackedPostProperty name;
+  @trackedPostProperty username;
+  @trackedPostProperty is_auto_generated;
+  @trackedPostProperty via_email;
+  @trackedPostProperty locked;
+  @trackedPostProperty updated_at;
+  @trackedPostProperty version;
+  @trackedPostProperty wiki;
+  @trackedPostProperty reply_count;
+  @trackedPostProperty reply_to_user;
+  @trackedPostProperty last_wiki_edit;
+  @trackedPostProperty group_moderator;
+  @trackedPostProperty staff;
+  @trackedPostProperty admin;
+  @trackedPostProperty moderator;
+  @trackedPostProperty trust_level;
+  @trackedPostProperty primary_group_name;
+  @trackedPostProperty user_title;
+  @trackedPostProperty title_is_group;
+  @trackedPostProperty badges_granted;
+  @trackedPostProperty cooked;
+  @trackedPostProperty cooked_hidden;
+  @trackedPostProperty can_see_hidden_post;
+  @trackedPostProperty link_counts;
+  @trackedPostProperty can_view_edit_history;
+  @trackedPostProperty user_suspended;
+  @trackedPostProperty read;
+  @trackedPostProperty deleted_by;
+  @trackedPostProperty actions_summary;
+  @trackedPostProperty action_code;
+  @trackedPostProperty action_code_who;
+  @trackedPostProperty action_code_path;
+  @trackedPostProperty post_number;
+  @trackedPostProperty user;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -179,6 +217,8 @@ export default class Post extends RestModel {
   @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
+  @alias("deletedBy") postDeletedBy; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
+  @alias("deletedAt") postDeletedAt; // TODO (glimmer-post-stream): check if this alias can be removed after removing the widget code
 
   constructor() {
     super(...arguments);
@@ -189,9 +229,8 @@ export default class Post extends RestModel {
     });
   }
 
-  @discourseComputed("url", "customShare")
-  shareUrl(url) {
-    return this.customShare || resolveShareUrl(url, this.currentUser);
+  get shareUrl() {
+    return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
   @discourseComputed("name", "username")
@@ -199,14 +238,12 @@ export default class Post extends RestModel {
     return name && name !== username && this.siteSettings.display_name_on_posts;
   }
 
-  @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
-  postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
-    return firstPost ? topicDeletedBy : deletedBy;
+  get deletedBy() {
+    return this.firstPost ? this.topic?.deleted_by : this.deleted_by;
   }
 
-  @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
-  postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
-    return firstPost ? topicDeletedAt : deletedAt;
+  get deletedAt() {
+    return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
   @discourseComputed("post_number", "topic_id", "topic.slug")
@@ -334,12 +371,20 @@ export default class Post extends RestModel {
     return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
+  get canSplitMergeTopic() {
+    return !!this.topic?.details?.can_split_merge_topic;
+  }
+
   get canToggleLike() {
     return !!this.likeAction?.get("canToggle");
   }
 
   get filteredRepliesPostNumber() {
     return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get hasReplies() {
+    return this.reply_count > 0;
   }
 
   get isWhisper() {
@@ -415,13 +460,9 @@ export default class Post extends RestModel {
   }
 
   // Expands the first post's content, if embedded and shortened.
-  expand() {
-    return ajax(`/posts/${this.id}/expand-embed`).then((post) => {
-      this.set(
-        "cooked",
-        `<section class="expanded-embed">${post.cooked}</section>`
-      );
-    });
+  async expand() {
+    const post = await ajax(`/posts/${this.id}/expand-embed`);
+    this.cooked = `<section class="expanded-embed">${post.cooked}</section>`;
   }
 
   // Recover a deleted post
@@ -673,5 +714,45 @@ export default class Post extends RestModel {
     if (badgeIds) {
       return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
     }
+  }
+
+  @cached
+  get badgesGranted() {
+    return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
+  }
+
+  get requestedGroupName() {
+    return this.post_number === 1 ? this.topic?.requested_group_name : null;
+  }
+
+  get expandablePost() {
+    return this.post_number === 1 && !!this.topic?.expandable_first_post;
+  }
+
+  get topicUrl() {
+    return this.topic?.url;
+  }
+
+  @cached
+  get actionsSummary() {
+    return this.actions_summary
+      ?.filter((postAction) => {
+        return postAction.actionType.name_key !== "like" && postAction.acted;
+      })
+      ?.map((postAction) => {
+        const action = postAction.actionType.name_key;
+
+        return {
+          id: postAction.id,
+          postId: this.id,
+          action,
+          canUndo: postAction.can_undo,
+          description: i18n(`post.actions.by_you.${action}`, {
+            defaultValue: i18n(`post.actions.by_you.custom`, {
+              custom: postAction.actionType.name,
+            }),
+          }),
+        };
+      });
   }
 }

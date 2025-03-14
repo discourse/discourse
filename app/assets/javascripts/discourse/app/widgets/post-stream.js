@@ -1,16 +1,31 @@
+import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
+import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
+
+export let havePostStreamWidgetExtensions = null;
+
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === "discourse.post-stream-widget-overrides") {
+    if (!havePostStreamWidgetExtensions) {
+      havePostStreamWidgetExtensions = new Set();
+    }
+
+    havePostStreamWidgetExtensions.add(consolePrefix().slice(1, -1));
+  }
+});
 
 let transformCallbacks = null;
 
@@ -194,6 +209,8 @@ export default createWidget("post-stream", {
   tagName: "div.post-stream",
 
   html(attrs) {
+    getOwner(this).lookup("service:site").useGlimmerPostStream;
+
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
     const postArrayLength = postArray.length;
@@ -245,11 +262,27 @@ export default createWidget("post-stream", {
       const beforeGap = before[post.id];
       if (beforeGap) {
         result.push(
-          this.attach(
-            "post-gap",
-            { pos: "before", postId: post.id, gap: beforeGap },
-            { model: post }
-          )
+          this.site.useGlimmerPostStream
+            ? new RenderGlimmer(
+                this,
+                "div.post-gap-shim.glimmer-post-stream",
+                hbs`
+                <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
+                {
+                  post,
+                  gap: beforeGap,
+                  fillGap: () =>
+                    this.sendWidgetAction("fillGapBefore", {
+                      post,
+                      gap: beforeGap,
+                    }),
+                }
+              )
+            : this.attach(
+                "post-gap",
+                { pos: "before", postId: post.id, gap: beforeGap },
+                { model: post }
+              )
         );
       }
 
@@ -277,26 +310,116 @@ export default createWidget("post-stream", {
       postTransformCallbacks(transformed);
 
       if (transformed.isSmallAction) {
-        result.push(
-          this.attach("post-small-action", transformed, { model: post })
-        );
+        if (this.site.useGlimmerPostStream) {
+          result.push(
+            new RenderGlimmer(
+              this,
+              "div.post-small-action-shim.glimmer-post-stream",
+              hbs`
+                <Post::SmallAction @post={{@data.post}}
+                                   @deletePost={{@data.deletePost}}
+                                   @editPost={{@data.editPost}}
+                                   @recoverPost={{@data.recoverPost}} />`,
+              {
+                post,
+                deletePost: () => this.sendWidgetAction("deletePost", post),
+                editPost: () => this.sendWidgetAction("editPost", post),
+                recoverPost: () => this.sendWidgetAction("recoverPost", post),
+              }
+            )
+          );
+        } else {
+          result.push(
+            this.attach("post-small-action", transformed, { model: post })
+          );
+        }
       } else {
-        transformed.showReadIndicator = attrs.showReadIndicator;
-        // The following properties will have to be untangled from the transformed model when
-        // converting this widget to a Glimmer component:
-        // canCreatePost, showReadIndicator, prevPost, nextPost
-        result.push(this.attach("post", transformed, { model: post }));
+        if (this.site.useGlimmerPostStream) {
+          let multiSelect, selected;
+          if (post.canManage || post.canSplitMergeTopic) {
+            multiSelect = attrs.multiSelect;
+
+            if (multiSelect) {
+              selected = attrs.selectedQuery(post);
+            }
+          }
+
+          result.push(
+            this.attach("glimmer-post", {
+              post,
+              prevPost,
+              nextPost,
+              canCreatePost: attrs.canCreatePost, //ok
+              changeNotice: () => this.sendWidgetAction("changeNotice", post),
+              changePostOwner: () =>
+                this.sendWidgetAction("changePostOwner", post),
+              deletePost: () => this.sendWidgetAction("deletePost", post),
+              editPost: () => this.sendWidgetAction("editPost", post),
+              grantBadge: () => this.sendWidgetAction("grantBadge", post),
+              lockPost: () => this.sendWidgetAction("lockPost", post),
+              multiSelect,
+              permanentlyDeletePost: () =>
+                this.sendWidgetAction("permanentlyDeletePost", post),
+              rebakePost: () => this.sendWidgetAction("rebakePost", post),
+              recoverPost: () => this.sendWidgetAction("recoverPost", post),
+              removeAllowedGroup: () =>
+                this.sendWidgetAction("removeAllowedGroup", post),
+              removeAllowedUser: () =>
+                this.sendWidgetAction("removeAllowedUser", post),
+              replyToPost: () => this.sendWidgetAction("replyToPost", post),
+              selectBelow: () => this.sendWidgetAction("selectBelow", post),
+              selectReplies: () => this.sendWidgetAction("selectReplies", post),
+              selected,
+              showFlags: () => this.sendWidgetAction("showFlags", post),
+              showHistory: () => this.sendWidgetAction("showHistory", post),
+              showInvite: () => this.sendWidgetAction("showInvite", post),
+              showLogin: () => this.sendWidgetAction("showLogin", post),
+              showPagePublish: () =>
+                this.sendWidgetAction("showPagePublish", post),
+              showRawEmail: () => this.sendWidgetAction("showRawEmail", post),
+              showReadIndicator: attrs.showReadIndicator,
+              togglePostSelection: () =>
+                this.sendWidgetAction("togglePostSelection", post),
+              togglePostType: () =>
+                this.sendWidgetAction("togglePostType", post),
+              toggleReplyAbove: () =>
+                this.sendWidgetAction("toggleReplyAbove", post),
+              toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
+              unhidePost: () => this.sendWidgetAction("unhidePost", post),
+              unlockPost: () => this.sendWidgetAction("unlockPost", post),
+            })
+          );
+        } else {
+          transformed.showReadIndicator = attrs.showReadIndicator;
+          result.push(this.attach("post", transformed, { model: post }));
+        }
       }
 
       // Post gap - after
       const afterGap = after[post.id];
       if (afterGap) {
         result.push(
-          this.attach(
-            "post-gap",
-            { pos: "after", postId: post.id, gap: afterGap },
-            { model: post }
-          )
+          this.site.useGlimmerPostStream
+            ? new RenderGlimmer(
+                this,
+                "div.post-gap-shim.glimmer-post-stream",
+                hbs`
+                <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
+                {
+                  post,
+                  gap: afterGap,
+                  fillGap: () =>
+                    this.sendWidgetAction("fillGapAfter", {
+                      post,
+                      gap: afterGap,
+                    }),
+                }
+              )
+            : this.attach(
+                "post-gap",
+                { pos: "after", postId: post.id, gap: afterGap },
+                { model: post }
+              )
         );
       }
 
@@ -306,9 +429,19 @@ export default createWidget("post-stream", {
         attrs.lastReadPostNumber === post.post_number
       ) {
         result.push(
-          this.attach("topic-post-visited-line", {
-            post_number: post.post_number,
-          })
+          this.site.useGlimmerPostStream
+            ? new RenderGlimmer(
+                this,
+                "div.post-visited-line-shim.glimmer-post-stream",
+                hbs`
+                <Post::VisitedLine @post={{@data.post}} />`,
+                {
+                  post,
+                }
+              )
+            : this.attach("topic-post-visited-line", {
+                post_number: post.post_number,
+              })
         );
       }
 

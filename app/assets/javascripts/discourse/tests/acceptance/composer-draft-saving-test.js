@@ -19,8 +19,8 @@ acceptance("Composer - Draft saving", function (needs) {
 
   test("Shows a warning if a draft wasn't saved", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post-shim:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post-shim:nth-of-type(1) button.edit");
 
     await fillIn(".d-editor-input", draftThatWillBeSaved);
 

@@ -26,6 +26,7 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -142,7 +143,6 @@ import {
   replaceButton,
 } from "discourse/widgets/post-menu";
 import {
-  addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
@@ -162,11 +162,51 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
+const DEPRECATED_POST_STREAM_WIDGETS = [
+  "actions-summary",
+  "avatar-flair",
+  "embedded-post",
+  "expand-hidden",
+  "expand-post-button",
+  "filter-jump-to-post",
+  "filter-show-all",
+  "post-article",
+  "post-article",
+  "post-avatar-user-info",
+  "post-avatar",
+  "post-body",
+  "post-contents",
+  "post-date",
+  "post-edits-indicator",
+  "post-email-indicator",
+  "post-gap",
+  "post-group-request",
+  "post-links",
+  "post-locked-indicator",
+  "post-meta-data",
+  "post-notice",
+  "post-placeholder",
+  "post-stream",
+  "post",
+  "poster-name",
+  "poster-name-title",
+  "posts-filtered-notice",
+  "reply-to-tab",
+  "select-post",
+  "topic-post-visited-line",
+];
+
 const DEPRECATED_POST_MENU_WIDGETS = [
   "post-menu",
   "post-user-tip-shim",
   "small-user-list",
 ];
+
+const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
+};
 
 const POST_MENU_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta3-dev",
@@ -620,6 +660,14 @@ class PluginApi {
 
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
+    this.onAppEvent(
+      opts.afterAdopt
+        ? "decorate-post-cooked-element:after-adopt"
+        : "decorate-post-cooked-element:before-adopt",
+      callback
+    );
+
+    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -698,6 +746,12 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPosterIcons` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
@@ -1142,6 +1196,10 @@ class PluginApi {
    **/
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
+    this.registerValueTransformer(
+      "post-meta-data-poster-name-suppress-name",
+      () => true
+    );
   }
 
   /**
@@ -1445,7 +1503,16 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionIcon(key, icon) {
+    deprecated(
+      "`api.addPostSmallActionIcon` has been deprecated. Use the value transformer `post-small-action-icon` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostSmallActionIcon(key, icon);
+    this.registerValueTransformer(
+      "post-small-action-icon",
+      ({ value, context: { code } }) => (key === code ? icon : value)
+    );
   }
 
   /**
@@ -1472,6 +1539,11 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionClassesCallback(callback) {
+    deprecated(
+      "`api.addPostSmallActionClassesCallback` has been deprecated. Use the value transformer `post-small-action-class` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostSmallActionClassesCallback(callback);
   }
 
@@ -1533,6 +1605,11 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
+    deprecated(
+      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `post-class` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostClassesCallback(callback);
   }
 
@@ -1590,6 +1667,12 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
+    // TODO (glimmer-post-stream) what should replace this API?
+    deprecated(
+      "`api.addPostTransformCallback` has been deprecated. Use the value transformer `` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostTransformCallback(callback);
   }
 
@@ -3408,6 +3491,14 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+      return;
+    }
 
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(

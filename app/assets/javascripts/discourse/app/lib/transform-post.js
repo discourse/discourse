@@ -180,10 +180,8 @@ export default function transformPost(
   }
 
   if (postAtts.isDeleted) {
-    postAtts.deletedByAvatarTemplate = post.get(
-      "postDeletedBy.avatar_template"
-    );
-    postAtts.deletedByUsername = post.get("postDeletedBy.username");
+    postAtts.deletedByAvatarTemplate = post.get("deletedBy.avatar_template");
+    postAtts.deletedByUsername = post.get("deletedBy.username");
   }
 
   const replyToUser = post.get("reply_to_user");
