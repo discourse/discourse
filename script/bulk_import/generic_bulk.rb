@@ -2407,24 +2407,6 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_badges.close
-
-    puts "", "Updating badge grant counts..."
-    start_time = Time.now
-
-    DB.exec(<<~SQL)
-        WITH
-          grants AS (
-                      SELECT badge_id, COUNT(*) AS grant_count FROM user_badges GROUP BY badge_id
-                    )
-
-      UPDATE badges
-         SET grant_count = grants.grant_count
-        FROM grants
-       WHERE badges.id = grants.badge_id
-         AND badges.grant_count <> grants.grant_count
-    SQL
-
-    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_anniversary_user_badges
@@ -2492,6 +2474,24 @@ class BulkImport::Generic < BulkImport::Base
     UserBadge.update_featured_ranks!
 
     puts "  Anniversary user badges imported in #{(Time.now - start_time).to_i} seconds."
+
+    puts "", "Updating badge grant counts..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          grants AS (
+                      SELECT badge_id, COUNT(*) AS grant_count FROM user_badges GROUP BY badge_id
+                    )
+
+      UPDATE badges
+         SET grant_count = grants.grant_count
+        FROM grants
+       WHERE badges.id = grants.badge_id
+         AND badges.grant_count <> grants.grant_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_permalink_normalizations
