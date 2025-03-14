@@ -12,21 +12,6 @@ export default class ThemesGrid extends Component {
 
   sortedThemes;
 
-  externalResources = [
-    {
-      key: "admin.customize.theme.beginners_guide_title",
-      link: "https://meta.discourse.org/t/91966",
-    },
-    {
-      key: "admin.customize.theme.developers_guide_title",
-      link: "https://meta.discourse.org/t/93648",
-    },
-    {
-      key: "admin.customize.theme.browse_themes",
-      link: "https://meta.discourse.org/c/theme",
-    },
-  ];
-
   constructor() {
     super(...arguments);
 
@@ -51,6 +36,9 @@ export default class ThemesGrid extends Component {
       {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
+      {{#if (has-block "specialCard")}}
+        {{yield to="specialCard"}}
+      {{/if}}
     </div>
   </template>
 }

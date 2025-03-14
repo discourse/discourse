@@ -503,9 +503,9 @@ export default class Category extends RestModel {
     this.set("parent_category_id", newParentCategory?.id);
   }
 
-  @computed("site.categories.[]")
+  @computed("site.categoriesByParentId")
   get subcategories() {
-    return this.site.categories.filterBy("parent_category_id", this.id);
+    return this.site.categoriesByParentId.get(this.id) || [];
   }
 
   @computed("subcategories")
