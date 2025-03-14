@@ -844,6 +844,7 @@ acceptance("Composer", function (needs) {
 
     assert.dom(".dialog-body").doesNotExist("does not open the dialog");
     assert.dom(".d-editor-input").exists("the composer input is visible");
+    assert.dom(".d-editor-input").hasValue(/^Any plans to support/);
   });
 
   test("Can switch states without abandon popup", async function (assert) {
