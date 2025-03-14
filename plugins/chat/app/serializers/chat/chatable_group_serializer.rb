@@ -9,7 +9,7 @@ module Chat
     end
 
     def chat_enabled_user_count
-      object.users.count { |user| user.user_option&.chat_enabled }
+      object.human_users.count { |user| user.user_option&.chat_enabled }
     end
 
     def can_chat
