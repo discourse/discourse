@@ -26,6 +26,7 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -143,7 +144,6 @@ import {
   replaceButton,
 } from "discourse/widgets/post-menu";
 import {
-  addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
@@ -1504,7 +1504,16 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionIcon(key, icon) {
+    deprecated(
+      "`api.addPostSmallActionIcon` has been deprecated. Use the value transformer `post-small-action-icon` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostSmallActionIcon(key, icon);
+    this.registerValueTransformer(
+      "post-small-action-icon",
+      ({ value, context: { code } }) => (key === code ? icon : value)
+    );
   }
 
   /**
@@ -1531,6 +1540,11 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionClassesCallback(callback) {
+    deprecated(
+      "`api.addPostSmallActionClassesCallback` has been deprecated. Use the value transformer `post-small-action-class` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostSmallActionClassesCallback(callback);
   }
 
@@ -1592,9 +1606,8 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
-    // TODO (glimmer-post-stream) what should replace this API?
     deprecated(
-      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `` instead.",
+      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `post-class` instead.",
       POST_STREAM_DEPRECATION_OPTIONS
     );
 

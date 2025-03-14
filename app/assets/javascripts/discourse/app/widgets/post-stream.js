@@ -310,9 +310,29 @@ export default createWidget("post-stream", {
       postTransformCallbacks(transformed);
 
       if (transformed.isSmallAction) {
-        result.push(
-          this.attach("post-small-action", transformed, { model: post })
-        );
+        if (this.site.useGlimmerPostStream) {
+          result.push(
+            new RenderGlimmer(
+              this,
+              "div.post-small-action-shim.glimmer-post-stream",
+              hbs`
+                <Post::SmallAction @post={{@data.post}}
+                                   @deletePost={{@data.deletePost}}
+                                   @editPost={{@data.editPost}}
+                                   @recoverPost={{@data.recoverPost}} />`,
+              {
+                post,
+                deletePost: () => this.sendWidgetAction("deletePost", post),
+                editPost: () => this.sendWidgetAction("editPost", post),
+                recoverPost: () => this.sendWidgetAction("recoverPost", post),
+              }
+            )
+          );
+        } else {
+          result.push(
+            this.attach("post-small-action", transformed, { model: post })
+          );
+        }
       } else {
         if (this.site.useGlimmerPostStream) {
           let multiSelect, selected;
@@ -414,7 +434,7 @@ export default createWidget("post-stream", {
                 this,
                 "div.post-visited-line-shim.glimmer-post-stream",
                 hbs`
-                    <Post::VisitedLine @post={{@data.post}} />`,
+                <Post::VisitedLine @post={{@data.post}} />`,
                 {
                   post,
                 }
