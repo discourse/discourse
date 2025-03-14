@@ -8,7 +8,7 @@ module PageObjects
         self
       end
 
-      def fill_input(content)
+      def set_input(content)
         # Can't rely on capybara here because ace editor is not a normal input.
         page.evaluate_script(
           "ace.edit(document.getElementsByClassName('ace')[0]).setValue(#{content.to_json})",
@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def clear_input
-        fill_input("")
+        set_input("")
       end
 
       def editor_input
