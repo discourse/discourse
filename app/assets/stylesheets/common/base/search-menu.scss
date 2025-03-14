@@ -94,10 +94,7 @@ $search-pad-horizontal: 0.5em;
   .results {
     display: flex;
     flex-direction: column;
-
-    &.with-data {
-      padding-top: $search-pad-vertical;
-    }
+    padding-top: $search-pad-vertical;
 
     .list {
       min-width: 100px;
