@@ -1,5 +1,4 @@
 import UserAvatar from "discourse/components/user-avatar";
-import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 

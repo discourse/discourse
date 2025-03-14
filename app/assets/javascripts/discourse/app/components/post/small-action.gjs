@@ -117,7 +117,9 @@ export default class PostSmallAction extends Component {
   }
 
   get path() {
-    return getURL(this.args.post.action_code_path || `/t/${topic.id}`);
+    return getURL(
+      this.args.post.action_code_path || `/t/${this.args.post.topic.id}`
+    );
   }
 
   get username() {

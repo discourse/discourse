@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import UserAvatar from "discourse/components/user-avatar";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
 
 export default class PostAvatar extends Component {
