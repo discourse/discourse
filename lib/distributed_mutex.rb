@@ -39,7 +39,7 @@ class DistributedMutex
     @using_global_redis = true if !redis
     @redis = redis || Discourse.redis
     @mutex = Mutex.new
-    @validity = validity
+    @validity = validity.to_i
   end
 
   # NOTE wrapped in mutex to maintain its semantics
