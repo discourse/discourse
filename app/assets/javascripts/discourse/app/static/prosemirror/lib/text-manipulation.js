@@ -194,9 +194,10 @@ export default class ProsemirrorTextManipulation {
   emojiSelected(code) {
     let index = 0;
 
-    const match = this.autocompleteHandler.getValue().match(/\B:(\w*)$/);
+    const value = this.autocompleteHandler.getValue();
+    const match = value.match(/\B:(\w*)$/);
     if (match) {
-      index = this.autocompleteHandler.getValue().length - match.index;
+      index = value.length - match.index;
     }
 
     const { from, to } = this.view.state.selection;
