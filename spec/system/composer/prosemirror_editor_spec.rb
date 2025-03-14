@@ -426,6 +426,24 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("pre code", wait: 1)
       expect(rich).to have_css("select.code-language-select", wait: 1)
     end
+
+    it "respects existing marks when pasting a url to make a link" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      cdp.write_clipboard("`code` **bold** *italic*")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      page.execute_script("document.execCommand('selectAll',false,null)")
+      cdp.write_clipboard("www.google.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      expect(rich).to have_css("code", text: "code")
+      expect(rich).to have_css("strong", text: "bold")
+      expect(rich).to have_css("em", text: "italic")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[`code` **bold** *italic*](www.google.com)")
+    end
   end
 
   describe "trailing paragraph" do

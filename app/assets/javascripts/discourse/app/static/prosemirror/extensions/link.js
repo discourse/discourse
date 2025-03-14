@@ -121,54 +121,62 @@ const extension = {
             return;
           }
 
-          const marks = $context.marks();
-          const selectedText = view.state.doc.textBetween(
-            view.state.selection.from,
-            view.state.selection.to
-          );
-          const textNode = view.state.schema.text(selectedText, [
-            ...marks,
-            view.state.schema.marks.link.create({ href: text }),
-          ]);
-          return new Slice(Fragment.from(textNode), 0, 0);
+          const { from, to } = view.state.selection;
+          const linkMark = view.state.schema.marks.link.create({ href: text });
+
+          const tr = view.state.tr;
+          tr.addMark(from, to, linkMark);
+
+          return tr.doc.slice(from, to);
         },
 
         // Auto-linkify rich content with a single text node that is a URL
         transformPasted(paste, view) {
+          let textContent = null;
+
+          if (paste.content.childCount === 1) {
+            if (paste.content.firstChild.isText) {
+              // Direct text node
+              textContent = paste.content.firstChild.text;
+            } else if (
+              paste.content.firstChild.type.name === "paragraph" &&
+              paste.content.firstChild.childCount === 1 &&
+              paste.content.firstChild.firstChild.isText
+            ) {
+              // Text inside paragraph
+              textContent = paste.content.firstChild.firstChild.text;
+            }
+          }
+
           if (
-            paste.content.childCount === 1 &&
-            paste.content.firstChild.isText &&
-            !paste.content.firstChild.marks.some(
+            !textContent ||
+            paste.content.firstChild.firstChild.marks.some(
               (mark) => mark.type.name === "link"
             )
           ) {
-            const matches = utils
-              .getLinkify()
-              .match(paste.content.firstChild.text);
-            const isFullMatch =
-              matches &&
-              matches.length === 1 &&
-              matches[0].raw === paste.content.firstChild.text;
-
-            if (!isFullMatch) {
-              return paste;
-            }
-
-            const marks = view.state.selection.$head.marks();
-            const originalText = view.state.doc.textBetween(
-              view.state.selection.from,
-              view.state.selection.to
-            );
-
-            const textNode = view.state.schema.text(originalText, [
-              ...marks,
-              view.state.schema.marks.link.create({
-                href: paste.content.firstChild.text,
-              }),
-            ]);
-            paste = new Slice(Fragment.from(textNode), 0, 0);
+            return paste;
           }
-          return paste;
+
+          const matches = utils.getLinkify().match(textContent);
+          const isFullMatch =
+            matches && matches.length === 1 && matches[0].raw === textContent;
+
+          if (!isFullMatch) {
+            return paste;
+          }
+
+          const marks = view.state.selection.$head.marks();
+          const originalText = view.state.doc.textBetween(
+            view.state.selection.from,
+            view.state.selection.to
+          );
+
+          const textNode = view.state.schema.text(originalText, [
+            ...marks,
+            view.state.schema.marks.link.create({ href: textContent }),
+          ]);
+
+          return new Slice(Fragment.from(textNode), 0, 0);
         },
       },
     }),
