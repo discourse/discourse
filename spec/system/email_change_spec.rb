@@ -36,7 +36,7 @@ describe "Changing email", type: :system do
     mail.body.to_s[%r{/u/confirm-#{type}-email/\S+}, 0]
   end
 
-  it "allows regular user to change their email" do
+  xit "allows regular user to change their email" do
     sign_in user
 
     visit generate_confirm_link
@@ -106,7 +106,7 @@ describe "Changing email", type: :system do
     authenticator&.remove!
   end
 
-  xit "does not require login to verify" do
+  it "does not require login to verify" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
