@@ -1,10 +1,10 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TimeGap from "discourse/components/time-gap";
+import TimeGap from "discourse/components/post/time-gap";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | time-gap", function (hooks) {
+module("Integration | Component | post | time-gap", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders days correctly", async function (assert) {
