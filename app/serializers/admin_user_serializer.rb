@@ -40,6 +40,14 @@ class AdminUserSerializer < AdminUserListSerializer
     object.registration_ip_address.try(:to_s)
   end
 
+  def include_ip_address?
+    scope.can_see_ip?
+  end
+
+  def include_registration_ip_address?
+    scope.can_see_ip?
+  end
+
   def include_can_be_deleted?
     true
   end
