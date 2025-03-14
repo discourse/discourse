@@ -174,6 +174,82 @@ RSpec.describe WebhooksController do
     end
   end
 
+  describe "#netcorecloud" do
+    it "processes hard bounce" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/netcorecloud.json",
+           params: {
+             "_json" => [
+               {
+                 "TRANSID" => 15_543_162_088_093_688,
+                 "EMAIL" => email,
+                 "EVENT" => "bounced",
+                 "X-APIHEADER" => message_id,
+                 "BOUNCE_TYPE" => "HARDBOUNCE",
+                 "BOUNCE_REASONID" => 77,
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("77")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "processes soft bounce" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/netcorecloud.json",
+           params: {
+             "_json" => [
+               {
+                 "TRANSID" => 15_543_162_088_093_688,
+                 "EMAIL" => email,
+                 "EVENT" => "bounced",
+                 "X-APIHEADER" => message_id,
+                 "BOUNCE_TYPE" => "SOFTBOUNCE",
+                 "BOUNCE_REASONID" => 45,
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("45")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
+    it "processes dropped email" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/netcorecloud.json",
+           params: {
+             "_json" => [
+               {
+                 "TRANSID" => 15_543_162_088_093_688,
+                 "EMAIL" => email,
+                 "EVENT" => "dropped",
+                 "X-APIHEADER" => message_id,
+                 "BOUNCE_REASONID" => 90,
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq("90")
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+  end
+
   describe "#mailjet" do
     it "works" do
       user = Fabricate(:user, email: email)
