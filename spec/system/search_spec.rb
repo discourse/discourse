@@ -14,6 +14,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
+      SiteSetting.enable_welcome_banner = false
     end
 
     after { SearchIndexer.disable }
@@ -68,6 +69,7 @@ describe "Search", type: :system do
       SearchIndexer.index(topic, force: true)
       SiteSetting.rate_limit_search_anon_user_per_minute = 4
       RateLimiter.enable
+      SiteSetting.enable_welcome_banner = false
     end
 
     after { SearchIndexer.disable }
@@ -93,6 +95,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
+      SiteSetting.enable_welcome_banner = false
     end
 
     after { SearchIndexer.disable }
@@ -170,6 +173,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
+      SiteSetting.enable_welcome_banner = false
       sign_in(admin)
     end
 

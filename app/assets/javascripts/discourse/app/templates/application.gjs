@@ -25,6 +25,7 @@ import RenderGlimmerContainer from "discourse/components/render-glimmer-containe
 import Sidebar from "discourse/components/sidebar";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
+import WelcomeBanner from "discourse/components/welcome-banner";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
@@ -90,6 +91,9 @@ export default RouteTemplate(
 
         <div id="main-outlet">
           <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+
+          <WelcomeBanner />
+
           <div class="container" id="main-container">
             {{#if @controller.showTop}}
               <CustomHtml @name="top" />
