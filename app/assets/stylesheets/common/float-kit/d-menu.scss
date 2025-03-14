@@ -103,6 +103,7 @@
       width: 100%;
       justify-content: flex-start;
       background: rgba(0, 0, 0, 0);
+      border-radius: 0;
 
       &.-selected {
         background: var(--d-hover);
