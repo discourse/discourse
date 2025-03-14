@@ -6088,6 +6088,7 @@ en:
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
+          illegal_character_in_color: "Colors consist of hexadecimal characters only"
       plugins:
         title: "Plugins"
         name: "Name"
