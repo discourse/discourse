@@ -7,8 +7,20 @@ acceptance("Hashtag CSS Generator", function (needs) {
 
   needs.site({
     categories: [
-      { id: 1, color: "ff0000", text_color: "ffffff", name: "category1" },
-      { id: 2, color: "333", text_color: "ffffff", name: "category2" },
+      {
+        id: 1,
+        color: "ff0000",
+        text_color: "ffffff",
+        style_type: "square",
+        name: "category1",
+      },
+      {
+        id: 2,
+        color: "333",
+        text_color: "ffffff",
+        style_type: "square",
+        name: "category2",
+      },
       {
         id: 4,
         color: "2B81AF",
