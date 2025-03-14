@@ -2,11 +2,11 @@
 const extension = {
   markSpec: {
     underline: {
-      before: "link",
       toDOM() {
         return ["u", 0];
       },
       parseDOM: [{ tag: "u" }],
+      excludes: "underline link",
     },
   },
   inputRules: ({ schema, markInputRule }) =>
