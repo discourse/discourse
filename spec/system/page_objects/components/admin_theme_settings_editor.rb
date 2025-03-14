@@ -3,6 +3,11 @@
 module PageObjects
   module Components
     class AdminThemeSettingsEditor < Base
+      def opened?
+        page.has_css?(".ace_editor")
+        self
+      end
+
       def fill_in(settings)
         editor.fill_input(settings)
         self
