@@ -36,7 +36,7 @@ export default class AdminSearchDataSource extends Service {
   }
 
   async buildMap() {
-    if (this._mapCached) {
+    if (this.isLoaded) {
       return;
     }
 
