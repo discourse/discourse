@@ -66,6 +66,7 @@ export function resetPostSmallActionClassesCallbacks() {
   addPostSmallActionClassesCallbacks.length = 0;
 }
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
   tagName: "article.small-action.onscreen-post",

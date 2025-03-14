@@ -228,7 +228,14 @@ export default createWidget("post-stream", {
       const post = postArray[i];
 
       if (post instanceof Placeholder) {
-        result.push(this.attach("post-placeholder"));
+        this.site.useGlimmerPostStream
+          ? new RenderGlimmer(
+              this,
+              "div.post-placeholder-shim.glimmer-post-stream",
+              hbs`
+            <Post::Placeholder/>`
+            )
+          : result.push(this.attach("post-placeholder"));
         continue;
       }
 
@@ -310,29 +317,25 @@ export default createWidget("post-stream", {
       postTransformCallbacks(transformed);
 
       if (transformed.isSmallAction) {
-        if (this.site.useGlimmerPostStream) {
-          result.push(
-            new RenderGlimmer(
-              this,
-              "div.post-small-action-shim.glimmer-post-stream",
-              hbs`
+        result.push(
+          this.site.useGlimmerPostStream
+            ? new RenderGlimmer(
+                this,
+                "div.post-small-action-shim.glimmer-post-stream",
+                hbs`
                 <Post::SmallAction @post={{@data.post}}
                                    @deletePost={{@data.deletePost}}
                                    @editPost={{@data.editPost}}
                                    @recoverPost={{@data.recoverPost}} />`,
-              {
-                post,
-                deletePost: () => this.sendWidgetAction("deletePost", post),
-                editPost: () => this.sendWidgetAction("editPost", post),
-                recoverPost: () => this.sendWidgetAction("recoverPost", post),
-              }
-            )
-          );
-        } else {
-          result.push(
-            this.attach("post-small-action", transformed, { model: post })
-          );
-        }
+                {
+                  post,
+                  deletePost: () => this.sendWidgetAction("deletePost", post),
+                  editPost: () => this.sendWidgetAction("editPost", post),
+                  recoverPost: () => this.sendWidgetAction("recoverPost", post),
+                }
+              )
+            : this.attach("post-small-action", transformed, { model: post })
+        );
       } else {
         if (this.site.useGlimmerPostStream) {
           let multiSelect, selected;
