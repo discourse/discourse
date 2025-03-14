@@ -6,13 +6,16 @@
   }
 }
 
-.welcome-banner--visible.header-search--visible {
+.welcome-banner--visible.header-search--enabled {
   .floating-search-input-wrapper {
     display: none;
   }
 }
 
 .welcome-banner {
+  margin-bottom: 1em;
+  border-radius: var(--d-border-radius-large);
+
   &__search-menu {
     .menu-panel-results .menu-panel.search-menu-panel {
       position: unset;
@@ -23,8 +26,7 @@
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: 2.5em 0 3em;
-    margin: 1em auto;
+    padding: 1.5em 0 3em;
 
     @include breakpoint(tablet) {
       padding: 1em 8px 1.25em;

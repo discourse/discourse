@@ -69,7 +69,7 @@ export default class WelcomeBanner extends Component {
 
       <div class="welcome-banner" {{this.checkViewport}}>
         <div class="custom-search-banner welcome-banner__inner-wrapper">
-          <div class="wrap custom-search-banner-wrap welcome-banner__wrap">
+          <div class="custom-search-banner-wrap welcome-banner__wrap">
             <h1 class="welcome-banner__title">{{htmlSafe this.headerText}}</h1>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">
