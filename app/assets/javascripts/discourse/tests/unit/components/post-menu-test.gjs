@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostMenu from "discourse/components/post/menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
