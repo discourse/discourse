@@ -181,6 +181,7 @@ export default class PostArticle extends Component {
         <div class="topic-map --op">
           <TopicMap
             @model={{@post.topic}}
+            @cancelFilter={{@cancelFilter}}
             @topicDetails={{@post.topic.details}}
             @postStream={{@post.topic.postStream}}
             @showPMMap={{eq @post.topic.archetype "private_message"}}

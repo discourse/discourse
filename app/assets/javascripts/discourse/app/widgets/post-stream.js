@@ -356,6 +356,7 @@ export default createWidget("post-stream", {
               prevPost,
               nextPost,
               canCreatePost: attrs.canCreatePost, //ok
+              cancelFilter: () => this.sendWidgetAction("cancelFilter"),
               changeNotice: () => this.sendWidgetAction("changeNotice", post),
               changePostOwner: () =>
                 this.sendWidgetAction("changePostOwner", post),
@@ -466,6 +467,7 @@ export default createWidget("post-stream", {
               "div.post-filtered-notice-shim.glimmer-post-stream",
               hbs`
               <Post::FilteredNotice @posts={{@data.posts}}
+                                    @cancelFilter={{@data.cancelFilter}}
                                     @streamFilters={{@data.streamFilters}}
                                     @filteredPostsCount={{@data.filteredPostsCount}} />`,
               {

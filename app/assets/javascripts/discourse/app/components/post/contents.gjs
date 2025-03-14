@@ -139,19 +139,15 @@ export default class PostContents extends Component {
   async toggleFilteredRepliesView() {
     const post = this.args.post;
     const currentFilterPostNumber =
-      this.topic.postStream.filterRepliesToPostNumber;
+      this.args.post.topic.postStream.filterRepliesToPostNumber;
 
     if (
       currentFilterPostNumber &&
       currentFilterPostNumber === post.post_number
     ) {
       this.topicController.send("cancelFilter", currentFilterPostNumber);
-
-      this.filteredRepliesShown = false;
       return;
     }
-
-    this.filteredRepliesShown = true;
 
     await post.get("topic.postStream").filterReplies(post.post_number, post.id);
     this.topicController.updateQueryParams();

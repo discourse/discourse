@@ -109,6 +109,7 @@ export default class Post extends Component {
           @prevPost={{@prevPost}}
           @nextPost={{@nextPost}}
           @canCreatePost={{@canCreatePost}}
+          @cancelFilter={{@cancelFilter}}
           @changeNotice={{@changeNotice}}
           @changePostOwner={{@changePostOwner}}
           @deletePost={{@deletePost}}
