@@ -293,6 +293,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -342,6 +343,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -391,6 +393,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -441,6 +444,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -491,6 +495,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -542,6 +547,7 @@ export default {
           description:
             "This category is for discussion about localizing Discourse.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 1167,
@@ -594,6 +600,7 @@ export default {
           description:
             "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 4196,
@@ -645,6 +652,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -694,6 +702,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -744,6 +753,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -793,6 +803,7 @@ export default {
           description:
             "A bug report means something is broken, preventing normal/typical use of Discourse. Do be sure to search prior to submitting bugs. Include repro steps, and only describe one bug per topic please.",
           text_color: "000000",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 11179,
@@ -842,6 +853,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -891,6 +903,7 @@ export default {
           description:
             "Discussion about meta.discourse.org itself, the organization of this forum about Discourse, how it works, and how we can improve this site.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 1116,
@@ -940,6 +953,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -989,6 +1003,7 @@ export default {
           description:
             "A bug report means something is broken, preventing normal/typical use of Discourse. Do be sure to search prior to submitting bugs. Include repro steps, and only describe one bug per topic please.",
           text_color: "000000",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 11179,
@@ -1038,6 +1053,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -1088,6 +1104,7 @@ export default {
           description:
             "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 4196,
@@ -1137,6 +1154,7 @@ export default {
           description:
             "Topics about extending the functionality of Discourse with plugins, themes, add-ons, or other mechanisms for extensibility.  ",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 2574,
@@ -1186,6 +1204,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -1235,6 +1254,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
