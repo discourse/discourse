@@ -1,15 +1,17 @@
+{{#if (and this.site.isMobileViewAndDevice this.search.inTopicContext)}}
+  <DButton
+    @icon="xmark"
+    @label="search.in_this_topic"
+    @title="search.in_this_topic_tooltip"
+    @action={{fn (mut this.search.inTopicContext) false}}
+    class="btn-small search-context"
+  />
+{{/if}}
+
 {{#if (and this.search.inTopicContext (not @searchTopics))}}
-  {{#if this.site.isMobileViewAndDevice}}
-    <DButton
-      @icon="xmark"
-      @label="search.in_this_topic"
-      @title="search.in_this_topic_tooltip"
-      @action={{fn (mut this.search.inTopicContext) false}}
-      class="btn-small search-context"
-    />
-  {{else}}
+  {{#unless this.site.isMobileViewAndDevice}}
     <SearchMenu::BrowserSearchTip />
-  {{/if}}
+  {{/unless}}
 {{else}}
   <ConditionalLoadingSection @isLoading={{this.loading}}>
     <div
