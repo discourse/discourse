@@ -70,7 +70,7 @@ export default class Results extends Component {
       <BrowserSearchTip />
     {{else}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
-        <div class="results">
+        <div class="results" data-test-selector="search-menu-results">
           <PluginOutlet
             @name="search-menu-results-top"
             @outletArgs={{hash
