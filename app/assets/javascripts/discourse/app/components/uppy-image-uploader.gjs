@@ -216,7 +216,7 @@ export default class UppyImageUploader extends Component {
       {{#if @imageUrl}}
         <div class="image-upload-controls">
           <label
-            class="btn btn-flat btn-small {{if this.disabled 'disabled'}}"
+            class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
             title={{this.disabledReason}}
             for={{this.computedId}}
             tabindex="0"
@@ -235,7 +235,6 @@ export default class UppyImageUploader extends Component {
             @action={{@onUploadDeleted}}
             @icon="trash-can"
             @disabled={{this.disabled}}
-            @noAutoClass={{true}}
             @label="upload_selector.delete"
             class="btn-danger btn-small"
           />
