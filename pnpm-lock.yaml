@@ -101,8 +101,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(ember-template-lint@7.0.1(@babel/core@7.26.10))
       lint-to-the-future-eslint:
-        specifier: ^3.0.0
-        version: 3.0.0(eslint@9.22.0)
+        specifier: ^3.1.0
+        version: 3.1.0(eslint@9.22.0)
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
@@ -6077,8 +6077,8 @@ packages:
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
-  lint-to-the-future-eslint@3.0.0:
-    resolution: {integrity: sha512-ffB9PyFloMd0S3AvYUeqG24rXPAqGbd8xY3SOAnHI1W/8M6E3s+XO7UgmxjVyxHkd5suMLeZ7ymFn3QWhhVWWQ==}
+  lint-to-the-future-eslint@3.1.0:
+    resolution: {integrity: sha512-JejnF+vL2fy1orNBRZy+Ufwy7bWZge1dLatkVMVcLWwzwm4a1fI3cu85ydftCy08JSXVo4H0uLDwi1iMZHjT4A==}
     engines: {node: 10.* || >= 12.*}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -15265,11 +15265,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  lint-to-the-future-eslint@3.0.0(eslint@9.22.0):
+  lint-to-the-future-eslint@3.1.0(eslint@9.22.0):
     dependencies:
       eslint: 9.22.0
+      globby: 14.1.0
       import-cwd: 3.0.0
-      walk-sync: 3.0.0
 
   lint-to-the-future@2.6.3(encoding@0.1.13):
     dependencies:
