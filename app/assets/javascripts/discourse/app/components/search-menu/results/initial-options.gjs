@@ -203,6 +203,7 @@ export default class InitialOptions extends Component {
                 @label={{this.label}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
+                data-test-context-item="context-type"
               />
 
               {{#if
