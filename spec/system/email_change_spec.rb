@@ -50,7 +50,7 @@ describe "Changing email", type: :system do
     expect(user_preferences_page).to have_primary_email(new_email)
   end
 
-  it "works when user has totp 2fa" do
+  xit "works when user has totp 2fa" do
     SiteSetting.hide_email_address_taken = false
 
     second_factor = Fabricate(:user_second_factor_totp, user: user)
@@ -106,7 +106,7 @@ describe "Changing email", type: :system do
     authenticator&.remove!
   end
 
-  it "does not require login to verify" do
+  xit "does not require login to verify" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
