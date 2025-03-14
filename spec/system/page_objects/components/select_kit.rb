@@ -26,7 +26,7 @@ module PageObjects
       end
 
       def expanded_component
-        expand_if_needed
+        return expand if is_collapsed?
         find(@context + ".is-expanded", wait: 5)
       end
 
@@ -98,10 +98,6 @@ module PageObjects
 
       def select_row_by_index(index)
         expanded_component.find(".select-kit-row[data-index='#{index}']").click
-      end
-
-      def expand_if_needed
-        expand if is_collapsed?
       end
     end
   end
