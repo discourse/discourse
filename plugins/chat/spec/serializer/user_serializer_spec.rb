@@ -12,4 +12,10 @@ RSpec.describe UserSerializer do
       expect(serializer.as_json[:user_option][:chat_separate_sidebar_mode]).to eq("default")
     end
   end
+
+  describe "#chat_quick_reaction_type" do
+    it "is present with default enum string" do
+      expect(serializer.as_json[:user_option][:chat_quick_reaction_type]).to eq("frequent")
+    end
+  end
 end
