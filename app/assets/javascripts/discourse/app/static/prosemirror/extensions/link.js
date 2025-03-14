@@ -112,7 +112,7 @@ const extension = {
         return { href: match[2], title: match[3] };
       }
     ),
-  plugins: ({ pmState: { Plugin }, pmModel: { Slice, Fragment }, utils }) =>
+  plugins: ({ pmState: { Plugin }, utils }) =>
     new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs
@@ -121,13 +121,7 @@ const extension = {
             return;
           }
 
-          const { from, to } = view.state.selection;
-          const linkMark = view.state.schema.marks.link.create({ href: text });
-
-          const tr = view.state.tr;
-          tr.addMark(from, to, linkMark);
-
-          return tr.doc.slice(from, to);
+          return addLinkMark(view, text);
         },
 
         // Auto-linkify rich content with a single text node that is a URL
@@ -165,22 +159,21 @@ const extension = {
             return paste;
           }
 
-          const marks = view.state.selection.$head.marks();
-          const originalText = view.state.doc.textBetween(
-            view.state.selection.from,
-            view.state.selection.to
-          );
-
-          const textNode = view.state.schema.text(originalText, [
-            ...marks,
-            view.state.schema.marks.link.create({ href: textContent }),
-          ]);
-
-          return new Slice(Fragment.from(textNode), 0, 0);
+          return addLinkMark(view, textContent);
         },
       },
     }),
 };
+
+function addLinkMark(view, href) {
+  const { from, to } = view.state.selection;
+  const linkMark = view.state.schema.marks.link.create({ href });
+
+  const tr = view.state.tr;
+  tr.addMark(from, to, linkMark);
+
+  return tr.doc.slice(from, to);
+}
 
 function isPlainURL(link, parent, index) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
