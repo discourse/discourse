@@ -494,10 +494,6 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
-      abandon:
-        confirm: "You already have a draft in progress. What would you like to do with it?"
-        yes_value: "Discard"
-        no_value: "Resume editing"
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
