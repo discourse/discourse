@@ -123,7 +123,7 @@ class HashtagAutocompleteService
       @ref = params[:ref]
       @slug = params[:slug]
       @id = params[:id]
-      @style_type = params[:style_type]
+      @style_type = params[:style_type] if params[:type] == "category"
       @style_icon = params[:style_icon] if params[:style_type] == "icon"
       @style_emoji = params[:style_emoji] if params[:style_type] == "emoji"
     end
@@ -139,15 +139,13 @@ class HashtagAutocompleteService
         ref: self.ref,
         slug: self.slug,
         id: self.id,
-        style_type: self.style_type,
-        style_icon: self.style_icon,
-        style_emoji: self.style_emoji,
       }
-      # if self.style_type == "icon"
-      #   opts[:style_icon] = self.style_icon
-      # elsif self.style_type == "emoji"
-      #   opts[:style_emoji] = self.style_emoji
-      # end
+
+      opts[:style_type] = self.style_type
+      if self.type == "category"
+        opts[:style_icon] = self.style_icon if self.style_type == "icon"
+        opts[:style_emoji] = self.style_emoji if self.style_type == "emoji"
+      end
 
       opts
     end

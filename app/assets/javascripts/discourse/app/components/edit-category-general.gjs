@@ -190,8 +190,6 @@ export default class EditCategoryGeneral extends Component {
         type: "PUT",
         data,
       });
-
-      this.router.transitionTo("discovery.categories");
     } catch (error) {
       popupAjaxError(error);
     }
@@ -221,7 +219,7 @@ export default class EditCategoryGeneral extends Component {
 
   get panelClass() {
     const isActive = this.args.selectedTab === "general" ? "active" : "";
-    return "edit-category-tab edit-category-general " + isActive;
+    return "edit-category-tab edit-category-tab-general " + isActive;
   }
 
   <template>
