@@ -31,10 +31,10 @@ const chatTranscriptRule = {
     }
 
     const isThread = threadId && content.includes("[chat");
-    let wrapperDivToken = state.push("div_chat_transcript_wrap", "div", 1);
+    let wrapperDivToken = state.push("div_chat_transcript_wrap_open", "div", 1);
 
     if (channelName && multiQuote) {
-      let metaDivToken = state.push("div_chat_transcript_meta", "div", 1);
+      let metaDivToken = state.push("div_chat_transcript_meta_open", "div", 1);
       metaDivToken.attrs = [["class", "chat-transcript-meta"]];
       const channelToken = state.push("html_inline", "", 0);
 
@@ -51,7 +51,7 @@ const chatTranscriptRule = {
         channel: unescapedChannelName,
         channelLink,
       });
-      state.push("div_chat_transcript_meta", "div", -1);
+      state.push("div_chat_transcript_meta_close", "div", -1);
     }
 
     if (isThread) {
@@ -127,12 +127,12 @@ const chatTranscriptRule = {
       wrapperDivToken.attrs.push(["data-channel-id", channelId]);
     }
 
-    let userDivToken = state.push("div_chat_transcript_user", "div", 1);
+    let userDivToken = state.push("div_chat_transcript_user_open", "div", 1);
     userDivToken.attrs = [["class", "chat-transcript-user"]];
 
     // start: user avatar
     let avatarDivToken = state.push(
-      "div_chat_transcript_user_avatar",
+      "div_chat_transcript_user_avatar_open",
       "div",
       1
     );
@@ -148,11 +148,15 @@ const chatTranscriptRule = {
       avatarImgToken.content = avatarImg;
     }
 
-    state.push("div_chat_transcript_user_avatar", "div", -1);
+    state.push("div_chat_transcript_user_avatar_close", "div", -1);
     // end: user avatar
 
     // start: username
-    let usernameDivToken = state.push("div_chat_transcript_username", "div", 1);
+    let usernameDivToken = state.push(
+      "div_chat_transcript_username_open",
+      "div",
+      1
+    );
     usernameDivToken.attrs = [["class", "chat-transcript-username"]];
 
     let displayName;
@@ -165,11 +169,15 @@ const chatTranscriptRule = {
     const usernameToken = state.push("html_inline", "", 0);
     usernameToken.content = displayName;
 
-    state.push("div_chat_transcript_username", "div", -1);
+    state.push("div_chat_transcript_username_close", "div", -1);
     // end: username
 
     // start: time + link to message
-    let datetimeDivToken = state.push("div_chat_transcript_datetime", "div", 1);
+    let datetimeDivToken = state.push(
+      "div_chat_transcript_datetime_open",
+      "div",
+      1
+    );
     datetimeDivToken.attrs = [["class", "chat-transcript-datetime"]];
 
     // for some cases, like archiving, we don't want the link to the
@@ -206,7 +214,7 @@ const chatTranscriptRule = {
       linkToken.block = false;
     }
 
-    state.push("div_chat_transcript_datetime", "div", -1);
+    state.push("div_chat_transcript_datetime_close", "div", -1);
     // end: time + link to message
 
     // start: channel link for !multiQuote
@@ -223,9 +231,13 @@ const chatTranscriptRule = {
     }
     // end: channel link for !multiQuote
 
-    state.push("div_chat_transcript_user", "div", -1);
+    state.push("div_chat_transcript_user_close", "div", -1);
 
-    let messagesToken = state.push("div_chat_transcript_messages", "div", 1);
+    let messagesToken = state.push(
+      "div_chat_transcript_messages_open",
+      "div",
+      1
+    );
     messagesToken.attrs = [["class", "chat-transcript-messages"]];
 
     if (isThread) {
@@ -233,26 +245,26 @@ const chatTranscriptRule = {
       const match = regex.exec(content);
 
       if (match) {
-        const threadToken = state.push("html_raw", "", 1);
+        const threadToken = state.push("html_raw_open", "", 1);
 
         threadToken.content = customMarkdownCookFn(
           content.substring(0, match.index)
         );
-        state.push("html_raw", "", -1);
+        state.push("html_raw_close", "", -1);
         state.push("div_thread_close", "div", -1);
         state.push("summary_chat_transcript_close", "summary", -1);
-        const token = state.push("html_raw", "", 1);
+        const token = state.push("html_raw_open", "", 1);
 
         token.content = customMarkdownCookFn(content.substring(match.index));
-        state.push("html_raw", "", -1);
+        state.push("html_raw_close", "", -1);
         state.push("details_chat_transcript_wrap_close", "details", -1);
       }
     } else {
       // rendering chat message content with limited markdown rule subset
-      const token = state.push("html_raw", "", 1);
+      const token = state.push("html_raw_open", "", 1);
 
       token.content = customMarkdownCookFn(content);
-      state.push("html_raw", "", -1);
+      state.push("html_raw_close", "", -1);
     }
 
     if (reactions) {
@@ -290,8 +302,8 @@ const chatTranscriptRule = {
       state.push("div_chat_transcript_reactions", "div", -1);
     }
 
-    state.push("div_chat_transcript_messages", "div", -1);
-    state.push("div_chat_transcript_wrap", "div", -1);
+    state.push("div_chat_transcript_messages_close", "div", -1);
+    state.push("div_chat_transcript_wrap_close", "div", -1);
     return true;
   },
 };
