@@ -17,23 +17,27 @@ export default class PostNoticeCustom extends Component {
   });
 
   get createdByName() {
-    return escapeExpression(
-      prioritizeNameInUx(this.args.post.notice_created_by_user.name)
-        ? this.args.post.notice_created_by_user.name
-        : this.args.post.notice_created_by_user.username
-    );
+    if (!this.args.post.notice_created_by_user) {
+      return;
+    }
+
+    return prioritizeNameInUx(this.args.post.notice_created_by_user.name)
+      ? this.args.post.notice_created_by_user.name
+      : this.args.post.notice_created_by_user.username;
   }
 
   <template>
     {{icon "user-shield"}}
     <div class="post-notice-message test" {{this.registerCreatedByLink}}>
       {{htmlSafe @notice.cooked}}
-      {{htmlSafe
-        (i18n
-          "post.notice.custom_created_by"
-          userLinkHTML="<span class='custom_created_by'></span>"
-        )
-      }}
+      {{#if this.createdByName}}
+        {{htmlSafe
+          (i18n
+            "post.notice.custom_created_by"
+            userLinkHTML="<span class='custom_created_by'></span>"
+          )
+        }}
+      {{/if}}
       {{! #in-element is used as an strategy to render the HTML content in the string from a real component
           instead defining it from a string }}
       {{#if this.createdByAnchorElement}}
