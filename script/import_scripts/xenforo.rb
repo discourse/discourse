@@ -197,30 +197,45 @@ class ImportScripts::XenForo < ImportScripts::Base
     @prefix_as_category = true
   end
 
+  # Helper method to check if a table exists.
+  def table_exists?(table_name)
+    result = mysql_query("SHOW TABLES LIKE '#{table_name}'").to_a
+    !result.empty?
+  end
+
   def import_likes
+    # Use the reaction content table (with the prefix) for likes.
+    table_name = "#{TABLE_PREFIX}reaction_content"
+
+    unless table_exists?(table_name)
+      puts "Table #{table_name} does not exist. Skipping import of likes."
+      return
+    end
+
     puts "", "importing likes"
-    total_count =
-      mysql_query(
-        "SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'",
-      ).first[
-        "count"
-      ]
+
+    # Count the total number of 'post' likes (only include rows where is_counted = 1)
+    total_count_query = "SELECT COUNT(*) AS count FROM #{table_name} WHERE content_type = 'post' AND is_counted = 1"
+    total_count = mysql_query(total_count_query).first["count"]
+
+    # Process in batches to avoid memory issues
     batches(BATCH_SIZE) do |offset|
-      results =
-        mysql_query(
-          "SELECT like_id, content_id, like_user_id, like_date
-         FROM #{TABLE_PREFIX}liked_content
-         WHERE content_type = 'post'
-         ORDER BY like_id
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};",
-        )
-      break if results.size < 1
+      query = <<-SQL
+        SELECT reaction_content_id AS like_id, content_id, reaction_user_id, reaction_date
+        FROM #{table_name}
+        WHERE content_type = 'post' AND is_counted = 1
+        ORDER BY reaction_content_id
+        LIMIT #{BATCH_SIZE} OFFSET #{offset}
+      SQL
+
+      results = mysql_query(query).to_a
+      break if results.empty?
+
       create_likes(results, total: total_count, offset: offset) do |row|
         {
           post_id: row["content_id"],
-          user_id: row["like_user_id"],
-          created_at: Time.zone.at(row["like_date"]),
+          user_id: row["reaction_user_id"],
+          created_at: Time.zone.at(row["reaction_date"])
         }
       end
     end
@@ -308,55 +323,106 @@ class ImportScripts::XenForo < ImportScripts::Base
     end
   end
 
-  def import_private_messages
-    puts "", "importing private messages..."
-    post_count = mysql_query("SELECT COUNT(*) count FROM xf_conversation_message").first["count"]
+def import_private_messages
+    puts "", "Importing private messages..."
+    total_count = mysql_query("SELECT COUNT(*) AS count FROM xf_conversation_message").first["count"]
+
     batches(BATCH_SIZE) do |offset|
-      posts = mysql_query <<-SQL
-        SELECT c.conversation_id, c.recipients, c.title, m.message, m.user_id, m.message_date, m.message_id, IF(c.first_message_id != m.message_id, c.first_message_id, 0) as topic_id
-        FROM xf_conversation_master c
-        LEFT JOIN xf_conversation_message m ON m.conversation_id = c.conversation_id
-        ORDER BY c.conversation_id, m.message_id
-        LIMIT #{BATCH_SIZE}
-        OFFSET #{offset}
+      rows = mysql_query(<<-SQL).to_a
+        SELECT
+          cm.conversation_id,
+          cm.title,
+          cm.user_id AS conversation_owner,
+          cm.recipients,
+          cm.first_message_id,
+          cmsg.message_id,
+          cmsg.message,
+          cmsg.user_id AS message_user_id,
+          cmsg.message_date,
+          cmsg.username AS message_username
+        FROM xf_conversation_master cm
+        JOIN xf_conversation_message cmsg
+          ON cmsg.conversation_id = cm.conversation_id
+        ORDER BY cm.conversation_id, cmsg.message_date
+        LIMIT #{BATCH_SIZE} OFFSET #{offset}
       SQL
-      break if posts.size < 1
-      next if all_records_exist? :posts, posts.map { |post| "pm_#{post["message_id"]}" }
-      create_posts(posts, total: post_count, offset: offset) do |post|
-        user_id = user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID
-        title = post["title"]
-        message_id = "pm_#{post["message_id"]}"
-        raw = process_xenforo_post(post["message"], 0)
-        if raw.present?
-          msg = {
-            id: message_id,
-            user_id: user_id,
-            raw: raw,
-            created_at: Time.zone.at(post["message_date"].to_i),
-            import_mode: true,
-          }
-          if post["topic_id"] <= 0
-            topic_id = post["topic_id"]
-            if t = topic_lookup_from_imported_post_id("pm_#{topic_id}")
-              msg[:topic_id] = t[:topic_id]
-            else
-              puts "Topic ID #{topic_id} not found, skipping post #{post["message_id"]} from #{post["user_id"]}"
-              next
-            end
-          else
-            msg[:title] = post["title"]
-            msg[:archetype] = Archetype.private_message
-            to_user_array = PHP.unserialize(post["recipients"])
-            if to_user_array.size > 0
-              discourse_user_ids = to_user_array.keys.map { |id| user_id_from_imported_user_id(id) }
-              usernames = User.where(id: [discourse_user_ids]).pluck(:username)
-              msg[:target_usernames] = usernames.join(",")
+
+      break if rows.empty?
+      next if all_records_exist?(:posts, rows.map { |row| "pm_#{row["message_id"]}" })
+
+      create_posts(rows, total: total_count, offset: offset) do |row|
+        # Determine sender: use conversation_owner for the first message; otherwise, use message_user_id.
+        mapped_user_id = if row["message_id"].to_i == row["first_message_id"].to_i
+          user_id_from_imported_user_id(row["conversation_owner"])
+        else
+          user_id_from_imported_user_id(row["message_user_id"])
+        end
+
+        # If mapping fails, fall back to the system user.
+        unless User.exists?(id: mapped_user_id)
+          puts "Row #{row["message_id"]}: User mapping invalid for XenForo user #{row["message_user_id"]} or conversation owner #{row["conversation_owner"]}, using system user."
+          mapped_user_id = Discourse::SYSTEM_USER_ID
+        end
+
+        # Process the message body and timestamp.
+        raw = process_xenforo_post(row["message"], row["message_id"])
+        created_at = Time.zone.at(row["message_date"].to_i)
+
+        if row["message_id"].to_i == row["first_message_id"].to_i
+          # For the first message (PM topic), get target recipients.
+          recipients_raw = (PHP.unserialize(row["recipients"]) rescue nil)
+          if recipients_raw.blank?
+            begin
+              recipients_raw = JSON.parse(row["recipients"])
+            rescue
+              recipients_raw = {}
             end
           end
-          msg
+
+          # Fallback: if still empty, query the recipient table.
+          if recipients_raw.blank? || recipients_raw.empty?
+            recipient_rows = mysql_query("SELECT user_id FROM #{TABLE_PREFIX}conversation_recipient WHERE conversation_id = #{row["conversation_id"]} AND recipient_state = 'active'").to_a
+            if recipient_rows.any?
+              recipients_raw = {}
+              recipient_rows.each { |r| recipients_raw[r["user_id"].to_s] = true }
+            end
+          end
+
+          target_usernames = if recipients_raw.present? && recipients_raw.keys.any?
+            discourse_user_ids = recipients_raw.keys.map { |id| user_id_from_imported_user_id(id.to_s) }
+            User.where(id: discourse_user_ids).pluck(:username).join(",")
+          end
+
+          if target_usernames.blank?
+            puts "Row #{row["message_id"]}: No valid target usernames found, skipping conversation."
+            next
+          end
+
+          {
+            id: "pm_#{row["message_id"]}",
+            user_id: mapped_user_id,
+            title: row["title"].presence || "No title",
+            raw: raw,
+            created_at: created_at,
+            archetype: Archetype.private_message,
+            import_mode: true,
+            target_usernames: target_usernames
+          }
         else
-          puts "Empty message, skipping post #{post["message_id"]}"
-          next
+          # For replies, find the topic by the first message.
+          parent = topic_lookup_from_imported_post_id("pm_#{row["first_message_id"]}")
+          unless parent
+            puts "Row #{row["message_id"]}: Topic for conversation #{row["conversation_id"]} not found, skipping message."
+            next
+          end
+          {
+            id: "pm_#{row["message_id"]}",
+            user_id: mapped_user_id,
+            raw: raw,
+            created_at: created_at,
+            topic_id: parent[:topic_id],
+            import_mode: true
+          }
         end
       end
     end
