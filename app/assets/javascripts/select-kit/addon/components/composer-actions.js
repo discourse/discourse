@@ -321,6 +321,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   _replyAsNewTopicSelect(options) {
     options.action = CREATE_TOPIC;
+    options.draftKey = this.composer.topicDraftKey;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);

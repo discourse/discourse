@@ -90,7 +90,7 @@ module PageObjects
 
       def click_theme_settings_editor_button
         click_button(I18n.t("admin_js.admin.customize.theme.settings_editor"))
-        PageObjects::Components::AdminThemeSettingsEditor.new
+        PageObjects::Components::AdminThemeSettingsEditor.new.opened?
       end
 
       def switch_to_components

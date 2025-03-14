@@ -3,7 +3,6 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
-import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -382,12 +381,9 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     can_tag_topics: true,
   });
 
-  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
-
   test("shared draft", async function (assert) {
     updateCurrentUser({ draft_count: 1 });
     stubDraftResponse();
-    toggleCheckDraftPopup(true);
 
     await visit("/");
     await click("button.topic-drafts-menu-trigger");
