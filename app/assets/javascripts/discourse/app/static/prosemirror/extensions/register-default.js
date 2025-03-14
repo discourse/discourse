@@ -9,9 +9,11 @@ import image from "./image";
 import link from "./link";
 import markdownPaste from "./markdown-paste";
 import mention from "./mention";
+import onebox from "./onebox";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
+import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 
@@ -24,6 +26,7 @@ import underline from "./underline";
 const defaultExtensions = [
   emoji,
   image,
+  onebox,
   link,
   heading,
   codeBlock,
@@ -34,6 +37,7 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
+  trailingParagraph,
   typographerReplacements,
   table,
   markdownPaste,

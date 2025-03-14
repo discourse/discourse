@@ -2213,7 +2213,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
-    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。使用前缀 'fa-' 表示实心图标，使用 'far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
+    svg_icon_subset: "添加你希望包含在资产中的其他 FontAwesome 图标。实心图标不使用前缀，普通图标使用 \"far-\"，品牌图标使用 \"fab-\"。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_requirement: "将全名字段设为注册表单中的必选字段、可选字段或可选但隐藏的字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
@@ -2394,7 +2394,6 @@ zh_CN:
     glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
-    admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -4943,6 +4942,7 @@ zh_CN:
       revoked: 已撤消
       restored: 已恢复
     bulk_user_delete: "已通过批量删除操作删除"
+    cli_bulk_post_delete: "从 rake 任务中批量删除"
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"

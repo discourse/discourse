@@ -3066,9 +3066,11 @@ uk:
         new_features: "З’явилися нові функції Discourse!"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
+      change: "Змінити"
+      delete: "Видалити"
       uploading: "Надсилання"
-      processing: "Обробка надсилання"
-      select_file: "Обрати файл"
+      processing: "Обробка завантаження"
+      select_file: "Натисніть, щоб завантажити або перетягніть файл"
       default_image_alt_text: зображення
     search:
       sort_by: "Сортувати за"
@@ -5890,6 +5892,7 @@ uk:
         key: "Ключ"
         keys: "Ключі"
         created: Ким створено
+        scope: Області використання
         updated: Оновлено
         last_used: Останнє використання
         never_used: Ніколи

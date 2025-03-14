@@ -37,9 +37,10 @@ sr:
               label: ID Teme
         post_created_edited:
           fields:
-            restricted_category:
-              label: Kategorija
+            restricted_categories:
+              label: Kategorije
           created: Napravljeno
+          topics: Teme
         category_created_edited:
           fields:
             restricted_category:

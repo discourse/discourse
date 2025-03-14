@@ -165,9 +165,8 @@ hu:
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
-            restricted_category:
-              label: Kategória
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
+            restricted_categories:
+              label: Kategóriák
             restricted_user_group:
               label: Korlátozott felhasználói csoport
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés felhasználója ebben a csoportban van
@@ -191,6 +190,7 @@ hu:
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
           edited: Szerkesztve
+          topics: Témák
         user_updated:
           fields:
             user_profile:

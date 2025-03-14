@@ -48,9 +48,10 @@ sw:
           fields:
             restricted_tags:
               label: Lebo
-            restricted_category:
+            restricted_categories:
               label: Kategoria
           created: Imetengenezwa
+          topics: Mada
         category_created_edited:
           fields:
             restricted_category:

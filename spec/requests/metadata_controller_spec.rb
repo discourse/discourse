@@ -164,6 +164,9 @@ RSpec.describe MetadataController do
     it "returns 404 by default" do
       get "/apple-app-site-association"
       expect(response.status).to eq(404)
+
+      get "/.well-known/apple-app-site-association"
+      expect(response.status).to eq(404)
     end
 
     it "returns the right output" do
@@ -175,6 +178,13 @@ RSpec.describe MetadataController do
         }
       JSON
       get "/apple-app-site-association"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("applinks")
+      expect(response.media_type).to eq("application/json")
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, private")
+
+      get "/.well-known/apple-app-site-association"
 
       expect(response.status).to eq(200)
       expect(response.body).to include("applinks")

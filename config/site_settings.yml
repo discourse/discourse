@@ -3581,6 +3581,7 @@ experimental:
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
+    client: true
   rich_editor:
     client: true
     default: false
