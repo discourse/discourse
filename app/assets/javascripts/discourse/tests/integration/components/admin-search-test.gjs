@@ -1,7 +1,23 @@
-import { render } from "@ember/test-helpers";
+import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminSearch from "admin/components/admin-search";
+
+function filterButtonCss(filterType) {
+  return `.admin-search__filter.--${filterType} button`;
+}
+
+function assertFilterActive(assert, filterType, isActive = true) {
+  if (isActive) {
+    assert
+      .dom(`${filterButtonCss(filterType)}.admin-search__filter-item.is-active`)
+      .exists();
+  } else {
+    assert
+      .dom(`${filterButtonCss(filterType)}.admin-search__filter-item.is-active`)
+      .doesNotExist();
+  }
+}
 
 module("Integration | Component | AdminSearch", function (hooks) {
   setupRenderingTest(hooks);
@@ -10,32 +26,63 @@ module("Integration | Component | AdminSearch", function (hooks) {
     await render(<template><AdminSearch /></template>);
 
     assert.dom(".admin-search__filters").exists();
-    assert
-      .dom(".admin-search__filter.--page .admin-search__filter-item.is-active")
-      .exists();
-    assert
-      .dom(
-        ".admin-search__filter.--setting .admin-search__filter-item.is-active"
-      )
-      .exists();
-    assert
-      .dom(".admin-search__filter.--theme .admin-search__filter-item.is-active")
-      .exists();
-    assert
-      .dom(
-        ".admin-search__filter.--component .admin-search__filter-item.is-active"
-      )
-      .exists();
-    assert
-      .dom(
-        ".admin-search__filter.--report .admin-search__filter-item.is-active"
-      )
-      .exists();
+    assertFilterActive(assert, "page");
+    assertFilterActive(assert, "setting");
+    assertFilterActive(assert, "theme");
+    assertFilterActive(assert, "component");
+    assertFilterActive(assert, "report");
+
+    await click(filterButtonCss("page"));
+    await click(filterButtonCss("setting"));
+
+    assertFilterActive(assert, "page", false);
+    assertFilterActive(assert, "setting", false);
 
     await render(<template><AdminSearch /></template>);
 
-    // TODO (martin) test that clicking a couple of the filters is remembered
+    assertFilterActive(assert, "page", false);
+    assertFilterActive(assert, "setting", false);
   });
 
-  // test("filters different types of search results", async function (assert) {});
+  test("filters different types of search results", async function (assert) {
+    await render(<template><AdminSearch /></template>);
+    await fillIn(".admin-search__input-field", "title");
+
+    assert.dom(".admin-search__results").exists();
+    assert.dom(".admin-search__result").exists({ count: 1 });
+
+    await click(filterButtonCss("setting"));
+    assert.dom(".admin-search__result").doesNotExist();
+
+    await fillIn(".admin-search__input-field", "admin login");
+    assert.dom(".admin-search__result").exists({ count: 1 });
+
+    await click(filterButtonCss("report"));
+    assert.dom(".admin-search__result").doesNotExist();
+  });
+
+  test("navigates search results with keyboard, getting back to the input when reaching the end of results", async function (assert) {
+    await render(<template><AdminSearch /></template>);
+    await fillIn(".admin-search__input-field", "site");
+    await triggerKeyEvent(".admin-search__input-field", "keydown", "ArrowDown");
+    assert
+      .dom(
+        ".admin-search__result .admin-search__result-link[href='/admin/site_settings']"
+      )
+      .isFocused();
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    assert
+      .dom(
+        ".admin-search__result .admin-search__result-link[href='/admin/backups']"
+      )
+      .isFocused();
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert
+      .dom(
+        ".admin-search__result .admin-search__result-link[href='/admin/site_settings']"
+      )
+      .isFocused();
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+    assert.dom(".admin-search__input-field").isFocused();
+  });
 });
