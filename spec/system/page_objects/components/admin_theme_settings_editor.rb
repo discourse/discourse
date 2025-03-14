@@ -8,8 +8,8 @@ module PageObjects
         self
       end
 
-      def fill_in(settings)
-        editor.fill_input(settings)
+      def set_input(settings)
+        editor.set_input(settings)
         self
       end
 
