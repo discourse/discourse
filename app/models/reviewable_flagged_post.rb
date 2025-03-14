@@ -333,6 +333,7 @@ class ReviewableFlaggedPost < Reviewable
       action.description = "#{prefix}.description"
       action.client_action = client_action
       action.confirm_message = "#{prefix}.confirm" if confirm
+      action.completed_message = "#{prefix}.complete"
     end
   end
 
