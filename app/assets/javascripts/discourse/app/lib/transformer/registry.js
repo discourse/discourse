@@ -32,7 +32,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-class",
   "post-menu-buttons",
   "post-meta-data-poster-name-suppress-name",
-  "post-notice-components",
+  "post-notice-component",
   "post-small-action-class",
   "post-small-action-custom-component",
   "post-small-action-icon",

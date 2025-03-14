@@ -5,7 +5,7 @@ import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
-import { and, eq } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
@@ -131,7 +131,7 @@ export default class PostArticle extends Component {
           </section>
         </div>
       {{/if}}
-      {{#if (and @post.deletedAt @post.notice)}}
+      {{#if (and (not @post.deletedAt) @post.notice)}}
         <div class="row">
           <PostNotice @post={{@post}} />
         </div>

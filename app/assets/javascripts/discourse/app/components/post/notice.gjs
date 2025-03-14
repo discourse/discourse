@@ -8,19 +8,25 @@ import PostNoticeCustom from "./notice/custom";
 import PostNoticeNewUser from "./notice/new-user";
 import PostNoticeReturningUser from "./notice/returning-user";
 
+const POST_NOTICE_COMPONENTS = {
+  custom: PostNoticeCustom,
+  new_user: PostNoticeNewUser,
+  returning_user: PostNoticeReturningUser,
+};
+
 export default class PostNotice extends Component {
   @service siteSettings;
 
-  get components() {
-    return applyValueTransformer("post-notice-components", {
-      custom: PostNoticeCustom,
-      new_user: PostNoticeNewUser,
-      returning_user: PostNoticeReturningUser,
-    });
+  get Component() {
+    return applyValueTransformer(
+      "post-notice-component",
+      POST_NOTICE_COMPONENTS[this.type],
+      { type: this.type, post: this.args.post }
+    );
   }
 
   get classNames() {
-    const classes = [dasherize(this.args.post.notice.type)];
+    const classes = [dasherize(this.type)];
 
     if (
       new Date() - new Date(this.args.post.created_at) >
@@ -38,9 +44,7 @@ export default class PostNotice extends Component {
 
   <template>
     <div class={{concatClass "post-notice" this.classNames}}>
-      {{#let (get this.components this.type) as |PostNoticeTypeComponent|}}
-        <PostNoticeTypeComponent @notice={{@post.notice}} @post={{@post}} />
-      {{/let}}
+      <this.Component @notice={{@post.notice}} @post={{@post}} />
     </div>
   </template>
 }

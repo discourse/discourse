@@ -86,6 +86,7 @@ addWidgetCleanCallback("post-stream", () => {
   _heights = {};
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("posts-filtered-notice", {
   buildKey: (attrs) => `posts-filtered-notice-${attrs.id}`,
 
@@ -168,6 +169,7 @@ createWidget("posts-filtered-notice", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("filter-jump-to-post", {
   tagName: "a.filtered-jump-to-post",
   buildKey: (attrs) => `jump-to-post-${attrs.id}`,
@@ -184,6 +186,7 @@ createWidget("filter-jump-to-post", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 createWidget("filter-show-all", {
   tagName: "button.filtered-replies-show-all",
   buildKey: (attrs) => `filtered-show-all-${attrs.id}`,
@@ -233,7 +236,7 @@ export default createWidget("post-stream", {
               this,
               "div.post-placeholder-shim.glimmer-post-stream",
               hbs`
-            <Post::Placeholder/>`
+              <Post::Placeholder/>`
             )
           : result.push(this.attach("post-placeholder"));
         continue;
@@ -457,11 +460,26 @@ export default createWidget("post-stream", {
       (Object.keys(before).length > 0 || Object.keys(after).length > 0)
     ) {
       result.push(
-        this.attach("posts-filtered-notice", {
-          posts: postArray,
-          streamFilters: attrs.streamFilters,
-          filteredPostsCount: attrs.filteredPostsCount,
-        })
+        this.site.useGlimmerPostStream
+          ? new RenderGlimmer(
+              this,
+              "div.post-filtered-notice-shim.glimmer-post-stream",
+              hbs`
+              <Post::FilteredNotice @posts={{@data.posts}}
+                                    @streamFilters={{@data.streamFilters}}
+                                    @filteredPostsCount={{@data.filteredPostsCount}} />`,
+              {
+                posts: postArray,
+                streamFilters: attrs.streamFilters,
+                filteredPostsCount: attrs.filteredPostsCount,
+                cancelFilter: () => this.sendWidgetAction("cancelFilter"),
+              }
+            )
+          : this.attach("posts-filtered-notice", {
+              posts: postArray,
+              streamFilters: attrs.streamFilters,
+              filteredPostsCount: attrs.filteredPostsCount,
+            })
       );
     }
 
