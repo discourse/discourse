@@ -16,6 +16,7 @@ import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
 import {
+  applyBehaviorTransformer,
   applyMutableValueTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
