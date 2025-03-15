@@ -21,7 +21,7 @@ acceptance("Search - Mobile", function (needs) {
         .doesNotExist("should not show recent search suggestions");
       assert
         .dom('[data-test-selector="search-menu-initial-options"]')
-        .doesNotExist("should not show initial options");
+        .hasNoText("should not render any contents inside initial options");
     });
 
     test("with search term present", async function (assert) {
