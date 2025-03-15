@@ -17,6 +17,15 @@
         "text_color": {
           "type": "string"
         },
+        "style_type": {
+          "type": "string"
+        },
+        "style_emoji": {
+          "type": "string"
+        },
+        "style_icon": {
+          "type": "string"
+        },
         "slug": {
           "type": "string"
         },
@@ -279,6 +288,9 @@
         "name",
         "color",
         "text_color",
+        "style_type",
+        "style_emoji",
+        "style_icon",
         "slug",
         "topic_count",
         "post_count",

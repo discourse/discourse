@@ -22,20 +22,20 @@ acceptance("Category Edit", function (needs) {
     );
 
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
-    assert.dom(".category-color-editor .badge-category").hasText("bug");
+    assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.dom(".category-color-editor .badge-category").hasText("testing");
+    assert.dom(".category-style .badge-category__name").hasText("testing");
 
     await fillIn(".edit-text-color input", "ff0000");
 
     await click(".edit-category-topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click("#save-category");
+    await click("form button[type=submit]");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
-      "stays on the edit screen"
+      "stays on the general edit screen"
     );
 
     await visit("/c/bug/edit/settings");
@@ -47,7 +47,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
-      "stays on the edit screen"
+      "stays on the settings edit screen"
     );
 
     sinon.stub(DiscourseURL, "routeTo");
@@ -201,7 +201,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click("#save-category");
+    await click("form button[type=submit]");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {

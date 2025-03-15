@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { helperContext, registerRawHelper } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -46,6 +47,19 @@ export function categoryBadgeHTML(category, opts) {
       siteSettings.suppress_uncategorized_badge)
   ) {
     return "";
+  }
+
+  if (!opts.styleType) {
+    opts.styleType = category.style_type;
+
+    switch (opts.styleType) {
+      case "icon":
+        opts.styleIcon = category.style_icon;
+        break;
+      case "emoji":
+        opts.styleEmoji = category.style_emoji;
+        break;
+    }
   }
 
   const depth = (opts.depth || 1) + 1;
@@ -151,6 +165,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
+  if (opts.styleType) {
+    classNames += ` --style-${opts.styleType}`;
+  }
+
   html += `<span
     ${dataAttributes}
     data-drop-close="true"
@@ -162,6 +180,14 @@ export function defaultCategoryLinkRenderer(category, opts) {
     }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
+
+  if (opts.styleType === "icon" && opts.styleIcon) {
+    html += iconHTML(opts.styleIcon);
+  }
+
+  if (opts.styleType === "emoji" && opts.styleEmoji) {
+    html += replaceEmoji(`:${opts.styleEmoji}:`);
+  }
 
   // not ideal as we have to call it manually and we pass a fake category object
   // but there's not way around it for now

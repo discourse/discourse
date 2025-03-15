@@ -75,6 +75,11 @@ export default class EditCategoryTabsController extends Controller {
     return i18n(`category.${underscore(tab)}`);
   }
 
+  @discourseComputed("selectedTab")
+  showSubmit(tab) {
+    return tab !== "general";
+  }
+
   @action
   registerValidator(validator) {
     this.validators.push(validator);
