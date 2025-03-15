@@ -15,7 +15,6 @@ const isMac =
 
 export function buildKeymap(
   extensions,
-  schema,
   initialKeymap,
   params,
   includeDefault = true
@@ -37,6 +36,8 @@ export function buildKeymap(
   if (!includeDefault) {
     return keys;
   }
+
+  const schema = params.schema;
 
   keys["Shift-Enter"] = chainCommands(exitCode, (state, dispatch) => {
     if (dispatch) {

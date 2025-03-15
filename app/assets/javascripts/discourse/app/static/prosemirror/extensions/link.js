@@ -104,8 +104,8 @@ const extension = {
       mixable: true,
     },
   },
-  inputRules: ({ schema, markInputRule }) =>
-    markInputRule(
+  inputRules: ({ schema, utils }) =>
+    utils.markInputRule(
       /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
       schema.marks.link,
       (match) => {
