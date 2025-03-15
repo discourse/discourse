@@ -66,6 +66,7 @@ export default class Results extends Component {
         @title="search.in_this_topic_tooltip"
         @action={{fn (mut this.search.inTopicContext) false}}
         class="btn-small search-context"
+        data-test-button="search-in-this-topic"
       />
     {{/if}}
 
