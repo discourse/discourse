@@ -27,7 +27,7 @@
 {{/unless}}
 
 <div class="navigation-controls">
-  {{#if (and this.notCategoriesRoute this.site.mobileView @canBulkSelect)}}
+  {{#if this.showBulkSelectInNavControls}}
     <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
   {{/if}}
 
