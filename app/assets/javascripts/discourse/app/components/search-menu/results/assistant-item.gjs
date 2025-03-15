@@ -23,6 +23,7 @@ export function resetItemSelectCallbacks() {
 
 export default class AssistantItem extends Component {
   @service search;
+  @service site;
   @service appEvents;
 
   icon = this.args.icon || "magnifying-glass";
@@ -183,7 +184,13 @@ export default class AssistantItem extends Component {
         </span>
         {{#if @extraHint}}
           <span class="extra-hint">
-            {{i18n "search.enter_hint"}}
+            {{i18n
+              (if
+                this.site.isMobileViewAndDevice
+                "search.mobile_enter_hint"
+                "search.enter_hint"
+              )
+            }}
           </span>
         {{/if}}
       </a>
