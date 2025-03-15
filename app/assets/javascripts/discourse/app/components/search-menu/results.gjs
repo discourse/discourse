@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
 import Assistant from "discourse/components/search-menu/results/assistant";
@@ -30,8 +29,7 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
-
-  @tracked searchTopics = this.args.searchTopics;
+  @service site;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
@@ -60,17 +58,24 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
-  @action
-  updateSearchTopics(value) {
-    this.searchTopics = value;
-  }
-
   <template>
+    {{#if (and this.site.isMobileViewAndDevice this.search.inTopicContext)}}
+      <DButton
+        @icon="xmark"
+        @label="search.in_this_topic"
+        @title="search.in_this_topic_tooltip"
+        @action={{fn (mut this.search.inTopicContext) false}}
+        class="btn-small search-context"
+      />
+    {{/if}}
+
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
-      <BrowserSearchTip />
+      {{#unless this.site.isMobileViewAndDevice}}
+        <BrowserSearchTip />
+      {{/unless}}
     {{else}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
-        <div class="results">
+        <div class="results" data-test-selector="search-menu-results">
           <PluginOutlet
             @name="search-menu-results-top"
             @outletArgs={{hash

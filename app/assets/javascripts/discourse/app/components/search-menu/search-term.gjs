@@ -120,6 +120,7 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
+      ...attributes
       id={{this.inputId}}
       type="search"
       autocomplete="off"
