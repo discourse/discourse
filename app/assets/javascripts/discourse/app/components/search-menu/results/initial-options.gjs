@@ -47,6 +47,12 @@ export default class InitialOptions extends Component {
     }
   }
 
+  get hideForEmptyMobileSearch() {
+    return (
+      this.site.isMobileViewAndDevice && !this.search.activeGlobalSearchTerm
+    );
+  }
+
   get termMatchesContextTypeKeyword() {
     return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP);
   }
@@ -189,17 +195,19 @@ export default class InitialOptions extends Component {
             {{/if}}
 
             {{#if this.search.searchContext}}
-              <this.contextTypeComponent
-                @slug={{this.slug}}
-                @suggestionKeyword={{this.contextTypeKeyword}}
-                @results={{this.initialResults}}
-                @withInLabel={{this.withInLabel}}
-                @suffix={{this.suffix}}
-                @label={{this.label}}
-                @closeSearchMenu={{@closeSearchMenu}}
-                @searchTermChanged={{@searchTermChanged}}
-                data-test-context-item="context-type"
-              />
+              {{#unless this.hideForEmptyMobileSearch}}
+                <this.contextTypeComponent
+                  @slug={{this.slug}}
+                  @suggestionKeyword={{this.contextTypeKeyword}}
+                  @results={{this.initialResults}}
+                  @withInLabel={{this.withInLabel}}
+                  @suffix={{this.suffix}}
+                  @label={{this.label}}
+                  @closeSearchMenu={{@closeSearchMenu}}
+                  @searchTermChanged={{@searchTermChanged}}
+                  data-test-context-item="context-type"
+                />
+              {{/unless}}
 
               {{#if
                 (and
@@ -214,7 +222,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else}}
+          {{else if (not this.site.isMobileViewAndDevice)}}
             <RandomQuickTip
               @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}
