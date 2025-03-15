@@ -36,7 +36,7 @@ acceptance("User menu", function (needs) {
   });
 
   needs.settings({
-    allow_anonymous_posting: true,
+    allow_anonymous_mode: true,
   });
 
   let requestHeaders = {};
@@ -622,7 +622,7 @@ acceptance("User menu", function (needs) {
     assert
       .dom("#quick-access-profile ul li.enable-anonymous")
       .doesNotExist(
-        "toggle anon button is not shown if the allow_anonymous_posting setting is false"
+        "toggle anon button is not shown if the allow_anonymous_mode setting is false"
       );
 
     await clickOutside();

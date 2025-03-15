@@ -180,7 +180,7 @@ RSpec.describe ApplicationController do
 
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       sign_in(user)
 
