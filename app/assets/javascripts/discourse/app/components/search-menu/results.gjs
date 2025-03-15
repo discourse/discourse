@@ -58,11 +58,6 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
-  @action
-  updateSearchTopics(value) {
-    this.searchTopics = value;
-  }
-
   <template>
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
       <BrowserSearchTip />
