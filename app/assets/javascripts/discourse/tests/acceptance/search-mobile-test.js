@@ -1,6 +1,7 @@
 import { click, fillIn, findAll, visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
@@ -89,6 +90,34 @@ acceptance("Search - Mobile", function (needs) {
         0,
         "search results are reset"
       );
+    });
+  });
+
+  module("filtered search", function () {
+    test("initial options - topic search scope", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#search-button");
+      await fillIn("#search-term", "sm");
+
+      assert
+        .dom('[data-test-assistant-item="search-in-topics-posts"]')
+        .includesText(
+          `sm ${i18n("search.in_topics_posts")} ${i18n("search.mobile_enter_hint")}`,
+          "should show mobile specific copy"
+        );
+      assert
+        .dom('[data-test-context-item="context-type"]')
+        .hasText(
+          `sm ${i18n("search.in_this_topic")}`,
+          "should show topic context suggestion"
+        );
+
+      await click('[data-test-context-item="context-type"]');
+
+      assert.dom('[data-test-context-item="context-type"]').doesNotExist();
+      assert
+        .dom('[data-test-button="search-in-this-topic"]')
+        .isVisible('should show "in topic" filter selected');
     });
   });
 
