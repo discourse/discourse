@@ -13,6 +13,7 @@ export default class Search extends Service {
   @tracked searchContext;
   @tracked highlightTerm;
   @tracked inTopicContext = false;
+  @tracked inPMInboxContext = this.contextType === "private_messages";
   @tracked visible = false;
   @tracked results = {};
   @tracked welcomeBannerSearchInViewport = false;
