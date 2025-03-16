@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,11 +10,12 @@ import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
 import MenuPanel from "discourse/components/menu-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActiveFilters from "discourse/components/search-menu/active-filters";
 import AdvancedButton from "discourse/components/search-menu/advanced-button";
 import ClearButton from "discourse/components/search-menu/clear-button";
+import MobileSearchButton from "discourse/components/search-menu/mobile-search-button";
 import Results from "discourse/components/search-menu/results";
 import SearchTerm from "discourse/components/search-menu/search-term";
-import concatClass from "discourse/helpers/concat-class";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -29,6 +30,7 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { i18n } from "discourse-i18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -44,8 +46,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked
-  inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -107,7 +107,7 @@ export default class SearchMenu extends Component {
   }
 
   get searchContext() {
-    if (this.search.inTopicContext || this.inPMInboxContext) {
+    if (this.search.inTopicContext || this.search.inPMInboxContext) {
       return this.search.searchContext;
     }
 
@@ -221,21 +221,15 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  clearPMInboxContext() {
-    this.inPMInboxContext = false;
-  }
-
-  @action
-  clearTopicContext() {
-    this.search.inTopicContext = false;
-  }
-
-  @action
-  cancelSearchMobile() {
+  cancelMobileSearch() {
     this.close();
 
     if (this.search.inTopicContext) {
-      this.clearTopicContext();
+      this.search.inTopicContext = false;
+    }
+
+    if (this.search.inPMInboxContext) {
+      this.search.inPMInboxContext = false;
     }
 
     if (this.search.activeGlobalSearchTerm) {
@@ -417,16 +411,51 @@ export default class SearchMenu extends Component {
       {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
-      <div
-        class={{concatClass "search-input" (concat "search-input--" @location)}}
-      >
-        {{#if this.search.inTopicContext}}
+      <div class="search-input-wrapper">
+        <div class="search-input">
+          {{#if this.site.isMobileViewAndDevice}}
+            <MobileSearchButton @onTap={{this.mobileSearch}} />
+          {{else}}
+            <ActiveFilters />
+          {{/if}}
+
+          <PluginOutlet
+            @name="search-menu-before-term-input"
+            @outletArgs={{hash openSearchMenu=this.open}}
+          />
+
+          <SearchTerm
+            @searchTermChanged={{this.searchTermChanged}}
+            @typeFilter={{this.typeFilter}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @triggerSearch={{this.triggerSearch}}
+            @fullSearch={{this.fullSearch}}
+            @closeSearchMenu={{this.close}}
+            @openSearchMenu={{this.open}}
+            @autofocus={{@autofocusInput}}
+            data-test-input="search-term"
+          />
+
+          {{#if this.loading}}
+            <div class="searching">
+              {{loadingSpinner}}
+            </div>
+          {{else}}
+            <div class="searching">
+              <PluginOutlet @name="search-menu-before-advanced-search" />
+              {{#if this.search.activeGlobalSearchTerm}}
+                <ClearButton @clearSearch={{this.clearSearch}} />
+              {{/if}}
+              <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
+            </div>
+          {{/if}}
+        </div>
+        {{#if this.site.isMobileViewAndDevice}}
           <DButton
-            @icon="xmark"
-            @label="search.in_this_topic"
-            @title="search.in_this_topic_tooltip"
-            @action={{this.clearTopicContext}}
-            class="btn-small search-context"
+            @action={{this.cancelMobileSearch}}
+            @translatedLabel={{i18n "cancel_value"}}
+            class="btn-flat"
+            data-test-button="cancel-search-mobile"
           />
         {{else if this.inPMInboxContext}}
           <DButton
@@ -480,7 +509,6 @@ export default class SearchMenu extends Component {
           @suggestionKeyword={{this.suggestionKeyword}}
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
-          @inPMInboxContext={{this.inPMInboxContext}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
@@ -496,7 +524,6 @@ export default class SearchMenu extends Component {
             @suggestionKeyword={{this.suggestionKeyword}}
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
-            @inPMInboxContext={{this.inPMInboxContext}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}
