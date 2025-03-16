@@ -46,7 +46,7 @@ export default class WelcomeBanner extends Component {
     }
 
     return i18n("welcome_banner.header.logged_in_members", {
-      username: prioritizeNameFallback(
+      preferred_display_name: prioritizeNameFallback(
         this.currentUser.name,
         this.currentUser.username
       ),

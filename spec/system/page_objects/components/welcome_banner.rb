@@ -25,7 +25,8 @@ module PageObjects
       def has_logged_in_title?(username)
         has_css?(
           ".welcome-banner .welcome-banner__title",
-          text: I18n.t("js.welcome_banner.header.logged_in_members", username:),
+          text:
+            I18n.t("js.welcome_banner.header.logged_in_members", preferred_display_name: username),
         )
       end
     end

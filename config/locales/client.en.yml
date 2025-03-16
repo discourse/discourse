@@ -220,7 +220,7 @@ en:
 
     welcome_banner:
       header:
-        logged_in_members: "Welcome back, %{username}!"
+        logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       search: "Search"
 
