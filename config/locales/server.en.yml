@@ -5673,22 +5673,27 @@ en:
         complete: "Post discarded."
       revise_and_reject_post:
         title: "Revise Post..."
+        complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
       approve:
         title: "Approve"
+        complete: "Post approved."
       approve_post:
         title: "Approve Post"
         confirm_closed: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
       reject_post:
         title: "Reject Post"
+        complete: "Post rejected."
       approve_user:
         title: "Approve User"
+        complete: "User approved."
       reject_user:
         title: "Delete User…"
         delete:
@@ -5704,14 +5709,19 @@ en:
         bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
+        complete: "Post rejected and user suspended."
       reject_and_silence:
         title: "Reject and Silence user"
+        complete: "Post rejected and user silenced."
       reject_and_delete:
         title: "Reject and Delete the post"
+        complete: "Post rejected and deleted."
       reject_and_keep_deleted:
         title: "Keep post deleted"
+        complete: "Post rejected and kept deleted."
       approve_and_restore:
         title: "Approve and Restore post"
+        complete: "Post approved and restored."
       delete_user:
         reason: "Deleted via review queue"
 
