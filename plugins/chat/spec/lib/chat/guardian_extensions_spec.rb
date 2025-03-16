@@ -45,6 +45,28 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    context "when user is a shadow account" do
+      fab!(:anonymous)
+
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      context "when allow_chat_in_anonymous_mode is true" do
+        before { SiteSetting.allow_chat_in_anonymous_mode = true }
+
+        it "can chat" do
+          expect(Guardian.new(anonymous).can_chat?).to eq(true)
+        end
+      end
+
+      context "when allow_chat_in_anonymous_mode is false" do
+        before { SiteSetting.allow_chat_in_anonymous_mode = false }
+
+        it "can not chat" do
+          expect(Guardian.new(anonymous).can_chat?).to eq(false)
+        end
+      end
+    end
+
     it "allows TL1 to chat by default and by extension higher trust levels" do
       expect(guardian.can_chat?).to eq(true)
       user.change_trust_level!(TrustLevel[3])

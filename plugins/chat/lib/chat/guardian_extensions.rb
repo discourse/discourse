@@ -13,7 +13,13 @@ module Chat
 
     def can_chat?
       return false if anonymous?
-      @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
+      return true if @user.bot?
+
+      if @user.anonymous?
+        SiteSetting.allow_chat_in_anonymous_mode
+      else
+        @user.in_any_groups?(Chat.allowed_group_ids)
+      end
     end
 
     def can_direct_message?
