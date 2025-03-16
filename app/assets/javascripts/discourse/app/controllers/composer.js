@@ -6,7 +6,6 @@ import deprecated from "discourse/lib/deprecated";
 import Composer, {
   addComposerSaveErrorCallback,
   clearComposerSaveErrorCallback,
-  toggleCheckDraftPopup,
 } from "discourse/services/composer";
 
 // TODO add deprecation
@@ -32,5 +31,4 @@ export {
   clearComposerSaveErrorCallback,
   clearPopupMenuOptions,
   clearPopupMenuOptionsCallback,
-  toggleCheckDraftPopup,
 };

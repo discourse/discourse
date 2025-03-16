@@ -89,6 +89,10 @@ class UserApiKeysController < ApplicationController
 
     public_key_str = @client.public_key.present? ? @client.public_key : params[:public_key]
     public_key = OpenSSL::PKey::RSA.new(public_key_str)
+
+    # by default, Ruby uses `PKCS1_PADDING` here
+    # see https://docs.ruby-lang.org/en/3.2/OpenSSL/PKey/RSA.html#method-i-public_encrypt
+    # make sure that Node/OpenSSL can use the same padding in your implementation
     @payload = Base64.encode64(public_key.public_encrypt(@payload))
 
     if scopes.include?("one_time_password")

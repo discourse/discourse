@@ -33,12 +33,12 @@ const extension = {
 
   inputRules: [
     {
-      match: /(?<=^|\s)\[(x? ?)]$/,
+      match: /(^|\s)\[(x? ?)]$/,
       handler: (state, match, start, end) =>
         state.tr.replaceWith(
-          start,
+          start + match[1].length,
           end,
-          state.schema.nodes.check.create({ checked: match[1] === "x" })
+          state.schema.nodes.check.create({ checked: match[2] === "x" })
         ),
       options: { undoable: false },
     },

@@ -30,6 +30,7 @@ export default class ComposerToggleSwitch extends Component {
       }}
       type="button"
       role="switch"
+      disabled={{@disabled}}
       aria-checked={{if @state "true" "false"}}
       aria-label={{this.label}}
       title={{this.label}}

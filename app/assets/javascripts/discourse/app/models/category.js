@@ -503,12 +503,10 @@ export default class Category extends RestModel {
     this.set("parent_category_id", newParentCategory?.id);
   }
 
-  @computed("site.categories.[]")
   get subcategories() {
-    return this.site.categories.filterBy("parent_category_id", this.id);
+    return this.site.categoriesByParentId.get(this.id) || [];
   }
 
-  @computed("subcategories")
   get unloadedSubcategoryCount() {
     return this.subcategory_count - this.subcategories.length;
   }
@@ -560,8 +558,7 @@ export default class Category extends RestModel {
     }
   }
 
-  @discourseComputed("subcategories")
-  descendants() {
+  get descendants() {
     const descendants = [this];
     for (let i = 0; i < descendants.length; i++) {
       if (descendants[i].subcategories) {

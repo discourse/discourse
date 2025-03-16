@@ -166,7 +166,7 @@ class PostDestroyer
     # All posts in the topic must be force deleted if the first is force
     # deleted (except @post which is destroyed by current instance).
     if @topic && @post.is_first_post? && permanent?
-      @topic.ordered_posts.with_deleted.reverse_order.find_each do |post|
+      @topic.posts.with_deleted.find_each do |post|
         PostDestroyer.new(@user, post, @opts).destroy if post.id != @post.id
       end
     end
