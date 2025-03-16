@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActiveFilters from "discourse/components/search-menu/active-filters";
 import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
@@ -32,7 +32,7 @@ export default class Results extends Component {
   @service site;
 
   get renderInitialOptions() {
-    return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
+    return !this.search.activeGlobalSearchTerm && !this.search.inPMInboxContext;
   }
 
   get noTopicResults() {
@@ -59,15 +59,13 @@ export default class Results extends Component {
   }
 
   <template>
-    {{#if (and this.site.isMobileViewAndDevice this.search.inTopicContext)}}
-      <DButton
-        @icon="xmark"
-        @label="search.in_this_topic"
-        @title="search.in_this_topic_tooltip"
-        @action={{fn (mut this.search.inTopicContext) false}}
-        class="btn-small search-context"
-        data-test-button="search-in-this-topic"
-      />
+    {{#if
+      (and
+        this.site.isMobileViewAndDevice
+        (or this.search.inTopicContext this.search.inPMInboxContext)
+      )
+    }}
+      <ActiveFilters />
     {{/if}}
 
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
@@ -103,7 +101,7 @@ export default class Results extends Component {
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
-            {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
+            {{#if (and (not @searchTopics) (not this.search.inPMInboxContext))}}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
                 @closeSearchMenu={{@closeSearchMenu}}
@@ -128,7 +126,7 @@ export default class Results extends Component {
               />
             {{else if
               (and
-                (not @inPMInboxContext)
+                (not this.search.inPMInboxContext)
                 (not @searchTopics)
                 this.resultTypesWithComponent
               )

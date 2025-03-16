@@ -10,6 +10,7 @@ import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
 import MenuPanel from "discourse/components/menu-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActiveFilters from "discourse/components/search-menu/active-filters";
 import AdvancedButton from "discourse/components/search-menu/advanced-button";
 import ClearButton from "discourse/components/search-menu/clear-button";
 import MobileSearchButton from "discourse/components/search-menu/mobile-search-button";
@@ -50,8 +51,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked
-  inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -112,7 +111,7 @@ export default class SearchMenu extends Component {
   }
 
   get searchContext() {
-    if (this.search.inTopicContext || this.inPMInboxContext) {
+    if (this.search.inTopicContext || this.search.inPMInboxContext) {
       return this.search.searchContext;
     }
 
@@ -221,21 +220,15 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  clearPMInboxContext() {
-    this.inPMInboxContext = false;
-  }
-
-  @action
-  clearTopicContext() {
-    this.search.inTopicContext = false;
-  }
-
-  @action
-  cancelSearchMobile() {
+  cancelMobileSearch() {
     this.close();
 
     if (this.search.inTopicContext) {
-      this.clearTopicContext();
+      this.search.inTopicContext = false;
+    }
+
+    if (this.search.inPMInboxContext) {
+      this.search.inPMInboxContext = false;
     }
 
     if (this.search.activeGlobalSearchTerm) {
@@ -425,23 +418,7 @@ export default class SearchMenu extends Component {
           {{#if this.site.isMobileViewAndDevice}}
             <MobileSearchButton @onTap={{this.mobileSearch}} />
           {{else}}
-            {{#if this.search.inTopicContext}}
-              <DButton
-                @icon="xmark"
-                @label="search.in_this_topic"
-                @title="search.in_this_topic_tooltip"
-                @action={{this.clearTopicContext}}
-                class="btn-small search-context"
-              />
-            {{else if this.inPMInboxContext}}
-              <DButton
-                @icon="xmark"
-                @label="search.in_messages"
-                @title="search.in_messages_tooltip"
-                @action={{this.clearPMInboxContext}}
-                class="btn-small search-context"
-              />
-            {{/if}}
+            <ActiveFilters />
           {{/if}}
 
           <PluginOutlet
@@ -455,8 +432,6 @@ export default class SearchMenu extends Component {
             @updateTypeFilter={{this.updateTypeFilter}}
             @triggerSearch={{this.triggerSearch}}
             @fullSearch={{this.fullSearch}}
-            @clearPMInboxContext={{this.clearPMInboxContext}}
-            @clearTopicContext={{this.clearTopicContext}}
             @closeSearchMenu={{this.close}}
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
@@ -479,7 +454,7 @@ export default class SearchMenu extends Component {
         </div>
         {{#if this.site.isMobileViewAndDevice}}
           <DButton
-            @action={{this.cancelSearchMobile}}
+            @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}
             class="btn-flat"
             data-test-button="cancel-search-mobile"
@@ -494,7 +469,6 @@ export default class SearchMenu extends Component {
           @suggestionKeyword={{this.suggestionKeyword}}
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
-          @inPMInboxContext={{this.inPMInboxContext}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
@@ -509,7 +483,6 @@ export default class SearchMenu extends Component {
             @suggestionKeyword={{this.suggestionKeyword}}
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
-            @inPMInboxContext={{this.inPMInboxContext}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}
