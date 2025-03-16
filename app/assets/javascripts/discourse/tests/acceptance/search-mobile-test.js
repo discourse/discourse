@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
+  needs.user();
 
   module("search behaviour", function () {
     test("on initial render (empty input search)", async function (assert) {
@@ -94,6 +95,15 @@ acceptance("Search - Mobile", function (needs) {
   });
 
   module("filtered search", function () {
+    test("private message search scope - shows 'in messages' button when in an inbox", async function (assert) {
+      await visit("/u/charlie/messages");
+      await click("#search-button");
+
+      assert
+        .dom('[data-test-button="search-in-messages"]')
+        .isVisible('should show "in messages" filter selected');
+    });
+
     test("initial options - topic search scope", async function (assert) {
       await visit("/t/internationalization-localization/280");
       await click("#search-button");
