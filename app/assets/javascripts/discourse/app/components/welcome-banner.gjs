@@ -81,7 +81,7 @@ export default class WelcomeBanner extends Component {
               />
               <SearchMenu @location="welcome-banner" />
             </div>
-            <PluginOutlet @name="search-banner-below-input" />
+            <PluginOutlet @name="welcome-banner-below-input" />
           </div>
         </div>
       </div>
