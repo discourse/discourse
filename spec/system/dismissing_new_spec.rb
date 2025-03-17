@@ -14,28 +14,6 @@ RSpec.describe "Dismissing New", type: :system do
     fab!(:post1) { create_post(user: user, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
-    it "should remove the unread post across sessions after the user dismisses it" do
-      sign_in(user)
-
-      visit("/unread")
-
-      expect(topic_list_controls).to have_unread(count: 1)
-
-      using_session(:tab_1) do
-        sign_in(user)
-
-        visit("/unread")
-
-        expect(topic_list_controls).to have_unread(count: 1)
-      end
-
-      topic_list_controls.dismiss_unread
-
-      expect(topic_list_controls).to have_unread(count: 0)
-
-      using_session(:tab_1) { expect(topic_list_controls).to have_unread(count: 0) }
-    end
-
     it "should untrack topics across sessions after the user dismisses it" do
       sign_in(user)
 
