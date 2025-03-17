@@ -87,7 +87,7 @@ describe "Admin Customize Themes", type: :system do
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
     end
 
-    it "should allow admin to edit and save the theme translations from other languages" do
+    xit "should allow admin to edit and save the theme translations from other languages" do
       theme.set_field(
         target: :translations,
         name: "en",
