@@ -132,14 +132,17 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
           colors: result.colors,
           icon: result.icon,
           id: result.id,
-          style_type: result.style_type,
         };
 
-        if (result.style_type === "icon") {
+        if (result.style_type) {
+          opts.style_type = result.style_type;
+        }
+
+        if (result.style_icon) {
           opts.style_icon = result.style_icon;
         }
 
-        if (result.style_type === "emoji") {
+        if (result.style_emoji) {
           opts.style_emoji = result.style_emoji;
         }
 

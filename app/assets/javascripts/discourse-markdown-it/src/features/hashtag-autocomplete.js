@@ -30,10 +30,19 @@ function addHashtag(buffer, matches, state) {
       ["data-type", result.type],
       ["data-slug", result.slug],
       ["data-id", result.id],
-      ["data-style-type", result.style_type],
-      ["data-style-icon", result.style_icon],
-      ["data-style-emoji", result.style_emoji],
     ];
+
+    if (result.style_type) {
+      token.attrs.push(["data-style-type", result.style_type]);
+    }
+
+    if (result.style_emoji) {
+      token.attrs.push(["data-style-emoji", result.style_emoji]);
+    }
+
+    if (result.style_icon) {
+      token.attrs.push(["data-style-icon", result.style_icon]);
+    }
 
     // Most cases these will be the exact same, one standout is categories
     // which have a parent:child reference.
