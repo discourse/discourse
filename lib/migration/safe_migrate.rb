@@ -78,6 +78,20 @@ class Migration::SafeMigrate
     return if ENV["RAILS_ENV"] == "production"
 
     @@migration_sqls = []
+    @@activerecord_remove_indexes = []
+
+    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
+      alias_method :original_remove_index, :remove_index
+
+      def remove_index(table_name, column_name = nil, **options)
+        @@activerecord_remove_indexes << (
+          options[:name] || index_name(table_name, options.merge(column: column_name))
+        )
+
+        # Call the original method
+        original_remove_index(table_name, column_name, **options)
+      end
+    end
 
     PG::Connection.class_eval do
       alias_method :exec_migrator_unpatched, :exec
@@ -99,7 +113,13 @@ class Migration::SafeMigrate
     return if !PG::Connection.method_defined?(:exec_migrator_unpatched)
     return if ENV["RAILS_ENV"] == "production"
 
-    @@migration_sqls = []
+    @@migration_sqls.clear
+    @@activerecord_remove_indexes.clear
+
+    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
+      alias_method :remove_index, :original_remove_index
+      remove_method :original_remove_index
+    end
 
     PG::Connection.class_eval do
       alias_method :exec, :exec_migrator_unpatched
@@ -119,21 +139,6 @@ class Migration::SafeMigrate
       ActiveRecord::Tasks::DatabaseTasks.singleton_class.prepend(NiceErrors)
     end
   end
-
-  UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING = <<~TEXT
-  WARNING
-  -------------------------------------------------------------------------------------
-  An attempt was made to create an index concurrently in a migration without first dropping the index.
-
-  Per postgres documentation:
-
-    If a problem arises while scanning the table, such as a deadlock or a uniqueness violation in a unique index,
-    the CREATE INDEX command will fail but leave behind an “invalid” index. This index will be ignored for querying
-    purposes because it might be incomplete; however it will still consume update overhead. The recommended recovery
-    method in such cases is to drop the index and try again to perform CREATE INDEX CONCURRENTLY .
-
-  Please update the migration to first drop the index if it exists before creating it concurrently.
-  TEXT
 
   def self.protect!(sql)
     @@migration_sqls << sql
@@ -169,15 +174,37 @@ class Migration::SafeMigrate
       TEXT
       raise Discourse::InvalidMigration, "Attempt was made to rename or delete column"
     elsif sql =~ /\A\s*create\s+(?:unique\s+)?index\s+concurrently\s+/i
+      index_name =
+        sql.match(/\bINDEX\s+CONCURRENTLY\s+(?:IF\s+NOT\s+EXISTS\s+)?"?([a-zA-Z0-9_\.]+)"?/i)[1]
+
+      return if @@activerecord_remove_indexes.include?(index_name)
+
       match = sql.match(/\bON\s+(?:ONLY\s+)?(?:"([^"]+)"|([a-zA-Z0-9_\.]+))/i)
       table_name = match[1] || match[2]
 
-      if !@@migration_sqls.any? { |migration_sql|
-           migration_sql =~ /\A\s*drop\s+index\s+(?:concurrently\s+)?if\s+exists\s+/i &&
-             migration_sql.include?(table_name)
-         }
-        $stdout.puts("", UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
-      end
+      has_drop_index_statement =
+        @@migration_sqls.any? do |migration_sql|
+          migration_sql =~ /\A\s*drop\s+index/i && migration_sql.include?(table_name) &&
+            migration_sql.include?(index_name)
+        end
+
+      return if has_drop_index_statement
+
+      raise(Discourse::InvalidMigration, <<~RAW)
+      WARNING
+      -------------------------------------------------------------------------------------
+      An attempt was made to create an index concurrently in a migration without first dropping the index.
+      SQL used was: '#{sql}'
+
+      Per postgres documentation:
+
+        If a problem arises while scanning the table, such as a deadlock or a uniqueness violation in a unique index,
+        the CREATE INDEX command will fail but leave behind an “invalid” index. This index will be ignored for querying
+        purposes because it might be incomplete; however it will still consume update overhead. The recommended recovery
+        method in such cases is to drop the index and try again to perform CREATE INDEX CONCURRENTLY .
+
+      Please update the migration to first drop the index if it exists before creating it concurrently.
+      RAW
     end
   end
 
