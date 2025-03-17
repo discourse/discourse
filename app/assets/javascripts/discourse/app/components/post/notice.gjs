@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { get } from "@ember/helper";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import concatClass from "discourse/helpers/concat-class";

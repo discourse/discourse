@@ -5,7 +5,6 @@ import { modifier } from "ember-modifier";
 import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 // TODO (glimmer-post-stream) needs tests
