@@ -15,7 +15,7 @@ rescue LoadError
 end
 
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-
+AVATAR_DIR = "/path/to/avatars"
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/xenforo.rb
 class ImportScripts::XenForo < ImportScripts::Base
@@ -201,17 +201,17 @@ class ImportScripts::XenForo < ImportScripts::Base
     puts "", "importing likes"
     total_count =
       mysql_query(
-        "SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'",
+        "SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}reaction_content WHERE content_type = 'post'",
       ).first[
         "count"
       ]
     batches(BATCH_SIZE) do |offset|
       results =
         mysql_query(
-          "SELECT like_id, content_id, like_user_id, like_date
-         FROM #{TABLE_PREFIX}liked_content
+          "SELECT reaction_id, content_id, reaction_user_id, reaction_date
+         FROM #{TABLE_PREFIX}reaction_content
          WHERE content_type = 'post'
-         ORDER BY like_id
+         ORDER BY reaction_id
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};",
         )
@@ -219,8 +219,8 @@ class ImportScripts::XenForo < ImportScripts::Base
       create_likes(results, total: total_count, offset: offset) do |row|
         {
           post_id: row["content_id"],
-          user_id: row["like_user_id"],
-          created_at: Time.zone.at(row["like_date"]),
+          user_id: row["reaction_user_id"],
+          created_at: Time.zone.at(row["reaction_date"]),
         }
       end
     end
