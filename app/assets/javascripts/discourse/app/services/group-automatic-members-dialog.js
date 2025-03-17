@@ -1,18 +1,35 @@
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 
 export default class GroupAutomaticMembersDialog extends Service {
   @service dialog;
 
   async showConfirm(group_id, email_domains) {
-    if (!email_domains) {
+    const domainCount = email_domains?.split("|")?.length ?? 0;
+
+    if (domainCount === 0) {
       return Promise.resolve(true);
     }
 
-    const data = {};
-    data.automatic_membership_email_domains = email_domains;
+    // On the back-end we compare every single user's e-mail to each e-mail
+    // domain by regular expression. At some point this is a but much work
+    // just to display this dialog, so go with a generic message instead.
+    if (domainCount > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP) {
+      return new Promise((resolve) => {
+        this.dialog.confirm({
+          message: i18n(
+            "admin.groups.manage.membership.automatic_membership_user_unknown_count"
+          ),
+          didConfirm: () => resolve(true),
+          didCancel: () => resolve(false),
+        });
+      });
+    }
+
+    const data = { automatic_membership_email_domains: email_domains };
 
     if (group_id) {
       data.id = group_id;

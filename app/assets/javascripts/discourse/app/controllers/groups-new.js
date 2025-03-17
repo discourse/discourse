@@ -6,7 +6,7 @@ import discourseComputed from "discourse/lib/decorators";
 
 export default class GroupsNewController extends Controller {
   @service router;
-  @service group_automatic_members_dialog;
+  @service groupAutomaticMembersDialog;
 
   saving = null;
 
@@ -25,7 +25,7 @@ export default class GroupsNewController extends Controller {
     this.set("saving", true);
     const group = this.model;
 
-    const accepted = await this.group_automatic_members_dialog.showConfirm(
+    const accepted = await this.groupAutomaticMembersDialog.showConfirm(
       group.id,
       group.automatic_membership_email_domains
     );

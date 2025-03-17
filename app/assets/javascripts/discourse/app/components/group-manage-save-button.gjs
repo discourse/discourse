@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 
 export default class GroupManageSaveButton extends Component {
   @service modal;
-  @service group_automatic_members_dialog;
+  @service groupAutomaticMembersDialog;
 
   saving = null;
   disabled = false;
@@ -59,7 +59,7 @@ export default class GroupManageSaveButton extends Component {
     this.set("saving", true);
     const group = this.model;
 
-    const accepted = await this.group_automatic_members_dialog.showConfirm(
+    const accepted = await this.groupAutomaticMembersDialog.showConfirm(
       group.id,
       group.automatic_membership_email_domains
     );
