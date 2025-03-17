@@ -187,7 +187,8 @@ export default {
           table.parentNode.setAttribute("data-table-index", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
-          if (post.can_edit) {
+          // TODO (glimmer-post-stream) in the Glimmer post stream we can check for post.can_edit instead
+          if (post.canEdit) {
             table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
