@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { computedI18n, setting } from "discourse/lib/computed";
 import discourseDebounce from "discourse/lib/debounce";
@@ -27,7 +28,6 @@ export default class AdminUsersListShowController extends Controller {
   query = null;
   order = null;
   asc = null;
-  users = null;
   showEmails = false;
   refreshing = false;
   listFilter = null;
@@ -36,8 +36,12 @@ export default class AdminUsersListShowController extends Controller {
   @computedI18n("search_hint") searchHint;
 
   _page = 1;
-  _results = [];
+  _results = new TrackedArray();
   _canLoadMore = true;
+
+  get users() {
+    return this._results.flat();
+  }
 
   @discourseComputed("query")
   title(query) {
@@ -84,7 +88,7 @@ export default class AdminUsersListShowController extends Controller {
 
   resetFilters() {
     this._page = 1;
-    this._results = [];
+    this._results.length = 0;
     this._canLoadMore = true;
     return this._refreshUsers();
   }
@@ -111,7 +115,6 @@ export default class AdminUsersListShowController extends Controller {
     })
       .then((result) => {
         this._results[page] = result;
-        this.set("users", this._results.flat());
 
         if (result.length === 0) {
           this._canLoadMore = false;
