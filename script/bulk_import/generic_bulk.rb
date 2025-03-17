@@ -101,6 +101,7 @@ class BulkImport::Generic < BulkImport::Base
     import_badges
     import_user_badges
     import_anniversary_user_badges
+    update_badge_grant_counts
 
     import_optimized_images
 
@@ -2410,6 +2411,11 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_anniversary_user_badges
+    unless SiteSetting.enable_badges?
+      puts "", "Skipping anniversary user badges because badges are not enabled."
+      return
+    end
+
     puts "", "Importing anniversary user badges..."
 
     start_time = Time.now
@@ -2474,7 +2480,9 @@ class BulkImport::Generic < BulkImport::Base
     UserBadge.update_featured_ranks!
 
     puts "  Anniversary user badges imported in #{(Time.now - start_time).to_i} seconds."
+  end
 
+  def update_badge_grant_counts
     puts "", "Updating badge grant counts..."
     start_time = Time.now
 
