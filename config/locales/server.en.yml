@@ -5724,6 +5724,7 @@ en:
         complete: "Post approved and restored."
       delete_user:
         reason: "Deleted via review queue"
+        complete: "User deleted."
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
