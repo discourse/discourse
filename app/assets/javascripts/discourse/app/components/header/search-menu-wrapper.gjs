@@ -5,7 +5,6 @@ import SearchMenuPanel from "../search-menu-panel";
     <SearchMenuPanel
       @searchInputId={{@searchInputId}}
       @closeSearchMenu={{@closeSearchMenu}}
-      @hasClosingAnimation={{@hasClosingAnimation}}
     />
   </div>
 </template>

@@ -10,13 +10,13 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import delayedDestroy from "discourse/modifiers/delayed-destroy";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
 import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
-import discourseLater from "discourse/lib/later";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
@@ -113,6 +113,12 @@ export default class GlimmerHeader extends Component {
   });
 
   @action
+  handleAnimationComplete() {
+    this.hasClosingAnimation = false;
+    this.search.visible = false;
+  }
+
+  @action
   closeCurrentMenu() {
     if (this.search.visible) {
       this.toggleSearchMenu();
@@ -164,14 +170,10 @@ export default class GlimmerHeader extends Component {
 
     if (this.site.isMobileViewAndDevice && this.search.visible) {
       this.hasClosingAnimation = true;
-
-      discourseLater(() => {
-        this.hasClosingAnimation = false;
-        this.search.visible = false;
-      }, 300);
     } else {
       this.search.visible = !this.search.visible;
     }
+
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
@@ -297,10 +299,14 @@ export default class GlimmerHeader extends Component {
 
           {{#if this.search.visible}}
             <SearchMenuWrapper
-              @hasClosingAnimation={{this.hasClosingAnimation}}
               @closeSearchMenu={{this.toggleSearchMenu}}
-              {{this.handleFocus}}
               @searchInputId="icon-search-input"
+              {{this.handleFocus}}
+              {{delayedDestroy
+                animate=this.hasClosingAnimation
+                elementSelector=".menu-panel.search-menu-panel.slide-in"
+                onComplete=this.handleAnimationComplete
+              }}
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
