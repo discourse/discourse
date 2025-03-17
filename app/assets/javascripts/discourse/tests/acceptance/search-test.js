@@ -98,16 +98,16 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
 
     await click("#search-button");
-    assert.dom(".search-menu").exists();
+    assert.dom(".search-menu-panel").exists();
 
     await clickOutside();
-    assert.dom(".search-menu").doesNotExist();
+    assert.dom(".search-menu-panel").doesNotExist();
 
     await click("#search-button");
-    assert.dom(".search-menu").exists();
+    assert.dom(".search-menu-panel").exists();
 
     await click("#search-button"); // toggle same button
-    assert.dom(".search-menu").doesNotExist();
+    assert.dom(".search-menu-panel").doesNotExist();
   });
 
   test("initial options", async function (assert) {
@@ -572,7 +572,9 @@ acceptance("Search - Authenticated", function (needs) {
     assert
       .dom("#search-button")
       .isFocused("Escaping search returns focus to search button");
-    assert.dom(".search-menu").doesNotExist("Esc removes search dropdown");
+    assert
+      .dom(".search-menu-panel")
+      .doesNotExist("Esc removes search dropdown");
 
     await click("#search-button");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");

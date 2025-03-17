@@ -18,7 +18,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import { toggleCheckDraftPopup } from "discourse/services/composer";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -80,8 +79,6 @@ acceptance("Composer", function (needs) {
       return helper.response(topicList);
     });
   });
-
-  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("Composer is opened", async function (assert) {
     await visit("/");
@@ -839,22 +836,18 @@ acceptance("Composer", function (needs) {
     assert.dom(".d-editor-input").hasNoValue("clears the composer input");
   });
 
-  test("Checks for existing draft", async function (assert) {
-    toggleCheckDraftPopup(true);
-
+  test("Does not check for existing draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click(".topic-post-shim:nth-of-type(1) button.show-more-actions");
     await click(".topic-post-shim:nth-of-type(1) button.edit");
 
-    assert.dom(".dialog-body").hasText(i18n("drafts.abandon.confirm"));
-
-    await click(".dialog-footer .btn-resume-editing");
+    assert.dom(".dialog-body").doesNotExist("does not open the dialog");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
+    assert.dom(".d-editor-input").hasValue(/^Any plans to support/);
   });
 
   test("Can switch states without abandon popup", async function (assert) {
-    toggleCheckDraftPopup(true);
-
     await visit("/t/internationalization-localization/280");
 
     const longText = "a".repeat(256);
@@ -889,9 +882,7 @@ acceptance("Composer", function (needs) {
       .doesNotExist("mode should have changed");
   });
 
-  test("Loading draft also replaces the recipients", async function (assert) {
-    toggleCheckDraftPopup(true);
-
+  test("Does not replace recipient when another draft exists", async function (assert) {
     sinon.stub(Draft, "get").resolves({
       draft:
         '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
@@ -900,10 +891,12 @@ acceptance("Composer", function (needs) {
 
     await visit("/u/charlie");
     await click("button.compose-pm");
-    await click(".dialog-footer .btn-resume-editing");
 
     const privateMessageUsers = selectKit("#private-message-users");
-    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
+    assert.strictEqual(privateMessageUsers.header().value(), "charlie");
+
+    await click(".submit-panel .cancel");
+    assert.dom(".d-editor-input").doesNotExist();
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {

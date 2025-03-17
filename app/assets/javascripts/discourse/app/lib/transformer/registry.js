@@ -11,6 +11,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "admin-reports-show-query-params",
+  "bulk-select-in-nav-controls",
   "category-available-views",
   "category-description-text",
   "category-display-name",
@@ -31,6 +32,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "parent-category-row-class-mobile",
   "post-class",
   "post-menu-buttons",
+  "post-menu-collapsed",
   "post-meta-data-poster-name-suppress-name",
   "post-notice-component",
   "post-small-action-class",

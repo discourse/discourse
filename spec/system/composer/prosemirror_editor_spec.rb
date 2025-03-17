@@ -51,6 +51,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_emoji_autocomplete
     end
+
+    it "strips partially written emoji when using 'more' emoji modal" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Why :repeat_single")
+
+      expect(composer).to have_emoji_autocomplete
+
+      # "more" emoji picker
+      composer.send_keys(:arrow_down, :enter)
+
+      find("img[data-emoji='repeat_single_button']").click
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Why :repeat_single_button: ")
+    end
   end
 
   context "with inputRules" do
@@ -130,13 +146,20 @@ describe "Composer - ProseMirror editor", type: :system do
     it "supports typographer replacements" do
       open_composer_and_toggle_rich_editor
       composer.type_content(
-        "foo +- bar... test???? wow!!!! x,, y-- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
+        "foo +- bar... test???? wow!!!! x,, y-- --- a--> b<-- c-> d<- e<-> f<--> (tm) (pa)",
       )
 
       expect(rich).to have_css(
         "p",
-        text: "foo ± bar… test??? wow!!! x, y– a–> b←- c→ d← e←> f←→ ™ ¶",
+        text: "foo ± bar… test??? wow!!! x, y– — a–> b←- c→ d← e←> f←→ ™ ¶",
       )
+    end
+
+    it "supports ---, *** or ___ to create a horizontal rule" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Hey\n---\nThere\n*** Friend\n___ ")
+
+      expect(rich).to have_css("hr", count: 3)
     end
   end
 
@@ -426,6 +449,21 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("pre code", wait: 1)
       expect(rich).to have_css("select.code-language-select", wait: 1)
     end
+
+    it "parses images copied from cooked with base62-sha1" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard(
+        '<img src="image.png" alt="alt text" data-base62-sha1="1234567890">',
+        html: true,
+      )
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      expect(page).to have_css(
+        "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
+      )
+    end
   end
 
   describe "trailing paragraph" do
@@ -441,6 +479,22 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys([PLATFORM_KEY_MODIFIER, :shift, "_"]) # Insert a horizontal rule
       expect(rich).to have_css("hr", count: 1)
       expect(rich).to have_css("p", count: 2) # New paragraph inserted after the ruler
+    end
+  end
+
+  describe "uploads" do
+    it "handles uploads and disables the editor toggle while uploading" do
+      open_composer_and_toggle_rich_editor
+
+      file_path = file_from_fixtures("logo.png", "images").path
+      cdp.with_slow_upload do
+        attach_file(file_path) { composer.click_toolbar_button("upload") }
+        expect(composer).to have_in_progress_uploads
+        expect(composer.editor_toggle_switch).to be_disabled
+      end
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(rich).to have_css("img", count: 1)
     end
   end
 end

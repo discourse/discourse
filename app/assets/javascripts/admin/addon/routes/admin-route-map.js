@@ -276,8 +276,9 @@ export default function () {
             path: "/",
           });
         });
-        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+        this.route("customize", function () {
           this.route("themes");
+          this.route("components");
         });
         this.route(
           "adminPermalinks",

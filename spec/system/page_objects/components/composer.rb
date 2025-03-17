@@ -297,8 +297,12 @@ module PageObjects
       end
 
       def toggle_rich_editor
-        find("#{COMPOSER_ID} .composer-toggle-switch").click
+        editor_toggle_switch.click
         self
+      end
+
+      def editor_toggle_switch
+        find("#{COMPOSER_ID} .composer-toggle-switch")
       end
 
       private
