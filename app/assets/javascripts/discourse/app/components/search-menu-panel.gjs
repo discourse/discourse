@@ -10,9 +10,7 @@ export default class SearchMenuPanel extends Component {
 
   get animationClass() {
     return this.site.mobileView || this.site.narrowDesktopView
-      ? this.args.hasClosingAnimation
-        ? "slide-in is-closing"
-        : "slide-in"
+      ? "slide-in"
       : "drop-down";
   }
 
