@@ -65,7 +65,7 @@ https://meta.discourse.org/t/splitting-up-theme-scss-into-multiple-files/115126
 
 For those looking to split up theme into multiple JS files, just add the JS files you want into the javascripts directory.
 
-The `about.json` file structure is:
+The `about.json` file structure is below, and you can see more information about it at https://meta.discourse.org/t/adding-metadata-to-a-theme/119205:
 
 ```json
 {
@@ -84,7 +84,8 @@ The `about.json` file structure is:
     "My Color Scheme": {
       "primary": "222222"
     }
-  }
+  },
+  "screenshots": ["screenshots/light.jpeg", "screenshots/dark.jpeg"]
 }
 ```
 
