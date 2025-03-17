@@ -6,7 +6,8 @@ RSpec.describe RemoteTheme do
       love_color: "FAFAFA",
       tertiary_low_color: "FFFFFF",
       color_scheme_name: "Amazing",
-      about_url: "https://www.site.com/about"
+      about_url: "https://www.site.com/about",
+      screenshots: %w[screenshots/light.jpeg screenshots/dark.jpeg]
     )
       <<~JSON
         {
@@ -35,7 +36,7 @@ RSpec.describe RemoteTheme do
               "value": "list_setting"
             }
           },
-          "screenshots": ["screenshots/1.jpeg", "screenshots/2.jpeg"]
+          "screenshots": #{screenshots.to_json}
         }
       JSON
     end
@@ -73,8 +74,8 @@ RSpec.describe RemoteTheme do
         "settings.yaml" => settings,
         "locales/en.yml" => "sometranslations",
         "migrations/settings/0001-some-migration.js" => migration_js,
-        "screenshots/1.jpeg" => file_from_fixtures("logo.jpg", "images"),
-        "screenshots/2.jpeg" => file_from_fixtures("logo.jpg", "images"),
+        "screenshots/light.jpeg" => file_from_fixtures("logo.jpg", "images"),
+        "screenshots/dark.jpeg" => file_from_fixtures("logo.jpg", "images"),
       )
     end
 
@@ -392,12 +393,12 @@ RSpec.describe RemoteTheme do
       before { SiteSetting.theme_download_screenshots = true }
 
       it "fails if any of the provided screenshots is not an accepted file type" do
-        stub_const(RemoteTheme, "THEME_SCREENSHOT_ALLOWED_FILE_TYPES", [".bmp"]) do
+        stub_const(ThemeScreenshotsHandler, "THEME_SCREENSHOT_ALLOWED_FILE_TYPES", [".bmp"]) do
           expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
             RemoteTheme::ImportError,
             I18n.t(
               "themes.import_error.screenshot_invalid_type",
-              file_name: "1.jpeg",
+              file_name: "light.jpeg",
               accepted_formats: ".bmp",
             ),
           )
@@ -405,12 +406,12 @@ RSpec.describe RemoteTheme do
       end
 
       it "fails if any of the provided screenshots is too big" do
-        stub_const(RemoteTheme, "MAX_THEME_SCREENSHOT_FILE_SIZE", 1.byte) do
+        stub_const(ThemeScreenshotsHandler, "MAX_THEME_SCREENSHOT_FILE_SIZE", 1.byte) do
           expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
             RemoteTheme::ImportError,
             I18n.t(
               "themes.import_error.screenshot_invalid_size",
-              file_name: "1.jpeg",
+              file_name: "light.jpeg",
               max_size: "1 Bytes",
             ),
           )
@@ -420,14 +421,14 @@ RSpec.describe RemoteTheme do
       it "fails if any of the provided screenshots has dimensions that are too big" do
         FastImage
           .expects(:size)
-          .with { |arg| arg.match(%r{/screenshots/1\.jpeg}) }
+          .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
           .returns([512, 512])
-        stub_const(RemoteTheme, "MAX_THEME_SCREENSHOT_DIMENSIONS", [1, 1]) do
+        stub_const(ThemeScreenshotsHandler, "MAX_THEME_SCREENSHOT_DIMENSIONS", [1, 1]) do
           expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
             RemoteTheme::ImportError,
             I18n.t(
               "themes.import_error.screenshot_invalid_dimensions",
-              file_name: "1.jpeg",
+              file_name: "light.jpeg",
               width: 512,
               height: 512,
               max_width: 1,
@@ -440,17 +441,17 @@ RSpec.describe RemoteTheme do
       it "creates uploads and associated theme fields for all theme screenshots" do
         FastImage
           .stubs(:size)
-          .with { |arg| arg.match(%r{/screenshots/1\.jpeg}) }
+          .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
           .returns([800, 600])
         FastImage
           .stubs(:size)
-          .with { |arg| arg.match(%r{/screenshots/2\.jpeg}) }
+          .with { |arg| arg.match(%r{/screenshots/dark\.jpeg}) }
           .returns([1024, 768])
 
         theme = RemoteTheme.import_theme(initial_repo_url)
 
-        screenshot_1 = theme.theme_fields.find_by(name: "screenshot_1")
-        screenshot_2 = theme.theme_fields.find_by(name: "screenshot_2")
+        screenshot_1 = theme.theme_fields.find_by(name: "screenshot_light")
+        screenshot_2 = theme.theme_fields.find_by(name: "screenshot_dark")
 
         expect(screenshot_1).to be_present
         expect(screenshot_1.type_id).to eq(ThemeField.types[:theme_screenshot_upload_var])
@@ -462,8 +463,8 @@ RSpec.describe RemoteTheme do
         expect(UploadReference.exists?(target: screenshot_1)).to eq(true)
         expect(UploadReference.exists?(target: screenshot_2)).to eq(true)
 
-        expect(screenshot_1.upload.original_filename).to eq("1.jpeg")
-        expect(screenshot_2.upload.original_filename).to eq("2.jpeg")
+        expect(screenshot_1.upload.original_filename).to eq("light.jpeg")
+        expect(screenshot_2.upload.original_filename).to eq("dark.jpeg")
       end
     end
   end
