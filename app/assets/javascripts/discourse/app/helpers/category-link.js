@@ -52,13 +52,10 @@ export function categoryBadgeHTML(category, opts) {
   if (!opts.styleType) {
     opts.styleType = category.style_type;
 
-    switch (opts.styleType) {
-      case "icon":
-        opts.styleIcon = category.style_icon;
-        break;
-      case "emoji":
-        opts.styleEmoji = category.style_emoji;
-        break;
+    if (opts.styleType === "icon") {
+      opts.styleIcon = category.style_icon;
+    } else if (opts.styleType === "emoji") {
+      opts.styleEmoji = category.style_emoji;
     }
   }
 

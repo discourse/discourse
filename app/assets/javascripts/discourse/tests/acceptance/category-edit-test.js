@@ -35,7 +35,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
-      "stays on the general edit screen"
+      "stays on the edit screen"
     );
 
     await visit("/c/bug/edit/settings");
@@ -47,7 +47,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
-      "stays on the settings edit screen"
+      "stays on the edit screen"
     );
 
     sinon.stub(DiscourseURL, "routeTo");
