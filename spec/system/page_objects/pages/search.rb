@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def type_in_search_menu(input)
-        find("input#search-term").send_keys(input)
+        find(".search-input--header input").send_keys(input)
         self
       end
 

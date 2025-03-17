@@ -586,8 +586,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0
       message-bus-client:
-        specifier: ^4.3.9
-        version: 4.3.9
+        specifier: ^4.4.0
+        version: 4.4.0
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
@@ -6324,8 +6324,8 @@ packages:
   mersenne-twister@1.1.0:
     resolution: {integrity: sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==}
 
-  message-bus-client@4.3.9:
-    resolution: {integrity: sha512-fbDUSdao7rYt49jwlVPkFAnkOob240LXF0DtCc+Adqya2D9wrqXG8wnjqDzp7AywkKS6RtIkmGLJ/yrGmIXHMw==}
+  message-bus-client@4.4.0:
+    resolution: {integrity: sha512-QDzvPiYsbEmyBNnXasD7pNid8kUs+vb/OoBjqMBHnXJIkhDea2XfahtQ/ENgDrBh8VOVVbGY4DbiA72/T2SsZA==}
 
   methods@1.1.2:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
@@ -15525,7 +15525,7 @@ snapshots:
 
   mersenne-twister@1.1.0: {}
 
-  message-bus-client@4.3.9: {}
+  message-bus-client@4.4.0: {}
 
   methods@1.1.2: {}
 

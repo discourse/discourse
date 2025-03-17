@@ -71,11 +71,44 @@ RSpec.describe Migration::SafeMigrate do
     expect { User.first.username }.not_to raise_error
   end
 
-  it "allows running a migration that creates an index concurrently if it drops the index first" do
-    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_safe"
-    output = capture_stdout { expect do migrate_up(path) end.to raise_error(StandardError) }
+  it "allows running a migration that creates an index concurrently if it checks if the index exists first" do
+    Migration::SafeMigrate.enable!
 
-    expect(output).not_to include(described_class::UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
+    path =
+      File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_safe_activerecord"
+
+    error = nil
+
+    capture_stdout do
+      begin
+        migrate_up(path)
+      rescue StandardError => e
+        error = e
+      end
+    end
+
+    expect(error.cause.cause.message).to include(
+      "CREATE INDEX CONCURRENTLY cannot run inside a transaction block",
+    )
+  end
+
+  it "allows running a migration that creates an index concurrently if it drops the index first" do
+    Migration::SafeMigrate.enable!
+
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_safe"
+    error = nil
+
+    capture_stdout do
+      begin
+        migrate_up(path)
+      rescue StandardError => e
+        error = e
+      end
+    end
+
+    expect(error.cause.cause.message).to include(
+      "CREATE INDEX CONCURRENTLY cannot run inside a transaction block",
+    )
   end
 
   it "bans running a migration that creates an index concurrently without first dropping the index if it exists" do
@@ -84,9 +117,17 @@ RSpec.describe Migration::SafeMigrate do
     path =
       File.expand_path("#{Rails.root}/spec/fixtures/db/migrate/create_index_concurrently_unsafe")
 
-    output = capture_stdout { expect do migrate_up(path) end.to raise_error(StandardError) }
+    error = nil
 
-    expect(output).to include(described_class::UNSAFE_DROP_INDEX_CONCURRENTLY_WARNING)
+    capture_stdout do
+      migrate_up(path)
+    rescue StandardError => e
+      error = e
+    end
+
+    expect(error.message).to include(
+      "An attempt was made to create an index concurrently in a migration without first dropping the index.",
+    )
   end
 
   it "allows dropping NOT NULL" do

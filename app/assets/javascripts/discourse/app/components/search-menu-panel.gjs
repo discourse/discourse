@@ -26,6 +26,7 @@ export default class SearchMenuPanel extends Component {
         @onClose={{@closeSearchMenu}}
         @inlineResults={{true}}
         @autofocusInput={{true}}
+        @location="header"
       />
     </MenuPanel>
   </template>

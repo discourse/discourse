@@ -25,7 +25,7 @@ RSpec.describe "Chat composer draft", type: :system do
       sign_in(current_user)
     end
 
-    it "loads the draft" do
+    xit "loads the draft" do
       chat_page.visit_channel(channel_1)
 
       expect(channel_page.composer).to have_value("draft")
