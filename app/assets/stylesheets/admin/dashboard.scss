@@ -49,8 +49,19 @@
     }
 
     .navigation-link {
+      @include breakpoint("mobile-extra-large") {
+        padding: 0.4em;
+        font-size: var(--font-down-1);
+      }
+
       .emoji {
         margin-right: 0.5em;
+
+        @include breakpoint("mobile-extra-large") {
+          width: 1.3em;
+          height: 1.3em;
+          margin-right: 0;
+        }
       }
     }
   }
@@ -399,6 +410,12 @@
 
 .activity-metrics {
   margin-bottom: 2em;
+
+  @include breakpoint("mobile-extra-large") {
+    .counters-list {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .user-metrics {
@@ -788,6 +805,16 @@
   &__new-feature-version {
     margin-left: auto;
     color: var(--primary-low-mid);
+
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    h3 {
+      margin-right: 0.5em;
+    }
   }
 }
 
