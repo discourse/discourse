@@ -2617,6 +2617,7 @@ sk:
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
     show_bottom_topic_map: "Zobrazí mapu témy v spodnej časti témy, ak má 10 alebo viac odpovedí."
     show_topic_map_in_topics_without_replies: "Zobrazí mapu témy, aj keď téma nemá žiadne odpovede."
+    enable_welcome_banner: "Zobrazenie banneru na hlavných stránkach zoznamu tém, ktorý víta členov a umožňuje im vyhľadávať obsah webu"
     splash_screen: "Zobrazí dočasnú obrazovku načítania, kým sa načítajú aktíva webu"
     navigation_menu: "Ako hlavnú navigačnú ponuku na stránke môžete určiť bočný panel alebo rozbaľovaciu ponuku v záhlaví. Odporúča sa bočný panel."
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
@@ -3863,10 +3864,15 @@ sk:
     in_reply_to: "V odpovedi na"
     reply_by_email: "[Navštívte tému](%{base_url}%{url}) alebo odpovedzte na tento e-mail."
     reply_by_email_pm: "[Navštíviť správu](%{base_url}%{url}) alebo odpovedzte na tento e-mail a odpovedzte na %{participants}."
+    reply_by_email_button_only: "[Navštíviť tému](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Navštíviť správu](%{base_url}%{url})"
     only_reply_by_email: "Ak chcete odpovedať, odpovedzte na tento e-mail."
     only_reply_by_email_pm: "Ak chcete odpovedať na %{participants}, odpovedzte na tento e-mail."
+    only_reply_by_email_pm_button_only: "[Navštíviť správu](%{base_url}%{url})"
     visit_link_to_respond: "Ak chcete odpovedať, [navštívte tému](%{base_url}%{url})."
     visit_link_to_respond_pm: "[Navštívte správu](%{base_url}%{url}), ak chcete odpovedať na %{participants}."
+    visit_link_to_respond_button_only: "[Navštíviť tému](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Navštíviť správu](%{base_url}%{url})"
     reply_above_line: "## Napíšte svoju odpoveď nad tento riadok. ##"
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     pm_participants: "Účastníci: %{participants}"
@@ -5387,11 +5393,13 @@ sk:
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
       delete_single:
         title: "Odstrániť"
+        complete: "Príspevok zmazaný."
       delete:
         title: "Odstrániť…"
       delete_and_ignore:
         title: "Ignorovať príznak a vymazať príspevok"
         description: "Ignorujte označenie odstránením z fronty a zmažte príspevok; ak je to prvý príspevok, zmažte aj tému. "
+        complete: "Príspevok zmazaný."
       delete_and_ignore_replies:
         title: "Ignorujte príznak, odstráňte príspevok a odpovede"
         description: "Ignorovať príznak odstránením z frontu, vymazať príspevok a všetky jeho odpovede; ak ide o prvý príspevok, vymazať aj tému"
@@ -5399,6 +5407,7 @@ sk:
       delete_and_agree:
         title: "Odstrániť príspevok"
         description: "Súhlasiť s označením a zmazať tento príspevok; ak je to prvý príspevok, zmazať aj tému."
+        complete: "Príspevok zmazaný."
       delete_and_agree_replies:
         title: "Odstrániť príspevok a odpovede"
         description: "Súhlasiť s označením a vymazať tento príspevok a všetky jeho odpovede; ak je prvý príspevok, vymazať aj tému."
@@ -5408,29 +5417,37 @@ sk:
         description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
       disagree:
         title: "Nie"
+        complete: "Vlajka ignorovaná."
       discard_post:
         title: "Zahodiť príspevok"
       revise_and_reject_post:
         title: "Revidovať príspevok..."
       ignore:
         title: "Ignorovať"
+        complete: "Vlajka ignorovaná."
       ignore_and_do_nothing:
         title: "Nerobiť nič"
         description: "Ignorujte označenie odstránením z fronty bez prijatia akýchkoľvek opatrení. Skryté príspevky zostanú skryté a budú spracované automatickými nástrojmi."
+        complete: "Vlajka ignorovaná."
       approve:
         title: "Schváliť"
+        complete: "Príspevok schválený."
       approve_post:
         title: "Schváliť príspevok"
         confirm_closed: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
+        complete: "Príspevok schválený."
       reject_post:
         title: "Odmietnuť príspevok"
+        complete: "Príspevok zamietnutý."
       approve_user:
         title: "Schváliť používateľa"
+        complete: "Používateľ schválený."
       reject_user:
         title: "Odstrániť používateľa…"
         delete:
           title: "Odstrániť používateľa"
           description: "Používateľ bude z fóra vymazaný."
+          complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
           description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
@@ -5449,6 +5466,7 @@ sk:
         title: "Schváliť a obnoviť príspevok"
       delete_user:
         reason: "Odstránené prostredníctvom poradia na kontrolu"
+        complete: "Používateľ odstránený."
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"
   notification_level:

@@ -5121,11 +5121,13 @@ fr:
         description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
       delete_single:
         title: "Supprimer"
+        complete: "Message supprimé."
       delete:
         title: "Supprimer…"
       delete_and_ignore:
         title: "Ignorer le signalement et supprimer le message"
         description: "Ignorez le signalement en le retirant de la file d'attente et supprimez le message. S'il s'agit du premier message, vous supprimerez également le sujet. "
+        complete: "Message supprimé."
       delete_and_ignore_replies:
         title: "Ignorer le signalement, supprimer le message et les réponses"
         description: "Ignorez le signalement en le supprimant de la file d'attente, et supprimez le message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet"
@@ -5133,6 +5135,7 @@ fr:
       delete_and_agree:
         title: "Supprimer le message"
         description: "Accepter le signalement et supprimer ce message. S'il s'agit du premier message, vous supprimerez également le sujet."
+        complete: "Message supprimé."
       delete_and_agree_replies:
         title: "Supprimer le message et les réponses"
         description: "Acceptez le signalement et supprimez ce message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet."
@@ -5142,29 +5145,37 @@ fr:
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
       disagree:
         title: "Non"
+        complete: "Signalement ignoré."
       discard_post:
         title: "Supprimer le message"
       revise_and_reject_post:
         title: "Réviser le message..."
       ignore:
         title: "Ignorer"
+        complete: "Signalement ignoré."
       ignore_and_do_nothing:
         title: "Ne rien faire"
         description: "Ignorez le signalement en le retirant de la file d'attente sans effectuer aucune action. Les messages masqués resteront masqués et seront gérés par les outils automatiques."
+        complete: "Signalement ignoré."
       approve:
         title: "Approuver"
+        complete: "Message approuvé."
       approve_post:
         title: "Approuver le message"
         confirm_closed: "Ce sujet est fermé. Voulez-vous quand même créer le message ?"
+        complete: "Message approuvé."
       reject_post:
         title: "Rejeter le message"
+        complete: "Message refusé."
       approve_user:
         title: "Approuver l'utilisateur"
+        complete: "Utilisateur approuvé."
       reject_user:
         title: "Supprimer l'utilisateur…"
         delete:
           title: "Supprimer l'utilisateur"
           description: "L'utilisateur sera supprimé du forum."
+          complete: "Utilisateur supprimé."
         block:
           title: "Supprimer et bloquer l'utilisateur"
           description: "L'utilisateur sera supprimé et nous bloquerons ses adresses e-mail et IP."
@@ -5183,6 +5194,7 @@ fr:
         title: "Autoriser et restaurer ce message"
       delete_user:
         reason: "Supprimé via la file des messages en attente d'examen"
+        complete: "Utilisateur supprimé."
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"
   notification_level:

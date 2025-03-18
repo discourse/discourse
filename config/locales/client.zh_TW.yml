@@ -164,6 +164,10 @@ zh_TW:
       dismiss: "忽略"
     bootstrap_mode: "快速開始"
     back_button: "上一步"
+    welcome_banner:
+      header:
+        anonymous_members: "歡迎來到 %{site_name}！"
+      search: "搜索"
     themes:
       default_description: "預設"
       broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
@@ -408,10 +412,6 @@ zh_TW:
       new_topic: "新話題草稿"
       new_private_message: "新個人訊息草稿"
       edit_topic: "編輯主題草稿"
-      abandon:
-        confirm: "您已有一份正在進行的草稿。你想對它做什麼？"
-        yes_value: "捨棄"
-        no_value: "繼續編輯"
       dropdown:
         title: "開啟最新草稿選單"
         untitled: "無標題草稿"
@@ -2389,6 +2389,8 @@ zh_TW:
       uploading: "上傳中..."
       show_preview: "顯示預覽"
       hide_preview: "隱藏預覽"
+      switch_to_markdown: "切換到標準 Markdown 編輯器"
+      switch_to_rich_text: "切換到新格式化文字編輯器"
       quote_post_title: "引用完整貼文"
       bold_label: "B"
       bold_title: "粗體"
@@ -2584,8 +2586,11 @@ zh_TW:
         new_features: "新的 Discourse 功能已發佈！"
         admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
+      change: "修改"
       delete: "刪除"
       uploading: "正在上傳"
+      processing: "正在處理上傳"
+      select_file: "按一下上傳或拖放檔案"
       default_image_alt_text: 圖片
     search:
       sort_by: "排序"
@@ -5303,6 +5308,40 @@ zh_TW:
             failed: "失敗"
       home:
         title: "主頁"
+      account:
+        title: "帳號"
+        sidebar_link:
+          backups: "備份"
+      community:
+        title: "社群"
+        sidebar_link:
+          badges: "徽章"
+          notifications: "通知"
+          permalinks: "固定連結"
+          users: "使用者"
+          groups: "群組"
+          legal: "法律"
+          moderation_flags:
+            title: "管理"
+            keywords: "檢舉|審核"
+      appearance:
+        title: "外觀"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "導覽"
+          themes_and_components:
+            title: "主題與組件"
+            keywords: "延伸插件"
+      email_settings:
+        sidebar_link:
+          appearance: "外觀"
+      security:
+        title: "安全性"
+      section_landing_pages:
+        account:
+          title: "帳號"
+          backups:
+            title: "備份"
       config_areas:
         about:
           general_settings: "一般設定"
@@ -5397,16 +5436,16 @@ zh_TW:
           delete: "刪除"
           more_options:
             title: "更多選項"
-        look_and_feel:
+        themes_and_components:
+          title: "主題與組件"
+          breadcrumb_title: "客製化"
+          install: "安裝"
           themes:
             title: "佈景主題"
             themes_intro: "安裝新主題即可開始使用，或使用這些資源從頭開始建立您自己的主題。"
-            themes_intro_img_alt: "新增佈景主題預留位置"
-            set_default_theme: "設定預設值"
-            default_theme: "預設佈景主題"
-            themes_description: "佈景主題是一種廣泛的客製化設計，可以改變論壇設計風格的多種元素，通常還包括額外的前端功能。"
             new_theme: "新佈景主題"
-            user_selectable: "使用者可選"
+          components:
+            title: "元件"
         user_fields:
           field: "欄位"
           type: "類型"
@@ -5417,6 +5456,13 @@ zh_TW:
           delete: "刪除"
           delete_successful: "使用者欄位已刪除。"
           save_successful: "儲存使用者欄位。"
+        color_palettes:
+          palette_name: "名字"
+          color_options:
+            toggle: "使用者可選"
+            toggle_description: "調色盤可由使用者選擇"
+          colors:
+            title: "顏色"
       plugins:
         title: "外掛"
         name: "名稱"
