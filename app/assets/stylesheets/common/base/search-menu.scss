@@ -49,6 +49,12 @@ $search-pad-horizontal: 0.5em;
       }
     }
 
+    @include breakpoint("mobile-extra-large") {
+      .mobile-search-button + input#search-term {
+        padding-left: 0;
+      }
+    }
+
     .btn.search-context {
       margin: 2px;
       margin-right: 0;
@@ -62,6 +68,13 @@ $search-pad-horizontal: 0.5em;
 
     &:focus-within {
       @include default-focus;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .btn.search-context {
+      margin: 0.25em 0 0 0;
+      padding: 0.25em 0.5em;
     }
   }
 
