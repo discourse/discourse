@@ -168,7 +168,7 @@ export default class GlimmerHeader extends Component {
       return false;
     }
 
-    if (this.site.isMobileViewAndDevice && this.search.visible) {
+    if (this.site.mobileView && this.search.visible) {
       this.hasClosingAnimation = true;
     } else {
       this.search.visible = !this.search.visible;

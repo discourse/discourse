@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -16,6 +16,7 @@ import ClearButton from "discourse/components/search-menu/clear-button";
 import MobileSearchButton from "discourse/components/search-menu/mobile-search-button";
 import Results from "discourse/components/search-menu/results";
 import SearchTerm from "discourse/components/search-menu/search-term";
+import concatClass from "discourse/helpers/concat-class";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -307,7 +308,7 @@ export default class SearchMenu extends Component {
 
     if (!this.search.activeGlobalSearchTerm) {
       this.abortPerform({
-        noResults: this.site.isMobileViewAndDevice,
+        noResults: this.site.mobileView,
         invalidTerm: false,
       });
     } else if (
@@ -416,8 +417,13 @@ export default class SearchMenu extends Component {
       {{on "keydown" this.onKeydown}}
     >
       <div class="search-input-wrapper">
-        <div class="search-input">
-          {{#if this.site.isMobileViewAndDevice}}
+        <div
+          class={{concatClass
+            "search-input"
+            (concat "search-input--" @location)
+          }}
+        >
+          {{#if this.site.mobileView}}
             <MobileSearchButton @onTap={{this.mobileSearch}} />
           {{else}}
             <ActiveFilters
@@ -458,7 +464,7 @@ export default class SearchMenu extends Component {
             </div>
           {{/if}}
         </div>
-        {{#if this.site.isMobileViewAndDevice}}
+        {{#if this.site.mobileView}}
           <DButton
             @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}

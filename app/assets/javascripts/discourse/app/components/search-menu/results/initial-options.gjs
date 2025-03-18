@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
@@ -48,9 +48,7 @@ export default class InitialOptions extends Component {
   }
 
   get hideForEmptyMobileSearch() {
-    return (
-      this.site.isMobileViewAndDevice && !this.search.activeGlobalSearchTerm
-    );
+    return this.site.mobileView && !this.search.activeGlobalSearchTerm;
   }
 
   get termMatchesContextTypeKeyword() {
@@ -214,6 +212,7 @@ export default class InitialOptions extends Component {
                   this.currentUser
                   this.siteSettings.log_search_queries
                   this.displayInitialOptions
+                  (not this.site.mobileView)
                 )
               }}
                 <RecentSearches
@@ -222,7 +221,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else if (not this.site.isMobileViewAndDevice)}}
+          {{else if (not this.site.mobileView)}}
             <RandomQuickTip
               @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}
