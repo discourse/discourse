@@ -988,25 +988,54 @@ fa_IR:
       short_description: "پسندیدن این فرسته"
   user_activity:
     no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
+  email_settings:
+    timeout_error: "مدت زمان اتصال به سرور، بیش از حد طول کشید. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
+    unhandled_error: "خطای کنترل نشده هنگام تست تنظیمات ایمیل. %{message}"
+  webauthn:
+    validation:
+      invalid_type_error: "نوع webauthn ارائه شده نامعتبر بود. انواع معتبر webauthn.get و webauthn.create هستند."
+      challenge_mismatch_error: "چالش ارائه شده با چالش ایجاد شده توسط سرور احراز هویت مطابقت ندارد."
+      invalid_origin_error: "مبدا درخواست احراز هویت با مبدا سرور مطابقت ندارد."
+      malformed_attestation_error: "خطایی در رمزگشایی داده‌های گواهی وجود داشت."
+      user_presence_error: "حضور کاربر الزامی است."
+      user_verification_error: "تأیید کاربر مورد نیاز است."
+      unsupported_public_key_algorithm_error: "الگوریتم کلید عمومی ارائه شده توسط سرور پشتیبانی نمی شود."
+      unsupported_attestation_format_error: "فرمت گواهی توسط سرور پشتیبانی نمی شود."
+      credential_id_in_use_error: "شناسه اعتبار ارائه شده، از قبل در حال استفاده است."
+      public_key_error: "تأیید کلید عمومی برای اعتبارنامه انجام نشد."
+      ownership_error: "کلید امنیتی متعلق به کاربر نیست."
+      not_found_error: "کلید امنیتی با شناسه اعتبار ارائه شده یافت نشد."
+      unknown_cose_algorithm_error: "الگوریتم مورد استفاده برای کلید امنیتی شناسایی نمی شود."
+      malformed_public_key_credential_error: "کلید عمومی ارائه شده نامعتبر است."
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
       description: "این موضوع تبلیغاتی است. این برای سایت مفید یا مربط نیست، ولی تبلیغات طبیعی است."
       long_form: "پرچم‌گذاری به عنوان یک هرزنامه"
+      short_description: "این یک تبلیغ است"
     inappropriate:
       title: "نامناسب"
+      description: 'این موضوع حاوی مطالبی است که یک فرد معقول آن را توهین‌آمیز، زننده، رفتار نفرت‌انگیز یا ناقض <a href="%{base_path}/guidelines">دستورالعمل‌های انجمن ما</a> تلقی می‌کند.'
       long_form: "پرچم گذاری شده به عنوان نامناسب"
+      short_description: 'ناقض <a href="%{base_path}/guidelines">دستورالعمل‌های انجمن ما</a>'
     notify_moderators:
       title: "یک چیز دیگر"
+      description: 'این موضوع بر اساس <a href="%{base_path}/guidelines"> دستورالعمل‌‌ها</a>، <a href="%{tos_url}"> قوانین و مقررات استفاده از خدمات</a>، یا به دلیل دیگری که در بالا ذکر نشده است، نیازمند توجه کارکنان است.'
       long_form: "این را برای توجه مدیر پرچم گذاری کن"
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
       email_title: 'موضوع "%{title}" نیاز به توجه ناظم دارد. '
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "غیر قانونی"
+      description: "این موضوع به توجه کارکنان نیاز دارد زیرا معتقدم حاوی محتوای غیرقانونی است."
+      short_description: "غیر قانونی است"
       email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>پست شما توسط انجمن پرچم گذاری شد. لطفا <a href="%{path}">پیام های خود را ببینید</a>.</p>'
     user_must_edit: "<p>این نوشته توسط انجمن پرچم‌گذاری شده و به طور موقت مخفی است.</p>"
+  ignored:
+    hidden_content: "<p>محتوای نادیده گرفته شده</p>"
   archetypes:
     regular:
       title: "موضوع عادی"
@@ -1016,14 +1045,20 @@ fa_IR:
         make: "این موضوع در حال حاضر یک بنر است و تا زمانی که توسط کاربر رد شود، بالای تمام صفحه‌ها نمایش داده می‌شود. "
         remove: "این موضوع دیگر بنر نیست و بالای تمام صفحات به نمایش در نمی‌آید. "
   unsubscribed:
+    title: "تنظیمات برگزیده ایمیل به روز شد!"
+    description: "تنظیمات برگزیده ایمیل برای <b>%{email}</b> به روز شد. برای تغییر تنظیمات ایمیل خود <a href='%{url}'>از تنظیمات برگزیده کاربر خود بازدید کنید</a>."
     topic_description: "برای اشتراک مجدد در %{link}، از مدیریت آگاه‌سازی در قسمت پایین یا راست موضوع استفاده کنید."
+    private_topic_description: "برای اشتراک مجدد، از کنترل اعلان در پایین یا سمت راست موضوع استفاده کنید."
   unsubscribe:
     title: "لغو اشتراک"
     stop_watching_topic: "این موضوع را مشاهده نکنید، %{link}"
     mute_topic: "نادیده گرفتن تمام اطلاعیه‌های این موضوع، %{link}"
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
+    all: "هیچ ایمیلی از %{sitename}برای من نفرست"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
+    not_found_description: "متأسفیم، نتوانستیم آن اشتراک را پیدا کنیم. ممکن است پیوند ایمیل شما خیلی قدیمی باشد و منقضی شده باشد؟"
+    user_not_found_description: "متأسفیم، نتوانستیم کاربری برای این اشتراک پیدا کنیم. احتمالاً در حال تلاش برای لغو اشتراک حسابی هستید که دیگر وجود ندارد."
     log_out: "خروج"
     submit: "ذخیره تنظیمات"
     digest_frequency:
@@ -1043,6 +1078,7 @@ fa_IR:
     read: "خواندن"
     read_write: "خواندن/نوشتن"
     description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
+    otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:
       confirm_title: ورود به %{site_name}
       logging_in_as: ورود با %{username}
@@ -1056,43 +1092,97 @@ fa_IR:
       session_info: "خواندن اطلاعات session کاربر"
       read: "خواندن همه"
       write: "نوشتن همه"
+      one_time_password: "یک رمز ورود یک بار مصرف ایجاد کنید"
+      bookmarks_calendar: "یادآورهای نشانک را بخوانید"
       user_status: "خواندن و به‌روزرسانی وضعیت کاربر"
+    invalid_public_key: "متأسفیم، کلید عمومی نامعتبر است."
+    invalid_token: "توکن گم شده، نامعتبر یا منقضی شده است"
+  flags:
+    errors:
+      already_handled: "پرچم قبلاً کنترل شده بود"
+      wrong_move: "پرچم قابل جابجایی نیست"
+      used: "پرچم را نمی توان به روز کرد یا حذف کرد زیرا قبلاً استفاده شده است."
+      unique_name: "نام پرچم باید منحصر به فرد باشد"
   reports:
     default:
       labels:
         count: تعداد
+        percent: درصد
         day: روز
     post_edits:
+      title: "ویرایش‌های فرسته"
       labels:
         edited_at: تاریخ
         post: فرسته
         editor: ویرایشگر
+        author: نویسنده
         edit_reason: دلیل
     user_flagging_ratio:
+      title: "نسبت پرچم گذاری کاربر"
       labels:
         user: کاربر
+        agreed_flags: گزارش‌های تایید شده
+        disagreed_flags: گزارش‌های رد شده
+        ignored_flags: گزارش‌های نادیده گرفته‌شده
         score: امتیاز
     moderators_activity:
+      title: "فعالیت ناظر"
       labels:
         moderator: مدیر
+        flag_count: گزارش‌ها بررسی شدند
+        time_read: مدت زمان خواندن
+        topic_count: موضوعات ساخته شدند
+        post_count: نوشته‌ها ساخته شدند
+        revision_count: تجدید نظرها
+      description: فهرست فعالیت‌های ناظر شامل گزارش‌های بررسی‌شده، زمان مطالعه، موضوعات ایجاد شده، پست‌های ایجاد شده، پیام‌های شخصی ایجاد شده و بازبینی‌ها است
     flags_status:
+      title: "وضعیت گزارش‌ها"
+      values:
+        agreed: تأیید شده
+        disagreed: رد شده
+        deferred: به تعویق افتاده
+        no_action: هیچ اقدامی
       labels:
         flag: نوع
+        assigned: اختصاص داده شده
+        poster: ارسال کننده
+        flagger: گزارش‌دهنده
     visits:
       title: "بازدید کاربران"
       xaxis: "روز"
       yaxis: "تعداد بازدید ها"
+      description: "تعداد بازدیدهای کاربران وارد شده"
     signups:
+      title: "ثبت‌نام‌ها"
       xaxis: "روز"
+      yaxis: "تعداد ثبت‌نام‌ها"
+      description: "ثبت‌نام‌های حساب کاربری جدید در این دوره"
     new_contributors:
+      title: "مشارکت کنندگان جدید"
       xaxis: "روز"
+      yaxis: "تعداد مشارکت کنندگان جدید"
+      description: "تعداد کاربرانی که اولین پست خود را در این مدت ارسال کردند."
     trust_level_growth:
+      title: "رشد سطح اعتماد"
+      xaxis:
+        tl1_reached: "به TL1 رسید"
+        tl2_reached: "به TL2 رسید"
+        tl3_reached: "به TL3 رسید"
+        tl4_reached: "به TL4 رسید"
       yaxis: "روز"
+      description: "تعداد کاربرانی که در این مدت سطح اعتماد خود را افزایش دادند."
     consolidated_page_views:
+      title_legacy: "بازدیدهای تجمیع شده"
+      xaxis:
+        page_view_crawler: "خزنده‌ها"
+        page_view_anon: "کاربران ناشناس"
+        page_view_logged_in: "کاربران وارد شده"
       yaxis: "روز"
+      description_legacy: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس و خزنده ها."
       labels:
         post: فرسته
         editor: ویرایشگر
+        author: نویسنده
         edit_reason: دلیل
     consolidated_api_requests:
       title: "درخواست‌های API تلفیقی"
@@ -1102,26 +1192,46 @@ fa_IR:
       yaxis: "روز"
       description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "مرورگر ناشناس"
+        page_view_crawler: "خزنده شناخته شده"
+        page_view_other: "سایر بازدیدهای صفحه"
       yaxis: "روز"
     site_traffic:
+      title: "ترافیک سایت"
+      xaxis:
+        page_view_anon_browser: "بازدید از صفحه (ناشناس)"
+        page_view_logged_in_browser: "بازدید از صفحه (وارد شده)"
+        page_view_crawler: "خزنده های شناخته شده"
+        page_view_other: "ترافیک‌های دیگر"
       yaxis: "روز"
+      description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "روز"
+      yaxis: "DAU/MAU"
+      description: "تعداد اعضایی که در روز گذشته وارد سیستم شده‌اند تقسیم بر تعداد اعضایی که در ماه گذشته وارد شده‌اند - درصدی را نشان می‌دهد که نشان‌دهنده «چسبندگی» انجمن است. بیش از ۲۰٪ را هدف بگیرید."
     daily_engaged_users:
+      title: "کاربران فعال روزانه"
       xaxis: "روز"
+      yaxis: "کاربران فعال"
+      description: "تعداد کاربرانی که در روز گذشته نوشته‌ای را پسند کرده‌اند یا پستی گذاشته‌اند."
     profile_views:
       title: "بازدید‌های نمایه کاربر"
       xaxis: "روز"
       yaxis: "تعداد نمایه‌های کاربری که بازدید شده‌اند"
+      description: "کل بازدیدهای جدید از پروفایل‌های کاربران"
     topics:
       title: "موضوعات"
       xaxis: "روز"
       yaxis: "تعداد موضوعات جدید"
+      description: "موضوعات جدید ایجاد شده در این دوره."
     posts:
       title: "فرسته‌ها"
       xaxis: "روز"
       yaxis: "تعداد فرسته‌های جدید"
+      description: "پست‌های جدید ایجاد شده در این دوره"
     likes:
       title: "پسندها"
       xaxis: "روز"
@@ -1131,18 +1241,22 @@ fa_IR:
       title: "پرچم‌ها"
       xaxis: "روز"
       yaxis: "تعداد پرچم‌ها"
+      description: "تعداد گزارش‌های جدید"
     bookmarks:
       title: "نشانک‌ها"
       xaxis: "روز"
       yaxis: "تعداد نشانک‌های جدید"
+      description: "تعداد موضوعات و پست های جدید نشانک شده."
     users_by_trust_level:
       title: "کاربران بر اساس سطح‌اعتماد"
       xaxis: "سطح‌اعتماد"
       yaxis: "تعداد کاربران"
       labels:
         level: سطح
+      description: "تعداد کاربران گروه بندی شده بر اساس سطح اعتماد."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
+      title: "کاربران بر اساس نوع"
       xaxis: "نوع"
       yaxis: "تعداد کاربران"
       labels:
@@ -1151,27 +1265,38 @@ fa_IR:
         admin: مدیر
         moderator: مدیر
         suspended: تعلیق شد
+        silenced: بی‌صدا شده
     trending_search:
+      title: عبارات جستجوی پرطرفدار
       labels:
         searches: جستجوها
+        click_through: CTR
+      description: "محبوب ترین عبارات جستجو با نرخ کلیک آنها."
     emails:
       title: "ایمیل ها ارسال شد"
       xaxis: "روز"
       yaxis: "تعداد ایمیل‌ها"
+      description: "تعداد ایمیل های جدید ارسال شده"
     user_to_user_private_messages:
+      title: "کاربر به کاربر (به استثنای پاسخ ها)"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد پیام‌های شخصی تازه شروع شده"
     user_to_user_private_messages_with_replies:
+      title: "کاربر به کاربر (با پاسخ)"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد تمام پیام‌ها و پاسخ‌های شخصی جدید."
     system_private_messages:
       title: "سیستم"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد پیام‌های شخصی ارسال شده به صورت خودکار توسط سیستم."
     moderator_warning_private_messages:
       title: "هشدار مدیر"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد اخطارهای ارسال شده از طریق پیام‌های شخصی از طرف مدیران."
     notify_moderators_private_messages:
       title: "اطلاعیه مدیران"
       xaxis: "روز"
@@ -1180,6 +1305,7 @@ fa_IR:
       title: "اطلاعیه کاربر"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد دفعاتی که کاربران با استفاده از کادر گفتگوی گزارش، پیام شخصی ارسال کرده‌اند."
     top_referrers:
       title: "برترین معرفی کنندگان"
       xaxis: "کاربر"
@@ -1189,6 +1315,7 @@ fa_IR:
         user: "کاربر"
         num_clicks: "کلیک‌ها"
         num_topics: "موضوعات"
+      description: "لیست کاربران بر اساس تعداد کلیک روی پیوندهایی که به اشتراک گذاشته‌اند."
     top_traffic_sources:
       title: "بالاترین منابع ترافیک"
       xaxis: "دومین"
@@ -1199,27 +1326,33 @@ fa_IR:
         domain: دومین
         num_clicks: کلیک‌ها
         num_topics: موضوعات
+      description: "منابع خارجی که بیشتر به این سایت لینک داده‌اند."
     top_referred_topics:
       title: "بالاترین موضوعات مورد مراجعه"
       labels:
         num_clicks: "کلیک‌ها"
         topic: "موضوعات"
+      description: "موضوعاتی که بیشترین کلیک را از منابع خارجی دریافت کرده‌اند."
     page_view_anon_reqs:
       title: "ناشناس"
       xaxis: "روز"
       yaxis: "نمایش صفحات به کاربران ناشناس"
+      description: "تعداد بازدیدهای جدید از صفحه توسط بازدیدکنندگانی که به حساب وارد نشده‌اند."
     page_view_logged_in_reqs:
       title: "وارد شده در"
       xaxis: "روز"
       yaxis: "نمایش صفحات به کاربران وارد شده"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی کاربران وارد شده."
     page_view_crawler_reqs:
       title: "نمایش صفحات به خزندگان وب"
       xaxis: "روز"
       yaxis: "نمایش صفحات به خزندگان وب"
+      description: "کل بازدیدهای صفحات از سوی خزنده های وب در طول زمان"
     page_view_total_reqs:
       title: "بازدید"
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
+      description: "تعداد بازدیدهای جدید صفحات از سوی همه بازدیدکنندگان."
     page_view_legacy_total_reqs:
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
@@ -1227,10 +1360,12 @@ fa_IR:
       title: "نمایش صفحات کاربران وارد شده"
       xaxis: "روز"
       yaxis: "نمایش صفحات کاربران وارد شده موبایلی"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی کاربران دستگاه‌های تلفن همراه و وارد شده با حساب کاربری."
     page_view_anon_mobile_reqs:
       title: "بازدید ناشناس"
       xaxis: "روز"
       yaxis: "بازدید ناشناس موبایلی"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی بازدیدکنندگان دستگاه همراهی که وارد سیستم نشده‌اند.ورود به حساب کاربری."
     page_view_anon_browser_reqs:
       xaxis: "روز"
     page_view_logged_in_browser_reqs:
