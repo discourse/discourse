@@ -55,10 +55,7 @@ module("Unit | Utility | icon-library", function (hooks) {
     withSilencedDeprecations("discourse.fontawesome-6-upgrade", () => {
       const adjustIcon = iconHTML("adjust");
       assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
-      assert.true(
-        adjustIcon.includes('href="#circle-half-stroke"'),
-        "has remapped icon"
-      );
+      assert.true(adjustIcon.includes('href="#adjust"'), "has original icon");
 
       const farIcon = iconHTML("far-dot-circle");
       assert.true(
@@ -66,8 +63,8 @@ module("Unit | Utility | icon-library", function (hooks) {
         "class is maintained"
       );
       assert.true(
-        farIcon.includes('href="#far-circle-dot"'),
-        "has remapped icon"
+        farIcon.includes('href="#far-dot-circle"'),
+        "has original icon"
       );
     });
   });
