@@ -4,142 +4,74 @@
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
-    chat_transcript: {
-      content:
-        "block* chat_transcript_meta chat_transcript_user chat_transcript_messages",
-      draggable: true,
+    chat: {
+      attrs: {
+        messageId: {},
+        username: {},
+        datetime: {},
+        channelName: {},
+        channelId: {},
+        html: {},
+      },
+      content: "block+",
       selectable: true,
-      defining: true,
+      isolating: true,
       parseDOM: [{ tag: "div.chat-transcript" }],
-      toDOM() {
-        console.log("chat_transcript");
-        return ["div", { class: "chat-transcript" }, 0];
-      },
-    },
-    chat_transcript_user: {
-      content: "chat_transcript_user_details inline",
-      draggable: false,
-      selectable: false,
-      parseDOM: [{ tag: "div.chat-transcript-user" }],
-      toDOM() {
-        console.log("chat_transcript_user");
-        return ["div", { class: "chat-transcript-user" }, 0];
-      },
-    },
-    chat_transcript_datetime: {
-      content: "inline*",
-      group: "chat_transcript_user_details",
-      draggable: false,
-      selectable: false,
-      inline: true,
-      parseDOM: [{ tag: "div.chat-transcript-datetime" }],
-      toDOM() {
-        console.log("chat_transcript_datetime");
-        return ["div", { class: "chat-transcript-datetime" }, 0];
-      },
-    },
-    chat_transcript_messages: {
-      content: "inline*",
-      group: "chat_transcript",
-      draggable: false,
-      selectable: false,
-      parseDOM: [
-        {
-          tag: "div.chat-transcript-messages",
-          getAttrs(dom) {
-            return { html: dom.innerHTML };
-          },
-        },
-      ],
-      toDOM() {
-        console.log("chat_transcript_messages");
-        return ["div", { class: "chat-transcript-messages" }, 0];
-      },
-    },
-    chat_transcript_user_avatar: {
-      content: "inline*",
-      group: "chat_transcript_user_details",
-      draggable: false,
-      selectable: false,
-      inline: true,
-      parseDOM: [{ tag: "div.chat-transcript-user-avatar" }],
-      toDOM() {
-        console.log("chat_transcript_user_avatar");
-        return ["div", { class: "chat-transcript-user-avatar" }, 0];
-      },
-    },
-    chat_transcript_username: {
-      content: "inline*",
-      group: "chat_transcript_user_details",
-      draggable: false,
-      selectable: false,
-      inline: true,
-      parseDOM: [{ tag: "div.chat-transcript-username" }],
-      toDOM() {
-        console.log("chat_transcript_username");
-        return ["div", { class: "chat-transcript-username" }, 0];
-      },
-    },
-    chat_transcript_messages_html: {
-      content: "block*",
-      group: "block",
-      draggable: false,
-      selectable: false,
-      toDOM() {
-        console.log("chat_transcript_messages_html");
-        return ["div", {}, 0];
-      },
-    },
-    chat_transcript_meta: {
-      content: "inline*",
-      group: "chat_transcript",
-      draggable: false,
-      selectable: false,
-      parseDOM: [{ tag: "div.chat-transcript-meta" }],
-      toDOM() {
-        console.log("chat_transcript_meta");
-        return ["div", { class: "chat-transcript-meta" }, 0];
+      toDOM(node) {
+        const dom = document.createElement("div");
+        dom.classList.add("chat-transcript");
+        dom.innerHTML = node.attrs.html;
+        return dom;
       },
     },
   },
   serializeNode: {
-    chat_transcript(state, node) {
-      console.log(state, node);
+    chat(state, node) {
+      state.write("[chat]");
+      state.renderContent(node);
+      state.write("[/chat]");
     },
   },
   parse: {
-    div_chat_transcript_wrap: { block: "chat_transcript" },
+    chat: { ignore: true },
+    div_chat_transcript_wrap_open(state, token, tokens) {
+      const messagesHtml = tokens.find(
+        (t) => t.type === "html_raw_open"
+      )?.content;
+      state.openNode(state.schema.nodes.chat, {
+        messageId: token.attrGet("data-message-id"),
+        username: token.attrGet("data-username"),
+        datetime: token.attrGet("data-datetime"),
+        channelName: token.attrGet("data-channel-name"),
+        channelId: token.attrGet("data-channel-id"),
+        html: messagesHtml,
+      });
+      return true;
+    },
+    div_chat_transcript_wrap_close(state) {
+      state.closeNode();
+      return true;
+    },
     div_chat_transcript_user: {
-      block: "chat_transcript_user",
+      ignore: true,
     },
     div_chat_transcript_user_avatar: {
-      block: "chat_transcript_user_avatar",
+      ignore: true,
     },
     div_chat_transcript_username: {
-      block: "chat_transcript_username",
+      ignore: true,
     },
     div_chat_transcript_datetime: {
-      block: "chat_transcript_datetime",
+      ignore: true,
     },
     div_chat_transcript_messages: {
-      block: "chat_transcript_messages",
+      ignore: true,
     },
-    // div_chat_transcript_reaction(state, token) {
-    //   console.log(state, token);
-    // },
-    // div_chat_transcript_reactions(state, token) {
-    //   console.log(state, token);
-    // },
-    div_chat_transcript_meta: {
-      block: "chat_transcript_meta",
-    },
-    html_raw: { block: "chat_transcript_messages_html" },
+    div_chat_transcript_reaction: { ignore: true },
+    div_chat_transcript_reactions: { ignore: true },
+    div_chat_transcript_meta: { ignore: true },
+    html_raw: { ignore: true },
   },
-  // serializeNode: {
-  //   chat(state, node) {
-  //     console.log(state, node);
-  //   },
-  // },
 };
 
 export default extension;
