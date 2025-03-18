@@ -579,8 +579,8 @@ export default RouteTemplate(
                     @durationMinutes={{@controller.model.topic_timer.duration_minutes}}
                     @categoryId={{@controller.model.topic_timer.category_id}}
                     @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-                    @removeTopicTimer={{action
-                      "removeTopicTimer"
+                    @removeTopicTimer={{fn
+                      @controller.removeTopicTimer
                       @controller.model.topic_timer.status_type
                       "topic_timer"
                     }}
