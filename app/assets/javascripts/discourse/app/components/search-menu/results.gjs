@@ -60,8 +60,7 @@ export default class Results extends Component {
   <template>
     {{#if
       (and
-        this.site.isMobileViewAndDevice
-        (or this.search.inTopicContext @inPMInboxContext)
+        this.site.mobileView (or this.search.inTopicContext @inPMInboxContext)
       )
     }}
       <ActiveFilters
@@ -71,7 +70,9 @@ export default class Results extends Component {
     {{/if}}
 
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
-      <BrowserSearchTip />
+      {{#unless this.site.mobileView}}
+        <BrowserSearchTip />
+      {{/unless}}
     {{else}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
         <div class="results" data-test-selector="search-menu-results">
