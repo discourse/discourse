@@ -5,6 +5,8 @@ RSpec.describe "User chat preferences", type: :system do
 
   let(:user_preferences_chat_page) { PageObjects::Pages::UserPreferencesChat.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
+  let(:chat) { PageObjects::Pages::Chat.new }
+  let(:channel) { PageObjects::Pages::ChatChannel.new }
 
   before do
     chat_system_bootstrap
@@ -43,6 +45,33 @@ RSpec.describe "User chat preferences", type: :system do
 
     expect(page).to have_checked_field("user_chat_quick_reaction_type_custom")
     expect(user_preferences_chat_page.reactions_selected.first).to eq "sweat_smile"
+  end
+
+  describe "chat interface" do
+    fab!(:category_channel_1) { Fabricate(:category_channel) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+
+    it "sees expected quick-reactions on hover" do
+      sign_in(current_user)
+
+      # save custom and look for reaction
+      user_preferences_chat_page.visit
+      find("#user_chat_quick_reaction_type_custom").click
+      user_preferences_chat_page.save_changes_and_refresh
+      chat.visit_channel(category_channel_1)
+      channel.hover_message(message_1)
+
+      expect(channel.find_quick_reaction("smile")).to be_present
+
+      # save frequent and look for reaction
+      user_preferences_chat_page.visit
+      find("#user_chat_quick_reaction_type_frequent").click
+      user_preferences_chat_page.save_changes_and_refresh
+      chat.visit_channel(category_channel_1)
+      channel.hover_message(message_1)
+
+      expect(channel.find_quick_reaction("tada")).to be_present
+    end
   end
 
   shared_examples "select and save" do
