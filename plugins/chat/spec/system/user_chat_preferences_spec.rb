@@ -57,7 +57,7 @@ RSpec.describe "User chat preferences", type: :system do
 
   describe "chat sound" do
     include_examples "select and save" do
-      let(:selfor) { "#user_chat_sounds" }
+      let(:sel) { "#user_chat_sounds" }
       let(:val) { "bell" }
     end
   end
