@@ -639,7 +639,9 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
-      counting_too_many_email_domains: "Maximum %{count} email domains can be counted at once"
+      counting_too_many_email_domains:
+        one: "Maximum %{count} email domain can be counted at once"
+        other: "Maximum %{count} email domains can be counted at once"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
     default_names:
