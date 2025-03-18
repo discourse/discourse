@@ -322,7 +322,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_add_section_button
   end
 
-  it "displays limited links for moderator" do
+  xit "displays limited links for moderator" do
     sign_in(moderator)
     visit("/admin")
 

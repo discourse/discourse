@@ -140,6 +140,9 @@ export default class SearchMenu extends Component {
 
   @action
   open() {
+    if (!this.menuPanelOpen) {
+      this.appEvents.trigger("search-menu:search_menu_opened");
+    }
     this.menuPanelOpen = true;
   }
 
@@ -338,9 +341,6 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
-          this.appEvents.trigger("search:search_result_view", {
-            searchMenu: true, // delineate between search menu and full page search
-          });
         });
     }
   }

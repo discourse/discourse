@@ -125,7 +125,9 @@ class Demon::Base
       if alive?
         log(
           "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}\n#{caller.join("\n")}",
+          level: :warn,
         )
+
         Process.kill("KILL", @pid)
       end
 
@@ -229,7 +231,7 @@ class Demon::Base
             Process.kill "KILL", Process.pid
           end
         rescue => e
-          log("URGENT monitoring thread had an exception #{e}")
+          log("URGENT monitoring thread had an exception #{e}", level: :error)
         end
         sleep 1
       end

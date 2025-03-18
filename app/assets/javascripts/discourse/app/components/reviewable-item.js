@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -49,7 +50,10 @@ export default class ReviewableItem extends Component {
   @service siteSettings;
   @service currentUser;
   @service composer;
+  @service toasts;
   @optionalService adminTools;
+
+  @tracked disabled = false;
 
   updating = null;
   editing = false;
@@ -201,6 +205,8 @@ export default class ReviewableItem extends Component {
   _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
+    this.disabled = true;
+
     let performAction = () => {
       let version = reviewable.get("version");
       this.set("updating", true);
@@ -242,6 +248,12 @@ export default class ReviewableItem extends Component {
             );
           }
 
+          if (performableAction.completed_message) {
+            this.toasts.success({
+              data: { message: performableAction.completed_message },
+            });
+          }
+
           if (this.remove) {
             this.remove(performResult.remove_reviewable_ids);
           } else {
@@ -249,7 +261,10 @@ export default class ReviewableItem extends Component {
           }
         })
         .catch(popupAjaxError)
-        .finally(() => this.set("updating", false));
+        .finally(() => {
+          this.set("updating", false);
+          this.disabled = false;
+        });
     };
 
     if (performableAction.client_action) {

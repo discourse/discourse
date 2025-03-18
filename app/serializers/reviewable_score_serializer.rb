@@ -78,10 +78,10 @@ class ReviewableScoreSerializer < ApplicationSerializer
     if object.context.nil?
       # If the words weren't recorded, try to guess them based on current settings.
       if object.reviewable.respond_to?(:post)
-        s = object.reviewable.post.raw
+        s = object.reviewable.post.raw.clone
         s << " #{object.reviewable.post.topic.title}" if object.reviewable.post.post_number == 1
       elsif object.reviewable.respond_to?(:payload)
-        s = object.reviewable.payload["raw"]
+        s = object.reviewable.payload["raw"].clone
         s << " #{object.reviewable.payload["title"]}" if object.reviewable.payload.key?("title")
       end
 

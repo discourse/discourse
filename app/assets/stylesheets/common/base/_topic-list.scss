@@ -130,16 +130,13 @@
 .topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
+  --tag-text-color: var(--primary-medium);
+
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
 
   .badge-category {
-    color: var(--primary-medium);
-  }
-
-  .discourse-tag,
-  .discourse-tag:visited {
     color: var(--primary-medium);
   }
 }

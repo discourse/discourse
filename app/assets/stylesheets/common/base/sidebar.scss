@@ -4,6 +4,11 @@
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
+
+  @include breakpoint("mobile-extra-large") {
+    --d-sidebar-row-height: 2.4em;
+  }
+
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-background: var(--secondary);
@@ -202,6 +207,10 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
+    @include breakpoint("mobile-extra-large") {
+      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+    }
+
     &.header {
       padding-bottom: 0;
 
@@ -220,6 +229,10 @@
 
     .link-icon {
       grid-column: 2;
+
+      @include breakpoint("mobile-extra-large") {
+        grid-column: 1;
+      }
     }
 
     .input-group {
@@ -260,7 +273,7 @@
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include breakpoint("mobile-extra-large") {
       grid-template-columns: auto 1fr;
       justify-items: left;
 

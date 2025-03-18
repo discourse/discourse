@@ -1,3 +1,11 @@
+:root {
+  --tag-text-color: var(--primary-high);
+}
+
+.extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
+}
+
 .container.tags-index {
   background: var(--d-content-background);
 }
@@ -59,19 +67,15 @@
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-
-  @include ellipsis;
   vertical-align: middle;
   margin: 0;
-  color: var(--primary-medium);
+  color: var(--tag-text-color);
+
+  @include ellipsis;
 
   &:visited,
   &:hover {
-    color: var(--primary-medium);
-  }
-
-  .extra-info-wrapper & {
-    color: var(--header_primary-high) !important;
+    color: var(--tag-text-color);
   }
 
   &.large {
@@ -80,19 +84,11 @@
 
   &.box {
     background-color: var(--primary-low);
-    color: var(--primary-high);
     padding: 2px 8px;
 
     .extra-info-wrapper & {
       background-color: var(--header_primary-low);
-      color: var(--header_primary-medium);
     }
-  }
-
-  &.simple,
-  &.simple:visited,
-  &.simple:hover {
-    color: var(--primary-high);
   }
 
   &.bullet {
@@ -130,6 +126,7 @@
 
   &__tag-separator {
     margin-right: 0.25em;
+    color: var(--tag-text-color);
   }
 
   .box,
@@ -149,10 +146,6 @@
     font-weight: normal;
     font-size: var(--font-down-1);
   }
-}
-
-header .discourse-tag {
-  color: var(--primary-medium);
 }
 
 .list-tags {

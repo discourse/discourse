@@ -5,10 +5,6 @@
     display: none;
   }
 
-  .before-header-panel-outlet {
-    flex: 0.25 0.25 auto;
-  }
-
   a.search-link {
     color: var(--tertiary);
 
@@ -34,14 +30,14 @@
   }
 
   .floating-search-input {
-    width: 60%;
+    width: 100%;
+    max-width: 550px; // half of defualt d-max-width
 
     .search-banner {
       height: 100%;
 
       &-inner.wrap {
         height: 100%;
-        width: 100%;
         padding: 0;
 
         .search-menu {
@@ -55,7 +51,7 @@
           }
 
           @media screen and (max-width: 768px) {
-            width: 95%;
+            width: 90%;
           }
 
           // Hide search-icon when search-context is present
