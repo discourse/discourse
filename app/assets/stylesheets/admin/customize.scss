@@ -1203,8 +1203,11 @@
 
 .desktop-view .admin-customize {
   .show-current-style {
-    padding-left: 0;
     width: 68%;
+
+    &.legacy {
+      padding-left: 2%;
+    }
 
     .title {
       input {
