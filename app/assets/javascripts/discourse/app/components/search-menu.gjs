@@ -310,7 +310,7 @@ export default class SearchMenu extends Component {
 
     if (!this.search.activeGlobalSearchTerm) {
       this.abortPerform({
-        noResults: this.site.isMobileViewAndDevice,
+        noResults: this.site.mobileView,
         invalidTerm: false,
       });
     } else if (
@@ -425,7 +425,7 @@ export default class SearchMenu extends Component {
             (concat "search-input--" @location)
           }}
         >
-          {{#if this.site.isMobileViewAndDevice}}
+          {{#if this.site.mobileView}}
             <MobileSearchButton @onTap={{this.mobileSearch}} />
           {{else}}
             <ActiveFilters
@@ -466,7 +466,7 @@ export default class SearchMenu extends Component {
             </div>
           {{/if}}
         </div>
-        {{#if this.site.isMobileViewAndDevice}}
+        {{#if this.site.mobileView}}
           <DButton
             @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}

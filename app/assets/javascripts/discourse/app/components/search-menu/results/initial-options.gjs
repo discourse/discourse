@@ -48,9 +48,7 @@ export default class InitialOptions extends Component {
   }
 
   get hideForEmptyMobileSearch() {
-    return (
-      this.site.isMobileViewAndDevice && !this.search.activeGlobalSearchTerm
-    );
+    return this.site.mobileView && !this.search.activeGlobalSearchTerm;
   }
 
   get termMatchesContextTypeKeyword() {
@@ -219,7 +217,7 @@ export default class InitialOptions extends Component {
                   this.currentUser
                   this.siteSettings.log_search_queries
                   this.displayInitialOptions
-                  (not this.site.isMobileViewAndDevice)
+                  (not this.site.mobileView)
                 )
               }}
                 <RecentSearches
@@ -228,7 +226,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else if (not this.site.isMobileViewAndDevice)}}
+          {{else if (not this.site.mobileView)}}
             <RandomQuickTip @searchTermChanged={{@searchTermChanged}} />
             {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
               <RecentSearches

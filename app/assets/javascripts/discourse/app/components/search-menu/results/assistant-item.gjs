@@ -188,7 +188,7 @@ export default class AssistantItem extends Component {
           <span class="extra-hint">
             {{i18n
               (if
-                this.site.isMobileViewAndDevice
+                this.site.mobileView
                 "search.mobile_enter_hint"
                 "search.enter_hint"
               )
