@@ -67,7 +67,7 @@ function processInputRule(inputRule, params) {
     inputRule.match instanceof RegExp &&
     inputRule.handler instanceof Function
   ) {
-    // Default to NOT applying input rules to inCodeMark
+    // Default to NOT applying input rules when inCodeMark
     const options = inputRule.options || {};
     options.inCodeMark ??= options.inCode || false;
     return new InputRule(inputRule.match, inputRule.handler, options);
