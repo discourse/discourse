@@ -254,8 +254,14 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
 
   add_to_serializer(:user_option, :chat_quick_reaction_type) { object.chat_quick_reaction_type }
+  add_to_serializer(:current_user_option, :chat_quick_reaction_type) do
+    object.chat_quick_reaction_type
+  end
 
   add_to_serializer(:user_option, :chat_quick_reactions_custom) do
+    object.chat_quick_reactions_custom
+  end
+  add_to_serializer(:current_user_option, :chat_quick_reactions_custom) do
     object.chat_quick_reactions_custom
   end
 

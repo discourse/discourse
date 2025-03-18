@@ -19,6 +19,12 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#chat_quick_reaction_type" do
+    it "is present with default enum string" do
+      expect(serializer.as_json[:user_option][:chat_quick_reaction_type]).to eq("frequent")
+    end
+  end
+
   describe "#chat_drafts" do
     context "when user can't chat" do
       before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
