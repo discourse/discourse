@@ -5614,88 +5614,118 @@ en:
       agree_and_keep:
         title: "Keep post"
         description: "Agree with flag but keep this post unchanged."
+        complete: "Post kept unchanged."
       agree_and_keep_hidden:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
+        complete: "Post kept hidden."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
+        complete: "User suspended."
       agree_and_silence:
         title: "Silence user"
         description: "Agree with flag and silence the user."
+        complete: "User silenced."
       agree_and_restore:
         title: "Restore post"
         description: "Restore the post so that all users can see it."
+        complete: "Post restored."
       agree_and_hide:
         title: "Hide post"
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
+        complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Agree and Edit Post"
         description: "Agree with flag and open a composer window to edit the post."
+        complete: "Flag acknowledged, you can now edit the post."
       delete_single:
         title: "Delete"
+        complete: "Post deleted."
       delete:
         title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
+        complete: "Post deleted."
       delete_and_ignore_replies:
         title: "Ignore flag, delete post and replies"
         description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
+        complete: "Post and replies deleted."
       delete_and_agree:
         title: "Delete post"
         description: "Agree with flag and delete this post; if the first post, delete the topic as well."
+        complete: "Post deleted."
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
+        complete: "Post and replies deleted."
       disagree_and_restore:
         title: "No, restore post"
         description: "Restore the post so that all users can see it."
+        complete: "Post restored."
       disagree:
         title: "No"
+        complete: "Flag ignored."
       discard_post:
         title: "Discard Post"
+        complete: "Post discarded."
       revise_and_reject_post:
         title: "Revise Post..."
+        complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
+        complete: "Flag ignored."
       approve:
         title: "Approve"
+        complete: "Post approved."
       approve_post:
         title: "Approve Post"
         confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        complete: "Post approved."
       reject_post:
         title: "Reject Post"
+        complete: "Post rejected."
       approve_user:
         title: "Approve User"
+        complete: "User approved."
       reject_user:
         title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
+          complete: "User deleted."
         block:
           title: "Delete and Block User"
           description: "The user will be deleted, and we'll block their IP and email address."
+          complete: "User deleted and blocked."
       reject:
         title: "Reject"
         bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
+        complete: "Post rejected and user suspended."
       reject_and_silence:
         title: "Reject and Silence user"
+        complete: "Post rejected and user silenced."
       reject_and_delete:
         title: "Reject and Delete the post"
+        complete: "Post rejected and deleted."
       reject_and_keep_deleted:
         title: "Keep post deleted"
+        complete: "Post rejected and kept deleted."
       approve_and_restore:
         title: "Approve and Restore post"
+        complete: "Post approved and restored."
       delete_user:
         reason: "Deleted via review queue"
+        complete: "User deleted."
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"

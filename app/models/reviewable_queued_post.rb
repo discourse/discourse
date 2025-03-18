@@ -39,12 +39,14 @@ class ReviewableQueuedPost < Reviewable
           a.icon = "check"
           a.label = "reviewables.actions.approve_post.title"
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
+          a.completed_message = "reviewables.actions.approve_post.complete"
         end
       else
         if target_created_by.present?
           actions.add(:approve_post) do |a|
             a.icon = "check"
             a.label = "reviewables.actions.approve_post.title"
+            a.completed_message = "reviewables.actions.approve_post.complete"
           end
         end
       end
