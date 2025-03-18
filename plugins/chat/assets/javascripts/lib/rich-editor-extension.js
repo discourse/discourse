@@ -12,8 +12,8 @@ const extension = {
         channelName: {},
         channelId: {},
         html: {},
+        rawContent: {},
       },
-      content: "block+",
       group: "block",
       isolating: true,
       selectable: true,
@@ -46,13 +46,12 @@ const extension = {
 
       // todo: handle chained and multiQuote
 
-      state.write(`[chat ${bbCodeAttrs.join(" ")}]`);
-      state.renderContent(node);
-      state.write("[/chat]");
+      state.write(`[chat ${bbCodeAttrs.join(" ")}]\n`);
+      state.write(node.attrs.rawContent);
+      state.write("\n[/chat]\n");
     },
   },
   parse: {
-    chat: { ignore: true, noCloseToken: true },
     div_chat_transcript_wrap_open(state, token, tokens) {
       const messagesHtml = tokens.find((t) => t.type === "html_raw")?.content;
       state.openNode(state.schema.nodes.chat, {
@@ -62,6 +61,7 @@ const extension = {
         channelName: token.attrGet("data-channel-name"),
         channelId: token.attrGet("data-channel-id"),
         html: messagesHtml,
+        rawContent: token.content,
       });
       return true;
     },
@@ -69,21 +69,11 @@ const extension = {
       state.closeNode();
       return true;
     },
-    div_chat_transcript_user: {
-      ignore: true,
-    },
-    div_chat_transcript_user_avatar: {
-      ignore: true,
-    },
-    div_chat_transcript_username: {
-      ignore: true,
-    },
-    div_chat_transcript_datetime: {
-      ignore: true,
-    },
-    div_chat_transcript_messages: {
-      ignore: true,
-    },
+    div_chat_transcript_user: { ignore: true },
+    div_chat_transcript_user_avatar: { ignore: true },
+    div_chat_transcript_username: { ignore: true },
+    div_chat_transcript_datetime: { ignore: true },
+    div_chat_transcript_messages: { ignore: true },
     div_chat_transcript_reaction: { ignore: true },
     div_chat_transcript_reactions: { ignore: true },
     div_chat_transcript_meta: { ignore: true },

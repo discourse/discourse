@@ -110,6 +110,7 @@ const chatTranscriptRule = {
       wrapperClasses.push("chat-transcript-chained");
     }
 
+    wrapperDivToken.content = content;
     wrapperDivToken.attrs = [["class", wrapperClasses.join(" ")]];
     wrapperDivToken.attrs.push(["data-message-id", messageIdStart]);
     wrapperDivToken.attrs.push(["data-username", username]);
