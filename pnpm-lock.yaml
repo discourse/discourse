@@ -609,6 +609,9 @@ importers:
       broccoli-asset-rev:
         specifier: ^3.0.0
         version: 3.0.0
+      codemod-resolver:
+        specifier: workspace:1.0.0
+        version: link:../codemod-resolver
       custom-proxy:
         specifier: workspace:1.0.0
         version: link:../custom-proxy
