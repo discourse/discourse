@@ -32,7 +32,7 @@ export default class Results extends Component {
   @service site;
 
   get renderInitialOptions() {
-    return !this.search.activeGlobalSearchTerm && !this.search.inPMInboxContext;
+    return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
   }
 
   get noTopicResults() {
@@ -62,10 +62,13 @@ export default class Results extends Component {
     {{#if
       (and
         this.site.isMobileViewAndDevice
-        (or this.search.inTopicContext this.search.inPMInboxContext)
+        (or this.search.inTopicContext @inPMInboxContext)
       )
     }}
-      <ActiveFilters />
+      <ActiveFilters
+        @inPMInboxContext={{@inPMInboxContext}}
+        @clearPMInboxContext={{@clearPMInboxContext}}
+      />
     {{/if}}
 
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
@@ -101,7 +104,7 @@ export default class Results extends Component {
               @searchTermChanged={{@searchTermChanged}}
             />
           {{else}}
-            {{#if (and (not @searchTopics) (not this.search.inPMInboxContext))}}
+            {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
                 @closeSearchMenu={{@closeSearchMenu}}
@@ -126,7 +129,7 @@ export default class Results extends Component {
               />
             {{else if
               (and
-                (not this.search.inPMInboxContext)
+                (not @inPMInboxContext)
                 (not @searchTopics)
                 this.resultTypesWithComponent
               )

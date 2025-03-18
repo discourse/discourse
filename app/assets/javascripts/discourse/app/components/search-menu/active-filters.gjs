@@ -16,12 +16,12 @@ export default class ActiveFilters extends Component {
         class="btn-small search-context"
         data-test-button="search-in-this-topic"
       />
-    {{else if this.search.inPMInboxContext}}
+    {{else if @inPMInboxContext}}
       <DButton
         @icon="xmark"
         @label="search.in_messages"
         @title="search.in_messages_tooltip"
-        @action={{fn (mut this.search.inPMInboxContext) false}}
+        @action={{@clearPMInboxContext}}
         class="btn-small search-context"
         data-test-button="search-in-messages"
       />
