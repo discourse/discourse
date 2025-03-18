@@ -94,9 +94,7 @@ export default class SearchTerm extends Component {
           if (this.search.inTopicContext) {
             this.search.inTopicContext = false;
           }
-          if (this.search.inPMInboxContext) {
-            this.search.inPMInboxContext = false;
-          }
+          this.args.clearPMInboxContext();
           this.focus(e.target);
         }
         this.searchCleared = true;
