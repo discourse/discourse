@@ -137,6 +137,17 @@ export default class PreferencesChatController extends Controller {
   }
 
   @action
+  onChangeQuickReactionType(value) {
+    this.model.set("user_option.chat_quick_reaction_type", value);
+    if (value === "custom") {
+      this.model.set(
+        "user_option.chat_quick_reactions_custom",
+        this.chatQuickReactionsCustom.join("|")
+      );
+    }
+  }
+
+  @action
   didSelectEmoji(selected, index) {
     let emoji = this.chatQuickReactionsCustom;
     emoji[index] = selected;

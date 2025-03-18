@@ -31,12 +31,7 @@
               this.model.user_option.chat_quick_reaction_type
               option.value
             }}
-            {{on
-              "change"
-              (withEventValue
-                (fn (mut this.model.user_option.chat_quick_reaction_type))
-              )
-            }}
+            {{on "change" (withEventValue this.onChangeQuickReactionType)}}
           />
           {{option.label}}
         </label>
@@ -45,12 +40,21 @@
   </div>
   {{#if (eq this.model.user_option.chat_quick_reaction_type "custom")}}
     <div class="controls tracking-controls emoji-pickers">
-      {{#each this.chatQuickReactionsCustom as |reaction index|}}
-        <EmojiPicker
-          @emoji={{reaction}}
-          @didSelectEmoji={{this.createSelectEmojiCallback index}}
-        />
-      {{/each}}
+      <EmojiPicker
+        @emoji={{get this.chatQuickReactionsCustom "0"}}
+        @didSelectEmoji={{this.createSelectEmojiCallback 0}}
+        @context="chat"
+      />
+      <EmojiPicker
+        @emoji={{get this.chatQuickReactionsCustom "1"}}
+        @didSelectEmoji={{this.createSelectEmojiCallback 1}}
+        @context="chat"
+      />
+      <EmojiPicker
+        @emoji={{get this.chatQuickReactionsCustom "2"}}
+        @didSelectEmoji={{this.createSelectEmojiCallback 2}}
+        @context="chat"
+      />
     </div>
   {{/if}}
 </fieldset>
