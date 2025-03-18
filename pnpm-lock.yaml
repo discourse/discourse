@@ -363,8 +363,8 @@ importers:
         specifier: ^1.4.3
         version: 1.4.3
       prosemirror-transform:
-        specifier: ^1.10.2
-        version: 1.10.2
+        specifier: ^1.10.3
+        version: 1.10.3
       prosemirror-view:
         specifier: ^1.38.1
         version: 1.38.1
@@ -7216,8 +7216,8 @@ packages:
   prosemirror-state@1.4.3:
     resolution: {integrity: sha512-goFKORVbvPuAQaXhpbemJFRKJ2aixr+AZMGiquiqKxaucC6hlpHNZHWgz5R7dS4roHiwq9vDctE//CZ++o0W1Q==}
 
-  prosemirror-transform@1.10.2:
-    resolution: {integrity: sha512-2iUq0wv2iRoJO/zj5mv8uDUriOHWzXRnOTVgCzSXnktS/2iQRa3UUQwVlkBlYZFtygw6Nh1+X4mGqoYBINn5KQ==}
+  prosemirror-transform@1.10.3:
+    resolution: {integrity: sha512-Nhh/+1kZGRINbEHmVu39oynhcap4hWTs/BlU7NnxWj3+l0qi8I1mu67v6mMdEe/ltD8hHvU4FV6PHiCw2VSpMw==}
 
   prosemirror-view@1.38.1:
     resolution: {integrity: sha512-4FH/uM1A4PNyrxXbD+RAbAsf0d/mM0D/wAKSVVWK7o0A9Q/oOXJBrw786mBf2Vnrs/Edly6dH6Z2gsb7zWwaUw==}
@@ -16377,12 +16377,12 @@ snapshots:
     dependencies:
       prosemirror-model: 1.25.0
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
 
   prosemirror-dropcursor@1.8.1:
     dependencies:
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
       prosemirror-view: 1.38.1
 
   prosemirror-gapcursor@1.3.2:
@@ -16402,14 +16402,14 @@ snapshots:
   prosemirror-history@1.4.1:
     dependencies:
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
       prosemirror-view: 1.38.1
       rope-sequence: 1.3.4
 
   prosemirror-inputrules@1.5.0:
     dependencies:
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
 
   prosemirror-keymap@1.2.2:
     dependencies:
@@ -16430,15 +16430,15 @@ snapshots:
     dependencies:
       prosemirror-model: 1.25.0
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
 
   prosemirror-state@1.4.3:
     dependencies:
       prosemirror-model: 1.25.0
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
       prosemirror-view: 1.38.1
 
-  prosemirror-transform@1.10.2:
+  prosemirror-transform@1.10.3:
     dependencies:
       prosemirror-model: 1.25.0
 
@@ -16446,7 +16446,7 @@ snapshots:
     dependencies:
       prosemirror-model: 1.25.0
       prosemirror-state: 1.4.3
-      prosemirror-transform: 1.10.2
+      prosemirror-transform: 1.10.3
 
   proxy-addr@2.0.7:
     dependencies:
