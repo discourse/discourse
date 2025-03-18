@@ -21,10 +21,10 @@ export default modifier(
       const targetEl = elementSelector
         ? element.querySelector(elementSelector)
         : element;
-      targetEl?.classList.add("is-closing");
+      targetEl?.classList.add("is-destroying");
 
       discourseLater(() => {
-        targetEl?.classList.remove("is-closing");
+        targetEl?.classList.remove("is-destroying");
         onComplete();
       }, delay);
     }
