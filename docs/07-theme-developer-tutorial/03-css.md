@@ -45,4 +45,4 @@ For example, let's assume you want to style all the buttons in Discourse. One ap
 
 To explore re-styling Discourse in more detail, check out [the Designer's guide to Discourse themes](https://meta.discourse.org/t/152002)
 
-Or if you're ready to explore more ways to add/change content in Discourse, let's go to the [next chapter]
+Or if you're ready to explore more ways to add/change content in Discourse, let's go to the [next chapter](https://meta.discourse.org/t/357799)

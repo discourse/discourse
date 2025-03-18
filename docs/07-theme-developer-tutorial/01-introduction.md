@@ -126,4 +126,4 @@ Now save and refresh the preview. You should see a new dynamic welcome banner ju
 
 There's a lot going on this example: the JS API, Plugin Outlets, Ember's `<template>` tag, and the handlebars template syntax inside that. Don't worry, we'll continue to explore these concepts in more detail throughout the rest of the tutorial.
 
-Next up, we'll demonstrate how to turn this into a "Remote Theme", and take advantage of the extra features they unlock. [Let's go!]()
+Next up, we'll demonstrate how to turn this into a "Remote Theme", and take advantage of the extra features they unlock. [Let's go!](https://meta.discourse.org/t/357797)

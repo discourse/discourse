@@ -8,7 +8,7 @@ Discourse Themes and Theme Components can be used to customize the look, feel an
 
 This introduction aims to provide a map of all the tools and APIs for theme development. If you prefer a step-by-step tutorial for theme development, jump straight to:
 
-// todo: theme tutorial onebox
+https://meta.discourse.org/t/theme-developer-tutorial-1-introduction/357796
 
 ## Themes vs. Theme Components
 

@@ -93,4 +93,4 @@ Then set up the remote repository by visiting [github.com/new](https://github.co
 
 Then follow GitHub's instructions to "push an existing repository from the command line". Once complete, you should see all your theme files in the GitHub UI. The repository URL can now be used to install the theme on any Discourse forum, and any updates you push to GitHub will be made available to forum admins.
 
-Now that we've got the mechanics out the way, we'll be exploring a bunch of ways that themes can be used to customize Discourse. Join us in [the next chapter].
+Now that we've got the mechanics out the way, we'll be exploring a bunch of ways that themes can be used to customize Discourse. Join us in [the next chapter](https://meta.discourse.org/t/357798).

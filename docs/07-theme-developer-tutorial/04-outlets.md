@@ -155,4 +155,4 @@ If you want to re-render the wrapped core implementation inside your component, 
 
 ## Conclusion
 
-Now we know how to create and insert content across the whole of Discourse, we'll explore some more advanced concepts you can use in your components. See [the next chapter]
+Now we know how to create and insert content across the whole of Discourse, we'll explore some more advanced concepts you can use in your components. See [the next chapter](https://meta.discourse.org/t/357800)

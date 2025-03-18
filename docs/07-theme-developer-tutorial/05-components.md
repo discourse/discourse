@@ -97,4 +97,4 @@ Once you've made those changes and saved, you should see the counter interface i
 
 Now we know how to use other components from our theme! To learn more about all of this, we recommend you check out [the Ember guides](https://guides.emberjs.com/release/), and read through code from other Discourse themes, plugins, or core.
 
-Next up we'll take a look at some of the other JS-based customization which Discourse offers.
+[Next up](https://meta.discourse.org/t/357801) we'll take a look at some of the other JS-based customization which Discourse offers.
