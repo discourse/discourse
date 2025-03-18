@@ -705,14 +705,14 @@ et:
         modal_yes: "Jah"
     user_action_groups:
       "1": "Meeldimisi antud"
-      "2": "Meeldimisi saadud"
-      "3": "Järjehoidjat"
-      "4": "Teemat"
-      "5": "Vastust"
+      "2": "Meeldimised"
+      "3": "Järjehoidjad"
+      "4": "Teemad"
+      "5": "Vastused"
       "6": "Reaktsioone"
-      "7": "Mainimisi"
+      "7": "Mainimised"
       "9": "Tsitaate"
-      "11": "Redaktsioone"
+      "11": "Redaktsioonid"
       "12": "Saatmisi"
       "13": "Postkast"
       "14": "Ootel"
@@ -1634,8 +1634,8 @@ et:
       tabs:
         replies: "Vastused"
         mentions: "Mainimisi"
-        likes: "Meeldimisi antud"
-        bookmarks: "Järjehoidjat"
+        likes: "Meeldimised"
+        bookmarks: "Järjehoidjad"
         profile: "Profiil"
     topics:
       new_messages_marker: "viimane visiit"
@@ -2631,7 +2631,7 @@ et:
         tags:
           header_link_text: "Sildid"
         categories:
-          header_link_text: "Liigid"
+          header_link_text: "Kategooriad"
         community:
           edit_section:
             header_dropdown: "Kohanda"
@@ -2643,7 +2643,7 @@ et:
             badges:
               content: "Märgised"
             topics:
-              content: "Teemasid"
+              content: "Teemad"
             faq:
               content: "KKK"
             guidelines:
