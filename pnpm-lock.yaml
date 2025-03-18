@@ -36,7 +36,7 @@ importers:
         version: 7.25.9(@babel/core@7.26.10)
       '@discourse/lint-configs':
         specifier: ^2.11.2
-        version: 2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))
+        version: 2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.16.0(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -125,8 +125,8 @@ importers:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
       stylelint:
-        specifier: 16.15.0
-        version: 16.15.0(typescript@5.6.3)
+        specifier: 16.16.0
+        version: 16.16.0(typescript@5.6.3)
       terser:
         specifier: ^5.39.0
         version: 5.39.0
@@ -701,7 +701,7 @@ importers:
         version: 4.3.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1)))
     devDependencies:
       ember-cli:
         specifier: ~6.2.3
@@ -1050,7 +1050,7 @@ importers:
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1)))
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -2326,8 +2326,8 @@ packages:
   '@jspreadsheet/formula@2.0.2':
     resolution: {integrity: sha512-PDQYf9REQA53I7tVYkvkeyQxrd5jcjUeHgItYnRpjN2QiIQwawSqBDtGGEVQTSboTG+JwgGCuhvOpj7FxeKwew==}
 
-  '@keyv/serialize@1.0.2':
-    resolution: {integrity: sha512-+E/LyaAeuABniD/RvUezWVXKpeuvwLEA9//nE9952zBaOdBd2mQ3pPoM8cUe2X6IcMByfuSLzmYqnYshG60+HQ==}
+  '@keyv/serialize@1.0.3':
+    resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
 
   '@lint-todo/utils@13.1.1':
     resolution: {integrity: sha512-F5z53uvRIF4dYfFfJP3a2Cqg+4P1dgJchJsFnsZE0eZp0LK8X7g2J0CsJHRgns+skpXOlM7n5vFGwkWCWj8qJg==}
@@ -3466,8 +3466,8 @@ packages:
     resolution: {integrity: sha512-AKcdTnFSWATd5/GCPRxr2ChwIJ85CeyrEyjRHlKxQ56d4XJMGym0uAiKn0xbLOGOl3+yRpOTi484dVCEc5AUzQ==}
     engines: {node: '>=0.10.0'}
 
-  cacheable@1.8.8:
-    resolution: {integrity: sha512-OE1/jlarWxROUIpd0qGBSKFLkNsotY8pt4GeiVErUYh/NUeTNrT+SBksUgllQv4m6a0W/VZsLuiHb88maavqEw==}
+  cacheable@1.8.9:
+    resolution: {integrity: sha512-FicwAUyWnrtnd4QqYAoRlNs44/a1jTL7XDKqm5gJ90wz1DQPlC7U2Rd1Tydpv+E7WAr4sQHuw8Q8M3nZMAyecQ==}
 
   calculate-cache-key-for-tree@2.0.0:
     resolution: {integrity: sha512-Quw8a6y8CPmRd6eU+mwypktYCwUcf8yVFIRbNZ6tPQEckX9yd+EBVEPC/GSZZrMWH9e7Vz4pT7XhpmyApRByLQ==}
@@ -4911,8 +4911,8 @@ packages:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
 
-  file-entry-cache@10.0.6:
-    resolution: {integrity: sha512-0wvv16mVo9nN0Md3k7DMjgAPKG/TY4F/gYMBVb/wMThFRJvzrpaqBFqF6km9wf8QfYTN+mNg5aeaBLfy8k35uA==}
+  file-entry-cache@10.0.7:
+    resolution: {integrity: sha512-txsf5fu3anp2ff3+gOJJzRImtrtm/oa9tYLN0iTuINZ++EyVR/nRrg2fKYwvG/pXDofcrvvb0scEbX3NyW/COw==}
 
   file-entry-cache@8.0.0:
     resolution: {integrity: sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ==}
@@ -5009,8 +5009,8 @@ packages:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
 
-  flat-cache@6.1.6:
-    resolution: {integrity: sha512-F+CKgSwp0pzLx67u+Zy1aCueVWFAHWbXepvXlZ+bWVTaASbm5SyCnSJ80Fp1ePEmS57wU+Bf6cx6525qtMZ4lQ==}
+  flat-cache@6.1.7:
+    resolution: {integrity: sha512-qwZ4xf1v1m7Rc9XiORly31YaChvKt6oNVHuqqZcoED/7O+ToyNVGobKsIAopY9ODcWpEDKEBAbrSOCBHtNQvew==}
 
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
@@ -5379,8 +5379,8 @@ packages:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
 
-  hookified@1.7.0:
-    resolution: {integrity: sha512-XQdMjqC1AyeOzfs+17cnIk7Wdfu1hh2JtcyNfBf5u9jHrT3iZUlGHxLTntFBuk5lwkqJ6l3+daeQdHK5yByHVA==}
+  hookified@1.8.1:
+    resolution: {integrity: sha512-GrO2l93P8xCWBSTBX9l2BxI78VU/MAAYag+pG8curS3aBGy0++ZlxrQ7PdUOUVMbn5BwkGb6+eRrnf43ipnFEA==}
 
   hosted-git-info@7.0.2:
     resolution: {integrity: sha512-puUZAUKT5m8Zzvs72XWy3HtvVbTWljRE66cP60bxJzAqf2DgICo7lYTY2IHUmLnNpjYvw5bvmoHvPc0QO2a62w==}
@@ -5958,8 +5958,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  keyv@5.2.3:
-    resolution: {integrity: sha512-AGKecUfzrowabUv0bH1RIR5Vf7w+l4S3xtQAypKaUpTdIR1EbrAcTxHCrpo9Q+IWeUlFE2palRtgIQcgm+PQJw==}
+  keyv@5.3.2:
+    resolution: {integrity: sha512-Lji2XRxqqa5Wg+CHLVfFKBImfJZ4pCSccu9eVWK6w4c2SDFLd8JAn1zqTuSFnsxb7ope6rMsnIHfp+eBbRBRZQ==}
 
   kind-of@3.2.2:
     resolution: {integrity: sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ==}
@@ -8008,8 +8008,8 @@ packages:
     peerDependencies:
       stylelint: ^16.0.2
 
-  stylelint@16.15.0:
-    resolution: {integrity: sha512-OK6Rs7EPdcdmjqiDycadZY4fw3f5/TC1X6/tGjnF3OosbwCeNs7nG+79MCAtjEg7ckwqTJTsku08e0Rmaz5nUw==}
+  stylelint@16.16.0:
+    resolution: {integrity: sha512-40X5UOb/0CEFnZVEHyN260HlSSUxPES+arrUphOumGWgXERHfwCD0kNBVILgQSij8iliYVwlc0V7M5bcLP9vPg==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
@@ -9595,7 +9595,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))':
+  '@discourse/lint-configs@2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.16.0(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.26.10(supports-color@8.1.1)
       '@babel/eslint-parser': 7.26.10(@babel/core@7.26.10)(eslint@9.22.0)
@@ -9611,9 +9611,9 @@ snapshots:
       globals: 16.0.0
       prettier: 3.5.3
       prettier-plugin-ember-template-tag: 2.0.4(prettier@3.5.3)
-      stylelint: 16.15.0(typescript@5.6.3)
-      stylelint-config-standard: 37.0.0(stylelint@16.15.0(typescript@5.6.3))
-      stylelint-config-standard-scss: 14.0.0(postcss@8.5.3)(stylelint@16.15.0(typescript@5.6.3))
+      stylelint: 16.16.0(typescript@5.6.3)
+      stylelint-config-standard: 37.0.0(stylelint@16.16.0(typescript@5.6.3))
+      stylelint-config-standard-scss: 14.0.0(postcss@8.5.3)(stylelint@16.16.0(typescript@5.6.3))
       typescript: 5.8.2
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
@@ -10378,7 +10378,7 @@ snapshots:
 
   '@jspreadsheet/formula@2.0.2': {}
 
-  '@keyv/serialize@1.0.2':
+  '@keyv/serialize@1.0.3':
     dependencies:
       buffer: 6.0.3
 
@@ -11993,10 +11993,10 @@ snapshots:
       union-value: 1.0.1
       unset-value: 1.0.0
 
-  cacheable@1.8.8:
+  cacheable@1.8.9:
     dependencies:
-      hookified: 1.7.0
-      keyv: 5.2.3
+      hookified: 1.8.1
+      keyv: 5.3.2
 
   calculate-cache-key-for-tree@2.0.0:
     dependencies:
@@ -13283,7 +13283,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1))):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.3.0
@@ -13930,9 +13930,9 @@ snapshots:
     dependencies:
       escape-string-regexp: 1.0.5
 
-  file-entry-cache@10.0.6:
+  file-entry-cache@10.0.7:
     dependencies:
-      flat-cache: 6.1.6
+      flat-cache: 6.1.7
 
   file-entry-cache@8.0.0:
     dependencies:
@@ -14079,11 +14079,11 @@ snapshots:
       flatted: 3.3.3
       keyv: 4.5.4
 
-  flat-cache@6.1.6:
+  flat-cache@6.1.7:
     dependencies:
-      cacheable: 1.8.8
+      cacheable: 1.8.9
       flatted: 3.3.3
-      hookified: 1.7.0
+      hookified: 1.8.1
 
   flatted@3.3.3: {}
 
@@ -14549,7 +14549,7 @@ snapshots:
     dependencies:
       parse-passwd: 1.0.0
 
-  hookified@1.7.0: {}
+  hookified@1.8.1: {}
 
   hosted-git-info@7.0.2:
     dependencies:
@@ -15137,9 +15137,9 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  keyv@5.2.3:
+  keyv@5.3.2:
     dependencies:
-      '@keyv/serialize': 1.0.2
+      '@keyv/serialize': 1.0.3
 
   kind-of@3.2.2:
     dependencies:
@@ -17322,42 +17322,42 @@ snapshots:
 
   styled_string@0.0.1: {}
 
-  stylelint-config-recommended-scss@14.1.0(postcss@8.5.3)(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-recommended-scss@14.1.0(postcss@8.5.3)(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.3)
-      stylelint: 16.15.0(typescript@5.6.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.15.0(typescript@5.6.3))
-      stylelint-scss: 6.11.0(stylelint@16.15.0(typescript@5.6.3))
+      stylelint: 16.16.0(typescript@5.6.3)
+      stylelint-config-recommended: 14.0.1(stylelint@16.16.0(typescript@5.6.3))
+      stylelint-scss: 6.11.0(stylelint@16.16.0(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.3
 
-  stylelint-config-recommended@14.0.1(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-recommended@14.0.1(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.15.0(typescript@5.6.3)
+      stylelint: 16.16.0(typescript@5.6.3)
 
-  stylelint-config-recommended@15.0.0(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-recommended@15.0.0(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.15.0(typescript@5.6.3)
+      stylelint: 16.16.0(typescript@5.6.3)
 
-  stylelint-config-standard-scss@14.0.0(postcss@8.5.3)(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-standard-scss@14.0.0(postcss@8.5.3)(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.15.0(typescript@5.6.3)
-      stylelint-config-recommended-scss: 14.1.0(postcss@8.5.3)(stylelint@16.15.0(typescript@5.6.3))
-      stylelint-config-standard: 36.0.1(stylelint@16.15.0(typescript@5.6.3))
+      stylelint: 16.16.0(typescript@5.6.3)
+      stylelint-config-recommended-scss: 14.1.0(postcss@8.5.3)(stylelint@16.16.0(typescript@5.6.3))
+      stylelint-config-standard: 36.0.1(stylelint@16.16.0(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.3
 
-  stylelint-config-standard@36.0.1(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-standard@36.0.1(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.15.0(typescript@5.6.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.15.0(typescript@5.6.3))
+      stylelint: 16.16.0(typescript@5.6.3)
+      stylelint-config-recommended: 14.0.1(stylelint@16.16.0(typescript@5.6.3))
 
-  stylelint-config-standard@37.0.0(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-config-standard@37.0.0(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
-      stylelint: 16.15.0(typescript@5.6.3)
-      stylelint-config-recommended: 15.0.0(stylelint@16.15.0(typescript@5.6.3))
+      stylelint: 16.16.0(typescript@5.6.3)
+      stylelint-config-recommended: 15.0.0(stylelint@16.16.0(typescript@5.6.3))
 
-  stylelint-scss@6.11.0(stylelint@16.15.0(typescript@5.6.3)):
+  stylelint-scss@6.11.0(stylelint@16.16.0(typescript@5.6.3)):
     dependencies:
       css-tree: 3.1.0
       is-plain-object: 5.0.0
@@ -17367,9 +17367,9 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.0
       postcss-value-parser: 4.2.0
-      stylelint: 16.15.0(typescript@5.6.3)
+      stylelint: 16.16.0(typescript@5.6.3)
 
-  stylelint@16.15.0(typescript@5.6.3):
+  stylelint@16.16.0(typescript@5.6.3):
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
@@ -17384,7 +17384,7 @@ snapshots:
       debug: 4.4.0(supports-color@8.1.1)
       fast-glob: 3.3.3
       fastest-levenshtein: 1.0.16
-      file-entry-cache: 10.0.6
+      file-entry-cache: 10.0.7
       global-modules: 2.0.0
       globby: 11.1.0
       globjoin: 0.1.4
