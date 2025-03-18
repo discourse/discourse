@@ -35,8 +35,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.10)
       '@discourse/lint-configs':
-        specifier: ^2.11.0
-        version: 2.11.0(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))
+        specifier: ^2.11.2
+        version: 2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -701,7 +701,7 @@ importers:
         version: 4.3.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
     devDependencies:
       ember-cli:
         specifier: ~6.2.3
@@ -1050,7 +1050,7 @@ importers:
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -1103,8 +1103,8 @@ packages:
     resolution: {integrity: sha512-vMqyb7XCDMPvJFFOaT9kxtiRh42GwlZEg1/uIgtZshS5a/8OaduUfCi7kynKgc3Tw/6Uo2D+db9qBttghhmxwQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/eslint-parser@7.26.8':
-    resolution: {integrity: sha512-3tBctaHRW6xSub26z7n8uyOTwwUsCdvIug/oxBH9n6yCO5hMj2vwDJAo7RbBMKrM7P+W2j61zLKviJQFGOYKMg==}
+  '@babel/eslint-parser@7.26.10':
+    resolution: {integrity: sha512-QsfQZr4AiLpKqn7fz+j7SN+f43z2DZCgGyYbNJ2vJOqKfG4E6MZer1+jqGZqKJaxq/gdO2DC/nUu45+pOL5p2Q==}
     engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
     peerDependencies:
       '@babel/core': ^7.11.0
@@ -1745,13 +1745,13 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.11.0':
-    resolution: {integrity: sha512-lXnnRjRTHoDEyRbSruL/e7Pobm3JG0HgEl3bmYAxr8kr8Lt7iHYicW6l3h/itmUU7meEWd3rlcqHsb7b8qu/VA==}
+  '@discourse/lint-configs@2.11.2':
+    resolution: {integrity: sha512-Y5P9AOJaXJg1EZAYe9EoZzhhIjDwxzhA2a69OdVP+jpYl3z8zgJAIaK3ek2e+ZDJWbo1Qa8g1ovcUgX+/V4E7g==}
     peerDependencies:
       ember-template-lint: 7.0.1
       eslint: 9.22.0
       prettier: 3.5.3
-      stylelint: 16.15.0
+      stylelint: 16.16.0
 
   '@discourse/moment-timezone-names-translations@1.0.0':
     resolution: {integrity: sha512-4xr1QWQ0nzmFa2ZXQgWZA+dtE/BU2ePA+qkJWPFzNpq4ZnQi8MmMMAS2285t3rc2ySMBQqYaAArmcSUiufUgRA==}
@@ -8449,10 +8449,10 @@ packages:
   virtual-dom@2.1.1:
     resolution: {integrity: sha512-wb6Qc9Lbqug0kRqo/iuApfBpJJAq14Sk1faAnSmtqXiwahg7PVTvWMs9L02Z8nNIMqbwsxzBAA90bbtRLbw0zg==}
 
-  volar-service-typescript@0.0.60:
-    resolution: {integrity: sha512-QDGC66exWZMH6fs93M6XFIBMxDObxgV9q1XENII7vGzvW5KqikYG4f06AO+MWsHmAna8cI+X28xITb0SzzB0Yw==}
+  volar-service-typescript@0.0.64:
+    resolution: {integrity: sha512-FN2H97iqjR1id8AM4fH7lTXuTx2on9zD6QlUFllaiHKqgNrEITlQwm/9Ujrd9ST7MUzhgIKyUsa2WlanX9kkMg==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.19
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
@@ -8810,7 +8810,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/eslint-parser@7.26.8(@babel/core@7.26.10)(eslint@9.22.0)':
+  '@babel/eslint-parser@7.26.10(@babel/core@7.26.10)(eslint@9.22.0)':
     dependencies:
       '@babel/core': 7.26.10(supports-color@8.1.1)
       '@nicolo-ribaudo/eslint-scope-5-internals': 5.1.1-v1
@@ -9595,14 +9595,14 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.11.0(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))':
+  '@discourse/lint-configs@2.11.2(ember-template-lint@7.0.1(@babel/core@7.26.10))(eslint@9.22.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.15.0(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.26.10(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.26.8(@babel/core@7.26.10)(eslint@9.22.0)
+      '@babel/eslint-parser': 7.26.10(@babel/core@7.26.10)(eslint@9.22.0)
       '@babel/plugin-proposal-decorators': 7.25.9(@babel/core@7.26.10)
       ember-template-lint: 7.0.1(@babel/core@7.26.10)
       eslint: 9.22.0
-      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.26.8(@babel/core@7.26.10)(eslint@9.22.0))(eslint@9.22.0)
+      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.26.10(@babel/core@7.26.10)(eslint@9.22.0))(eslint@9.22.0)
       eslint-plugin-ember: 12.5.0(@babel/core@7.26.10)(eslint@9.22.0)
       eslint-plugin-import: 2.31.0(eslint@9.22.0)
       eslint-plugin-qunit: 8.1.2(eslint@9.22.0)
@@ -10292,7 +10292,7 @@ snapshots:
       silent-error: 1.1.1
       typescript: 5.6.3
       uuid: 8.3.2
-      volar-service-typescript: 0.0.60(@volar/language-service@2.4.0-alpha.16)
+      volar-service-typescript: 0.0.64(@volar/language-service@2.4.0-alpha.16)
       vscode-languageserver-protocol: 3.17.5
       vscode-languageserver-textdocument: 1.0.12
       vscode-uri: 3.0.8
@@ -13071,7 +13071,7 @@ snapshots:
   ember-eslint-parser@0.5.9(@babel/core@7.26.10)(eslint@9.22.0):
     dependencies:
       '@babel/core': 7.26.10(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.26.8(@babel/core@7.26.10)(eslint@9.22.0)
+      '@babel/eslint-parser': 7.26.10(@babel/core@7.26.10)(eslint@9.22.0)
       '@glimmer/syntax': 0.92.3
       content-tag: 2.0.3
       eslint-scope: 7.2.2
@@ -13283,7 +13283,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.9)(esbuild@0.25.1))):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.3.0
@@ -13524,7 +13524,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.26.8(@babel/core@7.26.10)(eslint@9.22.0))(eslint@9.22.0):
+  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.26.10(@babel/core@7.26.10)(eslint@9.22.0))(eslint@9.22.0):
     dependencies:
       '@babel/core': 7.26.10(supports-color@8.1.1)
       '@babel/plugin-proposal-decorators': 7.25.9(@babel/core@7.26.10)
@@ -13533,7 +13533,7 @@ snapshots:
       eslint: 9.22.0
       snake-case: 3.0.4
     optionalDependencies:
-      '@babel/eslint-parser': 7.26.8(@babel/core@7.26.10)(eslint@9.22.0)
+      '@babel/eslint-parser': 7.26.10(@babel/core@7.26.10)(eslint@9.22.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -17971,7 +17971,7 @@ snapshots:
       x-is-array: 0.1.0
       x-is-string: 0.1.0
 
-  volar-service-typescript@0.0.60(@volar/language-service@2.4.0-alpha.16):
+  volar-service-typescript@0.0.64(@volar/language-service@2.4.0-alpha.16):
     dependencies:
       path-browserify: 1.0.1
       semver: 7.7.1
