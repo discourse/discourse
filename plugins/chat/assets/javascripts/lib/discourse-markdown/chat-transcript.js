@@ -245,26 +245,26 @@ const chatTranscriptRule = {
       const match = regex.exec(content);
 
       if (match) {
-        const threadToken = state.push("html_raw_open", "", 1);
+        const threadToken = state.push("html_raw", "", 1);
 
         threadToken.content = customMarkdownCookFn(
           content.substring(0, match.index)
         );
-        state.push("html_raw_close", "", -1);
+        state.push("html_raw", "", -1);
         state.push("div_thread_close", "div", -1);
         state.push("summary_chat_transcript_close", "summary", -1);
-        const token = state.push("html_raw_open", "", 1);
+        const token = state.push("html_raw", "", 1);
 
         token.content = customMarkdownCookFn(content.substring(match.index));
-        state.push("html_raw_close", "", -1);
+        state.push("html_raw", "", -1);
         state.push("details_chat_transcript_wrap_close", "details", -1);
       }
     } else {
       // rendering chat message content with limited markdown rule subset
-      const token = state.push("html_raw_open", "", 1);
+      const token = state.push("html_raw", "", 1);
 
       token.content = customMarkdownCookFn(content);
-      state.push("html_raw_close", "", -1);
+      state.push("html_raw", "", -1);
     }
 
     if (reactions) {
