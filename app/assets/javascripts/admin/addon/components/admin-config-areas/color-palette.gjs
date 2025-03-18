@@ -5,6 +5,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
@@ -19,6 +20,7 @@ export default class AdminConfigAreasColorPalette extends Component {
   @tracked editingName = false;
   @tracked editorMode = LIGHT;
   @tracked hasUnsavedChanges = false;
+  hasChangedColors = false;
 
   @cached
   get data() {
@@ -40,6 +42,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     const color = this.data.colors.find((c) => c.name === name);
     color.hex = value;
     this.hasUnsavedChanges = true;
+    this.hasChangedColors = true;
   }
 
   @action
@@ -47,6 +50,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     const color = this.data.colors.find((c) => c.name === name);
     color.dark_hex = value;
     this.hasUnsavedChanges = true;
+    this.hasChangedColors = true;
   }
 
   @action
@@ -63,6 +67,10 @@ export default class AdminConfigAreasColorPalette extends Component {
           message: i18n("saved"),
         },
       });
+      if (this.hasChangedColors) {
+        this.applyColorChangesIfPossible();
+        this.hasChangedColors = false;
+      }
     } catch (error) {
       this.toasts.error({
         duration: 3000,
@@ -105,6 +113,47 @@ export default class AdminConfigAreasColorPalette extends Component {
   handleUserSelectableChange(value, { set }) {
     set("user_selectable", value);
     this.hasUnsavedChanges = true;
+  }
+
+  async applyColorChangesIfPossible() {
+    const id = this.args.colorPalette.id;
+
+    if (!id) {
+      return;
+    }
+
+    const tags = document.querySelectorAll(`link[data-scheme-id="${id}"]`);
+
+    if (tags.length === 0) {
+      return;
+    }
+
+    let darkTag;
+    let lightTag;
+    for (const tag of tags) {
+      if (tag.classList.contains("dark-scheme")) {
+        darkTag = tag;
+      } else if (tag.classList.contains("light-scheme")) {
+        lightTag = tag;
+      }
+    }
+
+    try {
+      const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
+        data: {
+          request_dark: !!darkTag,
+        },
+      });
+      if (data?.new_href && lightTag) {
+        lightTag.href = data.new_href;
+      }
+      if (data?.new_dark_href && darkTag) {
+        darkTag.href = data.new_dark_href;
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to apply changes to color palette ${id}`, error);
+    }
   }
 
   <template>
