@@ -107,6 +107,11 @@ RSpec.describe TopicsBulkAction do
 
       PostDestroyer.new(Fabricate(:admin), p).destroy
 
+      TopicTrackingState.expects(:publish_dismiss_new_posts).with(
+        post1.user_id,
+        topic_ids: [post1.topic_id],
+      )
+
       TopicsBulkAction.new(post1.user, [post1.topic_id], type: "dismiss_posts").perform!
 
       tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
