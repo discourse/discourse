@@ -70,6 +70,14 @@ class Demon::Sidekiq < ::Demon::Base
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
   end
 
+  def stop_signal
+    "TERM"
+  end
+
+  def stop_timeout
+    30
+  end
+
   private
 
   def suppress_stdout
