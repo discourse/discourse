@@ -206,11 +206,11 @@
         justify-content: space-between;
         width: 79.7%;
 
-        @media screen and (max-width: 700px) {
+        @media screen and (width <= 700px) {
           width: 100%;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 768px) {
+        @media screen and (width >= 700px) and (width <= 768px) {
           width: 73%;
         }
 
@@ -398,11 +398,11 @@
     border-left: 1px solid var(--primary-low);
     width: 100%;
 
-    @media screen and (max-height: 1000px) {
+    @media screen and (height <= 1000px) {
       max-height: 50vh;
     }
 
-    @media screen and (max-height: 800px) {
+    @media screen and (height <= 800px) {
       max-height: 40vh;
     }
 
@@ -960,7 +960,7 @@
     }
   }
 
-  @media screen and (max-width: 880px) {
+  @media screen and (width <= 880px) {
     table.grid {
       thead {
         display: none;
@@ -984,7 +984,7 @@
     }
   }
 
-  @media screen and (max-width: 580px) {
+  @media screen and (width <= 580px) {
     table.grid {
       tr td.editing-input {
         grid-column-start: 1;
