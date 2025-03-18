@@ -5,7 +5,7 @@ import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-// TODO (glimmer-post-stream) remove this test when the widget post stream is removed
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module(
   "Integration | Component | Widget | post-small-action",
   function (hooks) {

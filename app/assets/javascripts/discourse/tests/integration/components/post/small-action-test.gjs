@@ -5,7 +5,7 @@ import PostSmallAction from "discourse/components/post/small-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-function renderPostSmallAction(post) {
+function renderComponent(post) {
   return render(<template><PostSmallAction @post={{post}} /></template>);
 }
 
@@ -29,7 +29,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   });
 
   test("does not have delete/edit/recover buttons by default", async function (assert) {
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert.dom(".small-action-desc .small-action-delete").doesNotExist();
     assert.dom(".small-action-desc .small-action-recover").doesNotExist();
@@ -39,14 +39,14 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   test("shows edit button if canEdit", async function (assert) {
     this.post.can_edit = true;
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action-desc .small-action-edit")
       .exists("adds the edit small action button");
   });
 
-  test("can customize the class of the component", async function (assert) {
+  test("can add classes to the component", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer("post-small-action-class", ({ value }) => {
         value.push("custom-class");
@@ -54,7 +54,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       });
     });
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action.custom-class")
@@ -70,7 +70,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       });
     });
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action .custom-component")
@@ -88,7 +88,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       );
     });
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action .d-icon-far-circle-check")
@@ -100,7 +100,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     this.post.deleted_at = new Date().toISOString();
     this.post.can_recover = true;
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action-desc .small-action-edit")
@@ -114,7 +114,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     this.post.can_delete = true;
     this.currentUser.staff = true;
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action-desc .small-action-delete")
@@ -125,7 +125,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     this.post.deleted_at = new Date().toISOString();
     this.post.can_recover = true;
 
-    await renderPostSmallAction(this.post);
+    await renderComponent(this.post);
 
     assert
       .dom(".small-action-desc .small-action-recover")

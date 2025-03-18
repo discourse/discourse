@@ -35,10 +35,10 @@ export default class PostMetaDataPosterName extends Component {
     this.#stopTrackingUserStatus();
   }
 
-  get suppressName() {
+  get suppressSimilarName() {
     return applyValueTransformer(
-      "post-meta-data-poster-name-suppress-name",
-      false,
+      "post-meta-data-poster-name-suppress-similar-name",
+      true,
       { post: this.args.post, name: this.name }
     );
   }
@@ -100,7 +100,7 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   #sanitizeName(name) {
-    return this.suppressName
+    return this.suppressSimilarName
       ? name.toLowerCase().replace(/[\s._-]/g, "")
       : name;
   }

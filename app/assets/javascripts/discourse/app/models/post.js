@@ -718,7 +718,10 @@ export default class Post extends RestModel {
 
   @cached
   get badgesGranted() {
-    return this.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]);
+    return this.badges_granted?.map((json) => {
+      const badges = Badge.createFromJson(json);
+      return Array.isArray(badges) ? badges[0] : badges;
+    });
   }
 
   get requestedGroupName() {

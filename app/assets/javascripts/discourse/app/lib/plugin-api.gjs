@@ -1197,7 +1197,7 @@ class PluginApi {
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
     this.registerValueTransformer(
-      "post-meta-data-poster-name-suppress-name",
+      "post-meta-data-poster-name-suppress-similar-name",
       () => true
     );
   }
