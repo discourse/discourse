@@ -278,13 +278,12 @@ export default class Post extends RestModel {
       .catch(popupAjaxError);
   }
 
-  @discourseComputed("link_counts.@each.internal")
-  internalLinks() {
+  get internalLinks() {
     if (isEmpty(this.link_counts)) {
       return null;
     }
 
-    return this.link_counts.filterBy("internal").filterBy("title");
+    return this.link_counts.filter((link) => link.internal && link.title);
   }
 
   @discourseComputed("actions_summary.@each.can_act")
