@@ -32,7 +32,6 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -312,10 +311,24 @@ export default class DEditor extends Component {
             },
           };
 
-          this.menuInstance = this.menu.show(
-            virtualElementFromTextRange(),
-            menuOptions
-          );
+          const caretCoords =
+            this.textManipulation.autocompleteHandler.getCaretCoords(
+              this.textManipulation.autocompleteHandler.getCaretPosition()
+            );
+
+          const rect = document
+            .querySelector(".d-editor-input")
+            .getBoundingClientRect();
+
+          const virtualElement = {
+            getBoundingClientRect: () => ({
+              left: rect.left + caretCoords.left + 18,
+              top: rect.top + caretCoords.top + 10,
+              width: 0,
+              height: 0,
+            }),
+          };
+          this.menuInstance = this.menu.show(virtualElement, menuOptions);
           return "";
         }
       },
