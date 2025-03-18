@@ -115,7 +115,7 @@ export default class PreferencesChatController extends Controller {
   }
 
   get chatQuickReactionsCustom() {
-    let emojis =
+    const emojis =
       this.model.get("user_option.chat_quick_reactions_custom") ||
       CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
     return emojis.split("|");
