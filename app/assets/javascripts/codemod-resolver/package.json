@@ -1,6 +1,6 @@
 {
   "name": "codemod-resolver",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
