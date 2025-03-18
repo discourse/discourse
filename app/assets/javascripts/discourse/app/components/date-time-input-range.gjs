@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import DateTimeInput from "discourse/components/date-time-input";
@@ -51,7 +51,7 @@ export default class DateTimeInputRange extends Component {
   <template>
     <DateTimeInput
       @date={{this.from}}
-      @onChange={{action "onChangeRanges" (hash prop="from")}}
+      @onChange={{fn this.onChangeRanges (hash prop="from")}}
       @showTime={{this.showFromTime}}
       @placeholder={{i18n "dates.from_placeholder"}}
       @timezone={{@timezone}}
@@ -61,7 +61,7 @@ export default class DateTimeInputRange extends Component {
     <DateTimeInput
       @date={{this.to}}
       @relativeDate={{this.from}}
-      @onChange={{action "onChangeRanges" (hash prop="to")}}
+      @onChange={{fn this.onChangeRanges (hash prop="to")}}
       @timeFirst={{this.toTimeFirst}}
       @showTime={{this.showToTime}}
       @clearable={{this.clearable}}

@@ -50,7 +50,7 @@ export default class SignupCta extends Component {
             class="btn-primary"
           />
           <DButton
-            @action={{action "hideForSession"}}
+            @action={{this.hideForSession}}
             @label="signup_cta.hide_session"
             class="no-icon"
           />
