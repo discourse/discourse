@@ -83,7 +83,7 @@ export default class DateTimeInput extends Component {
         @date={{this.date}}
         @placeholder={{this.placeholder}}
         @relativeDate={{this.relativeDate}}
-        @onChange={{action "onChangeDate"}}
+        @onChange={{this.onChangeDate}}
         @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
       />
     {{/unless}}
@@ -92,7 +92,7 @@ export default class DateTimeInput extends Component {
       <TimeInput
         @date={{this.date}}
         @relativeDate={{this.relativeDate}}
-        @onChange={{action "onChangeTime"}}
+        @onChange={{this.onChangeTime}}
       />
     {{/if}}
 
@@ -101,7 +101,7 @@ export default class DateTimeInput extends Component {
         @date={{this.date}}
         @placeholder={{this.placeholder}}
         @relativeDate={{this.relativeDate}}
-        @onChange={{action "onChangeDate"}}
+        @onChange={{this.onChangeDate}}
         @useGlobalPickerContainer={{this.useGlobalPickerContainer}}
       />
     {{/if}}
