@@ -27,7 +27,7 @@ module PageObjects
 
       def expanded_component
         return expand if is_collapsed?
-        find(@context + ".is-expanded", wait: 5)
+        find(@context + ".is-expanded")
       end
 
       def collapsed_component
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def is_collapsed?
-        has_css?(context + ":not(.is-expanded)", wait: 0)
+        has_css?(context) && has_css?("#{context}:not(.is-expanded)", wait: 0)
       end
 
       def is_not_disabled?
@@ -75,7 +75,7 @@ module PageObjects
       end
 
       def expand
-        collapsed_component.find(":not(.is-expanded) .select-kit-header", visible: :all).click
+        collapsed_component.find(".select-kit-header", visible: :all).click
         expanded_component
       end
 
