@@ -147,7 +147,7 @@ function handleDeprecatedIcon(id) {
 
   if (newId !== id) {
     deprecated(
-      `The icon name "${id}" has been updated to "${newId}". Please use the new name in your code. Old names will be removed in Q2 2025.`,
+      `The icon name "${id}" has been updated to "${newId}". Please use the new name in your code. Old names have been removed as of Q2 2025.`,
       {
         id: "discourse.fontawesome-6-upgrade",
         url: "https://meta.discourse.org/t/325349",
@@ -156,7 +156,7 @@ function handleDeprecatedIcon(id) {
     );
   }
 
-  return newId;
+  return id;
 }
 
 function warnIfMissing(id) {

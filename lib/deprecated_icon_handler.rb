@@ -691,7 +691,6 @@ module DeprecatedIconHandler
         "The icon `#{icon_name}` is deprecated. Use `#{new_name}` instead.",
         raise_error: Rails.env.test?,
       )
-      return new_name
     end
 
     icon_name
