@@ -106,7 +106,7 @@ acceptance("New category preview", function (needs) {
     await visit("/new-category");
 
     let previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
@@ -115,7 +115,7 @@ acceptance("New category preview", function (needs) {
     await fillIn(".hex-input", "FF00FF");
 
     previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 

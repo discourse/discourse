@@ -3,8 +3,18 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Chat | Hashtag CSS Generator", function (needs) {
-  const category1 = { id: 1, color: "ff0000", name: "category1" };
-  const category2 = { id: 2, color: "333", name: "category2" };
+  const category1 = {
+    id: 1,
+    color: "ff0000",
+    style_type: "square",
+    name: "category1",
+  };
+  const category2 = {
+    id: 2,
+    color: "333",
+    style_type: "square",
+    name: "category2",
+  };
   const category3 = {
     id: 4,
     color: "2B81AF",

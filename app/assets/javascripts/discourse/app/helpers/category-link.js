@@ -64,7 +64,9 @@ export function categoryBadgeHTML(category, opts) {
     const { ancestors, ...otherOpts } = opts;
     return [category, ...ancestors]
       .reverse()
-      .map((c) => categoryBadgeHTML(c, otherOpts))
+      .map((c) => {
+        return categoryBadgeHTML(c, { ...otherOpts, styleType: null });
+      })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);

@@ -102,7 +102,7 @@ export default class EditCategoryGeneral extends Component {
       color: this.color,
       id: category.id,
       text_color: category.text_color,
-      parent_category_id: parseInt(category.parent_category_id, 10),
+      parent_category_id: parseInt(category.get("parent_category_id"), 10),
       read_restricted: category.get("read_restricted"),
     });
 
@@ -143,6 +143,11 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   async save(data) {
+    data = {
+      ...data,
+      color: this.color,
+    };
+
     if (this.isUpdate) {
       this.update(data);
     } else {
@@ -197,12 +202,14 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   updateField(name, value, { set }) {
-    if (value) {
-      set(name, value);
-    } else {
-      set(name, undefined);
-    }
-    this[name] = value;
+    const newValue = value || undefined;
+    set(name, newValue);
+    this[name] = newValue;
+  }
+
+  @action
+  updateColor(newColor) {
+    this.color = newColor.replace("#", "");
   }
 
   get categoryDescription() {
@@ -258,7 +265,6 @@ export default class EditCategoryGeneral extends Component {
                   as |field|
                 >
                   <field.Input
-                    @value={{@category.name}}
                     @placeholderKey="category.name_placeholder"
                     @maxlength="50"
                     class="category-name"
@@ -391,6 +397,7 @@ export default class EditCategoryGeneral extends Component {
                     @hexValue={{this.color}}
                     @valid={{@category.colorValid}}
                     @ariaLabelledby="background-color-label"
+                    @onChangeColor={{fn this.updateColor}}
                   />
                   <ColorPicker
                     @colors={{this.backgroundColors}}
