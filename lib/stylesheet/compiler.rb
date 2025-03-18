@@ -56,6 +56,7 @@ module Stylesheet
           source_map_contents: true,
           load_paths: load_paths,
           silence_deprecations: %w[color-functions import global-builtin],
+          fatal_deprecations: options[:strict_deprecations] ? %w[mixed-decls] : [],
         )
 
       result = engine.render
