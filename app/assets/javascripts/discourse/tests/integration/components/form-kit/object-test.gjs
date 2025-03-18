@@ -12,8 +12,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
     await render(
       <template>
         <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
-          <form.Object @name="foo" as |object name|>
-            <object.Field @name={{name}} @title={{name}} as |field|>
+          <form.Object @name="foo" as |object|>
+            <object.Field @name="bar" @title="bar" as |field|>
+              <field.Input />
+            </object.Field>
+            <object.Field @name="baz" @title="baz" as |field|>
               <field.Input />
             </object.Field>
           </form.Object>
@@ -34,8 +37,11 @@ module("Integration | Component | FormKit | Object", function (hooks) {
         >
           <form.Object @name="one" as |one|>
             <one.Object @name="two" as |two|>
-              <two.Object @name="three" as |three name|>
-                <three.Field @name={{name}} @title={{name}} as |field|>
+              <two.Object @name="three" as |three|>
+                <three.Field @name="foo" @title="foo" as |field|>
+                  <field.Input />
+                </three.Field>
+                <three.Field @name="bar" @title="bar" as |field|>
                   <field.Input />
                 </three.Field>
               </two.Object>

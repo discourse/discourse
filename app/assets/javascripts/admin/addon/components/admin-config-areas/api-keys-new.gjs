@@ -148,6 +148,16 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     });
   }
 
+  @action
+  scopesKeys(scopesData) {
+    return Object.keys(scopesData);
+  }
+
+  @action
+  paramsKeys(paramsData) {
+    return Object.keys(paramsData);
+  }
+
   async #loadScopes() {
     try {
       this.loadingScopes = true;
@@ -265,59 +275,68 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <form.Object @name="scopes" as |scopesObject scopeName|>
-                        <tr class="scope-resource-name">
-                          <td><b>{{scopeName}}</b></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
+                      <form.Object @name="scopes" as |scopesObject scopesData|>
+                        {{#each (this.scopesKeys scopesData) as |scopeKey|}}
+                          <tr class="scope-resource-name">
+                            <td><b>{{scopeKey}}</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
 
-                        <scopesObject.Collection
-                          @name={{scopeName}}
-                          @tagName="tr"
-                          as |topicsCollection index collectionData|
-                        >
-                          <td>
-                            <topicsCollection.Field
-                              @name="enabled"
-                              @title={{collectionData.key}}
-                              @tooltip={{i18n
-                                (concat
-                                  "admin.api.scopes.descriptions."
-                                  scopeName
-                                  "."
-                                  collectionData.key
-                                )
-                              }}
-                              as |field|
-                            >
-                              <field.Checkbox />
-                            </topicsCollection.Field>
-                          </td>
-                          <td>
-                            <DButton
-                              @icon="link"
-                              @action={{fn this.showURLs collectionData.urls}}
-                              class="btn-info"
-                            />
-                          </td>
-                          <td>
-                            <topicsCollection.Object
-                              @name="params"
-                              as |paramsObject name|
-                            >
-                              <paramsObject.Field
-                                @name={{name}}
-                                @title={{name}}
-                                @showTitle={{false}}
-                                as |field|
-                              >
-                                <field.Input placeholder={{name}} />
-                              </paramsObject.Field>
-                            </topicsCollection.Object>
-                          </td>
-                        </scopesObject.Collection>
+                          <scopesObject.Collection
+                            @name={{scopeKey}}
+                            @tagName="div"
+                            as |topicsCollection index collectionData|
+                          >
+                            <tr>
+                              <td>
+                                <topicsCollection.Field
+                                  @name="enabled"
+                                  @title={{collectionData.key}}
+                                  @tooltip={{i18n
+                                    (concat
+                                      "admin.api.scopes.descriptions."
+                                      scopeKey
+                                      "."
+                                      collectionData.key
+                                    )
+                                  }}
+                                  as |field|
+                                >
+                                  <field.Checkbox />
+                                </topicsCollection.Field>
+                              </td>
+                              <td>
+                                <DButton
+                                  @icon="link"
+                                  @action={{fn
+                                    this.showURLs
+                                    collectionData.urls
+                                  }}
+                                  class="btn-info"
+                                />
+                              </td>
+                              <td>
+                                <topicsCollection.Object
+                                  @name="params"
+                                  as |paramsObject data|
+                                >
+                                  {{#each (this.paramsKeys data) as |name|}}
+                                    <paramsObject.Field
+                                      @name={{name}}
+                                      @title={{name}}
+                                      @showTitle={{false}}
+                                      as |field|
+                                    >
+                                      <field.Input placeholder={{name}} />
+                                    </paramsObject.Field>
+                                  {{/each}}
+                                </topicsCollection.Object>
+                              </td>
+                            </tr>
+                          </scopesObject.Collection>
+                        {{/each}}
                       </form.Object>
                     </tbody>
                   </table>
