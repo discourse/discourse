@@ -32,7 +32,7 @@ html.composer-open {
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (width <= 1200px) {
     min-width: 0;
   }
 
@@ -177,7 +177,7 @@ html.composer-open {
 
         @include ellipsis;
 
-        @media screen and (max-width: 500px) {
+        @media screen and (width <= 500px) {
           display: none;
         }
       }
