@@ -51,6 +51,7 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
+  @tracked inPMInboxContext = this.search.contextType === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -111,7 +112,7 @@ export default class SearchMenu extends Component {
   }
 
   get searchContext() {
-    if (this.search.inTopicContext || this.search.inPMInboxContext) {
+    if (this.search.inTopicContext || this.inPMInboxContext) {
       return this.search.searchContext;
     }
 
@@ -225,6 +226,11 @@ export default class SearchMenu extends Component {
   }
 
   @action
+  clearPMInboxContext() {
+    this.inPMInboxContext = false;
+  }
+
+  @action
   cancelMobileSearch() {
     this.close();
 
@@ -232,9 +238,7 @@ export default class SearchMenu extends Component {
       this.search.inTopicContext = false;
     }
 
-    if (this.search.inPMInboxContext) {
-      this.search.inPMInboxContext = false;
-    }
+    this.clearPMInboxContext();
 
     if (this.search.activeGlobalSearchTerm) {
       this.search.activeGlobalSearchTerm = "";
@@ -420,7 +424,10 @@ export default class SearchMenu extends Component {
           {{#if this.site.isMobileViewAndDevice}}
             <MobileSearchButton @onTap={{this.mobileSearch}} />
           {{else}}
-            <ActiveFilters />
+            <ActiveFilters
+              @inPMInboxContext={{this.inPMInboxContext}}
+              @clearPMInboxContext={{this.clearPMInboxContext}}
+            />
           {{/if}}
 
           <PluginOutlet
@@ -434,6 +441,7 @@ export default class SearchMenu extends Component {
             @updateTypeFilter={{this.updateTypeFilter}}
             @triggerSearch={{this.triggerSearch}}
             @fullSearch={{this.fullSearch}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
             @closeSearchMenu={{this.close}}
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
@@ -512,6 +520,8 @@ export default class SearchMenu extends Component {
           @suggestionKeyword={{this.suggestionKeyword}}
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
+          @inPMInboxContext={{this.inPMInboxContext}}
+          @clearPMInboxContext={{this.clearPMInboxContext}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
@@ -526,6 +536,8 @@ export default class SearchMenu extends Component {
             @suggestionKeyword={{this.suggestionKeyword}}
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
+            @inPMInboxContext={{this.inPMInboxContext}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}
