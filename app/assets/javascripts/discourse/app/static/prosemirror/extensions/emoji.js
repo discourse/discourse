@@ -45,10 +45,6 @@ const extension = {
     {
       match: /(^|\W):([^:]+):$/,
       handler: (state, match, start, end) => {
-        if (state.doc.rangeHasMark(start, end, state.schema.marks.code)) {
-          return null;
-        }
-
         if (emojiExists(match[2])) {
           const emojiStart = start + match[1].length;
           return state.tr.replaceWith(
@@ -67,10 +63,6 @@ const extension = {
           ") $"
       ),
       handler: (state, match, start, end) => {
-        if (state.doc.rangeHasMark(start, end, state.schema.marks.code)) {
-          return null;
-        }
-
         const emojiStart = start + match[1].length;
         return state.tr
           .replaceWith(

@@ -36,10 +36,7 @@ const extension = {
     match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
     handler: (state, match, start, end) => {
       const { $from } = state.selection;
-      if (
-        $from.nodeBefore?.type === state.schema.nodes.mention ||
-        state.doc.rangeHasMark(start, end, state.schema.marks.code)
-      ) {
+      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
         return null;
       }
       const mentionStart = start + match[1].length;

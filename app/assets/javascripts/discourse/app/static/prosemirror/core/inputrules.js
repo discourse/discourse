@@ -19,23 +19,23 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       ...smartQuotes,
       ...[
         wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
-
         orderedListRule(schema.nodes.ordered_list),
         bulletListRule(schema.nodes.bullet_list),
-
         textblockTypeInputRule(/^```$/, schema.nodes.code_block),
         textblockTypeInputRule(/^ {4}$/, schema.nodes.code_block),
-
         headingRule(schema.nodes.heading, 6),
-
-        markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
-        markInputRule(/(?<=^|\s)__([^_]+)__$/, schema.marks.strong),
-        markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
-        markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
-        markInputRule(/`([^`]+)`$/, schema.marks.code),
-
-        new InputRule(/^(\u2013-|___\s|\*\*\*\s)$/, horizontalRuleHandler),
-      ]
+      ].map((rule) => {
+        rule.inCodeMark = false;
+        return rule;
+      }),
+      markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
+      markInputRule(/(?<=^|\s)__([^_]+)__$/, schema.marks.strong),
+      markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
+      markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
+      markInputRule(/`([^`]+)`$/, schema.marks.code),
+      new InputRule(/^(\u2013-|___\s|\*\*\*\s)$/, horizontalRuleHandler, {
+        inCodeMark: false,
+      })
     );
   }
 
@@ -67,6 +67,9 @@ function processInputRule(inputRule, params) {
     inputRule.match instanceof RegExp &&
     inputRule.handler instanceof Function
   ) {
+    // Default to NOT applying input rules to inCodeMark
+    const options = inputRule.options || {};
+    options.inCodeMark ??= options.inCode || false;
     return new InputRule(inputRule.match, inputRule.handler, inputRule.options);
   }
 

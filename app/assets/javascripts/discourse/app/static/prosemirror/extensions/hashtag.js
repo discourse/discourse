@@ -34,10 +34,6 @@ const extension = {
     {
       match: /(^|\W)(#[\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
       handler: (state, match, start, end) => {
-        if (state.doc.rangeHasMark(start, end, state.schema.marks.code)) {
-          return null;
-        }
-
         const hashtagStart = start + match[1].length;
         const name = match[2].slice(1);
         return (
