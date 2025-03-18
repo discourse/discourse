@@ -46,11 +46,11 @@
           margin: 0 auto;
           position: relative;
 
-          @media screen and (max-width: 1025px) {
+          @include breakpoint(large) {
             width: 80%;
           }
 
-          @media screen and (max-width: 768px) {
+          @include breakpoint(tablet) {
             width: 90%;
           }
 
