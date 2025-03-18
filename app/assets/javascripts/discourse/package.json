@@ -49,7 +49,7 @@
     "prosemirror-keymap": "^1.2.2",
     "prosemirror-markdown": "^1.13.2",
     "prosemirror-model": "^1.25.0",
-    "prosemirror-schema-list": "^1.4.1",
+    "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.2",
     "prosemirror-view": "^1.38.1"
