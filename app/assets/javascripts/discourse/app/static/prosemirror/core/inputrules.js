@@ -70,7 +70,7 @@ function processInputRule(inputRule, params) {
     // Default to NOT applying input rules to inCodeMark
     const options = inputRule.options || {};
     options.inCodeMark ??= options.inCode || false;
-    return new InputRule(inputRule.match, inputRule.handler, inputRule.options);
+    return new InputRule(inputRule.match, inputRule.handler, options);
   }
 
   throw new Error("Input rule must have a match regex and a handler function");
