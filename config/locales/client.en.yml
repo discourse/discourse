@@ -218,6 +218,12 @@ en:
     bootstrap_mode: "Getting started"
     back_button: "Back"
 
+    welcome_banner:
+      header:
+        logged_in_members: "Welcome back, %{preferred_display_name}!"
+        anonymous_members: "Welcome to %{site_name}!"
+      search: "Search"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors."
@@ -494,10 +500,6 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
-      abandon:
-        confirm: "You already have a draft in progress. What would you like to do with it?"
-        yes_value: "Discard"
-        no_value: "Resume editing"
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"

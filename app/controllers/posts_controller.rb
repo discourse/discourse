@@ -451,6 +451,7 @@ class PostsController < ApplicationController
         .replies
         .secured(guardian)
         .where(post_number: after + 1..)
+        .order(:post_number)
         .limit(MAX_POST_REPLIES)
         .pluck(:id)
 

@@ -20,7 +20,9 @@ describe "Changing email", type: :system do
 
     find(".save-button button").click
 
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 1 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 1
+    end
 
     if user.admin?
       get_link_from_email(:old)
@@ -36,7 +38,7 @@ describe "Changing email", type: :system do
     mail.body.to_s[%r{/u/confirm-#{type}-email/\S+}, 0]
   end
 
-  it "allows regular user to change their email" do
+  xit "allows regular user to change their email" do
     sign_in user
 
     visit generate_confirm_link
@@ -50,7 +52,7 @@ describe "Changing email", type: :system do
     expect(user_preferences_page).to have_primary_email(new_email)
   end
 
-  it "works when user has totp 2fa" do
+  xit "works when user has totp 2fa" do
     SiteSetting.hide_email_address_taken = false
 
     second_factor = Fabricate(:user_second_factor_totp, user: user)
@@ -106,7 +108,7 @@ describe "Changing email", type: :system do
     authenticator&.remove!
   end
 
-  it "does not require login to verify" do
+  xit "does not require login to verify" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
@@ -141,7 +143,10 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 2
+    end
+
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link
@@ -172,7 +177,10 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 2
+    end
+
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link

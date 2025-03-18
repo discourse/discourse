@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -14,6 +14,7 @@ import AdvancedButton from "discourse/components/search-menu/advanced-button";
 import ClearButton from "discourse/components/search-menu/clear-button";
 import Results from "discourse/components/search-menu/results";
 import SearchTerm from "discourse/components/search-menu/search-term";
+import concatClass from "discourse/helpers/concat-class";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -137,6 +138,9 @@ export default class SearchMenu extends Component {
 
   @action
   open() {
+    if (!this.menuPanelOpen) {
+      this.appEvents.trigger("search-menu:search_menu_opened");
+    }
     this.menuPanelOpen = true;
   }
 
@@ -324,9 +328,6 @@ export default class SearchMenu extends Component {
         .catch(popupAjaxError)
         .finally(() => {
           this.loading = false;
-          this.appEvents.trigger("search:search_result_view", {
-            searchMenu: true, // delineate between search menu and full page search
-          });
         });
     }
   }
@@ -392,7 +393,9 @@ export default class SearchMenu extends Component {
       {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
-      <div class="search-input">
+      <div
+        class={{concatClass "search-input" (concat "search-input--" @location)}}
+      >
         {{#if this.search.inTopicContext}}
           <DButton
             @icon="xmark"
