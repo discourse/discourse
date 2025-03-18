@@ -5111,11 +5111,13 @@ es:
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
       delete_single:
         title: "Eliminar"
+        complete: "Publicación eliminada."
       delete:
         title: "Eliminar…"
       delete_and_ignore:
         title: "Ignorar la denuncia y eliminar la publicación"
         description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
+        complete: "Publicación eliminada."
       delete_and_ignore_replies:
         title: "Ignorar la denuncia, eliminar la publicación y las respuestas"
         description: "Ignorar la denuncia quitándola de la cola, eliminar la publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema"
@@ -5123,6 +5125,7 @@ es:
       delete_and_agree:
         title: "Eliminar publicación"
         description: "Aceptar la denuncia y eliminar esta publicación; si es la primera publicación, eliminar también el tema."
+        complete: "Publicación eliminada."
       delete_and_agree_replies:
         title: "Eliminar publicación y respuestas"
         description: "Aceptar la denuncia y eliminar esta publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema."
@@ -5132,29 +5135,37 @@ es:
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
         title: "No"
+        complete: "Denuncia ignorada."
       discard_post:
         title: "Descartar publicación"
       revise_and_reject_post:
         title: "Revisar publicación..."
       ignore:
         title: "Ignorar"
+        complete: "Denuncia ignorada."
       ignore_and_do_nothing:
         title: "No hacer nada"
         description: "Ignorar la denuncia quitándola de la cola sin realizar ninguna acción. Las publicaciones ocultas permanecerán ocultas y las gestionarán las herramientas automáticas."
+        complete: "Denuncia ignorada."
       approve:
         title: "Aprobar"
+        complete: "Publicación aprobada."
       approve_post:
         title: "Aprobar publicación"
         confirm_closed: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
+        complete: "Publicación aprobada."
       reject_post:
         title: "Rechazar publicación"
+        complete: "Publicación rechazada."
       approve_user:
         title: "Aprobar usuario"
+        complete: "Usuario aprobado."
       reject_user:
         title: "Eliminar usuario…"
         delete:
           title: "Eliminar usuario"
           description: "El usuario será eliminado del foro."
+          complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
@@ -5173,6 +5184,7 @@ es:
         title: "Aprobar y restaurar publicación"
       delete_user:
         reason: "Eliminado a través de la cola de revisiones"
+        complete: "Usuario eliminado."
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
   notification_level:

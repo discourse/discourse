@@ -164,6 +164,10 @@ da:
     software_update_prompt:
       dismiss: "Ignorer Alle"
     back_button: "Tilbage"
+    welcome_banner:
+      header:
+        anonymous_members: "Velkommen til %{site_name}!"
+      search: "Søg"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
@@ -342,9 +346,6 @@ da:
       remove_confirmation: "Er du sikker på, at du vil offentliggøre dette udkast?"
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny personlig meddelelseskladde"
-      abandon:
-        yes_value: "Kassér"
-        no_value: "Genoptag redigering"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -4240,6 +4241,42 @@ da:
             failed: "Fejlet"
       home:
         title: "Hjem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
+      community:
+        title: "Fællesskab"
+        sidebar_link:
+          badges: "Emblemer"
+          notifications: "Notifikationer"
+          permalinks: "Permalinks"
+          users: "Brugere"
+          groups: "Grupper"
+          legal: "Jura"
+          moderation_flags:
+            title: "Moderation"
+      appearance:
+        title: "Udseende"
+        sidebar_link:
+          emoji: "Humørikon"
+          navigation: "Navigation"
+          themes_and_components:
+            keywords: "filtypenavn"
+      email_settings:
+        sidebar_link:
+          appearance: "Udseende"
+      security:
+        title: "Sikkerhed"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4270,15 +4307,23 @@ da:
         embeddable_host:
           edit: "Rediger"
           delete: "Slet"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tilpasning"
+          install: "Installér"
           themes:
             title: "Temaer"
+          components:
+            title: "komponenter"
         user_fields:
           type: "Type"
           more_options:
             move_up: "Flyt op"
             move_down: "Flyt ned"
           delete: "Slet"
+        color_palettes:
+          palette_name: "Navn"
+          colors:
+            title: "Farver"
       plugins:
         title: "Udvidelser"
         name: "Navn"
