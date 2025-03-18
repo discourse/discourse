@@ -15,3 +15,4 @@ packages:
 - "app/assets/javascripts/select-kit"
 - "app/assets/javascripts/theme-transpiler"
 - "app/assets/javascripts/truth-helpers"
+- "app/assets/javascripts/codemod-resolver"
