@@ -5,14 +5,13 @@ import { htmlSafe } from "@ember/template";
 import Form from "discourse/components/form";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkForm extends Component {
   get reminderValidation() {
-    return `dateAfterOrEqual:${moment().format("YYYY-MM-DD HH:mm")}`;
+    return `dateAfterOrEqual:${moment().toISOString()}`;
   }
 
   @cached
@@ -20,7 +19,9 @@ export default class BookmarkForm extends Component {
     return {
       id: this.args.bookmark.id,
       name: this.args.bookmark.name,
-      reminderAt: moment(this.args.bookmark.reminderAt).toDate(),
+      reminderAt: this.args.bookmark.reminderAt
+        ? moment(this.args.bookmark.reminderAt).toDate()
+        : new Date(),
       autoDeletePreference:
         this.args.bookmark.autoDeletePreference ??
         AUTO_DELETE_PREFERENCES.CLEAR_REMINDER,

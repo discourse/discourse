@@ -2,6 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
@@ -124,6 +125,7 @@ export default class DatePicker extends Component {
       placeholder={{this.placeholder}}
       @value={{this.value}}
       autocomplete="off"
+      {{didInsert this.registerPicker}}
       ...attributes
     />
   </template>
