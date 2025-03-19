@@ -24,10 +24,6 @@ export default class PostLinks extends Component {
   }
 
   get canExpandList() {
-    console.log({
-      links: this.links,
-      r: this.links?.length > MAX_COLLAPSED_LINKS && this.collapsed,
-    });
     return this.links?.length > MAX_COLLAPSED_LINKS && this.collapsed;
   }
 
