@@ -273,7 +273,7 @@ class FKForm extends Component {
           Section=FKSection
           Fieldset=FKFieldset
           ConditionalContent=(component FKControlConditionalContent)
-          Container=FKContainer
+          Container=(component FKContainer format=@format)
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
           Alert=FKAlert

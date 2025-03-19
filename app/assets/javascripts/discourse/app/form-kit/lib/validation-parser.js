@@ -6,7 +6,13 @@ export default class ValidationParser {
   parse(input) {
     const rules = {};
     (input?.split("|") ?? []).forEach((rule) => {
-      const [ruleName, args] = rule.split(":").filter(Boolean);
+      const firstColonIndex = rule.indexOf(":");
+      const ruleName = rule.substring(
+        0,
+        firstColonIndex !== -1 ? firstColonIndex : rule.length
+      );
+      const args =
+        firstColonIndex !== -1 ? rule.substring(firstColonIndex + 1) : "";
 
       if (this[ruleName + "Rule"]) {
         rules[ruleName] = this[ruleName + "Rule"](args);
@@ -20,13 +26,17 @@ export default class ValidationParser {
 
   dateBeforeOrEqualRule(input) {
     return {
-      date: new Date(input),
+      date: moment(input).toDate(),
+      day: moment(input).format("YYYY-MM-DD"),
+      time: moment(input).format("HH:mm"),
     };
   }
 
   dateAfterOrEqualRule(input) {
     return {
-      date: new Date(input),
+      date: moment(input).toDate(),
+      day: moment(input).format("YYYY-MM-DD"),
+      time: moment(input).format("HH:mm"),
     };
   }
 

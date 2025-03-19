@@ -19,6 +19,7 @@ export default class PostMenuBookmarkButton extends Component {
       class="post-action-menu__bookmark"
       ...attributes
       @bookmarkManager={{this.bookmarkManager}}
+      @targetModel={{this.args.post}}
       @showLabel={{@showLabel}}
     />
   </template>

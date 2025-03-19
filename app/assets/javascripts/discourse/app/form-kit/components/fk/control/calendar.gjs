@@ -11,7 +11,7 @@ export default class FKControlCalendar extends Component {
   @service site;
 
   get containerId() {
-    return `${this.args.field.name}-container`;
+    return `${this.args.field.name}-${this.args.field.id}-container`;
   }
 
   get time() {
@@ -24,36 +24,12 @@ export default class FKControlCalendar extends Component {
     return this.args.includeTime ?? true;
   }
 
-  @action
-  setTime(time) {
-    const [hours, minutes] = time.split(":").map(Number);
-    const updatedDate = new Date(this.args.field.value.getTime());
-    updatedDate.setHours(hours, minutes, 0, 0);
-    this.args.field.set(updatedDate);
-  }
-
-  @action
-  setDate(date) {
-    const updatedDate = new Date(date);
-    const currentDate = this.args.field.value || new Date();
-
-    updatedDate.setHours(
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      0,
-      0
-    );
-
-    this.args.field.set(updatedDate);
-  }
-
-  @action
-  formatForInput(date) {
-    return moment(date).format("YYYY-MM-DD");
-  }
-
   get minDate() {
     return this.args.field.rules?.dateAfterOrEqual?.date;
+  }
+
+  get minTime() {
+    return this.args.field.rules?.dateAfterOrEqual?.time;
   }
 
   get maxDate() {
@@ -64,6 +40,36 @@ export default class FKControlCalendar extends Component {
     return (
       (this.args.expandedDatePickerOnDesktop ?? true) && this.site.desktopView
     );
+  }
+
+  get date() {
+    return this.args.field.value?.toDate();
+  }
+
+  @action
+  setTime(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    const updatedDate = this.args.field.value || new Date();
+    updatedDate.setHours(hours, minutes);
+    this.args.field.set(updatedDate);
+  }
+
+  @action
+  setDate(date) {
+    const updatedDate = new Date(date);
+    const currentDate = this.args.field.value || new Date();
+    updatedDate.setHours(currentDate.getHours(), currentDate.getMinutes());
+    this.args.field.set(updatedDate);
+  }
+
+  @action
+  formatForInput(date) {
+    return moment(date).format("YYYY-MM-DD");
+  }
+
+  @action
+  formatTimeForInput(date) {
+    return moment(date).format("HH:mm");
   }
 
   <template>
@@ -85,7 +91,7 @@ export default class FKControlCalendar extends Component {
         disabled={{@field.disabled}}
         class="form-kit__control-input form-kit__control-date"
         type="date"
-        value={{this.date}}
+        value={{@field.value}}
         {{on "change" (withEventValue this.setDate)}}
       />
     {{/if}}
@@ -98,6 +104,7 @@ export default class FKControlCalendar extends Component {
         {{on "input" (withEventValue this.setTime)}}
         class="form-kit__control-input form-kit__control-time"
         step="900"
+        min={{this.minTime}}
       />
     {{/if}}
   </template>

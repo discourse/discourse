@@ -218,6 +218,7 @@ export default class BookmarkMenu extends Component {
       const closeData = await this.modal.show(BookmarkModal, {
         model: {
           bookmark: this.existingBookmark,
+          targetModel: this.args.targetModel,
           afterSave: (savedData) => {
             return this.bookmarkManager.afterSave(savedData);
           },

@@ -1358,10 +1358,11 @@ export default class TopicController extends Controller.extend(
     }
   }
 
-  _modifyTopicBookmark(bookmark) {
+  _modifyTopicBookmark(bookmark, model) {
     this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(bookmark),
+        targetModel: model,
         afterSave: (bookmarkFormData) => {
           this._syncBookmarks(bookmarkFormData.saveData);
           this.model.set("bookmarking", false);

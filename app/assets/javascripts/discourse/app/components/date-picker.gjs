@@ -1,6 +1,8 @@
 /* global Pikaday:true */
+import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
@@ -12,10 +14,17 @@ const DATE_FORMAT = "YYYY-MM-DD";
 
 @classNames("date-picker-wrapper")
 export default class DatePicker extends Component {
+  @tracked picker = null;
+
   value = null;
   minDate = null;
   maxDate = null;
   _picker = null;
+
+  @action
+  registerPicker(element) {
+    this.picker = element;
+  }
 
   @discourseComputed("site.mobileView")
   inputType(mobileView) {
@@ -36,7 +45,7 @@ export default class DatePicker extends Component {
     loadScript("/javascripts/pikaday.js").then(() => {
       schedule("afterRender", () => {
         const options = {
-          field: this.element.querySelector(".date-picker"),
+          field: this.picker,
           container: container || null,
           bound: container === null,
           format: DATE_FORMAT,
@@ -116,6 +125,7 @@ export default class DatePicker extends Component {
       placeholder={{this.placeholder}}
       @value={{this.value}}
       autocomplete="off"
+      {{didInsert this.registerPicker}}
       ...attributes
     />
   </template>
