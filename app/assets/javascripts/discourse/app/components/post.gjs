@@ -7,9 +7,13 @@ import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import PostActionsSummary from "discourse/components/post/actions-summary";
 import PostAvatar from "discourse/components/post/avatar";
-import PostBody from "discourse/components/post/body";
+import PostContents from "discourse/components/post/contents";
 import PostEmbedded from "discourse/components/post/embedded";
+import PostLinks from "discourse/components/post/links";
+import PostMetaData from "discourse/components/post/meta-data";
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
@@ -223,7 +227,7 @@ export default class Post extends Component {
                 <PostEmbedded
                   @post={{reply}}
                   @above={{true}}
-                  @highlightTerm={{@highlightTerm}}
+                  @highlightTerm={{this.search.highlightTerm}}
                 />
               {{/each}}
             </section>
@@ -236,44 +240,57 @@ export default class Post extends Component {
         {{/if}}
         <div class="row">
           <PostAvatar @post={{@post}} />
-          <PostBody
-            @post={{@post}}
-            @prevPost={{@prevPost}}
-            @nextPost={{@nextPost}}
-            @canCreatePost={{@canCreatePost}}
-            @changeNotice={{@changeNotice}}
-            @changePostOwner={{@changePostOwner}}
-            @deletePost={{@deletePost}}
-            @editPost={{@editPost}}
-            @expandHidden={{@expandHidden}}
-            @grantBadge={{@grantBadge}}
-            @hasRepliesAbove={{this.hasRepliesAbove}}
-            @highlightTerm={{this.search.highlightTerm}}
-            @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
-            @lockPost={{@lockPost}}
-            @multiSelect={{@multiSelect}}
-            @permanentlyDeletePost={{@permanentlyDeletePost}}
-            @rebakePost={{@rebakePost}}
-            @recoverPost={{@recoverPost}}
-            @repliesAbove={{this.repliesAbove}}
-            @replyToPost={{@replyToPost}}
-            @selectBelow={{@selectBelow}}
-            @selectReplies={{@selectReplies}}
-            @selected={{@selected}}
-            @showFlags={{@showFlags}}
-            @showHistory={{@showHistory}}
-            @showLogin={{@showLogin}}
-            @showPagePublish={{@showPagePublish}}
-            @showRawEmail={{@showRawEmail}}
-            @showReadIndicator={{@showReadIndicator}}
-            @toggleLike={{this.toggleLike}}
-            @togglePostSelection={{@togglePostSelection}}
-            @togglePostType={{@togglePostType}}
-            @toggleReplyAbove={{this.toggleReplyAbove}}
-            @toggleWiki={{@toggleWiki}}
-            @unhidePost={{@unhidePost}}
-            @unlockPost={{@unlockPost}}
-          />
+          <div class="topic-body clearfix">
+            <PluginOutlet @name="post-metadata" @outletArgs={{hash post=@post}}>
+              <PostMetaData
+                @post={{@post}}
+                @editPost={{@editPost}}
+                @hasRepliesAbove={{this.hasRepliesAbove}}
+                @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
+                @multiSelect={{@multiSelect}}
+                @repliesAbove={{this.repliesAbove}}
+                @selectBelow={{@selectBelow}}
+                @selectReplies={{@selectReplies}}
+                @selected={{@selected}}
+                @showHistory={{@showHistory}}
+                @showRawEmail={{@showRawEmail}}
+                @togglePostSelection={{@togglePostSelection}}
+                @toggleReplyAbove={{this.toggleReplyAbove}}
+              />
+            </PluginOutlet>
+            <PostContents
+              @post={{@post}}
+              @prevPost={{@prevPost}}
+              @nextPost={{@nextPost}}
+              @canCreatePost={{@canCreatePost}}
+              @changeNotice={{@changeNotice}}
+              @changePostOwner={{@changePostOwner}}
+              @deletePost={{@deletePost}}
+              @editPost={{@editPost}}
+              @expandHidden={{@expandHidden}}
+              @grantBadge={{@grantBadge}}
+              @highlightTerm={{this.search.highlightTerm}}
+              @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
+              @lockPost={{@lockPost}}
+              @permanentlyDeletePost={{@permanentlyDeletePost}}
+              @rebakePost={{@rebakePost}}
+              @recoverPost={{@recoverPost}}
+              @replyToPost={{@replyToPost}}
+              @showFlags={{@showFlags}}
+              @showLogin={{@showLogin}}
+              @showPagePublish={{@showPagePublish}}
+              @showReadIndicator={{@showReadIndicator}}
+              @toggleLike={{this.toggleLike}}
+              @togglePostType={{@togglePostType}}
+              @toggleWiki={{@toggleWiki}}
+              @unhidePost={{@unhidePost}}
+              @unlockPost={{@unlockPost}}
+            />
+            <section class="post-actions">
+              <PostActionsSummary @post={{@post}} />
+            </section>
+            <PostLinks @post={{@post}} />
+          </div>
         </div>
         {{#if this.shouldShowTopicMap}}
           <div class="topic-map --op">
