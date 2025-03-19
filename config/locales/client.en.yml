@@ -5380,7 +5380,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
@@ -5391,6 +5391,10 @@ en:
           title: "Components"
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
+        themes_and_components:
+          title: "Themes and components"
+          header_description: "Personalize your Discourse site with themes and components to match your needs"
+          keywords: "theme|component|extension|customize"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
@@ -6533,7 +6537,6 @@ en:
           title: "Colors"
           edit: "Edit color palettes"
           long_title: "Color palettes"
-          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"
