@@ -193,6 +193,10 @@ sq:
       dismiss: "Hiqe"
     bootstrap_mode: "Material Hyrës"
     back_button: "Kthehu mbrapa"
+    welcome_banner:
+      header:
+        anonymous_members: "Mirë se vini tek %{site_name}!"
+      search: "Kërko"
     themes:
       default_description: "Paracaktuar"
       broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
@@ -454,10 +458,6 @@ sq:
       remove_confirmation: "Je të sigurt që dëshironi ta fshini këtë draft?"
       new_topic: "Draft i ri për temën"
       new_private_message: "Draft i ri i mesazhit personal"
-      abandon:
-        confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
-        yes_value: "Harroni"
-        no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
     topic_count_all:
@@ -4187,6 +4187,36 @@ sq:
             failed: "Dështoi"
       home:
         title: "Kryefaqja"
+      account:
+        title: "Llogaria"
+        sidebar_link:
+          backups: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
+      community:
+        title: "Komuniteti"
+        sidebar_link:
+          badges: "Stemat"
+          notifications: "Njoftimet"
+          permalinks: "Permalinks"
+          users: "Users"
+          groups: "Grupet"
+          legal: "Legale"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Shfletimi"
+      email_settings:
+        title: "Cilësimet e emailit"
+      security:
+        title: "Siguria"
+      section_landing_pages:
+        account:
+          title: "Llogaria"
+          backups:
+            title: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       config_areas:
         about:
           your_organization: "Organizata juaj"
@@ -4213,9 +4243,15 @@ sq:
           delete: "Fshij"
           more_options:
             title: "Më shumë mundësi"
+        themes_and_components:
+          breadcrumb_title: "Personalizo"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
+        color_palettes:
+          palette_name: "Emri"
+          colors:
+            title: "Ngjyrat"
       plugins:
         title: "Pluginet"
         name: "Emri"

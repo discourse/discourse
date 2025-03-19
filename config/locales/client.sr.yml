@@ -220,6 +220,10 @@ sr:
       dismiss: "Одбаци"
     bootstrap_mode: "Prvi koraci"
     back_button: "Nazad"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Подразумевано"
       broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
@@ -501,10 +505,6 @@ sr:
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
-      abandon:
-        confirm: "Već imate nacrt. Šta želite da uradite sa njim?"
-        yes_value: "Odbaci"
-        no_value: "Nastavi sa uređivanjem"
       dropdown:
         title: "Otvorite meni najnovijih nacrta"
         untitled: "Neimenovan nacrt"
@@ -2790,6 +2790,27 @@ sr:
             failed: "Neuspešno"
       home:
         title: "Home"
+      account:
+        sidebar_link:
+          backups: "Sigurnosne kopije"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obaveštenja"
+          users: "Korisnici"
+          groups: "Grupe"
+          legal: "Legalno"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      security:
+        title: "Sigurnost"
+      section_landing_pages:
+        account:
+          backups:
+            title: "Sigurnosne kopije"
       config_areas:
         about:
           company_name: "Ime foruma"
@@ -2814,9 +2835,15 @@ sr:
         embeddable_host:
           edit: "Izmeni"
           delete: "Obriši"
+        themes_and_components:
+          breadcrumb_title: "Prilagođavanje"
         user_fields:
           type: "Tip"
           delete: "Obriši"
+        color_palettes:
+          palette_name: "Ime foruma"
+          colors:
+            title: "Boje"
       plugins:
         title: "Dodaci"
         name: "Ime foruma"

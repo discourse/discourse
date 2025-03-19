@@ -218,6 +218,12 @@ en:
     bootstrap_mode: "Getting started"
     back_button: "Back"
 
+    welcome_banner:
+      header:
+        logged_in_members: "Welcome back, %{preferred_display_name}!"
+        anonymous_members: "Welcome to %{site_name}!"
+      search: "Search"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors."
@@ -494,10 +500,6 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
-      abandon:
-        confirm: "You already have a draft in progress. What would you like to do with it?"
-        yes_value: "Discard"
-        no_value: "Resume editing"
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
@@ -5378,7 +5380,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
@@ -5389,6 +5391,10 @@ en:
           title: "Components"
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
+        themes_and_components:
+          title: "Themes and components"
+          header_description: "Personalize your Discourse site with themes and components to match your needs"
+          keywords: "theme|component|extension|customize"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
@@ -5650,6 +5656,7 @@ en:
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_unknown_count: "Users with one of the new email domains will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
           alert:
@@ -6159,6 +6166,7 @@ en:
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
+          illegal_character_in_color: "Colors consist of hexadecimal characters only"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6529,7 +6537,6 @@ en:
           title: "Colors"
           edit: "Edit color palettes"
           long_title: "Color palettes"
-          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"

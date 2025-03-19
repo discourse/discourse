@@ -912,6 +912,9 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+  max_automatic_membership_email_domains:
+    default: 50
+    hidden: true
 
 posting:
   min_post_length:
@@ -3196,6 +3199,10 @@ uncategorized:
     default: true
 
   show_topic_map_in_topics_without_replies:
+    client: true
+    default: true
+
+  enable_welcome_banner:
     client: true
     default: true
 

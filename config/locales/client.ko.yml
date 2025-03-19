@@ -166,6 +166,10 @@ ko:
       dismiss: "무시"
     bootstrap_mode: "시작하기"
     back_button: "뒤로"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
+      search: "검색"
     themes:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
@@ -362,9 +366,6 @@ ko:
       remove_confirmation: "이 초안을 삭제할까요?"
       new_topic: "새 주제 초안"
       new_private_message: "새 개인 메시지 초안"
-      abandon:
-        yes_value: "버리기"
-        no_value: "편집 재개"
     topic_count_all:
       other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
@@ -4099,6 +4100,40 @@ ko:
             failed: "실패"
       home:
         title: "홈"
+      account:
+        title: "계정"
+        sidebar_link:
+          backups: "백업"
+          whats_new:
+            keywords: "변경 이력|기능|릴리즈"
+      community:
+        title: "커뮤니티"
+        sidebar_link:
+          badges: "배지"
+          notifications: "알림"
+          permalinks: "고유링크"
+          users: "사용자들"
+          groups: "그룹"
+          legal: "법률조항"
+          moderation_flags:
+            title: "관리"
+      appearance:
+        title: "외관"
+        sidebar_link:
+          emoji: "이모티콘"
+          navigation: "내비게이션"
+          themes_and_components:
+            keywords: "확장자"
+      email_settings:
+        sidebar_link:
+          appearance: "외관"
+      security:
+        title: "보안"
+      section_landing_pages:
+        account:
+          title: "계정"
+          backups:
+            title: "백업"
       config_areas:
         about:
           community_name: "커뮤니티 이름"
@@ -4128,12 +4163,20 @@ ko:
         embeddable_host:
           edit: "편집"
           delete: "삭제하기"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "사용자 지정"
+          install: "설치"
           themes:
             title: "테마"
+          components:
+            title: "구성 요소"
         user_fields:
           type: "유형"
           delete: "삭제하기"
+        color_palettes:
+          palette_name: "그룹명"
+          colors:
+            title: "색상"
       plugins:
         title: "플러그인"
         name: "이름"

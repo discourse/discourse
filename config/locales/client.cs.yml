@@ -250,6 +250,10 @@ cs:
       dismiss: "Označit jako přečtené"
     bootstrap_mode: "Začínáme"
     back_button: "Zpět"
+    welcome_banner:
+      header:
+        anonymous_members: "Vítejte v %{site_name}!"
+      search: "Vyhledat"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -555,10 +559,6 @@ cs:
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       edit_topic: "Upravit koncept tématu"
-      abandon:
-        confirm: "Máte rozpracovaný koncept. Co byste s ním chtěli udělat?"
-        yes_value: "Zahodit"
-        no_value: "Pokračovat v úpravách"
       dropdown:
         title: "Otevřít nabídku nejnovějších konceptů"
         untitled: "Koncept bez názvu"
@@ -6103,6 +6103,64 @@ cs:
             failed: "Neúspěšný"
       home:
         title: "Domů"
+      account:
+        title: "Účet"
+        sidebar_link:
+          backups: "Zálohy"
+          whats_new:
+            title: "Co je nového?"
+            keywords: "changelog|feature|release|změna|funkce|vydání"
+      community:
+        title: "Komunita"
+        sidebar_link:
+          about_your_site: "O vašem webu"
+          badges: "Odznaky"
+          login_and_authentication: "Přihlášení a ověřování"
+          notifications: "Upozornění"
+          permalinks: "Trvalé odkazy"
+          trust_levels: "Úrovně důvěry"
+          group_permissions: "Skupinová oprávnění"
+          users: "Uživatelé"
+          groups: "Skupiny"
+          user_fields: "Uživatelská pole"
+          watched_words: "Sledovaná slova"
+          legal: "Právní záležitosti"
+          moderation_flags:
+            title: "Moderování"
+            keywords: "flag|review|nahlášení|revize"
+      appearance:
+        title: "Vzhled"
+        sidebar_link:
+          font_style: "Styl písma"
+          site_logo: "Logo webu"
+          color_schemes: "Palety barev"
+          emoji: "Emoji"
+          navigation: "Navigace"
+          site_texts: "Texty"
+      email_settings:
+        title: "Nastavení e-mailu"
+        sidebar_link:
+          appearance: "Vzhled"
+          server_setup:
+            title: "Nastavení a protokoly"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled souhrnu"
+      security:
+        title: "Zabezpečení"
+        sidebar_link:
+          security: "Zabezpečení"
+          spam: "Spam"
+          staff_action_logs:
+            title: "Protokoly a filtrování"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
+      section_landing_pages:
+        account:
+          title: "Účet"
+          backups:
+            title: "Zálohy"
+            description: "Pořiďte si zálohu dat svého webu"
+          whats_new:
+            title: "Co je nového?"
+            description: "Objevte nové verze a vylepšení Discourse"
       config_areas:
         about:
           general_settings: "Obecná nastavení"
@@ -6198,16 +6256,15 @@ cs:
           delete: "Smazat"
           more_options:
             title: "Více možností"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Přizpůsobení"
+          install: "Instalovat"
           themes:
             title: "Motivy"
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
-            themes_intro_img_alt: "Zástupce nového motivu"
-            set_default_theme: "Nastavit výchozí"
-            default_theme: "Výchozí motiv"
-            themes_description: "Motivy jsou rozsáhlé úpravy, které mění více prvků stylu designu fóra a často zahrnují i rozšířené funkce v uživatelském rozhraní."
             new_theme: "Nový motiv"
-            user_selectable: "Volitelný uživatelem"
+          components:
+            title: "Komponenty"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -6218,6 +6275,13 @@ cs:
           delete: "Smazat"
           delete_successful: "Uživatelské pole odstraněno."
           save_successful: "Uživatelské pole uloženo."
+        color_palettes:
+          palette_name: "Jméno"
+          color_options:
+            toggle: "Volitelný uživatelem"
+            toggle_description: "Uživatelé si mohou tuto paletu vybrat"
+          colors:
+            title: "Barvy"
       plugins:
         title: "Pluginy"
         name: "Název"

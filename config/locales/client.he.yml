@@ -250,6 +250,11 @@ he:
       dismiss: "התעלמות"
     bootstrap_mode: "איך מתחילים"
     back_button: "חזרה"
+    welcome_banner:
+      header:
+        logged_in_members: "ברוך שובך, %{preferred_display_name}!"
+        anonymous_members: "ברוך בואך אל %{site_name}!"
+      search: "חיפוש"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -555,10 +560,6 @@ he:
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
       edit_topic: "עריכת טיוטת נושא"
-      abandon:
-        confirm: "כבר יש טיוטה שהתחלת לערוך. מה לעשות אתה?"
-        yes_value: "להשליך"
-        no_value: "לחזור לעריכה"
       dropdown:
         title: "פתיחת תפריט הטיוטות האחרונות"
         untitled: "טיוטה ללא שם"
@@ -2830,6 +2831,8 @@ he:
       uploading: "בהליכי העלאה…"
       show_preview: "להציג תצוגה מקדימה"
       hide_preview: "להסתיר תצוגה מקדימה"
+      switch_to_markdown: "החלפה לעורך ה־Markdown הרגיל"
+      switch_to_rich_text: "החלפה לעורך טקסט עשיר החדש"
       quote_post_title: "ציטוט פוסט בשלמותו"
       bold_label: "B"
       bold_title: "מודגש"
@@ -4759,6 +4762,7 @@ he:
       admin:
         title: "הנהלה"
         search_prev_next: "%{shortcut} העברת הבחירה למעלה ולמטה"
+        search_open: "%{shortcut} פתיחת חיפוש במנשק הניהול"
     badges:
       earned_n_times:
         one: "עיטור זה הוענק פעם אחת (%{count})"
@@ -5203,6 +5207,7 @@ he:
       no_results:
         title: "אין תוצאות"
         description: 'לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">לחפש בהגדרות האתר</a> או ב<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">רשימת משתמשי ההנהלה?</a>'
+        description_admin_search: 'לא הצלחנו למצוא שום דבר שעונה לחיפוש ‘%{filter}’.<br><br>כדאי <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">לחפש בכל מנשק הניהול</a>.'
       footer:
         interface_color_selector:
           light: "בהיר"
@@ -5402,6 +5407,7 @@ he:
                 help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
               large_icon:
                 title: "סמל מרובע"
+                description: "גרסה מרובעת של תמונת הלוגו מופיעה בחלק העליון של הניהול והיא גם לוגו היישומון במסך הבית של המכשיר הנייד."
                 help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
               square_icon_dark:
                 required: "האם להשתמש בסמל מרובע אחר עבור מצב כהה?"
@@ -5409,8 +5415,10 @@ he:
                 help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
               favicon:
                 title: "Favicon (סמל אתר)"
+                description: "הלוגו יופיע בתור הסמל בלשוניות הדפדפנים ובמועדפים/סימניות בדפדפנים."
               logo_small:
                 title: "לוגו קטן"
+                description: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. במקרה של העדר בחירה, תופיע אות הבית."
                 help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
               logo_small_dark:
                 required: "האם להשתמש בלוגו קטן אחר עבור מצב כהה?"
@@ -5421,12 +5429,18 @@ he:
               social_media: "רשתות חברתיות"
               mobile_logo:
                 title: "לוגו לנייד"
+                description: "הלוגו לשימוש לגרסה של האתר שלך לניידים. בהעדר בחירה, ייעשה שימוש בתמונה מהגדרת `logo` (לוגו)."
+                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
               mobile_logo_dark:
                 required: "האם להשתמש בלוגו אחר לנייד עבור מצב כהה?"
                 title: "לוגו כהה לנייד"
+                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
               manifest_icon:
+                title: "סמל ייצוגי"
+                description: "תמונה שתשמש כתמונת לוגו/פתיחה ב־Android. אם הבחירה תישאר ריקה, יוגדר ל־large_icon (סמל גדול)."
                 help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
               manifest_screenshots:
+                title: "תמונות מסך ייצוגיות"
                 description: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
               apple_touch_icon:
                 title: "סמל Apple touch"
@@ -5440,6 +5454,7 @@ he:
                 title: "תמונת OpenGraph"
                 description: "תמונת opengraph כברירת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
               x_summary_large_image:
+                title: "תמונה גדולה לתקציר ב־X"
                 help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
         navigation:
           title: "ניווט"
@@ -6115,6 +6130,67 @@ he:
             failed: "נכשל"
       home:
         title: "בית"
+      account:
+        title: "חשבון"
+        sidebar_link:
+          backups: "גיבויים"
+          whats_new:
+            title: "מה חדש?"
+            keywords: "יומן שינויים|יכולת|מהדורה"
+      community:
+        title: "קהילה"
+        sidebar_link:
+          about_your_site: "על האתר שלך"
+          badges: "עיטורים"
+          login_and_authentication: "כניסה ואימות"
+          notifications: "התראות"
+          permalinks: "קישורים קבועים"
+          trust_levels: "דרגות אמון"
+          group_permissions: "הרשאות קבוצתיות"
+          users: "משתמשים"
+          groups: "קבוצות"
+          user_fields: "שדות משתמש"
+          watched_words: "מילים במעקב"
+          legal: "משפטי"
+          moderation_flags:
+            title: "פיקוח"
+            keywords: "סימון|סקירה"
+      appearance:
+        title: "מראה"
+        sidebar_link:
+          font_style: "סגנון גופן"
+          site_logo: "לוגו האתר"
+          color_schemes: "ערכות צבעים"
+          emoji: "אמוג׳י"
+          navigation: "ניווט"
+          themes_and_components:
+            title: "ערכות עיצוב ורכיבים"
+            keywords: "סיומת"
+          site_texts: "טקסטים של האתר"
+      email_settings:
+        title: "הגדרות דוא״ל"
+        sidebar_link:
+          appearance: "מראה"
+          server_setup:
+            title: "הגדרות שרת ויומנים"
+            keywords: "דוא״ל|דוא\"ל|דואל|מייל|אימייל|smtp|mailgun|sendgrid|sent|דולג|נפסח|הוקפץ|הוחזר|התקבל|התקבלה|נדחה|נדחתה|יומני דוא״ל|תקציר תצוגה מקדימה"
+      security:
+        title: "אבטחה"
+        sidebar_link:
+          security: "הגדרות אבטחה"
+          spam: "הגדרות ספאם"
+          staff_action_logs:
+            title: "יומנים וסינון"
+            keywords: "יומני שגיאות|פעולת סגל|פעולות סגל|הודעות במעקב|IP במעקב|יומני חיפוש"
+      section_landing_pages:
+        account:
+          title: "חשבון"
+          backups:
+            title: "גיבויים"
+            description: "גיבוי נתוני האתר שלך"
+          whats_new:
+            title: "מה חדש?"
+            description: "חשיפת מהדורות חדשות ושיפורים ב־Discourse"
       config_areas:
         about:
           general_settings: "הגדרות כלליות"
@@ -6210,16 +6286,21 @@ he:
           delete: "מחיקה"
           more_options:
             title: "אפשרויות נוספות"
-        look_and_feel:
+        themes_and_components:
+          title: "ערכות עיצוב ורכיבים"
+          description: "התאמת אתר ה־Discourse לטעמך עם ערכות עיצוב ורכיבים שיענו על הצרכים שלך."
+          breadcrumb_title: "התאמה אישית"
+          install: "התקנה"
           themes:
             title: "תמות"
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
-            themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
-            set_default_theme: "הגדרת ברירת מחדל"
-            default_theme: "ערכת עיצוב כברירת מחדל"
-            themes_description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
             new_theme: "ערכת עיצוב חדשה"
-            user_selectable: "לבחירת המשתמש"
+            back: "חזרה לערכות עיצוב"
+          components:
+            title: "רכיבים"
+            components_intro: "יש להתקין רכיב כדי להתחיל או ליצור אחד משלך מאפס באמצעות המשאבים האלה."
+            new_component: "רכיב חדש"
+            back: "חזרה לרכיבים"
         user_fields:
           field: "שדה"
           type: "סוג"
@@ -6230,6 +6311,20 @@ he:
           delete: "מחיקה"
           delete_successful: "שדה משתמש נמחק."
           save_successful: "שדה משתמש נשמר."
+        color_palettes:
+          palette_name: "שם"
+          color_options:
+            title: "אפשרויות צבע"
+            toggle: "לבחירת המשתמש"
+            toggle_description: "המשתמשים יכולים לבחור את ערכת הצבעים"
+          colors:
+            title: "צבעים"
+          fonts_and_logos_hint: "מעניין אותך לעדכן את הגופנים והלוגואים שלך?"
+          go_to_branding: "מעבר למיתוג"
+          save_changes: "שמירת השינויים"
+          unsaved_changes: "יש שינויים שלא נשמרו"
+          copy_of: "עותק של %{name}"
+          copy_created: 'נוצר עותק חדש של „%{name}”'
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6376,6 +6471,7 @@ he:
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
           themes_intro_new: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
+          components_intro_new: "יש להתקין רכיב כדי להתחיל או ליצור אחד משלך מאפס באמצעות המשאבים האלה."
           themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
           beginners_guide_title: "המדריך למתחילים בערכות העיצוב של Discourse"
           developers_guide_title: "המדריך למפתחי ערכות עיצוב של Discourse"

@@ -11,10 +11,6 @@ class CreateIndexConcurrently < ActiveRecord::Migration[7.2]
     execute <<~SQL
     CREATE INDEX CONCURRENTLY some_notifications_index ON notifications(user_id);
     SQL
-
-    execute <<~SQL
-    DROP INDEX some_notifications_index;
-    SQL
   end
 
   def down

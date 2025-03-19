@@ -5017,11 +5017,13 @@ fi:
         description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
       delete_single:
         title: "Poista"
+        complete: "Viesti poistettu."
       delete:
         title: "Poista…"
       delete_and_ignore:
         title: "Ohita liputus ja poista viesti"
         description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
+        complete: "Viesti poistettu."
       delete_and_ignore_replies:
         title: "Ohita liputus, poista viesti ja vastaukset"
         description: "Ohita liputus poistamalla se jonosta, poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju"
@@ -5029,6 +5031,7 @@ fi:
       delete_and_agree:
         title: "Poista viesti"
         description: "Hyväksy liputus ja poista tämä viesti; jos viesti on ensimmäinen viesti, poista myös ketju."
+        complete: "Viesti poistettu."
       delete_and_agree_replies:
         title: "Poista viesti ja vastaukset"
         description: "Hyväksy liputus ja poista tämä viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju."
@@ -5038,29 +5041,37 @@ fi:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
         title: "Ei"
+        complete: "Liputus ohitettu."
       discard_post:
         title: "Hylkää viesti"
       revise_and_reject_post:
         title: "Korjaa julkaisua..."
       ignore:
         title: "Sivuuta"
+        complete: "Liputus ohitettu."
       ignore_and_do_nothing:
         title: "Älä tee mitään"
         description: "Ohita liputus poistamalla se jonosta tekemättä mitään. Piilotetut viestit pysyvät piilossa ja automaattiset työkalut käsittelevät ne."
+        complete: "Liputus ohitettu."
       approve:
         title: "Hyväksy"
+        complete: "Viesti hyväksytty."
       approve_post:
         title: "Hyväksy viesti"
         confirm_closed: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"
+        complete: "Viesti hyväksytty."
       reject_post:
         title: "Hylkää viesti"
+        complete: "Viesti hylätty."
       approve_user:
         title: "Hyväksy käyttäjä"
+        complete: "Käyttäjä hyväksytty."
       reject_user:
         title: "Poista käyttäjä…"
         delete:
           title: "Poista käyttäjä"
           description: "Käyttäjä poistetaan foorumista."
+          complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
@@ -5079,6 +5090,7 @@ fi:
         title: "Hyväksy ja palauta viesti"
       delete_user:
         reason: "Poistettiin tarkastusjonon kautta"
+        complete: "Käyttäjä poistettu."
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:
