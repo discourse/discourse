@@ -244,10 +244,10 @@ export const ADMIN_NAV_MAP = [
         route: "adminConfig.customize.themes",
         currentWhen:
           "adminConfig.customize.themes adminConfig.customize.components",
-        label: "admin.appearance.sidebar_link.themes_and_components.title",
+        label: "admin.config.themes_and_components.title",
+        description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
-        keywords:
-          "admin.appearance.sidebar_link.themes_and_components.keywords",
+        keywords: "admin.config.themes_and_components.keywords",
       },
       {
         name: "admin_customize_site_texts",
