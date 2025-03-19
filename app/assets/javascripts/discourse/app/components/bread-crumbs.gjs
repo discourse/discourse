@@ -1,10 +1,16 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { filter } from "@ember/object/computed";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+//  A breadcrumb including category drop downs
+import PluginOutlet from "discourse/components/plugin-outlet";
+import categoryVariables from "discourse/helpers/category-variables";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import CategoryDrop from "select-kit/components/category-drop";
+import TagDrop from "select-kit/components/tag-drop";
+import TagsIntersectionChooser from "select-kit/components/tags-intersection-chooser";
 
-//  A breadcrumb including category drop downs
 @tagName("ol")
 @classNameBindings("hidden:hidden", ":category-breadcrumb")
 export default class BreadCrumbs extends Component {
@@ -123,77 +129,82 @@ export default class BreadCrumbs extends Component {
       (c) => c.get("parentCategory") === firstCategory
     );
   }
+
+  <template>
+    <PluginOutlet
+      @name="bread-crumbs-left"
+      @connectorTagName="li"
+      @outletArgs={{hash
+        tagId=this.tag.id
+        additionalTags=this.additionalTags
+        noSubcategories=this.noSubcategories
+        showTagsSection=this.showTagsSection
+        currentCategory=this.category
+        categoryBreadcrumbs=this.categoryBreadcrumbs
+        editingCategory=this.editingCategory
+        editingCategoryTab=this.editingCategoryTab
+      }}
+    />
+
+    {{#each this.categoryBreadcrumbs as |breadcrumb|}}
+      {{#if breadcrumb.hasOptions}}
+        <li
+          style={{if
+            breadcrumb.category
+            (categoryVariables breadcrumb.category)
+          }}
+        >
+          <CategoryDrop
+            @category={{breadcrumb.category}}
+            @categories={{breadcrumb.options}}
+            @tagId={{this.tag.id}}
+            @editingCategory={{this.editingCategory}}
+            @editingCategoryTab={{this.editingCategoryTab}}
+            @options={{hash
+              parentCategory=breadcrumb.parentCategory
+              subCategory=breadcrumb.isSubcategory
+              noSubcategories=breadcrumb.noSubcategories
+              autoFilterable=true
+            }}
+          />
+        </li>
+      {{/if}}
+    {{/each}}
+
+    {{#if this.showTagsSection}}
+      {{#if this.additionalTags}}
+        <li>
+          <TagsIntersectionChooser
+            @currentCategory={{this.category}}
+            @mainTag={{this.tag.id}}
+            @additionalTags={{this.additionalTags}}
+            @options={{hash categoryId=this.category.id}}
+          />
+        </li>
+      {{else}}
+        <li>
+          <TagDrop
+            @currentCategory={{this.category}}
+            @noSubcategories={{this.noSubcategories}}
+            @tagId={{this.tag.id}}
+          />
+        </li>
+      {{/if}}
+    {{/if}}
+
+    <PluginOutlet
+      @name="bread-crumbs-right"
+      @connectorTagName="li"
+      @outletArgs={{hash
+        tagId=this.tag.id
+        additionalTags=this.additionalTags
+        noSubcategories=this.noSubcategories
+        showTagsSection=this.showTagsSection
+        currentCategory=this.category
+        categoryBreadcrumbs=this.categoryBreadcrumbs
+        editingCategory=this.editingCategory
+        editingCategoryTab=this.editingCategoryTab
+      }}
+    />
+  </template>
 }
-
-<PluginOutlet
-  @name="bread-crumbs-left"
-  @connectorTagName="li"
-  @outletArgs={{hash
-    tagId=this.tag.id
-    additionalTags=this.additionalTags
-    noSubcategories=this.noSubcategories
-    showTagsSection=this.showTagsSection
-    currentCategory=this.category
-    categoryBreadcrumbs=this.categoryBreadcrumbs
-    editingCategory=this.editingCategory
-    editingCategoryTab=this.editingCategoryTab
-  }}
-/>
-
-{{#each this.categoryBreadcrumbs as |breadcrumb|}}
-  {{#if breadcrumb.hasOptions}}
-    <li
-      style={{if breadcrumb.category (category-variables breadcrumb.category)}}
-    >
-      <CategoryDrop
-        @category={{breadcrumb.category}}
-        @categories={{breadcrumb.options}}
-        @tagId={{this.tag.id}}
-        @editingCategory={{this.editingCategory}}
-        @editingCategoryTab={{this.editingCategoryTab}}
-        @options={{hash
-          parentCategory=breadcrumb.parentCategory
-          subCategory=breadcrumb.isSubcategory
-          noSubcategories=breadcrumb.noSubcategories
-          autoFilterable=true
-        }}
-      />
-    </li>
-  {{/if}}
-{{/each}}
-
-{{#if this.showTagsSection}}
-  {{#if this.additionalTags}}
-    <li>
-      <TagsIntersectionChooser
-        @currentCategory={{this.category}}
-        @mainTag={{this.tag.id}}
-        @additionalTags={{this.additionalTags}}
-        @options={{hash categoryId=this.category.id}}
-      />
-    </li>
-  {{else}}
-    <li>
-      <TagDrop
-        @currentCategory={{this.category}}
-        @noSubcategories={{this.noSubcategories}}
-        @tagId={{this.tag.id}}
-      />
-    </li>
-  {{/if}}
-{{/if}}
-
-<PluginOutlet
-  @name="bread-crumbs-right"
-  @connectorTagName="li"
-  @outletArgs={{hash
-    tagId=this.tag.id
-    additionalTags=this.additionalTags
-    noSubcategories=this.noSubcategories
-    showTagsSection=this.showTagsSection
-    currentCategory=this.category
-    categoryBreadcrumbs=this.categoryBreadcrumbs
-    editingCategory=this.editingCategory
-    editingCategoryTab=this.editingCategoryTab
-  }}
-/>

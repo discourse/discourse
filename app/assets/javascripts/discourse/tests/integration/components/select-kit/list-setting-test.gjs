@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import ListSetting from "select-kit/components/list-setting";
 
 module("Integration | Component | select-kit/list-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,15 +12,16 @@ module("Integration | Component | select-kit/list-setting", function (hooks) {
   });
 
   test("default", async function (assert) {
+    const self = this;
+
     this.set("value", ["bold", "italic"]);
     this.set("choices", ["bold", "italic", "underline"]);
 
-    await render(hbs`
-      <ListSetting
-        @value={{this.value}}
-        @choices={{this.choices}}
-      />
-    `);
+    await render(
+      <template>
+        <ListSetting @value={{self.value}} @choices={{self.choices}} />
+      </template>
+    );
 
     assert.strictEqual(this.subject.header().name(), "bold,italic");
     assert.strictEqual(this.subject.header().value(), "bold,italic");

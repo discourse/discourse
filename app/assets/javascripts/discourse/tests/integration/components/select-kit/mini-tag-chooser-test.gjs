@@ -1,10 +1,11 @@
+import { hash } from "@ember/helper";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
+import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 
 module(
   "Integration | Component | select-kit/mini-tag-chooser",
@@ -16,17 +17,25 @@ module(
     });
 
     test("displays tags", async function (assert) {
+      const self = this;
+
       this.set("value", ["foo", "bar"]);
 
-      await render(hbs`<MiniTagChooser @value={{this.value}} />`);
+      await render(
+        <template><MiniTagChooser @value={{self.value}} /></template>
+      );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
     });
 
     test("create a tag", async function (assert) {
+      const self = this;
+
       this.set("value", ["foo", "bar"]);
 
-      await render(hbs`<MiniTagChooser @value={{this.value}} />`);
+      await render(
+        <template><MiniTagChooser @value={{self.value}} /></template>
+      );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
 
@@ -47,10 +56,14 @@ module(
     });
 
     test("max_tags_per_topic", async function (assert) {
+      const self = this;
+
       this.set("value", ["foo", "bar"]);
       this.siteSettings.max_tags_per_topic = 2;
 
-      await render(hbs`<MiniTagChooser @value={{this.value}} />`);
+      await render(
+        <template><MiniTagChooser @value={{self.value}} /></template>
+      );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
 
@@ -66,10 +79,14 @@ module(
     });
 
     test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
+      const self = this;
+
       this.set("value", ["cat", "kit"]);
       this.siteSettings.max_tags_per_topic = 0;
 
-      await render(hbs`<MiniTagChooser @value={{this.value}} />`);
+      await render(
+        <template><MiniTagChooser @value={{self.value}} /></template>
+      );
 
       assert.strictEqual(this.subject.header().value(), "cat,kit");
       await this.subject.expand();
@@ -82,14 +99,21 @@ module(
       await this.subject.fillInFilter("dawg");
       assert
         .dom(".select-kit-collection .select-kit-row")
-        .doesNotExist("doesn’t show any options");
+        .doesNotExist("doesn't show any options");
     });
 
     test("required_tag_group", async function (assert) {
+      const self = this;
+
       this.set("value", ["foo", "bar"]);
 
       await render(
-        hbs`<MiniTagChooser @value={{this.value}} @options={{hash categoryId=1}} />`
+        <template>
+          <MiniTagChooser
+            @value={{self.value}}
+            @options={{hash categoryId=1}}
+          />
+        </template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
@@ -112,11 +136,13 @@ module(
     });
 
     test("creating a tag using invalid character", async function (assert) {
-      await render(hbs`<MiniTagChooser @options={{hash allowAny=true}} />`);
+      await render(
+        <template><MiniTagChooser @options={{hash allowAny=true}} /></template>
+      );
       await this.subject.expand();
       await this.subject.fillInFilter("#");
 
-      assert.dom(".select-kit-error").doesNotExist("doesn’t show any error");
+      assert.dom(".select-kit-error").doesNotExist("doesn't show any error");
       assert
         .dom(".select-kit-row[data-value='#']")
         .doesNotExist("doesn't allow to create this tag");
@@ -131,7 +157,9 @@ module(
 
     test("creating a tag over the length limit", async function (assert) {
       this.siteSettings.max_tag_length = 1;
-      await render(hbs`<MiniTagChooser @options={{hash allowAny=true}} />`);
+      await render(
+        <template><MiniTagChooser @options={{hash allowAny=true}} /></template>
+      );
       await this.subject.expand();
       await this.subject.fillInFilter("foo");
 
@@ -141,11 +169,18 @@ module(
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
+      const self = this;
+
       this.set("value", ["foo", "bar"]);
       this.set("hiddenValues", ["foo"]);
 
       await render(
-        hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=this.hiddenValues}} @value={{this.value}} />`
+        <template>
+          <MiniTagChooser
+            @options={{hash allowAny=true hiddenValues=self.hiddenValues}}
+            @value={{self.value}}
+          />
+        </template>
       );
       assert.dom(".formatted-selection").hasText("bar");
 
@@ -170,10 +205,17 @@ module(
     });
 
     test("displays tags and filter in header", async function (assert) {
+      const self = this;
+
       this.set("value", ["apple", "orange", "potato"]);
 
       await render(
-        hbs`<MiniTagChooser @value={{this.value}} @options={{hash filterable=true useHeaderFilter=true}} />`
+        <template>
+          <MiniTagChooser
+            @value={{self.value}}
+            @options={{hash filterable=true useHeaderFilter=true}}
+          />
+        </template>
       );
 
       assert.strictEqual(this.subject.header().value(), "apple,orange,potato");
@@ -204,10 +246,17 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
+      const self = this;
+
       this.set("value", ["apple", "orange", "potato"]);
 
       await render(
-        hbs`<MiniTagChooser @value={{this.value}} @options={{hash filterable=true useHeaderFilter=true}} />`
+        <template>
+          <MiniTagChooser
+            @value={{self.value}}
+            @options={{hash filterable=true useHeaderFilter=true}}
+          />
+        </template>
       );
 
       assert.strictEqual(this.subject.header().value(), "apple,orange,potato");

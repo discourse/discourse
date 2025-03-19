@@ -1,6 +1,8 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import discourseComputed from "discourse/lib/decorators";
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default class ComposerUserSelector extends Component {
   _groups = [];
@@ -45,17 +47,19 @@ export default class ComposerUserSelector extends Component {
     this._updateGroups(selected, newGroups);
     this.set("recipients", selected.join(","));
   }
-}
 
-<EmailGroupUserChooser
-  @id="private-message-users"
-  @value={{this.splitRecipients}}
-  @onChange={{action "updateRecipients"}}
-  @options={{hash
-    topicId=this.topicId
-    none="composer.users_placeholder"
-    includeMessageableGroups=true
-    allowEmails=this.currentUser.can_send_private_email_messages
-    autoWrap=true
-  }}
-/>
+  <template>
+    <EmailGroupUserChooser
+      @id="private-message-users"
+      @value={{this.splitRecipients}}
+      @onChange={{this.updateRecipients}}
+      @options={{hash
+        topicId=this.topicId
+        none="composer.users_placeholder"
+        includeMessageableGroups=true
+        allowEmails=this.currentUser.can_send_private_email_messages
+        autoWrap=true
+      }}
+    />
+  </template>
+}

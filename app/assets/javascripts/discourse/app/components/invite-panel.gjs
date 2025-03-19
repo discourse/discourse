@@ -1,13 +1,21 @@
-import Component from "@ember/component";
+import Component, { Textarea } from "@ember/component";
+import { fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DiscourseLinkedText from "discourse/components/discourse-linked-text";
+import GeneratedInviteLink from "discourse/components/generated-invite-link";
+import TextField from "discourse/components/text-field";
+import htmlSafe from "discourse/helpers/html-safe";
 import { computedI18n } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import GroupChooser from "select-kit/components/group-chooser";
 
 export default class InvitePanel extends Component {
   @service site;
@@ -441,120 +449,122 @@ export default class InvitePanel extends Component {
       });
     }
   }
-}
 
-{{#if this.inviteModel.error}}
-  <div class="alert alert-error">
-    {{html-safe this.errorMessage}}
-  </div>
-{{/if}}
-
-<div class="body">
-  {{#if this.inviteModel.finished}}
-    {{#if this.inviteModel.inviteLink}}
-      <GeneratedInviteLink
-        @link={{this.inviteModel.inviteLink}}
-        @email={{this.invitee}}
-      />
-    {{else}}
-      <div class="success-message">
-        {{html-safe this.successMessage}}
+  <template>
+    {{#if this.inviteModel.error}}
+      <div class="alert alert-error">
+        {{htmlSafe this.errorMessage}}
       </div>
     {{/if}}
-  {{else}}
-    <div class="invite-user-control">
-      <label class="instructions">{{this.inviteInstructions}}</label>
-      <div class="invite-user-input-wrapper">
-        {{#if this.allowExistingMembers}}
-          <EmailGroupUserChooser
-            @value={{this.invitee}}
-            @onChange={{action "updateInvitee"}}
-            @options={{hash
-              maximum=1
-              allowEmails=this.canInviteViaEmail
-              excludeCurrentUser=true
-              includeMessageableGroups=this.isPM
-              filterPlaceholder=this.placeholderKey
-              fullWidthWrap=true
-            }}
-            class="invite-user-input"
+
+    <div class="body">
+      {{#if this.inviteModel.finished}}
+        {{#if this.inviteModel.inviteLink}}
+          <GeneratedInviteLink
+            @link={{this.inviteModel.inviteLink}}
+            @email={{this.invitee}}
           />
         {{else}}
-          <TextField
-            @value={{this.invitee}}
-            @placeholderKey="topic.invite_reply.email_placeholder"
-            class="email-or-username-input"
-          />
+          <div class="success-message">
+            {{htmlSafe this.successMessage}}
+          </div>
         {{/if}}
-        {{#if this.capabilities.hasContactPicker}}
-          <DButton
-            @icon="address-book"
-            @action={{this.searchContact}}
-            class="btn-primary open-contact-picker"
-          />
+      {{else}}
+        <div class="invite-user-control">
+          <label class="instructions">{{this.inviteInstructions}}</label>
+          <div class="invite-user-input-wrapper">
+            {{#if this.allowExistingMembers}}
+              <EmailGroupUserChooser
+                @value={{this.invitee}}
+                @onChange={{this.updateInvitee}}
+                @options={{hash
+                  maximum=1
+                  allowEmails=this.canInviteViaEmail
+                  excludeCurrentUser=true
+                  includeMessageableGroups=this.isPM
+                  filterPlaceholder=this.placeholderKey
+                  fullWidthWrap=true
+                }}
+                class="invite-user-input"
+              />
+            {{else}}
+              <TextField
+                @value={{this.invitee}}
+                @placeholderKey="topic.invite_reply.email_placeholder"
+                class="email-or-username-input"
+              />
+            {{/if}}
+            {{#if this.capabilities.hasContactPicker}}
+              <DButton
+                @icon="address-book"
+                @action={{this.searchContact}}
+                class="btn-primary open-contact-picker"
+              />
+            {{/if}}
+          </div>
+        </div>
+
+        {{#if this.showGroups}}
+          <div class="group-access-control">
+            <label class="instructions {{this.showGroupsClass}}">
+              {{i18n "topic.automatically_add_to_groups"}}
+            </label>
+            <GroupChooser
+              @content={{this.allGroups}}
+              @value={{this.groupIds}}
+              @labelProperty="name"
+              @onChange={{fn (mut this.groupIds)}}
+            />
+          </div>
         {{/if}}
-      </div>
+
+        {{#if this.showCustomMessage}}
+          <div class="show-custom-message-control">
+            <label class="instructions">
+              <DiscourseLinkedText
+                @action={{this.showCustomMessageBox}}
+                @text="invite.custom_message"
+                class="optional"
+              />
+            </label>
+            {{#if this.hasCustomMessage}}
+              <Textarea
+                @value={{this.customMessage}}
+                placeholder={{this.customMessagePlaceholder}}
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+      {{/if}}
+
+      {{#if this.showApprovalMessage}}
+        <label class="instructions approval-notice">
+          {{i18n "invite.approval_not_required"}}
+        </label>
+      {{/if}}
     </div>
 
-    {{#if this.showGroups}}
-      <div class="group-access-control">
-        <label class="instructions {{this.showGroupsClass}}">
-          {{i18n "topic.automatically_add_to_groups"}}
-        </label>
-        <GroupChooser
-          @content={{this.allGroups}}
-          @value={{this.groupIds}}
-          @labelProperty="name"
-          @onChange={{fn (mut this.groupIds)}}
+    <div class="footer">
+      {{#if this.inviteModel.finished}}
+        <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
+      {{else}}
+        <DButton
+          @icon={{this.inviteIcon}}
+          @action={{this.createInvite}}
+          @disabled={{this.disabled}}
+          @label={{this.buttonTitle}}
+          class="btn-primary send-invite"
         />
-      </div>
-    {{/if}}
-
-    {{#if this.showCustomMessage}}
-      <div class="show-custom-message-control">
-        <label class="instructions">
-          <DiscourseLinkedText
-            @action={{action "showCustomMessageBox"}}
-            @text="invite.custom_message"
-            class="optional"
-          />
-        </label>
-        {{#if this.hasCustomMessage}}
-          <Textarea
-            @value={{this.customMessage}}
-            placeholder={{this.customMessagePlaceholder}}
+        {{#if this.showCopyInviteButton}}
+          <DButton
+            @icon="link"
+            @action={{this.generateInviteLink}}
+            @disabled={{this.disabledCopyLink}}
+            @label="user.invited.generate_link"
+            class="btn-primary generate-invite-link"
           />
         {{/if}}
-      </div>
-    {{/if}}
-  {{/if}}
-
-  {{#if this.showApprovalMessage}}
-    <label class="instructions approval-notice">
-      {{i18n "invite.approval_not_required"}}
-    </label>
-  {{/if}}
-</div>
-
-<div class="footer">
-  {{#if this.inviteModel.finished}}
-    <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
-  {{else}}
-    <DButton
-      @icon={{this.inviteIcon}}
-      @action={{this.createInvite}}
-      @disabled={{this.disabled}}
-      @label={{this.buttonTitle}}
-      class="btn-primary send-invite"
-    />
-    {{#if this.showCopyInviteButton}}
-      <DButton
-        @icon="link"
-        @action={{this.generateInviteLink}}
-        @disabled={{this.disabledCopyLink}}
-        @label="user.invited.generate_link"
-        class="btn-primary generate-invite-link"
-      />
-    {{/if}}
-  {{/if}}
-</div>
+      {{/if}}
+    </div>
+  </template>
+}

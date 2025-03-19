@@ -1,8 +1,10 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import ComboBox from "select-kit/components/combo-box";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -184,17 +186,19 @@ export default class TimeInput extends Component {
       }
     }
   }
-}
 
-<ComboBox
-  @value={{this.time}}
-  @content={{this.timeOptions}}
-  @onChange={{action "onChangeTime"}}
-  @options={{hash
-    translatedNone="--:--"
-    allowAny=true
-    filterable=false
-    autoInsertNoneItem=false
-    translatedFilterPlaceholder="--:--"
-  }}
-/>
+  <template>
+    <ComboBox
+      @value={{this.time}}
+      @content={{this.timeOptions}}
+      @onChange={{this.onChangeTime}}
+      @options={{hash
+        translatedNone="--:--"
+        allowAny=true
+        filterable=false
+        autoInsertNoneItem=false
+        translatedFilterPlaceholder="--:--"
+      }}
+    />
+  </template>
+}

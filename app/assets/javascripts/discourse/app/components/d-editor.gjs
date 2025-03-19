@@ -1,17 +1,26 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
+import { observes, on as onEvent } from "@ember-decorators/object";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
+import ToggleSwitch from "discourse/components/composer/toggle-switch";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import PopupInputTip from "discourse/components/popup-input-tip";
+import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
@@ -34,6 +43,7 @@ import {
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { i18n } from "discourse-i18n";
+import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 let _createCallbacks = [];
 
@@ -182,7 +192,7 @@ export default class DEditor extends Component {
     }
   }
 
-  @on("willDestroyElement")
+  @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
 
@@ -699,98 +709,101 @@ export default class DEditor extends Component {
 
     return observer;
   }
-}
 
-<div class="d-editor-container">
-  <div class="d-editor-textarea-column">
-    {{yield}}
+  <template>
+    <div class="d-editor-container">
+      <div class="d-editor-textarea-column">
+        {{yield}}
 
-    <div
-      class="d-editor-textarea-wrapper
-        {{if this.disabled 'disabled'}}
-        {{if this.isEditorFocused 'in-focus'}}"
-    >
-      <div class="d-editor-button-bar" role="toolbar">
-        {{#if this.siteSettings.rich_editor}}
-          <Composer::ToggleSwitch
-            @preventFocus={{true}}
-            @disabled={{@disableSubmit}}
-            @state={{this.isRichEditorEnabled}}
-            {{on "click" this.toggleRichEditor}}
-          />
-        {{/if}}
-
-        {{#each this.toolbar.groups as |group|}}
-          {{#each group.buttons as |b|}}
-            {{#if (b.condition this)}}
-              {{#if b.popupMenu}}
-                <ToolbarPopupMenuOptions
-                  @content={{this.popupMenuOptions}}
-                  @onChange={{this.onPopupMenuAction}}
-                  @onOpen={{action b.action b}}
-                  @tabindex={{-1}}
-                  @onKeydown={{this.rovingButtonBar}}
-                  @options={{hash icon=b.icon focusAfterOnChange=false}}
-                  class={{b.className}}
-                />
-              {{else}}
-                <DButton
-                  @action={{fn (action b.action) b}}
-                  @translatedTitle={{b.title}}
-                  @label={{b.label}}
-                  @icon={{b.icon}}
-                  @preventFocus={{b.preventFocus}}
-                  @onKeyDown={{this.rovingButtonBar}}
-                  tabindex={{b.tabindex}}
-                  class={{b.className}}
-                />
-              {{/if}}
+        <div
+          class="d-editor-textarea-wrapper
+            {{if this.disabled 'disabled'}}
+            {{if this.isEditorFocused 'in-focus'}}"
+        >
+          <div class="d-editor-button-bar" role="toolbar">
+            {{#if this.siteSettings.rich_editor}}
+              <ToggleSwitch
+                @preventFocus={{true}}
+                @disabled={{@disableSubmit}}
+                @state={{this.isRichEditorEnabled}}
+                {{on "click" this.toggleRichEditor}}
+              />
             {{/if}}
-          {{/each}}
-        {{/each}}
+
+            {{#each this.toolbar.groups as |group|}}
+              {{#each group.buttons as |b|}}
+                {{#if (b.condition this)}}
+                  {{#if b.popupMenu}}
+                    <ToolbarPopupMenuOptions
+                      @content={{this.popupMenuOptions}}
+                      @onChange={{this.onPopupMenuAction}}
+                      @onOpen={{action b.action b}}
+                      @tabindex={{-1}}
+                      @onKeydown={{this.rovingButtonBar}}
+                      @options={{hash icon=b.icon focusAfterOnChange=false}}
+                      class={{b.className}}
+                    />
+                  {{else}}
+                    <DButton
+                      @action={{fn (action b.action) b}}
+                      @translatedTitle={{b.title}}
+                      @label={{b.label}}
+                      @icon={{b.icon}}
+                      @preventFocus={{b.preventFocus}}
+                      @onKeyDown={{this.rovingButtonBar}}
+                      tabindex={{b.tabindex}}
+                      class={{b.className}}
+                    />
+                  {{/if}}
+                {{/if}}
+              {{/each}}
+            {{/each}}
+          </div>
+
+          <ConditionalLoadingSpinner @condition={{this.loading}} />
+          <this.editorComponent
+            @class="d-editor-input"
+            @onSetup={{this.setupEditor}}
+            @markdownOptions={{this.markdownOptions}}
+            @keymap={{this.keymap}}
+            @value={{this.value}}
+            @placeholder={{this.placeholderTranslated}}
+            @disabled={{this.disabled}}
+            @change={{this.onChange}}
+            @focusIn={{this.handleFocusIn}}
+            @focusOut={{this.handleFocusOut}}
+            @categoryId={{@categoryId}}
+            @topicId={{@topicId}}
+            @id={{this.textAreaId}}
+          />
+          <PopupInputTip @validation={{this.validation}} />
+          <PluginOutlet
+            @name="after-d-editor"
+            @connectorTagName="div"
+            @outletArgs={{this.outletArgs}}
+          />
+        </div>
       </div>
 
-      <ConditionalLoadingSpinner @condition={{this.loading}} />
-      <this.editorComponent
-        @class="d-editor-input"
-        @onSetup={{this.setupEditor}}
-        @markdownOptions={{this.markdownOptions}}
-        @keymap={{this.keymap}}
-        @value={{this.value}}
-        @placeholder={{this.placeholderTranslated}}
-        @disabled={{this.disabled}}
-        @change={{this.onChange}}
-        @focusIn={{this.handleFocusIn}}
-        @focusOut={{this.handleFocusOut}}
-        @categoryId={{@categoryId}}
-        @topicId={{@topicId}}
-        @id={{this.textAreaId}}
-      />
-      <PopupInputTip @validation={{this.validation}} />
-      <PluginOutlet
-        @name="after-d-editor"
-        @connectorTagName="div"
-        @outletArgs={{this.outletArgs}}
-      />
+      {{! template-lint-disable no-invalid-interactive }}
+      <div
+        class="d-editor-preview-wrapper
+          {{if this.forcePreview 'force-preview'}}"
+        {{on "click" this.handlePreviewClick}}
+      >
+        <DecoratedHtml
+          @className="d-editor-preview"
+          @html={{htmlSafe this.preview}}
+          @decorate={{this.previewUpdated}}
+        />
+        <span class="d-editor-plugin">
+          <PluginOutlet
+            @name="editor-preview"
+            @connectorTagName="div"
+            @outletArgs={{this.outletArgs}}
+          />
+        </span>
+      </div>
     </div>
-  </div>
-
-  {{! template-lint-disable no-invalid-interactive }}
-  <div
-    class="d-editor-preview-wrapper {{if this.forcePreview 'force-preview'}}"
-    {{on "click" this.handlePreviewClick}}
-  >
-    <DecoratedHtml
-      @className="d-editor-preview"
-      @html={{html-safe this.preview}}
-      @decorate={{this.previewUpdated}}
-    />
-    <span class="d-editor-plugin">
-      <PluginOutlet
-        @name="editor-preview"
-        @connectorTagName="div"
-        @outletArgs={{this.outletArgs}}
-      />
-    </span>
-  </div>
-</div>
+  </template>
+}

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import CategoryChooser from "select-kit/components/category-chooser";
 
 export default class extends Component {
   @tracked categoryId = this.args.value;
@@ -10,6 +11,8 @@ export default class extends Component {
     this.categoryId = category;
     this.args.categoryChanged?.(category);
   }
-}
 
-<CategoryChooser @value={{this.categoryId}} @onChange={{this.onChange}} />
+  <template>
+    <CategoryChooser @value={{this.categoryId}} @onChange={{this.onChange}} />
+  </template>
+}

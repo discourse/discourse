@@ -1,12 +1,22 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { on as onEvent } from "@ember-decorators/object";
+import { or } from "truth-helpers";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 @tagName("")
 export default class GroupImapEmailSettings extends Component {
@@ -42,7 +52,7 @@ export default class GroupImapEmailSettings extends Component {
     this.set("imapSettingsValid", false);
   }
 
-  @on("init")
+  @onEvent("init")
   _fillForm() {
     this.set(
       "form",
@@ -88,128 +98,130 @@ export default class GroupImapEmailSettings extends Component {
       .catch(popupAjaxError)
       .finally(() => this.set("testingSettings", false));
   }
-}
 
-<div class="group-imap-email-settings">
-  <form class="groups-form form-horizontal groups-form-imap">
-    <div>
+  <template>
+    <div class="group-imap-email-settings">
+      <form class="groups-form form-horizontal groups-form-imap">
+        <div>
+          <div class="control-group">
+            <label for="imap_server">{{i18n
+                "groups.manage.email.credentials.imap_server"
+              }}</label>
+            <Input
+              @type="text"
+              name="imap_server"
+              @value={{this.form.imap_server}}
+              tabindex="8"
+              {{on "change" this.resetSettingsValid}}
+            />
+          </div>
+
+          <label for="enable_ssl_imap" class="groups-form__enable-ssl">
+            <Input
+              @type="checkbox"
+              @checked={{this.form.imap_ssl}}
+              id="enable_ssl_imap"
+              tabindex="11"
+              {{on "change" this.resetSettingsValid}}
+            />
+            {{i18n "groups.manage.email.credentials.imap_ssl"}}
+          </label>
+        </div>
+
+        <div>
+          <div class="control-group">
+            <label for="imap_port">{{i18n
+                "groups.manage.email.credentials.imap_port"
+              }}</label>
+            <Input
+              @type="text"
+              name="imap_port"
+              @value={{this.form.imap_port}}
+              tabindex="9"
+              {{on "change" (fn this.resetSettingsValid this.form.imap_port)}}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div class="control-group group-imap-mailboxes">
+            {{#if this.mailboxes}}
+              <label for="imap_mailbox_name">{{i18n
+                  "groups.manage.email.mailboxes.synchronized"
+                }}</label>
+              <ComboBox
+                @name="imap_mailbox_name"
+                @id="imap_mailbox"
+                @value={{this.group.imap_mailbox_name}}
+                @valueProperty="value"
+                @content={{this.mailboxes}}
+                @tabindex="10"
+                @onChange={{fn (mut this.group.imap_mailbox_name)}}
+                @options={{hash none="groups.manage.email.mailboxes.disabled"}}
+              />
+            {{/if}}
+          </div>
+
+        </div>
+      </form>
+
       <div class="control-group">
-        <label for="imap_server">{{i18n
-            "groups.manage.email.credentials.imap_server"
-          }}</label>
-        <Input
-          @type="text"
-          name="imap_server"
-          @value={{this.form.imap_server}}
-          tabindex="8"
-          {{on "change" (action "resetSettingsValid")}}
-        />
+        <div class="group-imap-prefill-options">
+          {{i18n "groups.manage.email.prefill.title"}}
+          <a
+            id="prefill_imap_gmail"
+            href
+            {{on "click" (fn this.prefillSettings "gmail")}}
+          >{{i18n "groups.manage.email.prefill.gmail"}}</a>
+        </div>
       </div>
 
-      <label for="enable_ssl_imap" class="groups-form__enable-ssl">
-        <Input
-          @type="checkbox"
-          @checked={{this.form.imap_ssl}}
-          id="enable_ssl_imap"
-          tabindex="11"
-          {{on "change" (action "resetSettingsValid")}}
-        />
-        {{i18n "groups.manage.email.credentials.imap_ssl"}}
-      </label>
-    </div>
+      {{#unless this.mailboxSelected}}
+        <div class="alert alert-error imap-no-mailbox-selected">
+          {{i18n "groups.manage.email.imap_mailbox_not_selected"}}
+        </div>
+      {{/unless}}
 
-    <div>
-      <div class="control-group">
-        <label for="imap_port">{{i18n
-            "groups.manage.email.credentials.imap_port"
-          }}</label>
-        <Input
-          @type="text"
-          name="imap_port"
-          @value={{this.form.imap_port}}
-          tabindex="9"
-          {{on "change" (action "resetSettingsValid" this.form.imap_port)}}
+      <div class="control-group buttons">
+        <DButton
+          @disabled={{or this.missingSettings this.testingSettings}}
+          @action={{this.testImapSettings}}
+          @icon="gear"
+          @label="groups.manage.email.test_settings"
+          @title="groups.manage.email.settings_required"
+          tabindex="12"
+          class="btn-primary test-imap-settings"
         />
-      </div>
-    </div>
 
-    <div>
-      <div class="control-group group-imap-mailboxes">
-        {{#if this.mailboxes}}
-          <label for="imap_mailbox_name">{{i18n
-              "groups.manage.email.mailboxes.synchronized"
-            }}</label>
-          <ComboBox
-            @name="imap_mailbox_name"
-            @id="imap_mailbox"
-            @value={{this.group.imap_mailbox_name}}
-            @valueProperty="value"
-            @content={{this.mailboxes}}
-            @tabindex="10"
-            @onChange={{fn (mut this.group.imap_mailbox_name)}}
-            @options={{hash none="groups.manage.email.mailboxes.disabled"}}
-          />
+        <ConditionalLoadingSpinner
+          @size="small"
+          @condition={{this.testingSettings}}
+        />
+
+        {{#if this.imapSettingsValid}}
+          <span class="imap-settings-ok">
+            {{icon "circle-check"}}
+            {{i18n "groups.manage.email.imap_settings_valid"}}
+          </span>
         {{/if}}
       </div>
 
+      {{#if this.group.imap_updated_at}}
+        <div class="group-email-last-updated-details for-imap">
+          <small>
+            {{i18n "groups.manage.email.last_updated"}}
+            <strong>{{formatDate
+                this.group.imap_updated_at
+                leaveAgo="true"
+              }}</strong>
+            {{i18n "groups.manage.email.last_updated_by"}}
+            <LinkTo
+              @route="user"
+              @model={{this.group.imap_updated_by.username}}
+            >{{this.group.imap_updated_by.username}}</LinkTo>
+          </small>
+        </div>
+      {{/if}}
     </div>
-  </form>
-
-  <div class="control-group">
-    <div class="group-imap-prefill-options">
-      {{i18n "groups.manage.email.prefill.title"}}
-      <a
-        id="prefill_imap_gmail"
-        href
-        {{on "click" (fn this.prefillSettings "gmail")}}
-      >{{i18n "groups.manage.email.prefill.gmail"}}</a>
-    </div>
-  </div>
-
-  {{#unless this.mailboxSelected}}
-    <div class="alert alert-error imap-no-mailbox-selected">
-      {{i18n "groups.manage.email.imap_mailbox_not_selected"}}
-    </div>
-  {{/unless}}
-
-  <div class="control-group buttons">
-    <DButton
-      @disabled={{or this.missingSettings this.testingSettings}}
-      @action={{this.testImapSettings}}
-      @icon="gear"
-      @label="groups.manage.email.test_settings"
-      @title="groups.manage.email.settings_required"
-      tabindex="12"
-      class="btn-primary test-imap-settings"
-    />
-
-    <ConditionalLoadingSpinner
-      @size="small"
-      @condition={{this.testingSettings}}
-    />
-
-    {{#if this.imapSettingsValid}}
-      <span class="imap-settings-ok">
-        {{d-icon "circle-check"}}
-        {{i18n "groups.manage.email.imap_settings_valid"}}
-      </span>
-    {{/if}}
-  </div>
-
-  {{#if this.group.imap_updated_at}}
-    <div class="group-email-last-updated-details for-imap">
-      <small>
-        {{i18n "groups.manage.email.last_updated"}}
-        <strong>{{format-date
-            this.group.imap_updated_at
-            leaveAgo="true"
-          }}</strong>
-        {{i18n "groups.manage.email.last_updated_by"}}
-        <LinkTo
-          @route="user"
-          @model={{this.group.imap_updated_by.username}}
-        >{{this.group.imap_updated_by.username}}</LinkTo>
-      </small>
-    </div>
-  {{/if}}
-</div>
+  </template>
+}

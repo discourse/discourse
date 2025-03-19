@@ -1,8 +1,9 @@
+import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -36,14 +37,15 @@ module(
     });
 
     test("selection behavior", async function (assert) {
+      const self = this;
+
       setDefaultState(this);
 
-      await render(hbs`
-        <DropdownSelectBox
-          @value={{this.value}}
-          @content={{this.content}}
-        />
-      `);
+      await render(
+        <template>
+          <DropdownSelectBox @value={{self.value}} @content={{self.content}} />
+        </template>
+      );
 
       await this.subject.expand();
       assert.true(this.subject.isExpanded());
@@ -56,23 +58,27 @@ module(
     });
 
     test("options.showFullTitle=false", async function (assert) {
+      const self = this;
+
       setDefaultState(this, {
         value: null,
         showFullTitle: false,
         none: "test_none",
       });
 
-      await render(hbs`
-        <DropdownSelectBox
-          @value={{this.value}}
-          @content={{this.content}}
-          @options={{hash
-            icon="xmark"
-            showFullTitle=this.showFullTitle
-            none=this.none
-          }}
-        />
-      `);
+      await render(
+        <template>
+          <DropdownSelectBox
+            @value={{self.value}}
+            @content={{self.content}}
+            @options={{hash
+              icon="xmark"
+              showFullTitle=self.showFullTitle
+              none=self.none
+            }}
+          />
+        </template>
+      );
 
       assert
         .dom(".selected-name", this.subject.header().el())
@@ -88,17 +94,19 @@ module(
     });
 
     test("options.showFullTitle=true", async function (assert) {
+      const self = this;
+
       setDefaultState(this, { showFullTitle: true });
 
-      await render(hbs`
-        <DropdownSelectBox
-          @value={{this.value}}
-          @content={{this.content}}
-          @options={{hash
-            showFullTitle=this.showFullTitle
-          }}
-        />
-      `);
+      await render(
+        <template>
+          <DropdownSelectBox
+            @value={{self.value}}
+            @content={{self.content}}
+            @options={{hash showFullTitle=self.showFullTitle}}
+          />
+        </template>
+      );
 
       assert
         .dom(".selected-name", this.subject.header().el())

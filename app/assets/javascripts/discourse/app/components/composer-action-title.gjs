@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
@@ -14,6 +15,7 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import ComposerActions from "select-kit/components/composer-actions";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -92,21 +94,23 @@ export default class ComposerActionTitle extends Component {
     )}</a>`;
     return htmlSafe(`${avatar}${htmlLink}`);
   }
+
+  <template>
+    <ComposerActions
+      @composerModel={{this.model}}
+      @replyOptions={{this.model.replyOptions}}
+      @canWhisper={{this.canWhisper}}
+      @action={{this.model.action}}
+      @tabindex={{this.tabindex}}
+      @topic={{this.model.topic}}
+      @post={{this.model.post}}
+      @whisper={{this.model.whisper}}
+      @noBump={{this.model.noBump}}
+      @options={{hash mobilePlacementStrategy="fixed"}}
+    />
+
+    <span class="action-title" role="heading" aria-level="1">
+      {{this.actionTitle}}
+    </span>
+  </template>
 }
-
-<ComposerActions
-  @composerModel={{this.model}}
-  @replyOptions={{this.model.replyOptions}}
-  @canWhisper={{this.canWhisper}}
-  @action={{this.model.action}}
-  @tabindex={{this.tabindex}}
-  @topic={{this.model.topic}}
-  @post={{this.model.post}}
-  @whisper={{this.model.whisper}}
-  @noBump={{this.model.noBump}}
-  @options={{hash mobilePlacementStrategy="fixed"}}
-/>
-
-<span class="action-title" role="heading" aria-level="1">
-  {{this.actionTitle}}
-</span>

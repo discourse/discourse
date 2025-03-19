@@ -1,12 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import FutureDateInput from "discourse/components/future-date-input";
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 const SLOW_MODE_OPTIONS = [
   {
@@ -181,75 +187,77 @@ export default class EditSlowMode extends Component {
   _parseValue(value) {
     return parseInt(value, 10) || 0;
   }
+
+  <template>
+    <DModal
+      @title={{i18n "topic.slow_mode_update.title"}}
+      class="edit-slow-mode-modal"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+    >
+      <:body>
+        <div class="control-group">
+          <label class="slow-mode-label">
+            {{i18n "topic.slow_mode_update.description"}}
+          </label>
+        </div>
+        <div class="control-group">
+          <label class="slow-mode-label">
+            {{i18n "topic.slow_mode_update.select"}}
+          </label>
+          <ComboBox
+            class="slow-mode-type"
+            @content={{this.slowModes}}
+            @value={{this.selectedSlowMode}}
+            @onChange={{this.setSlowModeDuration}}
+          />
+        </div>
+        {{#if this.showCustomSelect}}
+          <div class="control-group">
+            <label class="slow-mode-label">
+              {{i18n "topic.slow_mode_update.hours"}}
+            </label>
+            <Input @value={{this.hours}} @type="number" class="input-small" />
+            <label class="slow-mode-label">
+              {{i18n "topic.slow_mode_update.minutes"}}
+            </label>
+            <Input @value={{this.minutes}} @type="number" class="input-small" />
+            <label class="slow-mode-label">
+              {{i18n "topic.slow_mode_update.seconds"}}
+            </label>
+            <Input @value={{this.seconds}} @type="number" class="input-small" />
+          </div>
+        {{/if}}
+
+        <div class="control-group">
+          <FutureDateInput
+            class="enabled-until"
+            @label="topic.slow_mode_update.enabled_until"
+            @labelClasses="slow-mode-label"
+            @customShortcuts={{this.timeShortcuts}}
+            @clearable={{true}}
+            @input={{@model.topic.slow_mode_enabled_until}}
+            @onChangeInput={{fn (mut @model.topic.slow_mode_enabled_until)}}
+          />
+        </div>
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @disabled={{this.submitDisabled}}
+          @icon="hourglass-start"
+          @label={{this.saveButtonLabel}}
+          @action={{this.enableSlowMode}}
+        />
+        {{#if @model.topic.slow_mode_seconds}}
+          <DButton
+            class="btn-danger"
+            @action={{this.disableSlowMode}}
+            @disabled={{this.submitDisabled}}
+            @label="topic.slow_mode_update.remove"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
 }
-
-<DModal
-  @title={{i18n "topic.slow_mode_update.title"}}
-  class="edit-slow-mode-modal"
-  @closeModal={{@closeModal}}
-  @flash={{this.flash}}
->
-  <:body>
-    <div class="control-group">
-      <label class="slow-mode-label">
-        {{i18n "topic.slow_mode_update.description"}}
-      </label>
-    </div>
-    <div class="control-group">
-      <label class="slow-mode-label">
-        {{i18n "topic.slow_mode_update.select"}}
-      </label>
-      <ComboBox
-        class="slow-mode-type"
-        @content={{this.slowModes}}
-        @value={{this.selectedSlowMode}}
-        @onChange={{this.setSlowModeDuration}}
-      />
-    </div>
-    {{#if this.showCustomSelect}}
-      <div class="control-group">
-        <label class="slow-mode-label">
-          {{i18n "topic.slow_mode_update.hours"}}
-        </label>
-        <Input @value={{this.hours}} @type="number" class="input-small" />
-        <label class="slow-mode-label">
-          {{i18n "topic.slow_mode_update.minutes"}}
-        </label>
-        <Input @value={{this.minutes}} @type="number" class="input-small" />
-        <label class="slow-mode-label">
-          {{i18n "topic.slow_mode_update.seconds"}}
-        </label>
-        <Input @value={{this.seconds}} @type="number" class="input-small" />
-      </div>
-    {{/if}}
-
-    <div class="control-group">
-      <FutureDateInput
-        class="enabled-until"
-        @label="topic.slow_mode_update.enabled_until"
-        @labelClasses="slow-mode-label"
-        @customShortcuts={{this.timeShortcuts}}
-        @clearable={{true}}
-        @input={{@model.topic.slow_mode_enabled_until}}
-        @onChangeInput={{fn (mut @model.topic.slow_mode_enabled_until)}}
-      />
-    </div>
-  </:body>
-  <:footer>
-    <DButton
-      class="btn-primary"
-      @disabled={{this.submitDisabled}}
-      @icon="hourglass-start"
-      @label={{this.saveButtonLabel}}
-      @action={{this.enableSlowMode}}
-    />
-    {{#if @model.topic.slow_mode_seconds}}
-      <DButton
-        class="btn-danger"
-        @action={{this.disableSlowMode}}
-        @disabled={{this.submitDisabled}}
-        @label="topic.slow_mode_update.remove"
-      />
-    {{/if}}
-  </:footer>
-</DModal>

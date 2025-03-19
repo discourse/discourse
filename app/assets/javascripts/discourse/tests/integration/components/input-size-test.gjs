@@ -1,7 +1,10 @@
+import { hash } from "@ember/helper";
 import { find, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import ComboBox from "select-kit/components/combo-box";
 
 module(
   "Integration | Component | consistent input/dropdown/button sizes",
@@ -10,7 +13,11 @@ module(
 
     test("icon only button, icon and text button, text only button", async function (assert) {
       await render(
-        hbs`<DButton @icon="plus" /> <DButton @icon="plus" @label="topic.create" /> <DButton @label="topic.create" />`
+        <template>
+          <DButton @icon="plus" />
+          <DButton @icon="plus" @label="topic.create" />
+          <DButton @label="topic.create" />
+        </template>
       );
 
       assert.strictEqual(
@@ -27,7 +34,9 @@ module(
 
     test("button + text input", async function (assert) {
       await render(
-        hbs`<TextField /> <DButton @icon="plus" @label="topic.create" />`
+        <template>
+          <TextField /> <DButton @icon="plus" @label="topic.create" />
+        </template>
       );
 
       assert.strictEqual(
@@ -39,7 +48,9 @@ module(
 
     test("combo box + input", async function (assert) {
       await render(
-        hbs`<ComboBox @options={{hash none="category.none"}} /> <TextField />`
+        <template>
+          <ComboBox @options={{hash none="category.none"}} /> <TextField />
+        </template>
       );
 
       assert.strictEqual(

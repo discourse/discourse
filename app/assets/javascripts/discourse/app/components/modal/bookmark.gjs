@@ -1,11 +1,22 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
+import DButton from "discourse/components/d-button";
+import DModal, {
+  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+} from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
+import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
+import basePath from "discourse/helpers/base-path";
+import icon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
@@ -18,6 +29,7 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -334,111 +346,113 @@ export default class BookmarkModal extends Component {
       this.postDetectedLocalTimezone = localDateEl.dataset.timezone;
     }
   }
+
+  <template>
+    <DModal
+      @closeModal={{this.closingModal}}
+      @title={{this.modalTitle}}
+      @flash={{this.flash}}
+      @flashType="error"
+      id="bookmark-reminder-modal"
+      class="bookmark-reminder-modal"
+      data-bookmark-id={{this.bookmark.id}}
+      {{didInsert this.didInsert}}
+    >
+      <:headerPrimaryAction>
+        <DButton
+          @label="bookmarks.save"
+          @action={{this.saveAndClose}}
+          @title="modal.close"
+          class="btn-transparent btn-primary"
+        />
+      </:headerPrimaryAction>
+
+      <:body>
+        <div class="control-group bookmark-name-wrap">
+          <Input
+            id="bookmark-name"
+            @value={{this.bookmark.name}}
+            name="bookmark-name"
+            class="bookmark-name"
+            placeholder={{i18n "post.bookmarks.name_placeholder"}}
+            aria-label={{i18n "post.bookmarks.name_input_label"}}
+          />
+          <DButton
+            @icon="gear"
+            @action={{this.toggleShowOptions}}
+            @ariaLabel="post.bookmarks.options"
+            @title="post.bookmarks.options"
+            class="bookmark-options-button"
+          />
+        </div>
+
+        {{#if this.showOptions}}
+          <div class="bookmark-options-panel">
+            <label
+              class="control-label"
+              for="bookmark_auto_delete_preference"
+            >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+            <ComboBox
+              @content={{this.autoDeletePreferences}}
+              @value={{this.bookmark.autoDeletePreference}}
+              @id="bookmark-auto-delete-preference"
+              @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
+              class="bookmark-option-selector"
+            />
+          </div>
+        {{/if}}
+
+        {{#if this.showExistingReminderAt}}
+          <div class="alert alert-info existing-reminder-at-alert">
+            {{icon "far-clock"}}
+            <span>{{i18n
+                "bookmarks.reminders.existing_reminder"
+                at_date_time=this.existingReminderAtFormatted
+              }}</span>
+          </div>
+        {{/if}}
+
+        <div class="control-group">
+          <label class="control-label">
+            {{i18n "post.bookmarks.set_reminder"}}
+          </label>
+
+          {{#if this.userHasTimezoneSet}}
+            <TimeShortcutPicker
+              @timeShortcuts={{this.timeOptions}}
+              @prefilledDatetime={{this.prefilledDatetime}}
+              @onTimeSelected={{this.onTimeSelected}}
+              @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+              @customLabels={{this.customTimeShortcutLabels}}
+              @_itsatrap={{this._itsatrap}}
+            />
+          {{else}}
+            <div class="alert alert-info">{{htmlSafe
+                (i18n "bookmarks.no_timezone" basePath=(basePath))
+              }}</div>
+          {{/if}}
+        </div>
+      </:body>
+
+      <:footer>
+        <DButton
+          @label="bookmarks.save"
+          @action={{this.saveAndClose}}
+          id="save-bookmark"
+          class="btn-primary"
+        />
+        <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
+        {{#if this.showDelete}}
+          <DButton
+            @icon="trash-can"
+            @action={{this.delete}}
+            @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
+            @title="post.bookmarks.actions.delete_bookmark.name"
+            id="delete-bookmark"
+            class="delete-bookmark btn-danger"
+          />
+        {{/if}}
+      </:footer>
+    </DModal>
+  </template>
 }
-
-<DModal
-  @closeModal={{this.closingModal}}
-  @title={{this.modalTitle}}
-  @flash={{this.flash}}
-  @flashType="error"
-  id="bookmark-reminder-modal"
-  class="bookmark-reminder-modal"
-  data-bookmark-id={{this.bookmark.id}}
-  {{did-insert this.didInsert}}
->
-  <:headerPrimaryAction>
-    <DButton
-      @label="bookmarks.save"
-      @action={{this.saveAndClose}}
-      @title="modal.close"
-      class="btn-transparent btn-primary"
-    />
-  </:headerPrimaryAction>
-
-  <:body>
-    <div class="control-group bookmark-name-wrap">
-      <Input
-        id="bookmark-name"
-        @value={{this.bookmark.name}}
-        name="bookmark-name"
-        class="bookmark-name"
-        placeholder={{i18n "post.bookmarks.name_placeholder"}}
-        aria-label={{i18n "post.bookmarks.name_input_label"}}
-      />
-      <DButton
-        @icon="gear"
-        @action={{this.toggleShowOptions}}
-        @ariaLabel="post.bookmarks.options"
-        @title="post.bookmarks.options"
-        class="bookmark-options-button"
-      />
-    </div>
-
-    {{#if this.showOptions}}
-      <div class="bookmark-options-panel">
-        <label
-          class="control-label"
-          for="bookmark_auto_delete_preference"
-        >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-        <ComboBox
-          @content={{this.autoDeletePreferences}}
-          @value={{this.bookmark.autoDeletePreference}}
-          @id="bookmark-auto-delete-preference"
-          @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
-          class="bookmark-option-selector"
-        />
-      </div>
-    {{/if}}
-
-    {{#if this.showExistingReminderAt}}
-      <div class="alert alert-info existing-reminder-at-alert">
-        {{d-icon "far-clock"}}
-        <span>{{i18n
-            "bookmarks.reminders.existing_reminder"
-            at_date_time=this.existingReminderAtFormatted
-          }}</span>
-      </div>
-    {{/if}}
-
-    <div class="control-group">
-      <label class="control-label">
-        {{i18n "post.bookmarks.set_reminder"}}
-      </label>
-
-      {{#if this.userHasTimezoneSet}}
-        <TimeShortcutPicker
-          @timeShortcuts={{this.timeOptions}}
-          @prefilledDatetime={{this.prefilledDatetime}}
-          @onTimeSelected={{this.onTimeSelected}}
-          @hiddenOptions={{this.hiddenTimeShortcutOptions}}
-          @customLabels={{this.customTimeShortcutLabels}}
-          @_itsatrap={{this._itsatrap}}
-        />
-      {{else}}
-        <div class="alert alert-info">{{html-safe
-            (i18n "bookmarks.no_timezone" basePath=(base-path))
-          }}</div>
-      {{/if}}
-    </div>
-  </:body>
-
-  <:footer>
-    <DButton
-      @label="bookmarks.save"
-      @action={{this.saveAndClose}}
-      id="save-bookmark"
-      class="btn-primary"
-    />
-    <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
-    {{#if this.showDelete}}
-      <DButton
-        @icon="trash-can"
-        @action={{this.delete}}
-        @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
-        @title="post.bookmarks.actions.delete_bookmark.name"
-        id="delete-bookmark"
-        class="delete-bookmark btn-danger"
-      />
-    {{/if}}
-  </:footer>
-</DModal>

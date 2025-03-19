@@ -1,6 +1,11 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
+import DatePickerFuture from "discourse/components/date-picker-future";
+import icon from "discourse/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import {
   extendedDefaultTimeShortcuts,
@@ -10,7 +15,9 @@ import {
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import { i18n } from "discourse-i18n";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
+import FutureDateInputSelector, {
+  FORMAT,
+} from "select-kit/components/future-date-input-selector";
 
 export default class FutureDateInput extends Component {
   selection = null;
@@ -123,47 +130,49 @@ export default class FutureDateInput extends Component {
       }
     });
   }
+
+  <template>
+    <div class="future-date-input">
+      {{#unless this.noRelativeOptions}}
+        <div class="control-group">
+          <label class={{this.labelClasses}}>
+            {{#if this.displayLabelIcon}}{{icon
+                this.displayLabelIcon
+              }}{{/if}}{{this.displayLabel}}
+          </label>
+          <FutureDateInputSelector
+            @value={{readonly this.selection}}
+            @content={{this.shortcuts}}
+            @clearable={{this.clearable}}
+            @onChangeInput={{this.onChangeInput}}
+            @onChange={{fn (mut this.selection)}}
+            @options={{hash none="time_shortcut.select_timeframe"}}
+          />
+        </div>
+      {{/unless}}
+
+      {{#if this.displayDateAndTimePicker}}
+        <div class="control-group future-date-input-date-picker">
+          {{icon "calendar-days"}}
+          <DatePickerFuture
+            @value={{this._date}}
+            @defaultDate={{this._date}}
+            @onSelect={{this.onChangeDate}}
+          />
+        </div>
+
+        <div class="control-group future-date-input-time-picker">
+          {{icon "far-clock"}}
+          <Input
+            placeholder="--:--"
+            @type="time"
+            class="time-input"
+            @value={{this._time}}
+            disabled={{this.timeInputDisabled}}
+            {{on "input" (withEventValue this.onChangeTime)}}
+          />
+        </div>
+      {{/if}}
+    </div>
+  </template>
 }
-
-<div class="future-date-input">
-  {{#unless this.noRelativeOptions}}
-    <div class="control-group">
-      <label class={{this.labelClasses}}>
-        {{#if this.displayLabelIcon}}{{d-icon
-            this.displayLabelIcon
-          }}{{/if}}{{this.displayLabel}}
-      </label>
-      <FutureDateInputSelector
-        @value={{readonly this.selection}}
-        @content={{this.shortcuts}}
-        @clearable={{this.clearable}}
-        @onChangeInput={{this.onChangeInput}}
-        @onChange={{fn (mut this.selection)}}
-        @options={{hash none="time_shortcut.select_timeframe"}}
-      />
-    </div>
-  {{/unless}}
-
-  {{#if this.displayDateAndTimePicker}}
-    <div class="control-group future-date-input-date-picker">
-      {{d-icon "calendar-days"}}
-      <DatePickerFuture
-        @value={{this._date}}
-        @defaultDate={{this._date}}
-        @onSelect={{action "onChangeDate"}}
-      />
-    </div>
-
-    <div class="control-group future-date-input-time-picker">
-      {{d-icon "far-clock"}}
-      <Input
-        placeholder="--:--"
-        @type="time"
-        class="time-input"
-        @value={{this._time}}
-        disabled={{this.timeInputDisabled}}
-        {{on "input" (with-event-value this.onChangeTime)}}
-      />
-    </div>
-  {{/if}}
-</div>

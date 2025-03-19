@@ -1,10 +1,11 @@
+import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
+import NotificationsButton from "select-kit/components/notifications-button";
 
 module(
   "Integration | Component | select-kit/notifications-button",
@@ -16,18 +17,22 @@ module(
     });
 
     test("default", async function (assert) {
+      const self = this;
+
       this.set("value", 1);
       setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
 
-      await render(hbs`
-        <NotificationsButton
-          @value={{this.value}}
-          @options={{hash
-            i18nPrefix=this.i18nPrefix
-            i18nPostfix=this.i18nPostfix
-          }}
-        />
-      `);
+      await render(
+        <template>
+          <NotificationsButton
+            @value={{self.value}}
+            @options={{hash
+              i18nPrefix=self.i18nPrefix
+              i18nPostfix=self.i18nPostfix
+            }}
+          />
+        </template>
+      );
 
       assert.true(!!this.subject.header().value());
 

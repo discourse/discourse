@@ -1,66 +1,79 @@
-<div class="control-group notifications">
-  <label class="control-label">{{i18n "user.notifications"}}</label>
+import { fn, hash } from "@ember/helper";
+import RouteTemplate from "ember-route-template";
+import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import SaveControls from "discourse/components/save-controls";
+import UserNotificationSchedule from "discourse/components/user-notification-schedule";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
-  <div
-    class="controls controls-dropdown"
-    data-setting-name="user-like-notification-frequency"
-  >
-    <label>{{i18n "user.like_notification_frequency.title"}}</label>
-    <ComboBox
-      @valueProperty="value"
-      @content={{this.likeNotificationFrequencies}}
-      @value={{this.model.user_option.like_notification_frequency}}
-      @onChange={{action
-        (mut this.model.user_option.like_notification_frequency)
-      }}
-    />
-  </div>
-</div>
+export default RouteTemplate(
+  <template>
+    <div class="control-group notifications">
+      <label class="control-label">{{i18n "user.notifications"}}</label>
 
-{{#unless this.capabilities.isAppWebview}}
-  <div
-    class="control-group desktop-notifications"
-    data-setting-name="user-desktop-notifications"
-  >
-    <label class="control-label">{{i18n
-        "user.desktop_notifications.label"
-      }}</label>
-    <DesktopNotificationConfig />
-    <div class="instructions">{{i18n
-        "user.desktop_notifications.each_browser_note"
-      }}</div>
+      <div
+        class="controls controls-dropdown"
+        data-setting-name="user-like-notification-frequency"
+      >
+        <label>{{i18n "user.like_notification_frequency.title"}}</label>
+        <ComboBox
+          @valueProperty="value"
+          @content={{@controller.likeNotificationFrequencies}}
+          @value={{@controller.model.user_option.like_notification_frequency}}
+          @onChange={{fn
+            (mut @controller.model.user_option.like_notification_frequency)
+          }}
+        />
+      </div>
+    </div>
+
+    {{#unless @controller.capabilities.isAppWebview}}
+      <div
+        class="control-group desktop-notifications"
+        data-setting-name="user-desktop-notifications"
+      >
+        <label class="control-label">{{i18n
+            "user.desktop_notifications.label"
+          }}</label>
+        <DesktopNotificationConfig />
+        <div class="instructions">{{i18n
+            "user.desktop_notifications.each_browser_note"
+          }}</div>
+        <span>
+          <PluginOutlet
+            @name="user-preferences-desktop-notifications"
+            @connectorTagName="div"
+            @outletArgs={{hash model=@controller.model save=@controller.save}}
+          />
+        </span>
+      </div>
+    {{/unless}}
+
+    <UserNotificationSchedule @model={{@controller.model}} />
+
     <span>
       <PluginOutlet
-        @name="user-preferences-desktop-notifications"
+        @name="user-preferences-notifications"
         @connectorTagName="div"
-        @outletArgs={{hash model=this.model save=(action "save")}}
+        @outletArgs={{hash model=@controller.model save=@controller.save}}
       />
     </span>
-  </div>
-{{/unless}}
 
-<UserNotificationSchedule @model={{this.model}} />
+    <br />
 
-<span>
-  <PluginOutlet
-    @name="user-preferences-notifications"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model save=(action "save")}}
-  />
-</span>
+    <span>
+      <PluginOutlet
+        @name="user-custom-controls"
+        @connectorTagName="div"
+        @outletArgs={{hash model=@controller.model}}
+      />
+    </span>
 
-<br />
-
-<span>
-  <PluginOutlet
-    @name="user-custom-controls"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model}}
-  />
-</span>
-
-<SaveControls
-  @model={{this.model}}
-  @action={{action "save"}}
-  @saved={{this.saved}}
-/>
+    <SaveControls
+      @model={{@controller.model}}
+      @action={{@controller.save}}
+      @saved={{@controller.saved}}
+    />
+  </template>
+);

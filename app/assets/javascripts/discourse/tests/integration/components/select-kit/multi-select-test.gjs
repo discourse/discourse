@@ -1,9 +1,10 @@
+import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import MultiSelect from "select-kit/components/multi-select";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -30,14 +31,15 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("content", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`
-      <MultiSelect
-        @value={{this.value}}
-        @content={{this.content}}
-      />
-    `);
+    await render(
+      <template>
+        <MultiSelect @value={{self.value}} @content={{self.content}} />
+      </template>
+    );
 
     await this.subject.expand();
 
@@ -61,15 +63,19 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("maximum=1", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`
-      <MultiSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @options={{hash maximum=1}}
-      />
-    `);
+    await render(
+      <template>
+        <MultiSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @options={{hash maximum=1}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
@@ -81,37 +87,45 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
 
     assert.true(
       this.subject.isExpanded(),
-      "doesn’t close the dropdown when no selection has been made"
+      "doesn't close the dropdown when no selection has been made"
     );
   });
 
   test("maximum=2", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`
-      <MultiSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @options={{hash maximum=2}}
-      />
-    `);
+    await render(
+      <template>
+        <MultiSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @options={{hash maximum=2}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.true(this.subject.isExpanded(), "doesn’t close the dropdown");
+    assert.true(this.subject.isExpanded(), "doesn't close the dropdown");
   });
 
   test("pasting", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`
-      <MultiSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @options={{hash maximum=2}}
-      />
-    `);
+    await render(
+      <template>
+        <MultiSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @options={{hash maximum=2}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     await paste(".filter-input", "foo|bar");
@@ -122,13 +136,11 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   test("no value property with no content", async function (assert) {
     setDefaultState(this);
 
-    await render(hbs`
-      <MultiSelect @valueProperty={{null}} />
-    `);
+    await render(<template><MultiSelect @valueProperty={{null}} /></template>);
     await this.subject.expand();
 
     assert
       .dom(".selected-content")
-      .doesNotExist("doesn’t render an empty content div");
+      .doesNotExist("doesn't render an empty content div");
   });
 });

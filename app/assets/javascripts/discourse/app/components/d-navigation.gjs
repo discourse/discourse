@@ -1,16 +1,28 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import { and, gt } from "truth-helpers";
+import BreadCrumbs from "discourse/components/bread-crumbs";
+import BulkSelectToggle from "discourse/components/bulk-select-toggle";
+import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
+import CreateTopicButton from "discourse/components/create-topic-button";
+import DButton from "discourse/components/d-button";
+import NavigationBar from "discourse/components/navigation-bar";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
+import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
+import CategoriesAdminDropdown from "select-kit/components/categories-admin-dropdown";
 
 @tagName("")
 export default class DNavigation extends Component {
@@ -212,151 +224,153 @@ export default class DNavigation extends Component {
       this.createTopic();
     }
   }
-}
 
-<BreadCrumbs
-  @categories={{this.categories}}
-  @category={{this.category}}
-  @noSubcategories={{this.noSubcategories}}
-  @tag={{this.tag}}
-  @additionalTags={{this.additionalTags}}
-/>
-
-<PluginOutlet
-  @name="after-breadcrumbs"
-  @outletArgs={{hash
-    categories=this.categories
-    category=this.category
-    tag=this.tag
-    additionalTags=this.additionalTags
-  }}
-/>
-
-{{#unless this.additionalTags}}
-  {{! nav bar doesn't work with tag intersections }}
-  <NavigationBar
-    @navItems={{this.navItems}}
-    @filterMode={{this.filterMode}}
-    @category={{this.category}}
-    @tag={{this.tag}}
-  />
-{{/unless}}
-
-<div class="navigation-controls">
-  {{#if this.showBulkSelectInNavControls}}
-    <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
-  {{/if}}
-
-  <TopicDismissButtons
-    @position="top"
-    @selectedTopics={{@bulkSelectHelper.selected}}
-    @model={{@model}}
-    @showResetNew={{@showResetNew}}
-    @showDismissRead={{@showDismissRead}}
-    @resetNew={{@resetNew}}
-    @dismissRead={{@dismissRead}}
-  />
-
-  {{#if this.showCategoryAdmin}}
-    {{#if this.fixedCategoryPositions}}
-      <CategoriesAdminDropdown
-        @onChange={{action "selectCategoryAdminDropdownAction"}}
-        @options={{hash triggerOnChangeOnTab=false}}
-      />
-    {{else}}
-      <DButton
-        @action={{this.createCategory}}
-        @icon="plus"
-        @label={{if
-          this.site.mobileView
-          "categories.category"
-          "category.create"
-        }}
-        class="btn-default"
-        id="create-category"
-      />
-    {{/if}}
-  {{/if}}
-
-  {{#if (and this.category this.showCategoryEdit)}}
-    <DButton
-      @action={{this.editCategory}}
-      @icon="wrench"
-      @title="category.edit_title"
-      class="btn-default edit-category"
+  <template>
+    <BreadCrumbs
+      @categories={{this.categories}}
+      @category={{this.category}}
+      @noSubcategories={{this.noSubcategories}}
+      @tag={{this.tag}}
+      @additionalTags={{this.additionalTags}}
     />
-  {{/if}}
 
-  {{#if this.tag}}
-    {{#if this.showToggleInfo}}
-      <DButton
-        @icon={{if this.currentUser.staff "wrench" "circle-info"}}
-        @ariaLabel="tagging.info"
-        @action={{this.toggleInfo}}
-        id="show-tag-info"
-        class="btn-default"
+    <PluginOutlet
+      @name="after-breadcrumbs"
+      @outletArgs={{hash
+        categories=this.categories
+        category=this.category
+        tag=this.tag
+        additionalTags=this.additionalTags
+      }}
+    />
+
+    {{#unless this.additionalTags}}
+      {{! nav bar doesn't work with tag intersections }}
+      <NavigationBar
+        @navItems={{this.navItems}}
+        @filterMode={{this.filterMode}}
+        @category={{this.category}}
+        @tag={{this.tag}}
       />
-    {{/if}}
-  {{/if}}
-
-  <PluginOutlet
-    @name="before-create-topic-button"
-    @outletArgs={{hash
-      canCreateTopic=this.canCreateTopic
-      createTopicDisabled=this.createTopicDisabled
-      createTopicLabel=this.createTopicLabel
-      additionalTags=this.additionalTags
-      category=this.category
-      tag=this.tag
-    }}
-  />
-
-  <CreateTopicButton
-    @canCreateTopic={{this.canCreateTopic}}
-    @action={{action "clickCreateTopicButton"}}
-    @disabled={{this.createTopicButtonDisabled}}
-    @label={{this.createTopicLabel}}
-    @btnClass={{this.createTopicClass}}
-    @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
-    @showDrafts={{if (gt this.draftCount 0) true false}}
-  />
-
-  <PluginOutlet
-    @name="after-create-topic-button"
-    @outletArgs={{hash
-      canCreateTopic=this.canCreateTopic
-      createTopicDisabled=this.createTopicDisabled
-      createTopicLabel=this.createTopicLabel
-      category=this.category
-      tag=this.tag
-    }}
-  />
-
-  {{#if this.category}}
-    {{#unless this.tag}}
-      {{! don't show category notification menu on tag pages }}
-      {{#if this.showCategoryNotifications}}
-        {{#unless this.category.deleted}}
-          <CategoryNotificationsTracking
-            @levelId={{this.categoryNotificationLevel}}
-            @showFullTitle={{false}}
-            @showCaret={{false}}
-            @onChange={{this.changeCategoryNotificationLevel}}
-          />
-        {{/unless}}
-      {{/if}}
     {{/unless}}
-  {{/if}}
 
-  {{#if this.tag}}
-    {{#unless this.category}}
-      {{! don't show tag notification menu on category pages }}
-      {{#if this.showTagNotifications}}
-        <TagNotificationsTracking
-          @onChange={{this.changeTagNotificationLevel}}
-          @levelId={{this.tagNotification.notification_level}}
+    <div class="navigation-controls">
+      {{#if this.showBulkSelectInNavControls}}
+        <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
+      {{/if}}
+
+      <TopicDismissButtons
+        @position="top"
+        @selectedTopics={{@bulkSelectHelper.selected}}
+        @model={{@model}}
+        @showResetNew={{@showResetNew}}
+        @showDismissRead={{@showDismissRead}}
+        @resetNew={{@resetNew}}
+        @dismissRead={{@dismissRead}}
+      />
+
+      {{#if this.showCategoryAdmin}}
+        {{#if this.fixedCategoryPositions}}
+          <CategoriesAdminDropdown
+            @onChange={{this.selectCategoryAdminDropdownAction}}
+            @options={{hash triggerOnChangeOnTab=false}}
+          />
+        {{else}}
+          <DButton
+            @action={{this.createCategory}}
+            @icon="plus"
+            @label={{if
+              this.site.mobileView
+              "categories.category"
+              "category.create"
+            }}
+            class="btn-default"
+            id="create-category"
+          />
+        {{/if}}
+      {{/if}}
+
+      {{#if (and this.category this.showCategoryEdit)}}
+        <DButton
+          @action={{this.editCategory}}
+          @icon="wrench"
+          @title="category.edit_title"
+          class="btn-default edit-category"
         />
       {{/if}}
-    {{/unless}}
-  {{/if}}
-</div>
+
+      {{#if this.tag}}
+        {{#if this.showToggleInfo}}
+          <DButton
+            @icon={{if this.currentUser.staff "wrench" "circle-info"}}
+            @ariaLabel="tagging.info"
+            @action={{this.toggleInfo}}
+            id="show-tag-info"
+            class="btn-default"
+          />
+        {{/if}}
+      {{/if}}
+
+      <PluginOutlet
+        @name="before-create-topic-button"
+        @outletArgs={{hash
+          canCreateTopic=this.canCreateTopic
+          createTopicDisabled=this.createTopicDisabled
+          createTopicLabel=this.createTopicLabel
+          additionalTags=this.additionalTags
+          category=this.category
+          tag=this.tag
+        }}
+      />
+
+      <CreateTopicButton
+        @canCreateTopic={{this.canCreateTopic}}
+        @action={{this.clickCreateTopicButton}}
+        @disabled={{this.createTopicButtonDisabled}}
+        @label={{this.createTopicLabel}}
+        @btnClass={{this.createTopicClass}}
+        @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+        @showDrafts={{if (gt this.draftCount 0) true false}}
+      />
+
+      <PluginOutlet
+        @name="after-create-topic-button"
+        @outletArgs={{hash
+          canCreateTopic=this.canCreateTopic
+          createTopicDisabled=this.createTopicDisabled
+          createTopicLabel=this.createTopicLabel
+          category=this.category
+          tag=this.tag
+        }}
+      />
+
+      {{#if this.category}}
+        {{#unless this.tag}}
+          {{! don't show category notification menu on tag pages }}
+          {{#if this.showCategoryNotifications}}
+            {{#unless this.category.deleted}}
+              <CategoryNotificationsTracking
+                @levelId={{this.categoryNotificationLevel}}
+                @showFullTitle={{false}}
+                @showCaret={{false}}
+                @onChange={{this.changeCategoryNotificationLevel}}
+              />
+            {{/unless}}
+          {{/if}}
+        {{/unless}}
+      {{/if}}
+
+      {{#if this.tag}}
+        {{#unless this.category}}
+          {{! don't show tag notification menu on category pages }}
+          {{#if this.showTagNotifications}}
+            <TagNotificationsTracking
+              @onChange={{this.changeTagNotificationLevel}}
+              @levelId={{this.tagNotification.notification_level}}
+            />
+          {{/if}}
+        {{/unless}}
+      {{/if}}
+    </div>
+  </template>
+}

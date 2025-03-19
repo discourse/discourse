@@ -1,9 +1,10 @@
+import { hash } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import pretender, { response } from "../../../helpers/create-pretender";
 
 module(
@@ -16,7 +17,7 @@ module(
     });
 
     test("pasting", async function (assert) {
-      await render(hbs`<EmailGroupUserChooser/>`);
+      await render(<template><EmailGroupUserChooser /></template>);
 
       await this.subject.expand();
       await paste(".filter-input", "foo,bar");
@@ -46,6 +47,8 @@ module(
     });
 
     test("excluding usernames", async function (assert) {
+      const self = this;
+
       pretender.get("/u/search/users", () => {
         const users = [
           {
@@ -69,7 +72,11 @@ module(
 
       this.set("excludedUsernames", ["osama", "joshua"]);
       await render(
-        hbs`<EmailGroupUserChooser @options={{hash excludedUsernames=this.excludedUsernames}} />`
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash excludedUsernames=self.excludedUsernames}}
+          />
+        </template>
       );
 
       await this.subject.expand();
@@ -80,7 +87,11 @@ module(
 
       this.set("excludedUsernames", ["osama"]);
       await render(
-        hbs`<EmailGroupUserChooser @options={{hash excludedUsernames=this.excludedUsernames}} />`
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash excludedUsernames=self.excludedUsernames}}
+          />
+        </template>
       );
 
       await this.subject.expand();
@@ -105,7 +116,7 @@ module(
         })
       );
 
-      await render(hbs`<EmailGroupUserChooser />`);
+      await render(<template><EmailGroupUserChooser /></template>);
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
@@ -128,7 +139,9 @@ module(
         })
       );
 
-      await render(hbs`<EmailGroupUserChooser @showUserStatus={{true}} />`);
+      await render(
+        <template><EmailGroupUserChooser @showUserStatus={{true}} /></template>
+      );
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 

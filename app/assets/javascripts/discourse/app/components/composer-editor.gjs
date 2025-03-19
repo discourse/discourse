@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule, throttle } from "@ember/runloop";
@@ -8,6 +9,10 @@ import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { gt } from "truth-helpers";
+import DEditor from "discourse/components/d-editor";
+import Wrapper from "discourse/components/form-template-field/wrapper";
+import PickFilesButton from "discourse/components/pick-files-button";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
@@ -31,6 +36,7 @@ import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -953,63 +959,65 @@ export default class ComposerEditor extends Component {
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
   }
-}
 
-{{#if this.showFormTemplateForm}}
-  <div class="d-editor">
-    <div class="d-editor-container">
-      <div class="d-editor-textarea-column">
-        {{yield}}
+  <template>
+    {{#if this.showFormTemplateForm}}
+      <div class="d-editor">
+        <div class="d-editor-container">
+          <div class="d-editor-textarea-column">
+            {{yield}}
 
-        {{#if (gt this.composer.formTemplateIds.length 1)}}
-          <FormTemplateChooser
-            @filteredIds={{this.composer.formTemplateIds}}
-            @value={{this.selectedFormTemplateId}}
-            @onChange={{this.updateSelectedFormTemplateId}}
-            @options={{hash maximum=1}}
-            class="composer-select-form-template"
-          />
-        {{/if}}
-        <form id="form-template-form">
-          <FormTemplateField::Wrapper
-            @id={{this.selectedFormTemplateId}}
-            @initialValues={{this.composer.formTemplateInitialValues}}
-            @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-          />
-        </form>
+            {{#if (gt this.composer.formTemplateIds.length 1)}}
+              <FormTemplateChooser
+                @filteredIds={{this.composer.formTemplateIds}}
+                @value={{this.selectedFormTemplateId}}
+                @onChange={{this.updateSelectedFormTemplateId}}
+                @options={{hash maximum=1}}
+                class="composer-select-form-template"
+              />
+            {{/if}}
+            <form id="form-template-form">
+              <Wrapper
+                @id={{this.selectedFormTemplateId}}
+                @initialValues={{this.composer.formTemplateInitialValues}}
+                @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
+              />
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-{{else}}
-  <DEditor
-    @value={{this.composer.model.reply}}
-    @placeholder={{this.replyPlaceholder}}
-    @previewUpdated={{action "previewUpdated"}}
-    @markdownOptions={{this.markdownOptions}}
-    @extraButtons={{action "extraButtons"}}
-    @processPreview={{this.composer.isPreviewVisible}}
-    @validation={{this.validation}}
-    @loading={{this.composer.loading}}
-    @forcePreview={{this.forcePreview}}
-    @showLink={{this.showLink}}
-    @composerEvents={{true}}
-    @onPopupMenuAction={{this.composer.onPopupMenuAction}}
-    @popupMenuOptions={{this.composer.popupMenuOptions}}
-    @disabled={{this.composer.disableTextarea}}
-    @outletArgs={{hash composer=this.composer.model editorType="composer"}}
-    @topicId={{this.composer.model.topic.id}}
-    @categoryId={{this.composer.model.category.id}}
-    @onSetup={{this.setupEditor}}
-    @disableSubmit={{this.composer.disableSubmit}}
-  >
-    {{yield}}
-  </DEditor>
-{{/if}}
+    {{else}}
+      <DEditor
+        @value={{this.composer.model.reply}}
+        @placeholder={{this.replyPlaceholder}}
+        @previewUpdated={{this.previewUpdated}}
+        @markdownOptions={{this.markdownOptions}}
+        @extraButtons={{this.extraButtons}}
+        @processPreview={{this.composer.isPreviewVisible}}
+        @validation={{this.validation}}
+        @loading={{this.composer.loading}}
+        @forcePreview={{this.forcePreview}}
+        @showLink={{this.showLink}}
+        @composerEvents={{true}}
+        @onPopupMenuAction={{this.composer.onPopupMenuAction}}
+        @popupMenuOptions={{this.composer.popupMenuOptions}}
+        @disabled={{this.composer.disableTextarea}}
+        @outletArgs={{hash composer=this.composer.model editorType="composer"}}
+        @topicId={{this.composer.model.topic.id}}
+        @categoryId={{this.composer.model.category.id}}
+        @onSetup={{this.setupEditor}}
+        @disableSubmit={{this.composer.disableSubmit}}
+      >
+        {{yield}}
+      </DEditor>
+    {{/if}}
 
-{{#if this.composer.allowUpload}}
-  <PickFilesButton
-    @fileInputId={{this.fileUploadElementId}}
-    @allowMultiple={{true}}
-    name="file-uploader"
-  />
-{{/if}}
+    {{#if this.composer.allowUpload}}
+      <PickFilesButton
+        @fileInputId={{this.fileUploadElementId}}
+        @allowMultiple={{true}}
+        name="file-uploader"
+      />
+    {{/if}}
+  </template>
+}

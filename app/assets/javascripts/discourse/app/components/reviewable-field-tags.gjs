@@ -1,5 +1,7 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 
 export default class ReviewableFieldTags extends Component {
   @action
@@ -13,10 +15,12 @@ export default class ReviewableFieldTags extends Component {
         },
       });
   }
-}
 
-<MiniTagChooser
-  @value={{this.value}}
-  @onChange={{action "onChange"}}
-  @options={{hash categoryId=this.tagCategoryId}}
-/>
+  <template>
+    <MiniTagChooser
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @options={{hash categoryId=this.tagCategoryId}}
+    />
+  </template>
+}

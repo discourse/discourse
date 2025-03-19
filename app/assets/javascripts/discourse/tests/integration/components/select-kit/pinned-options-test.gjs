@@ -1,14 +1,16 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import PinnedOptions from "select-kit/components/pinned-options";
 
 module("Integration | Component | select-kit/pinned-options", function (hooks) {
   setupRenderingTest(hooks);
 
   test("unpinning", async function (assert) {
+    const self = this;
+
     this.siteSettings.automatically_unpin_topics = false;
     this.set("subject", selectKit());
 
@@ -24,7 +26,9 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
     );
 
     await render(
-      hbs`<PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />`
+      <template>
+        <PinnedOptions @value={{self.topic.pinned}} @topic={{self.topic}} />
+      </template>
     );
 
     assert.strictEqual(this.subject.header().name(), "pinned");
@@ -36,6 +40,8 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
   });
 
   test("pinning", async function (assert) {
+    const self = this;
+
     this.siteSettings.automatically_unpin_topics = false;
     this.set("subject", selectKit());
     const store = getOwner(this).lookup("service:store");
@@ -50,7 +56,9 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
     );
 
     await render(
-      hbs`<PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />`
+      <template>
+        <PinnedOptions @value={{self.topic.pinned}} @topic={{self.topic}} />
+      </template>
     );
 
     assert.strictEqual(this.subject.header().name(), "unpinned");

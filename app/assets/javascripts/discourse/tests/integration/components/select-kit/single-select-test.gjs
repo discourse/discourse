@@ -1,9 +1,11 @@
+import { hash } from "@ember/helper";
 import { find, render, tab } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n, { i18n } from "discourse-i18n";
+import SingleSelect from "select-kit/components/single-select";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -37,9 +39,13 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("content", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`<SingleSelect @content={{this.content}} />`);
+    await render(
+      <template><SingleSelect @content={{self.content}} /></template>
+    );
 
     await this.subject.expand();
 
@@ -63,9 +69,13 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("accessibility", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`<SingleSelect @content={{this.content}} />`);
+    await render(
+      <template><SingleSelect @content={{self.content}} /></template>
+    );
 
     await this.subject.expand();
 
@@ -109,17 +119,21 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("value", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+        />
+      </template>
+    );
 
     assert.strictEqual(
       this.subject.header().value(this.content),
@@ -129,20 +143,22 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("options.filterable", async function (assert) {
+    const self = this;
+
     setDefaultState(this, { filterable: true });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash
-          filterable=this.filterable
-        }}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash filterable=self.filterable}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     assert.true(this.subject.filter().exists(), "shows the filter");
@@ -157,21 +173,25 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("options.limitMatches", async function (assert) {
+    const self = this;
+
     setDefaultState(this, { limitMatches: 1, filterable: true });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash
-          limitMatches=this.limitMatches
-          filterable=this.filterable
-        }}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash
+            limitMatches=self.limitMatches
+            filterable=self.filterable
+          }}
+        />
+      </template>
+    );
 
     await this.subject.expand();
     await this.subject.fillInFilter("ba");
@@ -184,6 +204,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("valueAttribute (deprecated)", async function (assert) {
+    const self = this;
+
     this.set("value", "normal");
 
     const content = [
@@ -195,13 +217,15 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     ];
     this.set("content", content);
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @valueAttribute="value"
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @valueAttribute="value"
+        />
+      </template>
+    );
 
     await this.subject.expand();
 
@@ -209,21 +233,23 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("none:string", async function (assert) {
+    const self = this;
+
     I18n.translations[I18n.locale].js.test = { none: "(default)" };
     setDefaultState(this, { value: 1 });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash
-          none="test.none"
-        }}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash none="test.none"}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
 
@@ -233,20 +259,22 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("none:object", async function (assert) {
+    const self = this;
+
     setDefaultState(this, { none: { value: null, name: "(default)" } });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash
-          none=this.none
-        }}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash none=self.none}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
 
@@ -256,6 +284,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("content is a basic array", async function (assert) {
+    const self = this;
+
     I18n.translations[I18n.locale].js.test = { none: "(default)" };
     setDefaultState(this, {
       nameProperty: null,
@@ -264,18 +294,18 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       content: ["foo", "bar", "baz"],
     });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash
-          none="test.none"
-        }}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash none="test.none"}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
 
@@ -290,6 +320,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("selected value can be 0", async function (assert) {
+    const self = this;
+
     setDefaultState(this, {
       value: 1,
       content: [
@@ -298,15 +330,17 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       ],
     });
 
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+        />
+      </template>
+    );
 
     assert.strictEqual(this.subject.header().value(), "1");
 
@@ -317,21 +351,25 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("prevents propagating click event on header", async function (assert) {
+    const self = this;
+
     this.setProperties({
       onClick: () => this.set("value", "foo"),
       content: DEFAULT_CONTENT,
       value: DEFAULT_VALUE,
     });
 
-    await render(hbs`
-      <DButton @icon="xmark" @action={{this.onClick}}>
-        <SingleSelect
-          @value={{this.value}}
-          @content={{this.content}}
-          @options={{hash preventsClickPropagation=true}}
-        />
-      </DButton>
-    `);
+    await render(
+      <template>
+        <DButton @icon="xmark" @action={{self.onClick}}>
+          <SingleSelect
+            @value={{self.value}}
+            @content={{self.content}}
+            @options={{hash preventsClickPropagation=true}}
+          />
+        </DButton>
+      </template>
+    );
 
     assert.strictEqual(this.value, DEFAULT_VALUE);
     await this.subject.expand();
@@ -339,18 +377,22 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("labelProperty", async function (assert) {
+    const self = this;
+
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "JACKSON" }],
       value: 1,
     });
 
-    await render(hbs`
-      <SingleSelect
-        @labelProperty="foo"
-        @value={{this.value}}
-        @content={{this.content}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @labelProperty="foo"
+          @value={{self.value}}
+          @content={{self.content}}
+        />
+      </template>
+    );
 
     assert.strictEqual(this.subject.header().label(), "JACKSON");
 
@@ -362,18 +404,22 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("titleProperty", async function (assert) {
+    const self = this;
+
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "JACKSON" }],
       value: 1,
     });
 
-    await render(hbs`
-      <SingleSelect
-        @titleProperty="foo"
-        @value={{this.value}}
-        @content={{this.content}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @titleProperty="foo"
+          @value={{self.value}}
+          @content={{self.content}}
+        />
+      </template>
+    );
 
     assert.strictEqual(this.subject.header().title(), "JACKSON");
 
@@ -385,13 +431,21 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("langProperty", async function (assert) {
+    const self = this;
+
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "be" }],
       value: null,
     });
 
     await render(
-      hbs`<SingleSelect @langProperty="foo" @value={{this.value}} @content={{this.content}} />`
+      <template>
+        <SingleSelect
+          @langProperty="foo"
+          @value={{self.value}}
+          @content={{self.content}}
+        />
+      </template>
     );
 
     assert.strictEqual(
@@ -413,13 +467,17 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("name", async function (assert) {
+    const self = this;
+
     this.setProperties({
       content: [{ id: 1, name: "john" }],
       value: null,
     });
 
     await render(
-      hbs`<SingleSelect @value={{this.value}} @content={{this.content}} />`
+      <template>
+        <SingleSelect @value={{self.value}} @content={{self.content}} />
+      </template>
     );
 
     assert
@@ -438,6 +496,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("row index", async function (assert) {
+    const self = this;
+
     this.setProperties({
       content: [
         { id: 1, name: "john" },
@@ -447,7 +507,9 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     });
 
     await render(
-      hbs`<SingleSelect @value={{this.value}} @content={{this.content}} />`
+      <template>
+        <SingleSelect @value={{self.value}} @content={{self.content}} />
+      </template>
     );
     await this.subject.expand();
 
@@ -456,17 +518,21 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("options.verticalOffset", async function (assert) {
+    const self = this;
+
     setDefaultState(this, { verticalOffset: -50 });
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @nameProperty={{this.nameProperty}}
-        @valueProperty={{this.valueProperty}}
-        @onChange={{this.onChange}}
-        @options={{hash verticalOffset=this.verticalOffset}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @nameProperty={{self.nameProperty}}
+          @valueProperty={{self.valueProperty}}
+          @onChange={{self.onChange}}
+          @options={{hash verticalOffset=self.verticalOffset}}
+        />
+      </template>
+    );
     await this.subject.expand();
     const header = find(".select-kit-header").getBoundingClientRect();
     const body = find(".select-kit-body").getBoundingClientRect();
@@ -475,27 +541,35 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
   });
 
   test("options.expandedOnInsert", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @options={{hash expandedOnInsert=true}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @options={{hash expandedOnInsert=true}}
+        />
+      </template>
+    );
 
     assert.dom(".single-select.is-expanded").exists();
   });
 
   test("options.formName", async function (assert) {
+    const self = this;
+
     setDefaultState(this);
-    await render(hbs`
-      <SingleSelect
-        @value={{this.value}}
-        @content={{this.content}}
-        @options={{hash formName="foo"}}
-      />
-    `);
+    await render(
+      <template>
+        <SingleSelect
+          @value={{self.value}}
+          @content={{self.content}}
+          @options={{hash formName="foo"}}
+        />
+      </template>
+    );
 
     assert
       .dom('input[name="foo"]')

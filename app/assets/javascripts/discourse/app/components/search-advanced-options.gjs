@@ -1,13 +1,24 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
   attributeBindings,
   classNames,
   tagName,
 } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import DateInput from "discourse/components/date-input";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
+import SearchAdvancedCategoryChooser from "select-kit/components/search-advanced-category-chooser";
+import TagChooser from "select-kit/components/tag-chooser";
+import UserChooser from "select-kit/components/user-chooser";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -453,32 +464,32 @@ export default class SearchAdvancedOptions extends Component {
   }
 
   @action
-  onChangeSearchTermForAllTags(checked) {
-    this.set("searchedTerms.special.all_tags", checked);
+  onChangeSearchTermForAllTags(event) {
+    this.set("searchedTerms.special.all_tags", event.target.checked);
     this._updateSearchTermForTags();
   }
 
   @action
-  onChangeSearchTermForSpecialInLikes(checked) {
-    this.set("searchedTerms.special.in.likes", checked);
+  onChangeSearchTermForSpecialInLikes(event) {
+    this.set("searchedTerms.special.in.likes", event.target.checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_LIKES_MATCH, "likes");
   }
 
   @action
-  onChangeSearchTermForSpecialInMessages(checked) {
-    this.set("searchedTerms.special.in.messages", checked);
+  onChangeSearchTermForSpecialInMessages(event) {
+    this.set("searchedTerms.special.in.messages", event.target.checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_MESSAGES_MATCH, "messages");
   }
 
   @action
-  onChangeSearchTermForSpecialInSeen(checked) {
-    this.set("searchedTerms.special.in.seen", checked);
+  onChangeSearchTermForSpecialInSeen(event) {
+    this.set("searchedTerms.special.in.seen", event.target.checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_SEEN_MATCH, "seen");
   }
 
   @action
-  onChangeSearchTermForSpecialInTitle(checked) {
-    this.set("searchedTerms.special.in.title", checked);
+  onChangeSearchTermForSpecialInTitle(event) {
+    this.set("searchedTerms.special.in.title", event.target.checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_TITLE_MATCH, "title");
   }
 
@@ -756,308 +767,293 @@ export default class SearchAdvancedOptions extends Component {
   _updateSearchTerm(searchTerm) {
     this.onChangeSearchTerm(searchTerm.trim());
   }
-}
 
-<summary>
-  {{i18n "search.advanced.title"}}
-</summary>
-<div class="search-advanced-filters">
-  <div class="search-advanced-options">
-    <PluginOutlet
-      @name="advanced-search-options-above"
-      @connectorTagName="div"
-      @outletArgs={{hash
-        searchedTerms=this.searchedTerms
-        onChangeSearchedTermField=this.onChangeSearchedTermField
-      }}
-    />
-
-    <div class="control-group advanced-search-category">
-      <label class="control-label">{{i18n
-          "search.advanced.in_category.label"
-        }}</label>
-      <div class="controls">
-        <SearchAdvancedCategoryChooser
-          @id="search-in-category"
-          @value={{this.searchedTerms.category.id}}
-          @onChange={{action "onChangeSearchTermForCategory"}}
-        />
-      </div>
-    </div>
-
-    {{#if this.siteSettings.tagging_enabled}}
-      <div class="control-group advanced-search-tags">
-        <label class="control-label">{{i18n
-            "search.advanced.with_tags.label"
-          }}</label>
-        <div class="controls">
-          <TagChooser
-            @id="search-with-tags"
-            @tags={{this.searchedTerms.tags}}
-            @everyTag={{true}}
-            @unlimitedTagCount={{true}}
-            @onChange={{action "onChangeSearchTermForTags"}}
-            @options={{hash
-              allowAny=false
-              headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
-            }}
-          />
-          {{#if this.showAllTagsCheckbox}}
-            <section class="field">
-              <label>
-                <Input
-                  @type="checkbox"
-                  class="all-tags"
-                  @checked={{this.searchedTerms.special.all_tags}}
-                  {{on
-                    "click"
-                    (action
-                      "onChangeSearchTermForAllTags" value="target.checked"
-                    )
-                  }}
-                />
-                {{i18n "search.advanced.filters.all_tags"}}
-              </label>
-            </section>
-          {{/if}}
-        </div>
-      </div>
-    {{/if}}
-
-    <div class="control-group advanced-search-topics-posts">
-      <div class="controls">
-        <fieldset class="grouped-control">
-          <legend class="grouped-control-label">{{i18n
-              "search.advanced.filters.label"
-            }}</legend>
-
-          {{#if this.currentUser}}
-            <div class="grouped-control-field">
-              <Input
-                id="matching-title-only"
-                @type="checkbox"
-                class="in-title"
-                @checked={{this.searchedTerms.special.in.title}}
-                {{on
-                  "click"
-                  (action
-                    "onChangeSearchTermForSpecialInTitle" value="target.checked"
-                  )
-                }}
-              />
-              <label class="checkbox-label" for="matching-title-only">
-                {{i18n "search.advanced.filters.title"}}
-              </label>
-            </div>
-
-            <div class="grouped-control-field">
-              <Input
-                id="matching-liked"
-                @type="checkbox"
-                class="in-likes"
-                @checked={{this.searchedTerms.special.in.likes}}
-                {{on
-                  "click"
-                  (action
-                    "onChangeSearchTermForSpecialInLikes" value="target.checked"
-                  )
-                }}
-              />
-              <label class="checkbox-label" for="matching-liked">{{i18n
-                  "search.advanced.filters.likes"
-                }}</label>
-            </div>
-
-            <div class="grouped-control-field">
-              <Input
-                id="matching-in-messages"
-                @type="checkbox"
-                class="in-private"
-                @checked={{this.searchedTerms.special.in.messages}}
-                {{on
-                  "click"
-                  (action
-                    "onChangeSearchTermForSpecialInMessages"
-                    value="target.checked"
-                  )
-                }}
-              />
-              <label class="checkbox-label" for="matching-in-messages">{{i18n
-                  "search.advanced.filters.private"
-                }}</label>
-            </div>
-
-            <div class="grouped-control-field">
-              <Input
-                id="matching-seen"
-                @type="checkbox"
-                class="in-seen"
-                @checked={{this.searchedTerms.special.in.seen}}
-                {{on
-                  "click"
-                  (action
-                    "onChangeSearchTermForSpecialInSeen" value="target.checked"
-                  )
-                }}
-              />
-              <label class="checkbox-label" for="matching-seen">{{i18n
-                  "search.advanced.filters.seen"
-                }}</label>
-            </div>
-          {{/if}}
-
-          <ComboBox
-            @id="in"
-            @valueProperty="value"
-            @content={{this.inOptions}}
-            @value={{this.searchedTerms.in}}
-            @onChange={{action "onChangeSearchTermForIn"}}
-            @options={{hash none="user.locale.any" clearable=true}}
-          />
-        </fieldset>
-      </div>
-    </div>
-
-    <div class="control-group advanced-search-topic-status">
-      <label class="control-label">{{i18n
-          "search.advanced.statuses.label"
-        }}</label>
-      <div class="controls">
-        <ComboBox
-          @id="search-status-options"
-          @valueProperty="value"
-          @content={{this.statusOptions}}
-          @value={{this.searchedTerms.status}}
-          @onChange={{action "onChangeSearchTermForStatus"}}
-          @options={{hash
-            none="user.locale.any"
-            headerAriaLabel=(i18n "search.advanced.statuses.label")
-            clearable=true
-          }}
-        />
-      </div>
-    </div>
-
-    <div class="control-group advanced-search-posted-by">
-      <label class="control-label">
-        {{i18n "search.advanced.posted_by.label"}}
-      </label>
-      <div class="controls">
-        <UserChooser
-          @id="search-posted-by"
-          @value={{this.searchedTerms.username}}
-          @onChange={{action "onChangeSearchTermForUsername"}}
-          @options={{hash
-            headerAriaLabel=(i18n "search.advanced.posted_by.aria_label")
-            maximum=1
-            excludeCurrentUser=false
-          }}
-        />
-      </div>
-    </div>
-
-    <div class="control-group advanced-search-posted-date">
-      <label class="control-label">{{i18n
-          "search.advanced.post.time.label"
-        }}</label>
-      <div class="controls inline-form full-width">
-        <ComboBox
-          @id="postTime"
-          @valueProperty="value"
-          @content={{this.postTimeOptions}}
-          @value={{this.searchedTerms.time.when}}
-          @onChange={{action "onChangeWhenTime"}}
-          @options={{hash
-            headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
-          }}
-        />
-        <DateInput
-          @date={{this.searchedTerms.time.days}}
-          @onChange={{action "onChangeWhenDate"}}
-          @inputId="search-post-date"
-        />
-      </div>
-    </div>
-
-    <PluginOutlet
-      @name="advanced-search-options-below"
-      @connectorTagName="div"
-      @outletArgs={{hash
-        searchedTerms=this.searchedTerms
-        onChangeSearchedTermField=this.onChangeSearchedTermField
-      }}
-    />
-  </div>
-
-  <details class="search-advanced-additional-options">
+  <template>
     <summary>
-      {{i18n "search.advanced.additional_options.label"}}
+      {{i18n "search.advanced.title"}}
     </summary>
-    <div class="count-group control-group">
-      {{! TODO: Using a label here fails no-nested-interactive lint rule }}
-      <span class="control-label">{{i18n
-          "search.advanced.post.count.label"
-        }}</span>
-      <div class="controls">
-        <Input
-          @type="number"
-          @value={{readonly this.searchedTerms.min_posts}}
-          class="input-small"
-          id="search-min-post-count"
-          placeholder={{i18n "search.advanced.post.min.placeholder"}}
-          aria-label={{i18n "search.advanced.post.min.aria_label"}}
-          {{on "input" (with-event-value this.onChangeSearchTermMinPostCount)}}
+    <div class="search-advanced-filters">
+      <div class="search-advanced-options">
+        <PluginOutlet
+          @name="advanced-search-options-above"
+          @connectorTagName="div"
+          @outletArgs={{hash
+            searchedTerms=this.searchedTerms
+            onChangeSearchedTermField=this.onChangeSearchedTermField
+          }}
         />
-        {{d-icon "left-right"}}
-        <Input
-          @type="number"
-          @value={{readonly this.searchedTerms.max_posts}}
-          class="input-small"
-          id="search-max-post-count"
-          placeholder={{i18n "search.advanced.post.max.placeholder"}}
-          aria-label={{i18n "search.advanced.post.max.aria_label"}}
-          {{on "input" (with-event-value this.onChangeSearchTermMaxPostCount)}}
+
+        <div class="control-group advanced-search-category">
+          <label class="control-label">{{i18n
+              "search.advanced.in_category.label"
+            }}</label>
+          <div class="controls">
+            <SearchAdvancedCategoryChooser
+              @id="search-in-category"
+              @value={{this.searchedTerms.category.id}}
+              @onChange={{this.onChangeSearchTermForCategory}}
+            />
+          </div>
+        </div>
+
+        {{#if this.siteSettings.tagging_enabled}}
+          <div class="control-group advanced-search-tags">
+            <label class="control-label">{{i18n
+                "search.advanced.with_tags.label"
+              }}</label>
+            <div class="controls">
+              <TagChooser
+                @id="search-with-tags"
+                @tags={{this.searchedTerms.tags}}
+                @everyTag={{true}}
+                @unlimitedTagCount={{true}}
+                @onChange={{this.onChangeSearchTermForTags}}
+                @options={{hash
+                  allowAny=false
+                  headerAriaLabel=(i18n "search.advanced.with_tags.aria_label")
+                }}
+              />
+              {{#if this.showAllTagsCheckbox}}
+                <section class="field">
+                  <label>
+                    <Input
+                      @type="checkbox"
+                      class="all-tags"
+                      @checked={{this.searchedTerms.special.all_tags}}
+                      {{on "click" this.onChangeSearchTermForAllTags}}
+                    />
+                    {{i18n "search.advanced.filters.all_tags"}}
+                  </label>
+                </section>
+              {{/if}}
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="control-group advanced-search-topics-posts">
+          <div class="controls">
+            <fieldset class="grouped-control">
+              <legend class="grouped-control-label">{{i18n
+                  "search.advanced.filters.label"
+                }}</legend>
+
+              {{#if this.currentUser}}
+                <div class="grouped-control-field">
+                  <Input
+                    id="matching-title-only"
+                    @type="checkbox"
+                    class="in-title"
+                    @checked={{this.searchedTerms.special.in.title}}
+                    {{on "click" this.onChangeSearchTermForSpecialInTitle}}
+                  />
+                  <label class="checkbox-label" for="matching-title-only">
+                    {{i18n "search.advanced.filters.title"}}
+                  </label>
+                </div>
+
+                <div class="grouped-control-field">
+                  <Input
+                    id="matching-liked"
+                    @type="checkbox"
+                    class="in-likes"
+                    @checked={{this.searchedTerms.special.in.likes}}
+                    {{on "click" this.onChangeSearchTermForSpecialInLikes}}
+                  />
+                  <label class="checkbox-label" for="matching-liked">{{i18n
+                      "search.advanced.filters.likes"
+                    }}</label>
+                </div>
+
+                <div class="grouped-control-field">
+                  <Input
+                    id="matching-in-messages"
+                    @type="checkbox"
+                    class="in-private"
+                    @checked={{this.searchedTerms.special.in.messages}}
+                    {{on "click" this.onChangeSearchTermForSpecialInMessages}}
+                  />
+                  <label
+                    class="checkbox-label"
+                    for="matching-in-messages"
+                  >{{i18n "search.advanced.filters.private"}}</label>
+                </div>
+
+                <div class="grouped-control-field">
+                  <Input
+                    id="matching-seen"
+                    @type="checkbox"
+                    class="in-seen"
+                    @checked={{this.searchedTerms.special.in.seen}}
+                    {{on "click" this.onChangeSearchTermForSpecialInSeen}}
+                  />
+                  <label class="checkbox-label" for="matching-seen">{{i18n
+                      "search.advanced.filters.seen"
+                    }}</label>
+                </div>
+              {{/if}}
+
+              <ComboBox
+                @id="in"
+                @valueProperty="value"
+                @content={{this.inOptions}}
+                @value={{this.searchedTerms.in}}
+                @onChange={{this.onChangeSearchTermForIn}}
+                @options={{hash none="user.locale.any" clearable=true}}
+              />
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="control-group advanced-search-topic-status">
+          <label class="control-label">{{i18n
+              "search.advanced.statuses.label"
+            }}</label>
+          <div class="controls">
+            <ComboBox
+              @id="search-status-options"
+              @valueProperty="value"
+              @content={{this.statusOptions}}
+              @value={{this.searchedTerms.status}}
+              @onChange={{this.onChangeSearchTermForStatus}}
+              @options={{hash
+                none="user.locale.any"
+                headerAriaLabel=(i18n "search.advanced.statuses.label")
+                clearable=true
+              }}
+            />
+          </div>
+        </div>
+
+        <div class="control-group advanced-search-posted-by">
+          <label class="control-label">
+            {{i18n "search.advanced.posted_by.label"}}
+          </label>
+          <div class="controls">
+            <UserChooser
+              @id="search-posted-by"
+              @value={{this.searchedTerms.username}}
+              @onChange={{this.onChangeSearchTermForUsername}}
+              @options={{hash
+                headerAriaLabel=(i18n "search.advanced.posted_by.aria_label")
+                maximum=1
+                excludeCurrentUser=false
+              }}
+            />
+          </div>
+        </div>
+
+        <div class="control-group advanced-search-posted-date">
+          <label class="control-label">{{i18n
+              "search.advanced.post.time.label"
+            }}</label>
+          <div class="controls inline-form full-width">
+            <ComboBox
+              @id="postTime"
+              @valueProperty="value"
+              @content={{this.postTimeOptions}}
+              @value={{this.searchedTerms.time.when}}
+              @onChange={{this.onChangeWhenTime}}
+              @options={{hash
+                headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
+              }}
+            />
+            <DateInput
+              @date={{this.searchedTerms.time.days}}
+              @onChange={{this.onChangeWhenDate}}
+              @inputId="search-post-date"
+            />
+          </div>
+        </div>
+
+        <PluginOutlet
+          @name="advanced-search-options-below"
+          @connectorTagName="div"
+          @outletArgs={{hash
+            searchedTerms=this.searchedTerms
+            onChangeSearchedTermField=this.onChangeSearchedTermField
+          }}
         />
       </div>
-    </div>
 
-    <div class="count-group control-group">
-      {{! TODO: Using a label here fails no-nested-interactive lint rule }}
-      <span class="control-label">{{i18n "search.advanced.views.label"}}</span>
-      <div class="controls">
-        <Input
-          @type="number"
-          @value={{readonly this.searchedTerms.min_views}}
-          class="input-small"
-          id="search-min-views"
-          placeholder={{i18n "search.advanced.min_views.placeholder"}}
-          aria-label={{i18n "search.advanced.min_views.aria_label"}}
-          {{on "input" (with-event-value this.onChangeSearchTermMinViews)}}
-        />
-        {{d-icon "left-right"}}
-        <Input
-          @type="number"
-          @value={{readonly this.searchedTerms.max_views}}
-          class="input-small"
-          id="search-max-views"
-          placeholder={{i18n "search.advanced.max_views.placeholder"}}
-          aria-label={{i18n "search.advanced.max_views.aria_label"}}
-          {{on "input" (with-event-value this.onChangeSearchTermMaxViews)}}
-        />
-      </div>
-    </div>
-  </details>
+      <details class="search-advanced-additional-options">
+        <summary>
+          {{i18n "search.advanced.additional_options.label"}}
+        </summary>
+        <div class="count-group control-group">
+          {{! TODO: Using a label here fails no-nested-interactive lint rule }}
+          <span class="control-label">{{i18n
+              "search.advanced.post.count.label"
+            }}</span>
+          <div class="controls">
+            <Input
+              @type="number"
+              @value={{readonly this.searchedTerms.min_posts}}
+              class="input-small"
+              id="search-min-post-count"
+              placeholder={{i18n "search.advanced.post.min.placeholder"}}
+              aria-label={{i18n "search.advanced.post.min.aria_label"}}
+              {{on
+                "input"
+                (withEventValue this.onChangeSearchTermMinPostCount)
+              }}
+            />
+            {{icon "left-right"}}
+            <Input
+              @type="number"
+              @value={{readonly this.searchedTerms.max_posts}}
+              class="input-small"
+              id="search-max-post-count"
+              placeholder={{i18n "search.advanced.post.max.placeholder"}}
+              aria-label={{i18n "search.advanced.post.max.aria_label"}}
+              {{on
+                "input"
+                (withEventValue this.onChangeSearchTermMaxPostCount)
+              }}
+            />
+          </div>
+        </div>
 
-  {{#if this.site.mobileView}}
-    <div class="second-search-button">
-      <DButton
-        @action={{this.search}}
-        @icon="magnifying-glass"
-        @label="search.search_button"
-        @ariaLabel="search.search_button"
-        @disabled={{this.searchButtonDisabled}}
-        class="btn-primary search-cta"
-      />
+        <div class="count-group control-group">
+          {{! TODO: Using a label here fails no-nested-interactive lint rule }}
+          <span class="control-label">{{i18n
+              "search.advanced.views.label"
+            }}</span>
+          <div class="controls">
+            <Input
+              @type="number"
+              @value={{readonly this.searchedTerms.min_views}}
+              class="input-small"
+              id="search-min-views"
+              placeholder={{i18n "search.advanced.min_views.placeholder"}}
+              aria-label={{i18n "search.advanced.min_views.aria_label"}}
+              {{on "input" (withEventValue this.onChangeSearchTermMinViews)}}
+            />
+            {{icon "left-right"}}
+            <Input
+              @type="number"
+              @value={{readonly this.searchedTerms.max_views}}
+              class="input-small"
+              id="search-max-views"
+              placeholder={{i18n "search.advanced.max_views.placeholder"}}
+              aria-label={{i18n "search.advanced.max_views.aria_label"}}
+              {{on "input" (withEventValue this.onChangeSearchTermMaxViews)}}
+            />
+          </div>
+        </div>
+      </details>
+
+      {{#if this.site.mobileView}}
+        <div class="second-search-button">
+          <DButton
+            @action={{this.search}}
+            @icon="magnifying-glass"
+            @label="search.search_button"
+            @ariaLabel="search.search_button"
+            @disabled={{this.searchButtonDisabled}}
+            class="btn-primary search-cta"
+          />
+        </div>
+      {{/if}}
     </div>
-  {{/if}}
-</div>
+  </template>
+}

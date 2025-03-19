@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 module(
   "Integration | Component | select-kit/form-template-chooser",
@@ -23,7 +23,7 @@ module(
     });
 
     test("displays form templates", async function (assert) {
-      await render(hbs`<FormTemplateChooser />`);
+      await render(<template><FormTemplateChooser /></template>);
 
       await this.subject.expand();
 
@@ -32,9 +32,13 @@ module(
     });
 
     test("displays selected value", async function (assert) {
+      const self = this;
+
       this.set("value", [1]);
 
-      await render(hbs`<FormTemplateChooser @value={{this.value}} />`);
+      await render(
+        <template><FormTemplateChooser @value={{self.value}} /></template>
+      );
 
       assert.strictEqual(this.subject.header().name(), "template 1");
     });
@@ -44,7 +48,7 @@ module(
         return response({ form_templates: [] });
       });
 
-      await render(hbs`<FormTemplateChooser />`);
+      await render(<template><FormTemplateChooser /></template>);
       assert.true(this.subject.isDisabled());
     });
   }
