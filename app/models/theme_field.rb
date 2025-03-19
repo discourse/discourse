@@ -484,8 +484,23 @@ class ThemeField < ActiveRecord::Base
     prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
     self.theme.with_scss_load_paths do |load_paths|
+      entrypoint_name =
+        if basic_scss_field?
+          self.target_name
+        elsif target_name == "common" && name == "color_definitions"
+          "color_definitions"
+        elsif target_name == "common" && name == "embedded_scss"
+          "embedded_scss"
+        else
+          raise "Unknown entrypoint for #{target_name}/#{name}"
+        end
+
       Stylesheet::Compiler.compile(
-        "#{prepended_scss} #{self.theme.scss_variables} #{self.value}",
+        <<~SCSS,
+          #{prepended_scss}
+          #{self.theme.scss_variables}
+          @import \"theme-entrypoints/#{entrypoint_name}\";",
+        SCSS
         "#{Theme.targets[self.target_id]}.scss",
         theme: self.theme,
         load_paths: load_paths,
