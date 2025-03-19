@@ -198,16 +198,8 @@ module Stylesheet
 
       fields = theme.list_baked_fields(target, attr)
       fields.map do |field|
-        value = field.value
-        if value.present?
-          contents << <<~SCSS
-          // Theme: #{field.theme.name}
-          // Target: #{field.target_name} #{field.name}
-          // Last Edited: #{field.updated_at}
-          SCSS
-
-          contents << value
-        end
+        entrypoint = field.target_name
+        contents << "@import \"#{entrypoint}\";\n"
       end
       contents
     end

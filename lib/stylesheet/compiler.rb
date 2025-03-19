@@ -18,13 +18,11 @@ module Stylesheet
         filename = "#{asset}.scss"
         options[:load_paths] = [] if options[:load_paths].nil?
         plugin_assets.each do |src|
-          file += File.read src
           options[:load_paths] << File.expand_path(File.dirname(src))
+          file += "@import \"#{File.basename(src).sub(/\.scss$/, "")}\";\n"
         end
       else
-        filename = "#{asset}.scss"
-        path = "#{ASSET_ROOT}/#{filename}"
-        file += File.read path
+        file += "@import \"#{asset}\";\n"
 
         case asset.to_s
         when "embed", "publish"
@@ -38,7 +36,7 @@ module Stylesheet
         end
       end
 
-      compile(file, filename, options)
+      compile(file, "_#{asset}_entrypoint.scss", options)
     end
 
     def self.compile(stylesheet, filename, options = {})
