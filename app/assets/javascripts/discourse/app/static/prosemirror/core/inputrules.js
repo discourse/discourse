@@ -14,6 +14,12 @@ export function buildInputRules(extensions, params, includeDefault = true) {
   if (includeDefault) {
     const schema = params.schema;
 
+    // getAttrs handler for multi-group matching with prefix
+    const getAttrs = (match) => ({
+      prefix: match[1],
+      matchIndex: 2,
+    });
+
     rules.push(
       // TODO(renato) smartQuotes should respect `markdown_typographer_quotation_marks`
       ...smartQuotes,
@@ -29,9 +35,9 @@ export function buildInputRules(extensions, params, includeDefault = true) {
         return rule;
       }),
       markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
-      markInputRule(/(?<=^|\s)__([^_]+)__$/, schema.marks.strong),
-      markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
-      markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
+      markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
+      markInputRule(/(^|[^*])\*([^*]+)\*$/, schema.marks.em, getAttrs),
+      markInputRule(/(^|\s)_([^_]+)_$/, schema.marks.em, getAttrs),
       markInputRule(/`([^`]+)`$/, schema.marks.code),
       new InputRule(/^(\u2013-|___\s|\*\*\*\s)$/, horizontalRuleHandler, {
         inCodeMark: false,

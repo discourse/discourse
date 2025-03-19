@@ -10,27 +10,29 @@ export function markInputRule(regexp, markType, getAttrs) {
       const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       const tr = state.tr;
 
+      const { prefix = "", matchIndex = 1, ...markAttrs } = attrs ?? {};
+
       if (state.doc.rangeHasMark(start, end, markType)) {
         return null;
       }
 
-      if (match[1]) {
-        let textStart = start + match[0].indexOf(match[1]);
-        let textEnd = textStart + match[1].length;
+      if (match[matchIndex]) {
+        let textStart = start + match[0].indexOf(match[matchIndex]);
+        let textEnd = textStart + match[matchIndex].length;
         if (textEnd < end) {
           tr.delete(textEnd, end);
         }
-        if (textStart > start) {
-          tr.delete(start, textStart);
+        if (textStart > start + prefix.length) {
+          tr.delete(start + prefix.length, textStart);
         }
-        end = start + match[1].length;
+        end = start + match[matchIndex].length;
 
-        tr.addMark(start, end, markType.create(attrs));
+        tr.addMark(start, end, markType.create(markAttrs));
         tr.removeStoredMark(markType);
       } else {
         tr.delete(start, end);
         tr.insertText(" ");
-        tr.addMark(start, start + 1, markType.create(attrs));
+        tr.addMark(start, start + 1, markType.create(markAttrs));
         tr.removeStoredMark(markType);
         tr.insertText(" ");
 
