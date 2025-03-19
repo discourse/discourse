@@ -188,6 +188,7 @@ module Stylesheet
 
       fields = theme.list_baked_fields(target, attr)
       fields.map { |field| contents << "@import \"theme-entrypoint/#{target}\";\n" }
+      contents
     end
 
     def theme

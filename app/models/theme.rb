@@ -843,7 +843,7 @@ class Theme < ActiveRecord::Base
 
         entrypoints = {
           "common/common.scss" => "common.scss",
-          "common/embedded.scss" => "embedded_scss.scss",
+          "common/embedded.scss" => "embedded.scss",
           "common/color_definitions.scss" => "color_definitions.scss",
           "desktop/desktop.scss" => "desktop.scss",
           "mobile/mobile.scss" => "mobile.scss",

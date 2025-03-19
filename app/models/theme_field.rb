@@ -490,7 +490,7 @@ class ThemeField < ActiveRecord::Base
         elsif target_name == "common" && name == "color_definitions"
           "color_definitions"
         elsif target_name == "common" && name == "embedded_scss"
-          "embedded_scss"
+          "embedded"
         else
           raise "Unknown entrypoint for #{target_name}/#{name}"
         end
