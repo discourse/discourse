@@ -490,7 +490,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
 
-      cdp.write_clipboard("not selected **bold**not not selected")
+      cdp.write_clipboard("not selected **bold** not selected")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       rich.find("strong").double_click
 
@@ -499,7 +499,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("not selected [**bold**not](www.example.com) not selected")
+      expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
     end
   end
 

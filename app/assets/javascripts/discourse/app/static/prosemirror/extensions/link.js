@@ -2,7 +2,6 @@
 const extension = {
   markSpec: {
     link: {
-      before: "em",
       attrs: {
         href: {},
         title: { default: null },
