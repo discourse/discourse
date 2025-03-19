@@ -1,3 +1,7 @@
+import UserFieldBase from "./base";
+
+export default class UserFieldDropdown extends UserFieldBase {}
+
 <label
   class="control-label alt-placeholder"
   for={{concat "user-" this.elementId}}
