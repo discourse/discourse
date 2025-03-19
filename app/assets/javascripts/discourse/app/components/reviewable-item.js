@@ -50,6 +50,7 @@ export default class ReviewableItem extends Component {
   @service siteSettings;
   @service currentUser;
   @service composer;
+  @service store;
   @service toasts;
   @optionalService adminTools;
 
@@ -120,9 +121,13 @@ export default class ReviewableItem extends Component {
     return (topic && topic.id) || topicId || removedTopicId;
   }
 
-  @discourseComputed("siteSettings.reviewable_claiming", "topicId")
-  claimEnabled(claimMode, topicId) {
-    return claimMode !== "disabled" && !!topicId;
+  @discourseComputed(
+    "siteSettings.reviewable_claiming",
+    "topicId",
+    "reviewable.claimed_by.system"
+  )
+  claimEnabled(claimMode, topicId, claimedBySystem) {
+    return (claimMode !== "disabled" || claimedBySystem) && !!topicId;
   }
 
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
@@ -133,6 +138,11 @@ export default class ReviewableItem extends Component {
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
   claimRequired(claimMode, claimEnabled) {
     return claimEnabled && claimMode === "required";
+  }
+
+  @discourseComputed("reviewable.claimed_by.system")
+  claimedBySystem(claimedBySystem) {
+    return claimedBySystem;
   }
 
   @discourseComputed(
@@ -146,7 +156,7 @@ export default class ReviewableItem extends Component {
     }
 
     if (claimedBy) {
-      return claimedBy.id === this.currentUser.id;
+      return claimedBy.user.id === this.currentUser.id;
     }
 
     return claimMode !== "required";
@@ -158,11 +168,17 @@ export default class ReviewableItem extends Component {
   )
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
-      return claimedBy.id === this.currentUser.id
-        ? i18n("review.claim_help.claimed_by_you")
-        : i18n("review.claim_help.claimed_by_other", {
-            username: claimedBy.username,
-          });
+      if (claimedBy.user.id === this.currentUser.id) {
+        return i18n("review.claim_help.claimed_by_you");
+      } else if (claimedBy.system) {
+        return i18n("review.claim_help.claimed_by_system", {
+          username: claimedBy.user.username,
+        });
+      } else {
+        return i18n("review.claim_help.claimed_by_other", {
+          username: claimedBy.user.username,
+        });
+      }
     }
 
     return claimMode === "optional"
@@ -202,12 +218,12 @@ export default class ReviewableItem extends Component {
   }
 
   @bind
-  _performConfirmed(performableAction, additionalData = {}) {
+  async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
-    this.disabled = true;
+    let performAction = async () => {
+      this.disabled = true;
 
-    let performAction = () => {
       let version = reviewable.get("version");
       this.set("updating", true);
 
@@ -271,7 +287,22 @@ export default class ReviewableItem extends Component {
       let actionMethod =
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
-        return actionMethod.call(this, reviewable, performAction);
+        const claim = this.store.createRecord("reviewable-claimed-topic");
+
+        try {
+          await claim.save({
+            topic_id: this.reviewable.topic.id,
+            system: true,
+          });
+          this.reviewable.set("claimed_by", {
+            user: this.currentUser,
+            system: true,
+          });
+
+          return actionMethod.call(this, reviewable, performAction);
+        } catch (e) {
+          popupAjaxError(e);
+        }
       } else {
         // eslint-disable-next-line no-console
         console.error(

@@ -79,7 +79,7 @@ export default class ReviewIndex extends DiscourseRoute {
         : null;
       reviewables.forEach((reviewable) => {
         if (data.topic_id === reviewable.topic.id) {
-          reviewable.set("claimed_by", user);
+          reviewable.set("claimed_by", { user, system: data.system });
         }
       });
     }
