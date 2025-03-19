@@ -222,6 +222,10 @@ hr:
       dismiss: "Skloni"
     bootstrap_mode: "Prvi koraci"
     back_button: "Natrag"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}"
+      search: "Pretraživanje"
     themes:
       default_description: "Zadano"
       broken_theme_alert: "Vaša stranica možda neće raditi jer tema/komponenta ima pogreške."
@@ -470,10 +474,6 @@ hr:
       remove_confirmation: "Jeste li sigurni da želite izbrisati ovaj nacrt?"
       new_topic: "Nova skica teme"
       new_private_message: "Nova skica osobne poruke"
-      abandon:
-        confirm: "Već imate nacrt u tijeku. Što biste željeli učiniti s njim?"
-        yes_value: "Odbaci"
-        no_value: "Nastavi uređivati"
     topic_count_all:
       one: "Pregledajte %{count} nepročitanu temu."
       few: "Pregledajte %{count} nove teme."
@@ -4884,6 +4884,41 @@ hr:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Sigurnosne kopije"
+          whats_new:
+            title: "Što je novo?"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obavijest"
+          permalinks: "Poveznice"
+          users: "Korisnika"
+          groups: "Grupe"
+          legal: "Legalno"
+          moderation_flags:
+            title: "Moderiranje"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        title: "E-mail postavke"
+        sidebar_link:
+          appearance: "Izgled"
+      security:
+        title: "Sigurnost"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Sigurnosne kopije"
+          whats_new:
+            title: "Što je novo?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4913,12 +4948,20 @@ hr:
           delete: "Pobriši"
           more_options:
             title: "Više opcija"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Prilagodba"
+          install: "Instalirajte"
           themes:
             title: "Teme"
+          components:
+            title: "Komponente"
         user_fields:
           type: "Tip"
           delete: "Pobriši"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Boje"
       plugins:
         title: "Dodaci"
         name: "Naziv"

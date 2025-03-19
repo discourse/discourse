@@ -16,9 +16,11 @@ export default class FKCollection extends Component {
   }
 
   get name() {
-    return this.args.parentName
-      ? `${this.args.parentName}.${this.args.name}`
-      : this.args.name;
+    return this.args.name
+      ? `${this.args.parentName ? this.args.parentName + "." : ""}${
+          this.args.name
+        }`
+      : this.args.parentName;
   }
 
   get tagName() {
@@ -27,8 +29,8 @@ export default class FKCollection extends Component {
 
   <template>
     {{#let (element this.tagName) as |Wrapper|}}
-      {{#each this.collectionData key="index" as |data index|}}
-        <Wrapper class="form-kit__collection">
+      <Wrapper class="form-kit__collection">
+        {{#each this.collectionData key="index" as |data index|}}
           {{yield
             (hash
               Field=(component
@@ -53,6 +55,7 @@ export default class FKCollection extends Component {
                 unregisterField=@unregisterField
                 triggerRevalidationFor=@triggerRevalidationFor
                 parentName=(concat this.name "." index)
+                remove=@remove
               )
               Collection=(component
                 FKCollection
@@ -71,8 +74,8 @@ export default class FKCollection extends Component {
             index
             (get this.collectionData index)
           }}
-        </Wrapper>
-      {{/each}}
+        {{/each}}
+      </Wrapper>
     {{/let}}
   </template>
 }

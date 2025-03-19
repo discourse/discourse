@@ -130,11 +130,19 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
       config_areas:
         flags:
           description: "Description"
           form:
             description: "Description"
+        themes_and_components:
+          breadcrumb_title: "Customise"
+        color_palettes:
+          colors:
+            title: "Colours"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

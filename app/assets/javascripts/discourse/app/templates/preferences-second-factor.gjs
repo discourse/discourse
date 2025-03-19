@@ -58,9 +58,7 @@ export default RouteTemplate(
                       <TokenBasedAuthDropdown
                         @totp={{totp}}
                         @editSecondFactor={{@controller.editSecondFactor}}
-                        @disableSingleSecondFactor={{action
-                          @controller.disableSingleSecondFactor
-                        }}
+                        @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
                       />
                     </div>
                   {{/if}}

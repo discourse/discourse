@@ -3813,10 +3813,15 @@ uk:
     in_reply_to: "У відповідь на"
     reply_by_email: "[Відвідайте тему](%{base_url}%{url}) або надішліть відповідь на цей електронний лист, щоб відповісти."
     reply_by_email_pm: "[Відвідайте повідомлення](%{base_url}%{url}) або дайте відповідь на це повідомлення електронною поштою, щоб відповісти на %{participants}."
+    reply_by_email_button_only: "[Відвідати тему](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Відвідайте повідомлення](%{base_url}%{url})"
     only_reply_by_email: "Надіслати відповідь на це повідомлення електронною поштою."
     only_reply_by_email_pm: "Дайте відповідь на цей лист, щоб відповісти на %{participants}."
+    only_reply_by_email_pm_button_only: "[Відвідайте повідомлення](%{base_url}%{url})"
     visit_link_to_respond: "[Відвідайте тему](%{base_url}%{url}) для відповіді."
     visit_link_to_respond_pm: "[Відвідайте повідомлення](%{base_url}%{url}), щоб відповісти на %{participants}."
+    visit_link_to_respond_button_only: "[Відвідати тему](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Відвідайте повідомлення](%{base_url}%{url})"
     reply_above_line: "## Будь ласка, введіть Вашу відповідь вище цієї лінії. ##"
     posted_by: "Опубліковано %{username} %{post_date}"
     pm_participants: "Учасники: %{participants}"
@@ -5328,11 +5333,13 @@ uk:
         description: "Погодьтеся з прапором і відкрийте вікно редактора, щоб відредагувати допис."
       delete_single:
         title: "Видалити"
+        complete: "Допис вилучено."
       delete:
         title: "Видалити"
       delete_and_ignore:
         title: "Ігнорувати прапорець і видалити повідомлення"
         description: "Ігнорувати прапор, видаливши його з черги, і видалити публікацію; а якщо це перший допис, то видалити й тему. "
+        complete: "Допис вилучено."
       delete_and_ignore_replies:
         title: "Ігнорувати прапорець, видалити повідомлення та відповіді"
         description: "Ігнорувати прапорець, видалити його з черги, видалити повідомлення та всі відповіді на нього; а якщо це перше повідомлення, видалити й тему"
@@ -5340,6 +5347,7 @@ uk:
       delete_and_agree:
         title: "Видалити повідомлення"
         description: "Погодитися з прапорцем і видалити це повідомлення; а якщо це перше повідомлення, видалити й тему."
+        complete: "Допис вилучено."
       delete_and_agree_replies:
         title: "Видалити повідомлення та відповіді"
         description: "Погодитися з прапорцем і видалити це повідомлення і всі відповіді на нього; а якщо це перше повідомлення, видалити й тему."
@@ -5349,29 +5357,37 @@ uk:
         description: "Відновити допис, щоб усі користувачі могли його бачити."
       disagree:
         title: "Ні"
+        complete: "Прапор ігнорується."
       discard_post:
         title: "Відхилити допис"
       revise_and_reject_post:
         title: "Переглянути допис..."
       ignore:
         title: "Ігнорувати"
+        complete: "Прапор ігнорується."
       ignore_and_do_nothing:
         title: "Нічого не робити"
         description: "Ігнорувати прапорець, видалити його з черги, без будь-якої дії. Приховані повідомлення залишатимуться прихованими і оброблятимуться автоматичними інструментами."
+        complete: "Прапор ігнорується."
       approve:
         title: "Схвалити"
+        complete: "Допис затверджено."
       approve_post:
         title: "Схвалити допис"
         confirm_closed: "Ця тема закрита. Чи хочете ви все одно створити допис?"
+        complete: "Допис затверджено."
       reject_post:
         title: "Відхилити допис"
+        complete: "Допис відхилено."
       approve_user:
         title: "Затвердити користувача"
+        complete: "Користувач затверджений."
       reject_user:
         title: "Видалити користувача…"
         delete:
           title: "Видалити користувача"
           description: "Користувача буде видалено з форуму."
+          complete: "Користувача вилучено."
         block:
           title: "Видалити та заблокувати користувача"
           description: "Користувач буде видалений, і ми заблокуємо його IP-адресу та e-mail."
@@ -5390,6 +5406,7 @@ uk:
         title: "Затвердити та відновити допис"
       delete_user:
         reason: "Видалено за допомоги черги рецензування"
+        complete: "Користувача вилучено."
   email_style:
     html_missing_placeholder: "Шаблон html повинен містити %{placeholder}"
   notification_level:

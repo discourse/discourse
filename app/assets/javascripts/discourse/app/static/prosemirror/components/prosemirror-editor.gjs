@@ -126,11 +126,10 @@ export default class ProsemirrorEditor extends Component {
     const params = this.pluginParams;
 
     const plugins = [
-      buildInputRules(this.extensions, this.schema, this.args.includeDefault),
+      buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
           this.extensions,
-          this.schema,
           this.keymapFromArgs,
           params,
           this.args.includeDefault

@@ -755,7 +755,7 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
 
-    @media screen and (max-width: 420px) {
+    @media screen and (width <= 420px) {
       flex-direction: column;
       align-items: flex-start;
 
@@ -1412,7 +1412,7 @@ span.mention {
   }
 }
 
-@media all and (max-width: 767px) {
+@media all and (width <= 767px) {
   .reply-to-tab {
     span {
       display: none;

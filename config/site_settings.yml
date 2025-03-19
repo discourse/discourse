@@ -912,6 +912,9 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+  max_automatic_membership_email_domains:
+    default: 50
+    hidden: true
 
 posting:
   min_post_length:

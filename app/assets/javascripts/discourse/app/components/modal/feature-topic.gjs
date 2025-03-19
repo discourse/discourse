@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -259,7 +260,7 @@ export default class FeatureTopic extends Component {
                     class="pin-until"
                     @clearable={{true}}
                     @input={{@model.topic.pinnedInCategoryUntil}}
-                    @onChangeInput={{action
+                    @onChangeInput={{fn
                       (mut @model.topic.pinnedInCategoryUntil)
                     }}
                   />
@@ -277,7 +278,7 @@ export default class FeatureTopic extends Component {
                       class="pin-until"
                       @clearable={{true}}
                       @input={{@model.topic.pinnedInCategoryUntil}}
-                      @onChangeInput={{action
+                      @onChangeInput={{fn
                         (mut @model.topic.pinnedInCategoryUntil)
                       }}
                     />
@@ -333,7 +334,7 @@ export default class FeatureTopic extends Component {
                       class="pin-until"
                       @clearable={{true}}
                       @input={{@model.topic.pinnedGloballyUntil}}
-                      @onChangeInput={{action
+                      @onChangeInput={{fn
                         (mut @model.topic.pinnedGloballyUntil)
                       }}
                     />
@@ -351,7 +352,7 @@ export default class FeatureTopic extends Component {
                         class="pin-until"
                         @clearable={{true}}
                         @input={{@model.topic.pinnedGloballyUntil}}
-                        @onChangeInput={{action
+                        @onChangeInput={{fn
                           (mut @model.topic.pinnedGloballyUntil)
                         }}
                       />

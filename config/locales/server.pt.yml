@@ -2110,17 +2110,31 @@ pt:
         title: "Silenciar utilizador"
       delete_single:
         title: "Eliminar"
+        complete: "Publicação eliminada."
+      delete_and_ignore:
+        complete: "Publicação eliminada."
+      delete_and_agree:
+        complete: "Publicação eliminada."
       disagree:
         title: "Não"
+        complete: "Sinalização ignorada."
       ignore:
         title: "Ignorar"
+        complete: "Sinalização ignorada."
+      ignore_and_do_nothing:
+        complete: "Sinalização ignorada."
       approve:
         title: "Aprovar"
+      reject_post:
+        complete: "Publicação rejeitada."
       reject_user:
         delete:
           title: "Eliminar Utilizador"
+          complete: "Usuário eliminado."
       reject:
         title: "Rejeitar"
+      delete_user:
+        complete: "Usuário eliminado."
   fallback_username: "utilizador"
   activemodel:
     errors:
