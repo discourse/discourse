@@ -9,6 +9,7 @@
   "dependencies": {
     "@babel/standalone": "^7.26.10",
     "@csstools/postcss-light-dark-function": "^2.0.7",
+    "@csstools/postcss-relative-color-syntax": "^3.0.8",
     "@zxing/text-encoding": "^0.9.0",
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.3.0",

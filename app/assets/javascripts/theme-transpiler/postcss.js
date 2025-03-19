@@ -1,5 +1,6 @@
 import "core-js/actual/url";
 import postcssLightDark from "@csstools/postcss-light-dark-function";
+import postcssRelativeColor from "@csstools/postcss-relative-color-syntax";
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
 import minmax from "postcss-media-minmax";
@@ -12,6 +13,7 @@ const postCssProcessor = postcss([
   }),
   minmax(),
   postcssLightDark,
+  postcssRelativeColor(),
   postcssVariablePrefixer(),
 ]);
 let lastPostcssError, lastPostcssResult;
