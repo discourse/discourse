@@ -378,7 +378,7 @@ export default class EditCategoryGeneral extends Component {
                     @hexValue={{this.color}}
                     @valid={{@category.colorValid}}
                     @ariaLabelledby="background-color-label"
-                    @onChangeColor={{fn this.updateColor}}
+                    @onChangeColor={{this.updateColor}}
                   />
                   <ColorPicker
                     @colors={{this.backgroundColors}}
