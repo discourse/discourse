@@ -94,7 +94,7 @@ module DiscourseAutomation
       },
       "choices" => {
         "value" => {
-          "type" => %w[string integer null],
+          "type" => %w[string integer null array],
         },
       },
       "tags" => {
