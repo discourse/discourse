@@ -164,6 +164,10 @@ export default class GlimmerHeader extends Component {
       }
     }
 
+    if (this.search.welcomeBannerSearchInViewport) {
+      return;
+    }
+
     this.search.visible = !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
