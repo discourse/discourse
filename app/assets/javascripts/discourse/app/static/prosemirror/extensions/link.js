@@ -2,6 +2,7 @@
 const extension = {
   markSpec: {
     link: {
+      before: "em",
       attrs: {
         href: {},
         title: { default: null },
@@ -126,40 +127,36 @@ const extension = {
 
         // Auto-linkify rich content with a single text node that is a URL
         transformPasted(paste, view) {
-          let textContent = null;
+          let node = null;
 
           if (paste.content.childCount === 1) {
             if (paste.content.firstChild.isText) {
-              // Direct text node
-              textContent = paste.content.firstChild.text;
+              node = paste.content.firstChild;
             } else if (
               paste.content.firstChild.type.name === "paragraph" &&
               paste.content.firstChild.childCount === 1 &&
               paste.content.firstChild.firstChild.isText
             ) {
-              // Text inside paragraph
-              textContent = paste.content.firstChild.firstChild.text;
+              node = paste.content.firstChild.firstChild;
             }
           }
 
           if (
-            !textContent ||
-            paste.content.firstChild.firstChild.marks.some(
-              (mark) => mark.type.name === "link"
-            )
+            !node?.text ||
+            node?.marks.some((mark) => mark.type.name === "link")
           ) {
             return paste;
           }
 
-          const matches = utils.getLinkify().match(textContent);
+          const matches = utils.getLinkify().match(node.text);
           const isFullMatch =
-            matches && matches.length === 1 && matches[0].raw === textContent;
+            matches && matches.length === 1 && matches[0].raw === node.text;
 
           if (!isFullMatch) {
             return paste;
           }
 
-          return addLinkMark(view, textContent);
+          return addLinkMark(view, node.text);
         },
       },
     }),

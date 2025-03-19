@@ -468,10 +468,11 @@ describe "Composer - ProseMirror editor", type: :system do
     it "respects existing marks when pasting a url to make a link" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.write_clipboard("`code` **bold** *italic*")
+      cdp.write_clipboard("not selected `code`**bold**not*italic* not selected")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      page.execute_script("document.execCommand('selectAll',false,null)")
-      cdp.write_clipboard("www.google.com")
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("www.example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("code", text: "code")
@@ -480,7 +481,25 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("[`code` **bold** *italic*](www.google.com)")
+      expect(composer).to have_value(
+        "not selected [`code`**bold**not*italic*](www.example.com) not selected",
+      )
+    end
+
+    it "auto-links pasted URLs from text/html" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard("not selected **bold**not not selected")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("<p>www.example.com</p>", html: true)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("not selected [**bold**not](www.example.com) not selected")
     end
   end
 
