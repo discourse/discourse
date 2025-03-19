@@ -15,9 +15,13 @@ module Stylesheet
         filename = "theme_#{options[:theme_id]}.scss"
         file += options[:theme_variables].to_s
         file += importer.theme_import(asset)
-      elsif plugin_assets = Importer.plugin_assets[asset.to_s]
+      elsif plugin_asset_info = Importer.plugin_assets[asset.to_s]
         options[:load_paths] = [] if options[:load_paths].nil?
-        options[:load_paths] << "#{Rails.root}/plugins/#{asset}"
+
+        plugin_assets = plugin_asset_info[:stylesheets]
+        plugin_path = plugin_asset_info[:plugin_path]
+        options[:load_paths] << plugin_path
+
         plugin_assets.each do |src|
           options[:load_paths] << File.expand_path(File.dirname(src))
           file += "@import \"#{src}\";\n"

@@ -27,9 +27,12 @@ module Stylesheet
               end
             )
 
-          plugin_assets[asset_name] = stylesheets[
-            plugin_directory_name
-          ] if plugin_directory_name.present?
+          if plugin_directory_name.present?
+            plugin_assets[asset_name] = {
+              plugin_path: plugin.path,
+              stylesheets: stylesheets[plugin_directory_name],
+            }
+          end
         end
       end
     end
@@ -187,7 +190,9 @@ module Stylesheet
       contents = +""
 
       fields = theme.list_baked_fields(target, attr)
-      fields.map { |field| contents << "@import \"theme-entrypoint/#{target}\";\n" }
+      fields.map do |field|
+        contents << "@import \"theme-entrypoint/#{field.scss_entrypoint_name}\";\n"
+      end
       contents
     end
 
