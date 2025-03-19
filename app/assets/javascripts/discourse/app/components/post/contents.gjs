@@ -4,6 +4,7 @@ import { inject as controller } from "@ember/controller";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
@@ -22,6 +23,7 @@ import { i18n } from "discourse-i18n";
 import PostCookedHtml from "./cooked-html";
 import PostEmbedded from "./embedded";
 import PostMenu from "./menu";
+import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 
 export default class PostContents extends Component {
   @service capabilities;
@@ -54,6 +56,10 @@ export default class PostContents extends Component {
     return getURL(
       `/g/${this.args.post.requestedGroupName}/requests?filter=${this.args.post.username}`
     );
+  }
+
+  get isReplyToTabDisplayed() {
+    return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
   }
 
   get repliesShown() {
@@ -169,15 +175,23 @@ export default class PostContents extends Component {
   }
 
   <template>
-    <div class={{concatClass "regular" (unless this.repliesShown "contents")}}>
+    <div
+      class={{concatClass
+        "regular"
+        (unless this.repliesShown "contents")
+        (if this.isReplyToTabDisplayed "avoid-tab")
+      }}
+    >
       <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
         <PostCookedHtml @post={{@post}} @highlightTerm={{@highlightTerm}} />
       </PluginOutlet>
 
       {{#if @post.requestedGroupName}}
-        <a href={{this.groupRequestUrl}} class="group-request">
-          {{i18n "groups.requests.handle"}}
-        </a>
+        <div class="group-request">
+          <a href={{this.groupRequestUrl}}>
+            {{i18n "groups.requests.handle"}}
+          </a>
+        </div>
       {{/if}}
 
       {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}

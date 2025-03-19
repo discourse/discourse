@@ -9,6 +9,7 @@ import { and, eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PostAvatar from "./avatar";
@@ -39,11 +40,12 @@ export default class PostArticle extends Component {
     const showWithoutReplies =
       this.siteSettings.show_topic_map_in_topics_without_replies;
 
-    return (
-      this.args.post.topicMap ||
+    return applyValueTransformer(
+      "post-show-topic-map",
       isPM ||
-      (isRegular &&
-        (this.args.post.topic.posts_count > 1 || showWithoutReplies))
+        (isRegular &&
+          (this.args.post.topic.posts_count > 1 || showWithoutReplies)),
+      { post: this.args.post, isPM, isRegular, showWithoutReplies }
     );
   }
 
@@ -147,6 +149,7 @@ export default class PostArticle extends Component {
           @changePostOwner={{@changePostOwner}}
           @deletePost={{@deletePost}}
           @editPost={{@editPost}}
+          @expandHidden={{@expandHidden}}
           @grantBadge={{@grantBadge}}
           @hasRepliesAbove={{this.hasRepliesAbove}}
           @highlightTerm={{@highlightTerm}}

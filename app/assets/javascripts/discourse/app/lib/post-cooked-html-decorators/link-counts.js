@@ -5,8 +5,8 @@ import { i18n } from "discourse-i18n";
 export default function (element, context) {
   const { data } = context;
 
-  const linkCounts = data.link_counts;
-  if (!linkCounts) {
+  const linkCounts = data.post.link_counts;
+  if (!linkCounts?.length) {
     return;
   }
 

@@ -606,6 +606,7 @@ createWidget("post-contents", {
           copyLink: () => this.sendWidgetAction("copyLink"),
           deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
           editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
+          expandHidden: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
           grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
           lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
           permanentlyDeletePost: () =>
@@ -1210,6 +1211,7 @@ registerWidgetShim(
       @changePostOwner={{@data.changePostOwner}}
       @deletePost={{@data.deletePost}}
       @editPost={{@data.editPost}}
+      @expandHidden={{@expandHidden}}
       @grantBadge={{@data.grantBadge}}
       @lockPost={{@data.lockPost}}
       @multiSelect={{@data.multiSelect}}

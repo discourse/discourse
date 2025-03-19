@@ -362,6 +362,7 @@ export default createWidget("post-stream", {
                 this.sendWidgetAction("changePostOwner", post),
               deletePost: () => this.sendWidgetAction("deletePost", post),
               editPost: () => this.sendWidgetAction("editPost", post),
+              expandHidden: () => this.sendWidgetAction("expandHidden", post),
               grantBadge: () => this.sendWidgetAction("grantBadge", post),
               lockPost: () => this.sendWidgetAction("lockPost", post),
               multiSelect,

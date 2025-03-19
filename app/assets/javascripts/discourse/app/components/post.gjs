@@ -118,6 +118,7 @@ export default class Post extends Component {
         @changePostOwner={{@changePostOwner}}
         @deletePost={{@deletePost}}
         @editPost={{@editPost}}
+        @expandHidden={{@expandHidden}}
         @grantBadge={{@grantBadge}}
         @highlightTerm={{this.search.highlightTerm}}
         @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
