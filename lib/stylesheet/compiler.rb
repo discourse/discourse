@@ -9,19 +9,21 @@ module Stylesheet
     def self.compile_asset(asset, options = {})
       importer = Importer.new(options)
       file = importer.prepended_scss
+      filename = "_#{asset}_entrypoint.scss"
 
       if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
         file += options[:theme_variables].to_s
         file += importer.theme_import(asset)
       elsif plugin_assets = Importer.plugin_assets[asset.to_s]
-        filename = "#{asset}.scss"
         options[:load_paths] = [] if options[:load_paths].nil?
+        options[:load_paths] << "#{Rails.root}/plugins/#{asset}"
         plugin_assets.each do |src|
           options[:load_paths] << File.expand_path(File.dirname(src))
-          file += "@import \"#{File.basename(src).sub(/\.scss$/, "")}\";\n"
+          puts "importing #{src}"
+          file += "@import \"#{src}\";\n"
         end
-      else
+      else # Core asset
         file += "@import \"#{asset}\";\n"
 
         case asset.to_s
@@ -36,7 +38,7 @@ module Stylesheet
         end
       end
 
-      compile(file, "_#{asset}_entrypoint.scss", options)
+      compile(file, filename, options)
     end
 
     def self.compile(stylesheet, filename, options = {})
