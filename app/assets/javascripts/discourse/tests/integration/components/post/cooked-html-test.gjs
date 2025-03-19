@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 function renderComponent(post, { highlightTerm } = {}) {
   return render(
     <template>
-      <PostCookedHtml @post={{post}} @highlightTerm={{@highlightTerm}} />
+      <PostCookedHtml @post={{post}} @highlightTerm={{highlightTerm}} />
     </template>
   );
 }

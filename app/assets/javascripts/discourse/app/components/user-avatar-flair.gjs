@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tagName } from "@ember-decorators/component";
 import AvatarFlair from "discourse/components/avatar-flair";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 
