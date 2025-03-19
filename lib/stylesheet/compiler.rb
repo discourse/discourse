@@ -20,7 +20,6 @@ module Stylesheet
         options[:load_paths] << "#{Rails.root}/plugins/#{asset}"
         plugin_assets.each do |src|
           options[:load_paths] << File.expand_path(File.dirname(src))
-          puts "importing #{src}"
           file += "@import \"#{src}\";\n"
         end
       else # Core asset
