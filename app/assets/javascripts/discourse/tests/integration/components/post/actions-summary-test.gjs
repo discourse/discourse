@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import MountWidget from "discourse/components/mount-widget";
 import PostActionsSummary from "discourse/components/post/actions-summary";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
