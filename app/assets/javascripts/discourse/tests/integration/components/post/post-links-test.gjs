@@ -2,7 +2,6 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostLinks from "discourse/components/post/links";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 function renderComponent(post) {
