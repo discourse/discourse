@@ -148,16 +148,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     });
   }
 
-  @action
-  scopesKeys(scopesData) {
-    return Object.keys(scopesData);
-  }
-
-  @action
-  paramsKeys(paramsData) {
-    return Object.keys(paramsData);
-  }
-
   async #loadScopes() {
     try {
       this.loadingScopes = true;
@@ -276,7 +266,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     </thead>
                     <tbody>
                       <form.Object @name="scopes" as |scopesObject scopesData|>
-                        {{#each (this.scopesKeys scopesData) as |scopeKey|}}
+                        {{#each-in scopesData as |scopeKey|}}
                           <tr class="scope-resource-name">
                             <td><b>{{scopeKey}}</b></td>
                             <td></td>
@@ -320,9 +310,9 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                               <td>
                                 <topicsCollection.Object
                                   @name="params"
-                                  as |paramsObject data|
+                                  as |paramsObject paramsObjectData|
                                 >
-                                  {{#each (this.paramsKeys data) as |name|}}
+                                  {{#each-in paramsObjectData as |name|}}
                                     <paramsObject.Field
                                       @name={{name}}
                                       @title={{name}}
@@ -331,12 +321,12 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                                     >
                                       <field.Input placeholder={{name}} />
                                     </paramsObject.Field>
-                                  {{/each}}
+                                  {{/each-in}}
                                 </topicsCollection.Object>
                               </td>
                             </tr>
                           </scopesObject.Collection>
-                        {{/each}}
+                        {{/each-in}}
                       </form.Object>
                     </tbody>
                   </table>
