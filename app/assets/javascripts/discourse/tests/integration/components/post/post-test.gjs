@@ -89,6 +89,26 @@ module("Integration | Component | Post", function (hooks) {
       .exists("applies the custom class to the component");
   });
 
+  test("links", async function (assert) {
+    this.post.link_counts = [
+      {
+        title: "Link 1",
+        url: "/t/1",
+        internal: true,
+        reflection: true,
+        clicks: 2,
+      },
+    ];
+
+    await renderComponent(this.post);
+
+    assert.dom(".post-links-container").exists("links are displayed");
+    assert
+      .dom(".post-links a.track-link")
+      .exists({ count: 1 }, "hides the dupe link")
+      .hasAttribute("data-clicks", "2", "has the correct click count");
+  });
+
   test("post - cooked links", async function (assert) {
     this.post.cooked =
       "<a href='http://link1.example.com/'>first link</a> and <a href='http://link2.example.com/?some=query'>second link</a>";

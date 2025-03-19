@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 const MAX_COLLAPSED_LINKS = 5;
 
 export default class PostLinks extends Component {
-  @tracked collapsed;
+  @tracked collapsed = true;
 
   @cached
   get links() {
@@ -23,12 +23,16 @@ export default class PostLinks extends Component {
       }, []);
   }
 
-  get shouldShowAllLinks() {
-    return !this.collapsed || this.links?.length <= MAX_COLLAPSED_LINKS;
+  get canExpandList() {
+    console.log({
+      links: this.links,
+      r: this.links?.length > MAX_COLLAPSED_LINKS && this.collapsed,
+    });
+    return this.links?.length > MAX_COLLAPSED_LINKS && this.collapsed;
   }
 
   get displayedLinks() {
-    if (this.shouldShowAllLinks) {
+    if (!this.canExpandList) {
       return this.links;
     }
     return this.links.slice(0, MAX_COLLAPSED_LINKS);
@@ -39,7 +43,7 @@ export default class PostLinks extends Component {
   }
 
   @action
-  expandLinks() {
+  expandList() {
     this.collapsed = false;
   }
 
@@ -47,7 +51,7 @@ export default class PostLinks extends Component {
     {{#if this.links}}
       <div class="post-links-container">
         <ul class="post-links">
-          {{#each this.displayedLinks as |link|}}
+          {{#each this.displayedLinks key="title" as |link|}}
             <li>
               <a
                 class="track-link inbound"
@@ -59,19 +63,19 @@ export default class PostLinks extends Component {
               </a>
             </li>
           {{/each}}
-          {{#unless this.shouldShowAllLinks}}
+          {{#if this.canExpandList}}
             <li>
               <DButton
-                class="expand-links"
+                class="btn-transparent expand-links"
                 @translatedLabel={{i18n
                   "post_links.title"
                   count=this.remainingCount
                 }}
                 @title="post_links.about"
-                @action={{this.expandLinks}}
+                @action={{this.expandList}}
               />
             </li>
-          {{/unless}}
+          {{/if}}
         </ul>
       </div>
     {{/if}}
