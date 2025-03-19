@@ -38,7 +38,7 @@ describe "Changing email", type: :system do
     mail.body.to_s[%r{/u/confirm-#{type}-email/\S+}, 0]
   end
 
-  xit "allows regular user to change their email" do
+  it "allows regular user to change their email" do
     sign_in user
 
     visit generate_confirm_link
@@ -52,7 +52,7 @@ describe "Changing email", type: :system do
     expect(user_preferences_page).to have_primary_email(new_email)
   end
 
-  xit "works when user has totp 2fa" do
+  it "works when user has totp 2fa" do
     SiteSetting.hide_email_address_taken = false
 
     second_factor = Fabricate(:user_second_factor_totp, user: user)
