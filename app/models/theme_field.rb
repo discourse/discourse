@@ -485,7 +485,7 @@ class ThemeField < ActiveRecord::Base
 
     self.theme.with_scss_load_paths do |load_paths|
       entrypoint_name =
-        if basic_scss_field?
+        if name == "scss"
           self.target_name
         elsif target_name == "common" && name == "color_definitions"
           "color_definitions"
@@ -499,7 +499,7 @@ class ThemeField < ActiveRecord::Base
         <<~SCSS,
           #{prepended_scss}
           #{self.theme.scss_variables}
-          @import \"theme-entrypoints/#{entrypoint_name}\";",
+          @import \"theme-entrypoint/#{entrypoint_name}\";
         SCSS
         "#{Theme.targets[self.target_id]}.scss",
         theme: self.theme,
