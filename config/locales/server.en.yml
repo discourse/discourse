@@ -630,6 +630,7 @@ en:
         one: "'%{username}' is already a member of this group."
         other: "The following users are already members of this group: %{username}"
       invalid_domain: "'%{domain}' is not a valid domain."
+      too_many_domains: "Too many domains. Maximum of %{max}."
       invalid_incoming_email: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
