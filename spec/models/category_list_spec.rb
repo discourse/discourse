@@ -444,4 +444,31 @@ RSpec.describe CategoryList do
       end
     end
   end
+
+  describe "with many categories (more than MAX_UNOPTIMIZED_CATEGORIES)" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns at most CATEGORIES_PER_PAGE categories" do
+      stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+        category_list = CategoryList.new(Guardian.new(user))
+
+        expect(category_list.categories).to eq(
+          [Category.find(SiteSetting.uncategorized_category_id), category, subcategory],
+        )
+      end
+    end
+
+    context "with parent_category_id" do
+      it "returns at most CATEGORIES_PER_PAGE subcategories" do
+        subcategory_2 = Fabricate(:category, parent_category: category)
+
+        stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+          category_list = CategoryList.new(Guardian.new(user), parent_category_id: category.id)
+
+          expect(category_list.categories).to eq([subcategory, subcategory_2])
+        end
+      end
+    end
+  end
 end
