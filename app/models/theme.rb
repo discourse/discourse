@@ -836,28 +836,26 @@ class Theme < ActiveRecord::Base
   end
 
   def with_scss_load_paths
-    return yield([]) if self.extra_scss_fields.empty?
-
     ThemeStore::ZipExporter
       .new(self)
-      .with_export_dir(extra_scss_only: true) do |dir|
-        FileUtils.mkdir_p("#{dir}/_stylesheet_entrypoints")
+      .with_export_dir(scss_only: true) do |dir|
+        FileUtils.mkdir_p("#{dir}/_entry_loadpath/theme-entrypoint")
 
         entrypoints = {
-          "common/common.scss" => "_stylesheet_entrypoints/common.scss",
-          "common/embedded.scss" => "_stylesheet_entrypoints/embedded_scss.scss",
-          "common/color_definitions.scss" => "_stylesheet_entrypoints/color_definitions.scss",
-          "desktop/desktop.scss" => "_stylesheet_entrypoints/desktop.scss",
-          "mobile/mobile.scss" => "_stylesheet_entrypoints/mobile.scss",
+          "common/common.scss" => "common.scss",
+          "common/embedded.scss" => "embedded_scss.scss",
+          "common/color_definitions.scss" => "color_definitions.scss",
+          "desktop/desktop.scss" => "desktop.scss",
+          "mobile/mobile.scss" => "mobile.scss",
         }
 
         entrypoints.each do |source, destination|
           source_path = "#{dir}/#{source}"
-          destination_path = "#{dir}/#{destination}"
-          File.mv(source_path, destination_path) if File.exist?(source_path)
+          destination_path = "#{dir}/_entry_loadpath/theme-entrypoint/#{destination}"
+          FileUtils.mv(source_path, destination_path) if File.exist?(source_path)
         end
 
-        yield ["#{dir}/_stylesheet_entrypoints", "#{dir}/stylesheets"]
+        yield ["#{dir}/_entry_loadpath", "#{dir}/stylesheets"]
       end
   end
 

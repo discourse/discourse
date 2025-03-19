@@ -199,7 +199,7 @@ module Stylesheet
       fields = theme.list_baked_fields(target, attr)
       fields.map do |field|
         entrypoint = field.target_name
-        contents << "@import \"#{entrypoint}\";\n"
+        contents << "@import \"theme-entrypoint/#{entrypoint}\";\n"
       end
       contents
     end
