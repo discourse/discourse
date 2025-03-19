@@ -45,6 +45,14 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.dom(".badge-category").hasText("testing");
 
+    await click(".form-kit button[type=submit]");
+
+    assert.strictEqual(
+      currentURL(),
+      "/c/testing/11",
+      "it transitions to the new category"
+    );
+
     await click(".edit-category-nav .edit-category-topic-template a");
     assert
       .dom(".edit-category-tab-topic-template")

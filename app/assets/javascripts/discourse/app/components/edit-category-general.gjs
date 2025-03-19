@@ -21,6 +21,18 @@ import ColorInput from "admin/components/color-input";
 import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
 
+const FIELD_LIST = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "description",
+  "color",
+  "text_color",
+  "style_type",
+  "style_emoji",
+  "style_icon",
+];
+
 export default class EditCategoryGeneral extends Component {
   @service router;
   @service site;
@@ -143,61 +155,33 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   async save(data) {
-    data = {
+    const props = {
       ...data,
       color: this.color,
     };
 
-    if (this.isUpdate) {
-      this.update(data);
-    } else {
-      this.create(data);
+    try {
+      this.args.category.setProperties(props);
+      const response = await this.args.category.save();
+
+      this.router.replaceWith(
+        "editCategory",
+        Category.slugFor(response.category)
+      );
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
   get formData() {
-    // set the badge preview styles for new categories
+    const data = getProperties(this.args.category, ...FIELD_LIST);
+
     if (!this.isUpdate) {
-      this.style_type = "square";
-      return { style_type: "square", color: "0088CC", text_color: "FFFFFF" };
+      data.style_type = this.styleTypes[0].id;
+      this.style_type = data.style_type;
     }
 
-    return getProperties(this.args.category, [
-      "name",
-      "slug",
-      "parent_category_id",
-      "description",
-      "color",
-      "text_color",
-      "style_type",
-      "style_emoji",
-      "style_icon",
-    ]);
-  }
-
-  @bind
-  async create(data) {
-    try {
-      const response = await ajax("/categories", {
-        type: "POST",
-        data,
-      });
-      this.router.transitionTo("discovery.category", response.category.slug);
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @bind
-  async update(data) {
-    try {
-      await ajax(`/categories/${this.args.category.id}`, {
-        type: "PUT",
-        data,
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    return data;
   }
 
   @action
@@ -265,7 +249,7 @@ export default class EditCategoryGeneral extends Component {
                   as |field|
                 >
                   <field.Input
-                    @placeholderKey="category.name_placeholder"
+                    placeholder={{i18n "category.name_placeholder"}}
                     @maxlength="50"
                     class="category-name"
                   />
@@ -278,12 +262,10 @@ export default class EditCategoryGeneral extends Component {
                 @name="slug"
                 @title={{i18n "category.slug"}}
                 @format="large"
-                @validation="required"
                 as |field|
               >
                 <field.Input
-                  @value={{@category.slug}}
-                  @placeholderKey="category.slug_placeholder"
+                  placeholder={{i18n "category.slug_placeholder"}}
                   @maxlength="255"
                 />
               </form.Field>
@@ -388,7 +370,6 @@ export default class EditCategoryGeneral extends Component {
               @name="color"
               @title={{i18n "category.background_color"}}
               @format="full"
-              @validation="required"
               as |field|
             >
               <field.Custom>
@@ -413,7 +394,6 @@ export default class EditCategoryGeneral extends Component {
               @name="text_color"
               @title={{i18n "category.foreground_color"}}
               @format="full"
-              @validation="required"
               as |field|
             >
               <field.Custom>
