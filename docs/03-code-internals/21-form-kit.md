@@ -1039,8 +1039,11 @@ The object component allows to handle an object in your form.
 
 ```hbs
 <Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
-  <form.Object @name="foo" as |object name|>
-    <object.Field @name={{name}} @title={{name}} as |field|>
+  <form.Object @name="foo" as |object data|>
+    <object.Field @name="bar" @title="Bar" as |field|>
+      <field.Input />
+    </object.Field>
+    <object.Field @name="baz" @title="Baz" as |field|>
       <field.Input />
     </object.Field>
   </form.Object>
@@ -1054,7 +1057,7 @@ An object must have a unique name. This name is used as a prefix for the underly
 **Example**
 
 ```hbs
-<form.Collection @name="foo" />
+<form.Object @name="foo" />
 ```
 
 ## Nesting
@@ -1066,18 +1069,18 @@ An object can accept a nested Object or Collection.
 ```hbs
 <Form @data={{hash foo=(hash bar=(hash baz=1 bol=2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
-    <parentObject.Object @name="bar" as |childObject name|>
-      <childObject.Field @name={{name}} @title={{name}} as |field|>
+    <parentObject.Object @name="bar" as |childObject data|>
+      <childObject.Field @name="baz" @title="Baz" as |field|>
         <field.Input />
       </childObject.Field>
     </parentObject.Object>
   </form.Object>
 </Form>
 
-<Form @data={{hash foo=(hash bar=(array (hash baz=1) (hash baz=2)))}} as |form|>
+<Form @data={{hash foo=(hash bar=(array 1 2))}} as |form|>
   <form.Object @name="foo" as |parentObject|>
     <parentObject.Collection @name="bar" as |collection index|>
-      <collection.Field @name="baz" @title="baz" as |field|>
+      <collection.Field @title="Baz" as |field|>
         <field.Input />
       </collection.Field>
       <form.Button
@@ -1119,12 +1122,28 @@ For example, if collection has the name "foo", the 2nd field of the collection w
 
 ## @tagName
 
-A collection will by default render as a `<div class="form-kit__collection>`, you can alter this behavior by setting a `@tagName`.
+A collection will by default render as a `<div class="form-kit__collection>`, you can alter this behavior by using a `@tagName`.
 
 **Example**
 
 ```hbs
 <form.Collection @name="foo" @tagName="tr" />
+```
+
+## Primitive array
+
+If the shape of your data is an array of primitives, eg: [1, 2, 3], form-kit is able to handle it. You just have to omit the name on the field in this case, as the name will be auto generated for you with the index.
+
+**Example**
+
+```hbs
+<Form @data={{hash foo=(array 1 2)}} as |form|>
+  <form.Collection @name="foo" as |collection|>
+    <collection.Field @title="Baz" as |field|>
+      <field.Input />
+    </collection.Field>
+  </form.Object>
+</Form>
 ```
 
 ## Nesting
