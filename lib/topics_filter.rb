@@ -85,7 +85,7 @@ class TopicsFilter
       else
         if custom_filter =
              DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(filter) }
-          @scope = custom_filter[filter].call(@scope, filter_values)
+          @scope = instance_exec(@scope, filter_values, &custom_filter[filter]) || @scope
         end
       end
     end
@@ -562,7 +562,8 @@ class TopicsFilter
         key = "order:#{match_data[:column]}"
         if custom_match =
              DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(key) }
-          @scope = custom_match[key].call(@scope, match_data[:asc].nil? ? "DESC" : "ASC")
+          dir = match_data[:asc] ? "ASC" : "DESC"
+          @scope = instance_exec(@scope, dir, &custom_match[key]) || @scope
         end
       end
     end

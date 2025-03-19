@@ -1540,5 +1540,29 @@ RSpec.describe TopicsFilter do
         end
       end
     end
+
+    describe "with a custom filter" do
+      fab!(:topic)
+
+      before do
+        Plugin::Instance.new.add_filter_custom_filter(
+          "foo",
+          &->(scope, value) { @guardian.is_admin? ? scope : scope.where("1=0") }
+        )
+      end
+
+      it "has access to @guardian and other instance variables" do
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("foo:bar").pluck(:id),
+        ).to be_empty
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(admin))
+            .filter_from_query_string("foo:bar")
+            .pluck(:id),
+        ).to contain_exactly(topic.id)
+      end
+    end
   end
 end
