@@ -14,10 +14,10 @@ export function buildInputRules(extensions, params, includeDefault = true) {
   if (includeDefault) {
     const schema = params.schema;
 
-    // getAttrs handler for multi-group matching with prefix
+    // adapt the 2 groups to the single group that markInputRule expects
     const getAttrs = (match) => ({
-      prefix: match[1],
-      matchIndex: 2,
+      match: [match[0].replace(match[1], ""), match[2]],
+      start: match[1].length,
     });
 
     rules.push(
