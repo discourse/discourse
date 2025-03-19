@@ -330,10 +330,13 @@ export default class DEditor extends Component {
             .querySelector(".d-editor-input")
             .getBoundingClientRect();
 
+          const marginLeft = 18;
+          const marginTop = 10;
+
           const virtualElement = {
             getBoundingClientRect: () => ({
-              left: rect.left + caretCoords.left + 18,
-              top: rect.top + caretCoords.top + 10,
+              left: rect.left + caretCoords.left + marginLeft,
+              top: rect.top + caretCoords.top + marginTop,
               width: 0,
               height: 0,
             }),
