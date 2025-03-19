@@ -1,6 +1,5 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import MountWidget from "discourse/components/mount-widget";
 import SmallUserList from "discourse/components/small-user-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
