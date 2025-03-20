@@ -552,6 +552,13 @@ class Guardian
     SiteSetting.moderators_view_emails && is_moderator?
   end
 
+  def can_see_ip?
+    return true if is_admin?
+    return false if !SiteSetting.moderators_view_ips && is_moderator?
+
+    true
+  end
+
   def can_mute_user?(target_user)
     can_mute_users? && @user.id != target_user.id && !target_user.staff?
   end
