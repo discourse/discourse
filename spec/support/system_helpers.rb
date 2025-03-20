@@ -168,6 +168,21 @@ module SystemHelpers
     page.execute_script(js, selector, start, offset)
   end
 
+  def current_active_element
+    {
+      classes: page.evaluate_script("document.activeElement.className"),
+      id: page.evaluate_script("document.activeElement.id"),
+    }
+  end
+
+  def fake_scroll_down_long(selector_to_make_tall = "#main-outlet")
+    # Trick to give a huge vertical space to scroll
+    page.execute_script(
+      "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
+    )
+    page.scroll_to(0, 1000)
+  end
+
   def setup_or_skip_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
     skip_unless_s3_system_specs_enabled!
 

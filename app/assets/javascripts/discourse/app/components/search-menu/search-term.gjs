@@ -31,7 +31,7 @@ export default class SearchTerm extends Component {
 
   // make constant available in template
   get inputId() {
-    return SEARCH_INPUT_ID;
+    return this.args.inputId || SEARCH_INPUT_ID;
   }
 
   @action
@@ -121,6 +121,7 @@ export default class SearchTerm extends Component {
   <template>
     <input
       id={{this.inputId}}
+      class="search-term__input"
       type="search"
       autocomplete="off"
       enterkeyhint="search"
