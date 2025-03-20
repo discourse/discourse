@@ -60,6 +60,16 @@ export default class ReviewableItem extends Component {
   editing = false;
   _updates = null;
 
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
+  }
+
   @discourseComputed(
     "reviewable.type",
     "reviewable.last_performing_username",
@@ -215,6 +225,15 @@ export default class ReviewableItem extends Component {
       this.currentUser.staff &&
       this.reviewable.target_created_by
     );
+  }
+
+  @bind
+  _updateClaimedBy(data) {
+    const user = data.user ? this.store.createRecord("user", data.user) : null;
+
+    if (data.topic_id === this.reviewable.topic.id) {
+      this.reviewable.set("claimed_by", { user, system: data.system });
+    }
   }
 
   @bind
