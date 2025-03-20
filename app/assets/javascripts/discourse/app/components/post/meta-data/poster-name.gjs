@@ -18,7 +18,6 @@ import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {
-  @service currentUser;
   @service siteSettings;
   @service userStatus;
 

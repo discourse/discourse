@@ -1,10 +1,6 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 
 export default class GroupLink extends Component {
-  @service currentUser;
-  @service siteSettings;
-
   get name() {
     return this.args.name || this.args.group?.name;
   }

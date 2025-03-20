@@ -75,13 +75,11 @@ const defaultDagOptions = {
 };
 
 export default class PostMenu extends Component {
-  @service appEvents;
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
   @service modal;
   @service menu;
-  @service site;
   @service siteSettings;
   @service store;
 
