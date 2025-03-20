@@ -9,7 +9,6 @@ export default class FKControlEmoji extends Component {
   updateField(value) {
     this.args.field.set(value);
 
-    // trigger callback if one is provided
     this.args.onSelect?.(value);
   }
 

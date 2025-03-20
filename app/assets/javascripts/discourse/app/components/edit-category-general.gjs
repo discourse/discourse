@@ -62,19 +62,14 @@ export default class EditCategoryGeneral extends Component {
     return !this.args.category.isNew;
   }
 
-  // background colors are available as a pipe-separated string
   @cached
   get backgroundColors() {
     const categories = this.site.get("categoriesList");
     return this.siteSettings.category_colors
       .split("|")
-      .map(function (i) {
-        return i.toUpperCase();
-      })
+      .map((i) => i.toUpperCase())
       .concat(
-        categories.map(function (c) {
-          return c.color.toUpperCase();
-        })
+        categories.map((c) => c.color.toUpperCase())
       )
       .uniq();
   }
@@ -87,12 +82,12 @@ export default class EditCategoryGeneral extends Component {
 
     // if editing a category, don't include its color:
     return categories
-      .map(function (c) {
+      .map((c) => {
         return categoryId &&
-          categoryColor.toUpperCase() === c.color.toUpperCase()
+          categoryColor.toUpperCase() === category.color.toUpperCase()
           ? null
-          : c.color.toUpperCase();
-      }, this)
+          : category.color.toUpperCase();
+      })
       .compact();
   }
 
@@ -107,7 +102,7 @@ export default class EditCategoryGeneral extends Component {
   get categoryBadgePreview() {
     const category = this.args.category;
 
-    const c = Category.create({
+    const previewCategory = Category.create({
       name: this.name || i18n("category.untitled"),
       color: this.color,
       id: category.id,
@@ -116,7 +111,7 @@ export default class EditCategoryGeneral extends Component {
       read_restricted: category.get("read_restricted"),
     });
 
-    return categoryBadgeHTML(c, {
+    return categoryBadgeHTML(previewCategory, {
       link: false,
       previewColor: true,
       styleType: this.style_type,
@@ -131,10 +126,7 @@ export default class EditCategoryGeneral extends Component {
     if (!this.isUpdate) {
       return null;
     }
-    return Category.list().filterBy(
-      "parent_category_id",
-      this.args.category.id
-    );
+    return Category.list().filter((category) => category.get("parent_category_id") === this.args.category.id);
   }
 
   @cached
@@ -208,7 +200,7 @@ export default class EditCategoryGeneral extends Component {
 
   get panelClass() {
     const isActive = this.args.selectedTab === "general" ? "active" : "";
-    return "edit-category-tab edit-category-tab-general " + isActive;
+    return `edit-category-tab edit-category-tab-general ${isActive}`;
   }
 
   <template>
