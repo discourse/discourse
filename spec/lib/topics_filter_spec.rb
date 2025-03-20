@@ -1516,7 +1516,7 @@ RSpec.describe TopicsFilter do
           before_all do
             Plugin::Instance.new.add_filter_custom_filter(
               "order:bumped",
-              &->(scope, value) { scope.order("bumped_at #{value}") }
+              &->(scope, value, _guardian) { scope.order("bumped_at #{value}") }
             )
           end
 
@@ -1547,7 +1547,7 @@ RSpec.describe TopicsFilter do
       before do
         Plugin::Instance.new.add_filter_custom_filter(
           "foo",
-          &->(scope, value) { @guardian.is_admin? ? scope : scope.where("1=0") }
+          &->(scope, value, guardian) { guardian.is_admin? ? scope : scope.where("1=0") }
         )
       end
 
