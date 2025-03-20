@@ -12,6 +12,7 @@ import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { CATEGORY_STYLE_TYPES } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -49,9 +50,18 @@ export default class EditCategoryGeneral extends Component {
     "/admin/customize/site_texts?q=uncategorized"
   );
   foregroundColors = ["FFFFFF", "000000"];
+  styleIcon = this.styleType("Icon");
+  styleEmoji = this.styleType("Emoji");
 
   get styleTypes() {
-    return Category.styleTypes();
+    return Object.entries(CATEGORY_STYLE_TYPES).map(([key, value]) => ({
+      id: value,
+      name: i18n(`category.styles.options.${key}`),
+    }));
+  }
+
+  styleType(name) {
+    return String(this.styleTypes.find((s) => s.name === name)?.id);
   }
 
   get showWarning() {
@@ -68,9 +78,7 @@ export default class EditCategoryGeneral extends Component {
     return this.siteSettings.category_colors
       .split("|")
       .map((i) => i.toUpperCase())
-      .concat(
-        categories.map((c) => c.color.toUpperCase())
-      )
+      .concat(categories.map((c) => c.color.toUpperCase()))
       .uniq();
   }
 
@@ -84,9 +92,9 @@ export default class EditCategoryGeneral extends Component {
     return categories
       .map((c) => {
         return categoryId &&
-          categoryColor.toUpperCase() === category.color.toUpperCase()
+          categoryColor.toUpperCase() === c.color.toUpperCase()
           ? null
-          : category.color.toUpperCase();
+          : c.color.toUpperCase();
       })
       .compact();
   }
@@ -126,7 +134,9 @@ export default class EditCategoryGeneral extends Component {
     if (!this.isUpdate) {
       return null;
     }
-    return Category.list().filter((category) => category.get("parent_category_id") === this.args.category.id);
+    return Category.list().filter(
+      (category) => category.get("parent_category_id") === this.args.category.id
+    );
   }
 
   @cached
@@ -168,7 +178,7 @@ export default class EditCategoryGeneral extends Component {
 
     if (!this.isUpdate) {
       data.style_type = this.styleTypes[0].id;
-      this.style_type = data.style_type;
+      this.style_type = this.styleTypes[0].id;
     }
 
     return data;
@@ -331,7 +341,7 @@ export default class EditCategoryGeneral extends Component {
             </field.Select>
           </form.Field>
 
-          {{#if (eq transientData.style_type "emoji")}}
+          {{#if (eq transientData.style_type this.styleEmoji)}}
             <form.Field
               @name="style_emoji"
               @title={{i18n "category.styles.emoji"}}
@@ -342,7 +352,7 @@ export default class EditCategoryGeneral extends Component {
             >
               <field.Emoji />
             </form.Field>
-          {{else if (eq transientData.style_type "icon")}}
+          {{else if (eq transientData.style_type this.styleIcon)}}
             <form.Field
               @name="style_icon"
               @title={{i18n "category.styles.icon"}}

@@ -12,7 +12,6 @@ import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import { i18n } from "discourse-i18n";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -39,18 +38,6 @@ export default class Category extends RestModel {
 
   static isUncategorized(categoryId) {
     return categoryId === Site.currentProp("uncategorized_category_id");
-  }
-
-  static styleTypes() {
-    if (!this._styleTypes) {
-      this._styleTypes = [
-        { id: "square", name: i18n("category.styles.options.square") },
-        { id: "icon", name: i18n("category.styles.options.icon") },
-        { id: "emoji", name: i18n("category.styles.options.emoji") },
-      ];
-    }
-
-    return this._styleTypes;
   }
 
   static slugEncoded() {
