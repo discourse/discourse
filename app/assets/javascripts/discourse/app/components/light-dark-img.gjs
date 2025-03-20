@@ -29,16 +29,6 @@ export default class LightDarkImg extends Component {
     return getURLWithCDN(this.args.darkImg.url);
   }
 
-  get darkMediaQuery() {
-    if (this.interfaceColor.darkModeForced) {
-      return "all";
-    } else if (this.interfaceColor.lightModeForced) {
-      return "none";
-    } else {
-      return "(prefers-color-scheme: dark)";
-    }
-  }
-
   <template>
     {{#if this.isDarkImageAvailable}}
       <picture>
@@ -46,7 +36,7 @@ export default class LightDarkImg extends Component {
           srcset={{this.darkImgCdnSrc}}
           width={{@darkImg.width}}
           height={{@darkImg.height}}
-          media={{this.darkMediaQuery}}
+          media={{this.interfaceColor.darkMediaQuery}}
         />
         <CdnImg
           ...attributes
