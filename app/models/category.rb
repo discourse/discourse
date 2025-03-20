@@ -1384,8 +1384,8 @@ end
 #  uploaded_logo_dark_id                     :integer
 #  uploaded_background_dark_id               :integer
 #  style_type                                :integer          default("square"), not null
-#  style_emoji                               :string           default("")
-#  style_icon                                :string           default("")
+#  style_emoji                               :string
+#  style_icon                                :string
 #
 # Indexes
 #

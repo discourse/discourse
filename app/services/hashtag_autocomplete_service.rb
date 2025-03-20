@@ -144,8 +144,8 @@ class HashtagAutocompleteService
 
       if self.style_type.present?
         opts[:style_type] = self.style_type
-        opts[:style_icon] = self.style_icon if self.style_type == "icon"
-        opts[:style_emoji] = self.style_emoji if self.style_type == "emoji"
+        opts[:style_icon] = self.style_icon
+        opts[:style_emoji] = self.style_emoji
       end
 
       opts
