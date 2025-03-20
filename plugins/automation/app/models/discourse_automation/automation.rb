@@ -137,8 +137,10 @@ module DiscourseAutomation
           if scriptable.background && !running_in_background
             trigger_in_background!(context)
           else
-            triggerable&.on_call&.call(self, serialized_fields)
-            scriptable.script.call(context, serialized_fields, self)
+            Stat.log(id) do
+              triggerable&.on_call&.call(self, serialized_fields)
+              scriptable.script.call(context, serialized_fields, self)
+            end
           end
         ensure
           DiscourseAutomation.set_active_automation(nil)
@@ -187,3 +189,17 @@ module DiscourseAutomation
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_automation_automations
+#
+#  id                 :bigint           not null, primary key
+#  name               :string
+#  script             :string           not null
+#  enabled            :boolean          default(FALSE), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  last_updated_by_id :integer          not null
+#  trigger            :string
+#
