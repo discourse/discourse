@@ -18,7 +18,7 @@ import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
 
-const SEARCH_BUTTON_ID = "search-button";
+export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
 const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
 const PANEL_SELECTOR = ".panel-body";
