@@ -47,6 +47,12 @@ module Migrations
   end
 end
 
+if defined?(RubyVM::YJIT)
+  RubyVM::YJIT.enable
+else
+  warn "WARNING: Performance degraded: RubyVM::YJIT is not available".yellow
+end
+
 # rubocop:disable Discourse/NoChdir
 Dir.chdir(File.expand_path("../..", __dir__)) { ::Migrations::CLI::Application.start }
 # rubocop:enable Discourse/NoChdir

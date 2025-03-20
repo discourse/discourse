@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "colored2"
 require "ruby-progressbar"
 
 module Migrations
@@ -7,6 +8,7 @@ module Migrations
     def initialize(max_progress: nil)
       @max_progress = max_progress
 
+      @skip_count = 0
       @warning_count = 0
       @error_count = 0
       @extra_information = +""
@@ -28,8 +30,13 @@ module Migrations
       nil
     end
 
-    def update(progress, warning_count, error_count)
+    def update(progress, skip_count: 0, warning_count: 0, error_count: 0)
       updated = false
+
+      if skip_count > 0
+        @skip_count += skip_count
+        updated = true
+      end
 
       if warning_count > 0
         @warning_count += warning_count
@@ -82,6 +89,7 @@ module Migrations
       @extra_information.clear
 
       messages = []
+      messages << I18n.t("progressbar.skips", count: @skip_count).cyan if @skip_count > 0
       messages << I18n.t("progressbar.warnings", count: @warning_count).yellow if @warning_count > 0
       messages << I18n.t("progressbar.errors", count: @error_count).red if @error_count > 0
 

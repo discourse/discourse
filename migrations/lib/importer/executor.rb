@@ -37,7 +37,11 @@ module Migrations::Importer
     end
 
     def execute_steps
-      step_classes.each { |step_class| step_class.new(@intermediate_db, @discourse_db).execute }
+      step_classes.each do |step_class|
+        puts step_class.title
+        step = step_class.new(@intermediate_db, @discourse_db)
+        step.execute
+      end
     end
 
     def cleanup

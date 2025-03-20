@@ -1,5 +1,8 @@
 en:
   progressbar:
+    skips:
+      one: "%{count} skip"
+      other: "%{count} skips"
     warnings:
       one: "%{count} warning"
       other: "%{count} warnings"
@@ -15,6 +18,9 @@ en:
   converter:
     default_step_title: "Converting %{type}"
     max_progress_calculation: "Calculating items took %{duration}"
+
+  importer:
+    default_step_title: "Importing %{type}"
 
   schema:
     validator:

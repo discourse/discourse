@@ -55,7 +55,6 @@ module Migrations::Database
 
       if (@statement_counter += 1) >= @transaction_batch_size
         commit_transaction
-        @statement_counter = 0
       end
     end
 
@@ -63,23 +62,26 @@ module Migrations::Database
       @db.query(sql, *parameters, &block)
     end
 
+    def count(sql, *parameters)
+      @db.query_single_splat(sql, *parameters)
+    end
+
     def execute(sql, *parameters)
       @db.execute(sql, *parameters)
     end
 
-    private
-
     def begin_transaction
-      return if @db.transaction_active?
-
-      @db.execute("BEGIN DEFERRED TRANSACTION")
+      @db.execute("BEGIN DEFERRED TRANSACTION") unless @db.transaction_active?
     end
 
     def commit_transaction
-      return unless @db.transaction_active?
-
-      @db.execute("COMMIT")
+      if @db.transaction_active?
+        @db.execute("COMMIT")
+        @statement_counter = 0
+      end
     end
+
+    private
 
     def close_connection(keep_path:)
       return if @db.nil?
