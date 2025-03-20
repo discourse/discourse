@@ -12,11 +12,10 @@ function supportsLookbehind() {
 // We're expecting to catch Safari < 16 here, but using feature detection
 // instead of user-agent parsing, so that we also warn any other browsers missing
 // these features.
-export const checks = {
+const checks = {
   relativeColor: CSS.supports("(color: hsl(from white h s l))"),
   subgrid: CSS.supports("(grid-template-rows: subgrid)"),
   lookbehindRegex: supportsLookbehind(),
-  other: false,
 };
 
 export default apiInitializer((api) => {
