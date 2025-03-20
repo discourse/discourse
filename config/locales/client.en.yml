@@ -5160,7 +5160,7 @@ en:
           paste: "Paste..."
           save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
-    safari_15_warning: "Your browser will soon be incompatible with this community. Please upgrade your browser or <a href='%{url}'>learn more</a>."
+    safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
