@@ -162,12 +162,10 @@ export default class EditCategoryGeneral extends Component {
 
     try {
       this.args.category.setProperties(props);
-      await this.args.category.save();
+      const response = await this.args.category.save(props);
+      const category = this.isNew ? response.category : this.args.category;
 
-      this.router.replaceWith(
-        "editCategory",
-        Category.slugFor(this.args.category)
-      );
+      this.router.replaceWith("editCategory", Category.slugFor(category));
     } catch (error) {
       popupAjaxError(error);
     }
