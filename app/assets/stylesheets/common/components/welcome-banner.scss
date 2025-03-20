@@ -13,6 +13,8 @@
 }
 
 .welcome-banner {
+  position: relative;
+  z-index: 1;
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
