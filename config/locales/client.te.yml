@@ -192,6 +192,10 @@ te:
       dismiss: "రద్దుచేయండి"
     bootstrap_mode: "ప్రారంభించడం"
     back_button: "వెనుకకు"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name} కు సుస్వాగతం!"
+      search: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
       broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
@@ -388,10 +392,6 @@ te:
       remove_confirmation: "మీరు ఖచ్చితంగా ఈ చిత్తుప్రతిని తొలగించాలనుకుంటున్నారా?"
       new_topic: "కొత్త విషయం చిత్తుప్రతి"
       new_private_message: "కొత్త వ్యక్తిగత సందేశ చిత్తుప్రతి"
-      abandon:
-        confirm: "మీకు ఇప్పటికే చిత్తుప్రతి పురోగతిలో ఉంది. మీరు దానితో ఏమి చేయాలనుకుంటున్నారు?"
-        yes_value: "విస్మరించండి"
-        no_value: "సవరణను కొనసాగించండి"
     topic_count_all:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
@@ -4909,6 +4909,41 @@ te:
             failed: "విఫలం"
       home:
         title: "మొదటి పేజీ"
+      account:
+        title: "ఖాతా"
+        sidebar_link:
+          backups: "బ్యాకప్పులు"
+      community:
+        title: "సంఘం"
+        sidebar_link:
+          about_your_site: "మీ సైట్ గురించి"
+          badges: "బ్యాడ్జీలు"
+          notifications: "నోటిఫికేషన్‌లు"
+          permalinks: "శాశ్వత లింక్‌లు"
+          users: "సభ్యులు"
+          groups: "సమూహాలు"
+          legal: "చట్టపరమైన"
+          moderation_flags:
+            title: "మోడరేషన్"
+      appearance:
+        title: "స్వరూపం"
+        sidebar_link:
+          site_logo: "సైట్ లోగో"
+          emoji: "ఇమోజి"
+          navigation: "నావిగేషన్"
+          themes_and_components:
+            keywords: "ఎక్సటెన్షన్"
+      email_settings:
+        title: "ఇమెయిల్ సెట్టింగ్‌లు"
+        sidebar_link:
+          appearance: "స్వరూపం"
+      security:
+        title: "సెక్యూరిటీ"
+      section_landing_pages:
+        account:
+          title: "ఖాతా"
+          backups:
+            title: "బ్యాకప్పులు"
       config_areas:
         about:
           community_name: "సంఘం పేరు"
@@ -4941,12 +4976,20 @@ te:
         embeddable_host:
           edit: "సవరించండి"
           delete: "తొలగించు"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "కస్టమైజ్"
+          install: "ఇన్‌స్టాల్ చేయండి"
           themes:
             title: "థీమ్స్"
+          components:
+            title: "భాగాలు"
         user_fields:
           type: "రకం"
           delete: "తొలగించు"
+        color_palettes:
+          palette_name: "పేరు"
+          colors:
+            title: "రంగులు"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"

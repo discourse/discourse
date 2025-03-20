@@ -4395,11 +4395,13 @@ sv:
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
+        complete: "Inlägg raderat."
       delete:
         title: "Radera…"
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
+        complete: "Inlägg raderat."
       delete_and_ignore_replies:
         title: "Ignorera flaggning, radera inlägg och svar"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
@@ -4407,6 +4409,7 @@ sv:
       delete_and_agree:
         title: "Radera inlägg"
         description: "Godkänn flaggning och radera detta inlägg. Om det är det första inlägget, radera ämnet också."
+        complete: "Inlägg raderat."
       delete_and_agree_replies:
         title: "Radera inlägg och svar"
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
@@ -4416,29 +4419,37 @@ sv:
         description: "Återställ inlägget så att alla användare kan se det."
       disagree:
         title: "Nej"
+        complete: "Flaggning ignoreras."
       discard_post:
         title: "Kasta inlägg"
       revise_and_reject_post:
         title: "Revidera inlägg..."
       ignore:
         title: "Ignorera"
+        complete: "Flaggning ignoreras."
       ignore_and_do_nothing:
         title: "Gör ingenting"
         description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
+        complete: "Flaggning ignoreras."
       approve:
         title: "Godkänn"
+        complete: "Inlägget godkändes."
       approve_post:
         title: "Godkänn inlägg"
         confirm_closed: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
+        complete: "Inlägget godkändes."
       reject_post:
         title: "Avvisa inlägg"
+        complete: "Inlägget avvisades."
       approve_user:
         title: "Godkänn användare"
+        complete: "Användaren godkändes."
       reject_user:
         title: "Radera användare…"
         delete:
           title: "Ta bort användare"
           description: "Användaren kommer att raderas från forumet."
+          complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
@@ -4457,6 +4468,7 @@ sv:
         title: "Godkänn och återställ inlägg"
       delete_user:
         reason: "Raderad via granskningskön"
+        complete: "Användare raderad."
   email_style:
     html_missing_placeholder: "Html-mallen måste omfatta %{placeholder}"
   notification_level:

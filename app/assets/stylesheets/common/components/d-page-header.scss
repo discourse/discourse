@@ -90,3 +90,9 @@ $mobile-breakpoint: 700px;
     color: var(--primary);
   }
 }
+
+.d-page-header__learn-more {
+  &::before {
+    content: "• ";
+  }
+}

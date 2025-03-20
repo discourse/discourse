@@ -317,7 +317,8 @@ module Middleware
 
         if status == 200 && cache_duration
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration])
+            count =
+              REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration.to_i])
 
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i

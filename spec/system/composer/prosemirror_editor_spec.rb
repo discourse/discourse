@@ -464,6 +464,43 @@ describe "Composer - ProseMirror editor", type: :system do
         "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
       )
     end
+
+    it "respects existing marks when pasting a url to make a link" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      cdp.write_clipboard("not selected `code`**bold**not*italic* not selected")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("www.example.com")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      expect(rich).to have_css("code", text: "code")
+      expect(rich).to have_css("strong", text: "bold")
+      expect(rich).to have_css("em", text: "italic")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(
+        "not selected [`code`**bold**not*italic*](www.example.com) not selected",
+      )
+    end
+
+    it "auto-links pasted URLs from text/html" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard("not selected **bold** not selected")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("<p>www.example.com</p>", html: true)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
+    end
   end
 
   describe "trailing paragraph" do

@@ -28,7 +28,7 @@ export default class ColorPicker extends Component {
       <ColorPickerChoice
         @color={{c}}
         @usedColors={{this.usedColors}}
-        @selectColor={{action "selectColor"}}
+        @selectColor={{this.selectColor}}
         @ariaLabel={{this.getColorLabel c}}
       >
         {{icon "check"}}

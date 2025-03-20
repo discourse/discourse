@@ -293,7 +293,7 @@ export default class TimeShortcutPicker extends Component {
           <TapTile
             @tileId={{option.id}}
             @activeTile={{grid.activeTile}}
-            @onChange={{action "selectShortcut"}}
+            @onChange={{this.selectShortcut}}
           >
 
             <div class="tap-tile-title">{{i18n option.label}}</div>

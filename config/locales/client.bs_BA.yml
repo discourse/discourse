@@ -176,6 +176,10 @@ bs_BA:
     software_update_prompt:
       dismiss: "Odpusti"
     back_button: "Prethodno"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -323,8 +327,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      abandon:
-        yes_value: "Odbaci"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -3489,6 +3491,36 @@ bs_BA:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Bedž"
+          notifications: "Obavijest"
+          permalinks: "Permalink-ovi"
+          users: "Korisnici"
+          groups: "Groups"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderacija"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        sidebar_link:
+          appearance: "Izgled"
+      security:
+        title: "Security"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3515,12 +3547,20 @@ bs_BA:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Customize"
+          install: "Instaliraj"
           themes:
             title: "Teme"
+          components:
+            title: "Komponenti"
         user_fields:
           type: "Tip"
           delete: "Delete"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Colors"
       plugins:
         title: "Pluginovi"
         name: "Ime"

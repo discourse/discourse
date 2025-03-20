@@ -187,6 +187,10 @@ pt:
       dismiss: "Marcar como visto"
     bootstrap_mode: "Primeiros passos"
     back_button: "Retroceder"
+    welcome_banner:
+      header:
+        anonymous_members: "Bem-vindo a %{site_name}!"
+      search: "Pesquisar"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -362,9 +366,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      abandon:
-        yes_value: "Descartar"
-        no_value: "Retomar a edição"
     topic_count_all:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
@@ -3978,6 +3979,36 @@ pt:
             failed: "Falhado"
       home:
         title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Fazer Cópias de Segurança"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Crachás"
+          notifications: "Notificações"
+          permalinks: "Hiperligações Permanentes"
+          users: "Utilizadores"
+          groups: "Grupos"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderação"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegação"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparência"
+      security:
+        title: "Segurança"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Fazer Cópias de Segurança"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4005,12 +4036,20 @@ pt:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Componentes"
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Plugins"
         name: "Nome"

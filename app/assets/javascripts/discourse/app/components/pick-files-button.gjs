@@ -127,7 +127,7 @@ export default class PickFilesButton extends Component {
   <template>
     {{#if this.showButton}}
       <DButton
-        @action={{action "openSystemFilePicker"}}
+        @action={{this.openSystemFilePicker}}
         @label={{this.label}}
         @icon={{this.icon}}
       />

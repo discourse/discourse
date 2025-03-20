@@ -205,7 +205,7 @@ export default class TopicEntrance extends Component {
 
   <template>
     <DButton
-      @action={{action "enterTop"}}
+      @action={{this.enterTop}}
       @translatedAriaLabel={{i18n
         "topic_entrance.sr_jump_top_button"
         date=this.topDate
@@ -218,7 +218,7 @@ export default class TopicEntrance extends Component {
     </DButton>
 
     <DButton
-      @action={{action "enterBottom"}}
+      @action={{this.enterBottom}}
       @translatedAriaLabel={{i18n
         "topic_entrance.sr_jump_bottom_button"
         date=this.bottomDate
