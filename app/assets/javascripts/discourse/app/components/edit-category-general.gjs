@@ -54,8 +54,8 @@ export default class EditCategoryGeneral extends Component {
   styleEmoji = this.styleType("Emoji");
 
   get styleTypes() {
-    return Object.entries(CATEGORY_STYLE_TYPES).map(([key, value]) => ({
-      id: value,
+    return Object.keys(CATEGORY_STYLE_TYPES).map((key) => ({
+      id: key,
       name: i18n(`category.styles.options.${key}`),
     }));
   }
@@ -68,8 +68,8 @@ export default class EditCategoryGeneral extends Component {
     return this.args.category.isUncategorizedCategory;
   }
 
-  get isUpdate() {
-    return !this.args.category.isNew;
+  get isNew() {
+    return this.args.category.isNew;
   }
 
   @cached
@@ -131,7 +131,7 @@ export default class EditCategoryGeneral extends Component {
   // We can change the parent if there are no children
   @cached
   get subCategories() {
-    if (!this.isUpdate) {
+    if (this.isNew) {
       return null;
     }
     return Category.list().filter(
@@ -162,11 +162,11 @@ export default class EditCategoryGeneral extends Component {
 
     try {
       this.args.category.setProperties(props);
-      const response = await this.args.category.save();
+      await this.args.category.save();
 
       this.router.replaceWith(
         "editCategory",
-        Category.slugFor(response.category)
+        Category.slugFor(this.args.category)
       );
     } catch (error) {
       popupAjaxError(error);
@@ -176,9 +176,9 @@ export default class EditCategoryGeneral extends Component {
   get formData() {
     const data = getProperties(this.args.category, ...FIELD_LIST);
 
-    if (!this.isUpdate) {
-      data.style_type = this.styleTypes[0].id;
-      this.style_type = this.styleTypes[0].id;
+    if (this.isNew) {
+      data.style_type = "square";
+      this.style_type = "square";
     }
 
     return data;
@@ -186,9 +186,8 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   updateField(name, value, { set }) {
-    const newValue = value || undefined;
-    set(name, newValue);
-    this[name] = newValue;
+    set(name, value);
+    this[name] = value;
   }
 
   @action
@@ -341,7 +340,7 @@ export default class EditCategoryGeneral extends Component {
             </field.Select>
           </form.Field>
 
-          {{#if (eq transientData.style_type this.styleEmoji)}}
+          {{#if (eq transientData.style_type "emoji")}}
             <form.Field
               @name="style_emoji"
               @title={{i18n "category.styles.emoji"}}
@@ -352,7 +351,7 @@ export default class EditCategoryGeneral extends Component {
             >
               <field.Emoji />
             </form.Field>
-          {{else if (eq transientData.style_type this.styleIcon)}}
+          {{else if (eq transientData.style_type "icon")}}
             <form.Field
               @name="style_icon"
               @title={{i18n "category.styles.icon"}}
