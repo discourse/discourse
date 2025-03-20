@@ -2,8 +2,6 @@
 
 module Migrations::Importer
   class Step
-    NOW = "NOW()"
-
     class << self
       def title=(value)
         @title = value
@@ -44,22 +42,22 @@ module Migrations::Importer
       @intermediate_db = intermediate_db
       @discourse_db = discourse_db
 
-      @stats = StepStats.new(progress: 1, skip_count: 0, warning_count: 0, error_count: 0)
+      @stats = StepStats.new(skip_count: 0, warning_count: 0, error_count: 0)
     end
 
     def execute
     end
 
-    def update_progressbar
+    def update_progressbar(increment_by: 1)
       @progressbar.update(
-        @stats.progress,
+        increment_by:,
         skip_count: @stats.skip_count,
         warning_count: @stats.warning_count,
         error_count: @stats.error_count,
       )
     end
 
-    def with_progressbar
+    def with_progressbar(max_progress)
       ::Migrations::ExtendedProgressBar
         .new(max_progress:)
         .run do |progressbar|

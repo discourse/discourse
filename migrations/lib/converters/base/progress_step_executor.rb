@@ -40,7 +40,7 @@ module Migrations::Converters::Base
         @step.items.each do |item|
           stats = job.run(item)
           progressbar.update(
-            stats.progress,
+            increment_by: stats.progress,
             warning_count: stats.warning_count,
             error_count: stats.error_count,
           )
@@ -95,7 +95,7 @@ module Migrations::Converters::Base
             end
 
             progressbar.update(
-              stats.progress,
+              increment_by: stats.progress,
               warning_count: stats.warning_count,
               error_count: stats.error_count,
             )

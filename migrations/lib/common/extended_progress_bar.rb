@@ -30,7 +30,7 @@ module Migrations
       nil
     end
 
-    def update(progress, skip_count: 0, warning_count: 0, error_count: 0)
+    def update(increment_by:, skip_count: 0, warning_count: 0, error_count: 0)
       updated = false
 
       if skip_count > 0
@@ -50,10 +50,10 @@ module Migrations
 
       update_format if updated
 
-      if progress == 1
+      if increment_by == 1
         @progressbar.increment
       else
-        @progressbar.progress += progress
+        @progressbar.progress += increment_by
       end
     end
 
