@@ -53,31 +53,36 @@ module DiscourseAutomation
           last_updated_by_id: current_user.id,
         )
 
-      if automation.trigger != params[:automation][:trigger]
+      if attributes.key?(:trigger) && automation.trigger != params[:automation][:trigger]
         params[:automation][:fields] = []
         attributes[:enabled] = false
         automation.fields.destroy_all
       end
 
-      if automation.script != params[:automation][:script]
-        attributes[:trigger] = nil
-        params[:automation][:fields] = []
-        attributes[:enabled] = false
-        automation.fields.destroy_all
-        automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
-      else
-        Array(params[:automation][:fields])
-          .reject(&:empty?)
-          .each do |field|
-            automation.upsert_field!(
-              field[:name],
-              field[:component],
-              field[:metadata],
-              target: field[:target],
-            )
-          end
+      if attributes.key?(:script)
+        if automation.script != params[:automation][:script]
+          attributes[:trigger] = nil
+          params[:automation][:fields] = []
+          attributes[:enabled] = false
+          automation.fields.destroy_all
+          automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
+        else
+          Array(params[:automation][:fields])
+            .reject(&:empty?)
+            .each do |field|
+              automation.upsert_field!(
+                field[:name],
+                field[:component],
+                field[:metadata],
+                target: field[:target],
+              )
+            end
 
-        automation.tap { |r| r.assign_attributes(attributes) }.save!
+          automation.tap { |r| r.assign_attributes(attributes) }.save!
+        end
+      else
+        automation.assign_attributes(attributes)
+        automation.save!
       end
 
       render_serialized_automation(automation)

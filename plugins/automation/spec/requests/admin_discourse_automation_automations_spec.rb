@@ -143,6 +143,28 @@ describe DiscourseAutomation::AdminAutomationsController do
         end
       end
 
+      context "when only changing enabled state" do
+        it "updates only the enabled state" do
+          original_trigger = automation.trigger
+          original_script = automation.script
+          expect(automation.enabled).to eq(true)
+
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  enabled: false,
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["automation"]["enabled"]).to eq(false)
+          automation.reload
+          expect(automation.enabled).to eq(false)
+          expect(automation.trigger).to eq(original_trigger)
+          expect(automation.script).to eq(original_script)
+        end
+      end
+
       context "when changing trigger and script of an enabled automation" do
         it "forces the automation to be disabled" do
           expect(automation.enabled).to eq(true)

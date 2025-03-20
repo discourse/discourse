@@ -96,6 +96,7 @@ module DiscourseAutomation
         last_day: automation_stats[:last_day] || empty_stats,
         last_week: automation_stats[:last_week] || empty_stats,
         last_month: automation_stats[:last_month] || empty_stats,
+        last_run_at: automation_stats[:last_run_at],
       }
     end
 

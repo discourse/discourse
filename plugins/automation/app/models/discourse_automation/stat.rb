@@ -34,10 +34,8 @@ module DiscourseAutomation
         },
       }
 
-      # Build a hash to store results by automation_id
       result = {}
 
-      # For each period, fetch aggregated stats
       periods.each do |period_name, date_range|
         builder = DB.build <<~SQL
           SELECT
@@ -57,10 +55,19 @@ module DiscourseAutomation
 
         stats = builder.query(start_date: date_range[:start_date], end_date: date_range[:end_date])
 
-        # Process results into our hash
+        last_run_stats = DB.query_array <<~SQL
+          SELECT
+            automation_id,
+            MAX(last_run_at) AS last_run_at
+          FROM discourse_automation_stats
+          GROUP BY automation_id
+        SQL
+        last_run_stats = Hash[*last_run_stats.flatten]
+
         stats.each do |stat|
           automation_id = stat.automation_id
           result[automation_id] ||= {}
+          result[automation_id][:last_run_at] = last_run_stats[automation_id]
           result[automation_id][period_name] = {
             total_runs: stat.total_runs,
             total_time: stat.total_time,
