@@ -766,7 +766,7 @@ export default class ComposerService extends Service {
         if (linkWarn && !this.isWhispering) {
           if (linkInfo.username === this.currentUser.username) {
             this.appEvents.trigger("composer-messages:create", {
-              extraClass: "custom-composer-popup-body",
+              extraClass: "custom-body",
               templateName: "education",
               body: i18n("composer.duplicate_link_same_user", {
                 domain: linkInfo.domain,
@@ -776,7 +776,7 @@ export default class ComposerService extends Service {
             });
           } else {
             this.appEvents.trigger("composer-messages:create", {
-              extraClass: "custom-composer-popup-body duplicate-link-message",
+              extraClass: "custom-body duplicate-link-message",
               templateName: "education",
               body: i18n("composer.duplicate_link", {
                 domain: linkInfo.domain,
@@ -955,7 +955,7 @@ export default class ComposerService extends Service {
 
     if (body) {
       this.appEvents.trigger("composer-messages:create", {
-        extraClass: "custom-composer-popup-body",
+        extraClass: "custom-body",
         templateName: "education",
         body,
       });
@@ -979,7 +979,7 @@ export default class ComposerService extends Service {
     }
 
     this.appEvents.trigger("composer-messages:create", {
-      extraClass: "custom-composer-popup-body",
+      extraClass: "custom-body",
       templateName: "education",
       body,
     });
@@ -988,7 +988,7 @@ export default class ComposerService extends Service {
   @action
   hereMention(count) {
     this.appEvents.trigger("composer-messages:create", {
-      extraClass: "custom-composer-popup-body",
+      extraClass: "custom-body",
       templateName: "education",
       body: i18n("composer.here_mention", {
         here: this.siteSettings.here_mention,
