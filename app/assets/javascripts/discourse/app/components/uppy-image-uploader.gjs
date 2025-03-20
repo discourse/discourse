@@ -205,7 +205,10 @@ export default class UppyImageUploader extends Component {
               {{i18n "upload_selector.select_file"}}
             </label>
 
-            <div class="progress-status {{unless this.uppyUpload.uploading 'hidden'}}">
+            <div
+              class="progress-status
+                {{unless this.uppyUpload.uploading 'hidden'}}"
+            >
               <div
                 aria-label="{{i18n 'upload_selector.uploading'}}
               {{this.uppyUpload.uploadProgress}}%"
@@ -216,7 +219,8 @@ export default class UppyImageUploader extends Component {
               </div>
 
               <span>
-                {{i18n 'upload_selector.uploading'}} {{this.uppyUpload.uploadProgress}}%
+                {{i18n "upload_selector.uploading"}}
+                {{this.uppyUpload.uploadProgress}}%
               </span>
             </div>
           </div>
