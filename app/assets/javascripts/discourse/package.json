@@ -132,7 +132,7 @@
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
     "select-kit": "workspace:1.0.0",
-    "sinon": "^19.0.2",
+    "sinon": "^19.0.4",
     "source-map": "^0.7.4",
     "terser": "^5.39.0",
     "testem": "^3.15.2",
