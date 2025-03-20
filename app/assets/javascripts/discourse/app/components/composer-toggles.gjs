@@ -63,7 +63,7 @@ export default class ComposerToggles extends Component {
           @action={{this.toggleToolbar}}
           @title={{this.toggleToolbarTitle}}
           @preventFocus={{true}}
-          class="btn-flat toggle-toolbar btn-mini-toggle"
+          class="btn-transparent toggle-toolbar btn-mini-toggle"
         />
       {{/if}}
 
