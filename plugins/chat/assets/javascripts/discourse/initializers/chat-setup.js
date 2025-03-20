@@ -9,6 +9,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
+import richEditorExtension from "../../lib/rich-editor-extension";
 import ChatHeaderIcon from "../components/chat/header/icon";
 import chatStyleguide from "../components/styleguide/organisms/chat";
 
@@ -176,6 +177,8 @@ class ChatSetupInit {
         category: "organisms",
         id: "chat",
       });
+
+      api.registerRichEditorExtension(richEditorExtension);
     });
   }
 
