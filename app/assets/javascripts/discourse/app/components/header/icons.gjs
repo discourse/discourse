@@ -61,7 +61,7 @@ export default class Icons extends Component {
     }
 
     const searchExperience = applyValueTransformer(
-      "search-experience",
+      "site-setting-search-experience",
       this.siteSettings.search_experience
     );
 

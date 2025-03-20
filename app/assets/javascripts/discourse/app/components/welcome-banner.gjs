@@ -56,7 +56,7 @@ export default class WelcomeBanner extends Component {
 
   get shouldDisplay() {
     const enabled = applyValueTransformer(
-      "enable-welcome-banner",
+      "site-setting-enable-welcome-banner",
       this.siteSettings.enable_welcome_banner
     );
 
