@@ -305,13 +305,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "invalid request params" do
-    before do
-      @old_logger = Rails.logger
-      @logs = StringIO.new
-      Rails.logger = Logger.new(@logs)
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @old_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "should not raise a 500 (nor should it log a warning) for bad params" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
@@ -321,20 +319,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
 
-      log = @logs.string
-
-      if (log.include? "exception app middleware")
-        # heisentest diagnostics
-        puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITTENT TEST FAIL"
-        puts log
-        puts ">> action_dispatch.exception"
-        ex = request.env["action_dispatch.exception"]
-        puts ">> exception class: #{ex.class} : #{ex}"
-      end
-
-      expect(log).not_to include("exception app middleware")
-
+      expect(fake_logger.warnings.length).to eq(0)
       expect(response.status).to eq(400)
     end
   end
