@@ -706,15 +706,18 @@ RSpec.describe ReviewablesController do
         SiteSetting.reviewable_claiming = "optional"
         PostActionCreator.spam(user0, post0)
         moderator = Fabricate(:moderator)
-        ReviewableClaimedTopic.create!(user: moderator, topic: post0.topic)
+        claim = ReviewableClaimedTopic.create!(user: moderator, topic: post0.topic)
 
         get "/review/topics.json"
         expect(response.code).to eq("200")
         json = response.parsed_body
         json_topic = json["reviewable_topics"].find { |rt| rt["id"] == post0.topic_id }
-        expect(json_topic["claimed_by_id"]).to eq(moderator.id)
+        expect(json_topic["claimed_by_id"]).to eq(claim.id)
 
-        json_user = json["users"].find { |u| u["id"] == json_topic["claimed_by_id"] }
+        json_claim = json["claimed_bies"].find { |c| c["id"] == claim.id }
+        expect(json_claim["user_id"]).to eq(moderator.id)
+
+        json_user = json["users"].find { |u| u["id"] == json_claim["user_id"] }
         expect(json_user).to be_present
       end
 
