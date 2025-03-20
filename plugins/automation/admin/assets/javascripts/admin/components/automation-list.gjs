@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -18,14 +19,6 @@ const THRESHOLD = 10;
 export default class AutomationList extends Component {
   @service dialog;
   @service router;
-
-  @action
-  editAutomation(automation) {
-    this.router.transitionTo(
-      "adminPlugins.show.automation.edit",
-      automation.id
-    );
-  }
 
   @action
   newAutomation() {
@@ -213,11 +206,13 @@ export default class AutomationList extends Component {
                 {{/if}}
 
                 <td class="d-admin-row__controls automations__controls">
-                  <DButton
-                    @label="discourse_automation.edit"
-                    class="btn-small"
-                    @action={{this.editAutomation automation}}
-                  />
+                  <LinkTo
+                    @route="adminPlugins.show.automation.edit"
+                    @model={{automation.id}}
+                    class="btn btn-default btn-text btn-small"
+                  >
+                    {{i18n "discourse_automation.edit"}}
+                  </LinkTo>
 
                   <DButton
                     @icon="trash-can"
