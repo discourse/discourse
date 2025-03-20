@@ -287,22 +287,25 @@ export default class ReviewableItem extends Component {
       let actionMethod =
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
-        const claim = this.store.createRecord("reviewable-claimed-topic");
+        if (!this.reviewable.claimed_by) {
+          const claim = this.store.createRecord("reviewable-claimed-topic");
 
-        try {
-          await claim.save({
-            topic_id: this.reviewable.topic.id,
-            system: true,
-          });
-          this.reviewable.set("claimed_by", {
-            user: this.currentUser,
-            system: true,
-          });
-
-          return actionMethod.call(this, reviewable, performAction);
-        } catch (e) {
-          popupAjaxError(e);
+          try {
+            await claim.save({
+              topic_id: this.reviewable.topic.id,
+              system: true,
+            });
+            this.reviewable.set("claimed_by", {
+              user: this.currentUser,
+              system: true,
+            });
+          } catch (e) {
+            popupAjaxError(e);
+            return;
+          }
         }
+
+        return actionMethod.call(this, reviewable, performAction);
       } else {
         // eslint-disable-next-line no-console
         console.error(
@@ -350,17 +353,32 @@ export default class ReviewableItem extends Component {
     return performAction();
   }
 
-  _penalize(adminToolMethod, reviewable, performAction) {
+  async _penalize(adminToolMethod, reviewable, performAction) {
     let adminTools = this.adminTools;
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
       let postEdit = reviewable.get("raw");
-      return adminTools[adminToolMethod](createdBy, {
+
+      const data = await adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
         before: performAction,
       });
+
+      if (!data.success) {
+        try {
+          await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
+            type: "DELETE",
+            data: { system: true },
+          });
+          this.reviewable.set("claimed_by", null);
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      }
+
+      return data;
     }
   }
 

@@ -22,9 +22,10 @@ class ReviewableClaimedTopicsController < ApplicationController
 
   def destroy
     topic = Topic.with_deleted.find_by(id: params[:id])
+    system = params[:system] == "true"
     raise Discourse::NotFound if topic.blank?
 
-    guardian.ensure_can_claim_reviewable_topic!(topic)
+    guardian.ensure_can_claim_reviewable_topic!(topic, system)
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
 
