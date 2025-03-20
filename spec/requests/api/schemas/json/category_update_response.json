@@ -24,10 +24,16 @@
           "type": "string"
         },
         "style_emoji": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "style_icon": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "slug": {
           "type": "string"
