@@ -7,7 +7,7 @@ import UserAvatar from "discourse/components/user-avatar";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
-export default class extends Component {
+export default class PostFilteredNotice extends Component {
   get isViewingPostsByUsername() {
     return this.args.streamFilters.username_filters?.length;
   }
