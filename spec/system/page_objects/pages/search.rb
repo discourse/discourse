@@ -111,7 +111,7 @@ module PageObjects
         has_no_css?(SEARCH_PAGE_SELECTOR)
       end
 
-      def ctrl_f_search
+      def browser_search_shortcut
         page.send_keys([PLATFORM_KEY_MODIFIER, "f"])
       end
     end

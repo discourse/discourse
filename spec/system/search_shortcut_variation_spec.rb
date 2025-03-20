@@ -27,7 +27,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses welcome banner search when Ctrl+F is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        search_page.ctrl_f_search
+        search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("welcome-banner-search-term")
         page.send_keys(:escape)
@@ -51,7 +51,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
 
         it "displays and focuses header search when Ctrl+F is pressed and hides it when Escape is pressed" do
           expect(welcome_banner).to be_invisible
-          search_page.ctrl_f_search
+          search_page.browser_search_shortcut
           expect(search_page).to have_search_menu
           expect(current_active_element[:id]).to eq("search-term")
           page.send_keys(:escape)
@@ -76,7 +76,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses header search when Ctrl+F is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_hidden
-        search_page.ctrl_f_search
+        search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("search-term")
         page.send_keys(:escape)
@@ -104,7 +104,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses welcome banner search when Ctrl+F is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        search_page.ctrl_f_search
+        search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("welcome-banner-search-term")
         page.send_keys(:escape)
@@ -149,9 +149,9 @@ describe "Search | Shortcuts for variations of search input", type: :system do
 
         it "opens search on first press of Ctrl+F, and closes on the second" do
           visit "/t/#{topic.slug}/#{topic.id}"
-          search_page.ctrl_f_search
+          search_page.browser_search_shortcut
           expect(search_page).to have_search_menu_visible
-          search_page.ctrl_f_search
+          search_page.browser_search_shortcut
           expect(search_page).to have_no_search_menu_visible
         end
       end
