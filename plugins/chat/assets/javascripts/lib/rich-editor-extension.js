@@ -26,6 +26,8 @@ const extension = {
         user.innerHTML = `<span class="chat-transcript-username">${node.attrs.username}</span>`;
         const messages = document.createElement("div");
         messages.classList.add("chat-transcript-messages");
+
+        // html is raw content with additional html, raw content is just the text
         messages.innerHTML = node.attrs.html;
 
         dom.appendChild(user);
@@ -47,13 +49,26 @@ const extension = {
       // todo: handle chained and multiQuote
 
       state.write(`[chat ${bbCodeAttrs.join(" ")}]\n`);
+
       state.write(node.attrs.rawContent);
       state.write("\n[/chat]\n");
     },
   },
   parse: {
     div_chat_transcript_wrap_open(state, token, tokens) {
+      // TODO (martin) This needs to be getting the html_raw for the current
+      // token only, otherwise it will get the first one every time
       const messagesHtml = tokens.find((t) => t.type === "html_raw")?.content;
+
+      // So this content and the whole wrap_open happens for every single one of `[chat]`
+      //
+      // Only the first one will have multiQuote and chained
+      //
+      // Multiquote is > 1 message
+      // Chained is > 1 message by different users
+      //
+      //
+      //TODO: Maybe we do need a parent node to contain all these?
       state.openNode(state.schema.nodes.chat, {
         messageId: token.attrGet("data-message-id"),
         username: token.attrGet("data-username"),
@@ -78,6 +93,14 @@ const extension = {
     div_chat_transcript_reactions: { ignore: true },
     div_chat_transcript_meta: { ignore: true },
     html_raw: { ignore: true, noCloseToken: true },
+    span_open() {
+      // TODO: not sure if i need to actually do anything here,
+      // its just here to stop it erroring
+      return true;
+    },
+    span_close() {
+      return true;
+    },
   },
 };
 
