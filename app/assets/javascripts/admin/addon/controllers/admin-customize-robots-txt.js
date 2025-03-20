@@ -1,11 +1,14 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { not } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { propertyEqual } from "discourse/lib/computed";
 
 export default class AdminCustomizeRobotsTxtController extends Controller {
+  @tracked model;
   saved = false;
   isSaving = false;
 
@@ -13,10 +16,11 @@ export default class AdminCustomizeRobotsTxtController extends Controller {
 
   @not("model.overridden") resetDisabled;
 
-  @computed("model")
+  @cached
+  @dependentKeyCompat
   get buffered() {
     return BufferedProxy.create({
-      content: this.get("model"),
+      content: this.model,
     });
   }
 
