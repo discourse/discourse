@@ -21,11 +21,6 @@ export default class AutomationList extends Component {
   @service router;
 
   @action
-  newAutomation() {
-    this.router.transitionTo("adminPlugins.show.automation.new");
-  }
-
-  @action
   destroyAutomation(automation) {
     this.dialog.deleteConfirm({
       message: i18n("discourse_automation.destroy_automation.confirm", {
