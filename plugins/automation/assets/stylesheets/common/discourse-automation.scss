@@ -1,11 +1,11 @@
 .admin-plugins.automation {
   .automations {
     .relative-date {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
 
     &__stats {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
 
     td[role="button"] {
