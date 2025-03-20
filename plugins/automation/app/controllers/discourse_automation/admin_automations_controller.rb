@@ -11,6 +11,9 @@ module DiscourseAutomation
           automations,
           each_serializer: DiscourseAutomation::AutomationSerializer,
           root: "automations",
+          scope: {
+            stats: DiscourseAutomation::Stat.fetch_period_summaries,
+          },
         ).as_json
       render_json_dump(serializer)
     end

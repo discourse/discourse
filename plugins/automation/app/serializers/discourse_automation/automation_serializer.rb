@@ -2,15 +2,16 @@
 
 module DiscourseAutomation
   class AutomationSerializer < ApplicationSerializer
-    attributes :id
-    attributes :name
-    attributes :enabled
-    attributes :script
-    attributes :trigger
-    attributes :updated_at
-    attributes :last_updated_by
-    attributes :next_pending_automation_at
-    attributes :placeholders
+    attribute :id
+    attribute :name
+    attribute :enabled
+    attribute :script
+    attribute :trigger
+    attribute :updated_at
+    attribute :last_updated_by
+    attribute :next_pending_automation_at
+    attribute :placeholders
+    attribute :stats
 
     def last_updated_by
       BasicUserSerializer.new(
@@ -82,6 +83,24 @@ module DiscourseAutomation
         fields: process_fields(object.fields.where(target: "trigger")),
         settings: triggerable&.settings,
       }
+    end
+
+    def include_stats?
+      scope&.dig(:stats).present?
+    end
+
+    def stats
+      automation_stats = scope&.dig(:stats, object.id) || {}
+
+      {
+        last_day: automation_stats[:last_day] || empty_stats,
+        last_week: automation_stats[:last_week] || empty_stats,
+        last_month: automation_stats[:last_month] || empty_stats,
+      }
+    end
+
+    def empty_stats
+      { total_runs: 0, total_time: 0, average_run_time: 0, min_run_time: 0, max_run_time: 0 }
     end
 
     private
