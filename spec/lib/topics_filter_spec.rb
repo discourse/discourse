@@ -1551,7 +1551,7 @@ RSpec.describe TopicsFilter do
         )
       end
 
-      it "has access to @guardian and other instance variables" do
+      it "can guard against the current user" do
         expect(
           TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("foo:bar").pluck(:id),
         ).to be_empty
