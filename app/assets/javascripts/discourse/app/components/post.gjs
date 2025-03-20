@@ -2,31 +2,44 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionsSummary from "discourse/components/post/actions-summary";
 import PostAvatar from "discourse/components/post/avatar";
-import PostContents from "discourse/components/post/contents";
+import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostEmbedded from "discourse/components/post/embedded";
 import PostLinks from "discourse/components/post/links";
+import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import PostMetaDataReplyToTab from "discourse/components/post/meta-data/reply-to-tab";
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
+import { isTesting } from "discourse/lib/environment";
+import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
+import postActionFeedback from "discourse/lib/post-action-feedback";
+import { nativeShare } from "discourse/lib/pwa-utils";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
+import { clipboardCopy } from "discourse/lib/utilities";
 import parentClass from "discourse/modifiers/parent-class";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
   @service appEvents;
+  @service capabilities;
   @service currentUser;
   @service dialog;
   @service keyValueStore;
+  @service modal;
   @service search;
   @service site;
   @service siteSettings;
@@ -34,12 +47,35 @@ export default class Post extends Component {
 
   @controller("topic") topicController;
 
+  @tracked expandedFirstPost = false;
   @tracked repliesAbove;
+  @tracked repliesBelow = new TrackedArray();
 
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
       post: this.args.post,
     });
+  }
+
+  get canLoadMoreRepliesBelow() {
+    return this.repliesBelow.length < this.args.post.reply_count;
+  }
+
+  get filteredRepliesShown() {
+    return (
+      this.topicController.replies_to_post_number ===
+      this.args.post.post_number.toString()
+    );
+  }
+
+  get filteredRepliesView() {
+    return this.siteSettings.enable_filtered_replies_view;
+  }
+
+  get groupRequestUrl() {
+    return getURL(
+      `/g/${this.args.post.requestedGroupName}/requests?filter=${this.args.post.username}`
+    );
   }
 
   get hasRepliesAbove() {
@@ -57,6 +93,24 @@ export default class Post extends Component {
       this.args.post.id !==
         this.args.post.topic?.postStream?.filterUpwardsPostID
     );
+  }
+
+  get isReplyToTabDisplayed() {
+    return PostMetaDataReplyToTab.shouldRender(
+      {
+        post: this.args.post,
+        isReplyingDirectlyToPostAbove: this.isReplyingDirectlyToPostAbove,
+      },
+      null,
+      getOwner(this)
+    );
+  }
+
+  // replies show refers
+  get repliesShown() {
+    return this.filteredRepliesView
+      ? this.filteredRepliesShown
+      : this.repliesBelow.length > 0;
   }
 
   get shouldShowTopicMap() {
@@ -84,6 +138,90 @@ export default class Post extends Component {
       this.args.post.isSaving ||
       this.args.post.staged
     );
+  }
+
+  @action
+  copyLink() {
+    // Copying the link to clipboard on mobile doesn't make sense.
+    if (this.site.mobileView) {
+      return this.share();
+    }
+
+    const post = this.args.post;
+    const postId = post.id;
+
+    let actionCallback = () => clipboardCopy(getAbsoluteURL(post.shareUrl));
+
+    // Can't use clipboard in JS tests.
+    if (isTesting()) {
+      actionCallback = () => {};
+    }
+
+    postActionFeedback({
+      postId,
+      actionClass: "post-action-menu__copy-link",
+      messageKey: "post.controls.link_copied",
+      actionCallback,
+      errorCallback: () => this.share(),
+    });
+  }
+
+  @action
+  async loadMoreReplies() {
+    const after = this.repliesBelow.length
+      ? this.repliesBelow.at(-1).post_number
+      : 1;
+
+    const replies = await this.store.find("post-reply", {
+      postId: this.args.post.id,
+      after,
+    });
+
+    replies.forEach((reply) => {
+      // the components expect a post model instance
+      const replyAsPost = this.store.createRecord("post", reply);
+      this.repliesBelow.push(replyAsPost);
+    });
+  }
+
+  @action
+  async expandFirstPost() {
+    this.expandedFirstPost = new TrackedAsyncData(
+      await this.args.post.expand()
+    );
+  }
+
+  @action
+  async share() {
+    const post = this.args.post;
+
+    try {
+      await nativeShare(this.capabilities, { url: post.shareUrl });
+    } catch {
+      // if a native share dialog is not available, fallback to our share modal
+      const topic = post.topic;
+      this.modal.show(ShareTopicModal, {
+        model: { category: topic.category, topic, post },
+      });
+    }
+  }
+
+  @action
+  async toggleFilteredRepliesView() {
+    const post = this.args.post;
+    const currentFilterPostNumber =
+      this.args.post.topic.postStream.filterRepliesToPostNumber;
+
+    if (
+      currentFilterPostNumber &&
+      currentFilterPostNumber === post.post_number
+    ) {
+      this.topicController.send("cancelFilter", currentFilterPostNumber);
+      return;
+    }
+
+    await post.get("topic.postStream").filterReplies(post.post_number, post.id);
+    this.topicController.updateQueryParams();
   }
 
   @action
@@ -130,6 +268,28 @@ export default class Post extends Component {
       }
     } else {
       this.repliesAbove = new TrackedAsyncData(this.#loadRepliesAbove());
+    }
+  }
+
+  @action
+  async toggleReplies() {
+    return this.filteredRepliesView
+      ? await this.toggleFilteredRepliesView()
+      : await this.toggleRepliesBelow();
+  }
+
+  @action
+  toggleRepliesBelow(goToPost = false) {
+    if (this.repliesBelow.length) {
+      // since repliesBelow is a tracked array, let's truncate it instead of creating another one
+      this.repliesBelow.length = 0;
+
+      if (goToPost === true) {
+        const { topicUrl, post_number } = this.args.post;
+        DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
+      }
+    } else {
+      return this.loadMoreReplies();
     }
   }
 
@@ -258,34 +418,121 @@ export default class Post extends Component {
                 @toggleReplyAbove={{this.toggleReplyAbove}}
               />
             </PluginOutlet>
-            <PostContents
-              @post={{@post}}
-              @prevPost={{@prevPost}}
-              @nextPost={{@nextPost}}
-              @canCreatePost={{@canCreatePost}}
-              @changeNotice={{@changeNotice}}
-              @changePostOwner={{@changePostOwner}}
-              @deletePost={{@deletePost}}
-              @editPost={{@editPost}}
-              @expandHidden={{@expandHidden}}
-              @grantBadge={{@grantBadge}}
-              @highlightTerm={{this.search.highlightTerm}}
-              @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
-              @lockPost={{@lockPost}}
-              @permanentlyDeletePost={{@permanentlyDeletePost}}
-              @rebakePost={{@rebakePost}}
-              @recoverPost={{@recoverPost}}
-              @replyToPost={{@replyToPost}}
-              @showFlags={{@showFlags}}
-              @showLogin={{@showLogin}}
-              @showPagePublish={{@showPagePublish}}
-              @showReadIndicator={{@showReadIndicator}}
-              @toggleLike={{this.toggleLike}}
-              @togglePostType={{@togglePostType}}
-              @toggleWiki={{@toggleWiki}}
-              @unhidePost={{@unhidePost}}
-              @unlockPost={{@unlockPost}}
-            />
+            <div
+              class={{concatClass
+                "regular"
+                (unless this.repliesShown "contents")
+                (if this.isReplyToTabDisplayed "avoid-tab")
+              }}
+            >
+              <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
+                <PostCookedHtml
+                  @post={{@post}}
+                  @highlightTerm={{this.search.highlightTerm}}
+                />
+              </PluginOutlet>
+
+              {{#if @post.requestedGroupName}}
+                <div class="group-request">
+                  <a href={{this.groupRequestUrl}}>
+                    {{i18n "groups.requests.handle"}}
+                  </a>
+                </div>
+              {{/if}}
+
+              {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
+                {{! template-lint-disable no-invalid-interactive }}
+                <a class="expand-hidden" {{on "click" @expandHidden}}>
+                  {{i18n "post.show_hidden"}}
+                </a>
+              {{/if}}
+
+              {{#if
+                (and
+                  (not this.expandedFirstPost.isResolved) @post.expandablePost
+                )
+              }}
+                <DButton
+                  class="expand-post"
+                  @action={{this.expandFirstPost}}
+                  @translatedLabel={{if
+                    this.expandedFirstPost.isPending
+                    (i18n "loading")
+                    (concat (i18n "post.show_full") "...")
+                  }}
+                />
+              {{/if}}
+
+              <section class="post-menu-area clearfix">
+                <PostMenu
+                  @post={{@post}}
+                  @prevPost={{@prevPost}}
+                  @nextPost={{@nextPost}}
+                  @canCreatePost={{@canCreatePost}}
+                  @changeNotice={{@changeNotice}}
+                  @changePostOwner={{@changePostOwner}}
+                  @copyLink={{this.copyLink}}
+                  @deletePost={{@deletePost}}
+                  @editPost={{@editPost}}
+                  @filteredRepliesView={{this.filteredRepliesView}}
+                  @grantBadge={{@grantBadge}}
+                  @lockPost={{@lockPost}}
+                  @permanentlyDeletePost={{@permanentlyDeletePost}}
+                  @rebakePost={{@rebakePost}}
+                  @recoverPost={{@recoverPost}}
+                  @repliesShown={{this.repliesShown}}
+                  @replyToPost={{@replyToPost}}
+                  @share={{this.share}}
+                  @showFlags={{@showFlags}}
+                  @showLogin={{@showLogin}}
+                  @showPagePublish={{@showPagePublish}}
+                  @showReadIndicator={{@showReadIndicator}}
+                  @toggleLike={{this.toggleLike}}
+                  @togglePostType={{@togglePostType}}
+                  @toggleReplies={{this.toggleReplies}}
+                  @toggleWiki={{@toggleWiki}}
+                  @unhidePost={{@unhidePost}}
+                  @unlockPost={{@unlockPost}}
+                />
+              </section>
+
+              {{#if this.repliesBelow}}
+                <section
+                  id={{concat "embedded-posts__bottom--" @post.post_number}}
+                  class="embedded-posts bottom"
+                >
+                  {{#each this.repliesBelow key="id" as |reply|}}
+                    <PostEmbedded
+                      role="region"
+                      aria-label={{i18n
+                        "post.sr_embedded_reply_description"
+                        post_number=@post.post_number
+                        username=reply.username
+                      }}
+                      @post={{reply}}
+                      @highlightTerm={{this.search.highlightTerm}}
+                    />
+                  {{/each}}
+
+                  <DButton
+                    class="collapse-up"
+                    @action={{this.toggleRepliesBelow}}
+                    @ariaLabel="post.sr_collapse_replies"
+                    @icon="chevron-up"
+                    @title="post.collapse"
+                  />
+
+                  {{#if this.canLoadMoreRepliesBelow}}
+                    <DButton
+                      class="load-more-replies"
+                      @label="post.load_more_replies"
+                      @action={{this.loadMoreReplies}}
+                    />
+                  {{/if}}
+                </section>
+              {{/if}}
+            </div>
+
             <section class="post-actions">
               <PostActionsSummary @post={{@post}} />
             </section>
