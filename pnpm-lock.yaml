@@ -1028,8 +1028,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^3.1.1
-        version: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+        specifier: ^3.1.2
+        version: 3.1.2
       core-js:
         specifier: ^3.41.0
         version: 3.41.0
@@ -3927,6 +3927,9 @@ packages:
 
   content-tag@3.1.1:
     resolution: {integrity: sha512-94puwVk6X8oJcbRIEY03UM80zWzA3dYgGkOiRJzeY1vXgwrFUh3OolDDi/D7YBa6Vsx+CgAvuk4uXlB8loZ1FA==}
+
+  content-tag@3.1.2:
+    resolution: {integrity: sha512-Z+MGhZfnFFKzYC+pUTWXnoDYhfiXP9ojZe3JbwsYufmDuoeq2EvuDyeFAJ/RnKokUwz5s9bQhDOrbvSYRShcrQ==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -12297,11 +12300,13 @@ snapshots:
 
   content-tag-utils@0.3.1:
     dependencies:
-      content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.2
 
   content-tag@2.0.3: {}
 
   content-tag@3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
+
+  content-tag@3.1.2: {}
 
   content-type@1.0.5: {}
 
@@ -13249,7 +13254,7 @@ snapshots:
       aria-query: 5.3.2
       chalk: 5.4.1
       ci-info: 4.2.0
-      content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.2
       content-tag-utils: 0.3.1
       date-fns: 3.6.0
       ember-template-recast: 6.1.5
@@ -15267,7 +15272,7 @@ snapshots:
 
   lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.0.1(@babel/core@7.26.10)):
     dependencies:
-      content-tag: 3.1.1(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.2
       debug: 4.4.0(supports-color@8.1.1)
       ember-template-lint: 7.0.1(@babel/core@7.26.10)
       globby: 14.1.0
