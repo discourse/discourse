@@ -25,11 +25,11 @@ module DiscourseAutomation
           end_date: today,
         },
         last_week: {
-          start_date: today - 7.days,
+          start_date: today - 1.week,
           end_date: today,
         },
         last_month: {
-          start_date: today - 30.days,
+          start_date: today - 1.month,
           end_date: today,
         },
       }
