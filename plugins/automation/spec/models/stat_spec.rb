@@ -127,8 +127,8 @@ RSpec.describe DiscourseAutomation::Stat do
 
       DiscourseAutomation::Stat.create!(
         automation_id: new_automation_id,
-        date: 2.hours.from_now,
-        last_run_at: 2.hours.from_now,
+        date: 2.days.from_now,
+        last_run_at: 2.days.from_now,
         total_time: 1.0,
         average_run_time: 1.0,
         min_run_time: 1.0,
