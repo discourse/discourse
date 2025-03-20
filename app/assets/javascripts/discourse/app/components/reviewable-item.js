@@ -359,6 +359,7 @@ export default class ReviewableItem extends Component {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
       let postEdit = reviewable.get("raw");
+      let claimed_by = reviewable.get("claimed_by");
 
       const data = await adminTools[adminToolMethod](createdBy, {
         postId,
@@ -366,7 +367,7 @@ export default class ReviewableItem extends Component {
         before: performAction,
       });
 
-      if (!data.success) {
+      if (!data?.success && claimed_by?.system) {
         try {
           await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
             type: "DELETE",
