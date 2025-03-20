@@ -426,15 +426,9 @@ en:
           name:
             label: Trigger
         automation:
-          runs_today:
-            one: "%{count} today"
-            other: "%{count} today"
-          runs_this_week:
-            one: "%{count} this week"
-            other: "%{count} this week"
-          runs_this_month:
-            one: "%{count} this month"
-            other: "%{count} this month"
+          runs_today: "%{count} today"
+          runs_this_week: "%{count} this week"
+          runs_this_month: "%{count} this month"
           runs:
             label: Runs
           name:
