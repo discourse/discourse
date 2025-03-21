@@ -206,13 +206,22 @@ export default class UppyImageUploader extends Component {
             </label>
 
             <div
-              aria-label="{{i18n 'upload_selector.processing'}}
-            {{this.uppyUpload.uploadProgress}}%"
-              role="progressbar"
-              class="progress-bar-container
+              class="progress-status
                 {{unless this.uppyUpload.uploading 'hidden'}}"
             >
-              <div class="progress-bar" style={{this.progressBarStyle}}></div>
+              <div
+                aria-label="{{i18n 'upload_selector.uploading'}}
+              {{this.uppyUpload.uploadProgress}}%"
+                role="progressbar"
+                class="progress-bar-container"
+              >
+                <div class="progress-bar" style={{this.progressBarStyle}}></div>
+              </div>
+
+              <span>
+                {{i18n "upload_selector.uploading"}}
+                {{this.uppyUpload.uploadProgress}}%
+              </span>
             </div>
           </div>
         {{/if}}

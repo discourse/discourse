@@ -250,3 +250,17 @@ module DiscourseAutomation
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: discourse_automation_fields
+#
+#  id            :bigint           not null, primary key
+#  automation_id :bigint           not null
+#  metadata      :jsonb            not null
+#  component     :string           not null
+#  name          :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  target        :string
+#
