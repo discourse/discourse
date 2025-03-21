@@ -89,19 +89,23 @@ module DiscourseAutomation
       scope&.dig(:stats).present?
     end
 
+    EMPTY_STATS = {
+      total_runs: 0,
+      total_time: 0,
+      average_run_time: 0,
+      min_run_time: 0,
+      max_run_time: 0,
+    }
+
     def stats
       automation_stats = scope&.dig(:stats, object.id) || {}
 
       {
-        last_day: automation_stats[:last_day] || empty_stats,
-        last_week: automation_stats[:last_week] || empty_stats,
-        last_month: automation_stats[:last_month] || empty_stats,
+        last_day: automation_stats[:last_day] || EMPTY_STATS,
+        last_week: automation_stats[:last_week] || EMPTY_STATS,
+        last_month: automation_stats[:last_month] || EMPTY_STATS,
         last_run_at: automation_stats[:last_run_at],
       }
-    end
-
-    def empty_stats
-      { total_runs: 0, total_time: 0, average_run_time: 0, min_run_time: 0, max_run_time: 0 }
     end
 
     private
