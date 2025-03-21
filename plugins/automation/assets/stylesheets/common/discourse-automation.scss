@@ -1,7 +1,11 @@
 .admin-plugins.automation {
   .automations {
     .relative-date {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
+    }
+
+    &__stats {
+      font-size: var(--font-down-1);
     }
 
     td[role="button"] {
@@ -26,31 +30,25 @@
       }
     }
 
-    .d-admin-row__overview {
+    .d-admin-row__name {
       @include breakpoint("tablet") {
         order: 1;
       }
     }
 
-    .d-admin-row__detail.automations__status {
+    .d-admin-row__detail.automations__runs {
       @include breakpoint("tablet") {
         order: 2; // move below the name to avoid empty spacing
       }
     }
 
-    .d-admin-row__detail.automations__script {
+    .d-admin-row__detail.automations__updated-by {
       @include breakpoint("tablet") {
         order: 3;
       }
     }
 
-    .d-admin-row__detail.automations__version {
-      @include breakpoint("tablet") {
-        order: 4;
-      }
-    }
-
-    .d-admin-row__detail.automations__updated-by {
+    .d-admin-row__detail.automations__enabled {
       @include breakpoint("tablet") {
         order: 5;
       }
