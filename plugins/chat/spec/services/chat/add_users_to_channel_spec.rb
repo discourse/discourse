@@ -114,8 +114,11 @@ RSpec.describe Chat::AddUsersToChannel do
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end
 
-    context "when channel is not a group" do
-      before { direct_message.update!(group: false) }
+    context "when channel is not a group and has activity" do
+      before do
+        direct_message.update!(group: false)
+        channel.update!(messages_count: 1)
+      end
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end
