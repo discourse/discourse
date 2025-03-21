@@ -92,4 +92,39 @@ describe "Admin Color Palettes Config Area Page", type: :system do
     )
     expect(config_area.user_selectable_field.value).to eq(false)
   end
+
+  it "applies the changes live when editing the currently active palette" do
+    admin.user_option.update!(color_scheme_id: color_scheme.id)
+    config_area.visit(color_scheme.id)
+    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#aa339f")
+
+    expect(config_area).to have_unsaved_changes_indicator
+    config_area.form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    expect(config_area).to have_no_unsaved_changes_indicator
+
+    href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
+
+    expect(page).to have_css(
+      "link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]",
+      visible: false,
+    )
+    expect(find("html").native.css_value("background-color")).to eq(
+      "rgba(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)}, 1)",
+    )
+  end
+
+  it "doesn't apply changes when editing a palette that's not currently active" do
+    config_area.visit(color_scheme.id)
+    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#aa339f")
+
+    expect(config_area).to have_unsaved_changes_indicator
+    config_area.form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    expect(config_area).to have_no_unsaved_changes_indicator
+
+    href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
+
+    expect(page).to have_no_css("link[href=\"#{href}\"]", visible: false)
+  end
 end
