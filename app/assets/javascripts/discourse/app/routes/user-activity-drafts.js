@@ -4,6 +4,7 @@ import { i18n } from "discourse-i18n";
 
 export default class UserActivityDrafts extends DiscourseRoute {
   @service router;
+  @service currentUser;
 
   templateName = "user/stream";
 
