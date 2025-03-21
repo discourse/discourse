@@ -88,13 +88,13 @@ RSpec.describe SvgSprite do
 
   it "strips whitespace when processing icons" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "  fab fa-facebook-messenger  ")
-    expect(SvgSprite.all_icons).to include("fab-facebook-messenger")
-    expect(SvgSprite.all_icons).not_to include("  fab-facebook-messenger  ")
+    expect(SvgSprite.all_icons).to include("fab fa-facebook-messenger")
+    expect(SvgSprite.all_icons).not_to include("  fab fa-facebook-messenger  ")
   end
 
-  it "includes Font Awesome 5 icons from badges" do
+  it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
-    expect(SvgSprite.all_icons).to include("far-building")
+    expect(SvgSprite.all_icons).to include("far fa-building")
   end
 
   it "raises an error in test for deprecated icons" do
@@ -127,7 +127,7 @@ RSpec.describe SvgSprite do
     # FA5 syntax
     theme.update_setting(:custom_icon, "fab fa-bandcamp")
     theme.save!
-    expect(SvgSprite.all_icons(theme.id)).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons(theme.id)).to include("fab fa-bandcamp")
 
     # Internal Discourse syntax + multiple icons
     theme.update_setting(:custom_icon, "fab-android|dragon")
@@ -227,7 +227,7 @@ RSpec.describe SvgSprite do
     DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
 
     expect(SvgSprite.all_icons).to include("blender")
-    expect(SvgSprite.all_icons).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons).to include("fab fa-bandcamp")
   end
 
   it "includes Font Awesome icon from groups" do
