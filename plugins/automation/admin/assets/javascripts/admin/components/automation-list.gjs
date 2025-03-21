@@ -14,7 +14,8 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 
-const THRESHOLD = 10;
+// number of runs required to show the runs count for the period
+const RUN_THRESHOLD = 10;
 
 export default class AutomationList extends Component {
   @service dialog;
@@ -51,13 +52,13 @@ export default class AutomationList extends Component {
       return "-";
     }
 
-    if (stats.last_day?.total_runs > THRESHOLD) {
+    if (stats.last_day?.total_runs > RUN_THRESHOLD) {
       return i18n("discourse_automation.models.automation.runs_today", {
         count: stats.last_day.total_runs,
       });
     }
 
-    if (stats.last_week?.total_runs > THRESHOLD) {
+    if (stats.last_week?.total_runs > RUN_THRESHOLD) {
       return i18n("discourse_automation.models.automation.runs_this_week", {
         count: stats.last_day.total_runs,
       });
