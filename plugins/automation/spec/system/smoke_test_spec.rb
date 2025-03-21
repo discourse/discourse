@@ -47,8 +47,9 @@ describe "DiscourseAutomation | smoke test", type: :system do
 
       expect(page).not_to have_css(".automations__name", text: "automation-test")
 
-      automation = DiscourseAutomation::Automation.find_by(id: automation.id)
-      expect(automation).to be_nil
+      try_until_success do
+        expect(DiscourseAutomation::Automation.exists?(id: automation.id)).to be(false)
+      end  
     end
   end
 
