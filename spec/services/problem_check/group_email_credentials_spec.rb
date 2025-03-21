@@ -41,7 +41,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_email_credentials",
+            identifier: :group_email_credentials,
             target: group2.id,
             priority: "high",
             message:
@@ -66,7 +66,7 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_email_credentials",
+            identifier: :group_email_credentials,
             target: group3.id,
             priority: "high",
             message:

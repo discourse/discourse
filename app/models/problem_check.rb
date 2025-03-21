@@ -188,18 +188,22 @@ class ProblemCheck
     [NO_TARGET]
   end
 
-  def problem(override_key: nil, override_data: {})
-    [
+  def problem(target = nil, override_key: nil, override_data: {})
+    problem =
       Problem.new(
         I18n.t(
           override_key || translation_key,
           base_path: Discourse.base_path,
-          **override_data.merge(translation_data).symbolize_keys,
+          **override_data.merge(
+            target.present? ? translation_data(target) : translation_data,
+          ).symbolize_keys,
         ),
         priority: self.config.priority,
         identifier:,
-      ),
-    ]
+        target: target&.id,
+      )
+
+    target.present? ? problem : [problem]
   end
 
   def no_problem
@@ -210,7 +214,7 @@ class ProblemCheck
     "dashboard.problem.#{identifier}"
   end
 
-  def translation_data
+  def translation_data(target = nil)
     {}
   end
 end
