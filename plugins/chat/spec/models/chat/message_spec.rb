@@ -131,6 +131,36 @@ describe Chat::Message do
         )
       end
     end
+
+    context "with watched words" do
+      fab!(:watched_word) do
+        Fabricate(:watched_word, word: "badword", action: WatchedWord.actions[:block])
+      end
+
+      let(:text) { "this message contains badword and should be blocked" }
+
+      it "validates watched words for regular users" do
+        regular_user = Fabricate(:user)
+        message =
+          Chat::Message.new(
+            chat_channel: Fabricate(:chat_channel),
+            user: regular_user,
+            message: text,
+          )
+
+        expect(message).not_to be_valid
+      end
+
+      it "skips watched words validation for bot users" do
+        bot_user = Fabricate(:user, id: -999)
+        message =
+          Chat::Message.new(chat_channel: Fabricate(:chat_channel), user: bot_user, message: text)
+
+        message.validate_message
+
+        expect(message).to be_valid
+      end
+    end
   end
 
   describe ".in_thread?" do
