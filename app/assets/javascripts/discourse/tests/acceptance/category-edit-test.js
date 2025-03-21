@@ -27,7 +27,6 @@ acceptance("Category Edit", function (needs) {
     assert.dom(".category-style .badge-category__name").hasText("testing");
 
     await fillIn(".edit-text-color input", "ff0000");
-    await click(".form-kit button[type=submit]");
 
     await click(".edit-category-topic-template a");
     await fillIn(".d-editor-input", "this is the new topic template");
@@ -202,7 +201,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click(".form-kit button[type=submit]");
+    await click("#save-category");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {

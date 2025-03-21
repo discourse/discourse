@@ -1,5 +1,5 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -36,7 +36,7 @@ acceptance("New category access for non authorized users", function () {
 acceptance("Category New", function (needs) {
   needs.user();
 
-  skip("Creating a new category", async function (assert) {
+  test("Creating a new category", async function (assert) {
     await visit("/new-category");
 
     assert.dom(".badge-category").exists();
@@ -47,8 +47,8 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-nav .edit-category-topic-template a");
     assert
-      .dom(".edit-category-tab-topic-template")
-      .isVisible("it can switch to topic template tab");
+      .dom(".edit-category-tab-topic-template.active")
+      .exists("it can switch to the topic template tab");
 
     await click(".edit-category-nav .edit-category-tags a");
     await click("button.add-required-tag-group");

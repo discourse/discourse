@@ -43,9 +43,8 @@ export default class EditCategoryTabsController extends Controller {
   get formData() {
     const data = getProperties(this.model, ...FIELD_LIST);
 
-    if (this.isNew) {
+    if (this.model.isNew) {
       data.style_type = "square";
-      this.style_type = "square";
     }
 
     return data;
@@ -99,11 +98,6 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("selectedTab")
   selectedTabTitle(tab) {
     return i18n(`category.${underscore(tab)}`);
-  }
-
-  @discourseComputed("selectedTab")
-  showSubmit(tab) {
-    return tab !== "general";
   }
 
   @action

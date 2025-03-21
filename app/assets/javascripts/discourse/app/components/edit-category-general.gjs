@@ -5,11 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
 import { CATEGORY_STYLE_TYPES } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -30,8 +28,6 @@ export default class EditCategoryGeneral extends Component {
     "/admin/customize/site_texts?q=uncategorized"
   );
   foregroundColors = ["FFFFFF", "000000"];
-  styleIcon = this.styleType("Icon");
-  styleEmoji = this.styleType("Emoji");
 
   get styleTypes() {
     return Object.keys(CATEGORY_STYLE_TYPES).map((key) => ({
@@ -40,16 +36,8 @@ export default class EditCategoryGeneral extends Component {
     }));
   }
 
-  styleType(name) {
-    return String(this.styleTypes.find((s) => s.name === name)?.id);
-  }
-
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
-  }
-
-  get isNew() {
-    return this.args.category.isNew;
   }
 
   @cached
@@ -111,7 +99,7 @@ export default class EditCategoryGeneral extends Component {
   // We can change the parent if there are no children
   @cached
   get subCategories() {
-    if (this.isNew) {
+    if (this.args.category.isNew) {
       return null;
     }
     return Category.list().filter(
