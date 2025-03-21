@@ -1442,6 +1442,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
+  # When loading /categories with topics, preload topic associations
+  # using register_category_list_topics_preloader_associations(:association_name)
+  def register_category_list_topics_preloader_associations(fields)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(fields, self)
+  end
+
   private
 
   def setting_category

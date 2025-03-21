@@ -106,7 +106,10 @@ class CategoryList
           )
     end
 
-    @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
+    inclusions = [:last_poster]
+    preload = DiscoursePluginRegistry.category_list_topics_preloader_associations
+    inclusions.concat(preload) if preload.present?
+    @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(inclusions)
   end
 
   def find_relevant_topics
