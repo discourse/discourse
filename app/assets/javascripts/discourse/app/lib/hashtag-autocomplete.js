@@ -152,7 +152,7 @@ function renderOption(option) {
       <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href="#">
         ${option.icon}
         <span class="hashtag-autocomplete__text">
-          ${escapeExpression(option.text)}
+          ${option.text}
           ${metaText}
         </span>
       </a>
