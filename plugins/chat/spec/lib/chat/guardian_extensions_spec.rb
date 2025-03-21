@@ -740,7 +740,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#recipient_can_chat?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user, groups: [chatters]) }
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
     alias_matcher :be_able_to_chat, :be_recipient_can_chat
 
