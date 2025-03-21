@@ -62,6 +62,6 @@ describe "User activity bookmarks", type: :system do
   it "can clear the query with backspace" do
     user_activity_bookmarks.visit(current_user, q: "dog")
     user_activity_bookmarks.clear_query_with_backspace
-    expect(user_activity_bookmarks.has_empty_search?).to eq(true)
+    expect(user_activity_bookmarks).to have_empty_search
   end
 end
