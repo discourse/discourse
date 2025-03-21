@@ -114,13 +114,19 @@ RSpec.describe Chat::AddUsersToChannel do
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end
 
-    context "when channel is not a group and has activity" do
-      before do
-        direct_message.update!(group: false)
-        channel.update!(messages_count: 1)
+    context "when channel is not a group" do
+      before { direct_message.update!(group: false) }
+
+      it "allows adding members when there are no channel messages" do
+        expect { result }.to change { Chat::UserChatChannelMembership.count }.by(users.count + 1) # +1 for system user
+        expect(result).to be_a_success
       end
 
-      it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
+      context "when there are messages in the channel" do
+        before { channel.update!(messages_count: 1) }
+
+        it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
+      end
     end
 
     context "when channel is not a direct message channel" do
