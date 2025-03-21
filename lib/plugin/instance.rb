@@ -276,8 +276,8 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   add_filter_custom_filter("word_count") do |scope, value|
-  #     scope.where(word_count: value)
+  #   add_filter_custom_filter("word_count") do |scope, value, guardian|
+  #     scope.where(word_count: value) if guardian.admin?
   #   end
   def add_filter_custom_filter(name, &block)
     DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
