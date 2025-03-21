@@ -181,20 +181,15 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_options = delete_opts
-
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+    delete_user(post.user, delete_opts, performed_by)
     agree(performed_by, args)
   end
 
   def perform_delete_user_block(performed_by, args)
     delete_options = delete_opts
-
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+    delete_user(post.user, delete_options, performed_by)
     agree(performed_by, args)
   end
 
@@ -364,6 +359,15 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   private
+
+  def delete_user(user, delete_options, performed_by)
+    email = user.email
+
+    UserDestroyer.new(performed_by).destroy(user, delete_options)
+
+    message = UserNotifications.account_deleted(email, self)
+    Email::Sender.new(message, :account_deleted).send
+  end
 
   def delete_opts
     {
