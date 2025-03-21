@@ -1,0 +1,15 @@
+.admin-config.components {
+  .admin-config-components {
+    &__filters {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__status-filter {
+      display: flex;
+      white-space: nowrap;
+      align-items: center;
+      gap: 1em;
+    }
+  }
+}
