@@ -213,6 +213,7 @@ export default class AutomationList extends Component {
                   </LinkTo>
 
                   <DButton
+                    @isLoading={{this.isDestroying}}
                     @icon="trash-can"
                     @action={{this.destroyAutomation automation}}
                     class="btn-small btn-danger automations__delete"
