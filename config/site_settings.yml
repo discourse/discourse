@@ -812,10 +812,10 @@ users:
   enable_user_directory:
     client: true
     default: true
-  allow_anonymous_posting:
+  allow_anonymous_mode:
     default: false
     client: true
-  allow_anonymous_likes:
+  allow_likes_in_anonymous_mode:
     default: false
     client: true
   anonymous_posting_min_trust_level:

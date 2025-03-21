@@ -93,7 +93,7 @@ RSpec.describe PostGuardian do
     end
 
     it "returns true for the author if they are anonymous" do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
       post.update!(user: anon)
       expect(Guardian.new(anon).can_edit_post?(post)).to eq(true)
     end
