@@ -29,6 +29,7 @@ en:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
       chat_upload_not_allowed_secure_uploads: "Chat uploads are not allowed when secure uploads site setting is enabled."
+      allow_chat_in_anonymous_mode_invalid: "This setting requires the 'allow anonymous mode' setting to be enabled first."
   system_messages:
     private_channel_title: "Channel %{id}"
     chat_channel_archive_complete:
