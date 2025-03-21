@@ -16,7 +16,8 @@ module Chat
       return true if @user.bot?
 
       if @user.anonymous?
-        SiteSetting.allow_chat_in_anonymous_mode
+        SiteSetting.allow_chat_in_anonymous_mode &&
+          AnonymousShadowCreator.get_master(@user)&.guardian&.can_chat?
       else
         @user.in_any_groups?(Chat.allowed_group_ids)
       end
