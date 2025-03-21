@@ -63,11 +63,13 @@ export default class ReviewableItem extends Component {
   constructor() {
     super(...arguments);
     this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.subscribe("/reviewable_action", this._updateStatus);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
   @discourseComputed(
@@ -237,6 +239,14 @@ export default class ReviewableItem extends Component {
   }
 
   @bind
+  _updateStatus(data) {
+    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+      delete data.remove_reviewable_ids;
+      this._performResult(data, {}, this.reviewable);
+    }
+  }
+
+  @bind
   async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
@@ -266,35 +276,13 @@ export default class ReviewableItem extends Component {
           data,
         }
       )
-        .then((result) => {
-          let performResult = result.reviewable_perform_result;
-
-          // "fast track" to update the current user's reviewable count before the message bus finds out.
-          if (performResult.reviewable_count !== undefined) {
-            this.currentUser.updateReviewableCount(
-              performResult.reviewable_count
-            );
-          }
-
-          if (performResult.unseen_reviewable_count !== undefined) {
-            this.currentUser.set(
-              "unseen_reviewable_count",
-              performResult.unseen_reviewable_count
-            );
-          }
-
-          if (performableAction.completed_message) {
-            this.toasts.success({
-              data: { message: performableAction.completed_message },
-            });
-          }
-
-          if (this.remove) {
-            this.remove(performResult.remove_reviewable_ids);
-          } else {
-            return this.store.find("reviewable", reviewable.id);
-          }
-        })
+        .then((result) =>
+          this._performResult(
+            result.reviewable_perform_result,
+            performableAction,
+            reviewable
+          )
+        )
         .catch(popupAjaxError)
         .finally(() => {
           this.set("updating", false);
@@ -334,6 +322,32 @@ export default class ReviewableItem extends Component {
       }
     } else {
       return performAction();
+    }
+  }
+
+  _performResult(result, performableAction, reviewable) {
+    // "fast track" to update the current user's reviewable count before the message bus finds out.
+    if (result.reviewable_count !== undefined) {
+      this.currentUser.updateReviewableCount(result.reviewable_count);
+    }
+
+    if (result.unseen_reviewable_count !== undefined) {
+      this.currentUser.set(
+        "unseen_reviewable_count",
+        result.unseen_reviewable_count
+      );
+    }
+
+    if (performableAction.completed_message) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+    }
+
+    if (this.remove && result.remove_reviewable_ids) {
+      this.remove(result.remove_reviewable_ids);
+    } else {
+      return this.store.find("reviewable", reviewable.id);
     }
   }
 
