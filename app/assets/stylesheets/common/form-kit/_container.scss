@@ -22,6 +22,10 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
     padding-bottom: 0.25em;
+
+    > * {
+      margin: 0;
+    }
   }
 
   &-optional {

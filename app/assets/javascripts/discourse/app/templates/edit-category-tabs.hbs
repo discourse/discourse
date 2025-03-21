@@ -65,54 +65,59 @@
     </ul>
   </div>
 
-  <div class="edit-category-content">
-    <h3>{{this.selectedTabTitle}}</h3>
+  <Form
+    @data={{this.formData}}
+    @onDirtyCheck={{this.isLeavingForm}}
+    as |form transientData|
+  >
+    <form.Section
+      @title={{this.selectedTabTitle}}
+      class="edit-category-content"
+    >
+      {{#each this.panels as |tab|}}
+        {{component
+          tab
+          selectedTab=this.selectedTab
+          category=this.model
+          registerValidator=(action "registerValidator")
+          transientData=transientData
+          form=form
+        }}
+      {{/each}}
+    </form.Section>
 
-    {{#each this.panels as |tab|}}
-      {{component
-        tab
-        selectedTab=this.selectedTab
-        category=this.model
-        registerValidator=(action "registerValidator")
-      }}
-    {{/each}}
-  </div>
+    {{#if this.showDeleteReason}}
+      <form.Alert @type="warning" class="edit-category-delete-warning">
+        {{html-safe this.model.cannot_delete_reason}}
+      </form.Alert>
+    {{/if}}
 
-  {{#if this.showDeleteReason}}
-    <div class="edit-category-delete-warning">
-      <p class="warning">{{html-safe this.model.cannot_delete_reason}}</p>
-    </div>
-  {{/if}}
-
-  <div class="edit-category-footer">
-    {{#if this.showSubmit}}
-      <DButton
-        @disabled={{this.disabled}}
-        @action={{action "saveCategory"}}
+    <form.Actions class="edit-category-footer">
+      <form.Button
+        @disabled={{not (this.canSaveForm transientData)}}
+        @action={{fn this.saveCategory transientData}}
         @label={{this.saveLabel}}
         id="save-category"
         class="btn-primary"
       />
-    {{/if}}
 
-    {{#if this.model.can_delete}}
-      <DButton
-        @disabled={{this.deleteDisabled}}
-        @action={{action "deleteCategory"}}
-        @icon="trash-can"
-        @label="category.delete"
-        class="btn-danger"
-      />
-    {{else if this.model.id}}
-      <div class="disable-info">
-        <DButton
+      {{#if this.model.can_delete}}
+        <form.Button
           @disabled={{this.deleteDisabled}}
-          @action={{action "toggleDeleteTooltip"}}
+          @action={{this.deleteCategory}}
+          @icon="trash-can"
+          @label="category.delete"
+          class="btn-danger"
+        />
+      {{else if this.model.id}}
+        <form.Button
+          @disabled={{this.deleteDisabled}}
+          @action={{this.toggleDeleteTooltip}}
           @icon="circle-question"
           @label="category.delete"
           class="btn-default"
         />
-      </div>
-    {{/if}}
-  </div>
+      {{/if}}
+    </form.Actions>
+  </Form>
 </div>
