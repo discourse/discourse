@@ -49,7 +49,7 @@ describe "DiscourseAutomation | smoke test", type: :system do
 
       try_until_success do
         expect(DiscourseAutomation::Automation.exists?(id: automation.id)).to be(false)
-      end  
+      end
     end
   end
 
