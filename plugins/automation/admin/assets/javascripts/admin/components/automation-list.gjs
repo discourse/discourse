@@ -22,16 +22,18 @@ export default class AutomationList extends Component {
   @service router;
 
   @action
-  destroyAutomation(automation) {
+  async destroyAutomation(automation) {
     this.dialog.deleteConfirm({
       message: i18n("discourse_automation.destroy_automation.confirm", {
         name: escapeExpression(automation.name),
       }),
       didConfirm: () => {
-        return automation
-          .destroyRecord()
-          .then(() => this.send("triggerRefresh"))
-          .catch(popupAjaxError);
+        try {
+          automation.destroyRecord();
+          this.args.model.removeObject(automation);
+        } catch (e) {
+          popupAjaxError(e);
+        }
       },
     });
   }
@@ -213,7 +215,7 @@ export default class AutomationList extends Component {
                   <DButton
                     @icon="trash-can"
                     @action={{this.destroyAutomation automation}}
-                    class="btn-small btn-danger"
+                    class="btn-small btn-danger automations__delete"
                   />
                 </td>
               </tr>
