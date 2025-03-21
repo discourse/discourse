@@ -100,13 +100,13 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
   describe "#display_sidebar_tags" do
     fab!(:tag)
 
-    it "should not be included in serialised object when tagging has been disabled" do
+    it "is not included in serialised object when tagging has been disabled" do
       SiteSetting.tagging_enabled = false
 
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
 
-    it "should be true when user has visible tags" do
+    it "returns true when user has visible tags" do
       SiteSetting.tagging_enabled = true
 
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
@@ -115,7 +115,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       expect(serializer.as_json[:display_sidebar_tags]).to eq(true)
     end
 
-    it "should be false when user has no visible tags" do
+    it "returns false when user has no visible tags" do
       SiteSetting.tagging_enabled = true
 
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
