@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples "basic reviewable attributes" do
+RSpec.shared_examples "basic reviewable attributes" do
   describe "#id" do
     it "equals the reviewable's id" do
       expect(subject[:id]).to eq(reviewable.id)
