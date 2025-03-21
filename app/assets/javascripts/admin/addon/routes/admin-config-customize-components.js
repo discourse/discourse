@@ -1,10 +1,10 @@
+import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigThemesAndComponentsComponentsRoute extends DiscourseRoute {
   async model() {
-    const components = await this.store.findAll("theme");
-    return components.reject((t) => !t.component);
+    return await ajax("/admin/config/customize/components");
   }
 
   titleToken() {

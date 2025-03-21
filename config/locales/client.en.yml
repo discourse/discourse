@@ -6142,6 +6142,11 @@ en:
             components_intro: "Install a new component to get started, or create your own from scratch using these resources."
             new_component: "New component"
             back: "Back to components"
+            name: "Name"
+            used_on: "Used on"
+            enabled: "Enabled?"
+            by_author: "By %{name}"
+            learn_more: "Learn more"
         user_fields:
           field: "Field"
           type: "Type"
