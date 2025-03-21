@@ -68,6 +68,7 @@ module SvgSprite
         circle-xmark
         clock
         clock-rotate-left
+        cloud-arrow-down
         cloud-arrow-up
         code
         comment
