@@ -78,7 +78,7 @@ module DiscourseAutomation
               )
             end
 
-          automation.tap { |r| r.assign_attributes(attributes) }.save!
+          automation.update!(attributes)
         end
       else
         automation.assign_attributes(attributes)
