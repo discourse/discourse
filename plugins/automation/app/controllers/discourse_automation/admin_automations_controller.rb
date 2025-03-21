@@ -81,8 +81,7 @@ module DiscourseAutomation
           automation.update!(attributes)
         end
       else
-        automation.assign_attributes(attributes)
-        automation.save!
+        automation.update!(attributes)
       end
 
       render_serialized_automation(automation)
