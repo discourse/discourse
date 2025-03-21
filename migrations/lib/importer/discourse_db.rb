@@ -44,6 +44,7 @@ module Migrations::Importer
       query = <<~SQL
         SELECT COALESCE(MAX(id), 0)
           FROM #{quote_identifier(table_name)}
+        WHERE id > 0
       SQL
 
       result = @connection.exec(query)

@@ -25,16 +25,25 @@ module Migrations::Importer::Steps
                  ]
 
     store_mapped_ids true
-    total_rows_query "SELECT COUNT(*) FROM users"
-    rows_query <<~SQL
-      SELECT *
+
+    total_rows_query <<~SQL
+      SELECT COUNT(*)
       FROM users
-      ORDER BY rowid
+    SQL
+
+    rows_query <<~SQL
+      SELECT u.*, JSON_GROUP_ARRAY(ue.email) AS emails
+      FROM users u
+           LEFT JOIN user_emails ue ON u.id = ue.user_id
+      GROUP BY u.ROWID
+      ORDER BY u.ROWID
     SQL
 
     private
 
     def transform_row(row)
+      emails = JSON.parse(row[:emails])
+
       row[:username] = row[:username].unicode_normalize!
       row[:username_lower] = row[:username].downcase
 
