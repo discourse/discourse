@@ -89,6 +89,7 @@ $search-pad-horizontal: 0.5em;
     display: flex;
     flex-direction: column;
     padding-top: $search-pad-vertical;
+    border-radius: var(--d-border-radius);
 
     .list {
       min-width: 100px;
