@@ -29,7 +29,7 @@ class ReviewableClaimedTopicsController < ApplicationController
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
 
-    notify_users(topic, nil, false)
+    notify_users(topic, nil, system)
     render json: success_json
   end
 
