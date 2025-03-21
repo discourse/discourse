@@ -17,6 +17,8 @@ module DiscourseAutomation
              dependent: :delete_all,
              foreign_key: "automation_id"
 
+    has_many :stats, class_name: "DiscourseAutomation::Stat", dependent: :delete_all
+
     validates :script, presence: true
     validate :validate_trigger_fields
 
