@@ -127,7 +127,7 @@
     "jsuites": "^5.9.1",
     "loader.js": "^4.7.0",
     "make-plural": "^7.4.0",
-    "message-bus-client": "^4.4.0",
+    "message-bus-client": "^4.4.1",
     "pretender": "^3.4.7",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
