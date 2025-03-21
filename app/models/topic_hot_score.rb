@@ -5,6 +5,21 @@ class TopicHotScore < ActiveRecord::Base
 
   DEFAULT_BATCH_SIZE = 1000
 
+  def self.hot_topic_ids_cache
+    @hot_topic_ids_cache ||= DistributedCache.new("hot_topic_ids_cache")
+  end
+
+  def self.hottest_topic_ids
+    hot_topic_ids_cache["ids"].presence || Set.new
+  end
+
+  def self.recreate_hottest_topic_ids_cache
+    hot_topic_ids_cache.defer_set(
+      "ids",
+      DB.query_single("SELECT topic_id FROM topic_hot_scores ORDER BY score DESC LIMIT 100").to_set,
+    )
+  end
+
   def self.update_scores(max = DEFAULT_BATCH_SIZE)
     # score is
     # (total likes - 1) / (age in hours + 2) ^ gravity
@@ -145,6 +160,8 @@ class TopicHotScore < ActiveRecord::Base
     SQL
 
     DB.exec(sql, args)
+
+    recreate_hottest_topic_ids_cache
 
     DiscourseEvent.trigger(:topic_hot_scores_updated)
   end
