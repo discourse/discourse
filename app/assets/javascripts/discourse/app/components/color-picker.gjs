@@ -13,6 +13,7 @@ export default class ColorPicker extends Component {
   @action
   selectColor(color) {
     this.set("value", color);
+    this.onSelectColor?.(color);
   }
 
   @action

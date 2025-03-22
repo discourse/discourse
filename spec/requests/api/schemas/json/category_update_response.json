@@ -20,6 +20,21 @@
         "text_color": {
           "type": "string"
         },
+        "style_type": {
+          "type": "string"
+        },
+        "style_emoji": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "style_icon": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "slug": {
           "type": "string"
         },

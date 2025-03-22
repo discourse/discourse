@@ -152,6 +152,8 @@ task "javascript:update_constants" => :environment do
       max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
     }
 
+    export const CATEGORY_STYLE_TYPES = #{Category.style_types.to_json};
+
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};

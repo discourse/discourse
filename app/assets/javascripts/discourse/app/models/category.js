@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
@@ -451,6 +452,7 @@ export default class Category extends RestModel {
 
   @service currentUser;
 
+  @tracked color;
   permissions = null;
 
   init() {
@@ -761,6 +763,9 @@ export default class Category extends RestModel {
         moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
+        style_type: this.style_type,
+        style_emoji: this.style_emoji,
+        style_icon: this.style_icon,
       }),
       type: id ? "PUT" : "POST",
     });

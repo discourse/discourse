@@ -22,6 +22,8 @@ export const SIDEBAR_SECTION = {
   max_title_length: 30,
 };
 
+export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
+
 export const AUTO_GROUPS = {
   everyone: {
     id: 0,

@@ -12,6 +12,7 @@ describe "New Category", type: :system do
     category_page.find(".edit-category-tab-general input.category-name").fill_in(
       with: "New Category",
     )
+
     category_page.find(".edit-category-nav .edit-category-tags a").click
     category_page.find(".edit-category-tab-tags #category-minimum-tags").click
     category_page.save_settings

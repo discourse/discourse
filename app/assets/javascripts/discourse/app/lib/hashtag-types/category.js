@@ -1,4 +1,6 @@
 import { service } from "@ember/service";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import { iconHTML } from "discourse/lib/icon-library";
 import HashtagTypeBase from "./base";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
@@ -17,7 +19,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       // Set a default color for category hashtags. This is added here instead
       // of `hashtag.scss` because of the CSS precedence rules (<link> has a
       // higher precedence than <style>)
-      ".hashtag-category-badge { background-color: var(--primary-medium); }",
+      ".hashtag-category-square { background-color: var(--primary-medium); }",
       ...super.generatePreloadedCssClasses(),
     ];
   }
@@ -41,8 +43,12 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     let style;
     if (parentColor) {
       style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
-    } else {
+    } else if (categoryOrHashtag.style_type === "icon") {
+      style = `color: #${color};`;
+    } else if (categoryOrHashtag.style_type === "square") {
       style = `background-color: #${color};`;
+    } else {
+      return [];
     }
 
     return [`.hashtag-color--category-${categoryOrHashtag.id} { ${style} }`];
@@ -50,9 +56,17 @@ export default class CategoryHashtagType extends HashtagTypeBase {
 
   generateIconHTML(hashtag) {
     hashtag.preloaded ? this.onLoad(hashtag) : this.load(hashtag.id);
+    let style = "";
+
+    if (hashtag.style_type === "icon" && hashtag.style_icon) {
+      style = iconHTML(hashtag.style_icon);
+    }
+    if (hashtag.style_type === "emoji" && hashtag.style_emoji) {
+      style = replaceEmoji(`:${hashtag.style_emoji}:`);
+    }
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
-    return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;
+    return `<span class="hashtag-category-${hashtag.style_type} ${colorCssClass}">${style}</span>`;
   }
 
   isLoaded(id) {

@@ -102,7 +102,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
       with_tag(
         "span",
         with: {
-          class: "hashtag-category-badge hashtag-color--category-#{category.id}",
+          class: "hashtag-category-square hashtag-color--category-#{category.id}",
         },
       )
     end

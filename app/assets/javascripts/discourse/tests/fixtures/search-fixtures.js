@@ -821,6 +821,7 @@ export default {
         name: "dev",
         color: "000",
         text_color: "FFFFFF",
+        style_type: "square",
         slug: "dev",
         topic_count: 701,
         post_count: 5320,
