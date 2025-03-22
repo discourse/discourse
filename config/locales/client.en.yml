@@ -632,6 +632,7 @@ en:
         required: "You must claim items before you can review them."
         claimed_by_you: "You've claimed this item and can review it."
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
+        claimed_by_system: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "claim this topic"
       unclaim:
