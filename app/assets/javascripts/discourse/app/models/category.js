@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
@@ -451,6 +452,7 @@ export default class Category extends RestModel {
 
   @service currentUser;
 
+  @tracked color;
   permissions = null;
 
   init() {
