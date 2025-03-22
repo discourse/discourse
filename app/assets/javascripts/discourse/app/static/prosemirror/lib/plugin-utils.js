@@ -10,6 +10,15 @@ export function markInputRule(regexp, markType, getAttrs) {
       const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       const tr = state.tr;
 
+      // attrs may override match or start
+      const {
+        match: attrsMatch,
+        start: attrsStart,
+        ...markAttrs
+      } = attrs ?? {};
+      match = attrsMatch ?? match;
+      start += attrsStart ?? 0;
+
       if (state.doc.rangeHasMark(start, end, markType)) {
         return null;
       }
@@ -23,14 +32,13 @@ export function markInputRule(regexp, markType, getAttrs) {
         if (textStart > start) {
           tr.delete(start, textStart);
         }
-        end = start + match[1].length;
 
-        tr.addMark(start, end, markType.create(attrs));
+        tr.addMark(start, start + match[1].length, markType.create(markAttrs));
         tr.removeStoredMark(markType);
       } else {
         tr.delete(start, end);
         tr.insertText(" ");
-        tr.addMark(start, start + 1, markType.create(attrs));
+        tr.addMark(start, start + 1, markType.create(markAttrs));
         tr.removeStoredMark(markType);
         tr.insertText(" ");
 

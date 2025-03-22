@@ -123,17 +123,33 @@ describe "Composer - ProseMirror editor", type: :system do
     it "supports _ or * to create an italic text" do
       open_composer_and_toggle_rich_editor
       composer.type_content("_This is italic_\n")
-      composer.type_content("*This is italic*")
+      composer.type_content("Hey _This is italic_\n")
+      composer.type_content("*This is italic*\n")
+      composer.type_content("Hey*This is italic*\n")
 
-      expect(rich).to have_css("em", text: "This is italic", count: 2)
+      expect(rich).to have_css("em", text: "This is italic", count: 4)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(
+        "*This is italic*\n\nHey *This is italic*\n\n*This is italic*\n\nHey*This is italic*",
+      )
     end
 
     it "supports __ or ** to create a bold text" do
       open_composer_and_toggle_rich_editor
       composer.type_content("__This is bold__\n")
-      composer.type_content("**This is bold**")
+      composer.type_content("**This is bold**\n")
+      composer.type_content("Hey __This is bold__\n")
+      composer.type_content("Hey**This is bold**")
 
-      expect(rich).to have_css("strong", text: "This is bold", count: 2)
+      expect(rich).to have_css("strong", text: "This is bold", count: 4)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(
+        "**This is bold**\n\n**This is bold**\n\nHey **This is bold**\n\nHey**This is bold**",
+      )
     end
 
     it "supports ` to create a code text" do
