@@ -9,6 +9,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
 

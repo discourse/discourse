@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | small-user-list", function (hooks) {
   setupRenderingTest(hooks);
 

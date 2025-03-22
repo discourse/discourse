@@ -26,6 +26,7 @@ import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse
 import { clearRegisteredTabs } from "discourse/components/more-topics";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetGroupPostSmallActionCodes } from "discourse/components/post/small-action";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
@@ -101,6 +102,7 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
+import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -269,6 +271,8 @@ export function testCleanup(container, app) {
   clearRegisteredTabs();
   resetNeedsHbrTopicList();
   clearAddedTrackedPostProperties();
+  resetGroupPostSmallActionCodes();
+  resetPostSmallActionClassesCallbacks();
 }
 
 function cleanupCssGeneratorTags() {

@@ -5,8 +5,13 @@ import Badge from "discourse/models/badge";
 import User from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings.glimmer_post_stream_mode = "disabled";
+  });
 
   test("basic rendering", async function (assert) {
     const args = {

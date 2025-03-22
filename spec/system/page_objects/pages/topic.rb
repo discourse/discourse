@@ -123,26 +123,32 @@ module PageObjects
 
       def has_who_liked_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-liked a.trigger-user-card", count: count) }
+          return(
+            within_post(post) do
+              has_css?(".who-liked.--expanded a.trigger-user-card", count: count)
+            end
+          )
         end
 
-        within_post(post) { has_css?(".who-liked") }
+        within_post(post) { has_css?(".who-liked.--expanded") }
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked") }
+        within_post(post) { has_no_css?(".who-liked.--expanded") }
       end
 
       def has_who_read_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-read a.trigger-user-card", count: count) }
+          return(
+            within_post(post) { has_css?(".who-read.--expanded a.trigger-user-card", count: count) }
+          )
         end
 
-        within_post(post) { has_css?(".who-read") }
+        within_post(post) { has_css?(".who-read.--expanded") }
       end
 
       def has_no_who_read_on_post?(post)
-        within_post(post) { has_no_css?(".who-read") }
+        within_post(post) { has_no_css?(".who-read.--expanded") }
       end
 
       def expand_post_admin_actions(post)

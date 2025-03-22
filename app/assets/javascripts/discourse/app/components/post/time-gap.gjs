@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 
-export default class TimeGap extends Component {
+export default class PostTimeGap extends Component {
   get description() {
     const daysSince = this.args.daysSince;
 
