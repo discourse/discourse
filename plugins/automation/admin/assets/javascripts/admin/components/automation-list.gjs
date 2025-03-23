@@ -22,18 +22,26 @@ export default class AutomationList extends Component {
   @service router;
 
   @action
-  destroyAutomation(automation) {
-    this.dialog.deleteConfirm({
-      message: i18n("discourse_automation.destroy_automation.confirm", {
-        name: escapeExpression(automation.name),
-      }),
-      didConfirm: () => {
-        return automation
-          .destroyRecord()
-          .then(() => this.send("triggerRefresh"))
-          .catch(popupAjaxError);
-      },
-    });
+  async destroyAutomation(automation) {
+    automation.set("isDeleting", true);
+    try {
+      await this.dialog.deleteConfirm({
+        message: i18n("discourse_automation.destroy_automation.confirm", {
+          name: escapeExpression(automation.name),
+        }),
+        didConfirm: () => {
+          try {
+            automation.destroyRecord();
+            this.args.model.removeObject(automation);
+            automation = null;
+          } catch (e) {
+            popupAjaxError(e);
+          }
+        },
+      });
+    } finally {
+      automation?.set("isDeleting", false);
+    }
   }
 
   @action
@@ -212,8 +220,9 @@ export default class AutomationList extends Component {
 
                   <DButton
                     @icon="trash-can"
-                    @action={{this.destroyAutomation automation}}
-                    class="btn-small btn-danger"
+                    @disabled={{automation.isDeleting}}
+                    {{on "click" (fn this.destroyAutomation automation)}}
+                    class="btn-small btn-danger automations__delete"
                   />
                 </td>
               </tr>
