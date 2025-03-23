@@ -89,6 +89,7 @@ CREATE TABLE users
     manual_locked_trust_level INTEGER,
     moderator                 BOOLEAN,
     name                      TEXT,
+    original_username         TEXT,
     previous_visit_at         DATETIME,
     primary_group_id          NUMERIC,
     registration_ip_address   INET_TEXT,

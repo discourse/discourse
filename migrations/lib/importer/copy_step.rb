@@ -6,8 +6,8 @@ module Migrations::Importer
 
     NOW = "NOW()"
 
-    INSERT_MAPPING_SQL = <<~SQL
-      INSERT INTO mappings (original_id, type, discourse_id)
+    INSERT_MAPPED_IDS_SQL = <<~SQL
+      INSERT INTO mapped.ids (original_id, type, discourse_id)
       VALUES (?, ?, ?)
     SQL
 
@@ -64,6 +64,8 @@ module Migrations::Importer
     end
 
     def execute
+      super
+
       max_row_count = total_count
 
       with_progressbar(max_row_count) do
@@ -128,7 +130,7 @@ module Migrations::Importer
       return if !self.class.store_mapped_ids?
 
       rows.each do |row|
-        @intermediate_db.insert(INSERT_MAPPING_SQL, [row[:original_id], @mapping_type, row[:id]])
+        @intermediate_db.insert(INSERT_MAPPED_IDS_SQL, [row[:original_id], @mapping_type, row[:id]])
       end
 
       nil

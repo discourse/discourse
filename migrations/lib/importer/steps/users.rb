@@ -2,6 +2,11 @@
 
 module Migrations::Importer::Steps
   class Users < ::Migrations::Importer::CopyStep
+    INSERT_MAPPED_USERNAMES_SQL = <<~SQL
+      INSERT INTO mapped.usernames (discourse_user_id, original_username, discourse_username)
+      VALUES (?, ?, ?)
+    SQL
+
     table_name :users
     column_names %i[
                    id
@@ -44,10 +49,88 @@ module Migrations::Importer::Steps
     def transform_row(row)
       emails = JSON.parse(row[:emails])
 
-      row[:username] = row[:username].unicode_normalize!
+      row[:original_username] ||= row[:username]
+      row[:username] = UserNameSuggester.fix_username(row[:username])
       row[:username_lower] = row[:username].downcase
 
       super
+    end
+
+    def random_email
+      "#{SecureRandom.hex}@email.invalid"
+    end
+
+    def after_commit(rows)
+      rows.each do |row|
+        if row[:username] != row[:original_username]
+          @intermediate_db.insert(
+            INSERT_MAPPED_USERNAMES_SQL,
+            [row[:id], row[:original_username], row[:username]],
+          )
+        end
+      end
+
+      super
+    end
+
+    def process_user(user)
+      if user[:email].present?
+        user[:email] = user[:email].downcase
+
+        if (existing_user_id = @emails[user[:email]])
+          @users[user[:imported_id].to_i] = existing_user_id
+          user[:skip] = true
+          return user
+        end
+      end
+
+      if user[:external_id].present?
+        if (existing_user_id = @external_ids[user[:external_id]])
+          @users[user[:imported_id].to_i] = existing_user_id
+          user[:skip] = true
+          return user
+        end
+      end
+
+      # @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
+
+      imported_username = user[:original_username].presence || user[:username].dup
+
+      user[:username] = fix_name(user[:username]).presence || random_username
+
+      # if user[:username] != imported_username
+      #   @imported_usernames[imported_username] = user[:id]
+      #   @mapped_usernames[imported_username] = user[:username]
+      # end
+
+      # unique username_lower
+      if user_exist?(user[:username])
+        username = user[:username] + "_1"
+        username.next! while user_exist?(username)
+        user[:username] = username
+      end
+
+      user[:username_lower] = user[:username].downcase
+      user[:trust_level] ||= TrustLevel[1]
+      user[:active] = true unless user.has_key?(:active)
+      user[:admin] ||= false
+      user[:moderator] ||= false
+      user[:last_emailed_at] ||= NOW
+      user[:created_at] ||= NOW
+      user[:updated_at] ||= user[:created_at]
+      user[:suspended_at] ||= user[:suspended_at]
+      user[:suspended_till] ||= user[:suspended_till] ||
+        (200.years.from_now if user[:suspended_at].present?)
+
+      if (date_of_birth = user[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
+        user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+      end
+
+      @user_ids_by_username_lower[user[:username_lower]] = user[:id]
+      @usernames_by_id[user[:id]] = user[:username]
+      @user_full_names_by_id[user[:id]] = user[:name] if user[:name].present?
+
+      user
     end
   end
 end

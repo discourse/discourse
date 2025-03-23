@@ -25,6 +25,7 @@ module Migrations::Database::IntermediateDB
         manual_locked_trust_level,
         moderator,
         name,
+        original_username,
         previous_visit_at,
         primary_group_id,
         registration_ip_address,
@@ -39,7 +40,7 @@ module Migrations::Database::IntermediateDB
         views
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -61,6 +62,7 @@ module Migrations::Database::IntermediateDB
       manual_locked_trust_level: nil,
       moderator: nil,
       name: nil,
+      original_username: nil,
       previous_visit_at: nil,
       primary_group_id: nil,
       registration_ip_address: nil,
@@ -93,6 +95,7 @@ module Migrations::Database::IntermediateDB
         manual_locked_trust_level,
         ::Migrations::Database.format_boolean(moderator),
         name,
+        original_username,
         ::Migrations::Database.format_datetime(previous_visit_at),
         primary_group_id,
         ::Migrations::Database.format_ip_address(registration_ip_address),

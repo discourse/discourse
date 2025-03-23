@@ -9,13 +9,13 @@ module Migrations::Importer::Steps
     total_rows_query <<~SQL, MappingType::USERS
       SELECT COUNT(*)
       FROM user_emails ue
-        JOIN x.mappings mu ON ue.user_id = mu.original_id AND mu.type = ?
+        JOIN mapped.ids mu ON ue.user_id = mu.original_id AND mu.type = ?
     SQL
 
     rows_query <<~SQL, MappingType::USERS
       SELECT ue.email, ue."primary", ue.created_at, mu.discourse_id AS user_id
       FROM user_emails ue
-        JOIN x.mappings mu ON ue.user_id = mu.original_id AND mu.type = ?
+        JOIN mapped.ids mu ON ue.user_id = mu.original_id AND mu.type = ?
       ORDER BY ue.ROWID
     SQL
   end

@@ -23,7 +23,7 @@ module Migrations::Importer
         db_path,
         migrations_path: ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,
       )
-      @intermediate_db.execute("ATTACH DATABASE ? AS x", db_path)
+      @intermediate_db.execute("ATTACH DATABASE ? AS mapped", db_path)
     end
 
     def step_classes
@@ -38,7 +38,6 @@ module Migrations::Importer
 
     def execute_steps
       step_classes.each do |step_class|
-        puts step_class.title
         step = step_class.new(@intermediate_db, @discourse_db)
         step.execute
       end

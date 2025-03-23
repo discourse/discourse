@@ -3,16 +3,19 @@
 module Migrations::Importer
   class Step
     class << self
-      def title=(value)
-        @title = value
-      end
-
-      def title
-        @title ||=
-          I18n.t(
-            "importer.default_step_title",
-            type: name&.demodulize&.underscore&.humanize(capitalize: false),
+      # stree-ignore
+      def title(value = (getter = true; nil))
+        if getter
+          return(
+            @title ||=
+              I18n.t(
+                "importer.default_step_title",
+                type: name&.demodulize&.underscore&.humanize(capitalize: false),
+              )
           )
+        end
+
+        @title = value
       end
 
       def depends_on(*step_names)
@@ -46,6 +49,7 @@ module Migrations::Importer
     end
 
     def execute
+      puts self.class.title
     end
 
     def update_progressbar(increment_by: 1)
