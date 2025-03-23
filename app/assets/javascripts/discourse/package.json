@@ -120,7 +120,7 @@
     "ember-template-imports": "^4.3.0",
     "ember-test-selectors": "^7.0.0",
     "float-kit": "workspace:1.0.0",
-    "html-entities": "^2.5.2",
+    "html-entities": "^2.5.3",
     "imports-loader": "^5.0.0",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
