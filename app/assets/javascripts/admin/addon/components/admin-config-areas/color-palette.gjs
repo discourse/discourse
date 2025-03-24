@@ -20,6 +20,7 @@ export default class AdminConfigAreasColorPalette extends Component {
   @tracked editingName = false;
   @tracked editorMode = LIGHT;
   @tracked hasUnsavedChanges = false;
+  @tracked saving = false;
   hasChangedColors = false;
 
   @cached
@@ -55,6 +56,7 @@ export default class AdminConfigAreasColorPalette extends Component {
 
   @action
   async handleSubmit(data) {
+    this.saving = true;
     this.args.colorPalette.name = data.name;
     this.args.colorPalette.user_selectable = data.user_selectable;
 
@@ -68,7 +70,7 @@ export default class AdminConfigAreasColorPalette extends Component {
         },
       });
       if (this.hasChangedColors) {
-        this.applyColorChangesIfPossible();
+        await this.applyColorChangesIfPossible();
         this.hasChangedColors = false;
       }
     } catch (error) {
@@ -78,6 +80,8 @@ export default class AdminConfigAreasColorPalette extends Component {
           message: extractError(error),
         },
       });
+    } finally {
+      this.saving = false;
     }
   }
 
@@ -141,7 +145,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     try {
       const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
         data: {
-          request_dark: !!darkTag,
+          include_dark_scheme: !!darkTag,
         },
       });
       if (data?.new_href && lightTag) {
@@ -265,6 +269,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                   </span>
                 {{/if}}
                 <form.Submit
+                  @disabled={{this.saving}}
                   @label="admin.config_areas.color_palettes.save_changes"
                 />
               </div>

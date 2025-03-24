@@ -23,23 +23,15 @@ class StylesheetsController < ApplicationController
   def color_scheme
     params.require("id")
     params.permit("theme_id")
-    params.permit("request_dark")
+    params.permit("include_dark_scheme")
 
     manager = Stylesheet::Manager.new(theme_id: params[:theme_id])
-    stylesheet = manager.color_scheme_stylesheet_details(params[:id], fallback_to_base: true)
-
-    if params[:request_dark]
-      dark_href =
-        manager.color_scheme_stylesheet_link_tag_href(
-          params[:id],
-          dark: true,
-          fallback_to_base: false,
-        )
-      if dark_href
-        stylesheet = stylesheet.dup
-        stylesheet[:new_dark_href] = dark_href
-      end
-    end
+    stylesheet =
+      manager.color_scheme_stylesheet_details(
+        params[:id],
+        fallback_to_base: true,
+        include_dark_scheme: !!params[:include_dark_scheme],
+      )
 
     render json: stylesheet
   end
