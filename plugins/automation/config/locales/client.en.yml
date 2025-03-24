@@ -426,6 +426,11 @@ en:
           name:
             label: Trigger
         automation:
+          runs_today: "%{count} today"
+          runs_this_week: "%{count} this week"
+          runs_this_month: "%{count} this month"
+          runs:
+            label: Runs
           name:
             label: Name
           trigger:
@@ -444,5 +449,7 @@ en:
             label: Placeholders
           last_updated_at:
             label: Last update
+          last_run:
+            label: Last run
           last_updated_by:
             label: Updated by

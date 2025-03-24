@@ -15,6 +15,7 @@ export default class Search extends Service {
   @tracked visible = false;
   @tracked results = {};
   @tracked noResults = false;
+  @tracked welcomeBannerSearchInViewport = false;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
