@@ -35,7 +35,10 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       }
     } else {
       color = categoryOrHashtag.color;
-      if (categoryOrHashtag.parentCategory) {
+      if (
+        categoryOrHashtag.parentCategory &&
+        categoryOrHashtag.style_type === "square"
+      ) {
         parentColor = categoryOrHashtag.parentCategory.color;
       }
     }
