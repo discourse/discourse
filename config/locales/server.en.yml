@@ -4320,6 +4320,18 @@ en:
 
         Reason - %{reason}
 
+    account_deleted:
+      title: "Account Deleted"
+      subject_template: "[%{email_prefix}] Your account has been deleted"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
+
+        %{flag_reason}
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
+
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
