@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { inject as controller } from "@ember/controller";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -45,8 +44,6 @@ export default class Post extends Component {
   @service siteSettings;
   @service store;
 
-  @controller("topic") topicController;
-
   @tracked expandedFirstPost = false;
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
@@ -63,7 +60,7 @@ export default class Post extends Component {
 
   get filteredRepliesShown() {
     return (
-      this.topicController.replies_to_post_number ===
+      this.args.filteringRepliesToPostNumber ===
       this.args.post.post_number.toString()
     );
   }
@@ -223,12 +220,12 @@ export default class Post extends Component {
       currentFilterPostNumber &&
       currentFilterPostNumber === post.post_number
     ) {
-      this.topicController.send("cancelFilter", currentFilterPostNumber);
+      this.args.cancelFilter(currentFilterPostNumber);
       return;
     }
 
     await post.get("topic.postStream").filterReplies(post.post_number, post.id);
-    this.topicController.updateQueryParams();
+    this.args.updateTopicPageQueryParams();
   }
 
   @action
@@ -252,7 +249,7 @@ export default class Post extends Component {
       await this.args.post.topic?.postStream?.filterUpwards?.(
         this.args.post.id
       );
-      this.topicController.updateQueryParams();
+      this.args.updateTopicPageQueryParams();
     }
 
     const topicUrl = this.args.post.topicUrl;

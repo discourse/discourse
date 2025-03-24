@@ -356,13 +356,15 @@ export default createWidget("post-stream", {
               prevPost,
               nextPost,
               canCreatePost: attrs.canCreatePost, //ok
-              cancelFilter: () => this.sendWidgetAction("cancelFilter"),
+              cancelFilter: (nearestPost) =>
+                this.sendWidgetAction("cancelFilter", nearestPost),
               changeNotice: () => this.sendWidgetAction("changeNotice", post),
               changePostOwner: () =>
                 this.sendWidgetAction("changePostOwner", post),
               deletePost: () => this.sendWidgetAction("deletePost", post),
               editPost: () => this.sendWidgetAction("editPost", post),
               expandHidden: () => this.sendWidgetAction("expandHidden", post),
+              filteringRepliesToPostNumber: attrs.filteringRepliesToPostNumber,
               grantBadge: () => this.sendWidgetAction("grantBadge", post),
               lockPost: () => this.sendWidgetAction("lockPost", post),
               multiSelect,
@@ -395,6 +397,8 @@ export default createWidget("post-stream", {
               toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
               unhidePost: () => this.sendWidgetAction("unhidePost", post),
               unlockPost: () => this.sendWidgetAction("unlockPost", post),
+              updateTopicPageQueryParams: () =>
+                this.sendWidgetAction("updateTopicPageQueryParams"),
             })
           );
         } else {

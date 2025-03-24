@@ -1284,6 +1284,11 @@ export default class TopicController extends Controller.extend(
       .catch((error) => popupAjaxError(error));
   }
 
+  @action
+  updateTopicPageQueryParams() {
+    this.updateQueryParams();
+  }
+
   _jumpToIndex(index) {
     const postStream = this.get("model.postStream");
 

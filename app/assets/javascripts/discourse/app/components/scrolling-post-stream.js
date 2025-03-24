@@ -46,6 +46,7 @@ export default class ScrollingPostStream extends MountWidget {
       "posts",
       "canCreatePost",
       "filteredPostsCount",
+      "filteringRepliesToPostNumber",
       "multiSelect",
       "gaps",
       "selectedQuery",

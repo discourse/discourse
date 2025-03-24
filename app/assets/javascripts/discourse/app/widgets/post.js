@@ -1207,11 +1207,13 @@ registerWidgetShim(
   hbs`
     <Post
       @canCreatePost={{@data.canCreatePost}}
+      @cancelFilter={{@data.cancelFilter}}
       @changeNotice={{@data.changeNotice}}
       @changePostOwner={{@data.changePostOwner}}
       @deletePost={{@data.deletePost}}
       @editPost={{@data.editPost}}
       @expandHidden={{@expandHidden}}
+      @filteringRepliesToPostNumber={{@data.filteringRepliesToPostNumber}}
       @grantBadge={{@data.grantBadge}}
       @lockPost={{@data.lockPost}}
       @multiSelect={{@data.multiSelect}}
@@ -1239,5 +1241,6 @@ registerWidgetShim(
       @toggleWiki={{@data.toggleWiki}}
       @unhidePost={{@data.unhidePost}}
       @unlockPost={{@data.unlockPost}}
+      @updateTopicPageQueryParams={{@data.updateTopicPageQueryParams}}
     />`
 );
