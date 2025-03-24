@@ -194,7 +194,7 @@ export default class Post extends Component {
   @action
   async expandFirstPost() {
     this.expandedFirstPost = new TrackedAsyncData(
-      await this.args.post.expand()
+      this.args.post.expand()
     );
   }
 
