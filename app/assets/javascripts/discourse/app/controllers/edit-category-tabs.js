@@ -46,7 +46,7 @@ export default class EditCategoryTabsController extends Controller {
   get formData() {
     const data = getProperties(this.model, ...FIELD_LIST);
 
-    if (this.model.isNew) {
+    if (!this.model.style_type) {
       data.style_type = "square";
     }
 
