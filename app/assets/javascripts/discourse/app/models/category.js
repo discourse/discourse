@@ -453,6 +453,9 @@ export default class Category extends RestModel {
   @service currentUser;
 
   @tracked color;
+  @tracked style_type;
+  @tracked style_emoji;
+  @tracked style_icon;
   permissions = null;
 
   init() {

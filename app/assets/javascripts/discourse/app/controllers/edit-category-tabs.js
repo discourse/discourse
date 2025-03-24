@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
@@ -27,6 +28,8 @@ export default class EditCategoryTabsController extends Controller {
   @service dialog;
   @service site;
   @service router;
+
+  @tracked breadcrumbCategories = this.site.get("categoriesList");
 
   selectedTab = "general";
   saving = false;
@@ -136,6 +139,10 @@ export default class EditCategoryTabsController extends Controller {
             Category.slugFor(this.model)
           );
         }
+        // force a reload of the category list to track changes to style type
+        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+          c.id === this.model.id ? this.model : c
+        );
       })
       .catch((error) => {
         popupAjaxError(error);

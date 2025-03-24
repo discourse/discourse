@@ -4,7 +4,7 @@
       <h2>{{this.title}}</h2>
       {{#if this.model.id}}
         <BreadCrumbs
-          @categories={{this.site.categoriesList}}
+          @categories={{this.breadcrumbCategories}}
           @category={{this.model}}
           @noSubcategories={{this.model.noSubcategories}}
           @editingCategory={{true}}
