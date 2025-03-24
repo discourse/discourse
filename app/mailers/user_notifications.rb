@@ -179,7 +179,9 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_deleted(email, reviewable)
-    post_action_type_id = reviewable.reviewable_scores.first.reviewable_score_type
+    post_action_type_id =
+      reviewable.reviewable_scores.first&.reviewable_score_type ||
+        PostActionTypeView.new.types[:spam]
     build_email(
       email,
       template: "user_notifications.account_deleted",
