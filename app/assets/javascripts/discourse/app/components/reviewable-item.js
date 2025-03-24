@@ -180,7 +180,7 @@ export default class ReviewableItem extends Component {
     if (claimedBy) {
       if (claimedBy.user.id === this.currentUser.id) {
         return i18n("review.claim_help.claimed_by_you");
-      } else if (claimedBy.system) {
+      } else if (claimedBy.automatic) {
         return i18n("review.claim_help.automatically_claimed_by", {
           username: claimedBy.user.username,
         });

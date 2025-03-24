@@ -6,7 +6,7 @@ RSpec.describe ReviewableClaimedTopicsController do
   fab!(:topic)
   fab!(:automatic_topic) { Fabricate(:topic) }
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
-  fab!(:system_reviewable) { Fabricate(:reviewable_flagged_post, topic: system_topic) }
+  fab!(:automatic_reviewable) { Fabricate(:reviewable_flagged_post, topic: automatic_topic) }
 
   describe "#create" do
     let(:params) { { reviewable_claimed_topic: { topic_id: topic.id } } }
