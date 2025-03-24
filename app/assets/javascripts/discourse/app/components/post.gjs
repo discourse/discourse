@@ -44,7 +44,7 @@ export default class Post extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked expandedFirstPost = false;
+  @tracked expandedFirstPost;
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
 
@@ -190,9 +190,7 @@ export default class Post extends Component {
 
   @action
   async expandFirstPost() {
-    this.expandedFirstPost = new TrackedAsyncData(
-      this.args.post.expand()
-    );
+    this.expandedFirstPost = new TrackedAsyncData(this.args.post.expand());
   }
 
   @action
