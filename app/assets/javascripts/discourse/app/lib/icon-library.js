@@ -1,11 +1,7 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse/lib/attribute-hook";
 import deprecated from "discourse/lib/deprecated";
-import {
-  isDevelopment,
-  isRailsTesting,
-  isTesting,
-} from "discourse/lib/environment";
+import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
@@ -146,13 +142,11 @@ function handleDeprecatedIcon(id) {
   newId = remapFromFA5(newId);
 
   if (newId !== id) {
-    deprecated(
-      `The icon name "${id}" has been updated to "${newId}". Please use the new name in your code. Old names have been removed as of Q2 2025.`,
-      {
-        id: "discourse.fontawesome-6-upgrade",
-        url: "https://meta.discourse.org/t/325349",
-        raiseError: isTesting() || isRailsTesting(),
-      }
+    //TODO maybe add consolePrefix
+
+    // eslint-disable-next-line no-console
+    console.error(
+      `Missing icon error: The icon name "${id}" has been removed and should be updated to "${newId}" in your code. More info at https://meta.discourse.org/t/325349.`
     );
   }
 
