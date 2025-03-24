@@ -241,6 +241,14 @@ export default class ReviewableItem extends Component {
   }
 
   @bind
+  _updateStatus(data) {
+    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+      delete data.remove_reviewable_ids;
+      this._performResult(data, {}, this.reviewable);
+    }
+  }
+
+  @bind
   async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
