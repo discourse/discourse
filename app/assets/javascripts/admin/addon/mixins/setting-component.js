@@ -52,6 +52,7 @@ export default Mixin.create({
   router: service(),
   site: service(),
   dialog: service(),
+  siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
@@ -88,7 +89,15 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return !deepEqual(bufferVal, settingVal);
+    const dirty = !deepEqual(bufferVal, settingVal);
+
+    if (dirty) {
+      this.siteSettingChangeTracker.add(this.setting);
+    } else {
+      this.siteSettingChangeTracker.remove(this.setting);
+    }
+
+    return dirty;
   }),
 
   preview: computed("setting", "buffered.value", function () {
