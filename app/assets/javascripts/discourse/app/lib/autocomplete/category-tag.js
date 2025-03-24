@@ -13,7 +13,7 @@ export function renderCategory(option) {
 
 export function renderTag(option) {
   const text = `${escapeExpression(option.name)} x ${escapeExpression(option.count)}`;
-  return `<li><a href>${iconHTML("tag")} ${text}</a></li>`;
+  return `<li><a href>${iconHTML("tag")}${text}</a></li>`;
 }
 
 export function renderOption(option) {
