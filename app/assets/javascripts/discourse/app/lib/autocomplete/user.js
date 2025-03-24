@@ -1,10 +1,11 @@
+import avatar from "discourse/helpers/avatar";
 import { escapeExpression } from "discourse/lib/utilities";
 
 function renderUserItem(item) {
   return `
     <li data-index="${escapeExpression(item.index?.toString())}">
       <a href title="${escapeExpression(item.name)}" class="${escapeExpression(item.cssClasses)}">
-        ${item.avatar || ""}
+        ${avatar(item, { imageSize: "tiny" })}
         <span class='username'>${escapeExpression(item.username)}</span>
         ${item.name ? `<span class='name'>${escapeExpression(item.name)}</span>` : ""}
         ${item.status ? `<span class='user-status'></span>` : ""}
