@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
@@ -55,6 +56,8 @@ export default class ReviewableItem extends Component {
   @optionalService adminTools;
 
   @tracked disabled = false;
+
+  @alias("reviewable.claimed_by.system") claimedBySystem;
 
   updating = null;
   editing = false;
@@ -152,11 +155,6 @@ export default class ReviewableItem extends Component {
     return claimEnabled && claimMode === "required";
   }
 
-  @discourseComputed("reviewable.claimed_by.system")
-  claimedBySystem(claimedBySystem) {
-    return claimedBySystem;
-  }
-
   @discourseComputed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
@@ -183,7 +181,7 @@ export default class ReviewableItem extends Component {
       if (claimedBy.user.id === this.currentUser.id) {
         return i18n("review.claim_help.claimed_by_you");
       } else if (claimedBy.system) {
-        return i18n("review.claim_help.claimed_by_system", {
+        return i18n("review.claim_help.automatically_claimed_by", {
           username: claimedBy.user.username,
         });
       } else {
