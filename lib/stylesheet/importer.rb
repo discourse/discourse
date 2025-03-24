@@ -107,7 +107,7 @@ module Stylesheet
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
         contents << "\n\n// Color definitions from #{name}\n\n"
-        contents << File.read(path.to_s) # TODO
+        contents << File.read(path.to_s)
         contents << "\n\n"
       end
 
