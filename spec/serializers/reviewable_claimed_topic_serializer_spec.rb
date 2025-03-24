@@ -12,7 +12,7 @@ RSpec.describe ReviewableClaimedTopicSerializer do
       described_class.new(reviewable_claimed_topic, scope: Guardian.new(admin), root: nil).as_json
 
     expect(json[:id]).to eq(reviewable_claimed_topic.id)
-    expect(json[:system]).to eq(reviewable_claimed_topic.system)
+    expect(json[:automatic]).to eq(reviewable_claimed_topic.automatic)
     expect(json[:user_id]).to eq(admin.id)
   end
 end

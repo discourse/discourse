@@ -126,7 +126,7 @@
       {{#if this.claimEnabled}}
         <div class="claimed-actions">
           <span class="help">{{html-safe this.claimHelp}}</span>
-          {{#unless this.claimedBySystem}}
+          {{#unless this.autoClaimed}}
             <ReviewableClaimedTopic
               @topicId={{this.topicId}}
               @claimedBy={{this.reviewable.claimed_by}}

@@ -57,7 +57,7 @@ export default class ReviewableItem extends Component {
 
   @tracked disabled = false;
 
-  @alias("reviewable.claimed_by.system") claimedBySystem;
+  @alias("reviewable.claimed_by.automatic") autoClaimed;
 
   updating = null;
   editing = false;
@@ -139,10 +139,10 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "siteSettings.reviewable_claiming",
     "topicId",
-    "reviewable.claimed_by.system"
+    "reviewable.claimed_by.automatic"
   )
-  claimEnabled(claimMode, topicId, claimedBySystem) {
-    return (claimMode !== "disabled" || claimedBySystem) && !!topicId;
+  claimEnabled(claimMode, topicId, autoClaimed) {
+    return (claimMode !== "disabled" || autoClaimed) && !!topicId;
   }
 
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
@@ -233,7 +233,7 @@ export default class ReviewableItem extends Component {
 
     if (data.topic_id === this.reviewable.topic.id) {
       if (user) {
-        this.reviewable.set("claimed_by", { user, system: data.system });
+        this.reviewable.set("claimed_by", { user, automatic: data.automatic });
       } else {
         this.reviewable.set("claimed_by", null);
       }
@@ -302,11 +302,11 @@ export default class ReviewableItem extends Component {
           try {
             await claim.save({
               topic_id: this.reviewable.topic.id,
-              system: true,
+              automatic: true,
             });
             this.reviewable.set("claimed_by", {
               user: this.currentUser,
-              system: true,
+              automatic: true,
             });
           } catch (e) {
             popupAjaxError(e);
@@ -402,11 +402,11 @@ export default class ReviewableItem extends Component {
         before: performAction,
       });
 
-      if (!data?.success && claimed_by?.system) {
+      if (!data?.success && claimed_by?.automatic) {
         try {
           await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
             type: "DELETE",
-            data: { system: true },
+            data: { automatic: true },
           });
           this.reviewable.set("claimed_by", null);
         } catch (e) {

@@ -4,7 +4,7 @@ RSpec.describe ReviewableClaimedTopicsController do
   fab!(:moderator)
 
   fab!(:topic)
-  fab!(:system_topic) { Fabricate(:topic) }
+  fab!(:automatic_topic) { Fabricate(:topic) }
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
   fab!(:system_reviewable) { Fabricate(:reviewable_flagged_post, topic: system_topic) }
 
@@ -91,16 +91,16 @@ RSpec.describe ReviewableClaimedTopicsController do
         expect(response.status).to eq(403)
       end
 
-      it "allows claiming when system param is present" do
+      it "allows claiming when automatic param is present" do
         SiteSetting.reviewable_claiming = "disabled"
-        params[:reviewable_claimed_topic][:topic_id] = system_topic.id
-        params[:reviewable_claimed_topic][:system] = "true"
+        params[:reviewable_claimed_topic][:topic_id] = automatic_topic.id
+        params[:reviewable_claimed_topic][:automatic] = "true"
 
         post "/reviewable_claimed_topics.json", params: params
 
         expect(response.status).to eq(200)
         expect(
-          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: system_topic.id).exists?,
+          ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
         ).to eq(true)
       end
 
@@ -141,8 +141,8 @@ RSpec.describe ReviewableClaimedTopicsController do
 
   describe "#destroy" do
     fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: topic) }
-    fab!(:system_claimed) do
-      Fabricate(:reviewable_claimed_topic, topic: system_topic, system: true)
+    fab!(:automatic_claimed) do
+      Fabricate(:reviewable_claimed_topic, topic: automatic_topic, automatic: true)
     end
 
     before { sign_in(moderator) }
@@ -199,13 +199,13 @@ RSpec.describe ReviewableClaimedTopicsController do
       expect(response.status).to eq(403)
     end
 
-    it "allows unclaiming when system param is present" do
+    it "allows unclaiming when automatic param is present" do
       SiteSetting.reviewable_claiming = "disabled"
 
-      delete "/reviewable_claimed_topics/#{system_claimed.topic_id}.json?system=true"
+      delete "/reviewable_claimed_topics/#{automatic_claimed.topic_id}.json?automatic=true"
       expect(response.status).to eq(200)
       expect(
-        ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: system_topic.id).exists?,
+        ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: automatic_topic.id).exists?,
       ).to eq(false)
     end
 

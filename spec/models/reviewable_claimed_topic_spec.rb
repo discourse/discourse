@@ -19,21 +19,29 @@ RSpec.describe ReviewableClaimedTopic, type: :model do
       topic2 = Fabricate(:topic)
 
       ReviewableClaimedTopic.create(topic_id: topic1.id, user_id: Fabricate(:user).id)
-      ReviewableClaimedTopic.create(topic_id: topic2.id, user_id: Fabricate(:user).id, system: true)
+      ReviewableClaimedTopic.create(
+        topic_id: topic2.id,
+        user_id: Fabricate(:user).id,
+        automatic: true,
+      )
 
       result = ReviewableClaimedTopic.claimed_hash([topic1.id, topic2.id])
       expect(result[topic1.id].topic_id).to eq(topic1.id)
       expect(result[topic2.id].topic_id).to eq(topic2.id)
     end
 
-    it "only returns the system claimed topics when reviewable claiming is disabled" do
+    it "only returns the automatic claimed topics when reviewable claiming is disabled" do
       SiteSetting.reviewable_claiming = "disabled"
 
       topic1 = Fabricate(:topic)
       topic2 = Fabricate(:topic)
 
       ReviewableClaimedTopic.create(topic_id: topic1.id, user_id: Fabricate(:user).id)
-      ReviewableClaimedTopic.create(topic_id: topic2.id, user_id: Fabricate(:user).id, system: true)
+      ReviewableClaimedTopic.create(
+        topic_id: topic2.id,
+        user_id: Fabricate(:user).id,
+        automatic: true,
+      )
 
       result = ReviewableClaimedTopic.claimed_hash([topic1.id, topic2.id])
       expect(result[topic2.id].topic_id).to eq(topic2.id)
