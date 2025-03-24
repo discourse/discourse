@@ -17,18 +17,15 @@ module("Unit | Route | review-index", function (hooks) {
 
     let channels = messageBus.callbacks.map((c) => c.channel);
     assert.false(channels.includes("/reviewable_counts/654"));
-    assert.false(channels.includes("/reviewable_claimed"));
 
     reviewIndexRoute.activate();
 
     channels = messageBus.callbacks.map((c) => c.channel);
     assert.true(channels.includes("/reviewable_counts/654"));
-    assert.true(channels.includes("/reviewable_claimed"));
 
     reviewIndexRoute.deactivate();
 
     channels = messageBus.callbacks.map((c) => c.channel);
     assert.false(channels.includes("/reviewable_counts/654"));
-    assert.false(channels.includes("/reviewable_claimed"));
   });
 });

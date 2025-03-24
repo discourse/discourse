@@ -340,7 +340,7 @@ class ReviewableFlaggedPost < Reviewable
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
+    ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
 
     user_ids = User.staff.pluck(:id)
@@ -358,7 +358,7 @@ class ReviewableFlaggedPost < Reviewable
       user_ids.uniq!
     end
 
-    data = { topic_id: topic.id }
+    data = { topic_id: topic.id, automatic: false }
 
     MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end

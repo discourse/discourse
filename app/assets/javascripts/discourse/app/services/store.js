@@ -56,6 +56,7 @@ export default class StoreService extends Service {
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
     reviewable_history: "reviewable_histories",
+    claimed_by: "claimed_bies",
   };
 
   init() {
