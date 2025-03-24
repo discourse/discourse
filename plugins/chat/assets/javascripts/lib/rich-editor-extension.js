@@ -1,9 +1,7 @@
 import getURL from "discourse/lib/get-url";
+import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
-// need to account for both one message from single user,
-// multiple messages from single user,
-// and multiple messages from multiple users
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -29,31 +27,47 @@ const extension = {
         // decouple the token generation from the HTML generation, which is a lot of work,
         // so this is acceptable for now.
 
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("chat-transcript");
+        const wrapperElement = document.createElement("div");
+        wrapperElement.classList.add("chat-transcript");
+
+        if (node.attrs.chained) {
+          wrapperElement.classList.add("chat-transcript-chained");
+        }
 
         let metaElement;
+        let channelLinkElement;
         if (node.attrs.multiQuote) {
-          metaElement = document.createElement("div");
-          metaElement.classList.add("chat-transcript-meta");
+          if (node.attrs.channelName) {
+            metaElement = document.createElement("div");
+            metaElement.classList.add("chat-transcript-meta");
 
-          const channelLink = node.attrs.channelId
-            ? getURL(`/chat/c/-/${node.attrs.channelId}`)
-            : null;
+            const channelLink = node.attrs.channelId
+              ? getURL(`/chat/c/-/${node.attrs.channelId}`)
+              : null;
 
-          // TODO (martin) Handle emoji unescaping of channel name
-          metaElement.innerHTML = i18n("chat.quote.original_channel", {
-            channel: node.attrs.channelName,
-            channelLink,
-          });
+            // TODO (martin) Handle emoji unescaping of channel name
+            metaElement.innerHTML = i18n("chat.quote.original_channel", {
+              channel: emojiUnescape(node.attrs.channelName),
+              channelLink,
+            });
+          }
+        } else {
+          if (node.attrs.channelName) {
+            channelLinkElement = document.createElement("a");
+            channelLinkElement.classList.add("chat-transcript-channel");
+            channelLinkElement.href = getURL(
+              `/chat/c/-/${node.attrs.channelId}`
+            );
+            channelLinkElement.innerHTML = `#${emojiUnescape(
+              node.attrs.channelName
+            )}`;
+          }
         }
 
         const userElement = document.createElement("div");
         userElement.classList.add("chat-transcript-user");
 
-        // TODO (martin) Handle reactions...do we care about showing them here?
         // TODO (martin) Handle threads
-        // TODO (martin) Handle chained messages from different users
 
         // TODO (martin) Need to use current user's timezone here when we have
         // that available.
@@ -68,16 +82,21 @@ const extension = {
         const messagesElement = document.createElement("div");
         messagesElement.classList.add("chat-transcript-messages");
 
-        // html is raw content with additional html, raw content is just the text
         messagesElement.innerHTML = node.attrs.html;
 
         if (metaElement) {
-          wrapper.appendChild(metaElement);
+          wrapperElement.appendChild(metaElement);
         }
-        wrapper.appendChild(userElement);
-        wrapper.appendChild(messagesElement);
 
-        return wrapper;
+        wrapperElement.appendChild(userElement);
+
+        if (channelLinkElement) {
+          userElement.appendChild(channelLinkElement);
+        }
+
+        wrapperElement.appendChild(messagesElement);
+
+        return wrapperElement;
       },
     },
   },
@@ -105,10 +124,13 @@ const extension = {
     },
   },
   parse: {
-    div_chat_transcript_wrap_open(state, token, tokens) {
-      // TODO (martin) This needs to be getting the html_raw for the current
-      // token only, otherwise it will get the first one every time
-      const messagesHtml = tokens.find((t) => t.type === "html_raw")?.content;
+    div_chat_transcript_wrap_open(state, token, tokens, i) {
+      // The slice here makes sure we get the html_raw content
+      // only for the current [chat] bbcode block based on the
+      // token index.
+      const messagesHtml = tokens
+        .slice(i)
+        .find((t) => t.type === "html_raw")?.content;
 
       // So this content and the whole wrap_open happens for every single one of `[chat]`
       //
@@ -116,9 +138,6 @@ const extension = {
       //
       // Multiquote is > 1 message
       // Chained is > 1 message by different users
-      //
-      //
-      //TODO: Maybe we do need a parent node to contain all these?
       state.openNode(state.schema.nodes.chat, {
         messageId: token.attrGet("data-message-id"),
         username: token.attrGet("data-username"),
@@ -142,12 +161,30 @@ const extension = {
     div_chat_transcript_datetime: { ignore: true },
     div_chat_transcript_messages: { ignore: true },
     div_chat_transcript_reaction: { ignore: true },
+
+    // Reaction-related tokens are not used in the live preview,
+    // they are only used when archiving a channel, not needed here.
     div_chat_transcript_reactions: { ignore: true },
     div_chat_transcript_meta: { ignore: true },
+
+    // Thread-related tokens
+    // TODO (martin) Handle threads
+    details_chat_transcript_wrap: { ignore: true },
+    summary_chat_transcript: { ignore: true },
+    div_thread: { ignore: true },
+    div_thread_header: { ignore: true },
+    svg_thread_header: { ignore: true },
+    use_svg_thread: { ignore: true },
+    span_thread_title: { ignore: true },
+
     html_raw: { ignore: true, noCloseToken: true },
+
+    span: { ignore: true },
     span_open() {
       // TODO: not sure if i need to actually do anything here,
-      // its just here to stop it erroring
+      // its just here to stop it erroring, otherwise I get
+      //
+      // No parser processed span_open token for tag: span, attrs: [["title","2025-03-20T07:12:57Z"]]
       return true;
     },
     span_close() {

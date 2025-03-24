@@ -7,7 +7,7 @@ const chatTranscriptRule = {
   tag: "chat",
 
   replace: function (state, tagInfo, content) {
-    // shouldn't really happen but we don't want to break rendering if it does
+    // Shouldn't really happen but we don't want to break rendering if it does
     if (!customMarkdownCookFn) {
       return;
     }
@@ -15,6 +15,8 @@ const chatTranscriptRule = {
     const options = state.md.options.discourse;
     const [username, messageIdStart, messageTimeStart] =
       (tagInfo.attrs.quote && tagInfo.attrs.quote.split(";")) || [];
+
+    // NOTE: Reactions are only included when archiving a channel, not when quoting a message
     const reactions = tagInfo.attrs.reactions;
     const multiQuote = !!tagInfo.attrs.multiQuote;
     const noLink = !!tagInfo.attrs.noLink;
@@ -31,14 +33,15 @@ const chatTranscriptRule = {
     }
 
     const isThread = threadId && content.includes("[chat");
-    let wrapperDivToken = state.push("div_chat_transcript_wrap_open", "div", 1);
+    const wrapperDivToken = state.push(
+      "div_chat_transcript_wrap_open",
+      "div",
+      1
+    );
 
-    if (channelName && multiQuote) {
-      let metaDivToken = state.push("div_chat_transcript_meta_open", "div", 1);
-      metaDivToken.attrs = [["class", "chat-transcript-meta"]];
-      const channelToken = state.push("html_inline", "", 0);
-
-      const unescapedChannelName = performEmojiUnescape(channelName, {
+    let unescapedChannelName;
+    if (channelName) {
+      unescapedChannelName = performEmojiUnescape(channelName, {
         getURL: options.getURL,
         emojiSet: options.emojiSet,
         emojiCDNUrl: options.emojiCDNUrl,
@@ -46,6 +49,16 @@ const chatTranscriptRule = {
         inlineEmoji: options.inlineEmoji,
         lazy: true,
       });
+    }
+
+    if (channelName && multiQuote) {
+      const metaDivToken = state.push(
+        "div_chat_transcript_meta_open",
+        "div",
+        1
+      );
+      metaDivToken.attrs = [["class", "chat-transcript-meta"]];
+      const channelToken = state.push("html_inline", "", 0);
 
       channelToken.content = i18n("chat.quote.original_channel", {
         channel: unescapedChannelName,
@@ -64,18 +77,17 @@ const chatTranscriptRule = {
       const threadHeaderToken = state.push("div_thread_header_open", "div", 1);
       threadHeaderToken.attrs = [["class", "chat-transcript-thread-header"]];
 
-      const thread_svg = state.push("svg_thread_header_open", "svg", 1);
-      thread_svg.block = false;
-      thread_svg.attrs = [
+      const threadSvgHeader = state.push("svg_thread_header_open", "svg", 1);
+      threadSvgHeader.block = false;
+      threadSvgHeader.attrs = [
         ["class", "fa d-icon d-icon-discourse-threads svg-icon svg-node"],
       ];
-      state.push(thread_svg);
-      let thread_use = state.push("use_svg_thread_open", "use", 1);
-      thread_use.block = false;
-      thread_use.attrs = [["href", "#discourse-threads"]];
-      state.push(thread_use);
-      state.push(state.push("use_svg_thread_close", "use", -1));
-      state.push(state.push("svg_thread_header_close", "svg", -1));
+
+      const threadUseSvg = state.push("use_svg_thread_open", "use", 1);
+      threadUseSvg.block = false;
+      threadUseSvg.attrs = [["href", "#discourse-threads"]];
+      state.push("use_svg_thread_close", "use", -1);
+      state.push("svg_thread_header_close", "svg", -1);
 
       const threadTitleContainerToken = state.push(
         "span_thread_title_open",
@@ -104,7 +116,11 @@ const chatTranscriptRule = {
       state.push("div_thread_header_close", "div", -1);
     }
 
-    let wrapperClasses = ["chat-transcript"];
+    const wrapperClasses = ["chat-transcript"];
+
+    if (tagInfo.attrs.chained) {
+      wrapperClasses.push("chat-transcript-chained");
+    }
 
     wrapperDivToken.content = content;
     wrapperDivToken.attrs = [["class", wrapperClasses.join(" ")]];
@@ -113,7 +129,6 @@ const chatTranscriptRule = {
     wrapperDivToken.attrs.push(["data-datetime", messageTimeStart]);
 
     if (tagInfo.attrs.chained) {
-      wrapperClasses.push("chat-transcript-chained");
       wrapperDivToken.attrs.push(["data-chained", "true"]);
     }
 
@@ -133,11 +148,11 @@ const chatTranscriptRule = {
       wrapperDivToken.attrs.push(["data-multiquote", "true"]);
     }
 
-    let userDivToken = state.push("div_chat_transcript_user_open", "div", 1);
+    const userDivToken = state.push("div_chat_transcript_user_open", "div", 1);
     userDivToken.attrs = [["class", "chat-transcript-user"]];
 
     // start: user avatar
-    let avatarDivToken = state.push(
+    const avatarDivToken = state.push(
       "div_chat_transcript_user_avatar_open",
       "div",
       1
@@ -158,7 +173,7 @@ const chatTranscriptRule = {
     // end: user avatar
 
     // start: username
-    let usernameDivToken = state.push(
+    const usernameDivToken = state.push(
       "div_chat_transcript_username_open",
       "div",
       1
@@ -179,7 +194,7 @@ const chatTranscriptRule = {
     // end: username
 
     // start: time + link to message
-    let datetimeDivToken = state.push(
+    const datetimeDivToken = state.push(
       "div_chat_transcript_datetime_open",
       "div",
       1
@@ -231,7 +246,7 @@ const chatTranscriptRule = {
         ["href", channelLink],
       ];
       let inlineTextToken = state.push("html_inline", "", 0);
-      inlineTextToken.content = `#${channelName}`;
+      inlineTextToken.content = `#${unescapedChannelName}`;
       channelLinkToken = state.push("link_close", "a", -1);
       channelLinkToken.block = false;
     }
@@ -239,7 +254,7 @@ const chatTranscriptRule = {
 
     state.push("div_chat_transcript_user_close", "div", -1);
 
-    let messagesToken = state.push(
+    const messagesToken = state.push(
       "div_chat_transcript_messages_open",
       "div",
       1
@@ -274,8 +289,8 @@ const chatTranscriptRule = {
     }
 
     if (reactions) {
-      let emojiHtmlCache = {};
-      let reactionsToken = state.push(
+      const emojiHtmlCache = {};
+      const reactionsToken = state.push(
         "div_chat_transcript_reactions",
         "div",
         1
