@@ -234,7 +234,7 @@ export default createWidget("post-stream", {
         this.site.useGlimmerPostStream
           ? new RenderGlimmer(
               this,
-              "div.post-placeholder-shim.glimmer-post-stream",
+              "div.post-placeholder-shim",
               hbs`
               <Post::Placeholder/>`
             )
@@ -275,7 +275,7 @@ export default createWidget("post-stream", {
           this.site.useGlimmerPostStream
             ? new RenderGlimmer(
                 this,
-                "div.post-gap-shim.glimmer-post-stream",
+                "div.post-gap-shim",
                 hbs`
                 <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
                 {
@@ -304,7 +304,7 @@ export default createWidget("post-stream", {
           result.push(
             new RenderGlimmer(
               this,
-              "div.time-gap.small-action.glimmer-post-stream",
+              "div.time-gap.small-action",
               hbs`
                 <Post::TimeGap @daysSince={{@data.daysSince}} />`,
               { daysSince }
@@ -324,7 +324,7 @@ export default createWidget("post-stream", {
           this.site.useGlimmerPostStream
             ? new RenderGlimmer(
                 this,
-                "div.post-small-action-shim.glimmer-post-stream",
+                "div.post-small-action-shim",
                 hbs`
                 <Post::SmallAction @post={{@data.post}}
                                    @deletePost={{@data.deletePost}}
@@ -410,7 +410,7 @@ export default createWidget("post-stream", {
           this.site.useGlimmerPostStream
             ? new RenderGlimmer(
                 this,
-                "div.post-gap-shim.glimmer-post-stream",
+                "div.post-gap-shim",
                 hbs`
                 <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
                 {
@@ -440,7 +440,7 @@ export default createWidget("post-stream", {
           this.site.useGlimmerPostStream
             ? new RenderGlimmer(
                 this,
-                "div.post-visited-line-shim.glimmer-post-stream",
+                "div.post-visited-line-shim",
                 hbs`
                 <Post::VisitedLine @post={{@data.post}} />`,
                 {
@@ -465,7 +465,7 @@ export default createWidget("post-stream", {
         this.site.useGlimmerPostStream
           ? new RenderGlimmer(
               this,
-              "div.post-filtered-notice-shim.glimmer-post-stream",
+              "div.post-filtered-notice-shim",
               hbs`
               <Post::FilteredNotice @posts={{@data.posts}}
                                     @cancelFilter={{@data.cancelFilter}}
