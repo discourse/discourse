@@ -106,15 +106,16 @@ const chatTranscriptRule = {
 
     let wrapperClasses = ["chat-transcript"];
 
-    if (tagInfo.attrs.chained) {
-      wrapperClasses.push("chat-transcript-chained");
-    }
-
     wrapperDivToken.content = content;
     wrapperDivToken.attrs = [["class", wrapperClasses.join(" ")]];
     wrapperDivToken.attrs.push(["data-message-id", messageIdStart]);
     wrapperDivToken.attrs.push(["data-username", username]);
     wrapperDivToken.attrs.push(["data-datetime", messageTimeStart]);
+
+    if (tagInfo.attrs.chained) {
+      wrapperClasses.push("chat-transcript-chained");
+      wrapperDivToken.attrs.push(["data-chained", "true"]);
+    }
 
     if (reactions) {
       wrapperDivToken.attrs.push(["data-reactions", reactions]);
@@ -126,6 +127,10 @@ const chatTranscriptRule = {
 
     if (channelId) {
       wrapperDivToken.attrs.push(["data-channel-id", channelId]);
+    }
+
+    if (multiQuote) {
+      wrapperDivToken.attrs.push(["data-multiquote", "true"]);
     }
 
     let userDivToken = state.push("div_chat_transcript_user_open", "div", 1);

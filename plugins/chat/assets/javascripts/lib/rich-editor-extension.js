@@ -1,3 +1,6 @@
+import getURL from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
+
 // need to account for both one message from single user,
 // multiple messages from single user,
 // and multiple messages from multiple users
@@ -13,27 +16,68 @@ const extension = {
         channelId: {},
         html: {},
         rawContent: {},
+        multiQuote: {},
+        chained: {},
       },
       group: "block",
       isolating: true,
       selectable: true,
       parseDOM: [{ tag: "div.chat-transcript" }],
       toDOM(node) {
-        const dom = document.createElement("div");
-        dom.classList.add("chat-transcript");
-        const user = document.createElement("div");
-        user.classList.add("chat-transcript-user");
-        user.innerHTML = `<span class="chat-transcript-username">${node.attrs.username}</span>`;
-        const messages = document.createElement("div");
-        messages.classList.add("chat-transcript-messages");
+        // NOTE: This HTML representation of the node in a lot of ways is duplicated from
+        // the chat transcript markdown-it rule, this is unavoidable unless we completely
+        // decouple the token generation from the HTML generation, which is a lot of work,
+        // so this is acceptable for now.
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("chat-transcript");
+
+        let metaElement;
+        if (node.attrs.multiQuote) {
+          metaElement = document.createElement("div");
+          metaElement.classList.add("chat-transcript-meta");
+
+          const channelLink = node.attrs.channelId
+            ? getURL(`/chat/c/-/${node.attrs.channelId}`)
+            : null;
+
+          // TODO (martin) Handle emoji unescaping of channel name
+          metaElement.innerHTML = i18n("chat.quote.original_channel", {
+            channel: node.attrs.channelName,
+            channelLink,
+          });
+        }
+
+        const userElement = document.createElement("div");
+        userElement.classList.add("chat-transcript-user");
+
+        // TODO (martin) Handle reactions...do we care about showing them here?
+        // TODO (martin) Handle threads
+        // TODO (martin) Handle chained messages from different users
+
+        // TODO (martin) Need to use current user's timezone here when we have
+        // that available.
+        const formattedDateTime = moment(node.attrs.datetime).format(
+          i18n("dates.long_no_year")
+        );
+        userElement.innerHTML = `
+          <span class="chat-transcript-username">${node.attrs.username}</span>
+          <span class="chat-transcript-datetime">${formattedDateTime}</span>
+        `;
+
+        const messagesElement = document.createElement("div");
+        messagesElement.classList.add("chat-transcript-messages");
 
         // html is raw content with additional html, raw content is just the text
-        messages.innerHTML = node.attrs.html;
+        messagesElement.innerHTML = node.attrs.html;
 
-        dom.appendChild(user);
-        dom.appendChild(messages);
+        if (metaElement) {
+          wrapper.appendChild(metaElement);
+        }
+        wrapper.appendChild(userElement);
+        wrapper.appendChild(messagesElement);
 
-        return dom;
+        return wrapper;
       },
     },
   },
@@ -46,7 +90,13 @@ const extension = {
       bbCodeAttrs.push(`channel="${node.attrs.channelName}"`);
       bbCodeAttrs.push(`channelId="${node.attrs.channelId}"`);
 
-      // todo: handle chained and multiQuote
+      if (node.attrs.chained) {
+        bbCodeAttrs.push(`chained="true"`);
+      }
+
+      if (node.attrs.multiQuote) {
+        bbCodeAttrs.push(`multiQuote="true"`);
+      }
 
       state.write(`[chat ${bbCodeAttrs.join(" ")}]\n`);
 
@@ -75,6 +125,8 @@ const extension = {
         datetime: token.attrGet("data-datetime"),
         channelName: token.attrGet("data-channel-name"),
         channelId: token.attrGet("data-channel-id"),
+        chained: token.attrGet("data-chained"),
+        multiQuote: token.attrGet("data-multiquote"),
         html: messagesHtml,
         rawContent: token.content,
       });
