@@ -142,8 +142,6 @@ function handleDeprecatedIcon(id) {
   newId = remapFromFA5(newId);
 
   if (newId !== id) {
-    //TODO maybe add consolePrefix
-
     // eslint-disable-next-line no-console
     console.error(
       `Missing icon error: The icon name "${id}" has been removed and should be updated to "${newId}" in your code. More info at https://meta.discourse.org/t/325349.`
