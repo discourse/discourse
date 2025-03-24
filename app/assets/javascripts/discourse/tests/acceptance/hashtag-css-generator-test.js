@@ -25,6 +25,7 @@ acceptance("Hashtag CSS Generator", function (needs) {
         id: 4,
         color: "2B81AF",
         text_color: "ffffff",
+        style_type: "square",
         parent_category_id: 1,
         name: "category3",
       },
