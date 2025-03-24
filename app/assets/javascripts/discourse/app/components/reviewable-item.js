@@ -232,15 +232,11 @@ export default class ReviewableItem extends Component {
     const user = data.user ? this.store.createRecord("user", data.user) : null;
 
     if (data.topic_id === this.reviewable.topic.id) {
-      this.reviewable.set("claimed_by", { user, system: data.system });
-    }
-  }
-
-  @bind
-  _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
-      delete data.remove_reviewable_ids;
-      this._performResult(data, {}, this.reviewable);
+      if (user) {
+        this.reviewable.set("claimed_by", { user, system: data.system });
+      } else {
+        this.reviewable.set("claimed_by", null);
+      }
     }
   }
 
