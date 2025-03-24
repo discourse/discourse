@@ -19,9 +19,21 @@ module Migrations::Database::Adapter
       @connection.send_query_params(sql, params)
       @connection.set_single_row_mode
       Enumerator.new do |y|
-        result = @connection.get_result
-        result.stream_each { |row| y.yield(row) }
-        result.clear
+        while (result = @connection.get_result)
+          result.stream_each { |row| y.yield(row) }
+          result.clear
+        end
+      end
+    end
+
+    def query_array(sql, *params)
+      @connection.send_query_params(sql, params)
+      @connection.set_single_row_mode
+      Enumerator.new do |y|
+        while (result = @connection.get_result)
+          result.stream_each_row { |row| y.yield(row) }
+          result.clear
+        end
       end
     end
 

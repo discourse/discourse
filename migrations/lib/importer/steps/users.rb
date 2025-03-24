@@ -50,14 +50,49 @@ module Migrations::Importer::Steps
       emails = JSON.parse(row[:emails])
 
       row[:original_username] ||= row[:username]
-      row[:username] = UserNameSuggester.fix_username(row[:username])
+      row[:username] = fix_username(row)
       row[:username_lower] = row[:username].downcase
+
+      row[:trust_level] ||= TrustLevel[1]
+      row[:active] = true if row[:active].nil?
+      row[:admin] = false if row[:admin].nil?
+      row[:moderator] = false if row[:moderator].nil?
+      row[:last_emailed_at] ||= NOW
+      row[:suspended_till] ||= 200.years.from_now if row[:suspended_at].present?
+
+      date_of_birth = Migrations::Database.to_date(row[:date_of_birth])
+      if date_of_birth && date_of_birth.year != 1904
+        row[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+      end
 
       super
     end
 
     def random_email
       "#{SecureRandom.hex}@email.invalid"
+    end
+
+    def fix_username(row)
+      username = row[:username].unicode_normalize
+      username = UserNameSuggester.fix_username(username)
+
+      # username_lower = username.downcase
+      #
+      # # unique username_lower
+      # if user_exist?(user[:username])
+      #   username = user[:username] + "_1"
+      #   username.next! while user_exist?(username)
+      #   user[:username] = username
+      # end
+      #
+      # return false if !allow_reserved_username && reserved_username?(lower)
+      # return true if !username_exists?(lower)
+
+      # if User.username_available?(username, allow_reserved_username: row[:admin] == 1)
+      #   return username
+      # end
+      #
+      UserNameSuggester.find_available_username_based_on(username)
     end
 
     def after_commit(rows)
@@ -94,37 +129,37 @@ module Migrations::Importer::Steps
 
       # @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
 
-      imported_username = user[:original_username].presence || user[:username].dup
+      # imported_username = user[:original_username].presence || user[:username].dup
 
-      user[:username] = fix_name(user[:username]).presence || random_username
+      # user[:username] = fix_name(user[:username]).presence || random_username
 
       # if user[:username] != imported_username
       #   @imported_usernames[imported_username] = user[:id]
       #   @mapped_usernames[imported_username] = user[:username]
       # end
 
-      # unique username_lower
-      if user_exist?(user[:username])
-        username = user[:username] + "_1"
-        username.next! while user_exist?(username)
-        user[:username] = username
-      end
+      # # unique username_lower
+      # if user_exist?(user[:username])
+      #   username = user[:username] + "_1"
+      #   username.next! while user_exist?(username)
+      #   user[:username] = username
+      # end
 
-      user[:username_lower] = user[:username].downcase
-      user[:trust_level] ||= TrustLevel[1]
-      user[:active] = true unless user.has_key?(:active)
-      user[:admin] ||= false
-      user[:moderator] ||= false
-      user[:last_emailed_at] ||= NOW
-      user[:created_at] ||= NOW
-      user[:updated_at] ||= user[:created_at]
-      user[:suspended_at] ||= user[:suspended_at]
-      user[:suspended_till] ||= user[:suspended_till] ||
-        (200.years.from_now if user[:suspended_at].present?)
+      # user[:username_lower] = user[:username].downcase
+      # user[:trust_level] ||= TrustLevel[1]
+      # user[:active] = true unless user.has_key?(:active)
+      # user[:admin] ||= false
+      # user[:moderator] ||= false
+      # user[:last_emailed_at] ||= NOW
+      # user[:created_at] ||= NOW
+      # user[:updated_at] ||= user[:created_at]
+      # user[:suspended_at] ||= user[:suspended_at]
+      # user[:suspended_till] ||= user[:suspended_till] ||
+      #   (200.years.from_now if user[:suspended_at].present?)
 
-      if (date_of_birth = user[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
-        user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
-      end
+      # if (date_of_birth = user[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
+      #   user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
+      # end
 
       @user_ids_by_username_lower[user[:username_lower]] = user[:id]
       @usernames_by_id[user[:id]] = user[:username]

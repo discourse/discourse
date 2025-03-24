@@ -66,6 +66,8 @@ module Migrations::Importer
     def execute
       super
 
+      benchmark_loading
+
       max_row_count = total_count
 
       with_progressbar(max_row_count) do
@@ -163,6 +165,36 @@ module Migrations::Importer
     def total_count
       query, parameters = self.class.total_rows_query
       @intermediate_db.count(query, *parameters)
+    end
+
+    def benchmark_loading
+      start = Time.now
+
+      # @emails = UserEmail.pluck(:email, :user_id).to_h
+      # @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
+      @usernames_lower = User.unscoped.pluck(:username_lower, :id)
+
+      # @topic_users = TopicUser.unscoped.pluck(:topic_id, :user_id).to_set
+
+      puts "Loading done in #{Time.now - start} seconds"
+
+      start = Time.now
+
+      @intermediate_db.execute <<~SQL
+        CREATE TEMP TABLE usernames_lower (
+          username TEXT PRIMARY KEY,
+          discourse_user_id NUMBER
+        )
+      SQL
+
+      sql = <<~SQL
+        INSERT INTO usernames_lower (username, discourse_user_id)
+        VALUES (?, ?)
+      SQL
+
+      @usernames_lower.each { |row| @intermediate_db.insert(sql, row) }
+
+      puts "Writing done in #{Time.now - start} seconds"
     end
   end
 end
