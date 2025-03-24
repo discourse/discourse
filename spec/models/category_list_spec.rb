@@ -444,4 +444,58 @@ RSpec.describe CategoryList do
       end
     end
   end
+
+  describe "with many categories (more than MAX_UNOPTIMIZED_CATEGORIES)" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns at most CATEGORIES_PER_PAGE categories" do
+      stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+        category_list = CategoryList.new(Guardian.new(user))
+
+        expect(category_list.categories).to eq(
+          [Category.find(SiteSetting.uncategorized_category_id), category, subcategory],
+        )
+      end
+    end
+
+    context "with parent_category_id" do
+      it "returns at most CATEGORIES_PER_PAGE subcategories" do
+        subcategory_2 = Fabricate(:category, parent_category: category)
+
+        stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 1) do
+          category_list = CategoryList.new(Guardian.new(user), parent_category_id: category.id)
+
+          expect(category_list.categories).to eq([subcategory, subcategory_2])
+        end
+      end
+    end
+  end
+
+  describe "with displayable topics" do
+    fab!(:category) { Fabricate(:category, num_featured_topics: 2) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+
+    it "preloads topic associations" do
+      DiscoursePluginRegistry.register_category_list_topics_preloader_association(
+        :first_post,
+        Plugin::Instance.new,
+      )
+
+      category = Fabricate(:category_with_definition)
+      Fabricate(:topic, category: category)
+
+      CategoryFeaturedTopic.feature_topics
+
+      displayable_topics =
+        CategoryList
+          .new(Guardian.new(admin), include_topics: true)
+          .categories
+          .find { |x| x.id == category.id }
+          .displayable_topics
+      expect(displayable_topics.first.association(:first_post).loaded?).to eq(true)
+
+      DiscoursePluginRegistry.reset_register!(:category_list_topics_preloader_associations)
+    end
+  end
 end

@@ -57,8 +57,9 @@ module Chat
     end
 
     def can_add_users_to_channel(guardian:, channel:)
-      (guardian.user.admin? || channel.joined_by?(guardian.user)) &&
-        channel.direct_message_channel? && channel.chatable.group
+      return false if !guardian.user.admin? && !channel.joined_by?(guardian.user)
+
+      channel.direct_message_channel? && (channel.chatable.group || channel.messages_count == 0)
     end
 
     def fetch_target_users(params:, channel:)

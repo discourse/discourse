@@ -190,6 +190,10 @@ bg:
       dismiss: "Отмени"
     bootstrap_mode: "Първи стъпки"
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Добре дошли в %{site_name}!"
+      search: "Търсене"
     themes:
       default_description: "По подразбиране"
       broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
@@ -360,10 +364,6 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
-      abandon:
-        confirm: "Вече имате чернова за тази тема. Какво бихте искали да направите с нея?"
-        yes_value: "Отхвърляне"
-        no_value: "Възобновете редактирането"
     topic_count_all:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
@@ -3643,6 +3643,30 @@ bg:
             failed: "Провалени"
       home:
         title: "Начало"
+      account:
+        title: "Профил"
+        sidebar_link:
+          backups: "Бекъпи"
+      community:
+        title: "Общност "
+        sidebar_link:
+          badges: "Значки"
+          notifications: "Известия"
+          permalinks: "Постоянни адреси"
+          users: "Потребители"
+          groups: "Групи"
+          legal: "Правни"
+      appearance:
+        sidebar_link:
+          emoji: "Емотикони"
+          navigation: "Навигация"
+      security:
+        title: "Сигурност"
+      section_landing_pages:
+        account:
+          title: "Профил"
+          backups:
+            title: "Бекъпи"
       config_areas:
         about:
           company_name: "Име"
@@ -3668,9 +3692,15 @@ bg:
         embeddable_host:
           edit: "Редактирай"
           delete: "Изтрий"
+        themes_and_components:
+          breadcrumb_title: "Персонализация"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
+        color_palettes:
+          palette_name: "Име"
+          colors:
+            title: "Цветове"
       plugins:
         title: "Приставки"
         name: "Име"

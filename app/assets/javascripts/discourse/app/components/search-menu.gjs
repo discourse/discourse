@@ -37,8 +37,8 @@ export const SEARCH_INPUT_ID = "search-term";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
-export function focusSearchInput() {
-  document.getElementById(SEARCH_INPUT_ID).focus();
+export function focusSearchInput(inputId = SEARCH_INPUT_ID) {
+  document.getElementById(inputId).focus();
 }
 
 export default class SearchMenu extends Component {
@@ -121,6 +121,8 @@ export default class SearchMenu extends Component {
   onKeydown(event) {
     if (event.key === "Escape") {
       this.close();
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -132,7 +134,7 @@ export default class SearchMenu extends Component {
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
-    document.getElementById(SEARCH_INPUT_ID)?.blur();
+    document.getElementById(this.args.searchInputId || SEARCH_INPUT_ID)?.blur();
     this.menuPanelOpen = false;
   }
 
@@ -430,6 +432,7 @@ export default class SearchMenu extends Component {
           @closeSearchMenu={{this.close}}
           @openSearchMenu={{this.open}}
           @autofocus={{@autofocusInput}}
+          @inputId={{@searchInputId}}
         />
 
         {{#if this.loading}}

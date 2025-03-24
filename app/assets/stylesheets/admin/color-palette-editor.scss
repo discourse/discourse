@@ -48,9 +48,15 @@
     }
   }
 
-  &__input {
+  input[type="color"] {
     width: 23px;
     height: 23px;
+  }
+
+  input[type="text"] {
+    font-family: monospace;
+    margin: 0;
+    width: 5em;
   }
 
   &__color-code {

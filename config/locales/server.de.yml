@@ -2466,6 +2466,7 @@ de:
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     show_bottom_topic_map: "Zeigt die Themenübersicht am Ende des Themas an, wenn es 10 Antworten oder mehr hat."
     show_topic_map_in_topics_without_replies: "Zeigt die Themenübersicht an, auch wenn es zum Thema keine Antworten gibt."
+    enable_welcome_banner: "Zeige auf den Hauptseiten mit Themenlisten ein Banner an, um Mitglieder willkommen zu heißen und ihnen die Suche nach Website-Inhalten zu ermöglichen"
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
@@ -3639,10 +3640,15 @@ de:
     in_reply_to: "Als Antwort auf"
     reply_by_email: "[Rufe das Thema auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um zu antworten."
     reply_by_email_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um %{participants} zu antworten."
+    reply_by_email_button_only: "[Thema besuchen](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
     only_reply_by_email: "Antworte auf diese E-Mail, um zu antworten."
     only_reply_by_email_pm: "Antworte auf diese E-Mail, um %{participants} zu antworten."
+    only_reply_by_email_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um %{participants} zu antworten."
+    visit_link_to_respond_button_only: "[Thema besuchen](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
     reply_above_line: "## Bitte gib deine Antwort oberhalb dieser Zeile ein. ##"
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
@@ -5118,88 +5124,118 @@ de:
       agree_and_keep:
         title: "Beitrag behalten"
         description: "Meldung zustimmen, aber diesen Beitrag unbearbeitet lassen."
+        complete: "Der Beitrag bleibt unverändert."
       agree_and_keep_hidden:
         title: "Beitrag ausgeblendet lassen"
         description: "Meldung zustimmen und den Beitrag ausgeblendet lassen."
+        complete: "Beitrag versteckt gehalten."
       agree_and_suspend:
         title: "Benutzer sperren"
         description: "Meldung zustimmen und Benutzer sperren."
+        complete: "Benutzer gesperrt."
       agree_and_silence:
         title: "Benutzer stummschalten"
         description: "Meldung zustimmen und Benutzer stummschalten."
+        complete: "Benutzer stummgeschaltet."
       agree_and_restore:
         title: "Beitrag wiederherstellen"
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
+        complete: "Beitrag wiederhergestellt."
       agree_and_hide:
         title: "Beitrag ausblenden"
         description: "Der Meldung zustimmen, diesen Beitrag ausblenden und dem Benutzer automatisch eine Nachricht mit der Bitte schicken, ihn zu bearbeiten."
+        complete: "Beitrag ausgeblendet, Benutzer wurde benachrichtigt."
       agree_and_edit:
         title: "Zustimmen und Beitrag bearbeiten"
         description: "Stimme der Meldung zu und öffne ein Editorfenster, um den Beitrag zu bearbeiten."
+        complete: "Meldung bestätigt, du kannst den Beitrag jetzt bearbeiten."
       delete_single:
         title: "Löschen"
+        complete: "Beitrag gelöscht."
       delete:
         title: "Löschen …"
       delete_and_ignore:
         title: "Meldung ignorieren und Beitrag löschen"
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, wird auch das Thema gelöscht. "
+        complete: "Beitrag gelöscht."
       delete_and_ignore_replies:
         title: "Meldung ignorieren, Beitrag und Antworten löschen"
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag sowie alle seine Antworten löscht; wenn es der erste Beitrag ist, wird auch das Thema gelöscht"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
+        complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
         title: "Beitrag löschen"
         description: "Stimme der Meldung zu und lösche diesen Beitrag; wenn es der erste Beitrag ist, wird auch das Thema gelöscht."
+        complete: "Beitrag gelöscht."
       delete_and_agree_replies:
         title: "Beitrag und Antworten löschen"
         description: "Stimme der Meldung zu und lösche diesen Beitrag sowie alle seine Antworten; wenn es der erste Beitrag ist, wird auch das Thema gelöscht."
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
+        complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:
         title: "Nein, Beitrag wiederherstellen"
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
+        complete: "Beitrag wiederhergestellt."
       disagree:
         title: "Nein"
+        complete: "Meldung ignoriert."
       discard_post:
         title: "Beitrag verwerfen"
+        complete: "Beitrag verworfen."
       revise_and_reject_post:
         title: "Beitrag überarbeiten …"
+        complete: "Beitrag wurde bis zur Überarbeitung abgelehnt."
       ignore:
         title: "Ignorieren"
+        complete: "Meldung ignoriert."
       ignore_and_do_nothing:
         title: "Nichts tun"
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen. Ausgeblendete Beiträge bleiben versteckt und werden von den Auto-Tools bearbeitet."
+        complete: "Meldung ignoriert."
       approve:
         title: "Genehmigen"
+        complete: "Beitrag genehmigt."
       approve_post:
         title: "Beitrag genehmigen"
         confirm_closed: "Dieses Thema ist geschlossen. Willst du den Beitrag trotzdem erstellen?"
+        complete: "Beitrag genehmigt."
       reject_post:
         title: "Beitrag ablehnen"
+        complete: "Beitrag abgelehnt."
       approve_user:
         title: "Benutzer genehmigen"
+        complete: "Benutzer genehmigt."
       reject_user:
         title: "Benutzer löschen …"
         delete:
           title: "Benutzer löschen"
           description: "Der Benutzer wird aus dem Forum gelöscht."
+          complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
           description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
+          complete: "Benutzer gelöscht und gesperrt."
       reject:
         title: "Ablehnen"
         bundle_title: "Ablehnen …"
       reject_and_suspend:
         title: "Benutzer ablehnen und sperren"
+        complete: "Beitrag abgelehnt und Benutzer gesperrt."
       reject_and_silence:
         title: "Benutzer ablehnen und stummschalten"
+        complete: "Beitrag abgelehnt und Benutzer stummgeschaltet."
       reject_and_delete:
         title: "Den Beitrag ablehnen und löschen"
+        complete: "Beitrag abgelehnt und gelöscht."
       reject_and_keep_deleted:
         title: "Beitrag gelöscht lassen"
+        complete: "Beitrag abgelehnt und gelöscht belassen."
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
+        complete: "Beitrag genehmigt und wiederhergestellt."
       delete_user:
         reason: "Gelöscht via Warteschlange zur Überprüfung"
+        complete: "Benutzer gelöscht."
   email_style:
     html_missing_placeholder: "Die HTML-Vorlage muss %{placeholder} beinhalten"
   notification_level:

@@ -2613,6 +2613,7 @@ he:
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     show_bottom_topic_map: "הצגת מפת הנושאים בתחתית הנושא כשיש 10 תגובות ומעלה."
     show_topic_map_in_topics_without_replies: "הצגת מפת הנושאים אם לנושא איך תגובות."
+    enable_welcome_banner: "להציג כרזה בעמודי רשימת הנושאים העיקרית שלך כדי לקבל את פניהם של החברים ולהאפשר להם לחפש בתוכן האתר"
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "ציין את סרגל הצד או הכותרת הנפתחת כתפריט הניווט הראשי של האתר שלך. סרגל צד מומלץ."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
@@ -3844,10 +3845,15 @@ he:
     in_reply_to: "בתגובה ל"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
     reply_by_email_pm: "יש [לבקר בהודעה](%{base_url}%{url}) או להשיב להודעת דוא״ל זו כדי להגיב אל %{participants}."
+    reply_by_email_button_only: "[ביקור בנושא](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     only_reply_by_email: "השיבו למייל זה כדי לענות."
     only_reply_by_email_pm: "יש להשיב להודעה הזאת כדי להגיב אל %{participants}."
+    only_reply_by_email_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     visit_link_to_respond_pm: "יש [לבקר בהודעה](%{base_url}%{url}) כדי להגיב אל %{participants}."
+    visit_link_to_respond_button_only: "[ביקור בנושא](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     reply_above_line: "## נא להקליד את התגובה שלך מעל לשורה הזאת. ##"
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
@@ -5302,6 +5308,11 @@ he:
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
+      watched_word:
+        one: "הפוסט הזה מכיל מילה במעקב, המילה המסומנת היא: %{words}. פרטים נוספים בקישור %{link}."
+        two: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
+        many: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
+        other: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. מידע נוסף תחת %{link}."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. מידע נוסף ב־%{link}."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. למידע נוסף: %{link}."
@@ -5312,7 +5323,10 @@ he:
       contains_media: "פוסט זה כולל מדיה מוטמעת. מידע נוסף תחת %{link}."
       queued_by_staff: "אחד מחברי הסגל חושב שהפוסט הזה דורש סקירה. עד אז הוא יישאר מוסתר."
       links:
+        watched_word: הגדרות מילים במעקב
         category: הגדרות קטגוריה
+      no_context:
+        watched_word: "הפוסט הזה כלל מילים במעקב. נא לפנות אל %{link} לפרטים נוספים."
     actions:
       agree:
         title: "כן"
@@ -5339,11 +5353,13 @@ he:
         description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
       delete_single:
         title: "מחיקה"
+        complete: "פוסט נמחק."
       delete:
         title: "מחיקה…"
       delete_and_ignore:
         title: "התעלמות מהדגל ומחיקת הפוסט"
         description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
+        complete: "פוסט נמחק."
       delete_and_ignore_replies:
         title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
         description: "התעלמות מהסימון על ידי הסרתו מהתור, מחיקת הפוסט וכל התגובות שלו, אם זה הפוסט הראשון, למחוק גם את הנושא"
@@ -5351,6 +5367,7 @@ he:
       delete_and_agree:
         title: "מחיקת פוסט"
         description: "להסכים עם הסימון ולמחוק את הפוסט, אם זה הפוסט הראשון אז למחוק גם את הנושא."
+        complete: "פוסט נמחק."
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
@@ -5360,29 +5377,37 @@ he:
         description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       disagree:
         title: "לא"
+        complete: "הסימון זכה להתעלמות."
       discard_post:
         title: "השלכת פוסט"
       revise_and_reject_post:
         title: "עריכת שינויים בפוסט…"
       ignore:
         title: "התעלמות"
+        complete: "הסימון זכה להתעלמות."
       ignore_and_do_nothing:
         title: "לא לעשות דבר"
         description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
+        complete: "הסימון זכה להתעלמות."
       approve:
         title: "אישור"
+        complete: "הפרסום אושר."
       approve_post:
         title: "לאשר פוסט"
         confirm_closed: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
+        complete: "הפרסום אושר."
       reject_post:
         title: "לדחות פוסט"
+        complete: "הפרסום נדחה."
       approve_user:
         title: "אישור משתמש"
+        complete: "המשתמש אישר."
       reject_user:
         title: "מחיקת משתמש…"
         delete:
           title: "מחיקת משתמש"
           description: "המשתמש יימחק מהפורום."
+          complete: "משתמש נמחק."
         block:
           title: "מחיקה וחסימת המשתמש"
           description: "המשתמש יימחק ואנו נחסום את כתובת ה־IP והדוא״ל שלו."
@@ -5401,6 +5426,7 @@ he:
         title: "אישור ושחזור הפוסט"
       delete_user:
         reason: "למחוק דרך תור סקירה"
+        complete: "משתמש נמחק."
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   notification_level:

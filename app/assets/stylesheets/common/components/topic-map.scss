@@ -48,7 +48,7 @@ body:not(.archetype-private_message) {
 
   &.--op,
   &.--bottom {
-    @media screen and (max-width: 500px) {
+    @media screen and (width <= 500px) {
       padding-left: 0;
     }
   }
@@ -251,7 +251,7 @@ body:not(.archetype-private_message) {
       color: var(--primary-medium);
     }
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       display: none;
     }
   }

@@ -159,6 +159,10 @@ vi:
       dismiss: "Hủy bỏ"
     bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
+    welcome_banner:
+      header:
+        anonymous_members: "Chào mừng đến với %{site_name}!"
+      search: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -340,9 +344,6 @@ vi:
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
-      abandon:
-        yes_value: "Hủy bỏ"
-        no_value: "Tiếp tục chỉnh sửa"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -4117,6 +4118,36 @@ vi:
             failed: "Thất bại"
       home:
         title: "Trang chủ"
+      account:
+        title: "Tài khoản"
+        sidebar_link:
+          backups: "Bản sao lưu"
+      community:
+        title: "Cộng đồng"
+        sidebar_link:
+          badges: "Huy hiệu"
+          notifications: "Thông báo"
+          permalinks: "Liên kết cố định"
+          users: "Thành viên"
+          groups: "Nhóm"
+          legal: "Legal"
+          moderation_flags:
+            title: "Người kiểm duyệt"
+      appearance:
+        title: "Ngoại hình"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Điều hướng"
+      email_settings:
+        sidebar_link:
+          appearance: "Ngoại hình"
+      security:
+        title: "Bảo mật"
+      section_landing_pages:
+        account:
+          title: "Tài khoản"
+          backups:
+            title: "Bản sao lưu"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4144,12 +4175,20 @@ vi:
         embeddable_host:
           edit: "Sửa"
           delete: "Xóa"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tùy biến"
+          install: "Cài đặt"
           themes:
             title: "Themes"
+          components:
+            title: "Các thành phần"
         user_fields:
           type: "Loại"
           delete: "Xóa"
+        color_palettes:
+          palette_name: "Tên"
+          colors:
+            title: "Màu sắc"
       plugins:
         title: "Plugin"
         name: "Tên"

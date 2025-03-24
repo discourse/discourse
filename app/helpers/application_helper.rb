@@ -283,20 +283,18 @@ module ApplicationHelper
     end
 
     if opts[:image].blank?
-      twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
+      x_summary_large_image_url = SiteSetting.site_x_summary_large_image_url
 
-      if twitter_summary_large_image_url.present?
-        opts[:twitter_summary_large_image] = twitter_summary_large_image_url
-      end
+      opts[:x_summary_large_image] = x_summary_large_image_url if x_summary_large_image_url.present?
 
       opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image
     opts[:image] = get_absolute_image_url(opts[:image]) if opts[:image].present?
-    opts[:twitter_summary_large_image] = get_absolute_image_url(
-      opts[:twitter_summary_large_image],
-    ) if opts[:twitter_summary_large_image].present?
+    opts[:x_summary_large_image] = get_absolute_image_url(opts[:x_summary_large_image]) if opts[
+      :x_summary_large_image
+    ].present?
 
     result = []
     result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
@@ -342,8 +340,8 @@ module ApplicationHelper
   private def generate_twitter_card_metadata(result, opts)
     img_url =
       (
-        if opts[:twitter_summary_large_image].present?
-          opts[:twitter_summary_large_image]
+        if opts[:x_summary_large_image].present?
+          opts[:x_summary_large_image]
         else
           opts[:image]
         end
@@ -354,7 +352,7 @@ module ApplicationHelper
       img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
     end
 
-    if opts[:twitter_summary_large_image].present? && img_url.present?
+    if opts[:x_summary_large_image].present? && img_url.present?
       result << tag(:meta, name: "twitter:card", content: "summary_large_image")
       result << tag(:meta, name: "twitter:image", content: img_url)
     elsif opts[:image].present? && img_url.present?

@@ -222,6 +222,11 @@ ro:
       dismiss: "Respinge"
     bootstrap_mode: "Începe"
     back_button: "Înapoi"
+    welcome_banner:
+      header:
+        logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
+        anonymous_members: "Bine ai venit pe %{site_name}!"
+      search: "Caută"
     themes:
       default_description: "Implicit"
       broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau componentă are erori."
@@ -442,10 +447,6 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj personal nou"
       edit_topic: "Editează ciornă subiect"
-      abandon:
-        confirm: "Ai deja o ciornă în curs de redactare. Ce ai vrea să faci cu ea?"
-        yes_value: "Renunță"
-        no_value: "Reia editarea"
       dropdown:
         title: "Deschide meniul celei mai recente ciorne"
         untitled: "Ciornă fără titlu"
@@ -2000,6 +2001,8 @@ ro:
       saving: "Se salvează"
       saved: "Salvat!"
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
+      switch_to_markdown: "Comută la editorul standard Markdown"
+      switch_to_rich_text: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -3926,6 +3929,54 @@ ro:
             failed: "Eșuată"
       home:
         title: "Acasă"
+      account:
+        title: "Cont"
+        sidebar_link:
+          backups: "Copii de siguranță"
+          whats_new:
+            title: "Ce este nou?"
+      community:
+        title: "Comunitate"
+        sidebar_link:
+          badges: "Insigne"
+          notifications: "Notificări"
+          permalinks: "Legături permanente"
+          trust_levels: "Niveluri de încredere"
+          group_permissions: "Permisiuni grup"
+          users: "Utilizatori"
+          groups: "Grupuri"
+          user_fields: "Câmpuri utilizator"
+          watched_words: "Cuvinte urmărite"
+          legal: "Legal"
+      appearance:
+        title: "Aspect"
+        sidebar_link:
+          font_style: "Stil font"
+          site_logo: "Logo site"
+          color_schemes: "Paletă de culori"
+          emoji: "Emoticon"
+          navigation: "Navigare"
+          site_texts: "Texte site"
+      email_settings:
+        title: "Setări email"
+        sidebar_link:
+          appearance: "Aspect"
+          server_setup:
+            title: "Configurare și jurnale server"
+      security:
+        title: "Securitate"
+        sidebar_link:
+          security: "Setări de securitate"
+          spam: "Setări spam"
+      section_landing_pages:
+        account:
+          title: "Cont"
+          backups:
+            title: "Copii de siguranță"
+            description: "Fă o copie de siguranță a datelor site-ului tău"
+          whats_new:
+            title: "Ce este nou?"
+            description: "Descoperă noile versiuni și îmbunătățiri ale Discourse"
       config_areas:
         about:
           community_title: "Titlu comunitate"
@@ -3979,16 +4030,14 @@ ro:
           delete: "Șterge"
           more_options:
             title: "Mai multe opțiuni"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizare"
           themes:
             title: "Teme"
             themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
-            themes_intro_img_alt: "Substituent nou pentru temă"
-            set_default_theme: "Setare implicită"
-            default_theme: "Temă implicită"
-            themes_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
             new_theme: "Temă nouă"
-            user_selectable: "Selectabil de către utilizator"
+          components:
+            title: "Componente"
         user_fields:
           field: "Câmp"
           type: "Tip"
@@ -3999,6 +4048,17 @@ ro:
           delete: "Șterge"
           delete_successful: "Câmp utilizator șters."
           save_successful: "Câmp utilizator salvat."
+        color_palettes:
+          palette_name: "Nume"
+          color_options:
+            title: "Opțiuni de culoare"
+            toggle: "Selectabil de către utilizator"
+            toggle_description: "Paleta de culori poate fi selectată de utilizatori"
+          colors:
+            title: "Culori"
+          fonts_and_logos_hint: "Vrei să-ți actualizezi fonturile și logo-urile?"
+          save_changes: "Salvează modificări"
+          unsaved_changes: "Ai modificări nesalvate"
       plugins:
         title: "Plugin-uri"
         name: "Nume"

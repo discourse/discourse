@@ -192,6 +192,10 @@ nb_NO:
       dismiss: "Avslå"
     bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
+    welcome_banner:
+      header:
+        anonymous_members: "Velkommen til %{site_name}!"
+      search: "Søk"
     themes:
       default_description: "Forvalg"
       broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
@@ -435,10 +439,6 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
-      abandon:
-        confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
-        yes_value: "Forkast"
-        no_value: "Gjenoppta redigering"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -4712,6 +4712,36 @@ nb_NO:
             failed: "Feilet"
       home:
         title: "Hjem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Sikkerhetskopier"
+      community:
+        title: "Gemenskap"
+        sidebar_link:
+          badges: "Merker"
+          notifications: "Varsler"
+          permalinks: "Permalenker"
+          users: "Brukere"
+          groups: "Grupper"
+          legal: "Juridisk"
+          moderation_flags:
+            title: "Moderering"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigasjon"
+      email_settings:
+        sidebar_link:
+          appearance: "Utseende"
+      security:
+        title: "Sikkerhet"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Sikkerhetskopier"
       config_areas:
         about:
           company_name: "Navn"
@@ -4742,14 +4772,22 @@ nb_NO:
           delete: "Slett"
           more_options:
             title: "Flere valg"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tilpasse"
+          install: "Installer"
           themes:
             title: "Drakter"
+          components:
+            title: "Komponenter"
         user_fields:
           type: "Type"
           more_options:
             title: "Flere valg"
           delete: "Slett"
+        color_palettes:
+          palette_name: "Navn"
+          colors:
+            title: "Farger"
       plugins:
         title: "Utvidelser"
         name: "Navn"

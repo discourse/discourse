@@ -2678,8 +2678,13 @@ lt:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
+        complete: "Įrašas ištrintas."
+      delete_and_ignore:
+        complete: "Įrašas ištrintas."
       delete_and_ignore_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
+      delete_and_agree:
+        complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       disagree_and_restore:
@@ -2702,6 +2707,7 @@ lt:
         delete:
           title: "Ištrinti vartotoją"
           description: "Vartotojas bus pašalintas iš forumo."
+          complete: "Naudotojas ištrintas."
         block:
           title: "Ištrinti ir blokuoti vartotoją"
       reject:
@@ -2714,6 +2720,8 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      delete_user:
+        complete: "Naudotojas ištrintas."
   create_linked_topic:
     post_raw: "Tęsiant diskusiją nuo %{parent_url}.\n\nAnkstesnės diskusijos:\n\n%{previous_topics}"
     small_action_post_raw: "Tęsti diskusiją %{new_title}."
