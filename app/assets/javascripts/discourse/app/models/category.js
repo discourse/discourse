@@ -453,9 +453,9 @@ export default class Category extends RestModel {
   @service currentUser;
 
   @tracked color;
-  @tracked style_type;
-  @tracked style_emoji;
-  @tracked style_icon;
+  @tracked styleType = this.style_type;
+  @tracked styleEmoji = this.style_emoji;
+  @tracked styleIcon = this.style_icon;
   permissions = null;
 
   init() {
@@ -714,6 +714,10 @@ export default class Category extends RestModel {
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
+
+    this.styleType = this.style_type;
+    this.styleEmoji = this.style_emoji;
+    this.styleIcon = this.style_icon;
 
     return ajax(url, {
       contentType: "application/json",

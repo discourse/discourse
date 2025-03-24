@@ -37,7 +37,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
       color = categoryOrHashtag.color;
       if (
         categoryOrHashtag.parentCategory &&
-        categoryOrHashtag.style_type === "square"
+        categoryOrHashtag.styleType === "square"
       ) {
         parentColor = categoryOrHashtag.parentCategory.color;
       }
@@ -46,9 +46,9 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     let style;
     if (parentColor) {
       style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
-    } else if (categoryOrHashtag.style_type === "icon") {
+    } else if (categoryOrHashtag.styleType === "icon") {
       style = `color: #${color};`;
-    } else if (categoryOrHashtag.style_type === "square") {
+    } else if (categoryOrHashtag.styleType === "square") {
       style = `background-color: #${color};`;
     } else {
       return [];

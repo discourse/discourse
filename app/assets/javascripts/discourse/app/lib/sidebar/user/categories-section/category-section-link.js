@@ -193,7 +193,7 @@ export default class CategorySectionLink {
       return customPrefixType;
     }
 
-    return this.category.style_type;
+    return this.category.styleType;
   }
 
   get prefixValue() {
@@ -204,14 +204,14 @@ export default class CategorySectionLink {
       return customPrefixValue;
     }
 
-    const styleType = this.category.style_type;
+    const styleType = this.category.styleType;
 
     if (styleType === "icon") {
-      return this.category.style_icon;
+      return this.category.styleIcon;
     }
 
     if (styleType === "emoji") {
-      return this.category.style_emoji;
+      return this.category.styleEmoji;
     }
 
     if (this.category.parentCategory?.color) {

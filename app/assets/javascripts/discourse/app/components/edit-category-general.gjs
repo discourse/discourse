@@ -118,7 +118,6 @@ export default class EditCategoryGeneral extends Component {
   @action
   showCategoryTopic() {
     window.open(this.args.category.get("topic_url"), "_blank").focus();
-    return false;
   }
 
   @action
