@@ -1203,7 +1203,7 @@ export default createWidget("post", {
 // TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
 registerWidgetShim(
   "glimmer-post",
-  "div.topic-post.glimmer-post-stream",
+  "div",
   hbs`
     <Post
       @canCreatePost={{@data.canCreatePost}}

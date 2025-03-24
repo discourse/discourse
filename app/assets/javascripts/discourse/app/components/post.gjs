@@ -8,6 +8,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
+import Modifier from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -30,7 +31,6 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
-import parentClass from "discourse/modifiers/parent-class";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
@@ -108,6 +108,10 @@ export default class Post extends Component {
       null,
       getOwner(this)
     );
+  }
+
+  get minHeight() {
+    return this.args.height ? `${this.args.height}px` : null;
   }
 
   get repliesShown() {
@@ -327,7 +331,13 @@ export default class Post extends Component {
   }
 
   <template>
-    {{#unless @cloaked}}
+    {{#if @cloaked}}
+      {{! temporary workaround to set the parent class using the modifier while the post stream widget is not modernized }}
+      {{! TODO (glimmer-post-stream): remove when the post stream is modernized and move the class to the outer div }}
+      <article
+        {{parentClass "post--cloaked cloaked-post" parentSelector="div"}}
+      ></article>
+    {{else}}
       <article
         {{parentClass
           (concatClass
@@ -360,7 +370,7 @@ export default class Post extends Component {
             (if @post.user_suspended "post--user-suspended user-suspended")
             this.additionalClasses
           )
-          parentSelector=".topic-post.glimmer-post-stream"
+          parentSelector="div"
         }}
         ...attributes
         id={{this.id}}
@@ -569,6 +579,28 @@ export default class Post extends Component {
           </div>
         {{/if}}
       </article>
-    {{/unless}}
+    {{/if}}
   </template>
 }
+
+// This modifier is just a temporary workaround to set the classes in the parent component while we have to use it
+// as a wrapper due to the render glimmer helper.
+// DO NOT export it to be used outside of this class. The code will be removed as soon as the post stream widget is
+// modernized.
+const parentClass = class extends Modifier {
+  @service elementClasses;
+
+  modify(element, classes, { parentSelector }) {
+    const parent = element.closest(parentSelector);
+
+    if (!parent) {
+      return;
+    }
+
+    this.elementClasses.registerClasses(
+      this,
+      parent,
+      classes.flatMap((c) => c?.split(" ")).filter(Boolean)
+    );
+  }
+};
