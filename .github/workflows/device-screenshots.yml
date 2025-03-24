@@ -7,7 +7,7 @@ on:
 jobs:
   sanitize:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'thenonexistentguy'
+    if: github.event_name == "noop"
     permissions:
       pull-requests: write
     steps:
