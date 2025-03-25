@@ -64,11 +64,12 @@ describe "Changing email", type: :system do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]").click
 
+    expect(page).to have_content(I18n.t("js.second_factor_auth.redirect_after_success"))
     expect(page).to have_current_path("/u/#{user.username}/preferences/account")
     expect(user_preferences_page).to have_primary_email(new_email)
   end
 
-  xit "works when user has webauthn 2fa" do
+  it "works when user has webauthn 2fa" do
     # enforced 2FA flow needs a user created > 5 minutes ago
     user.created_at = 6.minutes.ago
     user.save!
@@ -107,7 +108,7 @@ describe "Changing email", type: :system do
     authenticator&.remove!
   end
 
-  xit "does not require login to verify" do
+  it "does not require login to verify" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
@@ -121,6 +122,7 @@ describe "Changing email", type: :system do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]:not([disabled])").click
 
+    expect(page).to have_content(I18n.t("js.second_factor_auth.redirect_after_success"))
     expect(page).to have_current_path("/latest")
     expect(user.reload.email).to eq(new_email)
   end
