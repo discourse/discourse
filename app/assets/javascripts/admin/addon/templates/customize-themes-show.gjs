@@ -454,7 +454,7 @@ export default RouteTemplate(
                 <ul class="removable-list">
                   {{#each @controller.model.uploads as |upload|}}
                     <li>
-                      <span class="col">${{upload.name}}:
+                      <span class="col">{{"$"}}{{upload.name}}:
                         <a
                           href={{upload.url}}
                           rel="noopener noreferrer"
