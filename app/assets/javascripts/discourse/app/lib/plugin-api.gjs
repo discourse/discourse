@@ -1574,11 +1574,15 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionClassesCallback(callback) {
-    deprecated(
-      "`api.addPostSmallActionClassesCallback` has been deprecated. Use the value transformer `post-small-action-class` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
+    this.registerValueTransformer(
+      "post-small-action-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
     );
 
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostSmallActionClassesCallback(callback);
   }
 

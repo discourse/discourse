@@ -53,13 +53,17 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
         value.push("custom-class");
         return value;
       });
+
+      api.addPostSmallActionClassesCallback(
+        (post) => `api-custom-class-${post.id}`
+      );
     });
 
     await renderComponent(this.post);
 
     assert
-      .dom(".small-action.custom-class")
-      .exists("applies the custom class to the component");
+      .dom(".small-action.custom-class.api-custom-class-123")
+      .exists("applies the custom classes to the component");
   });
 
   test("can use a custom component", async function (assert) {
