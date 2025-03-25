@@ -17,8 +17,8 @@
     "@babel/core": "^7.26.10",
     "@ember/string": "^4.0.1",
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.3.0"
+    "codemod-resolver": "workspace:*",
+    "truth-helpers": "workspace:*"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
@@ -28,6 +28,7 @@
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
+    "ember-auto-import": "^2.10.0",
     "ember-cli": "~6.3.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
@@ -46,7 +47,14 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
   },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon"
+  },
   "ember": {
-    "edition": "default"
+    "edition": "octane"
+  },
+  "exports": {
+    "./*": "./addon/*"
   }
 }
