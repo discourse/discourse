@@ -12,19 +12,21 @@ if (!fs.existsSync(destinationDir)) {
 }
 
 // Perform glob to find all files in the source directory
-fs.glob(`${sourceDir}/*`, (err, files) => {
+fs.glob(`${sourceDir}/**/*`, (err, files) => {
   if (err) {
     console.error("Error during glob operation:", err);
     process.exit(1);
   }
 
   files.forEach((file) => {
-    const fileName = path.basename(file);
+    const fileName = file.replace(`${sourceDir}/`, "");
+
     const destinationFileName = `${fileName.split(".")[0]}.js`;
     const destinationPath = path.join(destinationDir, destinationFileName);
     const moduleName = `select-kit/components/${fileName.split(".")[0]}`;
 
     // Create an empty file in the destination directory
+    fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
     fs.writeFileSync(
       destinationPath,
       `export { default } from "${moduleName}";\n`,
