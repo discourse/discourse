@@ -7,7 +7,8 @@ import ValueList from "admin/components/value-list";
 module("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("adding a value", async function (assert) {const self = this;
+  test("adding a value", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
 
@@ -28,7 +29,8 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("changing a value", async function (assert) {const self = this;
+  test("changing a value", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
 
@@ -41,7 +43,8 @@ module("Integration | Component | value-list", function (hooks) {
     assert.deepEqual(this.values, "vinkas\njarek", "updates the value list");
   });
 
-  test("removing a value", async function (assert) {const self = this;
+  test("removing a value", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
 
@@ -62,7 +65,8 @@ module("Integration | Component | value-list", function (hooks) {
       .hasText("vinkas", "it adds the removed value to choices");
   });
 
-  test("selecting a value", async function (assert) {const self = this;
+  test("selecting a value", async function (assert) {
+    const self = this;
 
     this.setProperties({
       values: "vinkas\nosama",
@@ -70,7 +74,9 @@ module("Integration | Component | value-list", function (hooks) {
     });
 
     await render(
-      <template><ValueList @values={{self.values}} @choices={{self.choices}} /></template>
+      <template>
+        <ValueList @values={{self.values}} @choices={{self.choices}} />
+      </template>
     );
 
     await selectKit().expand();
@@ -87,11 +93,16 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("array support", async function (assert) {const self = this;
+  test("array support", async function (assert) {
+    const self = this;
 
     this.set("values", ["vinkas", "osama"]);
 
-    await render(<template><ValueList @values={{self.values}} @inputType="array" /></template>);
+    await render(
+      <template>
+        <ValueList @values={{self.values}} @inputType="array" />
+      </template>
+    );
 
     this.set("values", ["vinkas", "osama"]);
 
@@ -110,12 +121,15 @@ module("Integration | Component | value-list", function (hooks) {
     );
   });
 
-  test("delimiter support", async function (assert) {const self = this;
+  test("delimiter support", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas|osama");
 
     await render(
-      <template><ValueList @values={{self.values}} @inputDelimiter="|" /></template>
+      <template>
+        <ValueList @values={{self.values}} @inputDelimiter="|" />
+      </template>
     );
 
     await selectKit().expand();

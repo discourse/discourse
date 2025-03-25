@@ -9,7 +9,12 @@ module("Integration | Component | admin-report", function (hooks) {
 
   test("default", async function (assert) {
     await render(
-      <template><AdminReport @dataSourceName="signups" @showDescriptionInTooltip={{false}} /></template>
+      <template>
+        <AdminReport
+          @dataSourceName="signups"
+          @showDescriptionInTooltip={{false}}
+        />
+      </template>
     );
 
     assert.dom(".admin-report.signups").exists();
@@ -49,7 +54,8 @@ module("Integration | Component | admin-report", function (hooks) {
       .hasText("7", "can sort rows");
   });
 
-  test("options", async function (assert) {const self = this;
+  test("options", async function (assert) {
+    const self = this;
 
     this.set("options", {
       table: {
@@ -59,7 +65,12 @@ module("Integration | Component | admin-report", function (hooks) {
     });
 
     await render(
-      <template><AdminReport @dataSourceName="signups" @reportOptions={{self.options}} /></template>
+      <template>
+        <AdminReport
+          @dataSourceName="signups"
+          @reportOptions={{self.options}}
+        />
+      </template>
     );
 
     assert.dom(".pagination").exists("paginates the results");
@@ -72,7 +83,9 @@ module("Integration | Component | admin-report", function (hooks) {
 
   test("switch modes", async function (assert) {
     await render(
-      <template><AdminReport @dataSourceName="signups" @showFilteringUI={{true}} /></template>
+      <template>
+        <AdminReport @dataSourceName="signups" @showFilteringUI={{true}} />
+      </template>
     );
 
     await click(".mode-btn.chart");
@@ -82,7 +95,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("timeout", async function (assert) {
-    await render(<template><AdminReport @dataSourceName="signups_timeout" /></template>);
+    await render(
+      <template><AdminReport @dataSourceName="signups_timeout" /></template>
+    );
 
     assert.dom(".alert-error.timeout").exists("displays a timeout error");
   });
@@ -94,7 +109,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("exception", async function (assert) {
-    await render(<template><AdminReport @dataSourceName="signups_exception" /></template>);
+    await render(
+      <template><AdminReport @dataSourceName="signups_exception" /></template>
+    );
 
     assert.dom(".alert-error.exception").exists("displays an error");
   });
@@ -110,7 +127,11 @@ module("Integration | Component | admin-report", function (hooks) {
       })
     );
 
-    await render(<template><AdminReport @dataSourceName="signups_rate_limited" /></template>);
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups_rate_limited" />
+      </template>
+    );
 
     assert
       .dom(".alert-error.rate-limited")
@@ -118,7 +139,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("post edits", async function (assert) {
-    await render(<template><AdminReport @dataSourceName="post_edits" /></template>);
+    await render(
+      <template><AdminReport @dataSourceName="post_edits" /></template>
+    );
 
     assert
       .dom(".admin-report.post-edits")
@@ -126,7 +149,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("not found", async function (assert) {
-    await render(<template><AdminReport @dataSourceName="not_found" /></template>);
+    await render(
+      <template><AdminReport @dataSourceName="not_found" /></template>
+    );
 
     assert.dom(".alert-error.not-found").exists("displays a not found error");
   });

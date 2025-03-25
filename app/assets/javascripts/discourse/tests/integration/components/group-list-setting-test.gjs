@@ -8,7 +8,8 @@ import SiteSetting from "admin/components/site-setting";
 module("Integration | Component | group-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("default", async function (assert) {const self = this;
+  test("default", async function (assert) {
+    const self = this;
 
     this.site.groups = [
       {
@@ -39,7 +40,9 @@ module("Integration | Component | group-list site-setting", function (hooks) {
       })
     );
 
-    await render(<template><SiteSetting @setting={{self.setting}} /></template>);
+    await render(
+      <template><SiteSetting @setting={{self.setting}} /></template>
+    );
 
     const subject = selectKit(".list-setting");
 
@@ -59,7 +62,8 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     );
   });
 
-  test("mandatory values", async function (assert) {const self = this;
+  test("mandatory values", async function (assert) {
+    const self = this;
 
     this.site.groups = [
       {
@@ -91,7 +95,9 @@ module("Integration | Component | group-list site-setting", function (hooks) {
       })
     );
 
-    await render(<template><SiteSetting @setting={{self.setting}} /></template>);
+    await render(
+      <template><SiteSetting @setting={{self.setting}} /></template>
+    );
 
     const subject = selectKit(".list-setting");
 

@@ -2,13 +2,14 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import Theme from "admin/models/theme";
 import ThemesListItem from "admin/components/themes-list-item";
+import Theme from "admin/models/theme";
 
 module("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("default theme", async function (assert) {const self = this;
+  test("default theme", async function (assert) {
+    const self = this;
 
     this.set("theme", Theme.create({ name: "Test", default: true }));
 
@@ -17,7 +18,8 @@ module("Integration | Component | themes-list-item", function (hooks) {
     assert.dom(".d-icon-check").exists("shows default theme icon");
   });
 
-  test("pending updates", async function (assert) {const self = this;
+  test("pending updates", async function (assert) {
+    const self = this;
 
     this.set(
       "theme",
@@ -29,7 +31,8 @@ module("Integration | Component | themes-list-item", function (hooks) {
     assert.dom(".d-icon-arrows-rotate").exists("shows pending update icon");
   });
 
-  test("broken theme", async function (assert) {const self = this;
+  test("broken theme", async function (assert) {
+    const self = this;
 
     this.set(
       "theme",
@@ -44,7 +47,8 @@ module("Integration | Component | themes-list-item", function (hooks) {
     assert.dom(".d-icon-circle-exclamation").exists("shows broken theme icon");
   });
 
-  test("with children", async function (assert) {const self = this;
+  test("with children", async function (assert) {
+    const self = this;
 
     this.childrenList = [1, 2, 3, 4, 5].map((num) =>
       Theme.create({ name: `Child ${num}`, component: true })

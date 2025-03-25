@@ -3,8 +3,8 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminPlugin from "admin/models/admin-plugin";
 import AdminPluginConfigArea from "admin/components/admin-plugin-config-area";
+import AdminPlugin from "admin/models/admin-plugin";
 
 module("Integration | Component | admin-plugin-config-area", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,11 +23,13 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
     getOwner(this).lookup("service:admin-plugin-nav-manager").currentPlugin =
       new AdminPlugin({ id: "discourse-test-plugin" });
 
-    await render(<template>
-      <AdminPluginConfigArea>
-        Test content
-      </AdminPluginConfigArea>
-    </template>);
+    await render(
+      <template>
+        <AdminPluginConfigArea>
+          Test content
+        </AdminPluginConfigArea>
+      </template>
+    );
 
     assert
       .dom(".admin-plugin-inner-sidebar-nav__item")

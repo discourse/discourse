@@ -8,7 +8,8 @@ import SiteSetting from "admin/components/site-setting";
 module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("mandatory values", async function (assert) {const self = this;
+  test("mandatory values", async function (assert) {
+    const self = this;
 
     this.set(
       "setting",
@@ -29,7 +30,9 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
       })
     );
 
-    await render(<template><SiteSetting @setting={{self.setting}} /></template>);
+    await render(
+      <template><SiteSetting @setting={{self.setting}} /></template>
+    );
 
     const subject = selectKit(".list-setting");
 

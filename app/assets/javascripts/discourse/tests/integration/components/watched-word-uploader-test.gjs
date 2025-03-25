@@ -17,7 +17,8 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
     });
   });
 
-  test("sets the proper action key on uploads", async function (assert) {const self = this;
+  test("sets the proper action key on uploads", async function (assert) {
+    const self = this;
 
     const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "alert");
@@ -40,9 +41,14 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
       done();
     });
 
-    await render(<template>
-      <WatchedWordUploader @actionKey={{self.actionNameKey}} @done={{self.doneUpload}} />
-    </template>);
+    await render(
+      <template>
+        <WatchedWordUploader
+          @actionKey={{self.actionNameKey}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const words = createFile("watched-words.txt");
     await this.container

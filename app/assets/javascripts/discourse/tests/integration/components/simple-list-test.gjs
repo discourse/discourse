@@ -1,4 +1,10 @@
-import { blur, click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  blur,
+  click,
+  fillIn,
+  render,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import SimpleList from "admin/components/simple-list";
@@ -6,7 +12,8 @@ import SimpleList from "admin/components/simple-list";
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("adding a value", async function (assert) {const self = this;
+  test("adding a value", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
 
@@ -35,13 +42,20 @@ module("Integration | Component | simple-list", function (hooks) {
       .exists({ count: 4 }, "adds the value when keying Enter");
   });
 
-  test("adding a value when list is predefined", async function (assert) {const self = this;
+  test("adding a value when list is predefined", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
     this.set("choices", ["vinkas", "osama", "kris"]);
 
     await render(
-      <template><SimpleList @values={{self.values}} @allowAny={{false}} @choices={{self.choices}} /></template>
+      <template>
+        <SimpleList
+          @values={{self.values}}
+          @allowAny={{false}}
+          @choices={{self.choices}}
+        />
+      </template>
     );
 
     await click(".add-value-input summary");
@@ -53,7 +67,8 @@ module("Integration | Component | simple-list", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
   });
 
-  test("changing a value", async function (assert) {const self = this;
+  test("changing a value", async function (assert) {
+    const self = this;
 
     const done = assert.async();
 
@@ -64,7 +79,9 @@ module("Integration | Component | simple-list", function (hooks) {
     });
 
     await render(
-      <template><SimpleList @values={{self.values}} @onChange={{self.onChange}} /></template>
+      <template>
+        <SimpleList @values={{self.values}} @onChange={{self.onChange}} />
+      </template>
     );
 
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
@@ -73,7 +90,8 @@ module("Integration | Component | simple-list", function (hooks) {
     assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
   });
 
-  test("removing a value", async function (assert) {const self = this;
+  test("removing a value", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas\nosama");
 
@@ -90,12 +108,15 @@ module("Integration | Component | simple-list", function (hooks) {
       .hasValue("osama", "removes the correct value");
   });
 
-  test("delimiter support", async function (assert) {const self = this;
+  test("delimiter support", async function (assert) {
+    const self = this;
 
     this.set("values", "vinkas|osama");
 
     await render(
-      <template><SimpleList @values={{self.values}} @inputDelimiter="|" /></template>
+      <template>
+        <SimpleList @values={{self.values}} @inputDelimiter="|" />
+      </template>
     );
 
     await fillIn(".add-value-input", "eviltrout");

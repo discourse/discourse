@@ -37,11 +37,18 @@ module("Integration | Component | emoji-uploader", function (hooks) {
     });
   });
 
-  test("uses the selected group for the upload", async function (assert) {const self = this;
+  test("uses the selected group for the upload", async function (assert) {
+    const self = this;
 
-    await render(<template>
-      <EmojiUploader @id="emoji-uploader" @emojiGroups={{self.emojiGroups}} @done={{self.doneUpload}} />
-    </template>);
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -58,11 +65,18 @@ module("Integration | Component | emoji-uploader", function (hooks) {
       .trigger("upload-mixin:emoji-uploader:add-files", image);
   });
 
-  test("does not clear the selected group between multiple uploads", async function (assert) {const self = this;
+  test("does not clear the selected group between multiple uploads", async function (assert) {
+    const self = this;
 
-    await render(<template>
-      <EmojiUploader @id="emoji-uploader" @emojiGroups={{self.emojiGroups}} @done={{self.doneUpload}} />
-    </template>);
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -86,11 +100,18 @@ module("Integration | Component | emoji-uploader", function (hooks) {
       .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
   });
 
-  test("clears the name after the first upload to avoid duplicate names", async function (assert) {const self = this;
+  test("clears the name after the first upload to avoid duplicate names", async function (assert) {
+    const self = this;
 
-    await render(<template>
-      <EmojiUploader @id="emoji-uploader" @emojiGroups={{self.emojiGroups}} @done={{self.doneUpload}} />
-    </template>);
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -118,11 +139,19 @@ module("Integration | Component | emoji-uploader", function (hooks) {
       .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
   });
 
-  test("sets the created_by field with username", async function (assert) {const self = this;
+  test("sets the created_by field with username", async function (assert) {
+    const self = this;
 
-    await render(<template>
-      <EmojiUploader @id="emoji-uploader" @emojiGroups={{self.emojiGroups}} @createdBy={{self.createdBy}} @done={{self.doneUpload}} />
-    </template>);
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @createdBy={{self.createdBy}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
 
