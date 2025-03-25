@@ -32,7 +32,7 @@ class CategoryHashtagDataSource
       item.relative_url = category.url
       item.id = category.id
       item.style_type = category.style_type
-      item.icon = category.style_type == "icon" ? category.icon : self.icon
+      item.icon = category.style_type == "icon" ? category.icon : icon
       item.emoji = category.emoji if category.style_type == "emoji"
 
       # Single-level category hierarchy should be enough to distinguish between

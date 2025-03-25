@@ -82,6 +82,12 @@ class HashtagAutocompleteService
     # have the type as a suffix to distinguish between conflicts.
     attr_accessor :slug
 
+    # Display style for the item, e.g. square, icon, emoji
+    attr_accessor :style_type
+
+    # The emoji to display in the UI autocomplete menu (without colons)
+    attr_accessor :emoji
+
     # The icon to display in the UI autocomplete menu for the item.
     attr_accessor :icon
 
@@ -103,15 +109,6 @@ class HashtagAutocompleteService
     # The ID of the resource that is represented by the autocomplete item,
     # e.g. category.id, tag.id
     attr_accessor :id
-
-    # Display style for the item, e.g. square, icon, emoji
-    attr_accessor :style_type
-
-    # The icon name to display in the category prefix
-    # attr_accessor :icon
-
-    # The emoji to display in the category prefix (without colons)
-    attr_accessor :emoji
 
     def initialize(params = {})
       @relative_url = params[:relative_url]

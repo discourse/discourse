@@ -36,11 +36,11 @@ function addHashtag(buffer, matches, state) {
       token.attrs.push(["data-style-type", result.style_type]);
     }
 
-    if (result.emoji) {
+    if (result.style_type === "emoji" && result.emoji) {
       token.attrs.push(["data-emoji", result.emoji]);
     }
 
-    if (result.icon) {
+    if (result.style_type === "icon" && result.icon) {
       token.attrs.push(["data-icon", result.icon]);
     }
 
