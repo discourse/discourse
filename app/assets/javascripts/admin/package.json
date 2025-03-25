@@ -15,12 +15,10 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
-    "@ember/render-modifiers": "^3.0.0",
     "@ember/string": "^4.0.1",
-    "codemod-resolver": "workspace:*",
     "ember-cli-babel": "^8.2.0",
-    "float-kit": "workspace:*",
-    "truth-helpers": "workspace:*"
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-template-imports": "^4.3.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
@@ -29,8 +27,7 @@
     "@types/jquery": "^3.5.32",
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
-    "broccoli-asset-rev": "^3.0.0",
-    "ember-auto-import": "^2.10.0",
+    "broccoli-asset-rev": "^3.0.0",    
     "ember-cli": "~6.3.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
@@ -49,14 +46,7 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
   },
-  "ember-addon": {
-    "version": 2,
-    "type": "addon"
-  },
   "ember": {
-    "edition": "octane"
-  },
-  "exports": {
-    "./*": "./addon/*"
+    "edition": "default"
   }
 }
