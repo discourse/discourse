@@ -927,6 +927,10 @@ div.ac-wrap {
     &.keyboard-visible #reply-control.open {
       height: calc(var(--composer-vh, 1vh) * 100);
 
+      .grippie {
+        display: none;
+      }
+
       .reply-area {
         padding-bottom: 0.375em;
       }

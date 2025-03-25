@@ -41,9 +41,7 @@ export default class ComposerContainer extends Component {
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
     >
-      {{#unless this.site.mobileView}}
-        <div class="grippie"></div>
-      {{/unless}}
+      <div class="grippie"></div>
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 
