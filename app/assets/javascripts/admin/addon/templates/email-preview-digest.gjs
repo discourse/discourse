@@ -25,7 +25,7 @@ export default RouteTemplate(
           <label>{{i18n "admin.email.user"}}:</label>
           <EmailGroupUserChooser
             @value={{@controller.username}}
-            @onChange={{action "updateUsername"}}
+            @onChange={{@controller.updateUsername}}
             @options={{hash
               maximum=1
               caretDownIcon="caret-down"

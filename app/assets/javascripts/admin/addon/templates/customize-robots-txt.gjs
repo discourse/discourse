@@ -20,7 +20,7 @@ export default RouteTemplate(
       />
       <SaveControls
         @model={{@controller}}
-        @action={{action "save"}}
+        @action={{@controller.save}}
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >

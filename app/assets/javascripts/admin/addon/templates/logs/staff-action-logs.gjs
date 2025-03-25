@@ -83,7 +83,7 @@ export default RouteTemplate(
         <ComboBox
           @content={{@controller.userHistoryActions}}
           @value={{@controller.filterActionId}}
-          @onChange={{action "filterActionIdChanged"}}
+          @onChange={{@controller.filterActionIdChanged}}
           @options={{hash none="admin.logs.staff_actions.all"}}
           @id="staff-action-logs-action-filter"
         />
@@ -100,7 +100,7 @@ export default RouteTemplate(
     <div class="clearfix"></div>
 
     <StaffActions>
-      <LoadMore @selector=".staff-logs tr" @action={{action "loadMore"}}>
+      <LoadMore @selector=".staff-logs tr" @action={{@controller.loadMore}}>
         {{#if @controller.model.content}}
           <table class="table staff-logs grid">
             <thead>

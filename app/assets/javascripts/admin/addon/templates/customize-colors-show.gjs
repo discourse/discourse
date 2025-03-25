@@ -65,7 +65,7 @@ export default RouteTemplate(
           <div class="pull-left">
             {{#if @controller.model.theme_id}}
               <InlineEditCheckbox
-                @action={{action "applyUserSelectable"}}
+                @action={{@controller.applyUserSelectable}}
                 @labelKey="admin.customize.theme.color_scheme_user_selectable"
                 @checked={{@controller.model.user_selectable}}
                 @modelId={{@controller.model.id}}

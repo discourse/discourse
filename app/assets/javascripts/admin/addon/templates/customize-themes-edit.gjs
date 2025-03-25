@@ -34,9 +34,9 @@ export default RouteTemplate(
           @editRouteName={{@controller.editRouteName}}
           @currentTargetName={{@controller.currentTargetName}}
           @fieldName={{@controller.fieldName}}
-          @fieldAdded={{action "fieldAdded"}}
+          @fieldAdded={{@controller.fieldAdded}}
           @maximized={{@controller.maximized}}
-          @save={{action "save"}}
+          @save={{@controller.save}}
         />
 
         <div class="admin-footer">

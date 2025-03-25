@@ -325,13 +325,13 @@ export default RouteTemplate(
             <div class="control-unit">
               {{#unless @controller.model.component}}
                 <InlineEditCheckbox
-                  @action={{action "applyDefault"}}
+                  @action={{@controller.applyDefault}}
                   @labelKey="admin.customize.theme.is_default"
                   @checked={{@controller.model.default}}
                   @modelId={{@controller.model.id}}
                 />
                 <InlineEditCheckbox
-                  @action={{action "applyUserSelectable"}}
+                  @action={{@controller.applyUserSelectable}}
                   @labelKey="admin.customize.theme.user_selectable"
                   @checked={{@controller.model.user_selectable}}
                   @modelId={{@controller.model.id}}
@@ -339,7 +339,7 @@ export default RouteTemplate(
               {{/unless}}
               {{#if @controller.model.remote_theme}}
                 <InlineEditCheckbox
-                  @action={{action "applyAutoUpdateable"}}
+                  @action={{@controller.applyAutoUpdateable}}
                   @labelKey="admin.customize.theme.auto_update"
                   @checked={{@controller.model.auto_update}}
                   @modelId={{@controller.model.id}}

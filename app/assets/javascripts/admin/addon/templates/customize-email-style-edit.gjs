@@ -7,7 +7,7 @@ export default RouteTemplate(
     <EmailStylesEditor
       @styles={{@controller.model}}
       @fieldName={{@controller.fieldName}}
-      @save={{action "save"}}
+      @save={{@controller.save}}
     />
 
     <div class="admin-footer">

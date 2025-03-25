@@ -52,7 +52,7 @@ export default RouteTemplate(
 
       <SaveControls
         @model={{@controller.siteText}}
-        @action={{action "saveChanges"}}
+        @action={{@controller.saveChanges}}
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >

@@ -36,7 +36,7 @@ export default RouteTemplate(
         />
       </div>
 
-      <ScreenedIpAddressForm @action={{action "recordAdded"}} />
+      <ScreenedIpAddressForm @action={{@controller.recordAdded}} />
     </div>
 
     <ConditionalLoadingSpinner @condition={{@controller.loading}}>

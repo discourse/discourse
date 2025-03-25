@@ -35,7 +35,7 @@ export default RouteTemplate(
       @loadingProblems={{@controller.loadingProblems}}
       @problems={{@controller.problems}}
       @problemsTimestamp={{@controller.problemsTimestamp}}
-      @refreshProblems={{action "refreshProblems"}}
+      @refreshProblems={{@controller.refreshProblems}}
     />
     <nav>
       <ul class="nav nav-pills">

@@ -93,7 +93,7 @@ export default RouteTemplate(
     </div>
     <LoadMore
       @selector=".directory-table .directory-table__cell"
-      @action={{action "loadMore"}}
+      @action={{@controller.loadMore}}
       class="users-list-container"
     >
       {{#if @controller.users}}

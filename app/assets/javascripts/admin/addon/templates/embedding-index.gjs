@@ -44,7 +44,7 @@ export default RouteTemplate(
           {{#each @controller.embedding.embeddable_hosts as |host|}}
             <EmbeddableHost
               @host={{host}}
-              @deleteHost={{action "deleteHost"}}
+              @deleteHost={{@controller.deleteHost}}
             />
           {{/each}}
         </tbody>

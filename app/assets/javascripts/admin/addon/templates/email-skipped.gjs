@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    <LoadMore @selector=".email-list tr" @action={{action "loadMore"}}>
+    <LoadMore @selector=".email-list tr" @action={{@controller.loadMore}}>
       <table class="table email-list">
         <thead>
           <tr>

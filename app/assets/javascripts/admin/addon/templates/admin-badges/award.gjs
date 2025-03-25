@@ -30,7 +30,7 @@ export default RouteTemplate(
               type="file"
               id="massAwardCSVUpload"
               accept=".csv"
-              onchange={{action "updateFileSelected"}}
+              onchange={{@controller.updateFileSelected}}
             />
           </div>
           <div class="control-group">

@@ -23,7 +23,9 @@ export default class SiteSettingComponent extends Component.extend(
   @readOnly("setting.staffLogFilter") staffLogFilter;
 
   get resolvedComponent() {
-    return getOwner(this).lookup(`component:${this.componentName}`);
+    return getOwner(this).resolveRegistration(
+      `component:${this.componentName}`
+    );
   }
 
   @cached

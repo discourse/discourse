@@ -65,7 +65,7 @@ export default RouteTemplate(
         <AdminEditableField
           @name="user.username.title"
           @value={{@controller.model.username}}
-          @action={{action "saveUsername"}}
+          @action={{@controller.saveUsername}}
           @editing={{@controller.editingUsername}}
         />
       </div>
@@ -74,7 +74,7 @@ export default RouteTemplate(
         <AdminEditableField
           @name="user.name.title"
           @value={{@controller.model.name}}
-          @action={{action "saveName"}}
+          @action={{@controller.saveName}}
           @editing={{@controller.editingName}}
         />
       </div>
@@ -223,7 +223,7 @@ export default RouteTemplate(
         <AdminEditableField
           @name="user.title.title"
           @value={{@controller.model.title}}
-          @action={{action "saveTitle"}}
+          @action={{@controller.saveTitle}}
           @editing={{@controller.editingTitle}}
         />
       </div>

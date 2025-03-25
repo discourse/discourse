@@ -20,7 +20,7 @@ export default RouteTemplate(
       <label for="email">{{i18n "admin.email.advanced_test.email"}}</label>
       <Textarea name="email" @value={{@controller.email}} class="email-body" />
       <DButton
-        @action={{action "run"}}
+        @action={{@controller.run}}
         @label="admin.email.advanced_test.run"
       />
     </div>

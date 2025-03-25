@@ -36,13 +36,13 @@ export default RouteTemplate(
 
       <SaveControls
         @model={{@controller.emailTemplate}}
-        @action={{action "saveChanges"}}
+        @action={{@controller.saveChanges}}
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >
         {{#if @controller.emailTemplate.can_revert}}
           <DButton
-            @action={{action "revertChanges"}}
+            @action={{@controller.revertChanges}}
             @label="admin.customize.email_templates.revert"
           />
         {{/if}}
