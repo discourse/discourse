@@ -11,7 +11,14 @@
     <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
 
     <div class={{concat-class "login-body" this.bodyClasses}}>
-      <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+      <PluginOutlet
+        @name="login-before-modal-body"
+        @connectorTagName="div"
+        @outletArgs={{hash
+          flashChanged=this.flashChanged
+          flashTypeChanged=this.flashTypeChanged
+        }}
+      />
 
       {{#if this.hasNoLoginOptions}}
         <div class={{if this.site.desktopView "login-left-side"}}>
