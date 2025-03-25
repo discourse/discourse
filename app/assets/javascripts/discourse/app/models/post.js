@@ -208,6 +208,7 @@ export default class Post extends RestModel {
   @trackedPostProperty via_email;
   @trackedPostProperty wiki;
   @trackedPostProperty yours;
+  @trackedPostProperty user_custom_fields;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
