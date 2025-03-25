@@ -46,7 +46,9 @@ be:
             restricted_categories:
               label: катэгорыі
           created: створаны
-          topics: тэмы
+          with_images: Выява
+          with_links: Спасылкі
+          with_uploads: Загрузкі
         category_created_edited:
           fields:
             restricted_category:

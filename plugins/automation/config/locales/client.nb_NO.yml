@@ -65,7 +65,10 @@ nb_NO:
             restricted_categories:
               label: Kategorier
           created: Opprettet
-          topics: Emner
+          with_images: Bilder
+          with_links: Lenker
+          with_code: Kode
+          with_uploads: Opplastinger
         category_created_edited:
           fields:
             restricted_category:
