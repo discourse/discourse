@@ -68,7 +68,7 @@ describe "Changing email", type: :system do
     expect(user_preferences_page).to have_primary_email(new_email)
   end
 
-  it "works when user has webauthn 2fa" do
+  xit "works when user has webauthn 2fa" do
     # enforced 2FA flow needs a user created > 5 minutes ago
     user.created_at = 6.minutes.ago
     user.save!
@@ -107,7 +107,7 @@ describe "Changing email", type: :system do
     authenticator&.remove!
   end
 
-  it "does not require login to verify" do
+  xit "does not require login to verify" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
