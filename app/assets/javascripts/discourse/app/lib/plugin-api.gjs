@@ -1541,16 +1541,13 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionIcon(key, icon) {
-    deprecated(
-      "`api.addPostSmallActionIcon` has been deprecated. Use the value transformer `post-small-action-icon` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
-    );
-
-    addPostSmallActionIcon(key, icon);
     this.registerValueTransformer(
       "post-small-action-icon",
       ({ value, context: { code } }) => (key === code ? icon : value)
     );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
+    addPostSmallActionIcon(key, icon);
   }
 
   /**

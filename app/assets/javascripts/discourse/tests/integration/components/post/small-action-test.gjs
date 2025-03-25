@@ -22,6 +22,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       post_number: 1,
       topic,
       like_count: 3,
+      action_code: "open_topic",
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
     });
 
@@ -93,6 +94,19 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     assert
       .dom(".small-action .d-icon-far-circle-check")
       .exists("the custom icon was rendered");
+  });
+
+  test("api.addPostSmallActionIcon", async function (assert) {
+    withPluginApi((api) => {
+      api.addPostSmallActionIcon("open_topic", "far-circle-check");
+      api.addPostSmallActionIcon("private_topic", "heart");
+    });
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".small-action .d-icon-far-circle-check")
+      .exists("the correct custom icon was rendered");
   });
 
   test("does not show edit button if canRecover even if canEdit", async function (assert) {
