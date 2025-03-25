@@ -6,7 +6,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
-import { and, or } from "truth-helpers";
+import { and } from "truth-helpers";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
