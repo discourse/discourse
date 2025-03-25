@@ -8,7 +8,14 @@
   {{hide-application-sidebar}}
   {{body-class "login-page"}}
   <div class="login-fullpage">
-    <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+    <FlashMessage
+      @flash={{this.flash}}
+      @type={{this.flashType}}
+      @outletArgs={{hash
+        flashChanged=this.flashChanged
+        flashTypeChanged=this.flashTypeChanged
+      }}
+    />
 
     <div class={{concat-class "login-body" this.bodyClasses}}>
       <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
