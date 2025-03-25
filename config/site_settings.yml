@@ -676,7 +676,7 @@ login:
     min: 1
     max: 175200
   full_page_login:
-    default: false
+    default: true
     client: true
   show_signup_form_email_instructions:
     client: true

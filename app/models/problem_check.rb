@@ -67,6 +67,7 @@ class ProblemCheck
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
     ProblemCheck::ForceHttps,
+    ProblemCheck::FullPageLoginCheck,
     ProblemCheck::GithubConfig,
     ProblemCheck::GoogleAnalyticsVersion,
     ProblemCheck::GoogleOauth2Config,
