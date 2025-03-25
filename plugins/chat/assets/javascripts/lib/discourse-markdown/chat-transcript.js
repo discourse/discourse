@@ -148,6 +148,14 @@ const chatTranscriptRule = {
       wrapperDivToken.attrs.push(["data-multiquote", "true"]);
     }
 
+    if (threadId) {
+      wrapperDivToken.attrs.push(["data-thread-id", threadId]);
+    }
+
+    if (threadTitle) {
+      wrapperDivToken.attrs.push(["data-thread-title", threadTitle]);
+    }
+
     const userDivToken = state.push("div_chat_transcript_user_open", "div", 1);
     userDivToken.attrs = [["class", "chat-transcript-user"]];
 

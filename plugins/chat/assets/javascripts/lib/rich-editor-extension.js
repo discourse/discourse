@@ -16,6 +16,9 @@ const extension = {
         rawContent: {},
         multiQuote: {},
         chained: {},
+        threadId: { default: null },
+        threadTitle: { default: null },
+        threadHtml: { default: null },
       },
       group: "block",
       isolating: true,
@@ -36,8 +39,8 @@ const extension = {
 
         let metaElement;
         let channelLinkElement;
-        if (node.attrs.multiQuote) {
-          if (node.attrs.channelName) {
+        if (node.attrs.channelName) {
+          if (node.attrs.multiQuote) {
             metaElement = document.createElement("div");
             metaElement.classList.add("chat-transcript-meta");
 
@@ -45,14 +48,11 @@ const extension = {
               ? getURL(`/chat/c/-/${node.attrs.channelId}`)
               : null;
 
-            // TODO (martin) Handle emoji unescaping of channel name
             metaElement.innerHTML = i18n("chat.quote.original_channel", {
               channel: emojiUnescape(node.attrs.channelName),
               channelLink,
             });
-          }
-        } else {
-          if (node.attrs.channelName) {
+          } else {
             channelLinkElement = document.createElement("a");
             channelLinkElement.classList.add("chat-transcript-channel");
             channelLinkElement.href = getURL(
@@ -67,8 +67,6 @@ const extension = {
         const userElement = document.createElement("div");
         userElement.classList.add("chat-transcript-user");
 
-        // TODO (martin) Handle threads
-
         // TODO (martin) Need to use current user's timezone here when we have
         // that available.
         const formattedDateTime = moment(node.attrs.datetime).format(
@@ -81,20 +79,60 @@ const extension = {
 
         const messagesElement = document.createElement("div");
         messagesElement.classList.add("chat-transcript-messages");
-
         messagesElement.innerHTML = node.attrs.html;
 
         if (metaElement) {
           wrapperElement.appendChild(metaElement);
         }
 
-        wrapperElement.appendChild(userElement);
+        if (node.attrs.threadId) {
+          const threadDetailsElement = document.createElement("details");
+          const threadSummaryElement = document.createElement("summary");
 
-        if (channelLinkElement) {
-          userElement.appendChild(channelLinkElement);
+          const threadElement = document.createElement("div");
+          threadElement.classList.add("chat-transcript-thread");
+
+          const threadHeaderElement = document.createElement("div");
+          threadHeaderElement.classList.add("chat-transcript-thread-header");
+          threadHeaderElement.innerHTML = `
+          <svg class="fa d-icon d-icon-discourse-threads svg-icon svg-node">
+            <use href="#discourse-threads"></use>
+          </svg>`;
+
+          const threadTitleElement = document.createElement("span");
+          threadTitleElement.classList.add(
+            "chat-transcript-thread-header__title"
+          );
+          threadTitleElement.innerHTML = node.attrs.threadTitle
+            ? emojiUnescape(node.attrs.threadTitle)
+            : i18n("chat.quote.default_thread_title");
+
+          threadHeaderElement.appendChild(threadTitleElement);
+          threadElement.appendChild(threadHeaderElement);
+          threadElement.appendChild(userElement);
+
+          if (channelLinkElement) {
+            userElement.appendChild(channelLinkElement);
+          }
+
+          threadElement.appendChild(messagesElement);
+          threadSummaryElement.appendChild(threadElement);
+          threadDetailsElement.appendChild(threadSummaryElement);
+
+          if (node.attrs.threadHtml) {
+            threadDetailsElement.innerHTML += node.attrs.threadHtml;
+          }
+
+          wrapperElement.appendChild(threadDetailsElement);
+        } else {
+          wrapperElement.appendChild(userElement);
+
+          if (channelLinkElement) {
+            userElement.appendChild(channelLinkElement);
+          }
+
+          wrapperElement.appendChild(messagesElement);
         }
-
-        wrapperElement.appendChild(messagesElement);
 
         return wrapperElement;
       },
@@ -128,11 +166,20 @@ const extension = {
       // The slice here makes sure we get the html_raw content
       // only for the current [chat] bbcode block based on the
       // token index.
-      const messagesHtml = tokens
+      const nextHtmlRaw = tokens
         .slice(i)
-        .find((t) => t.type === "html_raw")?.content;
+        .find((t) => t.type === "html_raw" && t.nesting === 1);
+      const messagesHtml = nextHtmlRaw?.content;
 
-      // So this content and the whole wrap_open happens for every single one of `[chat]`
+      let threadHtmlRaw;
+      if (token.attrGet("data-thread-id")) {
+        threadHtmlRaw = tokens
+          .slice(tokens.indexOf(nextHtmlRaw) + 1)
+          .find((t) => t.type === "html_raw" && t.nesting === 1);
+      }
+
+      // So this content and the whole wrap_open happens for every single instance of
+      // the `[chat]` bbcode, including nested which is the case for threads.
       //
       // Only the first one will have multiQuote and chained
       //
@@ -146,6 +193,9 @@ const extension = {
         channelId: token.attrGet("data-channel-id"),
         chained: token.attrGet("data-chained"),
         multiQuote: token.attrGet("data-multiquote"),
+        threadId: token.attrGet("data-thread-id"),
+        threadTitle: token.attrGet("data-thread-title"),
+        threadHtml: threadHtmlRaw ? threadHtmlRaw.content : null,
         html: messagesHtml,
         rawContent: token.content,
       });
@@ -168,7 +218,6 @@ const extension = {
     div_chat_transcript_meta: { ignore: true },
 
     // Thread-related tokens
-    // TODO (martin) Handle threads
     details_chat_transcript_wrap: { ignore: true },
     summary_chat_transcript: { ignore: true },
     div_thread: { ignore: true },
