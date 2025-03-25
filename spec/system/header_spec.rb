@@ -234,19 +234,6 @@ RSpec.describe "Glimmer Header", type: :system do
     end
   end
 
-  context "when cmd + f keyboard shortcut pressed - when within a topic with 20+ posts" do
-    before { sign_in(current_user) }
-    fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
-
-    it "opens search on first press, and closes on the second" do
-      visit "/t/#{topic.slug}/#{topic.id}"
-      header.search_in_topic_keyboard_shortcut
-      expect(search).to have_search_menu_visible
-      header.search_in_topic_keyboard_shortcut
-      expect(search).to have_no_search_menu_visible
-    end
-  end
-
   describe "mobile topic-info" do
     fab!(:topic)
     fab!(:posts) { Fabricate.times(21, :post, topic: topic) }

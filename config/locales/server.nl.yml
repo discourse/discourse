@@ -5114,11 +5114,13 @@ nl:
         description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
       delete_single:
         title: "Verwijderen"
+        complete: "Bericht verwijderd."
       delete:
         title: "Verwijderen…"
       delete_and_ignore:
         title: "Markering negeren en bericht verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
+        complete: "Bericht verwijderd."
       delete_and_ignore_replies:
         title: "Markering negeren, bericht en antwoorden verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht en alle antwoorden. Als dit het eerste bericht is, wordt het topic ook verwijderd"
@@ -5126,6 +5128,7 @@ nl:
       delete_and_agree:
         title: "Bericht verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht. Als dit het eerste bericht is, wordt ook het topic verwijderd."
+        complete: "Bericht verwijderd."
       delete_and_agree_replies:
         title: "Bericht en antwoorden verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht en alle antwoorden. Als dit het eerste bericht is, wordt ook het topic verwijderd."
@@ -5135,29 +5138,37 @@ nl:
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
         title: "Nee"
+        complete: "Markering genegeerd."
       discard_post:
         title: "Bericht weggooien"
       revise_and_reject_post:
         title: "Bericht herzien…"
       ignore:
         title: "Negeren"
+        complete: "Markering genegeerd."
       ignore_and_do_nothing:
         title: "Niets doen"
         description: "Negeer de vlag door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen. Verborgen berichten blijven verborgen en worden afgehandeld door de automatische tools."
+        complete: "Markering genegeerd."
       approve:
         title: "Goedkeuren"
+        complete: "Bericht goedgekeurd."
       approve_post:
         title: "Bericht goedkeuren"
         confirm_closed: "Dit topic is gesloten. Wil je het bericht toch maken?"
+        complete: "Bericht goedgekeurd."
       reject_post:
         title: "Bericht weigeren"
+        complete: "Bericht afgekeurd."
       approve_user:
         title: "Gebruiker goedkeuren"
+        complete: "Gebruiker goedgekeurd."
       reject_user:
         title: "Gebruiker verwijderen…"
         delete:
           title: "Gebruiker verwijderen"
           description: "De gebruiker wordt van het forum verwijderd."
+          complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
@@ -5176,6 +5187,7 @@ nl:
         title: "Bericht goedkeuren en herstellen"
       delete_user:
         reason: "Verwijderd via wachtrij voor beoordeling"
+        complete: "Gebruiker verwijderd."
   email_style:
     html_missing_placeholder: "De HTML-sjabloon moet %{placeholder} bevatten"
   notification_level:

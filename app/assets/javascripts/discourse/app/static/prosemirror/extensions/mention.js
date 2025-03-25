@@ -31,26 +31,23 @@ const extension = {
     },
   },
 
-  inputRules: [
-    {
-      // TODO(renato): pass unicodeUsernames?
-      match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
-      handler: (state, match, start, end) => {
-        if (
-          state.selection.$from.nodeBefore?.type === state.schema.nodes.mention
-        ) {
-          return null;
-        }
-        const mentionStart = start + match[1].length;
-        const name = match[2].slice(1);
-        return state.tr.replaceWith(mentionStart, end, [
-          state.schema.nodes.mention.create({ name }),
-          state.schema.text(" "),
-        ]);
-      },
-      options: { undoable: false },
+  inputRules: {
+    // TODO(renato): pass unicodeUsernames?
+    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    handler: (state, match, start, end) => {
+      const { $from } = state.selection;
+      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
+        return null;
+      }
+      const mentionStart = start + match[1].length;
+      const name = match[2].slice(1);
+      return state.tr.replaceWith(mentionStart, end, [
+        state.schema.nodes.mention.create({ name }),
+        state.schema.text(" "),
+      ]);
     },
-  ],
+    options: { undoable: false },
+  },
 
   parse: {
     mention: {

@@ -25,7 +25,7 @@
   background: var(--secondary);
   margin: 10vh auto 1em auto;
 
-  @media screen and (max-height: 700px) {
+  @media screen and (height <= 700px) {
     margin: 1em auto 1em auto;
   }
 }

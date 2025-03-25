@@ -162,6 +162,10 @@ ur:
     software_update_prompt:
       dismiss: "بر خاست کریں"
     back_button: "واپس"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name} پر خوش آمدید!"
+      search: "تلاش کریں"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -331,9 +335,6 @@ ur:
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
       new_topic: "نئے ٹاپک کا ڈرافٹ"
       new_private_message: "نیے ذاتی پیغام کا مسودہ"
-      abandon:
-        yes_value: "منسوخ"
-        no_value: "ترمیم دوبارہ شروع کریں"
     topic_count_all:
       one: "%{count} نیا ٹاپک دیکھیں۔"
       other: "%{count} نئے ٹاپک دیکھیں۔"
@@ -4056,6 +4057,38 @@ ur:
             failed: "ناکامی"
       home:
         title: "ہَوم"
+      account:
+        title: "اکاؤنٹ"
+        sidebar_link:
+          backups: "بیک اَپس"
+      community:
+        title: "کمیونٹی"
+        sidebar_link:
+          badges: "بَیج"
+          notifications: "اطلاعات"
+          permalinks: "دائمی لِنکس"
+          users: "صارفین"
+          groups: "گروپس"
+          legal: "قانونی"
+          moderation_flags:
+            title: "ماڈریٹر کا کام"
+      appearance:
+        title: "ظاہری شکل"
+        sidebar_link:
+          emoji: "اِیمَوجی"
+          navigation: "نیویگیشن"
+          themes_and_components:
+            keywords: "ایکسٹینشن"
+      email_settings:
+        sidebar_link:
+          appearance: "ظاہری شکل"
+      security:
+        title: "سیکورٹی"
+      section_landing_pages:
+        account:
+          title: "اکاؤنٹ"
+          backups:
+            title: "بیک اَپس"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4083,12 +4116,20 @@ ur:
         embeddable_host:
           edit: "ترمیم کریں"
           delete: "مٹائیں"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "مرضی کے مطابق بنائیں"
+          install: "انسٹال"
           themes:
             title: "تِھیمز"
+          components:
+            title: "اجزاء"
         user_fields:
           type: "قِسم"
           delete: "مٹائیں"
+        color_palettes:
+          palette_name: "نام"
+          colors:
+            title: "رنگ"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"

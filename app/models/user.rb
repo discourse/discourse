@@ -1636,7 +1636,7 @@ class User < ActiveRecord::Base
   end
 
   def anonymous?
-    SiteSetting.allow_anonymous_posting && trust_level >= 1 && !!anonymous_user_master
+    SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
   def is_singular_admin?

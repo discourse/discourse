@@ -1417,15 +1417,35 @@ sq:
         title: "Po"
       delete_single:
         title: "Fshij"
+        complete: "Postimi u fshi."
+      delete_and_ignore:
+        complete: "Postimi u fshi."
+      delete_and_agree:
+        complete: "Postimi u fshi."
       disagree:
         title: "Jo"
+        complete: "Shënimi u injorua."
+      ignore:
+        complete: "Shënimi u injorua."
+      ignore_and_do_nothing:
+        complete: "Shënimi u injorua."
       approve:
         title: "Aprovo"
+        complete: "Postimi u miratua."
+      approve_post:
+        complete: "Postimi u miratua."
+      reject_post:
+        complete: "Postimi u refuzua."
+      approve_user:
+        complete: "Përdoruesi u miratua."
       reject_user:
         delete:
           title: "Fshij Anëtarin"
+          complete: "Përdoruesi u fshi."
       reject:
         title: "Refuzo"
+      delete_user:
+        complete: "Përdoruesi u fshi."
   fallback_username: "përdorues"
   activemodel:
     errors:

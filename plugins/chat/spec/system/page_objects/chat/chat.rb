@@ -138,6 +138,14 @@ module PageObjects
         has_css?(".direct-message-channels-section")
       end
 
+      def has_add_member_button?
+        has_css?(".c-channel-members__list-item.-add-member")
+      end
+
+      def has_no_add_member_button?
+        has_no_css?(".c-channel-members__list-item.-add-member")
+      end
+
       private
 
       def drawer?(expectation:, channel_id: nil, expanded: true)

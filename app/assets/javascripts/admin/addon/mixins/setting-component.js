@@ -91,7 +91,6 @@ export default Mixin.create({
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
-  setting: null,
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),
@@ -310,7 +309,7 @@ export default Mixin.create({
       await this._save();
 
       this.set("validationMessage", null);
-      this.commitBuffer();
+      this.buffered.applyChanges();
       if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
         this.afterSave();
       }
@@ -339,7 +338,7 @@ export default Mixin.create({
   }),
 
   cancel: action(function () {
-    this.rollbackBuffer();
+    this.buffered.discardChanges();
     this.set("validationMessage", null);
   }),
 

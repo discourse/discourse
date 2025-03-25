@@ -96,7 +96,6 @@
       display: flex;
       flex-wrap: wrap;
       padding: 1em 10%;
-      background-color: var(--secondary);
       border-bottom: 1px solid var(--primary-low);
 
       @include breakpoint(medium) {

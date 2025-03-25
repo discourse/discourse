@@ -194,6 +194,10 @@ es:
       dismiss: "Descartar"
     bootstrap_mode: "Cómo empezar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -456,10 +460,6 @@ es:
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
-      abandon:
-        confirm: "Ya tienes un borrador en curso. ¿Qué te gustaría hacer con él?"
-        yes_value: "Descartar"
-        no_value: "Reanudar edición"
       dropdown:
         title: "Abre el menú de últimos borradores"
         untitled: "Borrador sin título"
@@ -5455,6 +5455,66 @@ es:
             failed: "Falló"
       home:
         title: "Inicio"
+      account:
+        title: "Cuenta"
+        sidebar_link:
+          backups: "Copias de seguridad"
+          whats_new:
+            title: "Novedades"
+            keywords: "registro de cambios|característica|lanzamiento"
+      community:
+        title: "Comunidad"
+        sidebar_link:
+          about_your_site: "Acerca de tu sitio"
+          badges: "Medallas"
+          login_and_authentication: "Inicio de sesión y autenticación"
+          notifications: "Notificaciones"
+          permalinks: "Enlaces permanentes"
+          trust_levels: "Niveles de confianza"
+          group_permissions: "Permisos de grupo"
+          users: "Usuarios"
+          groups: "Grupos"
+          user_fields: "Campos de usuario"
+          watched_words: "Palabras vigiladas"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
+            keywords: "denunciar|revisar"
+      appearance:
+        title: "Aspecto"
+        sidebar_link:
+          font_style: "Estilo de letra"
+          site_logo: "Logotipo del sitio"
+          color_schemes: "Paletas de colores"
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes_and_components:
+            keywords: "extensión"
+          site_texts: "Textos del sitio"
+      email_settings:
+        title: "Ajustes del correo electrónico"
+        sidebar_link:
+          appearance: "Aspecto"
+          server_setup:
+            title: "Configuración y registros del servidor"
+            keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
+      security:
+        title: "Seguridad"
+        sidebar_link:
+          security: "Ajustes de seguridad"
+          spam: "Ajustes de correo no deseado"
+          staff_action_logs:
+            title: "Registros y cribado"
+            keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
+      section_landing_pages:
+        account:
+          title: "Cuenta"
+          backups:
+            title: "Copias de seguridad"
+            description: "Haz una copia de seguridad de los datos de tu sitio web"
+          whats_new:
+            title: "Novedades"
+            description: "Descubre nuevas versiones y mejoras de Discourse"
       config_areas:
         about:
           general_settings: "Ajustes generales"
@@ -5548,16 +5608,15 @@ es:
           delete: "Eliminar"
           more_options:
             title: "Más opciones"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
-            title: "Temas"
+            title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
-            themes_intro_img_alt: "Nuevo marcador de posición del tema"
-            set_default_theme: "Establecer como predeterminado"
-            default_theme: "Tema predeterminado"
-            themes_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end."
             new_theme: "Nuevo tema"
-            user_selectable: "Seleccionable por el usuario"
+          components:
+            title: "Componentes"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5568,6 +5627,13 @@ es:
           delete: "Eliminar"
           delete_successful: "Campo de usuario eliminado."
           save_successful: "Campo de usuario guardado."
+        color_palettes:
+          palette_name: "Nombre"
+          color_options:
+            toggle: "Seleccionable por el usuario"
+            toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
+          colors:
+            title: "Colores"
       plugins:
         title: "Plugins"
         name: "Nombre"

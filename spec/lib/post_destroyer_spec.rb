@@ -1142,6 +1142,8 @@ RSpec.describe PostDestroyer do
     end
 
     it "destroys the post when force_destroy is true for soft deleted topics" do
+      Fabricate(:topic_web_hook)
+
       post = Fabricate(:post)
       topic = post.topic
 

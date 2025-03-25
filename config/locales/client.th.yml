@@ -148,6 +148,10 @@ th:
     software_update_prompt:
       dismiss: "ซ่อน"
     back_button: "กลับ"
+    welcome_banner:
+      header:
+        anonymous_members: "ยินดีต้อนรับสู่ %{site_name}!"
+      search: "ค้นหา"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -2739,6 +2743,30 @@ th:
             failed: "ล้มเหลว"
       home:
         title: "หน้าแรก"
+      account:
+        title: "บัญชี"
+        sidebar_link:
+          backups: "สำรอง"
+      community:
+        title: "ชุมชน"
+        sidebar_link:
+          badges: "เหรียญ"
+          notifications: "การแจ้งเตือน"
+          permalinks: "ลิงค์ถาวร"
+          users: "ผู้ใช้"
+          groups: "กลุ่ม"
+          legal: "กฎ"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "การนำทาง"
+      security:
+        title: "ความปลอดภัย"
+      section_landing_pages:
+        account:
+          title: "บัญชี"
+          backups:
+            title: "สำรอง"
       config_areas:
         about:
           company_name: "ชื่อ"
@@ -2765,12 +2793,18 @@ th:
         embeddable_host:
           edit: "แก้ไข"
           delete: "ลบ"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "การปรับแต่ง"
+          install: "ติดตั้ง"
           themes:
             title: "ธีม"
         user_fields:
           type: "ชนิด"
           delete: "ลบ"
+        color_palettes:
+          palette_name: "ชื่อ"
+          colors:
+            title: "สี"
       plugins:
         title: "ปลั้กอิน"
         name: "ชื่อ"

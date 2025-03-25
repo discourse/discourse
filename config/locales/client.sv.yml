@@ -192,6 +192,10 @@ sv:
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
     back_button: "Tillbaka"
+    welcome_banner:
+      header:
+        anonymous_members: "Välkommen till %{site_name}!"
+      search: "Sök"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -387,10 +391,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      abandon:
-        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
-        yes_value: "Förkasta"
-        no_value: "Återuppta redigering"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -4906,6 +4906,41 @@ sv:
             failed: "Misslyckad"
       home:
         title: "Hem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Säkerhetskopior"
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "Om din webbplats"
+          badges: "Utmärkelser"
+          notifications: "Aviseringar"
+          permalinks: "Permalänkar"
+          users: "Användare"
+          groups: "Grupper"
+          legal: "Juridik"
+          moderation_flags:
+            title: "Moderering"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          site_logo: "Webbplatsens logotyp"
+          emoji: "Emoji"
+          navigation: "Navigering"
+          themes_and_components:
+            keywords: "filnamnstillägg"
+      email_settings:
+        title: "E-postinställningar"
+        sidebar_link:
+          appearance: "Utseende"
+      security:
+        title: "Säkerhet"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Säkerhetskopior"
       config_areas:
         about:
           community_name: "Forumets namn"
@@ -4939,12 +4974,20 @@ sv:
         embeddable_host:
           edit: "Redigera"
           delete: "Radera"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Anpassa"
+          install: "Installera"
           themes:
             title: "Teman"
+          components:
+            title: "Komponenter"
         user_fields:
           type: "Typ"
           delete: "Radera"
+        color_palettes:
+          palette_name: "Namn"
+          colors:
+            title: "Färger"
       plugins:
         title: "Tillägg"
         name: "Namn"

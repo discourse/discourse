@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
-import { gt, or } from "truth-helpers";
+import { gt, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
@@ -43,7 +43,10 @@ export default RouteTemplate(
             @secondFactorMethod={{@controller.shownSecondFactorMethod}}
             value={{@controller.secondFactorToken}}
           />
+
           <DButton
+            @isLoading={{@controller.isLoading}}
+            @disabled={{not @controller.isSecondFactorTokenValid}}
             @action={{@controller.authenticateToken}}
             @label="submit"
             type="submit"

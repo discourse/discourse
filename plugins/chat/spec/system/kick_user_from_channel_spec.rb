@@ -25,11 +25,6 @@ describe "Kick user from chat channel", type: :system do
   context "when the user is looking at the channel they are kicked from" do
     before { chat.visit_channel(channel_1) }
 
-    it "shows an alert" do
-      publish_kick
-      expect(dialog).to have_content(I18n.t("js.chat.kicked_from_channel"))
-    end
-
     context "when the user presses ok" do
       it "redirects them to the first other public channel they have" do
         publish_kick

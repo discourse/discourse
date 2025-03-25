@@ -1373,6 +1373,11 @@ nb_NO:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       delete_single:
         title: "Slett"
+        complete: "Post slettet."
+      delete_and_ignore:
+        complete: "Post slettet."
+      delete_and_agree:
+        complete: "Post slettet."
       disagree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       disagree:
@@ -1383,11 +1388,16 @@ nb_NO:
         title: "ikke gjør noe"
       approve:
         title: "Godkjenn"
+      approve_user:
+        complete: "Brukar godkjent."
       reject_user:
         delete:
           title: "Slett bruker"
+          complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      delete_user:
+        complete: "Bruker slettet."
   fallback_username: "bruker"
   activemodel:
     errors:

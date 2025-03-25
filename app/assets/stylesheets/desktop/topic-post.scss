@@ -696,7 +696,7 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-@media all and (max-width: 790px) {
+@media all and (width <= 790px) {
   .topic-avatar {
     width: 45px;
   }

@@ -22,6 +22,13 @@ module SiteIconManager
       fallback_to_sketch: false,
       resize_required: false,
     },
+    mobile_logo_dark: {
+      width: nil,
+      height: nil,
+      settings: %i[mobile_logo_dark logo_dark],
+      fallback_to_sketch: false,
+      resize_required: false,
+    },
     large_icon: {
       width: nil,
       height: nil,

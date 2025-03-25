@@ -77,6 +77,10 @@ be:
       category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Сардэчна запрашаем да сайта %{site_name}!"
+      search: "Пошук"
     themes:
       default_description: "Default"
     s3:
@@ -1724,6 +1728,34 @@ be:
             failed: "памылка"
       home:
         title: "дома"
+      account:
+        title: "Аккаўнт"
+        sidebar_link:
+          backups: "Бэкапы"
+      community:
+        title: "супольнасць"
+        sidebar_link:
+          badges: "значкі"
+          notifications: "Натыфікацыі"
+          permalinks: "Сталыя спасылкі"
+          users: "карыстальнікаў"
+          groups: "групы"
+          legal: "Legal"
+          moderation_flags:
+            title: "Мадэрацыя"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "рух"
+          themes_and_components:
+            keywords: "пашырэнне"
+      security:
+        title: "Бяспека"
+      section_landing_pages:
+        account:
+          title: "Аккаўнт"
+          backups:
+            title: "Бэкапы"
       config_areas:
         about:
           company_name: "імя"
@@ -1746,9 +1778,15 @@ be:
         embeddable_host:
           edit: "рэдагаваць"
           delete: "выдаляць"
+        themes_and_components:
+          breadcrumb_title: "Кастамізаваць"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
+        color_palettes:
+          palette_name: "імя"
+          colors:
+            title: "<......"
       plugins:
         title: "Плагіны"
         name: "Назва"

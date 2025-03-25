@@ -9,7 +9,7 @@ RSpec.describe AnonymousShadowCreator do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[3]) }
 
     before do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
       SiteSetting.anonymous_posting_allowed_groups = "11"
     end
 

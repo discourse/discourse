@@ -402,10 +402,17 @@ class ProsemirrorAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return (
-      this.view.state.selection.$from.parent.type ===
-      this.schema.nodes.code_block
-    );
+    const { schema, view } = this;
+    const { selection } = view.state;
+
+    const isInCodeBlock =
+      selection.$from.parent.type === schema.nodes.code_block;
+
+    const hasCodeMark = selection.$from
+      .marks()
+      .some((mark) => mark.type === schema.marks.code);
+
+    return isInCodeBlock || hasCodeMark;
   }
 }
 

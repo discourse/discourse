@@ -194,6 +194,10 @@ hu:
       dismiss: "Elvetés"
     bootstrap_mode: "Első lépések"
     back_button: "Vissza"
+    welcome_banner:
+      header:
+        anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
+      search: "Keresés"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -457,10 +461,6 @@ hu:
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
       edit_topic: "Témavázlat szerkesztése"
-      abandon:
-        confirm: "Már van egy folyamatban lévő piszkozata. Mit szeretne vele kezdeni?"
-        yes_value: "Elvetés"
-        no_value: "Szerkesztés folytatása"
       dropdown:
         title: "Legújabb piszkozatok menü megnyitása"
         untitled: "Névtelen piszkozat"
@@ -5527,6 +5527,66 @@ hu:
             failed: "Sikertelen"
       home:
         title: "Kezdőlap"
+      account:
+        title: "Fiók"
+        sidebar_link:
+          backups: "Biztonsági mentések"
+          whats_new:
+            title: "Újdonságok?"
+            keywords: "változásjegyzék|funkció|kiadás"
+      community:
+        title: "Közösség"
+        sidebar_link:
+          about_your_site: "Az Ön webhelyéről"
+          badges: "Jelvények"
+          login_and_authentication: "Bejelentkezés és hitelesítés"
+          notifications: "Értesítések"
+          permalinks: "Közvetlen hivatkozás"
+          trust_levels: "Bizalmi szintek"
+          group_permissions: "Csoportengedélyek"
+          users: "Felhasználók"
+          groups: "Csoportok"
+          user_fields: "Felhasználói mezők"
+          watched_words: "Figyelt szavak"
+          legal: "Jogszabály"
+          moderation_flags:
+            title: "Moderálás"
+            keywords: "megjelölés|felülvizsgálat"
+      appearance:
+        title: "Megjelenés"
+        sidebar_link:
+          font_style: "Betűstílus"
+          site_logo: "Webhely logó"
+          color_schemes: "Színpaletták"
+          emoji: "Hangulatjel"
+          navigation: "Navigáció"
+          themes_and_components:
+            keywords: "kiterjesztés"
+          site_texts: "Oldal szövegei"
+      email_settings:
+        title: "E-mail beállítások"
+        sidebar_link:
+          appearance: "Megjelenés"
+          server_setup:
+            title: "Szerverbeállítások és naplók"
+            keywords: "email|smtp|mailgun|sendgrid|elküldve|kihagyva|visszapattant|kapott|elutasítva|e-mail naplók|előzetes összefoglaló"
+      security:
+        title: "Biztonság"
+        sidebar_link:
+          security: "Biztonsági beállítások"
+          spam: "Spam beállítások"
+          staff_action_logs:
+            title: "Naplók és szűrés"
+            keywords: "hibanaplók|személyzeti műveletek|ellenőrzött e-mailek|ellenőrzött ip-k|ellenőrzött URL-ek|keresési naplók"
+      section_landing_pages:
+        account:
+          title: "Fiók"
+          backups:
+            title: "Biztonsági mentések"
+            description: "Készítsen biztonsági másolatot webhelye adatairól"
+          whats_new:
+            title: "Újdonságok?"
+            description: "Fedezze fel a Discourse új kiadásait és fejlesztéseit"
       config_areas:
         about:
           general_settings: "Általános beállítások"
@@ -5622,16 +5682,15 @@ hu:
           delete: "Törlés"
           more_options:
             title: "További lehetőségek"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Személyre szabás"
+          install: "Telepítés"
           themes:
             title: "Témák"
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
-            themes_intro_img_alt: "Új téma helyőrző"
-            set_default_theme: "Beállítás alapértelmezettként"
-            default_theme: "Alapértelmezett téma"
-            themes_description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
             new_theme: "Új téma"
-            user_selectable: "Felhasználó által választható"
+          components:
+            title: "Összetevők"
         user_fields:
           field: "Mező"
           type: "Típus"
@@ -5642,6 +5701,13 @@ hu:
           delete: "Törlés"
           delete_successful: "Felhasználói mező törölve."
           save_successful: "Felhasználói mező mentve."
+        color_palettes:
+          palette_name: "Név"
+          color_options:
+            toggle: "Felhasználó által választható"
+            toggle_description: "A színpalettát a felhasználók választhatják ki"
+          colors:
+            title: "Színek"
       plugins:
         title: "Bővítmények"
         name: "Név"

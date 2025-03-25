@@ -10,7 +10,7 @@
   width: 100%;
   word-wrap: break-word;
 
-  @media screen and (min-width: 550px) and (max-width: 767px) {
+  @media screen and (width >= 550px) and (width <= 767px) {
     table.staff-logs tr {
       display: grid;
       grid-template-rows: auto auto;
@@ -171,11 +171,11 @@
       width: 140px;
     }
 
-    @media screen and (min-width: 900px) {
+    @media screen and (width >= 900px) {
       margin-left: auto;
     }
 
-    @media screen and (max-width: 899px) {
+    @media screen and (width <= 899px) {
       margin-top: 1em;
     }
   }
@@ -196,13 +196,13 @@ table.screened-ip-addresses {
   }
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (width >= 550px) {
   table.screened-ip-addresses tr {
     grid-template-columns: repeat(5, 1fr) auto;
   }
 }
 
-@media screen and (max-width: 549px) {
+@media screen and (width <= 549px) {
   table.screened-ip-addresses tr {
     td.actions {
       grid-row: 3;
@@ -387,7 +387,7 @@ table.search-logs-list {
     width: 60%;
     word-wrap: break-word;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (width <= 767px) {
       width: 100%;
     }
   }
@@ -397,7 +397,7 @@ table.search-logs-list {
     text-align: center;
   }
 
-  @media screen and (min-width: 550px) {
+  @media screen and (width >= 550px) {
     tr {
       td.term {
         grid-column-start: span 3;

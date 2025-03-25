@@ -138,6 +138,10 @@ sw:
     software_update_prompt:
       dismiss: "Ondosha"
     back_button: "Iliyopita"
+    welcome_banner:
+      header:
+        anonymous_members: "Karibu kwenye %{site_name}!"
+      search: "Tafuta"
     themes:
       default_description: "Halisi"
     s3:
@@ -2626,6 +2630,30 @@ sw:
             failed: "Kushindwa"
       home:
         title: "Nyumbani"
+      account:
+        title: "Akaunti"
+        sidebar_link:
+          backups: "Machelezo"
+      community:
+        title: "Jumuiya"
+        sidebar_link:
+          badges: "Beji"
+          notifications: "Taarifa"
+          permalinks: "Anwani za mtandao"
+          users: "Watumiaji"
+          groups: "Makundi"
+          legal: "Halali"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Abiri"
+      security:
+        title: "Ulinzi"
+      section_landing_pages:
+        account:
+          title: "Akaunti"
+          backups:
+            title: "Machelezo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -2651,12 +2679,17 @@ sw:
         embeddable_host:
           edit: "Hariri"
           delete: "Futa"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Geuza Kukufaa"
           themes:
             title: "Mandhari"
         user_fields:
           type: "Aina"
           delete: "Futa"
+        color_palettes:
+          palette_name: "Jina"
+          colors:
+            title: "Rangi"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"

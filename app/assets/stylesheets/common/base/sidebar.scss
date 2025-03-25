@@ -4,11 +4,6 @@
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
-
-  @include breakpoint("mobile-extra-large") {
-    --d-sidebar-row-height: 2.4em;
-  }
-
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-background: var(--secondary);
@@ -49,6 +44,10 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+
+  @include breakpoint("mobile-extra-large") {
+    --d-sidebar-row-height: 2.4em;
+  }
 
   @include breakpoint(large) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};

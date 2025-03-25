@@ -487,4 +487,29 @@ RSpec.describe SiteSettings::Validations do
       }.not_to raise_error
     end
   end
+
+  describe "#validate_allow_likes_in_anonymous_mode" do
+    it "doesn't allow the setting to be enabled if the allow_anonymous_mode setting is disabled" do
+      SiteSetting.allow_anonymous_mode = false
+
+      expect { SiteSetting.allow_likes_in_anonymous_mode = true }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.allow_likes_in_anonymous_mode_without_anonymous_mode_enabled"),
+      )
+    end
+
+    it "allows the setting to be enabled if the allow_anonymous_mode setting is enabled" do
+      SiteSetting.allow_anonymous_mode = true
+
+      expect { SiteSetting.allow_likes_in_anonymous_mode = true }.not_to raise_error
+    end
+
+    it "allows the setting to be disabled if the allow_anonymous_mode setting is disabled" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.allow_likes_in_anonymous_mode = true
+
+      SiteSetting.allow_anonymous_mode = false
+      expect { SiteSetting.allow_likes_in_anonymous_mode = false }.not_to raise_error
+    end
+  end
 end

@@ -193,7 +193,7 @@ export default class GroupCardContents extends CardContentsBase {
               {{#if this.group.messageable}}
                 <li>
                   <DButton
-                    @action={{action "messageGroup"}}
+                    @action={{this.messageGroup}}
                     @icon="envelope"
                     @label="groups.message"
                     class="btn-primary group-message-button inline"

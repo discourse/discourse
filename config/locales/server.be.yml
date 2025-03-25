@@ -2376,6 +2376,7 @@ be:
         title: "зацвердзіць паведамленне"
       reject_post:
         title: "адхіліць паведамленне"
+        complete: "Публікацыя адхілена."
       approve_user:
         title: "зацвердзіць карыстальніка"
       reject_user:

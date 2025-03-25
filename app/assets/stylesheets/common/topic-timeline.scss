@@ -21,7 +21,7 @@
       transition: max-height 0.4s ease-out;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       max-height: 75vh;
     }
 
@@ -56,7 +56,7 @@
       transition: max-height 0.3s ease-in;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       padding-top: 10px;
     }
 
@@ -89,7 +89,7 @@
 
         @include line-clamp(8);
 
-        @media screen and (max-height: 425px) {
+        @media screen and (height <= 425px) {
           @include line-clamp(5);
         }
       }

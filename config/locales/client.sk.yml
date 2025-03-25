@@ -250,6 +250,11 @@ sk:
       dismiss: "Zahodiť"
     bootstrap_mode: "Začíname"
     back_button: "Späť"
+    welcome_banner:
+      header:
+        logged_in_members: "Vitaj späť, %{preferred_display_name}!"
+        anonymous_members: "Vitajte na %{site_name}!"
+      search: "Hľadať"
     themes:
       default_description: "Predvolené"
       broken_theme_alert: "Vaša stránka nemusí fungovať, pretože téma/komponent obsahuje chyby."
@@ -555,10 +560,6 @@ sk:
       new_topic: "Nová téma"
       new_private_message: "Nový návrh osobnej správy"
       edit_topic: "Upraviť koncept témy"
-      abandon:
-        confirm: "Už máte rozpracovaný návrh. Čo by ste s ním chceli urobiť?"
-        yes_value: "Zahodiť"
-        no_value: "Pokračovať v úprave"
       dropdown:
         title: "Otvorenie ponuky najnovších návrhov"
         untitled: "Návrh bez názvu"
@@ -2837,6 +2838,8 @@ sk:
       uploading: "Nahráva sa…"
       show_preview: "zobraziť náhľad"
       hide_preview: "skryť náhľad"
+      switch_to_markdown: "Prepnutie na štandardný editor Markdown"
+      switch_to_rich_text: "Prepnutie na nový textový editor"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"
@@ -3074,8 +3077,11 @@ sk:
         new_features: "Boli vydané nové funkcie Discourse!"
         admin_problems: "nové rady na informačnom paneli vášho webu"
     upload_selector:
+      change: "Zmena"
       delete: "Odstrániť"
       uploading: "Nahrávanie"
+      processing: "Spracovanie nahrávania"
+      select_file: "Kliknutím nahrajte alebo potiahnite a pustite súbor"
       default_image_alt_text: Obrázok
     search:
       sort_by: "Zoradiť podľa"
@@ -6150,6 +6156,67 @@ sk:
             failed: "Nepodarilo sa"
       home:
         title: "Domov"
+      account:
+        title: "Účet"
+        sidebar_link:
+          backups: "Zálohy"
+          whats_new:
+            title: "Čo je nové?"
+            keywords: "changelog|feature|release"
+      community:
+        title: "Komunita"
+        sidebar_link:
+          about_your_site: "O vašej stránke"
+          badges: "Odznaky"
+          login_and_authentication: "Prihlásenie a overovanie"
+          notifications: "Upozornenia"
+          permalinks: "Trvalé odkazy"
+          trust_levels: "Úrovne dôvery"
+          group_permissions: "Oprávnenia skupiny"
+          users: "Používatelia"
+          groups: "Skupiny"
+          user_fields: "Používateľské polia"
+          watched_words: "Sledované slová"
+          legal: "Právne záležitosti"
+          moderation_flags:
+            title: "Moderovanie"
+            keywords: "vlajka|recenzia"
+      appearance:
+        title: "Vzhľad"
+        sidebar_link:
+          font_style: "Štýl písma"
+          site_logo: "Logo stránky"
+          color_schemes: "Palety farieb"
+          emoji: "Emoji"
+          navigation: "Navigácia"
+          themes_and_components:
+            title: "Témy a komponenty"
+            keywords: "rozšírenie"
+          site_texts: "Texty stránok"
+      email_settings:
+        title: "Nastavenia e-mailu"
+        sidebar_link:
+          appearance: "Vzhľad"
+          server_setup:
+            title: "Nastavenie servera a protokoly"
+            keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
+      security:
+        title: "Bezpečnosť"
+        sidebar_link:
+          security: "Nastavenia zabezpečenia"
+          spam: "Nastavenia spamu"
+          staff_action_logs:
+            title: "Protokoly a skríning"
+            keywords: "protokoly o chybách|akcie zamestnancov|prehľadané e-maily|prehľadané IP adresy|prehľadané URL adresy|denníky vyhľadávania"
+      section_landing_pages:
+        account:
+          title: "Účet"
+          backups:
+            title: "Zálohy"
+            description: "Urobte si zálohu údajov svojej stránky"
+          whats_new:
+            title: "Čo je nové?"
+            description: "Objavte nové verzie a vylepšenia Discourse"
       config_areas:
         about:
           general_settings: "Všeobecné nastavenia"
@@ -6245,16 +6312,21 @@ sk:
           delete: "Odstrániť"
           more_options:
             title: "Ďalšie možnosti"
-        look_and_feel:
+        themes_and_components:
+          title: "Témy a komponenty"
+          description: "Prispôsobte si svoju stránku Discourse pomocou tém a komponentov podľa svojich potrieb."
+          breadcrumb_title: "Upraviť"
+          install: "Inštalácia"
           themes:
             title: "Témy"
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
-            themes_intro_img_alt: "Nový zástupný symbol témy"
-            set_default_theme: "Nastavenie predvoleného nastavenia"
-            default_theme: "Predvolená téma"
-            themes_description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
             new_theme: "Nová téma"
-            user_selectable: "Voliteľné používateľom"
+            back: "Späť na témy"
+          components:
+            title: "Komponenty"
+            components_intro: "Na začiatok si nainštalujte nový komponent alebo si vytvorte vlastný od začiatku pomocou týchto zdrojov."
+            new_component: "Nový komponent"
+            back: "Späť na komponenty"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -6265,6 +6337,20 @@ sk:
           delete: "Odstrániť"
           delete_successful: "Používateľské pole odstránené."
           save_successful: "Používateľské pole uložené."
+        color_palettes:
+          palette_name: "Meno"
+          color_options:
+            title: "Možnosti farieb"
+            toggle: "Voliteľné používateľom"
+            toggle_description: "Farebná paleta môže byť vybraná používateľmi"
+          colors:
+            title: "Farby"
+          fonts_and_logos_hint: "Chcete aktualizovať svoje písma a logá?"
+          go_to_branding: "Prejsť na Branding"
+          save_changes: "Uloženie zmien"
+          unsaved_changes: "Máte neuložené zmeny"
+          copy_of: "Kópia %{name}"
+          copy_created: 'Bola vytvorená nová kópia "%{name}"'
       plugins:
         title: "Pluginy"
         name: "Meno"
@@ -6411,6 +6497,7 @@ sk:
           component_name: "Názov komponentu"
           themes_intro: "Vyberte si existujúcu tému alebo si nainštalujte novú a začnite"
           themes_intro_new: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
+          components_intro_new: "Na začiatok si nainštalujte nový komponent alebo si vytvorte vlastný od začiatku pomocou týchto zdrojov."
           themes_intro_img_alt: "Nový zástupca témy"
           beginners_guide_title: "Príručka pre začiatočníkov na používanie tém Discourse"
           developers_guide_title: "Príručka pre vývojárov k témam Discourse"

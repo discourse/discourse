@@ -151,7 +151,7 @@ class PresenceChannel
     mutex_value = SecureRandom.hex
     result =
       retry_on_mutex_error do
-        PresenceChannel.redis_eval(:leave, redis_keys, [name, user_id, client_id, nil, mutex_value])
+        PresenceChannel.redis_eval(:leave, redis_keys, [name, user_id, client_id, "", mutex_value])
       end
 
     if result == 1

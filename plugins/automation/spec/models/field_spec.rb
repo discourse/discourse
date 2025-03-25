@@ -92,7 +92,8 @@ describe DiscourseAutomation::Field do
       expect(field).to be_valid
     end
 
-    it "does not work with an array value" do
+    it "does work with an array value" do
+      # this is legit for multiselect choices
       field =
         DiscourseAutomation::Field.create(
           automation: automation,
@@ -102,7 +103,7 @@ describe DiscourseAutomation::Field do
             value: [1, 2, 3],
           },
         )
-      expect(field).to_not be_valid
+      expect(field).to be_valid
     end
 
     it "works with a nil value" do

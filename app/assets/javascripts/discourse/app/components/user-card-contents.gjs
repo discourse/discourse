@@ -507,7 +507,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#if this.hasUserFilters}}
                 <li>
                   <DButton
-                    @action={{action "cancelFilter"}}
+                    @action={{this.cancelFilter}}
                     @icon="xmark"
                     @label="topic.filters.cancel"
                   />

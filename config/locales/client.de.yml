@@ -194,6 +194,11 @@ de:
       dismiss: "Verwerfen"
     bootstrap_mode: "Erste Schritte"
     back_button: "Zurück"
+    welcome_banner:
+      header:
+        logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
+        anonymous_members: "Willkommen bei %{site_name}!"
+      search: "Suche"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -457,10 +462,6 @@ de:
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       edit_topic: "Themenentwurf bearbeiten"
-      abandon:
-        confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du damit machen?"
-        yes_value: "Verwerfen"
-        no_value: "Bearbeitung fortsetzen"
       dropdown:
         title: "Menü mit den neuesten Entwürfen öffnen"
         untitled: "Entwurf ohne Titel"
@@ -2549,6 +2550,8 @@ de:
       uploading: "Wird hochgeladen …"
       show_preview: "Vorschau zeigen"
       hide_preview: "Vorschau ausblenden"
+      switch_to_markdown: "Zum Standard Markdown-Editor wechseln"
+      switch_to_rich_text: "Wechsel zum neuen Rich-Text-Editor"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
       bold_title: "Fett gedruckt"
@@ -5599,6 +5602,67 @@ de:
             failed: "Fehlgeschlagen"
       home:
         title: "Startseite"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "Was ist neu?"
+            keywords: "Änderungsprotokoll|Funktion|Release"
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "Über deine Website"
+          badges: "Abzeichen"
+          login_and_authentication: "Anmeldung u. Auth."
+          notifications: "Benachrichtigungen"
+          permalinks: "Permalinks"
+          trust_levels: "Vertrauensstufen"
+          group_permissions: "Gruppenberechtigungen"
+          users: "Benutzer"
+          groups: "Gruppen"
+          user_fields: "Benutzerfelder"
+          watched_words: "Beobachtete Wörter"
+          legal: "Rechtliches"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "Meldungen|Überprüfung"
+      appearance:
+        title: "Erscheinungsbild"
+        sidebar_link:
+          font_style: "Schriftart"
+          site_logo: "Website-Logo"
+          color_schemes: "Farbpaletten"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes_and_components:
+            title: "Themes und Komponenten"
+            keywords: "dateiendung"
+          site_texts: "Website-Texte"
+      email_settings:
+        title: "E-Mail-Einstellungen"
+        sidebar_link:
+          appearance: "Erscheinungsbild"
+          server_setup:
+            title: "Server und Protokolle"
+            keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
+      security:
+        title: "Sicherheit"
+        sidebar_link:
+          security: "Sicherheitseinstellungen"
+          spam: "Spam-Einstellungen"
+          staff_action_logs:
+            title: "Protokolle und Screening"
+            keywords: "Fehlerprotokolle|Teamaktionen|Geprüfte E-Mails|Geprüfte URLs|Suchprotokolle"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Backups"
+            description: "Mache ein Backup der Daten deiner Website"
+          whats_new:
+            title: "Was ist neu?"
+            description: "Entdecke neue Versionen und Verbesserungen von Discourse"
       config_areas:
         about:
           general_settings: "Allgemeine Einstellungen"
@@ -5694,16 +5758,21 @@ de:
           delete: "Löschen"
           more_options:
             title: "Mehr Optionen"
-        look_and_feel:
+        themes_and_components:
+          title: "Themes und Komponenten"
+          description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen."
+          breadcrumb_title: "Anpassen"
+          install: "Installieren"
           themes:
             title: "Themes"
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
-            themes_intro_img_alt: "Neuer Theme-Platzhalter"
-            set_default_theme: "Standard festlegen"
-            default_theme: "Standard-Theme"
-            themes_description: "Themes sind umfangreiche Anpassungen, die mehrere Elemente des Stils deines Forumsdesigns verändern und oft auch zusätzliche Frontend-Funktionen enthalten."
             new_theme: "Neues Theme"
-            user_selectable: "Vom Benutzer wählbar"
+            back: "Zurück zu Themes"
+          components:
+            title: "Komponenten"
+            components_intro: "Installiere eine neue Komponente, um loszulegen, oder erstelle deine eigene mit Hilfe dieser Ressourcen von Grund auf."
+            new_component: "Neue Komponente"
+            back: "Zurück zu Komponenten"
         user_fields:
           field: "Feld"
           type: "Art"
@@ -5714,6 +5783,20 @@ de:
           delete: "Löschen"
           delete_successful: "Benutzerfeld gelöscht."
           save_successful: "Benutzerfeld gespeichert."
+        color_palettes:
+          palette_name: "Name"
+          color_options:
+            title: "Farboptionen"
+            toggle: "Vom Benutzer wählbar"
+            toggle_description: "Farbpalette kann von Benutzern ausgewählt werden"
+          colors:
+            title: "Farben"
+          fonts_and_logos_hint: "Willst du deine Schriftarten und Logos aktualisieren?"
+          go_to_branding: "Gehe zu Branding"
+          save_changes: "Änderungen speichern"
+          unsaved_changes: "Du hast ungespeicherte Änderungen"
+          copy_of: "Kopie von %{name}"
+          copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
       plugins:
         title: "Plug-ins"
         name: "Name"
@@ -5860,6 +5943,7 @@ de:
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
           themes_intro_new: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
+          components_intro_new: "Installiere eine neue Komponente, um loszulegen, oder erstelle deine eigene mit Hilfe dieser Ressourcen von Grund auf."
           themes_intro_img_alt: "Neuer Theme-Platzhalter"
           beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Entwickler-Leitfaden für Discourse-Themes"

@@ -5,35 +5,37 @@ class ReviewableClaimedTopicsController < ApplicationController
 
   def create
     topic = Topic.with_deleted.find_by(id: params[:reviewable_claimed_topic][:topic_id])
-    guardian.ensure_can_claim_reviewable_topic!(topic)
+    automatic = params[:reviewable_claimed_topic][:automatic] == "true"
+    guardian.ensure_can_claim_reviewable_topic!(topic, automatic)
 
     begin
-      ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id)
+      ReviewableClaimedTopic.create!(user_id: current_user.id, topic_id: topic.id, automatic:)
     rescue ActiveRecord::RecordInvalid
       return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
 
-    notify_users(topic, current_user)
+    notify_users(topic, current_user, automatic)
     render json: success_json
   end
 
   def destroy
     topic = Topic.with_deleted.find_by(id: params[:id])
+    automatic = params[:automatic] == "true"
     raise Discourse::NotFound if topic.blank?
 
-    guardian.ensure_can_claim_reviewable_topic!(topic)
+    guardian.ensure_can_claim_reviewable_topic!(topic, automatic)
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
 
-    notify_users(topic, nil)
+    notify_users(topic, nil, automatic)
     render json: success_json
   end
 
   private
 
-  def notify_users(topic, claimed_by)
+  def notify_users(topic, claimed_by, automatic)
     group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
 
     if SiteSetting.enable_category_group_moderation? && topic.category
@@ -41,9 +43,13 @@ class ReviewableClaimedTopicsController < ApplicationController
     end
 
     if claimed_by.present?
-      data = { topic_id: topic.id, user: BasicUserSerializer.new(claimed_by, root: false).as_json }
+      data = {
+        topic_id: topic.id,
+        user: BasicUserSerializer.new(claimed_by, root: false).as_json,
+        automatic:,
+      }
     else
-      data = { topic_id: topic.id }
+      data = { topic_id: topic.id, automatic: }
     end
 
     MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)

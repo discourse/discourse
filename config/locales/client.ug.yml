@@ -194,6 +194,10 @@ ug:
       dismiss: "پەرۋا قىلما"
     bootstrap_mode: "باشلاش"
     back_button: "كەينى"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name} غا خۇش كەلدىڭىز!"
+      search: "ئىزدە"
     themes:
       default_description: "كۆڭۈلدىكى"
       broken_theme_alert: "تور بېكىتىڭىز ئىشلىمەسلىكى مۇمكىن چۈنكى ئۆرنەك/ بۆلەكتە خاتالىق بار."
@@ -457,10 +461,6 @@ ug:
       new_topic: "يېڭى تېما دەسلەپكى نۇسخىسى"
       new_private_message: "يېڭى شەخسىي ئۇچۇر دەسلەپكى نۇسخىسى"
       edit_topic: "تېما دەسلەپكى نۇسخا تەھرىر"
-      abandon:
-        confirm: "بىر دەسلەپكى نۇسخىڭىز داۋاملىشىۋاتىدۇ. ئۇنى قانداق قىلماقچى بولۇۋاتىسىز؟"
-        yes_value: "تاشلىۋەت"
-        no_value: "تەھرىرلەشنى ئەسلىگە كەلتۈر"
       dropdown:
         title: "ئاخىرقى دەسلەپكى نۇسخا تىزىملىكىنى ئاچىدۇ"
         untitled: "ماۋزۇسىز دەسلەپكى نۇسخا"
@@ -2543,6 +2543,8 @@ ug:
       uploading: "يۈكلەۋاتىدۇ…"
       show_preview: "ئالدىن كۆزىتىشنى كۆرسەت"
       hide_preview: "ئالدىن كۆزىتىشنى يوشۇر"
+      switch_to_markdown: "ئۆلچەملىك Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
+      switch_to_rich_text: "يېڭى مول تېكىست تەھرىرلىگۈچكە ئالماشتۇرىدۇ"
       quote_post_title: "پۈتكۈل يازمىنى نەقىل ئال"
       bold_label: "B"
       bold_title: "توم"
@@ -2752,8 +2754,11 @@ ug:
         new_features: "يېڭى Discourse ئىقتىدارى ئېلان قىلىندى!"
         admin_problems: "تور بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا يېڭى تەكلىپ بار"
     upload_selector:
+      change: "ئۆزگەرت"
       delete: "ئۆچۈر"
       uploading: "يۈكلەۋاتىدۇ"
+      processing: "يۈكلەشنى بىر تەرەپ قىلىۋاتىدۇ"
+      select_file: "چېكىپ يۈكلىنىدۇ ياكى ھۆججەت سۆرەپ تاشلىنىدۇ"
       default_image_alt_text: سۈرەت
     search:
       sort_by: "تەرتىپى"
@@ -2800,6 +2805,9 @@ ug:
       browser_tip_description: "يەرلىك توركۆرگۈدە ئىزدەشنى قايتا ئىشلىتىش ئۈچۈن"
       recent: "يېقىنقى ئىزدەش"
       clear_recent: "يېقىنقى ئىزدەشنى تازىلا"
+      experience:
+        search_field: "بېكەت بەت قاشتىكى ئىزدەش بۆلىكى"
+        search_icon: "تەرجىمىھال سىماسىغا يېقىن ئىزدەش سىنبەلگىسى"
       type:
         default: "تېما / يازما"
         users: "ئىشلەتكۈچى"
@@ -3580,6 +3588,9 @@ ug:
       sr_post_like_count_button:
         one: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
         other: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
+      sr_post_read_count_button:
+        one: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
+        other: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
       filtered_replies_hint:
         one: "بۇ يازما ۋە ئۇنىڭ ئىنكاسىنى كۆرسىتىدۇ"
         other: "بۇ يازما ۋە ئۇنىڭ %{count} ئىنكاسىنى كۆرسىتىدۇ"
@@ -4998,7 +5009,7 @@ ug:
           title: "ئۆرنەك"
           header_description: "ئۆرنەك كېڭەيتىلگەن خاسلاشتۇرۇش بولۇپ، مۇنبەر لايىھەيىڭىزدىكى كۆپلىگەن ئېلېمېنتلارنى ئۆزگەرتەلەيسىز، ئادەتتە قوشۇمچە ئالدى ئۇچ ئىقتىدارلىرىنى ئۆز ئىچىگە ئالىدۇ"
         components:
-          title: "پارچە"
+          title: "بۆلەك"
           header_description: "بۆلەك تېخىمۇ كىچىك ئىختىيارى تەڭشەك، مۇنبەر لايىھەسىنىڭ ئۇسلۇبىنى ئۆزگەرتىشتىكى ئالاھىدە ئېلېمېنت بولۇپ ئۆرنەككە قوشقىلى بولىدۇ"
           keywords: "ئۆرنەك|بۆلەك|كېڭەيتىلمە"
         site_texts:
@@ -5085,8 +5096,8 @@ ug:
             one: "ئۆرنەك"
             other: "ئۆرنەك"
           component:
-            one: "پارچە"
-            other: "پارچە"
+            one: "بۆلەك"
+            other: "بۆلەك"
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
@@ -5562,6 +5573,67 @@ ug:
             failed: "مەغلۇب بولدى"
       home:
         title: "باش بەت"
+      account:
+        title: "ھېسابات"
+        sidebar_link:
+          backups: "زاپاس"
+          whats_new:
+            title: "يېڭىلىق?"
+            keywords: "يېڭىلاش خاتىرىسى|ئىقتىدار|تارقىتىش"
+      community:
+        title: "جامائەت"
+        sidebar_link:
+          about_your_site: "تور بېكىتىڭىز ھەققىدە"
+          badges: "تارتۇق"
+          login_and_authentication: "تىزىمغا كىرىش ۋە دەلىللەش"
+          notifications: "ئۇقتۇرۇش"
+          permalinks: "ئۆزگەرمەس ئۇلانما"
+          trust_levels: "ئىشەنچ دەرىجىسى"
+          group_permissions: "گۇرۇپپا ئىجازىتى"
+          users: "ئىشلەتكۈچى"
+          groups: "گۇرۇپپا"
+          user_fields: "ئىشلەتكۈچى بۆلىكى"
+          watched_words: "كۆزەتتىكى سۆز"
+          legal: "قانۇنلۇق"
+          moderation_flags:
+            title: "رىياسەتچىلىك"
+            keywords: "پاش قىل|تەكشۈر"
+      appearance:
+        title: "كۆرۈنۈش"
+        sidebar_link:
+          font_style: "خەت نۇسخا ئۇسلۇبى"
+          site_logo: "بېكەت تۇغى"
+          color_schemes: "رەڭ تاختا"
+          emoji: "چىراي ئىپادە"
+          navigation: "يولباشچى"
+          themes_and_components:
+            title: "ئۆرنەك ۋە بۆلەك"
+            keywords: "كېڭەيتىلمە"
+          site_texts: "بېكەت تېكىستى"
+      email_settings:
+        title: "ئېلخەت تەڭشىكى"
+        sidebar_link:
+          appearance: "كۆرۈنۈش"
+          server_setup:
+            title: "مۇلازىمېتىر تەڭشىكى ۋە خاتىرە"
+            keywords: "ئېلخەت|smtp|mailgun|sendgrid|يوللاندى|ئاتلىدى|قاڭقىدى|تاپشۇرۇۋالغان|رەت قىلىندى|ئېلخەت خاتىرىسى|ئالدىن كۆزىتىش ئۈزۈندىسى"
+      security:
+        title: "بىخەتەرلىك"
+        sidebar_link:
+          security: "بىخەتەرلىك تەڭشىكى"
+          spam: "ئەخلەت خەت تەڭشىكى"
+          staff_action_logs:
+            title: "خاتىرە ۋە سۈزۈش"
+            keywords: "خاتالىق خاتىرىسى|خادىم مەشغۇلاتى|تەكشۈرۈلگەن ئېلخەت|تەكشۈرۈلگەن ips|تەكشۈرۈلگەن تور ئادرېسى|ئىزدەش خاتىرىسى"
+      section_landing_pages:
+        account:
+          title: "ھېسابات"
+          backups:
+            title: "زاپاس"
+            description: "تور بېكىتىڭىزنىڭ سانلىق مەلۇماتلىرىنى زاپاسلاڭ"
+          whats_new:
+            title: "يېڭىلىق?"
+            description: "Discourse نىڭ يېڭى نەشرى ۋە ياخشىلىنىشلىرىنى بايقاڭ"
       config_areas:
         about:
           general_settings: "ئادەتتىكى تەڭشەك"
@@ -5657,16 +5729,21 @@ ug:
           delete: "ئۆچۈر"
           more_options:
             title: "تېخىمۇ كۆپ تاللانما"
-        look_and_feel:
+        themes_and_components:
+          title: "ئۆرنەك ۋە بۆلەك"
+          description: "ئېھتىياجىڭىزغا ماس كېلىدىغان تېما ۋە بۆلەك بىلەن Discourse تور بېكىتىڭىزنى خاسلاشتۇرۇڭ."
+          breadcrumb_title: "ئىختىيارى"
+          install: "ئورنات"
           themes:
             title: "ئۆرنەك"
             themes_intro: "باشلاش ئۈچۈن يېڭى ئۆرنەك ئورنىتىڭ ياكى بۇ مەنبەلەرنى ئىشلىتىپ باشتىن باشلاپ ئۆزىڭىز قۇرۇڭ."
-            themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
-            set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
-            default_theme: "كۆڭۈلدىكى ئۆرنەك"
-            themes_description: "ئۆرنەك كېڭەيتىلگەن خاسلاشتۇرۇش بولۇپ، مۇنبەر لايىھەيىڭىزدىكى كۆپلىگەن ئېلېمېنتلارنى ئۆزگەرتەلەيسىز، ئادەتتە قوشۇمچە ئالدى ئۇچ ئىقتىدارلىرىنى ئۆز ئىچىگە ئالىدۇ."
             new_theme: "يېڭى ئۆرنەك"
-            user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
+            back: "ئۆرنەككە قايت"
+          components:
+            title: "بۆلەك"
+            components_intro: "باشلاش ئۈچۈن يېڭى بۆلەك ئورنىتىڭ ياكى بۇ مەنبەلەرنى ئىشلىتىپ باشتىن باشلاپ ئۆزىڭىز قۇرۇڭ."
+            new_component: "يېڭى بۆلەك"
+            back: "بۆلەككە قايت"
         user_fields:
           field: "بۆلەك"
           type: "تىپى"
@@ -5677,6 +5754,13 @@ ug:
           delete: "ئۆچۈر"
           delete_successful: "ئىشلەتكۈچى بۆلىكى ئۆچۈرۈلدى."
           save_successful: "ئىشلەتكۈچى بۆلىكى ساقلاندى."
+        color_palettes:
+          palette_name: "ئىسمى"
+          color_options:
+            toggle: "ئىشلەتكۈچى تاللىيالايدۇ"
+            toggle_description: "ئىشلەتكۈچى رەڭ تاختىسىنى تاللىيالايدۇ"
+          colors:
+            title: "رەڭ"
       plugins:
         title: "قىستۇرما"
         name: "ئىسمى"
@@ -5817,12 +5901,13 @@ ug:
           filter_by: "سۈزگۈچى"
           theme: "ئۆرنەك"
           component: "پارچە"
-          components: "پارچە"
+          components: "بۆلەك"
           search_placeholder: "كىرگۈزگەننى ئىزدەيدۇ…"
           theme_name: "ئۆرنەك ئىسمى"
-          component_name: "پارچە ئىسمى"
+          component_name: "بۆلەك ئىسمى"
           themes_intro: "باشلاش ئۈچۈن مەۋجۇت ئۆرنەكتىن بىرى تاللىنىدۇ ياكى يېڭىسى ئورنىتىلىدۇ"
           themes_intro_new: "باشلاش ئۈچۈن يېڭى ئۆرنەك ئورنىتىڭ ياكى بۇ مەنبەلەرنى ئىشلىتىپ باشتىن باشلاپ ئۆزىڭىز قۇرۇڭ."
+          components_intro_new: "باشلاش ئۈچۈن يېڭى بۆلەك ئورنىتىڭ ياكى بۇ مەنبەلەرنى ئىشلىتىپ باشتىن باشلاپ ئۆزىڭىز قۇرۇڭ."
           themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
           beginners_guide_title: "يېڭىياچىلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
           developers_guide_title: "ئىجادكارلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
@@ -5858,28 +5943,28 @@ ug:
           default_light_scheme: "سۇس (كۆڭۈلدىكى)"
           color_scheme_select: "ئۆرنەكتە ئىشلەتكەن رەڭنى تاللايدۇ"
           custom_sections: "ئىختىيارى بۆلەك:"
-          theme_components: "ئۆرنەك پارچىسى"
+          theme_components: "ئۆرنەك بۆلىكى"
           add_all_themes: "ھەممە ئۆرنەكنى قوش"
           convert: "ئايلاندۇر"
-          convert_component_alert: "بۇ پارچىنى راستتىنلا ئۆرنەككە ئايلاندۇرامسىز؟ ئۇ %{relatives} دىن پارچە سۈپىتىدە چىقىرىۋېتىلىدۇ."
-          convert_component_tooltip: "بۇ پارچىنى ئۆرنەككە ئايلاندۇرىدۇ"
-          convert_component_alert_generic: "بۇ پارچىنى راستتىنلا ئۆرنەككە ئايلاندۇرامسىز؟"
-          convert_theme_alert: "بۇ ئۆرنەكنى راستتىنلا پارچىغا ئايلاندۇرامسىز؟ ئۇ %{relatives} نىڭ ئانىسىدىن چىقىرىۋېتىلىدۇ."
-          convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا پارچىغا ئايلاندۇرامسىز؟"
-          convert_theme_tooltip: "بۇ ئۆرنەكنى پارچىغا ئايلاندۇرىدۇ"
+          convert_component_alert: "بۇ بۆلەكنى راستتىنلا ئۆرنەككە ئايلاندۇرامسىز؟ ئۇ %{relatives} دىن بۆلەك سۈپىتىدە چىقىرىۋېتىلىدۇ."
+          convert_component_tooltip: "بۇ بۆلەكنى ئۆرنەككە ئايلاندۇرىدۇ"
+          convert_component_alert_generic: "بۇ بۆلەكنى راستتىنلا ئۆرنەككە ئايلاندۇرامسىز؟"
+          convert_theme_alert: "بۇ ئۆرنەكنى راستتىنلا بۆلەككە ئايلاندۇرامسىز؟ ئۇ %{relatives} نىڭ ئانىسىدىن چىقىرىۋېتىلىدۇ."
+          convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا بۆلەككە ئايلاندۇرامسىز؟"
+          convert_theme_tooltip: "بۇ ئۆرنەكنى بۆلەككە ئايلاندۇرىدۇ"
           inactive_themes: "ئاكتىپسىز ئۆرنەك:"
           set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
           default_theme: "كۆڭۈلدىكى ئۆرنەك"
           set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
           install_success: "%{theme} مۇۋەپپەقىيەتلىك ئورنىتىلدى!"
-          inactive_components: "ئىشلىتىلمىگەن پارچە:"
+          inactive_components: "ئىشلىتىلمىگەن بۆلەك:"
           selected:
             one: "%{count} تاللاندى"
             other: "%{count} تاللاندى"
           cancel: "ۋاز كەچ"
           broken_theme_tooltip: "بۇ ئۆرنەكنىڭ CSS، HTML ياكى YAML دا خاتالىق بار"
           broken_theme: "بۇزۇلغان ئۆرنەكنى چەكلە"
-          disabled_component_tooltip: "بۇ پارچە چەكلەنگەن"
+          disabled_component_tooltip: "بۇ بۆلەك چەكلەنگەن"
           default_theme_tooltip: "بۇ ئۆرنەك تور بېكەتنىڭ كۆڭۈلدىكى ئۆرنىكى"
           updates_available_tooltip: "بۇ ئۆرنەكنىڭ يېڭىلانمىسى بار"
           and_x_more:
@@ -5899,15 +5984,15 @@ ug:
           upload: "يۈكلە"
           select_component: "بۆلەك تاللىنىدۇ…"
           unsaved_changes_alert: "ئۆزگەرتىشلىرىڭىزنى تېخى ساقلىمىدىڭىز، ئۇلارنى تاشلىۋېتىپ داۋاملاشتۇرامسىز؟"
-          unsaved_parent_themes: "سىز پارچىنى ئۆرنەككە تەقسىملىمىدىڭىز، داۋاملاشتۇرۇۋېرەمسىز؟"
+          unsaved_parent_themes: "سىز بۆلەكنى ئۆرنەككە تەقسىملىمىدىڭىز، داۋاملاشتۇرۇۋېرەمسىز؟"
           discard: "تاشلىۋەت"
           stay: "قال"
           css_html: "ئىختىيارى كود"
           edit_css_html: "كود تەھرىر"
           edit_css_html_help: "سىز تېخى ھېچقانداق كودنى تەھرىرلىمىدىڭىز."
           delete_upload_confirm: "بۇ يۈكلەنمىنى ئۆچۈرەمدۇ؟ (ئۆرنەك CSS ئىشلەشتىن توختىشى مۇمكىن!)"
-          component_on_themes: "بۇ ئۆرنەكنىڭ پارچىلىرىنى ئۆز ئىچىگە ئالىدۇ"
-          included_components: "پارچىنى ئۆز ئىچىگە ئالىدۇ"
+          component_on_themes: "بۇ ئۆرنەكنىڭ بۆلەكلىرىنى ئۆز ئىچىگە ئالىدۇ"
+          included_components: "بۆلەكنى ئۆز ئىچىگە ئالىدۇ"
           add_all: "ھەممىنى قوش"
           import_web_tip: "ئۆرنەك نەشر خەزىنەسىنى ئۆز ئىچىگە ئالىدۇ"
           direct_install_tip: "تۆۋەندە تىزىپ كۆرسىتىلگەن خەزىنەدىن <strong>%{name}</strong> نى راستتىنلا ئورنىتامسىز؟"
@@ -5926,7 +6011,7 @@ ug:
           install_create: "يېڭىدىن قۇر"
           installing_message: "يېڭى ئۆرنىكىڭىزنى تەڭشەيدۇ…"
           installing_message_long_time: "ئۆرنەك تەڭشەشكە كېتىدىغان ۋاقىت مۆلچەردىكىدىن ئۇزاقراق بولۇشى مۇمكىن، سەل كۈتۈڭ…"
-          duplicate_remote_theme: "ئۆرنەك پارچىسى «%{name}» ئورنىتىلغان، راستتىنلا يەنە بىر نۇسخا ئورنىتامسىز؟"
+          duplicate_remote_theme: "ئۆرنەك بۆلىكى «%{name}» ئورنىتىلغان، راستتىنلا يەنە بىر نۇسخا ئورنىتامسىز؟"
           force_install: "ئۆرنەكنى ئورنىتالمايدۇ چۈنكى Git خەزىنەنى زىيارەت قىلغىلى بولمايدۇ. ئورنىتىشنى داۋاملاشتۇرامسىز؟"
           create_placeholder: "ئورۇن بەلگىسى قۇر"
           about_theme: "ھەققىدە"
@@ -5937,8 +6022,8 @@ ug:
           source_url: "مەنبە"
           enable: "قوزغات"
           disable: "چەكلە"
-          disabled: "بۇ پارچە چەكلەنگەن."
-          disabled_by: "بۇ پارچەنى چەكلىگۈچى"
+          disabled: "بۇ بۆلەك چەكلەنگەن."
+          disabled_by: "بۇ بۆلەكنى چەكلىگۈچى"
           required_version:
             error: "بۇ ئۆرنەك ئۆزلۈكىدىن چەكلەنگەن چۈنكى ئۇ نۆۋەتتىكى Discourse نەشرى بىلەن ماسلاشمايدۇ."
             minimum: "Discourse نىڭ نەشرى %{version} ياكى ئۇنىڭدىن يۇقىرى بولۇشى كېرەك."
@@ -6297,8 +6382,8 @@ ug:
             embeddable_host_update: "سىڭدۈرمە مۇلازىمېتىر يېڭىلا"
             embeddable_host_destroy: "سىڭدۈرمە مۇلازىمېتىرنى يوقات"
             change_theme_setting: "ئۆرنەك تەڭشىكىنى ئۆزگەرت"
-            disable_theme_component: "ئۆرنەك پارچىسىنى چەكلە"
-            enable_theme_component: "ئۆرنەك پارچىسىنى قوزغات"
+            disable_theme_component: "ئۆرنەك بۆلىكىنى چەكلە"
+            enable_theme_component: "ئۆرنەك بۆلىكىنى قوزغات"
             revoke_title: "ئاتاقنى بىكار قىل"
             change_title: "ماۋزۇنى ئۆزگەرت"
             api_key_create: "api ئاچقۇچى قۇر"

@@ -1871,15 +1871,18 @@ id:
         description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
       delete_single:
         title: "Hapus"
+        complete: "Pos dihapus."
       delete_and_ignore:
         title: "Abaikan penanda dan hapus post"
         description: "Abaikan penanda dengan menghapusnya dari antrean dan hapus post; jika post pertama, hapus topiknya juga. "
+        complete: "Pos dihapus."
       delete_and_ignore_replies:
         title: "Abaikan penanda, hapus post dan balasan"
         description: "Abaikan penanda dengan menghapusnya dari antrian, hapus kiriman dan semua balasannya; jika post pertama, hapus topiknya juga"
       delete_and_agree:
         title: "Hapus postingan"
         description: "Setuju dengan menandai dan menghapus postingan ini; jika postingan pertama, hapus juga topiknya."
+        complete: "Pos dihapus."
       delete_and_agree_replies:
         title: "Hapus postingan dan balasan"
         description: "Setuju dengan penanda dan hapus post ini dan semua balasannya; jika post pertama, hapus topiknya juga."
@@ -1887,20 +1890,33 @@ id:
         title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
+        complete: "Penandaan diabaikan."
       discard_post:
         title: "Buang Post"
       ignore:
         title: "Abaikan"
+        complete: "Penandaan diabaikan."
       ignore_and_do_nothing:
         title: "Tidak melakukan apapun"
         description: "Abaikan penanda dengan menghapusnya dari antrean tanpa melakukan tindakan apa pun. Post tersembunyi akan tetap tersembunyi dan ditangani oleh alat otomatis."
+        complete: "Penandaan diabaikan."
       approve:
         title: "Terima"
+        complete: "Post disetujui."
+      approve_post:
+        complete: "Post disetujui."
+      reject_post:
+        complete: "Post ditolak."
+      approve_user:
+        complete: "Pengguna disetujui."
       reject_user:
         delete:
           title: "Hapus Pengguna"
+          complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      delete_user:
+        complete: "Pengguna dihapus."
   fallback_username: "pengguna"
   form_templates:
     errors:

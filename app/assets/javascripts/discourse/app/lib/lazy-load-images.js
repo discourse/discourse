@@ -5,9 +5,13 @@ function isLoaded(img) {
 }
 
 export function nativeLazyLoading(api) {
-  api.decorateCookedElement((post) =>
-    post.querySelectorAll("img").forEach((img) => (img.loading = "lazy"))
-  );
+  api.decorateCookedElement((element, helper) => {
+    if (helper.getModel()) {
+      // We only want to lazy load images in the post-stream, not the composer
+      // (Safari in particular is very bad at re-rendering lazy-loaded images smoothly)
+      element.querySelectorAll("img").forEach((img) => (img.loading = "lazy"));
+    }
+  });
 
   api.decorateCookedElement(
     (post) => {

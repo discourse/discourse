@@ -20,9 +20,22 @@ module PageObjects
         self
       end
 
+      def clear_query_with_backspace
+        search_element.value.length.times { search_element.send_keys(:backspace) }
+        self
+      end
+
       def fill_in_search(query)
         fill_in("bookmark-search", with: query)
         self
+      end
+
+      def search_element
+        find_by_id("bookmark-search")
+      end
+
+      def has_empty_search?
+        search_element.value == ""
       end
 
       def has_topic?(topic)

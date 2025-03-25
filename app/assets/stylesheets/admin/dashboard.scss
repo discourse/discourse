@@ -120,7 +120,7 @@
       border-bottom: 1px solid var(--primary-low);
       padding-bottom: 0.5em;
 
-      @media screen and (max-width: 400px) {
+      @media screen and (width <= 400px) {
         flex-wrap: wrap;
       }
 
@@ -242,7 +242,7 @@
       }
     }
 
-    @media screen and (max-width: 400px) {
+    @media screen and (width <= 400px) {
       flex-wrap: wrap;
 
       .storage-stats,
@@ -598,7 +598,7 @@
   .update-header {
     flex: 1 1 100%;
 
-    @media screen and (max-width: 650px) {
+    @media screen and (width <= 650px) {
       margin: 0;
     }
 

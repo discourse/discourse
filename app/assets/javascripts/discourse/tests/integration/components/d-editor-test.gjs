@@ -1120,7 +1120,7 @@ third line`
       assert.strictEqual(
         this.value,
         initialValue + "",
-        "it doesn’t continue the list"
+        "doesn't continue the list"
       );
     },
     { enable_smart_lists: true }

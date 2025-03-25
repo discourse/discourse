@@ -1278,6 +1278,7 @@ ro:
     use_email_for_username_and_name_suggestions: "Folosește prima parte a adreselor de email pentru nume de utilizator și sugestii de nume. Avertisment: acest lucru poate face mai ușor pentru actorii rău intenționat să descopere adresa de email a membrilor tăi (deoarece mulți oameni folosesc furnizori de email obișnuiți precum `gmail.com`)."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
+    enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
@@ -1587,8 +1588,13 @@ ro:
     previous_discussion: "Răspunsurile precedente"
     in_reply_to: "Ca răspuns la"
     reply_by_email: "[Vizitează subiect](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
+    reply_by_email_button_only: "[Vizitează subiect](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
+    only_reply_by_email_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
+    visit_link_to_respond_button_only: "[Vizitează subiect](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     posted_by: "Postat de %{username} pe data %{post_date}"
     user_invited_to_private_message_pm_group:
       text_body_template: |
@@ -2163,21 +2169,39 @@ ro:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       delete_single:
         title: "Șterge"
+        complete: "Articol șters."
+      delete_and_ignore:
+        complete: "Articol șters."
+      delete_and_agree:
+        complete: "Articol șters."
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       disagree:
         title: "Nu"
+        complete: "Semnalare ignorată."
       ignore:
         title: "Ignoră"
+        complete: "Semnalare ignorată."
       ignore_and_do_nothing:
         title: "Nu face nimic"
+        complete: "Semnalare ignorată."
       approve:
         title: "Aprobare"
+        complete: "Articol aprobat."
+      approve_post:
+        complete: "Articol aprobat."
+      reject_post:
+        complete: "Articol respins."
+      approve_user:
+        complete: "Utilizator aprobat."
       reject_user:
         delete:
           title: "Şterge utilizatorul"
+          complete: "Utilizator șters."
       reject:
         title: "Respingere"
+      delete_user:
+        complete: "Utilizator șters."
   fallback_username: "utilizator"
   activemodel:
     errors:

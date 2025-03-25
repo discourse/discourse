@@ -3,6 +3,10 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
+  # Maximum 255 characters including terminator.
+  # https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.4
+  MAX_EMAIL_DOMAIN_LENGTH = 253
+
   # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
   self.ignored_columns = %w[flair_url smtp_ssl]
@@ -80,11 +84,10 @@ class Group < ActiveRecord::Base
 
   validate :name_format_validator
   validates :name, presence: true
-  validate :automatic_membership_email_domains_format_validator
+  validate :automatic_membership_email_domains_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
-  validates :automatic_membership_email_domains, length: { maximum: 1000 }
   validates :bio_raw, length: { maximum: 3000 }
   validates :membership_request_template, length: { maximum: 5000 }
   validates :full_name, length: { maximum: 100 }
@@ -1141,13 +1144,25 @@ class Group < ActiveRecord::Base
       end
   end
 
-  def automatic_membership_email_domains_format_validator
+  def automatic_membership_email_domains_validator
     return if self.automatic_membership_email_domains.blank?
 
     domains =
       Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
         self.errors.add :base, (I18n.t("groups.errors.invalid_domain", domain: domain))
       end
+
+    max_domains = SiteSetting.max_automatic_membership_email_domains
+
+    if domains.size > max_domains
+      self.errors.add :base, I18n.t("groups.errors.too_many_domains", max: max_domains)
+    end
+
+    domains.each do |domain|
+      if domain.length > MAX_EMAIL_DOMAIN_LENGTH
+        self.errors.add :base, I18n.t("groups.errors.invalid_domain", domain: domain)
+      end
+    end
 
     self.automatic_membership_email_domains = domains.join("|")
   end

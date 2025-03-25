@@ -626,7 +626,7 @@ RSpec.describe ApplicationHelper do
       it "returns the correct image" do
         SiteSetting.opengraph_image = Fabricate(:upload, url: "/images/og-image.png")
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         SiteSetting.large_icon = Fabricate(:upload, url: "/images/large_icon.png")
 
@@ -641,11 +641,9 @@ RSpec.describe ApplicationHelper do
 
         SiteSetting.opengraph_image = nil
 
-        expect(helper.crawlable_meta_data).to include(
-          SiteSetting.site_twitter_summary_large_image_url,
-        )
+        expect(helper.crawlable_meta_data).to include(SiteSetting.site_x_summary_large_image_url)
 
-        SiteSetting.twitter_summary_large_image = nil
+        SiteSetting.x_summary_large_image = nil
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_large_icon_url)
 
@@ -675,13 +673,13 @@ RSpec.describe ApplicationHelper do
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
-        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_twitter_summary_large_image_url}\" />
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_x_summary_large_image_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />

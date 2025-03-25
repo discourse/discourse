@@ -111,7 +111,7 @@
   }
 
   &:not(.--mode-inline) {
-    .-tag-revisions .discourse-tags {
+    .-tag-revisions .tag-revision__wrapper {
       flex: 0 1 50%;
       min-width: 0;
       align-self: start;

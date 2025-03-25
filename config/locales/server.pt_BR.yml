@@ -5128,11 +5128,13 @@ pt_BR:
         description: "Concorde com o sinalizador e abra uma janela do compositor para editar a postagem."
       delete_single:
         title: "Excluir"
+        complete: "Postagem excluída."
       delete:
         title: "Excluir…"
       delete_and_ignore:
         title: "Ignorar sinalizador e excluir postagem"
         description: "Ignore o sinalizador removendo da fila e exclua a postagem. Se for a primeira postagem, exclua o tópico também. "
+        complete: "Postagem excluída."
       delete_and_ignore_replies:
         title: "Ignorar sinalizadores, excluir postagem e respostas"
         description: "Ignore o sinalizador removendo da fila e exclua a postagem e todas as suas respostas. Se for a primeira postagem, exclua o tópico também"
@@ -5140,6 +5142,7 @@ pt_BR:
       delete_and_agree:
         title: "Excluir postagem"
         description: "Aceite o sinalizador e exclua esta postagem. Se for a primeira postagem, exclua o tópico também."
+        complete: "Postagem excluída."
       delete_and_agree_replies:
         title: "Excluir a postagem e respostas"
         description: "Aceite o sinalizador e exclua esta postagem e todas as suas respostas. Se for a primeira postagem, exclua o tópico também."
@@ -5149,24 +5152,31 @@ pt_BR:
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       disagree:
         title: "Não"
+        complete: "Sinalizador ignorado."
       discard_post:
         title: "Descartar postagem"
       revise_and_reject_post:
         title: "Revisar postagem..."
       ignore:
         title: "Ignorar"
+        complete: "Sinalizador ignorado."
       ignore_and_do_nothing:
         title: "Não fazer nada"
         description: "Ignore o sinalizador removendo da fila sem realizar nenhuma ação. Postagens ocultas permanecerão ocultas e serão manipuladas por ferramentas automáticas."
+        complete: "Sinalizador ignorado."
       approve:
         title: "Aprovar"
+        complete: "Postagem aprovada."
       approve_post:
         title: "Aprovar postagem"
         confirm_closed: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"
+        complete: "Postagem aprovada."
       reject_post:
         title: "Rejeitar postagem"
+        complete: "Postagem recusada."
       approve_user:
         title: "Aprovar usuário(a)"
+        complete: "Usuário aprovado."
       reject_user:
         title: "Excluir usuário(a)…"
         delete:

@@ -75,7 +75,7 @@
 
 // When topic progress is visible in the posts grid area and is sticky,
 // adjust positioning so presence is on the same line
-@media screen and (max-width: 924px) {
+@media screen and (width <= 924px) {
   body:has(.topic-navigation.with-topic-progress)
     .topic-above-footer-buttons-outlet.presence {
     margin-top: -3.2em;

@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP } from "discourse/lib/constants";
@@ -8,11 +9,11 @@ export default class GroupAutomaticMembersDialog extends Service {
   @service dialog;
 
   async showConfirm(group_id, email_domains) {
-    const domainCount = email_domains?.split("|")?.length ?? 0;
-
-    if (domainCount === 0) {
+    if (isEmpty(email_domains)) {
       return Promise.resolve(true);
     }
+
+    const domainCount = email_domains.split("|").length;
 
     // On the back-end we compare every single user's e-mail to each e-mail
     // domain by regular expression. At some point this is a but much work

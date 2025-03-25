@@ -159,6 +159,10 @@ id:
     software_update_prompt:
       dismiss: "Bubar"
     bootstrap_mode: "Memulai"
+    welcome_banner:
+      header:
+        anonymous_members: "Selamat datang ke %{site_name}!"
+      search: "Cari"
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -349,10 +353,6 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
-      abandon:
-        confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
-        yes_value: "Batalkan"
-        no_value: "Lanjut menyunting"
     topic_count_all:
       other: "Lihat %{count} topik baru"
     topic_count_categories:
@@ -2438,6 +2438,19 @@ id:
             failed: "Gagal"
       home:
         title: "Beranda"
+      account:
+        title: "Akun"
+      community:
+        sidebar_link:
+          notifications: "Pemberitahuan"
+          users: "Pengguna"
+          groups: "Grup"
+      appearance:
+        sidebar_link:
+          navigation: "Navigasi"
+      section_landing_pages:
+        account:
+          title: "Akun"
       config_areas:
         about:
           community_name: "Nama komunitas"
@@ -2469,9 +2482,15 @@ id:
         embeddable_host:
           edit: "Ubah"
           delete: "Hapus"
+        themes_and_components:
+          breadcrumb_title: "Sesuaikan"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
+        color_palettes:
+          palette_name: "Nama"
+          colors:
+            title: "Warna"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"

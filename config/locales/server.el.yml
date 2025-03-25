@@ -2452,6 +2452,11 @@ el:
         description: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
       delete_single:
         title: "Σβήσιμο"
+        complete: "Η ανάρτΗσΗ διαγράφΗκε."
+      delete_and_ignore:
+        complete: "Η ανάρτΗσΗ διαγράφΗκε."
+      delete_and_agree:
+        complete: "Η ανάρτΗσΗ διαγράφΗκε."
       disagree_and_restore:
         description: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
       disagree:
@@ -2465,8 +2470,11 @@ el:
       reject_user:
         delete:
           title: "Διαγραφή Χρήστη"
+          complete: "Ο χρήστης διαγράφηκε."
       reject:
         title: "Απόρριψη"
+      delete_user:
+        complete: "Ο χρήστης διαγράφηκε."
   fallback_username: "χρήστης"
   activemodel:
     errors:

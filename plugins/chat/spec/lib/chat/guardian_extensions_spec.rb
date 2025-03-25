@@ -10,7 +10,7 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
-  before { SiteSetting.chat_allowed_groups = chatters }
+  before { SiteSetting.chat_allowed_groups = chatters.id }
 
   describe "#can_chat?" do
     context "when the user is not in allowed to chat" do
@@ -42,6 +42,48 @@ RSpec.describe Chat::GuardianExtensions do
 
       it "cannot chat" do
         expect(guardian.can_chat?).to eq(false)
+      end
+    end
+
+    context "when user is a shadow account" do
+      fab!(:non_chatter) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before { SiteSetting.allow_anonymous_mode = true }
+
+      context "when allow_chat_in_anonymous_mode is true" do
+        before { SiteSetting.allow_chat_in_anonymous_mode = true }
+
+        it "allows shadow account to chat if master account can chat" do
+          anonymous = AnonymousShadowCreator.get(user)
+          expect(anonymous.id).to be_present
+          expect(Guardian.new(anonymous).can_chat?).to eq(true)
+          expect(Guardian.new(user).can_chat?).to eq(true)
+        end
+
+        it "doesn't allow shadow account to chat if master account can not chat" do
+          anonymous = AnonymousShadowCreator.get(non_chatter)
+          expect(anonymous.id).to be_present
+          expect(Guardian.new(anonymous).can_chat?).to eq(false)
+          expect(Guardian.new(non_chatter).can_chat?).to eq(false)
+        end
+      end
+
+      context "when allow_chat_in_anonymous_mode is false" do
+        before { SiteSetting.allow_chat_in_anonymous_mode = false }
+
+        it "doesn't allow shadow account to chat even if master account can chat" do
+          anonymous = AnonymousShadowCreator.get(user)
+          expect(anonymous.id).to be_present
+          expect(Guardian.new(anonymous).can_chat?).to eq(false)
+          expect(Guardian.new(user).can_chat?).to eq(true)
+        end
+
+        it "doesn't allow shadow account to chat if master account can not chat" do
+          anonymous = AnonymousShadowCreator.get(non_chatter)
+          expect(anonymous.id).to be_present
+          expect(Guardian.new(anonymous).can_chat?).to eq(false)
+          expect(Guardian.new(non_chatter).can_chat?).to eq(false)
+        end
       end
     end
 
@@ -698,7 +740,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#recipient_can_chat?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user, groups: [chatters]) }
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
     alias_matcher :be_able_to_chat, :be_recipient_can_chat
 

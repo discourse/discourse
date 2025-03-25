@@ -5067,11 +5067,13 @@ tr_TR:
         description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
       delete_single:
         title: "Sil"
+        complete: "Gönderi silindi."
       delete:
         title: "Sil…"
       delete_and_ignore:
         title: "Bayrağı yok say ve gönderiyi sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
+        complete: "Gönderi silindi."
       delete_and_ignore_replies:
         title: "Bayrağı yok say, gönderiyi ve yanıtları sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın, gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
@@ -5079,6 +5081,7 @@ tr_TR:
       delete_and_agree:
         title: "Gönderiyi sil"
         description: "Bayrağı kabul edin ve bu gönderiyi silin; ilk gönderiyse konuyu da silin."
+        complete: "Gönderi silindi."
       delete_and_agree_replies:
         title: "Gönderiyi ve yanıtları sil"
         description: "Bayrağı kabul edin ve bu gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin."
@@ -5088,29 +5091,37 @@ tr_TR:
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"
+        complete: "Bayrak yok sayıldı."
       discard_post:
         title: "Gönderiyi sil"
       revise_and_reject_post:
         title: "Gönderiyi gözden geçir..."
       ignore:
         title: "Yok say"
+        complete: "Bayrak yok sayıldı."
       ignore_and_do_nothing:
         title: "Hiçbir şey yapma"
         description: "Herhangi bir işlem yapmadan kuyruktan kaldırarak bayrağı yok sayın. Gizli gönderiler gizli kalır ve otomatik araçlar tarafından işlenir."
+        complete: "Bayrak yok sayıldı."
       approve:
         title: "Onayla"
+        complete: "Gönderi onaylandı."
       approve_post:
         title: "Gönderiyi Onayla"
         confirm_closed: "Bu konu kapalı. Yine de gönderiyi oluşturmak istiyor musunuz?"
+        complete: "Gönderi onaylandı."
       reject_post:
         title: "Gönderiyi Reddet"
+        complete: "Gönderi reddedildi."
       approve_user:
         title: "Kullanıcıyı Onayla"
+        complete: "Kullanıcı onaylandı."
       reject_user:
         title: "Kullanıcıyı sil…"
         delete:
           title: "Kullanıcıyı Sil"
           description: "Kullanıcı forumdan silinecek."
+          complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
@@ -5129,6 +5140,7 @@ tr_TR:
         title: "Onayla ve Gönderiyi Geri Yükle"
       delete_user:
         reason: "İnceleme kuyruğu aracılığıyla silindi"
+        complete: "Kullanıcı silindi."
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermeli"
   notification_level:

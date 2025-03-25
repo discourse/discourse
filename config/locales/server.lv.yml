@@ -541,6 +541,11 @@ lv:
         title: "Jā"
       delete_single:
         title: "Dzēst"
+        complete: "Ieraksts dzēsts."
+      delete_and_ignore:
+        complete: "Ieraksts dzēsts."
+      delete_and_agree:
+        complete: "Ieraksts dzēsts."
       disagree:
         title: "Nē"
       ignore:
@@ -550,8 +555,11 @@ lv:
       reject_user:
         delete:
           title: "Dzēst lietotāju."
+          complete: "Lietotājs dzēsts."
       reject:
         title: "Noraidīt"
+      delete_user:
+        complete: "Lietotājs dzēsts."
   fallback_username: "lietotājs"
   activemodel:
     errors:

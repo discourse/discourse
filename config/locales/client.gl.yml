@@ -157,6 +157,10 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "Dámoslle a benvida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -308,9 +312,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      abandon:
-        yes_value: "Desbotar"
-        no_value: "Retomar a edición"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -3790,6 +3791,38 @@ gl:
             failed: "Fallou"
       home:
         title: "Inicio"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Copias de seguranza"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Insignias"
+          notifications: "Notificacións"
+          permalinks: "Ligazóns permanentes"
+          users: "Usuarios"
+          groups: "Grupos"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
+      appearance:
+        title: "Aparencia"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes_and_components:
+            keywords: "extensión"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparencia"
+      security:
+        title: "Seguranza"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3817,12 +3850,20 @@ gl:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Compoñentes"
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Complementos"
         name: "Nome"

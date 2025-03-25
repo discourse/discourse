@@ -49,5 +49,31 @@ module(
         .dom(".form-kit__container .form-kit__container-subtitle")
         .hasText("Subtitle");
     });
+
+    test("@format", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Container @format="large">Test</form.Container>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(".form-kit__container .form-kit__container-content.--large")
+        .exists();
+    });
+
+    test("@direction", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Container @direction="column">Test</form.Container>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__container.--column").exists();
+    });
   }
 );

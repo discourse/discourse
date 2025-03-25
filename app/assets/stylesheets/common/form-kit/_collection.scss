@@ -1,7 +1,6 @@
 .form-kit__collection {
-  &div {
-    display: flex;
-    flex-direction: column;
-    gap: var(--form-kit-gutter-y);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-kit-gutter-y);
+  width: 100%;
 }

@@ -4714,11 +4714,13 @@ it:
         description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
       delete_single:
         title: "Elimina"
+        complete: "Messaggio eliminato."
       delete:
         title: "Elimina…"
       delete_and_ignore:
         title: "Ignora segnalazione ed elimina post"
         description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, elimina anche l'argomento. "
+        complete: "Messaggio eliminato."
       delete_and_ignore_replies:
         title: "Ignora segnalazione, elimina messaggio e risposte"
         description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio e tutte le sue risposte; se è li primo messaggio, elimina anche l'argomento"
@@ -4726,6 +4728,7 @@ it:
       delete_and_agree:
         title: "Elimina messaggio"
         description: "Accetta segnalazione ed elimina questo messaggio; se è il primo messaggio, elimina anche l'argomento."
+        complete: "Messaggio eliminato."
       delete_and_agree_replies:
         title: "Elimina messaggio e risposte"
         description: "Accetta segnalazione ed elimina questo messaggio; se è i primo messaggio, elimina anche l'argomento."
@@ -4735,29 +4738,37 @@ it:
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:
         title: "No"
+        complete: "Segnalazione ignorata."
       discard_post:
         title: "Annulla messaggio"
       revise_and_reject_post:
         title: "Revisiona il messaggio..."
       ignore:
         title: "Ignora"
+        complete: "Segnalazione ignorata."
       ignore_and_do_nothing:
         title: "Non fare nulla"
         description: "Ignora segnalazione rimuovendola dalla coda senza intraprendere alcuna azione. I messaggi nascosti rimarranno nascosti e saranno gestiti dagli strumenti automatici."
+        complete: "Segnalazione ignorata."
       approve:
         title: "Approva"
+        complete: "Messaggio approvato."
       approve_post:
         title: "Approva Messaggio"
         confirm_closed: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
+        complete: "Messaggio approvato."
       reject_post:
         title: "Rifiuta Messaggio"
+        complete: "Messaggio rifiutato."
       approve_user:
         title: "Approva Utente"
+        complete: "Utente approvato."
       reject_user:
         title: "Elimina utente…"
         delete:
           title: "Cancella utente"
           description: "L'utente sarà eliminato dal forum."
+          complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
@@ -4776,6 +4787,7 @@ it:
         title: "Approva e ripristina il messaggio"
       delete_user:
         reason: "Eliminato tramite la coda di revisione"
+        complete: "Utente eliminato."
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"
   notification_level:

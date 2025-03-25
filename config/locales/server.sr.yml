@@ -555,15 +555,35 @@ sr:
         title: "Da"
       delete_single:
         title: "Obriši"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
+        complete: "Markiranje ignorisano."
+      ignore:
+        complete: "Markiranje ignorisano."
+      ignore_and_do_nothing:
+        complete: "Markiranje ignorisano."
       approve:
         title: "Odobri"
+        complete: "Post odobren."
+      approve_post:
+        complete: "Post odobren."
+      reject_post:
+        complete: "Post odbijen."
+      approve_user:
+        complete: "Korisnik odobrio."
       reject_user:
         delete:
           title: "Obriši Korisnika"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "korisnik"
   time:
     <<: *datetime_formats

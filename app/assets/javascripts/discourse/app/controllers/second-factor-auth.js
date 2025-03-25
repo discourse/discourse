@@ -20,6 +20,7 @@ export default class SecondFactorAuthController extends Controller {
   messageIsError = false;
   secondFactorToken = null;
   userSelectedMethod = null;
+  isLoading = false;
 
   @readOnly("model.totp_enabled") totpEnabled;
   @readOnly("model.backup_enabled") backupCodesEnabled;
@@ -175,6 +176,8 @@ export default class SecondFactorAuthController extends Controller {
   }
 
   verifySecondFactor(data) {
+    this.set("isLoading", true);
+
     return ajax("/session/2fa", {
       type: "POST",
       data: {
@@ -185,7 +188,8 @@ export default class SecondFactorAuthController extends Controller {
     })
       .then((response) => {
         this.displaySuccess(i18n("second_factor_auth.redirect_after_success"));
-        ajax(response.callback_path, {
+
+        return ajax(response.callback_path, {
           type: response.callback_method,
           data: {
             second_factor_nonce: this.nonce,
@@ -195,12 +199,18 @@ export default class SecondFactorAuthController extends Controller {
           .then((callbackResponse) => {
             const redirectUrl =
               callbackResponse.redirect_url || response.redirect_url;
-            DiscourseURL.routeTo(redirectUrl);
+            return DiscourseURL.routeTo(redirectUrl);
           })
-          .catch((error) => this.displayError(extractError(error)));
+          .catch((error) => this.displayError(extractError(error)))
+          .finally(() => {
+            this.set("isLoading", false);
+          });
       })
       .catch((error) => {
         this.displayError(extractError(error));
+      })
+      .finally(() => {
+        this.set("isLoading", false);
       });
   }
 
@@ -222,6 +232,11 @@ export default class SecondFactorAuthController extends Controller {
         this.displayError(errorMessage);
       }
     );
+  }
+
+  @discourseComputed("secondFactorToken")
+  isSecondFactorTokenValid(secondFactorToken) {
+    return secondFactorToken?.length > 0;
   }
 
   @action

@@ -87,7 +87,7 @@ export default class UserController extends Controller {
       ariaLabel: this.collapsedInfo
         ? "user.sr_expand_profile"
         : "user.sr_collapse_profile",
-      action: "toggleProfile",
+      action: this.toggleProfile,
     };
   }
 

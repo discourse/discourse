@@ -142,6 +142,17 @@ export default class ChatRouteChannelInfoMembers extends Component {
     return MODES.add_members;
   }
 
+  get canAddMembers() {
+    if (!this.args.channel.isDirectMessageChannel) {
+      return false;
+    }
+
+    return (
+      this.args.channel.chatable.group ||
+      this.args.channel.messagesManager.messages.length === 0
+    );
+  }
+
   <template>
     <div class="c-routes --channel-info-members">
       {{#if this.site.mobileView}}
@@ -172,7 +183,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
           />
 
           <ul class="c-channel-members__list" {{this.fill}}>
-            {{#if @channel.chatable.group}}
+            {{#if this.canAddMembers}}
               <li
                 class="c-channel-members__list-item -add-member"
                 role="button"

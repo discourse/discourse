@@ -163,6 +163,10 @@ et:
     software_update_prompt:
       dismiss: "Ignoreeri"
     back_button: "Tagasi"
+    welcome_banner:
+      header:
+        anonymous_members: "Tere tulemast lehele %{site_name}!"
+      search: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -705,14 +709,14 @@ et:
         modal_yes: "Jah"
     user_action_groups:
       "1": "Meeldimisi antud"
-      "2": "Meeldimisi saadud"
-      "3": "Järjehoidjat"
-      "4": "Teemat"
-      "5": "Vastust"
+      "2": "Meeldimised"
+      "3": "Järjehoidjad"
+      "4": "Teemad"
+      "5": "Vastused"
       "6": "Reaktsioone"
-      "7": "Mainimisi"
+      "7": "Mainimised"
       "9": "Tsitaate"
-      "11": "Redaktsioone"
+      "11": "Redaktsioonid"
       "12": "Saatmisi"
       "13": "Postkast"
       "14": "Ootel"
@@ -1627,8 +1631,8 @@ et:
       tabs:
         replies: "Vastused"
         mentions: "Mainimisi"
-        likes: "Meeldimisi antud"
-        bookmarks: "Järjehoidjat"
+        likes: "Meeldimised"
+        bookmarks: "Järjehoidjad"
         profile: "Profiil"
     topics:
       new_messages_marker: "viimane visiit"
@@ -2626,7 +2630,7 @@ et:
         tags:
           header_link_text: "Sildid"
         categories:
-          header_link_text: "Liigid"
+          header_link_text: "Kategooriad"
         community:
           edit_section:
             header_dropdown: "Kohanda"
@@ -2638,7 +2642,7 @@ et:
             badges:
               content: "Märgised"
             topics:
-              content: "Teemasid"
+              content: "Teemad"
             faq:
               content: "KKK"
             guidelines:
@@ -2975,6 +2979,32 @@ et:
             failed: "Ebaõnnestunud"
       home:
         title: "Avaleht"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Varukoopiad"
+      community:
+        title: "Kogukond"
+        sidebar_link:
+          badges: "Märgised"
+          notifications: "Teavitus"
+          permalinks: "Püsiviited"
+          users: "Kasutajad"
+          groups: "Grupid"
+          legal: "Õiguslik"
+          moderation_flags:
+            title: "Modereerimine"
+      appearance:
+        sidebar_link:
+          emoji: "Emotikon"
+          navigation: "Navigatsioon"
+      security:
+        title: "Turve"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Varukoopiad"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3000,12 +3030,19 @@ et:
         embeddable_host:
           edit: "Muuda"
           delete: "Kustuta"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Kohanda"
           themes:
             title: "Kujundused"
+          components:
+            title: "Komponendid"
         user_fields:
           type: "Tüüp"
           delete: "Kustuta"
+        color_palettes:
+          palette_name: "Nimi"
+          colors:
+            title: "Värvid"
       plugins:
         title: "Plugin"
         name: "Nimi"
