@@ -68,6 +68,8 @@ export default class FKFieldData extends Component {
     if (this.args.onSet) {
       await this.args.onSet(value, {
         set: this.args.set,
+        name: this.name,
+        parentName: this.args.parentName,
         index: this.args.collectionIndex,
       });
     } else {
