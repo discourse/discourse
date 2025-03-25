@@ -100,6 +100,7 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
+import { resetPostClassesCallback } from "discourse/widgets/post";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
@@ -273,6 +274,7 @@ export function testCleanup(container, app) {
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();
+  resetPostClassesCallback();
 }
 
 function cleanupCssGeneratorTags() {

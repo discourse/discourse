@@ -1644,11 +1644,15 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
-    deprecated(
-      "`api.addPostClassesCallback` has been deprecated. Use the value transformer `post-class` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
+    this.registerValueTransformer(
+      "post-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
     );
 
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostClassesCallback(callback);
   }
 

@@ -80,13 +80,15 @@ module("Integration | Component | Post", function (hooks) {
         value.push("custom-class");
         return value;
       });
+
+      api.addPostClassesCallback((post) => `api-custom-class-${post.id}`);
     });
 
     await renderComponent(this.post);
 
     assert
-      .dom(".topic-post.custom-class")
-      .exists("applies the custom class to the component");
+      .dom(".topic-post.custom-class.api-custom-class-123")
+      .exists("applies the custom classes to the component");
   });
 
   test("links", async function (assert) {

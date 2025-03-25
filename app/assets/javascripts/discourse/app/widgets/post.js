@@ -1079,11 +1079,15 @@ createWidget("post-article", {
   },
 });
 
-let addPostClassesCallbacks = null;
+const addPostClassesCallbacks = [];
 
 export function addPostClassesCallback(callback) {
-  addPostClassesCallbacks = addPostClassesCallbacks || [];
   addPostClassesCallbacks.push(callback);
+}
+
+// only for testing purposes
+export function resetPostClassesCallback() {
+  addPostClassesCallbacks.length = 0;
 }
 
 // glimmer-post-stream: has glimmer version
