@@ -1,21 +1,16 @@
-import {
-  blur,
-  click,
-  fillIn,
-  render,
-  triggerKeyEvent,
-} from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
+import { blur, click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import SimpleList from "admin/components/simple-list";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("adding a value", async function (assert) {
+  test("adding a value", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
 
-    await render(hbs`<SimpleList @values={{this.values}} />`);
+    await render(<template><SimpleList @values={{self.values}} /></template>);
 
     assert
       .dom(".add-value-btn[disabled]")
@@ -40,12 +35,13 @@ module("Integration | Component | simple-list", function (hooks) {
       .exists({ count: 4 }, "adds the value when keying Enter");
   });
 
-  test("adding a value when list is predefined", async function (assert) {
+  test("adding a value when list is predefined", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
     this.set("choices", ["vinkas", "osama", "kris"]);
 
     await render(
-      hbs`<SimpleList @values={{this.values}} @allowAny={{false}} @choices={{this.choices}}/>`
+      <template><SimpleList @values={{self.values}} @allowAny={{false}} @choices={{self.choices}} /></template>
     );
 
     await click(".add-value-input summary");
@@ -57,7 +53,8 @@ module("Integration | Component | simple-list", function (hooks) {
       .exists({ count: 3 }, "adds the value to the list of values");
   });
 
-  test("changing a value", async function (assert) {
+  test("changing a value", async function (assert) {const self = this;
+
     const done = assert.async();
 
     this.set("values", "vinkas\nosama");
@@ -67,7 +64,7 @@ module("Integration | Component | simple-list", function (hooks) {
     });
 
     await render(
-      hbs`<SimpleList @values={{this.values}} @onChange={{this.onChange}} />`
+      <template><SimpleList @values={{self.values}} @onChange={{self.onChange}} /></template>
     );
 
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
@@ -76,10 +73,11 @@ module("Integration | Component | simple-list", function (hooks) {
     assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
   });
 
-  test("removing a value", async function (assert) {
+  test("removing a value", async function (assert) {const self = this;
+
     this.set("values", "vinkas\nosama");
 
-    await render(hbs`<SimpleList @values={{this.values}} />`);
+    await render(<template><SimpleList @values={{self.values}} /></template>);
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
@@ -92,11 +90,12 @@ module("Integration | Component | simple-list", function (hooks) {
       .hasValue("osama", "removes the correct value");
   });
 
-  test("delimiter support", async function (assert) {
+  test("delimiter support", async function (assert) {const self = this;
+
     this.set("values", "vinkas|osama");
 
     await render(
-      hbs`<SimpleList @values={{this.values}} @inputDelimiter="|" />`
+      <template><SimpleList @values={{self.values}} @inputDelimiter="|" /></template>
     );
 
     await fillIn(".add-value-input", "eviltrout");

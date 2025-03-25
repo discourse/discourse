@@ -1,12 +1,12 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+import WatchedWordUploader from "admin/components/watched-word-uploader";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);
@@ -17,7 +17,8 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
     });
   });
 
-  test("sets the proper action key on uploads", async function (assert) {
+  test("sets the proper action key on uploads", async function (assert) {const self = this;
+
     const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "alert");
 
@@ -39,12 +40,9 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
       done();
     });
 
-    await render(hbs`
-      <WatchedWordUploader
-        @actionKey={{this.actionNameKey}}
-        @done={{this.doneUpload}}
-      />
-    `);
+    await render(<template>
+      <WatchedWordUploader @actionKey={{self.actionNameKey}} @done={{self.doneUpload}} />
+    </template>);
 
     const words = createFile("watched-words.txt");
     await this.container

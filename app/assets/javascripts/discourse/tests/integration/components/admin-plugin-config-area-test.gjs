@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminPlugin from "admin/models/admin-plugin";
+import AdminPluginConfigArea from "admin/components/admin-plugin-config-area";
 
 module("Integration | Component | admin-plugin-config-area", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,11 +23,11 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
     getOwner(this).lookup("service:admin-plugin-nav-manager").currentPlugin =
       new AdminPlugin({ id: "discourse-test-plugin" });
 
-    await render(hbs`
+    await render(<template>
       <AdminPluginConfigArea>
         Test content
       </AdminPluginConfigArea>
-    `);
+    </template>);
 
     assert
       .dom(".admin-plugin-inner-sidebar-nav__item")

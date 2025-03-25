@@ -1,11 +1,12 @@
 import { fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
+import ThemesList from "admin/components/themes-list";
+import { array } from "@ember/helper";
 
 function createThemes(itemsCount, customAttributesCallback) {
   return [...Array(itemsCount)].map((_, i) => {
@@ -20,7 +21,8 @@ function createThemes(itemsCount, customAttributesCallback) {
 module("Integration | Component | themes-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("current tab is themes", async function (assert) {
+  test("current tab is themes", async function (assert) {const self = this;
+
     this.themes = createThemes(5);
     this.components = createThemes(5, (n) => {
       return {
@@ -37,7 +39,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{self.themes}} @components={{self.components}} @currentTab={{self.currentTab}} /></template>
     );
 
     assert.dom(".themes-tab").hasClass("active", "themes tab is active");
@@ -94,7 +96,8 @@ module("Integration | Component | themes-list", function (hooks) {
       );
   });
 
-  test("current tab is components", async function (assert) {
+  test("current tab is components", async function (assert) {const self = this;
+
     this.themes = createThemes(5);
     this.components = createThemes(5, (n) => {
       return {
@@ -111,7 +114,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{self.themes}} @components={{self.components}} @currentTab={{self.currentTab}} /></template>
     );
 
     assert
@@ -141,7 +144,8 @@ module("Integration | Component | themes-list", function (hooks) {
       );
   });
 
-  test("themes search is not visible when there are less than 10 themes", async function (assert) {
+  test("themes search is not visible when there are less than 10 themes", async function (assert) {const self = this;
+
     const themes = createThemes(9);
     this.setProperties({
       themes,
@@ -149,7 +153,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{self.themes}} @components={{(array)}} @currentTab={{self.currentTab}} /></template>
     );
 
     assert
@@ -157,7 +161,8 @@ module("Integration | Component | themes-list", function (hooks) {
       .doesNotExist("search input not shown when we have fewer than 10 themes");
   });
 
-  test("themes search keeps themes whose names include the search term", async function (assert) {
+  test("themes search keeps themes whose names include the search term", async function (assert) {const self = this;
+
     const themes = ["osama", "OsAmaa", "osAMA 1234"]
       .map((name) => Theme.create({ name: `Theme ${name}` }))
       .concat(createThemes(7));
@@ -167,7 +172,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{self.themes}} @components={{(array)}} @currentTab={{self.currentTab}} /></template>
     );
 
     assert.dom(".themes-list-search__input").exists();
@@ -181,7 +186,8 @@ module("Integration | Component | themes-list", function (hooks) {
     );
   });
 
-  test("themes filter", async function (assert) {
+  test("themes filter", async function (assert) {const self = this;
+
     const themes = [
       Theme.create({ name: "Theme enabled 1", user_selectable: true }),
       Theme.create({ name: "Theme enabled 2", user_selectable: true }),
@@ -220,7 +226,7 @@ module("Integration | Component | themes-list", function (hooks) {
     }
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{self.themes}} @components={{(array)}} @currentTab={{self.currentTab}} /></template>
     );
 
     assert.dom(".themes-list-filter__input").exists();
@@ -250,7 +256,8 @@ module("Integration | Component | themes-list", function (hooks) {
     assert.deepEqual(themeNames(), ["Theme disabled 2"]);
   });
 
-  test("components filter", async function (assert) {
+  test("components filter", async function (assert) {const self = this;
+
     const components = [
       Theme.create({
         name: "Component used 1",
@@ -304,7 +311,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{(array)}} @components={{this.components}} @currentTab={{this.currentTab}} />`
+      <template><ThemesList @themes={{(array)}} @components={{self.components}} @currentTab={{self.currentTab}} /></template>
     );
 
     function componentNames() {
