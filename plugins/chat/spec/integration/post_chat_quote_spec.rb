@@ -30,7 +30,7 @@ describe "chat bbcode quoting in posts" do
         "[chat quote=\"martin;2321;2022-01-25T05:40:39Z\" channel=\"Cool Cats Club\" channelId=\"1234\" multiQuote=\"true\"]\nThis is a chat message.\n[/chat]",
     )
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
-      <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234">
+      <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234" data-multiquote="true">
       <div class="chat-transcript-meta">
       Originally sent in <a href="/chat/c/-/1234">Cool Cats Club</a></div>
       <div class="chat-transcript-user">
@@ -73,7 +73,7 @@ describe "chat bbcode quoting in posts" do
         "[chat quote=\"martin;2321;2022-01-25T05:40:39Z\" channel=\"Cool Cats Club\" channelId=\"1234\" chained=\"true\"]\nThis is a chat message.\n[/chat]",
     )
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
-      <div class="chat-transcript chat-transcript-chained" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234">
+      <div class="chat-transcript chat-transcript-chained" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-chained="true" data-channel-name="Cool Cats Club" data-channel-id="1234">
       <div class="chat-transcript-user">
       <div class="chat-transcript-user-avatar"></div>
       <div class="chat-transcript-username">
@@ -94,7 +94,7 @@ describe "chat bbcode quoting in posts" do
         "[chat quote=\"martin;2321;2022-01-25T05:40:39Z\" channel=\"Cool Cats Club\" channelId=\"1234\" multiQuote=\"true\" noLink=\"true\"]\nThis is a chat message.\n[/chat]",
     )
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
-      <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234">
+      <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234" data-multiquote="true">
       <div class="chat-transcript-meta">
       Originally sent in <a href="/chat/c/-/1234">Cool Cats Club</a></div>
       <div class="chat-transcript-user">

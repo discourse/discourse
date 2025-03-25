@@ -355,7 +355,7 @@ describe Chat::Message do
         )
 
       expect(cooked).to eq(<<~COOKED.chomp)
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-chained="true" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}" data-multiquote="true">
         <div class="chat-transcript-meta">
         Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
@@ -369,7 +369,7 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
