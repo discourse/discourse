@@ -122,12 +122,6 @@ export default class EditCategoryGeneral extends Component {
   }
 
   @action
-  updateField(name, value, { set }) {
-    set(name, value);
-    this[name] = value;
-  }
-
-  @action
   updateColor(field, newColor) {
     field.set(newColor.replace("#", ""));
   }
@@ -173,7 +167,6 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.name"}}
             @format="large"
             @validation="required"
-            @onSet={{fn this.updateField "name"}}
             as |field|
           >
             <field.Input
@@ -251,7 +244,6 @@ export default class EditCategoryGeneral extends Component {
           @title={{i18n "category.styles.type"}}
           @format="large"
           @validation="required"
-          @onSet={{fn this.updateField "style_type"}}
           as |field|
         >
           {{htmlSafe (this.categoryBadgePreview @transientData)}}
@@ -270,7 +262,6 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.emoji"}}
             @format="small"
             @validation="required"
-            @onSet={{fn this.updateField "emoji"}}
             as |field|
           >
             <field.Emoji />
@@ -281,7 +272,6 @@ export default class EditCategoryGeneral extends Component {
             @title={{i18n "category.styles.icon"}}
             @format="small"
             @validation="required"
-            @onSet={{fn this.updateField "icon"}}
             as |field|
           >
             <field.Icon />

@@ -8,8 +8,6 @@ export default class FKControlEmoji extends Component {
   @action
   updateField(value) {
     this.args.field.set(value);
-
-    this.args.onSelect?.(value);
   }
 
   <template>
