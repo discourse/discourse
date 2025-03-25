@@ -29,8 +29,8 @@ class CategorySerializer < SiteCategorySerializer
              :moderating_group_ids,
              :default_slow_mode_seconds,
              :style_type,
-             :style_emoji,
-             :style_icon
+             :emoji,
+             :icon
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
 

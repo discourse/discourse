@@ -454,8 +454,8 @@ export default class Category extends RestModel {
 
   @tracked color;
   @tracked styleType = this.style_type;
-  @tracked styleEmoji = this.style_emoji;
-  @tracked styleIcon = this.style_icon;
+  @tracked emoji;
+  @tracked icon;
   permissions = null;
 
   init() {
@@ -716,8 +716,6 @@ export default class Category extends RestModel {
     const url = id ? `/categories/${id}` : "/categories";
 
     this.styleType = this.style_type;
-    this.styleEmoji = this.style_emoji;
-    this.styleIcon = this.style_icon;
 
     return ajax(url, {
       contentType: "application/json",
@@ -771,8 +769,8 @@ export default class Category extends RestModel {
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
         style_type: this.style_type,
-        style_emoji: this.style_emoji,
-        style_icon: this.style_icon,
+        emoji: this.emoji,
+        icon: this.icon,
       }),
       type: id ? "PUT" : "POST",
     });

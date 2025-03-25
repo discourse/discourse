@@ -136,8 +136,8 @@ class UserSummary
       color
       text_color
       style_type
-      style_icon
-      style_emoji
+      icon
+      emoji
       slug
       read_restricted
       parent_category_id
@@ -159,8 +159,8 @@ class UserSummary
         :color,
         :text_color,
         :style_type,
-        :style_icon,
-        :style_emoji,
+        :icon,
+        :emoji,
         :slug,
         :read_restricted,
         :parent_category_id,

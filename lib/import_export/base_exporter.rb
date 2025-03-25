@@ -14,8 +14,8 @@ module ImportExport
       description
       text_color
       style_type
-      style_icon
-      style_emoji
+      icon
+      emoji
       auto_close_hours
       position
       parent_category_id

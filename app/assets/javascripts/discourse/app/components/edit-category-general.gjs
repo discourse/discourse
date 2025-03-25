@@ -45,6 +45,7 @@ export default class EditCategoryGeneral extends Component {
     const categories = this.site.get("categoriesList");
     return this.siteSettings.category_colors
       .split("|")
+      .filter(Boolean)
       .map((i) => i.toUpperCase())
       .concat(categories.map((c) => c.color.toUpperCase()))
       .uniq();
@@ -91,8 +92,8 @@ export default class EditCategoryGeneral extends Component {
       link: false,
       previewColor: true,
       styleType: transientData.style_type,
-      styleEmoji: transientData.style_emoji,
-      styleIcon: transientData.style_icon,
+      emoji: transientData.emoji,
+      icon: transientData.icon,
     });
   }
 
@@ -265,22 +266,22 @@ export default class EditCategoryGeneral extends Component {
 
         {{#if (eq @transientData.style_type "emoji")}}
           <@form.Field
-            @name="style_emoji"
+            @name="emoji"
             @title={{i18n "category.styles.emoji"}}
             @format="small"
             @validation="required"
-            @onSet={{fn this.updateField "style_emoji"}}
+            @onSet={{fn this.updateField "emoji"}}
             as |field|
           >
             <field.Emoji />
           </@form.Field>
         {{else if (eq @transientData.style_type "icon")}}
           <@form.Field
-            @name="style_icon"
+            @name="icon"
             @title={{i18n "category.styles.icon"}}
             @format="small"
             @validation="required"
-            @onSet={{fn this.updateField "style_icon"}}
+            @onSet={{fn this.updateField "icon"}}
             as |field|
           >
             <field.Icon />

@@ -61,11 +61,11 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     hashtag.preloaded ? this.onLoad(hashtag) : this.load(hashtag.id);
     let style = "";
 
-    if (hashtag.style_type === "icon" && hashtag.style_icon) {
-      style = iconHTML(hashtag.style_icon);
+    if (hashtag.style_type === "icon" && hashtag.icon) {
+      style = iconHTML(hashtag.icon);
     }
-    if (hashtag.style_type === "emoji" && hashtag.style_emoji) {
-      style = replaceEmoji(`:${hashtag.style_emoji}:`);
+    if (hashtag.style_type === "emoji" && hashtag.emoji) {
+      style = replaceEmoji(`:${hashtag.emoji}:`);
     }
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;

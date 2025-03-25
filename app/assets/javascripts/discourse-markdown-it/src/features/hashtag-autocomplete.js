@@ -36,12 +36,12 @@ function addHashtag(buffer, matches, state) {
       token.attrs.push(["data-style-type", result.style_type]);
     }
 
-    if (result.style_emoji) {
-      token.attrs.push(["data-style-emoji", result.style_emoji]);
+    if (result.emoji) {
+      token.attrs.push(["data-emoji", result.emoji]);
     }
 
-    if (result.style_icon) {
-      token.attrs.push(["data-style-icon", result.style_icon]);
+    if (result.icon) {
+      token.attrs.push(["data-icon", result.icon]);
     }
 
     // Most cases these will be the exact same, one standout is categories
@@ -132,7 +132,7 @@ export function setup(helper) {
     "a[data-ref]",
     "a[data-id]",
     "a[data-style-type]",
-    "a[data-style-icon]",
-    "a[data-style-emoji]",
+    "a[data-icon]",
+    "a[data-emoji]",
   ]);
 }

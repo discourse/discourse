@@ -138,12 +138,12 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
           opts.style_type = result.style_type;
         }
 
-        if (result.style_icon) {
-          opts.style_icon = result.style_icon;
+        if (result.icon) {
+          opts.icon = result.icon;
         }
 
-        if (result.style_emoji) {
-          opts.style_emoji = result.style_emoji;
+        if (result.emoji) {
+          opts.emoji = result.emoji;
         }
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];

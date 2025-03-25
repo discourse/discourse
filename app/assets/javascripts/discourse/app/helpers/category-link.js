@@ -53,9 +53,9 @@ export function categoryBadgeHTML(category, opts) {
     opts.styleType = category.styleType;
 
     if (opts.styleType === "icon") {
-      opts.styleIcon = category.style_icon;
+      opts.icon = category.icon;
     } else if (opts.styleType === "emoji") {
-      opts.styleEmoji = category.style_emoji;
+      opts.emoji = category.emoji;
     }
   }
 
@@ -180,12 +180,12 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  if (opts.styleType === "icon" && opts.styleIcon) {
-    html += iconHTML(opts.styleIcon);
+  if (opts.styleType === "icon" && opts.icon) {
+    html += iconHTML(opts.icon);
   }
 
-  if (opts.styleType === "emoji" && opts.styleEmoji) {
-    html += replaceEmoji(`:${opts.styleEmoji}:`);
+  if (opts.styleType === "emoji" && opts.emoji) {
+    html += replaceEmoji(`:${opts.emoji}:`);
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

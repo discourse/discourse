@@ -28,13 +28,12 @@ class CategoryHashtagDataSource
         )
       item.slug = category.slug
       item.description = category.description_text
-      item.icon = icon
       item.colors = [category.parent_category&.color, category.color].compact
       item.relative_url = category.url
       item.id = category.id
       item.style_type = category.style_type
-      item.style_icon = category.style_icon if category.style_type == "icon"
-      item.style_emoji = category.style_emoji if category.style_type == "emoji"
+      item.icon = category.style_type == "icon" ? category.icon : self.icon
+      item.emoji = category.emoji if category.style_type == "emoji"
 
       # Single-level category hierarchy should be enough to distinguish between
       # categories here.
@@ -74,8 +73,8 @@ class CategoryHashtagDataSource
           :description,
           :color,
           :style_type,
-          :style_icon,
-          :style_emoji,
+          :icon,
+          :emoji,
         )
         .includes(:parent_category)
 

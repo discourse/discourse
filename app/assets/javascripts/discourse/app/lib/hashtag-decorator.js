@@ -83,10 +83,10 @@ export function generatePlaceholderHashtagHTML(type, spanEl, data) {
   link.dataset.style_type = data.style_type;
 
   if (data.style_type === "icon") {
-    link.dataset.style_icon = data.style_icon;
+    link.dataset.icon = data.icon;
   }
   if (data.style_type === "emoji") {
-    link.dataset.style_emoji = data.style_emoji;
+    link.dataset.emoji = data.emoji;
   }
 
   const hashtagTypeClass = new getHashtagTypeClasses()[type];
@@ -113,10 +113,10 @@ export function decorateHashtags(element, site) {
       };
 
       if (hashtagEl.dataset.styleType === "icon") {
-        opts.style_icon = hashtagEl.dataset.styleIcon;
+        opts.icon = hashtagEl.dataset.icon;
       }
       if (hashtagEl.dataset.styleType === "emoji") {
-        opts.style_emoji = hashtagEl.dataset.styleEmoji;
+        opts.emoji = hashtagEl.dataset.emoji;
       }
 
       const hashtagIconHTML = hashtagTypeClass.generateIconHTML(opts).trim();

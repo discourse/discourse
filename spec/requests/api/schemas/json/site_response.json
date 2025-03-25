@@ -602,13 +602,13 @@
             "style_type": {
               "type": "string"
             },
-            "style_emoji": {
+            "emoji": {
               "type": [
                 "string",
                 "null"
               ]
             },
-            "style_icon": {
+            "icon": {
               "type": [
                 "string",
                 "null"

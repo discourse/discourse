@@ -20,8 +20,8 @@ const FIELD_LIST = [
   "color",
   "text_color",
   "style_type",
-  "style_emoji",
-  "style_icon",
+  "emoji",
+  "icon",
 ];
 
 export default class EditCategoryTabsController extends Controller {

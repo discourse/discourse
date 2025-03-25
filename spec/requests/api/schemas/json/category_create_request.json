@@ -15,10 +15,10 @@
     "style_type": {
       "type": "string"
     },
-    "style_emoji": {
+    "emoji": {
       "type": "string"
     },
-    "style_icon": {
+    "icon": {
       "type": "string"
     },
     "parent_category_id": {

@@ -207,11 +207,11 @@ export default class CategorySectionLink {
     const styleType = this.category.styleType;
 
     if (styleType === "icon") {
-      return this.category.styleIcon;
+      return this.category.icon;
     }
 
     if (styleType === "emoji") {
-      return this.category.styleEmoji;
+      return this.category.emoji;
     }
 
     if (this.category.parentCategory?.color) {

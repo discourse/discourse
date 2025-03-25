@@ -7,8 +7,8 @@ class CategoryBadgeSerializer < ApplicationSerializer
              :color,
              :text_color,
              :style_type,
-             :style_icon,
-             :style_emoji,
+             :icon,
+             :emoji,
              :read_restricted,
              :parent_category_id
 

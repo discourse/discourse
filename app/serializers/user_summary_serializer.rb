@@ -71,8 +71,8 @@ class UserSummarySerializer < ApplicationSerializer
                :color,
                :text_color,
                :style_type,
-               :style_icon,
-               :style_emoji,
+               :icon,
+               :emoji,
                :slug,
                :read_restricted,
                :parent_category_id
