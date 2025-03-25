@@ -5,6 +5,7 @@ module Migrations::Importer
     def initialize(config)
       @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
+      @shared_data = SharedData.new(@discourse_db)
 
       attach_mappings_db(config[:mappings_db])
     end
@@ -38,7 +39,7 @@ module Migrations::Importer
 
     def execute_steps
       step_classes.each do |step_class|
-        step = step_class.new(@intermediate_db, @discourse_db)
+        step = step_class.new(@intermediate_db, @discourse_db, @shared_data)
         step.execute
       end
     end

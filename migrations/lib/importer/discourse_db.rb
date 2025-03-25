@@ -75,6 +75,18 @@ module Migrations::Importer
       result.column_values(0).map(&:to_sym)
     end
 
+    def query_array(sql, *params)
+      @connection.send_query_params(sql, params)
+      @connection.set_single_row_mode
+
+      Enumerator.new do |y|
+        while (result = @connection.get_result)
+          result.stream_each_row { |row| y.yield(row) }
+          result.clear
+        end
+      end
+    end
+
     def close
       @connection.finish
     end

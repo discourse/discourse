@@ -7,6 +7,10 @@ module Migrations::Importer::Steps
       VALUES (?, ?, ?)
     SQL
 
+    # requires_shared_data :usernames, :group_names
+    # requires_mapping "SELECT email, user_id FROM user_emails", :emails
+    # requires_mapping "SELECT external_id, user_id FROM single_sign_on_records", :external_ids
+
     table_name :users
     column_names %i[
                    id
@@ -44,13 +48,21 @@ module Migrations::Importer::Steps
       ORDER BY u.ROWID
     SQL
 
+    def initialize(intermediate_db, discourse_db, shared_data)
+      super
+      @unique_name_finder = ::Migrations::Importer::UniqueNameFinder.new(@shared_data)
+    end
+
     private
 
     def transform_row(row)
       emails = JSON.parse(row[:emails])
 
       row[:original_username] ||= row[:username]
-      row[:username] = fix_username(row)
+      row[:username] = @unique_name_finder.find_available_username(
+        row[:username],
+        allow_reserved_username: row[:admin] == 1,
+      )
       row[:username_lower] = row[:username].downcase
 
       row[:trust_level] ||= TrustLevel[1]
@@ -70,29 +82,6 @@ module Migrations::Importer::Steps
 
     def random_email
       "#{SecureRandom.hex}@email.invalid"
-    end
-
-    def fix_username(row)
-      username = row[:username].unicode_normalize
-      username = UserNameSuggester.fix_username(username)
-
-      # username_lower = username.downcase
-      #
-      # # unique username_lower
-      # if user_exist?(user[:username])
-      #   username = user[:username] + "_1"
-      #   username.next! while user_exist?(username)
-      #   user[:username] = username
-      # end
-      #
-      # return false if !allow_reserved_username && reserved_username?(lower)
-      # return true if !username_exists?(lower)
-
-      # if User.username_available?(username, allow_reserved_username: row[:admin] == 1)
-      #   return username
-      # end
-      #
-      UserNameSuggester.find_available_username_based_on(username)
     end
 
     def after_commit(rows)

@@ -15,20 +15,13 @@ module Migrations::Database::Adapter
       @connection.exec(sql)
     end
 
-    def query(sql, *params, result_type: :hash)
+    def query(sql, *params)
       @connection.send_query_params(sql, params)
       @connection.set_single_row_mode
 
       Enumerator.new do |y|
         while (result = @connection.get_result)
-          case result_type
-          when :hash
-            result.stream_each { |row| y.yield(row) }
-          when :array
-            result.stream_each_row { |row| y.yield(row) }
-          else
-            raise "Unknown result type: #{result_type}"
-          end
+          result.stream_each { |row| y.yield(row) }
           result.clear
         end
       end
