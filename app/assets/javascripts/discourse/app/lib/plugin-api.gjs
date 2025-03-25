@@ -754,7 +754,6 @@ class PluginApi {
 
     const IconsComponent = class extends Component {
       get definitions() {
-        console.log("definitions", this.args.outletArgs);
         return makeArray(
           cb(
             this.args.outletArgs.post.user_custom_fields || {},
