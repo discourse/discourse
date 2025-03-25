@@ -74,33 +74,30 @@ describe "Changing email", type: :system do
     sign_in user
 
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
-    options =
-      ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-        user_verification: true,
-        user_verified: true,
-        resident_key: true,
-      )
-    authenticator = page.driver.browser.add_virtual_authenticator(options)
 
-    user_preferences_security_page.visit(user)
-    user_preferences_security_page.visit_second_factor(user, password)
+    with_virtual_authenticator(
+      hasUserVerification: true,
+      hasResidentKey: true,
+      isUserVerified: true,
+    ) do
+      user_preferences_security_page.visit(user)
+      user_preferences_security_page.visit_second_factor(user, password)
 
-    find(".security-key .new-security-key").click
-    expect(user_preferences_security_page).to have_css("input#security-key-name")
+      find(".security-key .new-security-key").click
+      expect(user_preferences_security_page).to have_css("input#security-key-name")
 
-    find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
-    find(".add-security-key").click
+      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
+      find(".add-security-key").click
 
-    expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
+      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
 
-    visit generate_confirm_link
+      visit generate_confirm_link
 
-    find(".confirm-new-email .btn-primary").click
-    find("#security-key-authenticate-button").click
+      find(".confirm-new-email .btn-primary").click
+      find("#security-key-authenticate-button").click
 
-    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
-  ensure
-    authenticator&.remove!
+      try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
+    end
   end
 
   it "does not require login to confirm email change" do

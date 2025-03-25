@@ -120,16 +120,16 @@ RSpec.describe "Glimmer Header", type: :system do
     find(".header-dropdown-toggle.current-user").click
     expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{header.active_element_id}").send_keys(:arrow_down)
+    find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-replies")
 
-    4.times { find("##{header.active_element_id}").send_keys(:arrow_down) }
+    4.times { find("##{header.active_element_id}").send_keys(:down) }
     expect(header.active_element_id).to eq("user-menu-button-profile")
 
-    find("##{header.active_element_id}").send_keys(:arrow_down)
+    find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{header.active_element_id}").send_keys(:arrow_up)
+    find("##{header.active_element_id}").send_keys(:up)
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 

@@ -71,11 +71,11 @@ module PageObjects
       end
 
       def visit_topic_last_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.post-activity").native.send_keys(:return)
+        find("#{topic_list_item_class(topic)} a.post-activity").send_keys(:return)
       end
 
       def visit_topic_first_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} a.badge-posts").native.send_keys(:return)
+        find("#{topic_list_item_class(topic)} a.badge-posts").send_keys(:return)
       end
 
       def topic_list_item_class(topic)
