@@ -68,12 +68,12 @@ export default class AutomationList extends Component {
 
     if (stats.last_week?.total_runs > RUN_THRESHOLD) {
       return i18n("discourse_automation.models.automation.runs_this_week", {
-        count: stats.last_day.total_runs,
+        count: stats.last_week.total_runs,
       });
     }
 
     return i18n("discourse_automation.models.automation.runs_this_month", {
-      count: stats.last_day.total_runs,
+      count: stats.last_month.total_runs,
     });
   }
 

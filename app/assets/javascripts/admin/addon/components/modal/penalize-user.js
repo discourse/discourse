@@ -99,7 +99,7 @@ export default class PenalizeUser extends Component {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.args.model.penaltyType);
       }
-      this.args.closeModal();
+      this.args.closeModal({ success: true });
       if (this.successCallback) {
         await this.successCallback(result);
       }
@@ -115,12 +115,12 @@ export default class PenalizeUser extends Component {
     if (!this.confirmClose && (this.reason?.length || this.message?.length)) {
       this.dialog.confirm({
         message: i18n("admin.user.confirm_cancel_penalty"),
-        didConfirm: () => this.args.closeModal(),
+        didConfirm: () => this.args.closeModal({ success: false }),
       });
       return false;
     }
 
-    this.args.closeModal();
+    this.args.closeModal({ success: false });
   }
 
   @action

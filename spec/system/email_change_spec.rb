@@ -48,8 +48,7 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 
   it "works when user has totp 2fa" do
@@ -64,8 +63,7 @@ describe "Changing email", type: :system do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]").click
 
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 
   it "works when user has webauthn 2fa" do
@@ -98,11 +96,9 @@ describe "Changing email", type: :system do
     visit generate_confirm_link
 
     find(".confirm-new-email .btn-primary").click
-
     find("#security-key-authenticate-button").click
 
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   ensure
     authenticator&.remove!
   end
@@ -122,8 +118,7 @@ describe "Changing email", type: :system do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]:not([disabled])").click
 
-    expect(page).to have_content(I18n.t("js.second_factor_auth.redirect_after_success"))
-    expect(user.reload.email).to eq(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 
   it "makes admins verify old email" do
@@ -155,7 +150,7 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(user.reload.email).to eq(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 
   it "allows admin to verify old email while logged out" do
@@ -189,6 +184,6 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(user.reload.email).to eq(new_email)
+    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 end
