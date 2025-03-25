@@ -19,3 +19,21 @@
     }
   }
 }
+
+.admin-site-settings__changes-banner {
+  align-items: center;
+  background-color: var(--secondary);
+  border-top: 1px solid var(--tertiary);
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-3);
+  position: fixed;
+  max-width: 30rem;
+  width: 100%;
+
+  em {
+    font-style: normal;
+    font-weight: 700;
+  }
+}

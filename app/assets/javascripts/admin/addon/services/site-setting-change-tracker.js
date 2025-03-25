@@ -5,15 +5,19 @@ import { TrackedSet } from "@ember-compat/tracked-built-ins";
 export default class SiteSettingChangeTracker extends Service {
   @tracked dirtySiteSettings = new TrackedSet();
 
-  add(setting) {
-    this.dirtySiteSettings.add(setting.label);
+  add(settingComponent) {
+    this.dirtySiteSettings.add(settingComponent);
   }
 
-  remove(setting) {
-    this.dirtySiteSettings.delete(setting.label);
+  remove(settingComponent) {
+    this.dirtySiteSettings.delete(settingComponent);
+  }
+
+  discard() {
+    this.dirtySiteSettings.forEach((siteSetting) => siteSetting.cancel());
   }
 
   get count() {
-    this.dirtySiteSettings.size;
+    return this.dirtySiteSettings.size;
   }
 }

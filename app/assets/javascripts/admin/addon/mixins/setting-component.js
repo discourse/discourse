@@ -70,6 +70,7 @@ export default Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
+    this.siteSettingChangeTracker.remove(this);
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
@@ -92,9 +93,9 @@ export default Mixin.create({
     const dirty = !deepEqual(bufferVal, settingVal);
 
     if (dirty) {
-      this.siteSettingChangeTracker.add(this.setting);
+      this.siteSettingChangeTracker.add(this);
     } else {
-      this.siteSettingChangeTracker.remove(this.setting);
+      this.siteSettingChangeTracker.remove(this);
     }
 
     return dirty;
