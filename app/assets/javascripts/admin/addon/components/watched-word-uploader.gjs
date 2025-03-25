@@ -5,6 +5,9 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
+import dIcon from "discourse/helpers/d-icon";
+import i18n0 from "discourse/helpers/i18n";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 
 @classNames("watched-words-uploader")
 export default class WatchedWordUploader extends Component {
@@ -26,4 +29,8 @@ export default class WatchedWordUploader extends Component {
   });
 
   @alias("uppyUpload.uploading") addDisabled;
-}
+<template><label class="btn btn-default {{if this.addDisabled "disabled"}}">
+  {{dIcon "upload"}}
+  {{i18n0 "admin.watched_words.form.upload"}}
+  <input {{didInsert this.uppyUpload.setup}} class="hidden-upload-field" disabled={{this.addDisabled}} type="file" />
+</label></template>}

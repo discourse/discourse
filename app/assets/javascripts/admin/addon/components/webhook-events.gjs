@@ -7,6 +7,19 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import ComboBox from "select-kit/components/combo-box";
+import { fn, hash } from "@ember/helper";
+import DButton from "discourse/components/d-button";
+import not from "truth-helpers/helpers/not";
+import LoadMore from "discourse/components/load-more";
+import i18n0 from "discourse/helpers/i18n";
+import { on } from "@ember/modifier";
+import CountI18n from "discourse/components/count-i18n";
+import WebhookEvent from "admin/components/webhook-event";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 
 export default class WebhookEvents extends Component {
   @service messageBus;
@@ -185,4 +198,52 @@ export default class WebhookEvents extends Component {
       },
     });
   }
-}
+<template><div class="web-hook-events-listing" {{didInsert this.subscribe}} {{didUpdate this.reloadEvents @status}} {{willDestroy this.unsubscribe}}>
+  <div class="web-hook-events-actions">
+    <ComboBox @value={{@status}} @content={{this.statuses}} @onChange={{fn (mut @status)}} @options={{hash none="admin.web_hooks.events.filter_status.all"}} class="delivery-status-filters" />
+
+    <DButton @icon="arrows-rotate" @label="admin.web_hooks.events.redeliver_failed" @action={{this.redeliverFailed}} @disabled={{not this.redeliverEnabled}} />
+
+    <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{this.ping}} @disabled={{not this.pingEnabled}} class="webhook-events__ping-button" />
+  </div>
+
+  {{#if this.events}}
+    <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>
+      <div class="web-hook-events content-list">
+        <div class="heading-container">
+          <div class="col heading first status">
+            {{i18n0 "admin.web_hooks.events.status"}}
+          </div>
+          <div class="col heading event-id">
+            {{i18n0 "admin.web_hooks.events.event_id"}}
+          </div>
+          <div class="col heading timestamp">
+            {{i18n0 "admin.web_hooks.events.timestamp"}}
+          </div>
+          <div class="col heading completion">
+            {{i18n0 "admin.web_hooks.events.completion"}}
+          </div>
+          <div class="col heading actions">
+            {{i18n0 "admin.web_hooks.events.actions"}}
+          </div>
+        </div>
+
+        {{#if this.hasIncoming}}
+          <a href tabindex="0" {{on "click" this.showInserted}} class="alert alert-info clickable">
+            <CountI18n @key="admin.web_hooks.events.incoming" @count={{this.incomingCount}} />
+          </a>
+        {{/if}}
+
+        <ul>
+          {{#each this.events as |event|}}
+            <WebhookEvent @event={{event}} />
+          {{/each}}
+        </ul>
+      </div>
+
+      <ConditionalLoadingSpinner @condition={{this.events.loadingMore}} />
+    </LoadMore>
+  {{else}}
+    <p>{{i18n0 "admin.web_hooks.events.none"}}</p>
+  {{/if}}
+</div></template>}

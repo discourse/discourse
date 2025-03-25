@@ -15,9 +15,11 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
+    "@ember/render-modifiers": "^3.0.0",
     "@ember/string": "^4.0.1",
-    "ember-cli-babel": "^8.2.0",
     "codemod-resolver": "workspace:*",
+    "ember-cli-babel": "^8.2.0",
+    "float-kit": "workspace:*",
     "truth-helpers": "workspace:*"
   },
   "devDependencies": {
