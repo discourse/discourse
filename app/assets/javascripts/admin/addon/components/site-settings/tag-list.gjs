@@ -15,4 +15,13 @@ export default class TagList extends Component {
     this.set("value", tags.join("|"));
   }
 
-<template><TagChooser @tags={{this.selectedTags}} @onChange={{this.changeSelectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash allowAny=false}} /></template>}
+  <template>
+    <TagChooser
+      @tags={{this.selectedTags}}
+      @onChange={{this.changeSelectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
+  </template>
+}

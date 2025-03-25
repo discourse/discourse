@@ -8,7 +8,7 @@ import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import gt from "truth-helpers/helpers/gt";
 
@@ -97,30 +97,71 @@ export default class SimpleList extends Component {
       : [];
   }
 
-<template>{{#if this.collection}}
-  <div class="values">
-    {{#each this.collection as |value index|}}
-      <div data-index={{index}} class="value">
-        <DButton @action={{fn this.removeValue value}} @icon="xmark" class="btn-default remove-value-btn btn-small" />
+  <template>
+    {{#if this.collection}}
+      <div class="values">
+        {{#each this.collection as |value index|}}
+          <div data-index={{index}} class="value">
+            <DButton
+              @action={{fn this.removeValue value}}
+              @icon="xmark"
+              class="btn-default remove-value-btn btn-small"
+            />
 
-        <Input title={{value}} @value={{value}} class="value-input" {{on "focusout" (fn this.changeValue index)}} />
+            <Input
+              title={{value}}
+              @value={{value}}
+              class="value-input"
+              {{on "focusout" (fn this.changeValue index)}}
+            />
 
-        {{#if this.showUpDownButtons}}
-          <DButton @action={{fn this.shift -1 index}} @icon="arrow-up" class="btn-default shift-up-value-btn btn-small" />
-          <DButton @action={{fn this.shift 1 index}} @icon="arrow-down" class="btn-default shift-down-value-btn btn-small" />
-        {{/if}}
+            {{#if this.showUpDownButtons}}
+              <DButton
+                @action={{fn this.shift -1 index}}
+                @icon="arrow-up"
+                class="btn-default shift-up-value-btn btn-small"
+              />
+              <DButton
+                @action={{fn this.shift 1 index}}
+                @icon="arrow-down"
+                class="btn-default shift-down-value-btn btn-small"
+              />
+            {{/if}}
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
-{{/if}}
-
-<div class="simple-list-input">
-  {{#if this.isPredefinedList}}
-    {{#if (gt this.validValues.length 0)}}
-      <ComboBox @content={{this.validValues}} @value={{this.newValue}} @onChange={{this.addValue}} @valueProperty={{this.setting.computedValueProperty}} @nameProperty={{this.setting.computedNameProperty}} @options={{hash castInteger=true allowAny=false}} class="add-value-input" />
     {{/if}}
-  {{else}}
-    <Input @type="text" @value={{this.newValue}} placeholder={{i18n "admin.site_settings.simple_list.add_item"}} class="add-value-input" autocomplete="off" autocorrect="off" autocapitalize="off" />
-    <DButton @action={{fn this.addValue this.newValue}} @disabled={{this.inputEmpty}} @icon="plus" class="add-value-btn btn-small" />
-  {{/if}}
-</div></template>}
+
+    <div class="simple-list-input">
+      {{#if this.isPredefinedList}}
+        {{#if (gt this.validValues.length 0)}}
+          <ComboBox
+            @content={{this.validValues}}
+            @value={{this.newValue}}
+            @onChange={{this.addValue}}
+            @valueProperty={{this.setting.computedValueProperty}}
+            @nameProperty={{this.setting.computedNameProperty}}
+            @options={{hash castInteger=true allowAny=false}}
+            class="add-value-input"
+          />
+        {{/if}}
+      {{else}}
+        <Input
+          @type="text"
+          @value={{this.newValue}}
+          placeholder={{i18n "admin.site_settings.simple_list.add_item"}}
+          class="add-value-input"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+        />
+        <DButton
+          @action={{fn this.addValue this.newValue}}
+          @disabled={{this.inputEmpty}}
+          @icon="plus"
+          class="add-value-btn btn-small"
+        />
+      {{/if}}
+    </div>
+  </template>
+}

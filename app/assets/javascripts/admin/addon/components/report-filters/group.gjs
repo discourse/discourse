@@ -18,4 +18,18 @@ export default class Group extends FilterComponent {
     return this.filter.default ? parseInt(this.filter.default, 10) : null;
   }
 
-<template><ComboBox @valueProperty="value" @content={{this.groupOptions}} @value={{this.groupId}} @onChange={{this.onChange}} @options={{hash allowAny=this.filter.allow_any autoInsertNoneItem=this.filter.auto_insert_none_item filterable=true none="admin.dashboard.reports.groups"}} /></template>}
+  <template>
+    <ComboBox
+      @valueProperty="value"
+      @content={{this.groupOptions}}
+      @value={{this.groupId}}
+      @onChange={{this.onChange}}
+      @options={{hash
+        allowAny=this.filter.allow_any
+        autoInsertNoneItem=this.filter.auto_insert_none_item
+        filterable=true
+        none="admin.dashboard.reports.groups"
+      }}
+    />
+  </template>
+}

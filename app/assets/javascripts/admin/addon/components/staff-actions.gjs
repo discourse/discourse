@@ -23,7 +23,10 @@ export default class StaffActions extends Component {
     }
   }
 
-<template>{{!-- template-lint-disable no-invalid-interactive --}}
-<div class="table staff-actions" {{on "click" this.openLinks}}>
-  {{yield}}
-</div></template>}
+  <template>
+    {{! template-lint-disable no-invalid-interactive }}
+    <div class="table staff-actions" {{on "click" this.openLinks}}>
+      {{yield}}
+    </div>
+  </template>
+}

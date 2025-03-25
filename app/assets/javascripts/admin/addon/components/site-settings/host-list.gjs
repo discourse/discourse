@@ -21,4 +21,13 @@ export default class HostList extends Component {
     this.set("value", value.join(this.tokenSeparator));
   }
 
-<template><ListSetting @value={{this.settingValue}} @settingName={{this.setting.setting}} @choices={{this.settingValue}} @onChange={{this.onChange}} @options={{hash allowAny=this.allowAny}} /></template>}
+  <template>
+    <ListSetting
+      @value={{this.settingValue}}
+      @settingName={{this.setting.setting}}
+      @choices={{this.settingValue}}
+      @onChange={{this.onChange}}
+      @options={{hash allowAny=this.allowAny}}
+    />
+  </template>
+}

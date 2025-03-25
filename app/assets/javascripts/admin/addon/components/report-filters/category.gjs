@@ -12,4 +12,11 @@ export default class Category extends FilterComponent {
     this.applyFilter(this.filter.id, categoryId || undefined);
   }
 
-<template><SearchAdvancedCategoryChooser @value={{this.category}} @onChange={{this.onChange}} @options={{hash filterable=true disabled=this.filter.disabled}} /></template>}
+  <template>
+    <SearchAdvancedCategoryChooser
+      @value={{this.category}}
+      @onChange={{this.onChange}}
+      @options={{hash filterable=true disabled=this.filter.disabled}}
+    />
+  </template>
+}

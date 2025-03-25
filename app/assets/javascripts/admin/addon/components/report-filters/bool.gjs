@@ -16,4 +16,11 @@ export default class Bool extends FilterComponent {
     this.applyFilter(this.filter.id, !this.checked || undefined);
   }
 
-<template><Input @type="checkbox" @checked={{this.checked}} {{on "click" this.onChange}} /></template>}
+  <template>
+    <Input
+      @type="checkbox"
+      @checked={{this.checked}}
+      {{on "click" this.onChange}}
+    />
+  </template>
+}

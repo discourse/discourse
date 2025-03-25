@@ -10,4 +10,13 @@ export default class SimpleList extends Component {
     this.set("value", value.join(this.inputDelimiter || "\n"));
   }
 
-<template><SimpleList0 @values={{this.value}} @inputDelimiter={{this.inputDelimiter}} @onChange={{this.onChange}} @choices={{this.setting.choices}} @allowAny={{this.setting.allow_any}} /></template>}
+  <template>
+    <SimpleList0
+      @values={{this.value}}
+      @inputDelimiter={{this.inputDelimiter}}
+      @onChange={{this.onChange}}
+      @choices={{this.setting.choices}}
+      @allowAny={{this.setting.allow_any}}
+    />
+  </template>
+}

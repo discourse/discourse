@@ -1,6 +1,11 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
-import { attributeBindings, classNameBindings, classNames, tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
 import htmlSafe from "discourse/helpers/html-safe";
 import discourseComputed from "discourse/lib/decorators";
 
@@ -21,4 +26,5 @@ export default class AdminReportTableCell extends Component {
     return label.compute(data, options || {});
   }
 
-<template>{{htmlSafe this.formattedValue}}</template>}
+  <template>{{htmlSafe this.formattedValue}}</template>
+}

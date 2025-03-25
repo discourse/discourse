@@ -24,4 +24,15 @@ export default class GroupList extends Component {
     this.set("value", value.join(this.tokenSeparator));
   }
 
-<template><ListSetting @value={{this.settingValue}} @choices={{this.groupChoices}} @settingName="name" @mandatoryValues={{this.setting.mandatory_values}} @nameProperty={{this.nameProperty}} @valueProperty={{this.valueProperty}} @onChange={{this.onChangeGroupListSetting}} /></template>}
+  <template>
+    <ListSetting
+      @value={{this.settingValue}}
+      @choices={{this.groupChoices}}
+      @settingName="name"
+      @mandatoryValues={{this.setting.mandatory_values}}
+      @nameProperty={{this.nameProperty}}
+      @valueProperty={{this.valueProperty}}
+      @onChange={{this.onChangeGroupListSetting}}
+    />
+  </template>
+}

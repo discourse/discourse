@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 @classNames("inline-edit")
 export default class InlineEditCheckbox extends Component {
@@ -44,11 +44,26 @@ export default class InlineEditCheckbox extends Component {
     this.set("buffer", this.checked);
   }
 
-<template><label class="checkbox-label">
-  <Input @type="checkbox" disabled={{this.disabled}} @checked={{this.buffer}} />
-  {{i18n this.labelKey}}
-</label>
-{{#if this.changed}}
-  <DButton @action={{this.apply}} @icon="check" class="btn-primary btn-small submit-edit" />
-  <DButton @action={{this.cancel}} @icon="xmark" class="btn-small cancel-edit" />
-{{/if}}</template>}
+  <template>
+    <label class="checkbox-label">
+      <Input
+        @type="checkbox"
+        disabled={{this.disabled}}
+        @checked={{this.buffer}}
+      />
+      {{i18n this.labelKey}}
+    </label>
+    {{#if this.changed}}
+      <DButton
+        @action={{this.apply}}
+        @icon="check"
+        class="btn-primary btn-small submit-edit"
+      />
+      <DButton
+        @action={{this.cancel}}
+        @icon="xmark"
+        class="btn-small cancel-edit"
+      />
+    {{/if}}
+  </template>
+}
