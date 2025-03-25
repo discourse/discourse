@@ -1,15 +1,20 @@
 import { click, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import AdminReport from "admin/components/admin-report";
 
 module("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
     await render(
-      hbs`<AdminReport @dataSourceName="signups" @showDescriptionInTooltip={{false}} />`
+      <template>
+        <AdminReport
+          @dataSourceName="signups"
+          @showDescriptionInTooltip={{false}}
+        />
+      </template>
     );
 
     assert.dom(".admin-report.signups").exists();
@@ -50,6 +55,8 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("options", async function (assert) {
+    const self = this;
+
     this.set("options", {
       table: {
         perPage: 4,
@@ -58,7 +65,12 @@ module("Integration | Component | admin-report", function (hooks) {
     });
 
     await render(
-      hbs`<AdminReport @dataSourceName="signups" @reportOptions={{this.options}} />`
+      <template>
+        <AdminReport
+          @dataSourceName="signups"
+          @reportOptions={{self.options}}
+        />
+      </template>
     );
 
     assert.dom(".pagination").exists("paginates the results");
@@ -71,7 +83,9 @@ module("Integration | Component | admin-report", function (hooks) {
 
   test("switch modes", async function (assert) {
     await render(
-      hbs`<AdminReport @dataSourceName="signups" @showFilteringUI={{true}} />`
+      <template>
+        <AdminReport @dataSourceName="signups" @showFilteringUI={{true}} />
+      </template>
     );
 
     await click(".mode-btn.chart");
@@ -81,19 +95,23 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("timeout", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="signups_timeout" />`);
+    await render(
+      <template><AdminReport @dataSourceName="signups_timeout" /></template>
+    );
 
     assert.dom(".alert-error.timeout").exists("displays a timeout error");
   });
 
   test("no data", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="posts" />`);
+    await render(<template><AdminReport @dataSourceName="posts" /></template>);
 
     assert.dom(".no-data").exists("displays a no data alert");
   });
 
   test("exception", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="signups_exception" />`);
+    await render(
+      <template><AdminReport @dataSourceName="signups_exception" /></template>
+    );
 
     assert.dom(".alert-error.exception").exists("displays an error");
   });
@@ -109,7 +127,11 @@ module("Integration | Component | admin-report", function (hooks) {
       })
     );
 
-    await render(hbs`<AdminReport @dataSourceName="signups_rate_limited" />`);
+    await render(
+      <template>
+        <AdminReport @dataSourceName="signups_rate_limited" />
+      </template>
+    );
 
     assert
       .dom(".alert-error.rate-limited")
@@ -117,7 +139,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("post edits", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="post_edits" />`);
+    await render(
+      <template><AdminReport @dataSourceName="post_edits" /></template>
+    );
 
     assert
       .dom(".admin-report.post-edits")
@@ -125,7 +149,9 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("not found", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="not_found" />`);
+    await render(
+      <template><AdminReport @dataSourceName="not_found" /></template>
+    );
 
     assert.dom(".alert-error.not-found").exists("displays a not found error");
   });

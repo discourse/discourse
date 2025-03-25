@@ -1,7 +1,10 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
+import AceEditor from "discourse/components/ace-editor";
+import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -47,23 +50,25 @@ export default class EmailStylesEditor extends Component {
       },
     });
   }
-}
 
-<AceEditor
-  @content={{this.editorContents}}
-  @onChange={{fn (mut this.editorContents)}}
-  @mode={{this.currentEditorMode}}
-  @editorId={{this.editorId}}
-  @save={{@save}}
-/>
-
-<div class="admin-footer">
-  <div class="buttons">
-    <DButton
-      @action={{this.reset}}
-      @disabled={{this.resetDisabled}}
-      @label="admin.customize.email_style.reset"
-      class="btn-default"
+  <template>
+    <AceEditor
+      @content={{this.editorContents}}
+      @onChange={{fn (mut this.editorContents)}}
+      @mode={{this.currentEditorMode}}
+      @editorId={{this.editorId}}
+      @save={{@save}}
     />
-  </div>
-</div>
+
+    <div class="admin-footer">
+      <div class="buttons">
+        <DButton
+          @action={{this.reset}}
+          @disabled={{this.resetDisabled}}
+          @label="admin.customize.email_style.reset"
+          class="btn-default"
+        />
+      </div>
+    </div>
+  </template>
+}

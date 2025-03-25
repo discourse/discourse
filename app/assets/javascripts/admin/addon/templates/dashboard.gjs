@@ -1,63 +1,82 @@
-<PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from "ember-route-template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import { i18n } from "discourse-i18n";
+import DashboardProblems from "admin/components/dashboard-problems";
+import VersionChecks from "admin/components/version-checks";
 
-<DPageHeader @hideTabs={{true}}>
-  <:breadcrumbs>
-    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin.dashboard.title"}} />
-  </:breadcrumbs>
-</DPageHeader>
+export default RouteTemplate(
+  <template>
+    <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 
-{{#if this.showVersionChecks}}
-  <div class="section-top">
-    <div class="version-checks">
-      <VersionChecks @versionCheck={{this.versionCheck}} @tagName="" />
-    </div>
-  </div>
-{{/if}}
+    <DPageHeader @hideTabs={{true}}>
+      <:breadcrumbs>
+        <DBreadcrumbsItem
+          @path="/admin"
+          @label={{i18n "admin.dashboard.title"}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
 
-<DashboardProblems
-  @loadingProblems={{this.loadingProblems}}
-  @problems={{this.problems}}
-  @problemsTimestamp={{this.problemsTimestamp}}
-  @refreshProblems={{action "refreshProblems"}}
-/>
-<nav>
-  <ul class="nav nav-pills">
-    <li class="navigation-item general">
-      <LinkTo @route="admin.dashboard.general" class="navigation-link">
-        {{i18n "admin.dashboard.general_tab"}}
-      </LinkTo>
-    </li>
-
-    {{#if this.isModerationTabVisible}}
-      <li class="navigation-item moderation">
-        <LinkTo @route="admin.dashboardModeration" class="navigation-link">
-          {{i18n "admin.dashboard.moderation_tab"}}
-        </LinkTo>
-      </li>
+    {{#if @controller.showVersionChecks}}
+      <div class="section-top">
+        <div class="version-checks">
+          <VersionChecks
+            @versionCheck={{@controller.versionCheck}}
+            @tagName=""
+          />
+        </div>
+      </div>
     {{/if}}
 
-    {{#if this.isSecurityTabVisible}}
-      <li class="navigation-item security">
-        <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
-          {{i18n "admin.dashboard.security_tab"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+    <DashboardProblems
+      @loadingProblems={{@controller.loadingProblems}}
+      @problems={{@controller.problems}}
+      @problemsTimestamp={{@controller.problemsTimestamp}}
+      @refreshProblems={{@controller.refreshProblems}}
+    />
+    <nav>
+      <ul class="nav nav-pills">
+        <li class="navigation-item general">
+          <LinkTo @route="admin.dashboard.general" class="navigation-link">
+            {{i18n "admin.dashboard.general_tab"}}
+          </LinkTo>
+        </li>
 
-    {{#if this.isReportsTabVisible}}
-      <li class="navigation-item reports">
-        <LinkTo @route="admin.dashboardReports" class="navigation-link">
-          {{i18n "admin.dashboard.reports_tab"}}
-        </LinkTo>
-      </li>
-    {{/if}}
+        {{#if @controller.isModerationTabVisible}}
+          <li class="navigation-item moderation">
+            <LinkTo @route="admin.dashboardModeration" class="navigation-link">
+              {{i18n "admin.dashboard.moderation_tab"}}
+            </LinkTo>
+          </li>
+        {{/if}}
 
-    <PluginOutlet @name="admin-dashboard-tabs-after" />
-  </ul>
-</nav>
+        {{#if @controller.isSecurityTabVisible}}
+          <li class="navigation-item security">
+            <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
+              {{i18n "admin.dashboard.security_tab"}}
+            </LinkTo>
+          </li>
+        {{/if}}
 
-{{outlet}}
+        {{#if @controller.isReportsTabVisible}}
+          <li class="navigation-item reports">
+            <LinkTo @route="admin.dashboardReports" class="navigation-link">
+              {{i18n "admin.dashboard.reports_tab"}}
+            </LinkTo>
+          </li>
+        {{/if}}
 
-<span>
-  <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
-</span>
+        <PluginOutlet @name="admin-dashboard-tabs-after" />
+      </ul>
+    </nav>
+
+    {{outlet}}
+
+    <span>
+      <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
+    </span>
+  </template>
+);

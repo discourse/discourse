@@ -1,11 +1,17 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 const DEFAULT_GROUP = "default";
 
@@ -89,62 +95,66 @@ export default class EmojiUploader extends Component {
       return "plus";
     }
   }
-}
 
-<div class="form-kit">
-  <div class="form-kit__container form-kit__field form-kit__field-input-text">
-    <label class="form-kit__container-title">
-      {{i18n "admin.emoji.name"}}
-    </label>
-    <div class="form-kit__container-content --large">
-      <div class="form-kit__control-input-wrapper">
-        <Input
-          id="emoji-name"
-          class="form-kit__control-input"
-          name="name"
-          @value={{readonly this.name}}
-          {{on "input" (with-event-value (fn (mut this.name)))}}
-        />
+  <template>
+    <div class="form-kit">
+      <div
+        class="form-kit__container form-kit__field form-kit__field-input-text"
+      >
+        <label class="form-kit__container-title">
+          {{i18n "admin.emoji.name"}}
+        </label>
+        <div class="form-kit__container-content --large">
+          <div class="form-kit__control-input-wrapper">
+            <Input
+              id="emoji-name"
+              class="form-kit__control-input"
+              name="name"
+              @value={{readonly this.name}}
+              {{on "input" (withEventValue (fn (mut this.name)))}}
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="form-kit__container form-kit__field form-kit__field-input-combo-box"
+      >
+        <label class="form-kit__container-title">
+          {{i18n "admin.emoji.group"}}
+        </label>
+        <div class="form-kit__container-content --large">
+          <div class="form-kit__control-input-wrapper">
+            <ComboBox
+              @name="group"
+              @id="emoji-group-selector"
+              @value={{this.group}}
+              @content={{this.newEmojiGroups}}
+              @onChange={{action "createEmojiGroup"}}
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @options={{hash allowAny=true}}
+            />
+          </div>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="input">
+          <input
+            {{didInsert this.uppyUpload.setup}}
+            class="hidden-upload-field"
+            disabled={{this.uppyUpload.uploading}}
+            type="file"
+            multiple="true"
+            accept=".png,.gif"
+          />
+          <DButton
+            @translatedLabel={{this.buttonLabel}}
+            @action={{this.chooseFiles}}
+            @disabled={{this.uppyUpload.uploading}}
+            class="btn-primary"
+          />
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    class="form-kit__container form-kit__field form-kit__field-input-combo-box"
-  >
-    <label class="form-kit__container-title">
-      {{i18n "admin.emoji.group"}}
-    </label>
-    <div class="form-kit__container-content --large">
-      <div class="form-kit__control-input-wrapper">
-        <ComboBox
-          @name="group"
-          @id="emoji-group-selector"
-          @value={{this.group}}
-          @content={{this.newEmojiGroups}}
-          @onChange={{action "createEmojiGroup"}}
-          @valueProperty={{null}}
-          @nameProperty={{null}}
-          @options={{hash allowAny=true}}
-        />
-      </div>
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="input">
-      <input
-        {{did-insert this.uppyUpload.setup}}
-        class="hidden-upload-field"
-        disabled={{this.uppyUpload.uploading}}
-        type="file"
-        multiple="true"
-        accept=".png,.gif"
-      />
-      <DButton
-        @translatedLabel={{this.buttonLabel}}
-        @action={{this.chooseFiles}}
-        @disabled={{this.uppyUpload.uploading}}
-        class="btn-primary"
-      />
-    </div>
-  </div>
-</div>
+  </template>
+}

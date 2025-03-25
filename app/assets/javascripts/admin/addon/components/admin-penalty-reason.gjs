@@ -1,9 +1,13 @@
-import Component from "@ember/component";
+import Component, { Textarea } from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import TextField from "discourse/components/text-field";
+import htmlSafe from "discourse/helpers/html-safe";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
+import eq from "truth-helpers/helpers/eq";
 
 const CUSTOM_REASON_KEY = "custom";
 
@@ -52,54 +56,56 @@ export default class AdminPenaltyReason extends Component {
       );
     }
   }
+
+  <template>
+    <div class="penalty-reason-controls">
+      {{#if (eq @penaltyType "suspend")}}
+        <label class="suspend-reason-title">{{i18n
+            "admin.user.suspend_reason_title"
+          }}</label>
+        <ComboBox
+          @content={{this.reasons}}
+          @value={{this.selectedReason}}
+          @onChange={{this.setSelectedReason}}
+          class="suspend-reason"
+        />
+
+        {{#if this.isCustomReason}}
+          <TextField
+            @value={{this.customReason}}
+            @onChange={{this.setCustomReason}}
+            class="suspend-reason"
+          />
+        {{/if}}
+      {{else if (eq @penaltyType "silence")}}
+        <label class="silence-reason-title">
+          {{htmlSafe (i18n "admin.user.silence_reason_label")}}</label>
+
+        <ComboBox
+          @content={{this.reasons}}
+          @value={{this.selectedReason}}
+          @onChange={{this.setSelectedReason}}
+          class="silence-reason"
+        />
+
+        {{#if this.isCustomReason}}
+          <TextField
+            @value={{this.customReason}}
+            @onChange={{this.setCustomReason}}
+            @placeholderKey="admin.user.silence_reason_placeholder"
+            class="silence-reason"
+          />
+        {{/if}}
+      {{/if}}
+    </div>
+
+    <div class="penalty-message-controls">
+      <label>{{i18n "admin.user.suspend_message"}}</label>
+      <Textarea
+        @value={{this.message}}
+        class="suspend-message"
+        placeholder={{i18n "admin.user.suspend_message_placeholder"}}
+      />
+    </div>
+  </template>
 }
-
-<div class="penalty-reason-controls">
-  {{#if (eq @penaltyType "suspend")}}
-    <label class="suspend-reason-title">{{i18n
-        "admin.user.suspend_reason_title"
-      }}</label>
-    <ComboBox
-      @content={{this.reasons}}
-      @value={{this.selectedReason}}
-      @onChange={{this.setSelectedReason}}
-      class="suspend-reason"
-    />
-
-    {{#if this.isCustomReason}}
-      <TextField
-        @value={{this.customReason}}
-        @onChange={{this.setCustomReason}}
-        class="suspend-reason"
-      />
-    {{/if}}
-  {{else if (eq @penaltyType "silence")}}
-    <label class="silence-reason-title">
-      {{html-safe (i18n "admin.user.silence_reason_label")}}</label>
-
-    <ComboBox
-      @content={{this.reasons}}
-      @value={{this.selectedReason}}
-      @onChange={{this.setSelectedReason}}
-      class="silence-reason"
-    />
-
-    {{#if this.isCustomReason}}
-      <TextField
-        @value={{this.customReason}}
-        @onChange={{this.setCustomReason}}
-        @placeholderKey="admin.user.silence_reason_placeholder"
-        class="silence-reason"
-      />
-    {{/if}}
-  {{/if}}
-</div>
-
-<div class="penalty-message-controls">
-  <label>{{i18n "admin.user.suspend_message"}}</label>
-  <Textarea
-    @value={{this.message}}
-    class="suspend-message"
-    placeholder={{i18n "admin.user.suspend_message_placeholder"}}
-  />
-</div>

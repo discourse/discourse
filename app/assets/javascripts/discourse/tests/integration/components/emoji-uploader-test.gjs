@@ -1,10 +1,10 @@
 import { fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import EmojiUploader from "admin/components/emoji-uploader";
 
 let requestNumber;
 
@@ -38,13 +38,17 @@ module("Integration | Component | emoji-uploader", function (hooks) {
   });
 
   test("uses the selected group for the upload", async function (assert) {
-    await render(hbs`
-      <EmojiUploader
-        @id="emoji-uploader"
-        @emojiGroups={{this.emojiGroups}}
-        @done={{this.doneUpload}}
-      />
-    `);
+    const self = this;
+
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -62,13 +66,17 @@ module("Integration | Component | emoji-uploader", function (hooks) {
   });
 
   test("does not clear the selected group between multiple uploads", async function (assert) {
-    await render(hbs`
-      <EmojiUploader
-        @id="emoji-uploader"
-        @emojiGroups={{this.emojiGroups}}
-        @done={{this.doneUpload}}
-      />
-    `);
+    const self = this;
+
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -93,13 +101,17 @@ module("Integration | Component | emoji-uploader", function (hooks) {
   });
 
   test("clears the name after the first upload to avoid duplicate names", async function (assert) {
-    await render(hbs`
-      <EmojiUploader
-        @id="emoji-uploader"
-        @emojiGroups={{this.emojiGroups}}
-        @done={{this.doneUpload}}
-      />
-    `);
+    const self = this;
+
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     await selectKit("#emoji-group-selector").expand();
@@ -128,14 +140,18 @@ module("Integration | Component | emoji-uploader", function (hooks) {
   });
 
   test("sets the created_by field with username", async function (assert) {
-    await render(hbs`
-      <EmojiUploader
-        @id="emoji-uploader"
-        @emojiGroups={{this.emojiGroups}}
-        @createdBy={{this.createdBy}}
-        @done={{this.doneUpload}}
-      />
-    `);
+    const self = this;
+
+    await render(
+      <template>
+        <EmojiUploader
+          @id="emoji-uploader"
+          @emojiGroups={{self.emojiGroups}}
+          @createdBy={{self.createdBy}}
+          @done={{self.doneUpload}}
+        />
+      </template>
+    );
 
     const done = assert.async();
 

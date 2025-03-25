@@ -1,33 +1,39 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import ThemesListItem from "admin/components/themes-list-item";
 import Theme from "admin/models/theme";
 
 module("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default theme", async function (assert) {
+    const self = this;
+
     this.set("theme", Theme.create({ name: "Test", default: true }));
 
-    await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
+    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
 
     assert.dom(".d-icon-check").exists("shows default theme icon");
   });
 
   test("pending updates", async function (assert) {
+    const self = this;
+
     this.set(
       "theme",
       Theme.create({ name: "Test", remote_theme: { commits_behind: 6 } })
     );
 
-    await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
+    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
 
     assert.dom(".d-icon-arrows-rotate").exists("shows pending update icon");
   });
 
   test("broken theme", async function (assert) {
+    const self = this;
+
     this.set(
       "theme",
       Theme.create({
@@ -36,12 +42,14 @@ module("Integration | Component | themes-list-item", function (hooks) {
       })
     );
 
-    await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
+    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
 
     assert.dom(".d-icon-circle-exclamation").exists("shows broken theme icon");
   });
 
   test("with children", async function (assert) {
+    const self = this;
+
     this.childrenList = [1, 2, 3, 4, 5].map((num) =>
       Theme.create({ name: `Child ${num}`, component: true })
     );
@@ -55,7 +63,7 @@ module("Integration | Component | themes-list-item", function (hooks) {
       })
     );
 
-    await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
+    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
 
     assert.deepEqual(
       document

@@ -1,7 +1,11 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":secret-value-list")
@@ -113,48 +117,50 @@ export default class SecretValueList extends Component {
       return [];
     }
   }
-}
 
-{{#if this.collection}}
-  <div class="values">
-    {{#each this.collection as |value index|}}
-      <div class="value" data-index={{index}}>
-        <DButton
-          @action={{fn this.removeValue value}}
-          @icon="xmark"
-          class="btn-default remove-value-btn btn-small"
-        />
-        <Input
-          @value={{value.key}}
-          class="value-input"
-          {{on "focusout" (fn this.changeKey index)}}
-        />
-        <Input
-          @value={{value.secret}}
-          class="value-input"
-          @type={{if this.isSecret "password" "text"}}
-          {{on "focusout" (fn this.changeSecret index)}}
-        />
+  <template>
+    {{#if this.collection}}
+      <div class="values">
+        {{#each this.collection as |value index|}}
+          <div class="value" data-index={{index}}>
+            <DButton
+              @action={{fn this.removeValue value}}
+              @icon="xmark"
+              class="btn-default remove-value-btn btn-small"
+            />
+            <Input
+              @value={{value.key}}
+              class="value-input"
+              {{on "focusout" (fn this.changeKey index)}}
+            />
+            <Input
+              @value={{value.secret}}
+              class="value-input"
+              @type={{if this.isSecret "password" "text"}}
+              {{on "focusout" (fn this.changeSecret index)}}
+            />
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
-{{/if}}
+    {{/if}}
 
-<div class="value">
-  <TextField
-    @value={{this.newKey}}
-    @placeholder={{this.setting.placeholder.key}}
-    class="new-value-input key"
-  />
-  <Input
-    @type="password"
-    @value={{this.newSecret}}
-    class="new-value-input secret"
-    placeholder={{this.setting.placeholder.value}}
-  />
-  <DButton
-    @action={{this.addValue}}
-    @icon="plus"
-    class="add-value-btn btn-small"
-  />
-</div>
+    <div class="value">
+      <TextField
+        @value={{this.newKey}}
+        @placeholder={{this.setting.placeholder.key}}
+        class="new-value-input key"
+      />
+      <Input
+        @type="password"
+        @value={{this.newSecret}}
+        class="new-value-input secret"
+        placeholder={{this.setting.placeholder.value}}
+      />
+      <DButton
+        @action={{this.addValue}}
+        @icon="plus"
+        class="add-value-btn btn-small"
+      />
+    </div>
+  </template>
+}

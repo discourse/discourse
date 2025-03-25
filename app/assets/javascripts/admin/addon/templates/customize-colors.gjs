@@ -1,46 +1,61 @@
-<DPageHeader
-  @titleLabel={{i18n "admin.config.color_palettes.title"}}
-  @descriptionLabel={{i18n "admin.config.color_palettes.header_description"}}
-  @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
-  @hideTabs={{true}}
->
-  <:breadcrumbs>
-    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-    <DBreadcrumbsItem
-      @path="/admin/customize/colors"
-      @label={{i18n "admin.config.color_palettes.title"}}
-    />
-  </:breadcrumbs>
-</DPageHeader>
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from "ember-route-template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DButton from "discourse/components/d-button";
+import DPageHeader from "discourse/components/d-page-header";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
-<div class="content-list color-schemes">
-  <ul>
-    {{#each this.model as |scheme|}}
-      {{#unless scheme.is_base}}
-        <li>
-          <LinkTo
-            @route="adminCustomize.colors.show"
-            @model={{scheme}}
-            @replace={{true}}
-          >
-            {{d-icon "paintbrush"}}
-            {{scheme.description}}
-          </LinkTo>
-        </li>
-      {{/unless}}
-    {{/each}}
-  </ul>
+export default RouteTemplate(
+  <template>
+    <DPageHeader
+      @titleLabel={{i18n "admin.config.color_palettes.title"}}
+      @descriptionLabel={{i18n
+        "admin.config.color_palettes.header_description"
+      }}
+      @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
+      @hideTabs={{true}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin/customize/colors"
+          @label={{i18n "admin.config.color_palettes.title"}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
 
-  <PluginOutlet @name="admin-customize-colors-new-button">
-    <DButton
-      @action={{this.newColorScheme}}
-      @icon="plus"
-      @label="admin.customize.new"
-      class="btn-default"
-    />
-  </PluginOutlet>
-</div>
+    <div class="content-list color-schemes">
+      <ul>
+        {{#each @controller.model as |scheme|}}
+          {{#unless scheme.is_base}}
+            <li>
+              <LinkTo
+                @route="adminCustomize.colors.show"
+                @model={{scheme}}
+                @replace={{true}}
+              >
+                {{icon "paintbrush"}}
+                {{scheme.description}}
+              </LinkTo>
+            </li>
+          {{/unless}}
+        {{/each}}
+      </ul>
 
-{{outlet}}
+      <PluginOutlet @name="admin-customize-colors-new-button">
+        <DButton
+          @action={{@controller.newColorScheme}}
+          @icon="plus"
+          @label="admin.customize.new"
+          class="btn-default"
+        />
+      </PluginOutlet>
+    </div>
 
-<div class="clearfix"></div>
+    {{outlet}}
+
+    <div class="clearfix"></div>
+  </template>
+);

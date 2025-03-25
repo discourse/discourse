@@ -1,14 +1,16 @@
 import EmberObject from "@ember/object";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import SiteSetting from "admin/components/site-setting";
 
 module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("mandatory values", async function (assert) {
+    const self = this;
+
     this.set(
       "setting",
       EmberObject.create({
@@ -28,7 +30,9 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
       })
     );
 
-    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+    await render(
+      <template><SiteSetting @setting={{self.setting}} /></template>
+    );
 
     const subject = selectKit(".list-setting");
 

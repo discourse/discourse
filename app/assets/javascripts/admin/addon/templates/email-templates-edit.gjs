@@ -1,38 +1,52 @@
-<ComboBox
-  @value={{this.emailTemplate.id}}
-  @content={{this.adminEmailTemplates.sortedTemplates}}
-  @onChange={{this.adminEmailTemplates.onSelectTemplate}}
-  @nameProperty="title"
-/>
+import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from "ember-route-template";
+import DButton from "discourse/components/d-button";
+import DEditor from "discourse/components/d-editor";
+import SaveControls from "discourse/components/save-controls";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
-<div class="email-template">
-  <label>{{i18n "admin.customize.email_templates.subject"}}</label>
-  {{#if this.hasMultipleSubjects}}
-    <h3><LinkTo
-        @route="adminSiteText"
-        @query={{hash q=this.hasMultipleSubjects}}
-      >{{i18n
-          "admin.customize.email_templates.multiple_subjects"
-        }}</LinkTo></h3>
-  {{else}}
-    <Input @value={{this.buffered.subject}} />
-  {{/if}}
-  <br />
+export default RouteTemplate(
+  <template>
+    <ComboBox
+      @value={{@controller.emailTemplate.id}}
+      @content={{@controller.adminEmailTemplates.sortedTemplates}}
+      @onChange={{@controller.adminEmailTemplates.onSelectTemplate}}
+      @nameProperty="title"
+    />
 
-  <label>{{i18n "admin.customize.email_templates.body"}}</label>
-  <DEditor @value={{this.buffered.body}} />
+    <div class="email-template">
+      <label>{{i18n "admin.customize.email_templates.subject"}}</label>
+      {{#if @controller.hasMultipleSubjects}}
+        <h3><LinkTo
+            @route="adminSiteText"
+            @query={{hash q=@controller.hasMultipleSubjects}}
+          >{{i18n
+              "admin.customize.email_templates.multiple_subjects"
+            }}</LinkTo></h3>
+      {{else}}
+        <Input @value={{@controller.buffered.subject}} />
+      {{/if}}
+      <br />
 
-  <SaveControls
-    @model={{this.emailTemplate}}
-    @action={{action "saveChanges"}}
-    @saved={{this.saved}}
-    @saveDisabled={{this.saveDisabled}}
-  >
-    {{#if this.emailTemplate.can_revert}}
-      <DButton
-        @action={{action "revertChanges"}}
-        @label="admin.customize.email_templates.revert"
-      />
-    {{/if}}
-  </SaveControls>
-</div>
+      <label>{{i18n "admin.customize.email_templates.body"}}</label>
+      <DEditor @value={{@controller.buffered.body}} />
+
+      <SaveControls
+        @model={{@controller.emailTemplate}}
+        @action={{@controller.saveChanges}}
+        @saved={{@controller.saved}}
+        @saveDisabled={{@controller.saveDisabled}}
+      >
+        {{#if @controller.emailTemplate.can_revert}}
+          <DButton
+            @action={{@controller.revertChanges}}
+            @label="admin.customize.email_templates.revert"
+          />
+        {{/if}}
+      </SaveControls>
+    </div>
+  </template>
+);

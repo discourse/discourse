@@ -93,10 +93,6 @@ export default class TopicCell extends Component {
               @url={{@topic.lastUnreadUrl}}
             />
           {{~/if~}}
-          <PluginOutlet
-            @name="topic-list-after-badges"
-            @outletArgs={{hash topic=@topic}}
-          />
         </PluginOutlet>
       </span>
 

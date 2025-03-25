@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DiscourseURL from "discourse/lib/url";
@@ -21,9 +22,11 @@ export default class StaffActions extends Component {
       DiscourseURL.routeTo(`/t/${dataset.linkTopicId}`);
     }
   }
-}
 
-{{! template-lint-disable no-invalid-interactive }}
-<div class="table staff-actions" {{on "click" this.openLinks}}>
-  {{yield}}
-</div>
+  <template>
+    {{! template-lint-disable no-invalid-interactive }}
+    <div class="table staff-actions" {{on "click" this.openLinks}}>
+      {{yield}}
+    </div>
+  </template>
+}

@@ -1,6 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class ColorSchemeSelectBase extends Component {
   @tracked
@@ -11,27 +16,29 @@ export default class ColorSchemeSelectBase extends Component {
     this.args.model.newColorSchemeWithBase(this.selectedBaseThemeId);
     this.args.closeModal();
   }
-}
 
-<DModal
-  @title={{i18n "admin.customize.colors.select_base.title"}}
-  @closeModal={{@closeModal}}
->
-  <:body>
-    {{i18n "admin.customize.colors.select_base.description"}}
-    <ComboBox
-      @content={{@model.baseColorSchemes}}
-      @value={{this.selectedBaseThemeId}}
-      @onChange={{fn (mut this.selectedBaseThemeId)}}
-      @valueProperty="base_scheme_id"
-    />
-  </:body>
-  <:footer>
-    <DButton
-      class="btn-primary"
-      @action={{this.selectBase}}
-      @icon="plus"
-      @label="admin.customize.new"
-    />
-  </:footer>
-</DModal>
+  <template>
+    <DModal
+      @title={{i18n "admin.customize.colors.select_base.title"}}
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        {{i18n "admin.customize.colors.select_base.description"}}
+        <ComboBox
+          @content={{@model.baseColorSchemes}}
+          @value={{this.selectedBaseThemeId}}
+          @onChange={{fn (mut this.selectedBaseThemeId)}}
+          @valueProperty="base_scheme_id"
+        />
+      </:body>
+      <:footer>
+        <DButton
+          class="btn-primary"
+          @action={{this.selectBase}}
+          @icon="plus"
+          @label="admin.customize.new"
+        />
+      </:footer>
+    </DModal>
+  </template>
+}

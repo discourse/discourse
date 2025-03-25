@@ -1,9 +1,14 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
+import AdminReportTableHeader from "admin/components/admin-report-table-header";
+import AdminReportTableRow from "admin/components/admin-report-table-row";
 
 const PAGES_LIMIT = 8;
 
@@ -183,88 +188,94 @@ export default class AdminReportTable extends Component {
       this.set("sortLabel", label);
     }
   }
-}
 
-<table class="table">
-  <thead>
-    <tr>
-      {{#if this.model.computedLabels}}
-        {{#each this.model.computedLabels as |label|}}
-          <AdminReportTableHeader
-            @showSortingUI={{this.showSortingUI}}
-            @currentSortDirection={{this.sortDirection}}
-            @currentSortLabel={{this.sortLabel}}
-            @label={{label}}
-            @sortByLabel={{fn this.sortByLabel label}}
+  <template>
+    <table class="table">
+      <thead>
+        <tr>
+          {{#if this.model.computedLabels}}
+            {{#each this.model.computedLabels as |label|}}
+              <AdminReportTableHeader
+                @showSortingUI={{this.showSortingUI}}
+                @currentSortDirection={{this.sortDirection}}
+                @currentSortLabel={{this.sortLabel}}
+                @label={{label}}
+                @sortByLabel={{fn this.sortByLabel label}}
+              />
+            {{/each}}
+          {{else}}
+            {{#each this.model.data as |data|}}
+              <th>{{data.x}}</th>
+            {{/each}}
+          {{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.paginatedData as |data|}}
+          <AdminReportTableRow
+            @data={{data}}
+            @labels={{this.model.computedLabels}}
+            @options={{this.options}}
           />
         {{/each}}
-      {{else}}
-        {{#each this.model.data as |data|}}
-          <th>{{data.x}}</th>
-        {{/each}}
-      {{/if}}
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this.paginatedData as |data|}}
-      <AdminReportTableRow
-        @data={{data}}
-        @labels={{this.model.computedLabels}}
-        @options={{this.options}}
-      />
-    {{/each}}
 
-    {{#if this.showTotalForSample}}
-      <tr class="total-row">
-        <td colspan={{this.totalsForSample.length}}>
-          {{i18n "admin.dashboard.reports.totals_for_sample"}}
-        </td>
-      </tr>
-      <tr class="admin-report-table-row">
-        {{#each this.totalsForSample as |total|}}
-          <td class="admin-report-table-cell {{total.type}} {{total.property}}">
-            {{total.formattedValue}}
-          </td>
-        {{/each}}
-      </tr>
-    {{/if}}
+        {{#if this.showTotalForSample}}
+          <tr class="total-row">
+            <td colspan={{this.totalsForSample.length}}>
+              {{i18n "admin.dashboard.reports.totals_for_sample"}}
+            </td>
+          </tr>
+          <tr class="admin-report-table-row">
+            {{#each this.totalsForSample as |total|}}
+              <td
+                class="admin-report-table-cell
+                  {{total.type}}
+                  {{total.property}}"
+              >
+                {{total.formattedValue}}
+              </td>
+            {{/each}}
+          </tr>
+        {{/if}}
 
-    {{#if this.showTotal}}
-      <tr class="total-row">
-        <td colspan="2">
-          {{i18n "admin.dashboard.reports.total"}}
-        </td>
-      </tr>
-      <tr class="admin-report-table-row">
-        <td class="admin-report-table-cell date x">—</td>
-        <td
-          class="admin-report-table-cell number y"
-        >{{this.formattedTotal}}</td>
-      </tr>
-    {{/if}}
+        {{#if this.showTotal}}
+          <tr class="total-row">
+            <td colspan="2">
+              {{i18n "admin.dashboard.reports.total"}}
+            </td>
+          </tr>
+          <tr class="admin-report-table-row">
+            <td class="admin-report-table-cell date x">—</td>
+            <td
+              class="admin-report-table-cell number y"
+            >{{this.formattedTotal}}</td>
+          </tr>
+        {{/if}}
 
-    {{#if this.showAverage}}
-      <tr class="total-row">
-        <td colspan="2">
-          {{i18n "admin.dashboard.reports.average_for_sample"}}
-        </td>
-      </tr>
-      <tr class="admin-report-table-row">
-        <td class="admin-report-table-cell date x">—</td>
-        <td
-          class="admin-report-table-cell number y"
-        >{{this.averageForSample}}</td>
-      </tr>
-    {{/if}}
-  </tbody>
-</table>
+        {{#if this.showAverage}}
+          <tr class="total-row">
+            <td colspan="2">
+              {{i18n "admin.dashboard.reports.average_for_sample"}}
+            </td>
+          </tr>
+          <tr class="admin-report-table-row">
+            <td class="admin-report-table-cell date x">—</td>
+            <td
+              class="admin-report-table-cell number y"
+            >{{this.averageForSample}}</td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
 
-<div class="pagination">
-  {{#each this.pages as |pageState|}}
-    <DButton
-      @translatedLabel={{pageState.page}}
-      @action={{fn this.changePage pageState.index}}
-      class={{pageState.class}}
-    />
-  {{/each}}
-</div>
+    <div class="pagination">
+      {{#each this.pages as |pageState|}}
+        <DButton
+          @translatedLabel={{pageState.page}}
+          @action={{fn this.changePage pageState.index}}
+          class={{pageState.class}}
+        />
+      {{/each}}
+    </div>
+  </template>
+}

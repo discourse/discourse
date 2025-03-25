@@ -1,6 +1,15 @@
-<DBreadcrumbsItem
-  @path="/admin/config/customize/themes"
-  @label={{i18n "admin.config_areas.themes_and_components.themes.title"}}
-/>
+import RouteTemplate from "ember-route-template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import { i18n } from "discourse-i18n";
+import Themes from "admin/components/admin-config-areas/themes";
 
-<AdminConfigAreas::Themes @themes={{this.model}} />
+export default RouteTemplate(
+  <template>
+    <DBreadcrumbsItem
+      @path="/admin/config/customize/themes"
+      @label={{i18n "admin.config_areas.themes_and_components.themes.title"}}
+    />
+
+    <Themes @themes={{@controller.model}} />
+  </template>
+);

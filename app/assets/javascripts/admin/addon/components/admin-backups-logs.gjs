@@ -75,13 +75,15 @@ export default class AdminBackupsLogs extends Component {
       this.set("showLoadingSpinner", false);
     }
   }
-}
 
-{{#if this.hasFormattedLogs}}
-  <pre>{{this.formattedLogs}}</pre>
-{{else}}
-  <p>{{this.noLogsMessage}}</p>
-{{/if}}
-{{#if this.showLoadingSpinner}}
-  <div class="spinner small"></div>
-{{/if}}
+  <template>
+    {{#if this.hasFormattedLogs}}
+      <pre>{{this.formattedLogs}}</pre>
+    {{else}}
+      <p>{{this.noLogsMessage}}</p>
+    {{/if}}
+    {{#if this.showLoadingSpinner}}
+      <div class="spinner small"></div>
+    {{/if}}
+  </template>
+}

@@ -1,59 +1,71 @@
-<div class="sections">
-  <PluginOutlet
-    @name="admin-dashboard-moderation-top"
-    @connectorTagName="div"
-  />
+import { hash } from "@ember/helper";
+import RouteTemplate from "ember-route-template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import getUrl from "discourse/helpers/get-url";
+import { i18n } from "discourse-i18n";
+import AdminReport from "admin/components/admin-report";
+import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
 
-  {{#if this.isModeratorsActivityVisible}}
-    <div class="moderators-activity section">
-      <div class="section-title">
-        <h2>
-          <a href={{get-url "/admin/reports/moderators_activity"}}>
-            {{i18n "admin.dashboard.moderators_activity"}}
-          </a>
-        </h2>
+export default RouteTemplate(
+  <template>
+    <div class="sections">
+      <PluginOutlet
+        @name="admin-dashboard-moderation-top"
+        @connectorTagName="div"
+      />
 
-        <DashboardPeriodSelector
-          @period={{this.period}}
-          @setPeriod={{this.setPeriod}}
-          @startDate={{this.startDate}}
-          @endDate={{this.endDate}}
-          @setCustomDateRange={{this.setCustomDateRange}}
-        />
-      </div>
+      {{#if @controller.isModeratorsActivityVisible}}
+        <div class="moderators-activity section">
+          <div class="section-title">
+            <h2>
+              <a href={{getUrl "/admin/reports/moderators_activity"}}>
+                {{i18n "admin.dashboard.moderators_activity"}}
+              </a>
+            </h2>
 
-      <div class="section-body">
+            <DashboardPeriodSelector
+              @period={{@controller.period}}
+              @setPeriod={{@controller.setPeriod}}
+              @startDate={{@controller.startDate}}
+              @endDate={{@controller.endDate}}
+              @setCustomDateRange={{@controller.setCustomDateRange}}
+            />
+          </div>
+
+          <div class="section-body">
+            <AdminReport
+              @filters={{@controller.filters}}
+              @showHeader={{false}}
+              @dataSourceName="moderators_activity"
+            />
+          </div>
+        </div>
+      {{/if}}
+
+      <div class="main-section">
         <AdminReport
-          @filters={{this.filters}}
-          @showHeader={{false}}
-          @dataSourceName="moderators_activity"
+          @dataSourceName="flags_status"
+          @reportOptions={{@controller.flagsStatusOptions}}
+          @filters={{@controller.lastWeekFilters}}
+        />
+
+        <AdminReport
+          @dataSourceName="post_edits"
+          @filters={{@controller.lastWeekFilters}}
+        />
+
+        <AdminReport
+          @dataSourceName="user_flagging_ratio"
+          @filters={{@controller.lastWeekFilters}}
+          @reportOptions={{@controller.userFlaggingRatioOptions}}
+        />
+
+        <PluginOutlet
+          @name="admin-dashboard-moderation-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash filters=@controller.lastWeekFilters}}
         />
       </div>
     </div>
-  {{/if}}
-
-  <div class="main-section">
-    <AdminReport
-      @dataSourceName="flags_status"
-      @reportOptions={{this.flagsStatusOptions}}
-      @filters={{this.lastWeekFilters}}
-    />
-
-    <AdminReport
-      @dataSourceName="post_edits"
-      @filters={{this.lastWeekFilters}}
-    />
-
-    <AdminReport
-      @dataSourceName="user_flagging_ratio"
-      @filters={{this.lastWeekFilters}}
-      @reportOptions={{this.userFlaggingRatioOptions}}
-    />
-
-    <PluginOutlet
-      @name="admin-dashboard-moderation-bottom"
-      @connectorTagName="div"
-      @outletArgs={{hash filters=this.lastWeekFilters}}
-    />
-  </div>
-</div>
+  </template>
+);

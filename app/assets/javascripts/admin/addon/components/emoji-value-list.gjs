@@ -1,12 +1,17 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, set, setProperties } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import discourseComputed from "discourse/lib/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
+import not from "truth-helpers/helpers/not";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
@@ -160,55 +165,57 @@ export default class EmojiValueList extends Component {
   _saveValues() {
     this.set("values", this.collection.mapBy("value").join("|"));
   }
+
+  <template>
+    {{#if this.collection}}
+      <ul class="values emoji-value-list">
+        {{#each this.collection as |data index|}}
+          <li class="value" data-index={{index}}>
+            <DButton
+              @action={{fn this.removeValue data}}
+              @icon="xmark"
+              @disabled={{not data.isEditable}}
+              class="btn-default remove-value-btn btn-small"
+            />
+
+            <div
+              class="value-input emoji-details
+                {{if data.isEditable 'can-edit'}}
+                {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+              {{on "click" (fn this.editValue index)}}
+              role="button"
+            >
+              <img
+                height="15px"
+                width="15px"
+                src={{data.emojiUrl}}
+                class="emoji-list-emoji"
+              />
+              <span class="emoji-name">{{data.value}}</span>
+            </div>
+
+            {{#if this.showUpDownButtons}}
+              <DButton
+                @action={{fn this.shift -1 index}}
+                @icon="arrow-up"
+                class="btn-default shift-up-value-btn btn-small"
+              />
+              <DButton
+                @action={{fn this.shift 1 index}}
+                @icon="arrow-down"
+                class="btn-default shift-down-value-btn btn-small"
+              />
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+
+    <div class="value">
+      <EmojiPicker
+        @label={{i18n "admin.site_settings.emoji_list.add_emoji_button.label"}}
+        @didSelectEmoji={{this.emojiSelected}}
+      />
+    </div>
+  </template>
 }
-
-{{#if this.collection}}
-  <ul class="values emoji-value-list">
-    {{#each this.collection as |data index|}}
-      <li class="value" data-index={{index}}>
-        <DButton
-          @action={{fn this.removeValue data}}
-          @icon="xmark"
-          @disabled={{not data.isEditable}}
-          class="btn-default remove-value-btn btn-small"
-        />
-
-        <div
-          class="value-input emoji-details
-            {{if data.isEditable 'can-edit'}}
-            {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-          {{on "click" (fn this.editValue index)}}
-          role="button"
-        >
-          <img
-            height="15px"
-            width="15px"
-            src={{data.emojiUrl}}
-            class="emoji-list-emoji"
-          />
-          <span class="emoji-name">{{data.value}}</span>
-        </div>
-
-        {{#if this.showUpDownButtons}}
-          <DButton
-            @action={{fn this.shift -1 index}}
-            @icon="arrow-up"
-            class="btn-default shift-up-value-btn btn-small"
-          />
-          <DButton
-            @action={{fn this.shift 1 index}}
-            @icon="arrow-down"
-            class="btn-default shift-down-value-btn btn-small"
-          />
-        {{/if}}
-      </li>
-    {{/each}}
-  </ul>
-{{/if}}
-
-<div class="value">
-  <EmojiPicker
-    @label={{i18n "admin.site_settings.emoji_list.add_emoji_button.label"}}
-    @didSelectEmoji={{this.emojiSelected}}
-  />
-</div>

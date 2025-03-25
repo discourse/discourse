@@ -1,6 +1,10 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import getUrl from "discourse/helpers/get-url";
+import htmlSafe from "discourse/helpers/html-safe";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import I18n, { i18n } from "discourse-i18n";
@@ -42,59 +46,61 @@ export default class AdminReportStorageStats extends Component {
   freeUploadSpace(bytes) {
     return I18n.toHumanSize(bytes);
   }
-}
 
-{{#if this.showBackupStats}}
-  <div class="backups">
-    <h3 class="storage-stats-title">
-      <a href={{get-url "/admin/backups"}}>{{d-icon "box-archive"}}
-        {{i18n "admin.dashboard.backups"}}</a>
-    </h3>
-    <p>
-      {{#if this.backupStats.free_bytes}}
-        {{i18n
-          "admin.dashboard.space_used_and_free"
-          usedSize=this.usedBackupSpace
-          freeSize=this.freeBackupSpace
-        }}
-      {{else}}
-        {{i18n "admin.dashboard.space_used" usedSize=this.usedBackupSpace}}
-      {{/if}}
+  <template>
+    {{#if this.showBackupStats}}
+      <div class="backups">
+        <h3 class="storage-stats-title">
+          <a href={{getUrl "/admin/backups"}}>{{icon "box-archive"}}
+            {{i18n "admin.dashboard.backups"}}</a>
+        </h3>
+        <p>
+          {{#if this.backupStats.free_bytes}}
+            {{i18n
+              "admin.dashboard.space_used_and_free"
+              usedSize=this.usedBackupSpace
+              freeSize=this.freeBackupSpace
+            }}
+          {{else}}
+            {{i18n "admin.dashboard.space_used" usedSize=this.usedBackupSpace}}
+          {{/if}}
 
-      <br />
-      {{i18n
-        "admin.dashboard.backup_count"
-        count=this.backupStats.count
-        location=this.backupLocationName
-      }}
+          <br />
+          {{i18n
+            "admin.dashboard.backup_count"
+            count=this.backupStats.count
+            location=this.backupLocationName
+          }}
 
-      {{#if this.backupStats.last_backup_taken_at}}
-        <br />
-        {{html-safe
-          (i18n
-            "admin.dashboard.lastest_backup"
-            date=(format-date
-              this.backupStats.last_backup_taken_at leaveAgo="true"
-            )
-          )
-        }}
-      {{/if}}
-    </p>
-  </div>
-{{/if}}
-
-<div class="uploads">
-  <h3 class="storage-stats-title">{{d-icon "upload"}}
-    {{i18n "admin.dashboard.uploads"}}</h3>
-  <p>
-    {{#if this.uploadStats.free_bytes}}
-      {{i18n
-        "admin.dashboard.space_used_and_free"
-        usedSize=this.usedUploadSpace
-        freeSize=this.freeUploadSpace
-      }}
-    {{else}}
-      {{i18n "admin.dashboard.space_used" usedSize=this.usedUploadSpace}}
+          {{#if this.backupStats.last_backup_taken_at}}
+            <br />
+            {{htmlSafe
+              (i18n
+                "admin.dashboard.lastest_backup"
+                date=(formatDate
+                  this.backupStats.last_backup_taken_at leaveAgo="true"
+                )
+              )
+            }}
+          {{/if}}
+        </p>
+      </div>
     {{/if}}
-  </p>
-</div>
+
+    <div class="uploads">
+      <h3 class="storage-stats-title">{{icon "upload"}}
+        {{i18n "admin.dashboard.uploads"}}</h3>
+      <p>
+        {{#if this.uploadStats.free_bytes}}
+          {{i18n
+            "admin.dashboard.space_used_and_free"
+            usedSize=this.usedUploadSpace
+            freeSize=this.freeUploadSpace
+          }}
+        {{else}}
+          {{i18n "admin.dashboard.space_used" usedSize=this.usedUploadSpace}}
+        {{/if}}
+      </p>
+    </div>
+  </template>
+}

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { Input } from "@ember/component";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookEventChooser extends Component {
@@ -34,9 +35,11 @@ export default class WebhookEventChooser extends Component {
       );
     }
   }
-}
 
-<label class="hook-event">
-  <Input @type="checkbox" @checked={{this.enabled}} name="event-choice" />
-  {{this.details}}
-</label>
+  <template>
+    <label class="hook-event">
+      <Input @type="checkbox" @checked={{this.enabled}} name="event-choice" />
+      {{this.details}}
+    </label>
+  </template>
+}

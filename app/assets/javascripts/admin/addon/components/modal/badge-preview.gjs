@@ -1,4 +1,7 @@
 import Component from "@glimmer/component";
+import DModal from "discourse/components/d-modal";
+import icon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -50,60 +53,63 @@ export default class BadgePreview extends Component {
     output += "</pre>";
     return output;
   }
-}
 
-<DModal
-  @closeModal={{@closeModal}}
-  @title={{i18n "admin.badges.preview.modal_title"}}
-  class="badge-query-preview"
->
-  <:body>
-    {{#if @model.badge.errors}}
-      <p class="error-header">
-        {{i18n "admin.badges.preview.sql_error_header"}}
-      </p>
-      <pre class="badge-errors">{{@model.badge.errors}}</pre>
-    {{else}}
-      <p class="grant-count">
-        {{#if @model.badge.grant_count}}
-          {{html-safe
-            (i18n
-              "admin.badges.preview.grant_count" count=@model.badge.grant_count
-            )
-          }}
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.badges.preview.modal_title"}}
+      class="badge-query-preview"
+    >
+      <:body>
+        {{#if @model.badge.errors}}
+          <p class="error-header">
+            {{i18n "admin.badges.preview.sql_error_header"}}
+          </p>
+          <pre class="badge-errors">{{@model.badge.errors}}</pre>
         {{else}}
-          {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
+          <p class="grant-count">
+            {{#if @model.badge.grant_count}}
+              {{htmlSafe
+                (i18n
+                  "admin.badges.preview.grant_count"
+                  count=@model.badge.grant_count
+                )
+              }}
+            {{else}}
+              {{htmlSafe (i18n "admin.badges.preview.no_grant_count")}}
+            {{/if}}
+          </p>
+
+          {{#if this.countWarning}}
+            <div class="count-warning">
+              <p class="heading">
+                {{icon "triangle-exclamation"}}
+                {{i18n "admin.badges.preview.bad_count_warning.header"}}
+              </p>
+              <p class="body">
+                {{i18n "admin.badges.preview.bad_count_warning.text"}}
+              </p>
+            </div>
+          {{/if}}
+
+          {{#if @model.badge.sample}}
+            <p class="sample">
+              {{i18n "admin.badges.preview.sample"}}
+            </p>
+            <ul>
+              {{#each this.processedSample as |html|}}
+                <li>{{htmlSafe html}}</li>
+              {{/each}}
+            </ul>
+          {{/if}}
+
+          {{#if this.hasQueryPlan}}
+            <div class="badge-query-plan">
+              {{htmlSafe this.queryPlanHtml}}
+            </div>
+          {{/if}}
         {{/if}}
-      </p>
-
-      {{#if this.countWarning}}
-        <div class="count-warning">
-          <p class="heading">
-            {{d-icon "triangle-exclamation"}}
-            {{i18n "admin.badges.preview.bad_count_warning.header"}}
-          </p>
-          <p class="body">
-            {{i18n "admin.badges.preview.bad_count_warning.text"}}
-          </p>
-        </div>
-      {{/if}}
-
-      {{#if @model.badge.sample}}
-        <p class="sample">
-          {{i18n "admin.badges.preview.sample"}}
-        </p>
-        <ul>
-          {{#each this.processedSample as |html|}}
-            <li>{{html-safe html}}</li>
-          {{/each}}
-        </ul>
-      {{/if}}
-
-      {{#if this.hasQueryPlan}}
-        <div class="badge-query-plan">
-          {{html-safe this.queryPlanHtml}}
-        </div>
-      {{/if}}
-    {{/if}}
-  </:body>
-</DModal>
+      </:body>
+    </DModal>
+  </template>
+}

@@ -1,6 +1,8 @@
 import Component from "@ember/component";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import UploadedImageListModal from "admin/components/modal/uploaded-image-list";
 
 export default class UploadedImageList extends Component {
@@ -16,12 +18,14 @@ export default class UploadedImageList extends Component {
       },
     });
   }
-}
 
-<DButton
-  @label="admin.site_settings.uploaded_image_list.label"
-  @action={{fn
-    this.showUploadModal
-    (hash value=this.value setting=this.setting)
-  }}
-/>
+  <template>
+    <DButton
+      @label="admin.site_settings.uploaded_image_list.label"
+      @action={{fn
+        this.showUploadModal
+        (hash value=this.value setting=this.setting)
+      }}
+    />
+  </template>
+}

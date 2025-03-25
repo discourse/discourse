@@ -1,1 +1,6 @@
-<AdminEmbeddingHostForm @host={{this.model}} />
+import RouteTemplate from "ember-route-template";
+import AdminEmbeddingHostForm from "admin/components/admin-embedding-host-form";
+
+export default RouteTemplate(
+  <template><AdminEmbeddingHostForm @host={{@controller.model}} /></template>
+);
