@@ -471,4 +471,31 @@ RSpec.describe CategoryList do
       end
     end
   end
+
+  describe "with displayable topics" do
+    fab!(:category) { Fabricate(:category, num_featured_topics: 2) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+
+    it "preloads topic associations" do
+      DiscoursePluginRegistry.register_category_list_topics_preloader_association(
+        :first_post,
+        Plugin::Instance.new,
+      )
+
+      category = Fabricate(:category_with_definition)
+      Fabricate(:topic, category: category)
+
+      CategoryFeaturedTopic.feature_topics
+
+      displayable_topics =
+        CategoryList
+          .new(Guardian.new(admin), include_topics: true)
+          .categories
+          .find { |x| x.id == category.id }
+          .displayable_topics
+      expect(displayable_topics.first.association(:first_post).loaded?).to eq(true)
+
+      DiscoursePluginRegistry.reset_register!(:category_list_topics_preloader_associations)
+    end
+  end
 end
