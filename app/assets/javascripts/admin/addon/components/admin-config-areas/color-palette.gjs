@@ -269,7 +269,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                   </span>
                 {{/if}}
                 <form.Submit
-                  @disabled={{this.saving}}
+                  @isLoading={{this.saving}}
                   @label="admin.config_areas.color_palettes.save_changes"
                 />
               </div>
