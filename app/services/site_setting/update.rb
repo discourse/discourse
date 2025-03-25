@@ -3,7 +3,10 @@
 class SiteSetting::Update
   include Service::Base
 
-  options { attribute :allow_changing_hidden, :array, default: [] }
+  options do
+    attribute :allow_changing_hidden, :array, default: []
+    attribute :overridden_setting_names, default: {}
+  end
 
   policy :current_user_is_admin
 
@@ -40,6 +43,7 @@ class SiteSetting::Update
     end
   end
 
+  policy :settings_are_not_deprecated, class_name: SiteSetting::Policy::SettingsAreNotDeprecated
   policy :settings_are_unshadowed_globally,
          class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
   policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
@@ -53,9 +57,13 @@ class SiteSetting::Update
     guardian.is_admin?
   end
 
-  def save(params:, guardian:)
+  def save(params:, options:, guardian:)
     params.settings.each do |setting_name, value|
-      SiteSetting.set_and_log(setting_name, value, guardian.user)
+      SiteSetting.set_and_log(
+        options.overridden_setting_names[setting_name] || setting_name,
+        value,
+        guardian.user,
+      )
     end
   end
 end
