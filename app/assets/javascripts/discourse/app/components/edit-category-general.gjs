@@ -159,7 +159,7 @@ export default class EditCategoryGeneral extends Component {
 
       <PluginOutlet
         @name="category-name-fields-details"
-        @outletArgs={{hash category=@category}}
+        @outletArgs={{hash form=@form category=@category}}
       >
         {{#unless @category.isUncategorizedCategory}}
           <@form.Field
