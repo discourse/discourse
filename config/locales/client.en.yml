@@ -670,6 +670,12 @@ en:
         name: "Name"
         fields: "Fields"
         reject_reason: "Reason"
+        delete_record:
+          button: Delete Record
+          confirm_title: Delete Record
+          confirm_body: "Are you SURE you want to delete this review queue record? This is permanent!"
+          confirm_button: "Delete Record"
+          cancel_button: "Cancel"
 
       user_percentage:
         summary:

@@ -1,14 +1,39 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import ReviewableField from "discourse/components/reviewable-field";
 import getUrl from "discourse/helpers/get-url";
 import discourseComputed from "discourse/lib/decorators";
+import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
+import DeleteRejectedUserModal from "admin/components/modal/delete-rejected-user";
 
 export default class ReviewableUser extends Component {
+  @service modal;
+
   @discourseComputed("reviewable.user_fields")
   userFields(fields) {
     return this.site.collectUserFields(fields);
+  }
+
+  @discourseComputed("reviewable.status")
+  isRejected(status) {
+    return status === REJECTED;
+  }
+
+  @action
+  showDeleteRejectedUserModal() {
+    this.modal.show(DeleteRejectedUserModal, {
+      model: {
+        confirmDelete: this.deleteRejectedUser.bind(this),
+      },
+    });
+  }
+
+  deleteRejectedUser() {
+    // this.reviewable.destroyRecord();
   }
 
   <template>
@@ -85,5 +110,15 @@ export default class ReviewableUser extends Component {
 
       {{yield}}
     </div>
+    {{#if this.isRejected}}
+      <div class="delete-rejected-user">
+        <button
+          class="btn btn-danger"
+          {{on "click" this.showDeleteRejectedUserModal}}
+        >
+          {{i18n "review.user.delete_record.button"}}
+        </button>
+      </div>
+    {{/if}}
   </template>
 }
