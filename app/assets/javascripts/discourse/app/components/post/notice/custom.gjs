@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import ConditionalInElement from "discourse/components/conditional-in-element";
 import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -39,17 +40,15 @@ export default class PostNoticeCustom extends Component {
       {{/if}}
       {{! #in-element is used as an strategy to render the HTML content in the string from a real component
           instead defining it from a string }}
-      {{#if this.createdByAnchorElement}}
-        {{#in-element this.createdByAnchorElement}}
-          <UserLink
-            title={{this.createdByName}}
-            @username={{@post.notice_created_by_user.username}}
-            @ariaHidden={{false}}
-          >
-            {{this.createdByName}}
-          </UserLink>
-        {{/in-element}}
-      {{/if}}
+      <ConditionalInElement @element={{this.createdByAnchorElement}}>
+        <UserLink
+          title={{this.createdByName}}
+          @username={{@post.notice_created_by_user.username}}
+          @ariaHidden={{false}}
+        >
+          {{this.createdByName}}
+        </UserLink>
+      </ConditionalInElement>
     </div>
   </template>
 }
