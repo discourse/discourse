@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class VersionChecks extends Component {}
+
 <div class="section-title">
   <h2>
     {{i18n "admin.dashboard.version"}}

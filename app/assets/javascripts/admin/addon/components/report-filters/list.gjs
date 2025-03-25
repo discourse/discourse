@@ -1,3 +1,7 @@
+import FilterComponent from "admin/components/report-filters/filter";
+
+export default class List extends FilterComponent {}
+
 <ComboBox
   @content={{this.filter.choices}}
   @value={{this.filter.default}}

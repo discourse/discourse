@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class Enum extends Component {}
+
 <ComboBox
   @content={{this.setting.validValues}}
   @value={{this.value}}

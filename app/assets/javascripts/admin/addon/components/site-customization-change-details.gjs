@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class SiteCustomizationChangeDetails extends Component {}
+
 <section class="field">
   <b>{{i18n "admin.customize.enabled"}}</b>:
   {{this.change.enabled}}

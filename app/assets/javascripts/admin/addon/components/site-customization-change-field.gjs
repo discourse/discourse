@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class SiteCustomizationChangeField extends Component {}
+
 {{#if this.field}}
   <section class="field">
     <b>{{i18n this.name}}</b>: ({{i18n

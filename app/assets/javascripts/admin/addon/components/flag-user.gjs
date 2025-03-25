@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class FlagUser extends Component {}
+
 <div class="flag-user">
   <LinkTo
     @route="adminUser"

@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class String extends Component {}
+
 {{#if this.setting.textarea}}
   <Textarea @value={{this.value}} class="input-setting-textarea" />
 {{else if this.isSecret}}
