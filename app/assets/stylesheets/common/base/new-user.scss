@@ -78,6 +78,11 @@
     }
   }
 
+  [class*="horizontal-overflow-nav__scroll-"] {
+    --fade-color: var(--d-content-background, var(--secondary));
+    background-color: var(--d-content-background, var(--secondary));
+  }
+
   .user-navigation-secondary {
     position: relative;
     display: flex;

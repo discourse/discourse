@@ -150,6 +150,7 @@ end
 #  serialize_post_user_badges    :string           is an Array
 #  theme_setting_modifiers       :jsonb
 #  serialize_topic_op_likes_data :boolean
+#  serialize_topic_is_hot        :boolean
 #
 # Indexes
 #

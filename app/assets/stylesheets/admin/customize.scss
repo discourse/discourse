@@ -112,6 +112,8 @@
     background-color: var(--tertiary-low);
     padding: 10px;
     margin: 10px 0;
+    white-space: nowrap;
+    overflow-x: auto;
   }
 
   .admin-container {
@@ -632,7 +634,11 @@
     }
 
     .ace-wrapper {
-      height: calc(100vh - 200px);
+      height: calc(100vh - 270px);
+    }
+
+    .edit-main-nav ~ .ace-wrapper {
+      height: calc(100vh - 315px);
     }
 
     .wrapper {

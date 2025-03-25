@@ -31,7 +31,7 @@
 .horizontal-overflow-nav__scroll-right,
 .horizontal-overflow-nav__scroll-left {
   --fade-width: 1.5em;
-  --fade-color: var(--secondary-rgb); // must be RGB for gradient
+  --fade-color: var(--secondary);
   opacity: 1;
   position: absolute;
   z-index: 2;
@@ -63,11 +63,7 @@
     margin-left: calc(var(--fade-width) * -1);
     height: 100%;
     width: var(--fade-width);
-    background: linear-gradient(
-      to left,
-      rgba(var(--fade-color), 1),
-      rgba(var(--fade-color), 0)
-    );
+    background: linear-gradient(to left, var(--fade-color), transparent);
   }
 }
 
@@ -79,10 +75,6 @@
     margin-right: calc(var(--fade-width) * -1);
     height: 100%;
     width: var(--fade-width);
-    background: linear-gradient(
-      to right,
-      rgba(var(--fade-color), 1),
-      rgba(var(--fade-color), 0)
-    );
+    background: linear-gradient(to right, var(--fade-color), transparent);
   }
 }

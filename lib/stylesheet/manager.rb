@@ -341,7 +341,12 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_details(color_scheme_id = nil, dark: false, fallback_to_base: true)
+  def color_scheme_stylesheet_details(
+    color_scheme_id = nil,
+    dark: false,
+    fallback_to_base: true,
+    include_dark_scheme: false
+  )
     theme_id = @theme_id || SiteSetting.default_theme_id
 
     color_scheme = ColorScheme.find_by(id: color_scheme_id)
@@ -373,6 +378,18 @@ class Stylesheet::Manager
 
       href = builder.stylesheet_absolute_url
       stylesheet[:new_href] = href
+
+      if include_dark_scheme
+        dark_href =
+          self.color_scheme_stylesheet_link_tag_href(
+            color_scheme_id,
+            dark: true,
+            fallback_to_base: false,
+          )
+
+        stylesheet[:new_dark_href] = dark_href if dark_href
+      end
+
       stylesheet.freeze
     end
   end

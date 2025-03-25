@@ -265,6 +265,7 @@
     margin-right: 0;
     overflow: hidden;
     width: 100%;
+    border-radius: var(--d-border-radius);
 
     &.dialog-close {
       display: none;
