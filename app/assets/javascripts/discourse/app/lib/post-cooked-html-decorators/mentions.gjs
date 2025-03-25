@@ -1,30 +1,30 @@
+import UserStatusMessage from "discourse/components/user-status-message";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import {
-  destroyUserStatusOnMentions,
-  updateUserStatusOnMention,
-} from "discourse/lib/update-user-status-on-mention";
+
+const CookedUserStatusMessage = <template>
+  {{#in-element @data.wrapper}}
+    <UserStatusMessage @status={{@data.status}} />
+  {{/in-element}}
+</template>;
 
 export default function (element, context) {
   const {
     data: { post },
     state,
     owner,
+    helper,
   } = context;
 
   state.extractedMentions = _extractMentions(element, post);
 
   const userStatusService = owner.lookup("service:user-status");
 
-  if (userStatusService.isEnabled) {
-    destroyUserStatusOnMentions();
-  }
-
   const _updateUserStatus = (updatedUser) => {
     state.extractedMentions
       .filter(({ user }) => updatedUser.id === user?.id)
       .forEach(({ mentions, user }) => {
-        _renderUserStatusOnMentions(mentions, user, owner);
+        _renderUserStatusOnMentions(mentions, user, helper);
       });
   };
 
@@ -33,7 +33,7 @@ export default function (element, context) {
       user.statusManager?.trackStatus?.();
       user.on?.("status-changed", element, _updateUserStatus);
 
-      _renderUserStatusOnMentions(mentions, user, owner);
+      _renderUserStatusOnMentions(mentions, user, helper);
     }
 
     const classes = applyValueTransformer("mentions-class", [], {
@@ -55,14 +55,22 @@ export default function (element, context) {
         user.off?.("status-changed", element, _updateUserStatus);
       });
     }
-
-    destroyUserStatusOnMentions();
   };
 }
 
-function _renderUserStatusOnMentions(mentions, user, owner) {
+function _renderUserStatusOnMentions(mentions, user, helper) {
   mentions.forEach((mention) => {
-    updateUserStatusOnMention(owner, mention, user.status);
+    let wrapper = mention.querySelector(".user-status-message-wrapper");
+    if (!wrapper) {
+      wrapper = document.createElement("span");
+      wrapper.classList.add("user-status-message-wrapper");
+      mention.appendChild(wrapper);
+    }
+
+    helper.renderGlimmer(mention, CookedUserStatusMessage, {
+      wrapper,
+      status: user.status,
+    });
   });
 }
 
