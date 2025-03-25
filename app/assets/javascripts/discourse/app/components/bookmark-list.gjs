@@ -279,7 +279,7 @@ export default class BookmarkList extends Component {
                 class={{concatClass
                   "topic-list-item bookmark-list-item"
                   (if bookmark.excerpt "excerpt-expanded" "")
-                  (if (or bookmark.reminder_at bookmark.name) "has-metadata" "")
+                  (if bookmark.hasMetadata "has-metadata" "")
                 }}
               >
                 {{#if this.bulkSelectEnabled}}
@@ -301,7 +301,7 @@ export default class BookmarkList extends Component {
                   />
 
                   <span class="link-top-line">
-                    {{#if (or bookmark.reminder_at bookmark.name)}}
+                    {{#if bookmark.hasMetadata}}
                       <div class="bookmark-metadata">
                         {{#if bookmark.reminder_at}}
                           <span
