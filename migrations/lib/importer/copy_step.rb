@@ -69,9 +69,10 @@ module Migrations::Importer
       max_row_count = total_count
 
       with_progressbar(max_row_count) do
-        inserted_row_count = copy_data
+        copied_row_count = copy_data
 
-        if (missing_row_count = max_row_count - inserted_row_count) > 0
+        if (missing_row_count = max_row_count - copied_row_count) > 0
+          @stats.reset
           @stats.skip_count = missing_row_count
           update_progressbar(increment_by: 0)
         end
@@ -86,7 +87,7 @@ module Migrations::Importer
       table_name = self.class.table_name || self.class.name&.demodulize&.underscore
       column_names = self.class.column_names || @discourse_db.column_names(table_name)
       skipped_rows = []
-      inserted_row_count = 0
+      row_count = 0
 
       if self.class.store_mapped_ids?
         @last_id = @discourse_db.last_id_of(table_name)
@@ -94,20 +95,20 @@ module Migrations::Importer
       end
 
       @discourse_db.copy_data(table_name, column_names, fetch_rows(skipped_rows)) do |inserted_rows|
-        after_commit(inserted_rows)
+        after_commit_of_inserted_rows(inserted_rows)
+        row_count += inserted_rows.size
 
         if skipped_rows.any?
-          after_commit(skipped_rows)
+          after_commit_of_skipped_rows(skipped_rows)
+          row_count += skipped_rows.size
           skipped_rows.clear
         end
-
-        inserted_row_count += inserted_rows.size
       end
 
       @discourse_db.fix_last_id_of(table_name) if self.class.store_mapped_ids?
       @intermediate_db.commit_transaction
 
-      inserted_row_count
+      row_count
     end
 
     def fetch_rows(skipped_rows)
@@ -118,12 +119,20 @@ module Migrations::Importer
             enumerator << transformed_row
           else
             skipped_rows << row
-            @stats.skip_count += 1
+            @stats.skip_count = 1
           end
 
           update_progressbar
         end
       end
+    end
+
+    def after_commit_of_inserted_rows(rows)
+      after_commit(rows)
+    end
+
+    def after_commit_of_skipped_rows(rows)
+      after_commit(rows)
     end
 
     def after_commit(rows)

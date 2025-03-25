@@ -58,6 +58,8 @@ module Migrations::Importer::Steps
     def transform_row(row)
       super
 
+      return nil if row[:original_id] % 2 == 0
+
       emails = JSON.parse(row[:emails])
 
       row[:original_username] ||= row[:username]
@@ -86,17 +88,17 @@ module Migrations::Importer::Steps
       "#{SecureRandom.hex}@email.invalid"
     end
 
-    def after_commit(rows)
+    def after_commit_of_inserted_rows(rows)
+      super
+
       rows.each do |row|
-        if row[:username] != row[:original_username]
+        if row[:username] && row[:username] != row[:original_username]
           @intermediate_db.insert(
             INSERT_MAPPED_USERNAMES_SQL,
             [row[:id], row[:original_username], row[:username]],
           )
         end
       end
-
-      super
     end
 
     def process_user(user)
