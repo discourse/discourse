@@ -47,7 +47,9 @@ th:
             restricted_categories:
               label: หมวดหมู่
           created: สร้างเมื่อ
-          topics: หัวข้อ
+          with_images: รูปภาพ
+          with_links: ลิงก์
+          with_uploads: อัปโหลด
         pm_created:
           fields:
             restricted_user:

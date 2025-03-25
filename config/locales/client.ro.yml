@@ -552,6 +552,7 @@ ro:
         required: "Trebuie să revendici elementele înainte de a le putea revizui."
         claimed_by_you: "Ai revendicat acest element și îl poți revizui."
         claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
+        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "revendică acest subiect"
       unclaim:
@@ -3483,6 +3484,7 @@ ro:
           paste: "Lipește..."
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
+    safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
@@ -3612,12 +3614,17 @@ ro:
           header_description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         color_palettes:
           title: "Palete de culori"
+          header_description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stilizare, șabloane și componente suplimentare. Ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
         emoji:
           title: "Emoticon"
           header_description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp."
         themes:
           title: "Teme"
           header_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare"
+        themes_and_components:
+          title: "Teme și componente"
+          header_description: "Personalizează-ți site-ul Discourse cu teme și componente pentru a se potrivi nevoilor tale"
+          keywords: "theme|component|extension|customize"
         site_texts:
           title: "Texte site"
         email:
@@ -3793,6 +3800,7 @@ ro:
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
             trust_levels_none: "Nimeni"
             automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
+            automatic_membership_user_unknown_count: "Utilizatorii cu unul dintre noile domenii de email vor fi adăugați în grup."
             primary_group: "Setează automat ca grup principal"
         name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
         primary: "Grup primar"
@@ -4059,6 +4067,7 @@ ro:
           fonts_and_logos_hint: "Vrei să-ți actualizezi fonturile și logo-urile?"
           save_changes: "Salvează modificări"
           unsaved_changes: "Ai modificări nesalvate"
+          illegal_character_in_color: "Culorile constau numai din caractere hexazecimale"
       plugins:
         title: "Plugin-uri"
         name: "Nume"
@@ -4252,7 +4261,6 @@ ro:
           title: "Culori"
           edit: "Editează paletă de culori"
           long_title: "Paletă de culori"
-          description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stil, machete și componente suplimentare – ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
           undo: "Anulează acțiunea"

@@ -166,6 +166,7 @@ zh_TW:
     back_button: "上一步"
     welcome_banner:
       header:
+        logged_in_members: "%{preferred_display_name} 歡迎回來！"
         anonymous_members: "歡迎來到 %{site_name}！"
       search: "搜索"
     themes:
@@ -517,6 +518,7 @@ zh_TW:
         required: "您必須先審核項目才能查看它們。"
         claimed_by_you: "您已聲明此項目，並可以查看。"
         claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
+        automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
       claim:
         title: "聲稱這個話題"
       unclaim:
@@ -4539,6 +4541,7 @@ zh_TW:
           paste: "貼上..."
           save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
+    safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
@@ -4751,7 +4754,6 @@ zh_TW:
           header_description: "監察字詞是一種審查工具，可執行多種不同的動作，包括封鎖、審查、連結或標記含有特定字詞的文章"
         color_palettes:
           title: "調色盤"
-          header_description: "調色盤可以定義網站介面上使用的核心顏色，而主題則可以提供額外的樣式、版面設計和元件 - 兩者可以共同創造出網站獨特的外觀和感覺，而且兩者都可以供使用者選擇喜好。"
         emoji:
           title: "Emoji"
           header_description: "添加可供所有人使用的新表情符號。選擇多個文件，使用其文件名創建表情符號。所選群組將用於同時添加的所有文件。"
@@ -4762,6 +4764,8 @@ zh_TW:
           title: "元件"
           header_description: "元件是較小的客製化設定，可以新增至佈景主題，以改變論壇設計風格的特定元素。"
           keywords: "主題 | 元件 | 擴充套件"
+        themes_and_components:
+          title: "主題與組件"
         site_texts:
           title: "網站文字"
           header_description: "自定義 Discourse 中使用的任何文本，以匹配社區的聲音和語調"
@@ -5818,7 +5822,6 @@ zh_TW:
           title: "顏色"
           edit: "編輯調色盤"
           long_title: "調色盤"
-          description: "調色盤可以定義網站介面上使用的核心顏色，而主題則可以提供額外的樣式、版面設計和元件 - 兩者可以共同創造出網站獨特的外觀和感覺，而且兩者都可以供使用者選擇喜好。"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
           new_name: "新的調色盤"
           copy_name_prefix: "複製於"

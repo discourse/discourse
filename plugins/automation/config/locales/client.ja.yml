@@ -162,11 +162,8 @@ ja:
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
             restricted_categories:
               label: カテゴリ
-            restricted_groups:
+            restricted_inbox_groups:
               description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
-            ignore_group_members:
-              label: グループメンバーを無視
-              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
             ignore_automated:
               label: 自動送信元を無視
               description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
@@ -181,7 +178,10 @@ ja:
               description: "投稿がメールで作成された場合はトリガーをスキップします"
           created: 作成
           edited: 編集
-          topics: トピック
+          with_images: 画像
+          with_links: リンク
+          with_code: コード
+          with_uploads: アップロード
         user_updated:
           fields:
             user_profile:

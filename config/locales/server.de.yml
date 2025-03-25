@@ -342,6 +342,7 @@ de:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst das Entfernen der Bild-Metadaten nicht deaktivieren, wenn „composer media optimization image enabled“ aktiviert ist. Deaktiviere „composer media optimization image enabled“, bevor du das Entfernen der Bild-Metadaten deaktivierst."
       x_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
       tl0_and_anonymous_flag: "Für anonyme Benutzer muss entweder „site contact email“ oder „email address to report illegal content“ angegeben werden."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Für diese Einstellung muss zuerst die Einstellung „allow anonymous mode“ aktiviert werden."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -576,6 +577,7 @@ de:
         one: "„%{username}“ ist bereits Mitglied dieser Gruppe."
         other: "Die folgenden Benutzer sind bereits Mitglieder dieser Gruppe: %{username}"
       invalid_domain: "„%{domain}“ ist keine gültige Domain."
+      too_many_domains: "Zu viele Domänen. Maximal %{max}."
       invalid_incoming_email: "„%{email}“ ist keine gültige E-Mail-Adresse."
       email_already_used_in_group: "„%{email}“ wird bereits von der Gruppe „%{group_name}“ verwendet."
       email_already_used_in_category: "„%{email}“ wird bereits von der Kategorie „%{category_name}“ verwendet."
@@ -585,6 +587,9 @@ de:
         one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
         other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
       usernames_or_emails_required: "Benutzernamen oder E-Mails müssen vorhanden sein"
+      counting_too_many_email_domains:
+        one: "Maximal %{count} E-Mail-Domain kann auf einmal gezählt werden"
+        other: "Maximal %{count} E-Mail-Domains können auf einmal gezählt werden"
       no_invites_with_discourse_connect: "Du kannst nur registrierte Benutzer einladen, wenn DiscourseConnect aktiviert ist"
       no_invites_without_local_logins: "Du kannst nur registrierte Benutzer einladen, wenn lokale Anmeldungen deaktiviert sind"
     default_names:
@@ -2241,8 +2246,8 @@ de:
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
-    allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
-    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
+    allow_anonymous_mode: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
+    allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow anonymous mode`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -3910,6 +3915,17 @@ de:
         Du wurdest im Forum stummgeschaltet.
 
         Grund – %{reason}
+    account_deleted:
+      title: "Konto gelöscht"
+      subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von [%{site_name}](%{base_url}), um dich darüber zu informieren, dass das mit dieser E-Mail-Adresse verknüpfte Benutzerkonto, von einem Team-Mitglied gelöscht wurde.
+
+        %{flag_reason}
+
+        Bitte lies unsere [Community-Richtlinien](%{base_url}/guidelines) für weitere Informationen.
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"

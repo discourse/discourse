@@ -4956,7 +4956,7 @@ hu:
           header_description: "A megfigyelt szavak olyan moderációs eszközök, amelyek többféle műveletet is végrehajthatnak, beleértve bizonyos szavakat tartalmazó bejegyzések blokkolását, cenzúrázását, linkelését vagy megjelölését."
         color_palettes:
           title: "Színpaletták"
-          header_description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak. Mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettőt elérhetővé teheti a felhasználók számára, hogy kiválaszthassák preferenciáikat"
+          header_description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak. Mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettőt elérhetővé teheti a felhasználók számára, hogy kiválaszthassák preferenciáikat."
         emoji:
           title: "Hangulatjel"
           header_description: "Adjon hozzá új hangulatjeleket, amelyek mindenki számára elérhetőek lesznek. Válasszon ki több fájlt hangulatjelek létrehozásához a fájlnevük alapján. A kiválasztott csoport az összes egyidejűleg hozzáadott fájlhoz használható lesz."
@@ -6051,7 +6051,6 @@ hu:
           title: "Színek"
           edit: "Színpaletták szerkesztése"
           long_title: "Színpaletták"
-          description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak – mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettő elérhetővé tehető a felhasználók számára, hogy kiválaszthassák preferenciáikat."
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"
           copy_name_prefix: "másolata"

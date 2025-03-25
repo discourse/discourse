@@ -85,17 +85,29 @@ ro:
             restricted_archetype:
               label: Tip subiect
               description: Opțional, permite declanșarea numai pe subiecte sau mesaje personale
-            restricted_user_group:
-              label: Grup de utilizatori restricționat
-              description: Opțional, se va declanșa numai dacă utilizatorul postării se află în acest grup
             restricted_groups:
+              label: Grupuri restricționate
+              description: Opțional, se va declanșa doar dacă utilizatorul postării se află în oricare dintre aceste grupuri
+            restricted_inbox_groups:
               label: Grupuri de căsuțe poștale restricționate
+              description: Opțional, se va declanșa doar dacă subiectul postării este un mesaj personal într-una dintre căsuțele de intrare ale grupului
+            excluded_groups:
+              label: Grupuri excluse
+              description: Opțional, ignoră declanșatorul dacă utilizatorul postării aparține unuia dintre aceste grupuri
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"
+            post_features:
+              label: Caracteristici postare
+              description: "Opțional, limitează declanșarea numai la postările cu aceste caracteristici"
           created: Creat
-          topics: Subiecte
+          topics: Toate subiectele
           personal_messages: Mesaje personale
+          public_topics: Subiecte publice (exclude toate categoriile securizate)
+          with_images: Imagini
+          with_links: Legături
+          with_code: Cod
+          with_uploads: Încărcări
         user_updated:
           fields:
             new_users_only:
@@ -190,6 +202,11 @@ ro:
           name:
             label: Declanșator
         automation:
+          runs_today: "%{count} astăzi"
+          runs_this_week: "%{count} săptămâna aceasta"
+          runs_this_month: "%{count} luna aceasta"
+          runs:
+            label: Rulări
           name:
             label: Nume
           trigger:
@@ -202,3 +219,5 @@ ro:
             label: Activat
           disabled:
             label: Dezactivat
+          last_run:
+            label: Ultima rulare
