@@ -5,6 +5,7 @@
 
 export const PLUGIN_API_VERSION = "2.1.1";
 
+import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -26,6 +27,7 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -64,12 +66,13 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
+import { makeArray } from "discourse/lib/helpers";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
@@ -746,61 +749,96 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    // TODO (glimmer-post-stream) what should replace this API?
-    deprecated(
-      "`api.addPosterIcons` has been deprecated. Use the value transformer `` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
-    );
-
     const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, (dec) => {
-      const attrs = dec.attrs;
-      let results = cb(attrs.userCustomFields || {}, attrs);
+    const IconsComponent = class extends Component {
+      get definitions() {
+        console.log("definitions", this.args.outletArgs);
+        return makeArray(
+          cb(
+            this.args.outletArgs.post.user_custom_fields || {},
+            this.args.outletArgs.post
+          )
+        );
+      }
 
-      if (results) {
-        if (!Array.isArray(results)) {
-          results = [results];
-        }
+      <template>
+        {{#each this.definitions as |definition|}}
+          <PostMetaDataPosterNameIcon
+            @className={{definition.className}}
+            @emoji={{definition.emoji}}
+            @emojiTitle={{definition.emojiTitle}}
+            @icon={{definition.icon}}
+            @text={{definition.text}}
+            @title={{definition.title}}
+            @url={{definition.url}}
+          />
+        {{/each}}
+      </template>
+    };
 
-        return results.map((result) => {
-          let iconBody;
+    if (loc === "after") {
+      this.renderAfterWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    } else {
+      this.renderBeforeWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    }
 
-          if (result.icon) {
-            iconBody = iconNode(result.icon);
-          } else if (result.emoji) {
-            iconBody = result.emoji.split("|").map((name) => {
-              let widgetAttrs = { name };
-              if (result.emojiTitle) {
-                widgetAttrs.title = true;
-              }
-              return dec.attach("emoji", widgetAttrs);
-            });
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
+    withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+      decorateWidget(`poster-name:${loc}`, (dec) => {
+        const attrs = dec.attrs;
+        let results = cb(attrs.userCustomFields || {}, attrs);
+
+        if (results) {
+          if (!Array.isArray(results)) {
+            results = [results];
           }
 
-          if (result.text) {
-            iconBody = [iconBody, result.text];
-          }
+          return results.map((result) => {
+            let iconBody;
 
-          if (result.url) {
-            iconBody = dec.h(
-              "a",
-              { attributes: { href: result.url } },
+            if (result.icon) {
+              iconBody = iconNode(result.icon);
+            } else if (result.emoji) {
+              iconBody = result.emoji.split("|").map((name) => {
+                let widgetAttrs = { name };
+                if (result.emojiTitle) {
+                  widgetAttrs.title = true;
+                }
+                return dec.attach("emoji", widgetAttrs);
+              });
+            }
+
+            if (result.text) {
+              iconBody = [iconBody, result.text];
+            }
+
+            if (result.url) {
+              iconBody = dec.h(
+                "a",
+                { attributes: { href: result.url } },
+                iconBody
+              );
+            }
+
+            return dec.h(
+              "span.poster-icon",
+              {
+                className: result.className,
+                attributes: { title: result.title },
+              },
               iconBody
             );
-          }
-
-          return dec.h(
-            "span.poster-icon",
-            {
-              className: result.className,
-              attributes: { title: result.title },
-            },
-            iconBody
-          );
-        });
-      }
+          });
+        }
+      });
     });
   }
 

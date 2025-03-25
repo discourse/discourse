@@ -121,93 +121,101 @@ export default class PostMetaDataPosterName extends Component {
       class="names trigger-user-card"
       {{didUpdate this.refreshUserStatus this.user}}
     >
-      <span
-        class={{concatClass
-          "first"
-          (if this.nameFirst "full-name" "username")
-          (if @post.staff "staff")
-          (if @post.admin "admin")
-          (if @post.moderator "moderator")
-          (if @post.group_moderator "category-moderator")
-          (if @post.new_user "new-user")
-          (if
-            @post.primary_group_name (concat "group--" @post.primary_group_name)
-          )
-        }}
+      <PluginOutlet
+        @name="post-meta-data-poster-name"
+        @outletArgs={{hash post=@post}}
       >
-        <PluginOutlet
-          @name="post-meta-data-poster-name"
-          @outletArgs={{hash position="first" name=this.name post=@post}}
+        <span
+          class={{concatClass
+            "first"
+            (if this.nameFirst "full-name" "username")
+            (if @post.staff "staff")
+            (if @post.admin "admin")
+            (if @post.moderator "moderator")
+            (if @post.group_moderator "category-moderator")
+            (if @post.new_user "new-user")
+            (if
+              @post.primary_group_name
+              (concat "group--" @post.primary_group_name)
+            )
+          }}
         >
-          <UserLink @user={{@post}}>
-            {{this.name}}
-            {{#if this.showGlyph}}
-              {{#if (or @post.moderator @post.group_moderator)}}
-                {{icon "shield-halved" title=(i18n "user.moderator_tooltip")}}
-              {{/if}}
-            {{/if}}
-          </UserLink>
-        </PluginOutlet>
-      </span>
-
-      {{#if this.showNameAndGroup}}
-        {{#if this.shouldDisplaySecondName}}
-          <span
-            class={{concatClass
-              "second"
-              (if this.nameFirst "username" "full-name")
-            }}
+          {{! use the position argument to choose between the first and second name if needed}}
+          <PluginOutlet
+            @name="post-meta-data-poster-name-user-link"
+            @outletArgs={{hash position="first" name=this.name post=@post}}
           >
-            <PluginOutlet
-              @name="post-meta-data-poster-name"
-              @outletArgs={{hash position="second" name=this.name post=@post}}
-            >
-              <UserLink @user={{@post}}>
-                {{#if this.nameFirst}}
-                  {{formatUsername @post.username}}
-                {{else}}
-                  {{@post.name}}
+            <UserLink @user={{@post}}>
+              {{this.name}}
+              {{#if this.showGlyph}}
+                {{#if (or @post.moderator @post.group_moderator)}}
+                  {{icon "shield-halved" title=(i18n "user.moderator_tooltip")}}
                 {{/if}}
-              </UserLink>
-            </PluginOutlet>
-          </span>
-        {{/if}}
+              {{/if}}
+            </UserLink>
+          </PluginOutlet>
+        </span>
 
-        {{#if @post.user_title}}
-          <span class={{concatClass "user-title" this.titleClassNames}}>
-            {{#if (and @post.primary_group_name @post.title_is_group)}}
-              <GroupLink
-                @name={{@post.primary_group_name}}
-                @href={{this.primaryGroupHref}}
+        {{#if this.showNameAndGroup}}
+          {{#if this.shouldDisplaySecondName}}
+            <span
+              class={{concatClass
+                "second"
+                (if this.nameFirst "username" "full-name")
+              }}
+            >
+              {{! use the position argument to choose between the first and second name if needed}}
+              <PluginOutlet
+                @name="post-meta-data-poster-name-user-link"
+                @outletArgs={{hash position="second" name=this.name post=@post}}
               >
+                <UserLink @user={{@post}}>
+                  {{#if this.nameFirst}}
+                    {{formatUsername @post.username}}
+                  {{else}}
+                    {{@post.name}}
+                  {{/if}}
+                </UserLink>
+              </PluginOutlet>
+            </span>
+          {{/if}}
+
+          {{#if @post.user_title}}
+            <span class={{concatClass "user-title" this.titleClassNames}}>
+              {{#if (and @post.primary_group_name @post.title_is_group)}}
+                <GroupLink
+                  @name={{@post.primary_group_name}}
+                  @href={{this.primaryGroupHref}}
+                >
+                  {{@post.user_title}}
+                </GroupLink>
+              {{else}}
                 {{@post.user_title}}
-              </GroupLink>
-            {{else}}
-              {{@post.user_title}}
-            {{/if}}
-          </span>
-        {{/if}}
+              {{/if}}
+            </span>
+          {{/if}}
 
-        {{#if (and this.userStatus.isEnabled this.user.status)}}
-          <span class="user-status-message-wrap">
-            <UserStatusMessage @status={{this.user.status}} />
-          </span>
-        {{/if}}
+          {{#if (and this.userStatus.isEnabled this.user.status)}}
+            <span class="user-status-message-wrap">
+              <UserStatusMessage @status={{this.user.status}} />
+            </span>
+          {{/if}}
 
-        {{#if @post.badgesGranted}}
-          <span class="user-badge-buttons">
-            {{#each @post.badgesGranted key="id" as |badge|}}
-              <span class={{concat "user-badge-button-" badge.slug}}>
-                <UserBadge
-                  @badge={{this.withBadgeDescription badge}}
-                  @user={{@post.user}}
-                  @showName={{false}}
-                />
-              </span>
-            {{/each}}
-          </span>
+          {{#if @post.badgesGranted}}
+            <span class="user-badge-buttons">
+              {{#each @post.badgesGranted key="id" as |badge|}}
+                <span class={{concat "user-badge-button-" badge.slug}}>
+                  <UserBadge
+                    @badge={{this.withBadgeDescription badge}}
+                    @user={{@post.user}}
+                    @showName={{false}}
+                  />
+                </span>
+              {{/each}}
+            </span>
+          {{/if}}
         {{/if}}
-      {{/if}}
+      </PluginOutlet>
     </div>
   </template>
 }

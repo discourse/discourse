@@ -136,5 +136,56 @@ module(
         )
         .exists();
     });
+
+    test("api.addPosterIcons", async function (assert) {
+      this.post.username = "eviltrout";
+      this.post.user = this.store.createRecord("user", {
+        username: "eviltrout",
+      });
+
+      withPluginApi((api) => {
+        api.addPosterIcons((_, { username }) => {
+          return [
+            {
+              className: "test-icon",
+              icon: "cake-candles",
+              title: `${username}`,
+              text: "Test icon",
+            },
+            {
+              className: "test-smile",
+              emoji: "heart|smile",
+              emojiTitle: "test emojis",
+              url: "/u/eviltrout",
+              title: `${username}`,
+            },
+          ];
+        });
+      });
+
+      await renderComponent(this.post);
+
+      assert
+        .dom("span.poster-icon.test-icon")
+        .exists()
+        .hasAttribute("title", this.post.username)
+        .hasText("Test icon");
+      assert.dom("span.poster-icon.test-icon > .d-icon-cake-candles").exists();
+
+      assert
+        .dom("span.poster-icon.test-smile")
+        .exists()
+        .hasAttribute("title", this.post.username);
+      assert
+        .dom("span.poster-icon.test-smile > a")
+        .exists()
+        .hasAttribute("href", "/u/eviltrout");
+      assert
+        .dom("span.poster-icon.test-smile > a > .emoji[alt='heart']")
+        .exists();
+      assert
+        .dom("span.poster-icon.test-smile > a > .emoji[alt='smile']")
+        .exists();
+    });
   }
 );
