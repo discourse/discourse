@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import TextField from "discourse/components/text-field";
-import DButton from "discourse/components/d-button";
-import i18n from "discourse/helpers/i18n";
-import ComboBox from "select-kit/components/combo-box";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
+import { i18n } from 'discourse-i18n';
 import SiteTextSummary from "admin/components/site-text-summary";
+import ComboBox from "select-kit/components/combo-box";
+
 export default RouteTemplate(<template><div class="search-area">
   <TextField @value={{@controller.q}} @placeholderKey="admin.site_text.search" @autofocus="true" @key-up={{@controller.search}} class="no-blur site-text-search" />
 
@@ -58,4 +59,4 @@ export default RouteTemplate(<template><div class="search-area">
   {{#if @controller.model.extras.has_more}}
     <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
   {{/if}}
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

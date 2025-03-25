@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import DButton from "discourse/components/d-button";
-import WatchedWordUploader from "admin/components/watched-word-uploader";
-import htmlSafe from "discourse/helpers/html-safe";
-import i18n from "discourse/helpers/i18n";
-import basePath from "discourse/helpers/base-path";
-import WatchedWordForm from "admin/components/watched-word-form";
 import { Input } from "@ember/component";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import basePath from "discourse/helpers/base-path";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
 import AdminWatchedWord from "admin/components/admin-watched-word";
+import WatchedWordForm from "admin/components/watched-word-form";
+import WatchedWordUploader from "admin/components/watched-word-uploader";
+
 export default RouteTemplate(<template>{{#if @controller.regexpError}}
   <div class="alert alert-error">{{@controller.regexpError}}</div>
 {{/if}}
@@ -46,4 +47,4 @@ export default RouteTemplate(<template>{{#if @controller.regexpError}}
       </div>
     {{/each}}
   </div>
-{{/if}}</template>)
+{{/if}}</template>);

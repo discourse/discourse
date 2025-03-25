@@ -1,7 +1,8 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><table class="table">
   <tbody>
     <tr>
@@ -34,4 +35,4 @@ export default RouteTemplate(<template><table class="table">
       </div>
     </div>
   </div>
-</form></template>)
+</form></template>);

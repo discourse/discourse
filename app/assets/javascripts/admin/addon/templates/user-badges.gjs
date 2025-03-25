@@ -1,16 +1,17 @@
-import RouteTemplate from 'ember-route-template'
-import { LinkTo } from "@ember/routing";
-import dIcon from "discourse/helpers/d-icon";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import i18n from "discourse/helpers/i18n";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, fn } from "@ember/helper";
-import ComboBox from "select-kit/components/combo-box";
 import { Input } from "@ember/component";
+import { fn,hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
-import avatar from "discourse/helpers/avatar";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import avatar from "discourse/helpers/avatar";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
+import ComboBox from "select-kit/components/combo-box";
+
 export default RouteTemplate(<template><div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
@@ -86,4 +87,4 @@ export default RouteTemplate(<template><div class="admin-controls">
       </table>
     </PluginOutlet>
   </div>
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

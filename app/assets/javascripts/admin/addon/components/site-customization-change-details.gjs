@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import SiteCustomizationChangeField from "admin/components/site-customization-change-field";
 
 export default class SiteCustomizationChangeDetails extends Component {<template><section class="field">

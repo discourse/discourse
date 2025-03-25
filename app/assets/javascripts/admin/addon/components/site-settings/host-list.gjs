@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import ListSetting from "select-kit/components/list-setting";
-import { hash } from "@ember/helper";
 
 export default class HostList extends Component {
   tokenSeparator = "|";
@@ -20,4 +20,5 @@ export default class HostList extends Component {
 
     this.set("value", value.join(this.tokenSeparator));
   }
+
 <template><ListSetting @value={{this.settingValue}} @settingName={{this.setting.setting}} @choices={{this.settingValue}} @onChange={{this.onChange}} @options={{hash allowAny=this.allowAny}} /></template>}

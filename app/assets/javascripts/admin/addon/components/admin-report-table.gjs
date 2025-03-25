@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { i18n } from 'discourse-i18n';
 import AdminReportTableHeader from "admin/components/admin-report-table-header";
-import { fn } from "@ember/helper";
 import AdminReportTableRow from "admin/components/admin-report-table-row";
-import i18n from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
 
 const PAGES_LIMIT = 8;
 
@@ -188,6 +188,7 @@ export default class AdminReportTable extends Component {
       this.set("sortLabel", label);
     }
   }
+
 <template><table class="table">
   <thead>
     <tr>

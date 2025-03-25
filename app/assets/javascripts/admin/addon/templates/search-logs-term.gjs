@@ -1,18 +1,19 @@
-import RouteTemplate from 'ember-route-template'
-import PeriodChooser from "select-kit/components/period-chooser";
 import { fn, hash } from "@ember/helper";
-import ComboBox from "select-kit/components/combo-box";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import Chart from "admin/components/chart";
-import i18n from "discourse/helpers/i18n";
-import avatar from "discourse/helpers/avatar";
-import TopicStatus from "discourse/components/topic-status";
-import htmlSafe from "discourse/helpers/html-safe";
 import HighlightSearch from "discourse/components/highlight-search";
+import TopicStatus from "discourse/components/topic-status";
+import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTag from "discourse/helpers/discourse-tag";
 import formatAge from "discourse/helpers/format-age";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
+import Chart from "admin/components/chart";
+import ComboBox from "select-kit/components/combo-box";
+import PeriodChooser from "select-kit/components/period-chooser";
+
 export default RouteTemplate(<template><div class="admin-title">
   <PeriodChooser @period={{@controller.period}} @onChange={{fn (mut @controller.period)}} />
   <ComboBox @content={{@controller.searchTypeOptions}} @value={{@controller.searchType}} @onChange={{fn (mut @controller.searchType)}} class="search-logs-filter" />
@@ -86,4 +87,4 @@ export default RouteTemplate(<template><div class="admin-title">
       </div>
     {{/each}}
   </div>
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

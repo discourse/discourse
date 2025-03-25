@@ -1,12 +1,12 @@
 import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import DButton from "discourse/components/d-button";
-import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import ComboBox from "select-kit/components/combo-box";
 
 @classNames("value-list")
@@ -144,6 +144,7 @@ export default class ValueList extends Component {
       return [];
     }
   }
+
 <template>{{#if this.collection}}
   <div class="values">
     {{#each this.collection as |value index|}}

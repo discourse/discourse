@@ -1,14 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import LoadMore from "discourse/components/load-more";
-import i18n from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import formatDate from "discourse/helpers/format-date";
-import { LinkTo } from "@ember/routing";
-import avatar from "discourse/helpers/avatar";
-import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
+import { on } from "@ember/modifier";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import LoadMore from "discourse/components/load-more";
+import TextField from "discourse/components/text-field";
+import avatar from "discourse/helpers/avatar";
+import dIcon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><LoadMore @selector=".email-list tr" @action={{action "loadMore"}}>
   <table class="table email-list">
     <thead>
@@ -65,4 +66,4 @@ export default RouteTemplate(<template><LoadMore @selector=".email-list tr" @act
   </table>
 </LoadMore>
 
-<ConditionalLoadingSpinner @condition={{@controller.loading}} /></template>)
+<ConditionalLoadingSpinner @condition={{@controller.loading}} /></template>);

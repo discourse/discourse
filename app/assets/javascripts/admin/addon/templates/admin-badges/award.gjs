@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import { Input } from "@ember/component";
-import DButton from "discourse/components/d-button";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
 import dIcon from "discourse/helpers/d-icon";
+import iconOrImage from "discourse/helpers/icon-or-image";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><section class="current-badge content-body">
   <h2>{{i18n "admin.badges.mass_award.title"}}</h2>
   <p>{{i18n "admin.badges.mass_award.description"}}</p>
@@ -74,4 +75,4 @@ export default RouteTemplate(<template><section class="current-badge content-bod
   {{else}}
     <span class="badge-required">{{i18n "admin.badges.mass_award.no_badge_selected"}}</span>
   {{/if}}
-</section></template>)
+</section></template>);

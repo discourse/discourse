@@ -1,13 +1,14 @@
-import RouteTemplate from 'ember-route-template'
-import DPageSubheader from "discourse/components/d-page-subheader";
-import i18n from "discourse/helpers/i18n";
-import DatePickerPast from "discourse/components/date-picker-past";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import DatePickerPast from "discourse/components/date-picker-past";
 import TextField from "discourse/components/text-field";
+import { i18n } from 'discourse-i18n';
+import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+
 export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n "admin.config.email.sub_pages.preview_summary.header_description"}} />
 
 <div class="admin-controls email-preview">
@@ -69,4 +70,4 @@ export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n 
     </div>
   </div>
 
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

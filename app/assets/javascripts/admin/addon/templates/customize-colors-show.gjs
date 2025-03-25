@@ -1,13 +1,14 @@
-import RouteTemplate from 'ember-route-template'
-import TextField from "discourse/components/text-field";
-import DButton from "discourse/components/d-button";
-import { fn, array } from "@ember/helper";
-import i18n from "discourse/helpers/i18n";
-import { LinkTo } from "@ember/routing";
-import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 import { Input } from "@ember/component";
-import ColorInput from "admin/components/color-input";
+import { array,fn } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
+import { i18n } from 'discourse-i18n';
+import ColorInput from "admin/components/color-input";
+import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
+
 export default RouteTemplate(<template><div class="color-scheme show-current-style">
   <div class="admin-container">
     <h1>{{#if @controller.model.theme_id}}{{@controller.model.name}}{{else}}<TextField @value={{@controller.model.name}} class="style-name" />{{/if}}</h1>
@@ -82,4 +83,4 @@ export default RouteTemplate(<template><div class="color-scheme show-current-sty
       <p>{{i18n "search.no_results"}}</p>
     {{/if}}
   </div>
-</div></template>)
+</div></template>);

@@ -1,14 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import DPageSubheader from "discourse/components/d-page-subheader";
-import i18n from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import DButton from "discourse/components/d-button";
-import ScreenedIpAddressForm from "admin/components/screened-ip-address-form";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
+import { on } from "@ember/modifier";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import TextField from "discourse/components/text-field";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
+import ScreenedIpAddressForm from "admin/components/screened-ip-address-form";
+
 export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n "admin.config.staff_action_logs.sub_pages.screened_ips.header_description"}} />
 
 <div class="screened-ip-controls">
@@ -90,4 +91,4 @@ export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n 
   {{else}}
     {{i18n "search.no_results"}}
   {{/if}}
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

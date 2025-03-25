@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import i18n from "discourse/helpers/i18n";
-import dashIfEmpty from "discourse/helpers/dash-if-empty";
-import dIcon from "discourse/helpers/d-icon";
+import { hash } from "@ember/helper";
 import CustomHtml from "discourse/components/custom-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
+import dIcon from "discourse/helpers/d-icon";
+import dashIfEmpty from "discourse/helpers/dash-if-empty";
+import { i18n } from 'discourse-i18n';
 
 export default class VersionChecks extends Component {<template><div class="section-title">
   <h2>

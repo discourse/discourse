@@ -1,14 +1,15 @@
-import RouteTemplate from 'ember-route-template'
-import Form from "discourse/components/form";
-import iconOrImage from "discourse/helpers/icon-or-image";
-import i18n from "discourse/helpers/i18n";
+import { concat, fn,hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { hash, concat, fn } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
-import routeAction from "discourse/helpers/route-action";
+import RouteTemplate from 'ember-route-template';
+import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
+import iconOrImage from "discourse/helpers/icon-or-image";
 import number from "discourse/helpers/number";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><Form @data={{@controller.formData}} @onSubmit={{@controller.handleSubmit}} @validate={{@controller.validateForm}} @onRegisterApi={{@controller.registerApi}} class="badge-form current-badge content-body" as |form data|>
 
   <h2 class="current-badge-header">
@@ -197,4 +198,4 @@ export default RouteTemplate(<template><Form @data={{@controller.formData}} @onS
       </div>
     </div>
   {{/if}}
-</Form></template>)
+</Form></template>);

@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import htmlSafe from "discourse/helpers/html-safe";
-import i18n from "discourse/helpers/i18n";
-import { hash, get, fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { Input } from "@ember/component";
-import not from "truth-helpers/helpers/not";
+import { fn,get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import avatar from "discourse/helpers/avatar";
 import formatDuration from "discourse/helpers/format-duration";
+import htmlSafe from "discourse/helpers/html-safe";
 import number from "discourse/helpers/number";
+import { ajax } from "discourse/lib/ajax";
+import { i18n } from 'discourse-i18n';
+import not from "truth-helpers/helpers/not";
 
 export default class AdminPenaltySimilarUsers extends Component {
   @tracked isLoading;
@@ -55,6 +55,7 @@ export default class AdminPenaltySimilarUsers extends Component {
 
     this.args.onUsersChanged(this.selectedUserIds);
   }
+
 <template><div class="penalty-similar-users">
   <p class="alert alert-warning">
     {{htmlSafe (i18n "admin.user.other_matches" (hash count=@user.similar_users_count username=@user.username))}}

@@ -1,7 +1,8 @@
-import RouteTemplate from 'ember-route-template'
-import SiteSetting from "admin/components/site-setting";
+import RouteTemplate from 'ember-route-template';
 import routeAction from "discourse/helpers/route-action";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
+import SiteSetting from "admin/components/site-setting";
+
 export default RouteTemplate(<template>{{#if @controller.filteredContent}}
   <section class="form-horizontal settings">
     {{#each @controller.filteredContent as |setting|}}
@@ -14,4 +15,4 @@ export default RouteTemplate(<template>{{#if @controller.filteredContent}}
 {{else}}
   <br />
   {{i18n "admin.site_settings.no_results"}}
-{{/if}}</template>)
+{{/if}}</template>);

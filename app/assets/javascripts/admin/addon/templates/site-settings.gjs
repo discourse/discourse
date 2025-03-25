@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
-import concatClass from "discourse/helpers/concat-class";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import concatClass from "discourse/helpers/concat-class";
+import { i18n } from 'discourse-i18n';
+import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
+
 export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.config.site_settings.title"}} @descriptionLabel={{i18n "admin.config.site_settings.header_description"}} @hideTabs={{true}}>
   <:breadcrumbs>
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -33,4 +34,4 @@ export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.co
   {{outlet}}
 </div>
 
-<div class="clearfix"></div></template>)
+<div class="clearfix"></div></template>);

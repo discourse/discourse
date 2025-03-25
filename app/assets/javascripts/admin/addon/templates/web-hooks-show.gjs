@@ -1,9 +1,10 @@
-import RouteTemplate from 'ember-route-template'
 import { LinkTo } from "@ember/routing";
-import dIcon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
 import WebhookEvents from "admin/components/webhook-events";
+
 export default RouteTemplate(<template><LinkTo @route="adminWebHooks" class="go-back">
   {{dIcon "arrow-left"}}
   {{i18n "admin.web_hooks.back"}}
@@ -27,4 +28,4 @@ export default RouteTemplate(<template><LinkTo @route="adminWebHooks" class="go-
   </div>
 </div>
 
-<WebhookEvents @webhookId={{@controller.model.id}} @status={{@controller.status}} /></template>)
+<WebhookEvents @webhookId={{@controller.model.id}} @status={{@controller.status}} /></template>);

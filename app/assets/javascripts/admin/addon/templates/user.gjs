@@ -1,3 +1,3 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 
-export default RouteTemplate(<template><section>{{outlet}}</section></template>)
+export default RouteTemplate(<template><section>{{outlet}}</section></template>);

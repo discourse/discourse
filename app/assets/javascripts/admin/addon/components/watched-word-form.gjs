@@ -1,20 +1,19 @@
 import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { empty, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import WatchedWord from "admin/models/watched-word";
-import i18n0 from "discourse/helpers/i18n";
-import WatchedWords from "select-kit/components/watched-words";
-import { fn, hash } from "@ember/helper";
-import TextField from "discourse/components/text-field";
 import TagChooser from "select-kit/components/tag-chooser";
-import DButton from "discourse/components/d-button";
+import WatchedWords from "select-kit/components/watched-words";
 
 @tagName("form")
 @classNames("watched-word-form")
@@ -133,52 +132,113 @@ export default class WatchedWordForm extends Component {
         .finally(this.set("formSubmitted", false));
     }
   }
-<template><div class="watched-word-input">
-  <label for="watched-word">{{i18n0 "admin.watched_words.form.label"}}</label>
-  <WatchedWords @id="watched-words" @value={{this.words}} @onChange={{fn (mut this.words)}} @options={{hash filterPlaceholder=this.placeholderKey disabled=this.formSubmitted}} />
-</div>
 
-{{#if this.canReplace}}
-  <div class="watched-word-input">
-    <label for="watched-replacement">{{i18n0 "admin.watched_words.form.replace_label"}}</label>
-    <TextField @id="watched-replacement" @value={{this.replacement}} @disabled={{this.formSubmitted}} @autocorrect="off" @autocapitalize="off" @placeholderKey="admin.watched_words.form.replace_placeholder" class="watched-word-input-field" />
-  </div>
-{{/if}}
+  <template>
+    <div class="watched-word-input">
+      <label for="watched-word">{{i18n
+          "admin.watched_words.form.label"
+        }}</label>
+      <WatchedWords
+        @id="watched-words"
+        @value={{this.words}}
+        @onChange={{fn (mut this.words)}}
+        @options={{hash
+          filterPlaceholder=this.placeholderKey
+          disabled=this.formSubmitted
+        }}
+      />
+    </div>
 
-{{#if this.canTag}}
-  <div class="watched-word-input">
-    <label for="watched-tag">{{i18n0 "admin.watched_words.form.tag_label"}}</label>
-    <TagChooser @id="watched-tag" @tags={{this.selectedTags}} @onChange={{this.changeSelectedTags}} @everyTag={{true}} @options={{hash allowAny=true disabled=this.formSubmitted}} class="watched-word-input-field" />
-  </div>
-{{/if}}
+    {{#if this.canReplace}}
+      <div class="watched-word-input">
+        <label for="watched-replacement">{{i18n
+            "admin.watched_words.form.replace_label"
+          }}</label>
+        <TextField
+          @id="watched-replacement"
+          @value={{this.replacement}}
+          @disabled={{this.formSubmitted}}
+          @autocorrect="off"
+          @autocapitalize="off"
+          @placeholderKey="admin.watched_words.form.replace_placeholder"
+          class="watched-word-input-field"
+        />
+      </div>
+    {{/if}}
 
-{{#if this.canLink}}
-  <div class="watched-word-input">
-    <label for="watched-link">{{i18n0 "admin.watched_words.form.link_label"}}</label>
-    <TextField @id="watched-link" @value={{this.replacement}} @disabled={{this.formSubmitted}} @autocorrect="off" @autocapitalize="off" @placeholderKey="admin.watched_words.form.link_placeholder" class="watched-word-input-field" />
-  </div>
-{{/if}}
+    {{#if this.canTag}}
+      <div class="watched-word-input">
+        <label for="watched-tag">{{i18n
+            "admin.watched_words.form.tag_label"
+          }}</label>
+        <TagChooser
+          @id="watched-tag"
+          @tags={{this.selectedTags}}
+          @onChange={{this.changeSelectedTags}}
+          @everyTag={{true}}
+          @options={{hash allowAny=true disabled=this.formSubmitted}}
+          class="watched-word-input-field"
+        />
+      </div>
+    {{/if}}
 
-<div class="watched-word-input">
-  <label for="watched-case-sensitivity">{{i18n0 "admin.watched_words.form.case_sensitivity_label"}}</label>
-  <label class="case-sensitivity-checkbox checkbox-label">
-    <Input @type="checkbox" @checked={{this.isCaseSensitive}} disabled={{this.formSubmitted}} />
-    {{i18n0 "admin.watched_words.form.case_sensitivity_description"}}
-  </label>
-</div>
+    {{#if this.canLink}}
+      <div class="watched-word-input">
+        <label for="watched-link">{{i18n
+            "admin.watched_words.form.link_label"
+          }}</label>
+        <TextField
+          @id="watched-link"
+          @value={{this.replacement}}
+          @disabled={{this.formSubmitted}}
+          @autocorrect="off"
+          @autocapitalize="off"
+          @placeholderKey="admin.watched_words.form.link_placeholder"
+          class="watched-word-input-field"
+        />
+      </div>
+    {{/if}}
 
-{{#if this.canReplace}}
-  <div class="watched-word-input">
-    <label for="watched-html">{{i18n0 "admin.watched_words.form.html_label"}}</label>
-    <label class="html-checkbox checkbox-label">
-      <Input @type="checkbox" @checked={{this.isHtml}} disabled={{this.formSubmitted}} />
-      {{i18n0 "admin.watched_words.form.html_description"}}
-    </label>
-  </div>
-{{/if}}
+    <div class="watched-word-input">
+      <label for="watched-case-sensitivity">{{i18n
+          "admin.watched_words.form.case_sensitivity_label"
+        }}</label>
+      <label class="case-sensitivity-checkbox checkbox-label">
+        <Input
+          @type="checkbox"
+          @checked={{this.isCaseSensitive}}
+          disabled={{this.formSubmitted}}
+        />
+        {{i18n "admin.watched_words.form.case_sensitivity_description"}}
+      </label>
+    </div>
 
-<DButton @action={{this.submitForm}} @disabled={{this.submitDisabled}} @label="admin.watched_words.form.add" type="submit" class="btn-primary" />
+    {{#if this.canReplace}}
+      <div class="watched-word-input">
+        <label for="watched-html">{{i18n
+            "admin.watched_words.form.html_label"
+          }}</label>
+        <label class="html-checkbox checkbox-label">
+          <Input
+            @type="checkbox"
+            @checked={{this.isHtml}}
+            disabled={{this.formSubmitted}}
+          />
+          {{i18n "admin.watched_words.form.html_description"}}
+        </label>
+      </div>
+    {{/if}}
 
-{{#if this.showMessage}}
-  <span class="success-message">{{this.message}}</span>
-{{/if}}</template>}
+    <DButton
+      @action={{this.submitForm}}
+      @disabled={{this.submitDisabled}}
+      @label="admin.watched_words.form.add"
+      type="submit"
+      class="btn-primary"
+    />
+
+    {{#if this.showMessage}}
+      <span class="success-message">{{this.message}}</span>
+    {{/if}}
+  </template>
+}

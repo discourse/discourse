@@ -1,6 +1,7 @@
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
 import { Textarea } from "@ember/component";
+import DModal from "discourse/components/d-modal";
+import { i18n } from 'discourse-i18n';
+
 const IncomingEmail = <template><DModal class="admin-incoming-email-modal" @title={{i18n "admin.email.incoming_emails.modal.title"}} @closeModal={{@closeModal}} @bodyClass="incoming-emails">
   <:body>
     <div class="control-group">

@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import { LinkTo } from "@ember/routing";
 import { array } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import avatar from "discourse/helpers/avatar";
-import rawDate from "discourse/helpers/raw-date";
 import formatAge from "discourse/helpers/format-age";
+import rawDate from "discourse/helpers/raw-date";
 
 export default class FlagUser extends Component {<template><div class="flag-user">
   <LinkTo @route="adminUser" @models={{array this.user.id this.user.username}} class="flag-user-avatar">

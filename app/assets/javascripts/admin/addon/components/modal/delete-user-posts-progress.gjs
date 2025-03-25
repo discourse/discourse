@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import DModal from "discourse/components/d-modal";
+import htmlSafe from "discourse/helpers/html-safe";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
-import htmlSafe from "discourse/helpers/html-safe";
-import { concat } from "@ember/helper";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;
@@ -43,11 +42,23 @@ export default class DeleteUserPostsProgress extends Component {
       this.flash = extractError(e, i18n("admin.user.delete_posts_failed"));
     }
   }
-<template><DModal @title={{i18n0 "admin.user.delete_posts.progress.title"}} @closeModal={{@closeModal}} class="admin-delete-user-posts-progress-modal" @flash={{this.flash}} @dismissable={{false}}>
-  <:body>
-    <p>{{i18n0 "admin.user.delete_posts.progress.description"}}</p>
-    <div class="progress-bar">
-      <span style={{htmlSafe (concat "width: " this.deletedPercentage "%")}} />
-    </div>
-  </:body>
-</DModal></template>}
+
+  <template>
+    <DModal
+      @title={{i18n "admin.user.delete_posts.progress.title"}}
+      @closeModal={{@closeModal}}
+      class="admin-delete-user-posts-progress-modal"
+      @flash={{this.flash}}
+      @dismissable={{false}}
+    >
+      <:body>
+        <p>{{i18n "admin.user.delete_posts.progress.description"}}</p>
+        <div class="progress-bar">
+          <span
+            style={{htmlSafe (concat "width: " this.deletedPercentage "%")}}
+          />
+        </div>
+      </:body>
+    </DModal>
+  </template>
+}

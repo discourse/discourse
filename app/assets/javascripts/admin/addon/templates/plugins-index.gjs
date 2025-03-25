@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import NavItem from "discourse/components/nav-item";
-import dIcon from "discourse/helpers/d-icon";
-import AdminPluginsList from "admin/components/admin-plugins-list";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import NavItem from "discourse/components/nav-item";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
+import AdminPluginsList from "admin/components/admin-plugins-list";
+
 export default RouteTemplate(<template><div class="admin-plugins-list-container">
 
   <DPageHeader @titleLabel={{i18n "admin.config.plugins.title"}} @descriptionLabel={{i18n "admin.config.plugins.header_description"}} @learnMoreUrl="https://www.discourse.org/plugins">
@@ -42,4 +43,4 @@ export default RouteTemplate(<template><div class="admin-plugins-list-container"
   <span>
     <PluginOutlet @name="admin-below-plugins-index" @connectorTagName="div" @outletArgs={{hash model=@controller.model}} />
   </span>
-</div></template>)
+</div></template>);

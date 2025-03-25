@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-
 /**
   An input field for a color.
 
@@ -11,7 +11,7 @@ import { observes } from "@ember-decorators/object";
   @params valid is a boolean indicating if the input field is a valid color.
 **/
 import TextField from "discourse/components/text-field";
-import { on } from "@ember/modifier";
+
 @classNames("color-picker")
 export default class ColorInput extends Component {
   onlyHex = true;
@@ -73,5 +73,6 @@ export default class ColorInput extends Component {
   _valid(color = this.hexValue) {
     return /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color);
   }
+
 <template>{{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField @value={{this.hexValue}} @maxlength={{this.maxlength}} @input={{this.onHexInput}} class="hex-input" aria-labelledby={{this.ariaLabelledby}} />
 <input class="picker" type="color" value={{this.normalizedHexValue}} {{on "input" this.onPickerInput}} aria-labelledby={{this.ariaLabelledby}} /></template>}

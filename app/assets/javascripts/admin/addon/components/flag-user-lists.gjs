@@ -1,11 +1,11 @@
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
-import i18n from "discourse/helpers/i18n";
-import FlagUser from "admin/components/flag-user";
-import postActionTitle from "admin/helpers/post-action-title";
 import UserFlagPercentage from "discourse/components/user-flag-percentage";
-import dispositionIcon from "admin/helpers/disposition-icon";
 import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
+import FlagUser from "admin/components/flag-user";
+import dispositionIcon from "admin/helpers/disposition-icon";
+import postActionTitle from "admin/helpers/post-action-title";
 
 @classNames("flag-user-lists")
 export default class FlagUserLists extends Component {<template><div class="flagged-by">

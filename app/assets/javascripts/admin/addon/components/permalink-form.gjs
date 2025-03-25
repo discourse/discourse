@@ -1,17 +1,16 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import Permalink from "admin/models/permalink";
-import i18n0 from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
 import ComboBox from "select-kit/components/combo-box";
-import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 
 @tagName("")
 export default class PermalinkForm extends Component {
@@ -95,16 +94,45 @@ export default class PermalinkForm extends Component {
         );
     }
   }
-<template><div class="permalink-form">
-  <div class="inline-form">
-    <label>{{i18n0 "admin.permalink.form.label"}}</label>
 
-    <TextField @value={{this.url}} @disabled={{this.formSubmitted}} @placeholderKey="admin.permalink.url" @autocorrect="off" @autocapitalize="off" class="permalink-url" />
+  <template>
+    <div class="permalink-form">
+      <div class="inline-form">
+        <label>{{i18n "admin.permalink.form.label"}}</label>
 
-    <ComboBox @content={{this.permalinkTypes}} @value={{this.permalinkType}} @onChange={{fn (mut this.permalinkType)}} class="permalink-type" />
+        <TextField
+          @value={{this.url}}
+          @disabled={{this.formSubmitted}}
+          @placeholderKey="admin.permalink.url"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="permalink-url"
+        />
 
-    <TextField @value={{this.permalinkTypeValue}} @disabled={{this.formSubmitted}} @placeholderKey={{this.permalinkTypePlaceholder}} @autocorrect="off" @autocapitalize="off" @keyDown={{this.submitFormOnEnter}} class="permalink-destination" />
+        <ComboBox
+          @content={{this.permalinkTypes}}
+          @value={{this.permalinkType}}
+          @onChange={{fn (mut this.permalinkType)}}
+          class="permalink-type"
+        />
 
-    <DButton @action={{this.onSubmit}} @disabled={{this.formSubmitted}} @label="admin.permalink.form.add" class="permalink-add" />
-  </div>
-</div></template>}
+        <TextField
+          @value={{this.permalinkTypeValue}}
+          @disabled={{this.formSubmitted}}
+          @placeholderKey={{this.permalinkTypePlaceholder}}
+          @autocorrect="off"
+          @autocapitalize="off"
+          @keyDown={{this.submitFormOnEnter}}
+          class="permalink-destination"
+        />
+
+        <DButton
+          @action={{this.onSubmit}}
+          @disabled={{this.formSubmitted}}
+          @label="admin.permalink.form.add"
+          class="permalink-add"
+        />
+      </div>
+    </div>
+  </template>
+}

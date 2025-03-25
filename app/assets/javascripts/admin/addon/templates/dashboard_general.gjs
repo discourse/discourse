@@ -1,16 +1,17 @@
-import RouteTemplate from 'ember-route-template'
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import getUrl from "discourse/helpers/get-url";
-import i18n from "discourse/helpers/i18n";
-import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
-import AdminReport from "admin/components/admin-report";
-import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
 import basePath from "discourse/helpers/base-path";
-import { hash } from "@ember/helper";
+import formatDate from "discourse/helpers/format-date";
+import getUrl from "discourse/helpers/get-url";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
+import AdminReport from "admin/components/admin-report";
+import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
+
 export default RouteTemplate(<template><ConditionalLoadingSpinner @condition={{@controller.isLoading}}>
   <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
 
@@ -125,4 +126,4 @@ export default RouteTemplate(<template><ConditionalLoadingSpinner @condition={{@
   </div>
 
   <PluginOutlet @name="admin-dashboard-general-bottom" @connectorTagName="div" @outletArgs={{hash filters=@controller.filters}} />
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

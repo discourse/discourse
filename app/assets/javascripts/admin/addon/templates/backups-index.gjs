@@ -1,15 +1,16 @@
-import RouteTemplate from 'ember-route-template'
+import { fn } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import i18n from "discourse/helpers/i18n";
-import UppyBackupUploader from "admin/components/uppy-backup-uploader";
-import routeAction from "discourse/helpers/route-action";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import dIcon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+import UppyBackupUploader from "admin/components/uppy-backup-uploader";
 import humanSize from "admin/helpers/human-size";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 import DMenu from "float-kit/components/d-menu";
-import DropdownMenu from "discourse/components/dropdown-menu";
+
 export default RouteTemplate(<template><DPageSubheader @titleLabel={{i18n "admin.backups.files_title"}}>
   <:actions as |actions|>
     <actions.Wrapped as |wrapped|>
@@ -76,4 +77,4 @@ export default RouteTemplate(<template><DPageSubheader @titleLabel={{i18n "admin
       </tr>
     {{/each}}
   </tbody>
-</table></template>)
+</table></template>);

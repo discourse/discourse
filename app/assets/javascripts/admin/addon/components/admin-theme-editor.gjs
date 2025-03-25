@@ -1,21 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
+import { array, concat, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import AceEditor from "discourse/components/ace-editor";
+import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
 import gt from "truth-helpers/helpers/gt";
-import { LinkTo } from "@ember/routing";
-import { array, concat, fn } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
-import i18n0 from "discourse/helpers/i18n";
-import { on } from "@ember/modifier";
 import lte from "truth-helpers/helpers/lte";
-import htmlSafe from "discourse/helpers/html-safe";
-import AceEditor from "discourse/components/ace-editor";
 
 const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
 
@@ -163,70 +162,108 @@ export default class AdminThemeEditor extends Component {
       );
     }
   }
-<template>{{#if (gt this.visibleTargets.length 1)}}
-  <div class="edit-main-nav admin-controls">
-    <nav>
-      <ul class="nav nav-pills target">
-        {{#each this.visibleTargets as |target|}}
+
+  <template>
+    {{#if (gt this.visibleTargets.length 1)}}
+      <div class="edit-main-nav admin-controls">
+        <nav>
+          <ul class="nav nav-pills target">
+            {{#each this.visibleTargets as |target|}}
+              <li>
+                <LinkTo
+                  @route={{this.editRouteName}}
+                  @models={{array this.theme.id target.name this.fieldName}}
+                  @replace={{true}}
+                  title={{this.field.title}}
+                  class={{if target.edited "edited" "blank"}}
+                >
+                  {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                  {{#if target.icon}}{{dIcon target.icon}}{{/if}}
+                  {{i18n (concat "admin.customize.theme." target.name)}}
+                </LinkTo>
+              </li>
+            {{/each}}
+            <li class="spacer"></li>
+            <li>
+              <label>
+                <Input
+                  @type="checkbox"
+                  @checked={{this.showAdvanced}}
+                  {{on "click" this.toggleShowAdvanced}}
+                />
+                {{i18n "admin.customize.theme.show_advanced"}}
+              </label>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    {{/if}}
+
+    <div class="admin-controls">
+      <nav>
+        <ul class="nav nav-pills fields">
+          {{#each this.visibleFields as |field|}}
+            <li>
+              <LinkTo
+                @route={{this.editRouteName}}
+                @models={{array
+                  this.theme.id
+                  this.currentTargetName
+                  field.name
+                }}
+                @replace={{true}}
+                title={{field.title}}
+                class={{if field.edited "edited" "blank"}}
+              >
+                {{#if field.error}}{{dIcon "triangle-exclamation"}}{{/if}}
+                {{#if field.icon}}{{dIcon field.icon}}{{/if}}
+                {{field.translatedName}}
+              </LinkTo>
+            </li>
+          {{/each}}
+
+          <li class="spacer"></li>
           <li>
-            <LinkTo @route={{this.editRouteName}} @models={{array this.theme.id target.name this.fieldName}} @replace={{true}} title={{this.field.title}} class={{if target.edited "edited" "blank"}}>
-              {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
-              {{#if target.icon}}{{dIcon target.icon}}{{/if}}
-              {{i18n0 (concat "admin.customize.theme." target.name)}}
-            </LinkTo>
+            {{#if (lte this.visibleTargets.length 1)}}
+              <label>
+                <Input
+                  @type="checkbox"
+                  @checked={{this.showAdvanced}}
+                  {{on "click" this.toggleShowAdvanced}}
+                />
+                {{i18n "admin.customize.theme.show_advanced"}}
+              </label>
+            {{/if}}
+            <a href {{on "click" this.toggleMaximize}} class="no-text">
+              {{dIcon this.maximizeIcon}}
+            </a>
           </li>
-        {{/each}}
-        <li class="spacer"></li>
-        <li>
-          <label>
-            <Input @type="checkbox" @checked={{this.showAdvanced}} {{on "click" this.toggleShowAdvanced}} />
-            {{i18n0 "admin.customize.theme.show_advanced"}}
-          </label>
-        </li>
-      </ul>
-    </nav>
-  </div>
-{{/if}}
+        </ul>
+      </nav>
+    </div>
 
-<div class="admin-controls">
-  <nav>
-    <ul class="nav nav-pills fields">
-      {{#each this.visibleFields as |field|}}
-        <li>
-          <LinkTo @route={{this.editRouteName}} @models={{array this.theme.id this.currentTargetName field.name}} @replace={{true}} title={{field.title}} class={{if field.edited "edited" "blank"}}>
-            {{#if field.error}}{{dIcon "triangle-exclamation"}}{{/if}}
-            {{#if field.icon}}{{dIcon field.icon}}{{/if}}
-            {{field.translatedName}}
-          </LinkTo>
-        </li>
-      {{/each}}
+    {{#if this.error}}
+      <pre class="field-error">{{this.error}}</pre>
+    {{/if}}
 
-      <li class="spacer"></li>
-      <li>
-        {{#if (lte this.visibleTargets.length 1)}}
-          <label>
-            <Input @type="checkbox" @checked={{this.showAdvanced}} {{on "click" this.toggleShowAdvanced}} />
-            {{i18n0 "admin.customize.theme.show_advanced"}}
-          </label>
-        {{/if}}
-        <a href {{on "click" this.toggleMaximize}} class="no-text">
-          {{dIcon this.maximizeIcon}}
-        </a>
-      </li>
-    </ul>
-  </nav>
-</div>
+    {{#if this.warning}}
+      <pre class="field-warning">{{htmlSafe this.warning}}</pre>
+    {{/if}}
 
-{{#if this.error}}
-  <pre class="field-error">{{this.error}}</pre>
-{{/if}}
+    <div class="field-info">
+      {{this.currentField.title}}
+    </div>
 
-{{#if this.warning}}
-  <pre class="field-warning">{{htmlSafe this.warning}}</pre>
-{{/if}}
-
-<div class="field-info">
-  {{this.currentField.title}}
-</div>
-
-<AceEditor @content={{this.activeSection}} @onChange={{fn (mut this.activeSection)}} @editorId={{this.editorId}} @mode={{this.activeSectionMode}} @autofocus="true" @placeholder={{this.placeholder}} @htmlPlaceholder={{true}} @save={{this.save}} @setWarning={{this.setWarning}} /></template>}
+    <AceEditor
+      @content={{this.activeSection}}
+      @onChange={{fn (mut this.activeSection)}}
+      @editorId={{this.editorId}}
+      @mode={{this.activeSectionMode}}
+      @autofocus="true"
+      @placeholder={{this.placeholder}}
+      @htmlPlaceholder={{true}}
+      @save={{this.save}}
+      @setWarning={{this.setWarning}}
+    />
+  </template>
+}

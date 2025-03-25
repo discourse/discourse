@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import dIcon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import checkIcon from "admin/helpers/check-icon";
+
 export default RouteTemplate(<template><div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
@@ -170,4 +171,4 @@ export default RouteTemplate(<template><div class="admin-controls">
       {{/if}}
     {{/if}}
   </p>
-</div></template>)
+</div></template>);

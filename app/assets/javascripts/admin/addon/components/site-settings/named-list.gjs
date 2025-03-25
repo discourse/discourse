@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import ListSetting from "select-kit/components/list-setting";
-import { hash } from "@ember/helper";
 
 export default class NamedList extends Component {
   tokenSeparator = "|";
@@ -32,4 +32,5 @@ export default class NamedList extends Component {
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
   }
+
 <template><ListSetting @value={{this.settingValue}} @settingName={{this.setting.setting}} @choices={{this.settingChoices}} @nameProperty="name" @valueProperty="value" @onChange={{this.onChangeListSetting}} @options={{hash allowAny=this.allowAny}} /></template>}

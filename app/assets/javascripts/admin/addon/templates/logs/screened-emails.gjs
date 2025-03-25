@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import DPageSubheader from "discourse/components/d-page-subheader";
-import i18n from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import { fn } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n "admin.config.staff_action_logs.sub_pages.screened_emails.header_description"}} />
 
 <DButton @action={{@controller.exportScreenedEmailList}} @title="admin.export_csv.button_title.screened_email" @icon="download" @label="admin.export_csv.button_text" class="btn-default screened-email-export" />
@@ -46,4 +47,4 @@ export default RouteTemplate(<template><DPageSubheader @descriptionLabel={{i18n 
   {{else}}
     {{i18n "search.no_results"}}
   {{/if}}
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

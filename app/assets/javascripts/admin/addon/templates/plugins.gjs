@@ -1,9 +1,10 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import i18n from "discourse/helpers/i18n";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template>{{#if @controller.showTopNav}}
   <div class="d-page-header">
     <DBreadcrumbsContainer />
@@ -32,4 +33,4 @@ export default RouteTemplate(<template>{{#if @controller.showTopNav}}
   {{/each}}
 
   {{outlet}}
-</div></template>)
+</div></template>);

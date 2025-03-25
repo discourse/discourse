@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import DModal from "discourse/components/d-modal";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
 
 export default class MergeUsersProgress extends Component {
   @service messageBus;
@@ -38,8 +37,16 @@ export default class MergeUsersProgress extends Component {
       this.message = i18n("admin.user.merge_failed");
     }
   }
-<template><DModal @title={{i18n0 "admin.user.merge.progress.title"}} @dismissable={{false}} @closeModal={{@closeModal}}>
-  <:body>
-    {{this.message}}
-  </:body>
-</DModal></template>}
+
+  <template>
+    <DModal
+      @title={{i18n "admin.user.merge.progress.title"}}
+      @dismissable={{false}}
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        {{this.message}}
+      </:body>
+    </DModal>
+  </template>
+}

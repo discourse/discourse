@@ -1,6 +1,7 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AdminReport from "admin/components/admin-report";
+
 export default RouteTemplate(<template><div class="sections">
   <PluginOutlet @name="admin-dashboard-security-top" @connectorTagName="div" />
 
@@ -11,4 +12,4 @@ export default RouteTemplate(<template><div class="sections">
 
     <PluginOutlet @name="admin-dashboard-security-bottom" @connectorTagName="div" />
   </div>
-</div></template>)
+</div></template>);

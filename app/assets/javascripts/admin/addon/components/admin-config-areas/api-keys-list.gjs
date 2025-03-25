@@ -1,6 +1,7 @@
-import i18n from "discourse/helpers/i18n";
-import ApiKeyItem from "admin/components/api-key-item";
+import { i18n } from 'discourse-i18n';
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import ApiKeyItem from "admin/components/api-key-item";
+
 const ApiKeysList = <template><div class="container admin-api_keys">
   {{#if @apiKeys}}
     <table class="d-admin-table admin-api_keys__items">

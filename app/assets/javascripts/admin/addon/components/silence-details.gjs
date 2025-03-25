@@ -1,8 +1,8 @@
 import Component, { Textarea } from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
-import i18n from "discourse/helpers/i18n";
 import TextField from "discourse/components/text-field";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
 
 @tagName("")
 export default class SilenceDetails extends Component {<template><div class="penalty-reason-controls">

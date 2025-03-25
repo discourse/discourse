@@ -1,24 +1,25 @@
-import RouteTemplate from 'ember-route-template'
-import { LinkTo } from "@ember/routing";
-import dIcon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
-import DButton from "discourse/components/d-button";
 import { fn, hash } from "@ember/helper";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import AdminEditableField from "admin/components/admin-editable-field";
-import routeAction from "discourse/helpers/route-action";
-import htmlSafe from "discourse/helpers/html-safe";
-import and from "truth-helpers/helpers/and";
-import avatar from "discourse/helpers/avatar";
-import IpLookup from "admin/components/ip-lookup";
-import i18nYesNo from "discourse/helpers/i18n-yes-no";
-import ComboBox from "select-kit/components/combo-box";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import GroupChooser from "select-kit/components/group-chooser";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import avatar from "discourse/helpers/avatar";
+import dIcon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
-import gt from "truth-helpers/helpers/gt";
+import htmlSafe from "discourse/helpers/html-safe";
+import i18nYesNo from "discourse/helpers/i18n-yes-no";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+import AdminEditableField from "admin/components/admin-editable-field";
 import AdminUserExportsTable from "admin/components/admin-user-exports-table";
+import IpLookup from "admin/components/ip-lookup";
+import ComboBox from "select-kit/components/combo-box";
+import GroupChooser from "select-kit/components/group-chooser";
+import and from "truth-helpers/helpers/and";
+import gt from "truth-helpers/helpers/gt";
+
 export default RouteTemplate(<template><section class="details {{unless @controller.model.active "not-activated"}}">
   <div class="user-controls">
     {{#if @controller.model.canViewProfile}}
@@ -664,4 +665,4 @@ export default RouteTemplate(<template><section class="details {{unless @control
   {{/if}}
 </section>
 
-<div class="clearfix"></div></template>)
+<div class="clearfix"></div></template>);

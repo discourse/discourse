@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import AdminBackupsActions from "admin/components/admin-backups-actions";
+import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { i18n } from 'discourse-i18n';
+import AdminBackupsActions from "admin/components/admin-backups-actions";
+
 export default RouteTemplate(<template><div class="admin-backups admin-config-page">
   <DPageHeader @titleLabel={{i18n "admin.config.backups.title"}} @descriptionLabel={{i18n "admin.config.backups.header_description"}} @learnMoreUrl="https://meta.discourse.org/t/create-download-and-restore-a-backup-of-your-discourse-database/122710">
     <:breadcrumbs>
@@ -27,4 +28,4 @@ export default RouteTemplate(<template><div class="admin-backups admin-config-pa
   <div class="admin-container admin-config-page__main-area">
     {{outlet}}
   </div>
-</div></template>)
+</div></template>);

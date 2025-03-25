@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
+import { i18n } from 'discourse-i18n';
 import eq from "truth-helpers/helpers/eq";
-import i18n from "discourse/helpers/i18n";
 
 @classNames("row")
 export default class AdminFormRow extends Component {<template><div class="form-element label-area">

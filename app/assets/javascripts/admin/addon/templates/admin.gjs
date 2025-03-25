@@ -1,7 +1,8 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
+import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlClass from "discourse/helpers/html-class";
-import bodyClass from "discourse/helpers/body-class";
+
 export default RouteTemplate(<template>{{hideApplicationFooter}}
 {{htmlClass "admin-area"}}
 {{bodyClass "admin-interface"}}
@@ -14,4 +15,4 @@ export default RouteTemplate(<template>{{hideApplicationFooter}}
       </div>
     </div>
   </div>
-</div></template>)
+</div></template>);

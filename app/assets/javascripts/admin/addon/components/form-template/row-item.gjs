@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import CustomizeFormTemplateView from "discourse/components/modal/customize-form-template-view";
+import categoryLink from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import categoryLink from "discourse/helpers/category-link";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import CustomizeFormTemplateView from "discourse/components/modal/customize-form-template-view";
 
 export default class FormTemplateRowItem extends Component {
   @service router;
@@ -45,6 +45,7 @@ export default class FormTemplateRowItem extends Component {
       },
     });
   }
+
 <template><tr class="admin-list-item">
   <td class="col first">{{@template.name}}</td>
   <td class="col categories">

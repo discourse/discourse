@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, get,hash } from "@ember/helper";
+import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import htmlSafe from "discourse/helpers/html-safe";
-import i18n from "discourse/helpers/i18n";
+import { i18n } from 'discourse-i18n';
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import { hash, fn, get } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 
 export default class MergeUsersPrompt extends Component {
   @tracked targetUsername;
@@ -16,6 +16,7 @@ export default class MergeUsersPrompt extends Component {
       this.args.model.user.username === this.targetUsername[0]
     );
   }
+
 <template><DModal @title={{htmlSafe (i18n "admin.user.merge.prompt.title" username=@model.user.username)}} @closeModal={{@closeModal}}>
   <:body>
     <p>

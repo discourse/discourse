@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { i18n } from "discourse-i18n";
 import AceEditor from "discourse/components/ace-editor";
-import { fn } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
 import DButton from "discourse/components/d-button";
-import i18n0 from "discourse/helpers/i18n";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class ThemeSettingsEditor extends Component {
   @service dialog;
@@ -209,20 +208,34 @@ export default class ThemeSettingsEditor extends Component {
       changedSetting.value
     );
   }
-<template><div class="settings-editor">
-  <div>
-    <AceEditor @content={{this.editedContent}} @onChange={{fn (mut this.editedContent)}} @mode="html" />
 
-    {{#each this.errors as |error|}}
-      <div class="validation-error">
-        {{dIcon "xmark"}}
-        <b>{{error.setting}}</b>:
-        {{error.errorMessage}}
+  <template>
+    <div class="settings-editor">
+      <div>
+        <AceEditor
+          @content={{this.editedContent}}
+          @onChange={{fn (mut this.editedContent)}}
+          @mode="html"
+        />
+
+        {{#each this.errors as |error|}}
+          <div class="validation-error">
+            {{dIcon "xmark"}}
+            <b>{{error.setting}}</b>:
+            {{error.errorMessage}}
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
 
-  <div class="buttons">
-    <DButton @action={{this.save}} id="save" class="btn-primary save" @disabled={{this.saveButtonDisabled}} @translatedLabel={{i18n0 "admin.customize.theme.save"}} />
-  </div>
-</div></template>}
+      <div class="buttons">
+        <DButton
+          @action={{this.save}}
+          id="save"
+          class="btn-primary save"
+          @disabled={{this.saveButtonDisabled}}
+          @translatedLabel={{i18n "admin.customize.theme.save"}}
+        />
+      </div>
+    </div>
+  </template>
+}

@@ -1,10 +1,10 @@
 import Component from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import i18n from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import { on } from "@ember/modifier";
 import DButton from "discourse/components/d-button";
+import TextField from "discourse/components/text-field";
+import { i18n } from 'discourse-i18n';
 
 @tagName("")
 export default class AdminEditableField extends Component {
@@ -23,6 +23,7 @@ export default class AdminEditableField extends Component {
     // Action has to toggle 'editing' property.
     this.action(this.buffer);
   }
+
 <template><div class="field">{{i18n this.name}}</div>
 <div class="value">
   {{#if this.editing}}

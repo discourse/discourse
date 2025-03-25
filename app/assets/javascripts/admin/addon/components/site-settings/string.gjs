@@ -1,4 +1,4 @@
-import Component, { Textarea, Input } from "@ember/component";
+import Component, { Input,Textarea } from "@ember/component";
 import TextField from "discourse/components/text-field";
 
 export default class String extends Component {<template>{{#if this.setting.textarea}}

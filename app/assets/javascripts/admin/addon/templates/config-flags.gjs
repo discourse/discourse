@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.config.flags.title"}} @descriptionLabel={{i18n "admin.config.flags.header_description"}} @learnMoreUrl="https://meta.discourse.org/t/moderation-flags/325589">
   <:breadcrumbs>
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -19,4 +20,4 @@ export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.co
 
 <div class="admin-container admin-config-page__main-area">
   {{outlet}}
-</div></template>)
+</div></template>);

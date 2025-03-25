@@ -1,17 +1,18 @@
-import RouteTemplate from 'ember-route-template'
-import { on } from "@ember/modifier";
-import i18n from "discourse/helpers/i18n";
 import { fn, hash } from "@ember/helper";
-import dIcon from "discourse/helpers/d-icon";
-import ComboBox from "select-kit/components/combo-box";
-import DButton from "discourse/components/d-button";
-import StaffActions from "admin/components/staff-actions";
-import LoadMore from "discourse/components/load-more";
+import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import avatar from "discourse/helpers/avatar";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import htmlSafe from "discourse/helpers/html-safe";
+import RouteTemplate from 'ember-route-template';
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import LoadMore from "discourse/components/load-more";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import avatar from "discourse/helpers/avatar";
+import dIcon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
+import StaffActions from "admin/components/staff-actions";
+import ComboBox from "select-kit/components/combo-box";
+
 export default RouteTemplate(<template><div class="staff-action-logs-controls">
   {{#if @controller.filtersExists}}
     <div class="staff-action-logs-filters">
@@ -125,4 +126,4 @@ export default RouteTemplate(<template><div class="staff-action-logs-controls">
       {{i18n "search.no_results"}}
     {{/if}}
   </LoadMore>
-</StaffActions></template>)
+</StaffActions></template>);

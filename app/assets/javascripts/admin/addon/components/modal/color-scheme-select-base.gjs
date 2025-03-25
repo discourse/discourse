@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse/helpers/i18n";
-import ComboBox from "select-kit/components/combo-box";
 import { fn } from "@ember/helper";
+import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import { i18n } from 'discourse-i18n';
+import ComboBox from "select-kit/components/combo-box";
 
 export default class ColorSchemeSelectBase extends Component {
   @tracked
@@ -16,6 +16,7 @@ export default class ColorSchemeSelectBase extends Component {
     this.args.model.newColorSchemeWithBase(this.selectedBaseThemeId);
     this.args.closeModal();
   }
+
 <template><DModal @title={{i18n "admin.customize.colors.select_base.title"}} @closeModal={{@closeModal}}>
   <:body>
     {{i18n "admin.customize.colors.select_base.description"}}

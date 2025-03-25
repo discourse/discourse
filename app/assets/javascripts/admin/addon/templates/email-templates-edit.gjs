@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import ComboBox from "select-kit/components/combo-box";
-import i18n from "discourse/helpers/i18n";
-import { LinkTo } from "@ember/routing";
-import { hash } from "@ember/helper";
 import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import SaveControls from "discourse/components/save-controls";
-import DButton from "discourse/components/d-button";
+import { i18n } from 'discourse-i18n';
+import ComboBox from "select-kit/components/combo-box";
+
 export default RouteTemplate(<template><ComboBox @value={{@controller.emailTemplate.id}} @content={{@controller.adminEmailTemplates.sortedTemplates}} @onChange={{@controller.adminEmailTemplates.onSelectTemplate}} @nameProperty="title" />
 
 <div class="email-template">
@@ -26,4 +27,4 @@ export default RouteTemplate(<template><ComboBox @value={{@controller.emailTempl
       <DButton @action={{action "revertChanges"}} @label="admin.customize.email_templates.revert" />
     {{/if}}
   </SaveControls>
-</div></template>)
+</div></template>);

@@ -1,29 +1,30 @@
-import RouteTemplate from 'ember-route-template'
-import DPageSubheader from "discourse/components/d-page-subheader";
-import PluginOutlet from "discourse/components/plugin-outlet";
+import { concat, fn,get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DMenu from "float-kit/components/d-menu";
-import i18n from "discourse/helpers/i18n";
-import dIcon from "discourse/helpers/d-icon";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import ResponsiveTable from "discourse/components/responsive-table";
-import concatClass from "discourse/helpers/concat-class";
-import htmlSafe from "discourse/helpers/html-safe";
-import { concat, hash, get, fn } from "@ember/helper";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
-import eq from "truth-helpers/helpers/eq";
-import DTooltip from "float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
 import { LinkTo } from "@ember/routing";
-import rawDate from "discourse/helpers/raw-date";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ResponsiveTable from "discourse/components/responsive-table";
+import TableHeaderToggle from "discourse/components/table-header-toggle";
+import avatar from "discourse/helpers/avatar";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
 import formatDuration from "discourse/helpers/format-duration";
-import number from "discourse/helpers/number";
+import htmlSafe from "discourse/helpers/html-safe";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
+import number from "discourse/helpers/number";
+import rawDate from "discourse/helpers/raw-date";
+import { i18n } from 'discourse-i18n';
+import DMenu from "float-kit/components/d-menu";
+import DTooltip from "float-kit/components/d-tooltip";
+import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+
 export default RouteTemplate(<template><DPageSubheader @titleLabel={{@controller.title}}>
   <:actions as |actions|>
     {{#if @controller.canCheckEmails}}
@@ -247,4 +248,4 @@ export default RouteTemplate(<template><DPageSubheader @titleLabel={{@controller
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}
   <ConditionalLoadingSpinner @condition={{@controller.refreshing}} />
-</LoadMore></template>)
+</LoadMore></template>);

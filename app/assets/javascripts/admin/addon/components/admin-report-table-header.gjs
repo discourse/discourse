@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { attributeBindings, classNameBindings, classNames, tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DButton from "discourse/components/d-button";
 import htmlSafe from "discourse/helpers/html-safe";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("th")
 @classNames("admin-report-table-header")
@@ -18,6 +18,7 @@ export default class AdminReportTableHeader extends Component {
   sortIcon(currentSortDirection) {
     return currentSortDirection === 1 ? "caret-up" : "caret-down";
   }
+
 <template>{{#if this.showSortingUI}}
   <DButton @action={{this.sortByLabel}} @icon={{this.sortIcon}} class="sort-btn" />
 {{/if}}

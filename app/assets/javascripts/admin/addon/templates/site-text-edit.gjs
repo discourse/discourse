@@ -1,13 +1,14 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
-import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
-import { fn, hash } from "@ember/helper";
 import SaveControls from "discourse/components/save-controls";
-import { LinkTo } from "@ember/routing";
 import dIcon from "discourse/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><div class="edit-site-text">
   <div class="title">
     <h3>{{@controller.siteText.id}}</h3>
@@ -47,4 +48,4 @@ export default RouteTemplate(<template><div class="edit-site-text">
     {{dIcon "arrow-left"}}
     {{i18n "admin.site_text.go_back"}}
   </LinkTo>
-</div></template>)
+</div></template>);

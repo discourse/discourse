@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import InfoHeader from "admin/components/form-template/info-header";
-import i18n from "discourse/helpers/i18n";
-import RowItem from "admin/components/form-template/row-item";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
+import { i18n } from 'discourse-i18n';
+import InfoHeader from "admin/components/form-template/info-header";
+import RowItem from "admin/components/form-template/row-item";
+
 export default RouteTemplate(<template><div class="form-templates">
   <InfoHeader />
 
@@ -28,4 +29,4 @@ export default RouteTemplate(<template><div class="form-templates">
   {{/if}}
 
   <DButton @label="admin.form_templates.new_template" @title="admin.form_templates.new_template" @icon="plus" @action={{@controller.newTemplate}} class="btn-primary" />
-</div></template>)
+</div></template>);

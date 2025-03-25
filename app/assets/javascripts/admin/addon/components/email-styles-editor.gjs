@@ -1,12 +1,12 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
+import AceEditor from "discourse/components/ace-editor";
+import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import AceEditor from "discourse/components/ace-editor";
-import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 
 export default class EmailStylesEditor extends Component {
   @service dialog;
@@ -50,6 +50,7 @@ export default class EmailStylesEditor extends Component {
       },
     });
   }
+
 <template><AceEditor @content={{this.editorContents}} @onChange={{fn (mut this.editorContents)}} @mode={{this.currentEditorMode}} @editorId={{this.editorId}} @save={{@save}} />
 
 <div class="admin-footer">

@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
+import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
 import PluginOutlet from "discourse/components/plugin-outlet";
 import getUrl from "discourse/helpers/get-url";
-import i18n from "discourse/helpers/i18n";
-import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
+import { i18n } from 'discourse-i18n';
 import AdminReport from "admin/components/admin-report";
-import { hash } from "@ember/helper";
+import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
+
 export default RouteTemplate(<template><div class="sections">
   <PluginOutlet @name="admin-dashboard-moderation-top" @connectorTagName="div" />
 
@@ -35,4 +36,4 @@ export default RouteTemplate(<template><div class="sections">
 
     <PluginOutlet @name="admin-dashboard-moderation-bottom" @connectorTagName="div" @outletArgs={{hash filters=@controller.lastWeekFilters}} />
   </div>
-</div></template>)
+</div></template>);

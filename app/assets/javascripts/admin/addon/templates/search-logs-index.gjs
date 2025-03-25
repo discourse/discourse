@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import PeriodChooser from "select-kit/components/period-chooser";
 import { fn, hash } from "@ember/helper";
-import ComboBox from "select-kit/components/combo-box";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import i18n from "discourse/helpers/i18n";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { i18n } from 'discourse-i18n';
+import ComboBox from "select-kit/components/combo-box";
+import PeriodChooser from "select-kit/components/period-chooser";
+
 export default RouteTemplate(<template><div class="admin-title">
   <PeriodChooser @period={{@controller.period}} @onChange={{fn (mut @controller.period)}} />
   <ComboBox @content={{@controller.searchTypeOptions}} @value={{@controller.searchType}} @onChange={{fn (mut @controller.searchType)}} class="search-logs-filter" />
@@ -37,4 +38,4 @@ export default RouteTemplate(<template><div class="admin-title">
   {{else}}
     {{i18n "search.no_results"}}
   {{/if}}
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

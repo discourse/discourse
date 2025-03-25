@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
-import routeAction from "discourse/helpers/route-action";
 import dIcon from "discourse/helpers/d-icon";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><div class="themes-intro admin-intro">
   <img src={{@controller.womanArtistEmojiURL}} alt />
   <div class="content-wrapper">
@@ -19,4 +20,4 @@ export default RouteTemplate(<template><div class="themes-intro admin-intro">
       {{/each}}
     </div>
   </div>
-</div></template>)
+</div></template>);

@@ -1,16 +1,17 @@
-import RouteTemplate from 'ember-route-template'
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import TextField from "discourse/components/text-field";
-import i18n from "discourse/helpers/i18n";
-import concatClass from "discourse/helpers/concat-class";
-import FlatButton from "discourse/components/flat-button";
 import { fn } from "@ember/helper";
-import categoryLink from "discourse/helpers/category-link";
-import dIcon from "discourse/helpers/d-icon";
+import RouteTemplate from 'ember-route-template';
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import DMenu from "float-kit/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import FlatButton from "discourse/components/flat-button";
+import TextField from "discourse/components/text-field";
+import categoryLink from "discourse/helpers/category-link";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import DMenu from "float-kit/components/d-menu";
+
 export default RouteTemplate(<template><ConditionalLoadingSpinner @condition={{@controller.loading}}>
   {{#if @controller.hasPermalinks}}
     <div class="d-admin-filter">
@@ -85,4 +86,4 @@ export default RouteTemplate(<template><ConditionalLoadingSpinner @condition={{@
       {{/if}}
     {{/if}}
   </div>
-</ConditionalLoadingSpinner></template>)
+</ConditionalLoadingSpinner></template>);

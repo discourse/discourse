@@ -1,16 +1,16 @@
 import { arrayContentDidChange } from "@ember/-internals/metal";
 import Component, { Input } from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DButton from "discourse/components/d-button";
-import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
-import gt from "truth-helpers/helpers/gt";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from 'discourse-i18n';
 import ComboBox from "select-kit/components/combo-box";
-import i18n from "discourse/helpers/i18n";
+import gt from "truth-helpers/helpers/gt";
 
 @classNameBindings(":simple-list", ":value-list")
 export default class SimpleList extends Component {
@@ -96,6 +96,7 @@ export default class SimpleList extends Component {
       ? values.split(delimiter || "\n").filter(Boolean)
       : [];
   }
+
 <template>{{#if this.collection}}
   <div class="values">
     {{#each this.collection as |value index|}}

@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import htmlSafe from "discourse/helpers/html-safe";
-import i18n from "discourse/helpers/i18n";
-import HighlightedCode from "admin/components/highlighted-code";
-import EmbeddableHost from "admin/components/embeddable-host";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { hash } from "@ember/helper";
+import RouteTemplate from 'ember-route-template';
+import PluginOutlet from "discourse/components/plugin-outlet";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import EmbeddableHost from "admin/components/embeddable-host";
+import HighlightedCode from "admin/components/highlighted-code";
+
 export default RouteTemplate(<template>{{#if @controller.embedding.embeddable_hosts}}
   {{#if @controller.showEmbeddingCode}}
     <AdminConfigAreaCard @heading="admin.embedding.configuration_snippet" @collapsable={{true}} @collapsed={{true}} class="admin-embedding-index__code">
@@ -39,4 +40,4 @@ export default RouteTemplate(<template>{{#if @controller.embedding.embeddable_ho
   <AdminConfigAreaEmptyList @ctaLabel="admin.embedding.add_host" @ctaRoute="adminEmbedding.new" @ctaClass="admin-embedding__add-host" @emptyLabel="admin.embedding.get_started" />
 {{/if}}
 
-<PluginOutlet @name="after-embeddable-hosts-table" @outletArgs={{hash embedding=@controller.embedding}} /></template>)
+<PluginOutlet @name="after-embeddable-hosts-table" @outletArgs={{hash embedding=@controller.embedding}} /></template>);

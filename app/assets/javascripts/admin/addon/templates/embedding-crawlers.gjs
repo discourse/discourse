@@ -1,7 +1,8 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 import DPageSubheader from "discourse/components/d-page-subheader";
-import i18n from "discourse/helpers/i18n";
 import Form from "discourse/components/form";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><DPageSubheader @titleLabel={{i18n "admin.embedding.crawlers"}} @descriptionLabel={{i18n "admin.embedding.crawlers_description"}} />
 
 <Form @onSubmit={{@controller.save}} @data={{@controller.formData}} as |form|>
@@ -15,4 +16,4 @@ export default RouteTemplate(<template><DPageSubheader @titleLabel={{i18n "admin
     <field.Input placeholder="emoji, classname" />
   </form.Field>
   <form.Submit @label="admin.embedding.save" />
-</Form></template>)
+</Form></template>);

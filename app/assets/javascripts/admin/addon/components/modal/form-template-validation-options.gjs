@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
-import { i18n } from "discourse-i18n";
 import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const TABLE_HEADER_KEYS = ["key", "type", "description"];
 const VALIDATION_KEYS = ["required", "minimum", "maximum", "pattern", "type"];
@@ -31,25 +30,33 @@ export default class FormTemplateValidationOptions extends Component {
 
     return translatedValidations;
   }
-<template><DModal class="form-templates__validation-options admin-form-template-validation-options-modal" @title={{i18n0 "admin.form_templates.validations_modal.modal_title"}} @closeModal={{@closeModal}}>
-  <:body>
-    <table>
-      <thead>
-        <tr>
-          {{#each this.tableHeaders as |header|}}
-            <th>{{header}}</th>
-          {{/each}}
-        </tr>
-      </thead>
-      <tbody>
-        {{#each this.validations as |item|}}
-          <tr>
-            <td><pre>{{item.key}}</pre></td>
-            <td>{{item.type}}</td>
-            <td>{{item.description}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </:body>
-</DModal></template>}
+
+  <template>
+    <DModal
+      class="form-templates__validation-options admin-form-template-validation-options-modal"
+      @title={{i18n "admin.form_templates.validations_modal.modal_title"}}
+      @closeModal={{@closeModal}}
+    >
+      <:body>
+        <table>
+          <thead>
+            <tr>
+              {{#each this.tableHeaders as |header|}}
+                <th>{{header}}</th>
+              {{/each}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.validations as |item|}}
+              <tr>
+                <td><pre>{{item.key}}</pre></td>
+                <td>{{item.type}}</td>
+                <td>{{item.description}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </:body>
+    </DModal>
+  </template>
+}

@@ -1,23 +1,24 @@
-import RouteTemplate from 'ember-route-template'
+import { fn,hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import dIcon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
-import concatClass from "discourse/helpers/concat-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash, fn } from "@ember/helper";
-import TextField from "discourse/components/text-field";
+import RouteTemplate from 'ember-route-template';
 import DButton from "discourse/components/d-button";
-import formatDate from "discourse/helpers/format-date";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TextField from "discourse/components/text-field";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
-import htmlSafe from "discourse/helpers/html-safe";
+import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
+import htmlSafe from "discourse/helpers/html-safe";
+import { i18n } from 'discourse-i18n';
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
-import ColorPalettes from "select-kit/components/color-palettes";
-import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
 import ThemeSettingEditor from "admin/components/theme-setting-editor";
-import ComboBox from "select-kit/components/combo-box";
+import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
 import ThemeTranslation from "admin/components/theme-translation";
+import ColorPalettes from "select-kit/components/color-palettes";
+import ComboBox from "select-kit/components/combo-box";
+
 export default RouteTemplate(<template>{{#if @controller.editingThemeSetting}}
   {{outlet}}
 {{else}}
@@ -372,4 +373,4 @@ export default RouteTemplate(<template>{{#if @controller.editingThemeSetting}}
       </div>
     {{/if}}
   </div>
-{{/if}}</template>)
+{{/if}}</template>);

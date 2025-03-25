@@ -1,9 +1,10 @@
-import RouteTemplate from 'ember-route-template'
-import { LinkTo } from "@ember/routing";
-import dIcon from "discourse/helpers/d-icon";
-import i18n from "discourse/helpers/i18n";
 import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
 import Editor from "admin/components/schema-theme-setting/editor";
+
 export default RouteTemplate(<template><div class="customize-themes-show-schema__header row">
   <LinkTo @route="adminCustomizeThemes.show" @model={{@model.theme.id}} class="btn-transparent customize-themes-show-schema__back">
     {{dIcon "arrow-left"}}{{@model.theme.name}}
@@ -13,4 +14,4 @@ export default RouteTemplate(<template><div class="customize-themes-show-schema_
   </h2>
 </div>
 
-<Editor @themeId={{@model.theme.id}} @setting={{@model.setting}} /></template>)
+<Editor @themeId={{@model.theme.id}} @setting={{@model.setting}} /></template>);

@@ -1,10 +1,11 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import routeAction from "discourse/helpers/route-action";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
 import BadgeButton from "discourse/components/badge-button";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><div class="badges">
   <DPageHeader @titleLabel={{i18n "admin.config.badges.title"}} @descriptionLabel={{i18n "admin.config.badges.header_description"}} @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540">
     <:breadcrumbs>
@@ -37,4 +38,4 @@ export default RouteTemplate(<template><div class="badges">
     </div>
     {{outlet}}
   </div>
-</div></template>)
+</div></template>);

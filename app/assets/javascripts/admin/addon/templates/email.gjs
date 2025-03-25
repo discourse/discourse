@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.config.email.title"}} @descriptionLabel={{i18n "admin.config.email.header_description"}} @shouldDisplay={{true}}>
   <:breadcrumbs>
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -23,4 +24,4 @@ export default RouteTemplate(<template><DPageHeader @titleLabel={{i18n "admin.co
 
 <div class="admin-container">
   {{outlet}}
-</div></template>)
+</div></template>);

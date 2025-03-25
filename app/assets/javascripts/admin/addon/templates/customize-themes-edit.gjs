@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
-import DButton from "discourse/components/d-button";
-import i18n from "discourse/helpers/i18n";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DButton from "discourse/components/d-button";
+import { i18n } from 'discourse-i18n';
 import AdminThemeEditor from "admin/components/admin-theme-editor";
+
 export default RouteTemplate(<template><div class="current-style {{if @controller.maximized "maximized"}}">
   <div class="wrapper">
     <div class="editor-information">
@@ -32,4 +33,4 @@ export default RouteTemplate(<template><div class="current-style {{if @controlle
       </div>
     </div>
   </div>
-</div></template>)
+</div></template>);

@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import eq from "truth-helpers/helpers/eq";
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import or from "truth-helpers/helpers/or";
-import ThemesList from "admin/components/themes-list";
 import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+import ThemesList from "admin/components/themes-list";
+import eq from "truth-helpers/helpers/eq";
+import or from "truth-helpers/helpers/or";
+
 export default RouteTemplate(<template>{{#unless @controller.fromNewConfigPage}}
   {{#if (eq @controller.currentTab "themes")}}
     <DPageHeader @titleLabel={{i18n "admin.config.themes.title"}} @descriptionLabel={{i18n "admin.config.themes.header_description"}} @learnMoreUrl="https://meta.discourse.org/t/91966" @hideTabs={{true}}>
@@ -30,4 +31,4 @@ export default RouteTemplate(<template>{{#unless @controller.fromNewConfigPage}}
     <ThemesList @themes={{@controller.fullThemes}} @components={{@controller.childThemes}} @currentTab={{@controller.currentTab}} @installModal={{routeAction "installModal"}} />
   {{/unless}}
   {{outlet}}
-</PluginOutlet></template>)
+</PluginOutlet></template>);

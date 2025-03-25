@@ -1,12 +1,12 @@
 import Component, { Input } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
-import { i18n } from "discourse-i18n";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import TextField from "discourse/components/text-field";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":secret-value-list")
 export default class SecretValueList extends Component {
@@ -117,6 +117,7 @@ export default class SecretValueList extends Component {
       return [];
     }
   }
+
 <template>{{#if this.collection}}
   <div class="values">
     {{#each this.collection as |value index|}}

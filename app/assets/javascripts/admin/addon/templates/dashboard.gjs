@@ -1,11 +1,12 @@
-import RouteTemplate from 'ember-route-template'
-import PluginOutlet from "discourse/components/plugin-outlet";
-import DPageHeader from "discourse/components/d-page-header";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import i18n from "discourse/helpers/i18n";
-import VersionChecks from "admin/components/version-checks";
-import DashboardProblems from "admin/components/dashboard-problems";
 import { LinkTo } from "@ember/routing";
+import RouteTemplate from 'ember-route-template';
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import { i18n } from 'discourse-i18n';
+import DashboardProblems from "admin/components/dashboard-problems";
+import VersionChecks from "admin/components/version-checks";
+
 export default RouteTemplate(<template><PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 
 <DPageHeader @hideTabs={{true}}>
@@ -63,4 +64,4 @@ export default RouteTemplate(<template><PluginOutlet @name="admin-dashboard-top"
 
 <span>
   <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
-</span></template>)
+</span></template>);

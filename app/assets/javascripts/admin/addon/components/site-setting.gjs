@@ -1,18 +1,18 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { LinkTo } from "@ember/routing";
 import BufferedProxy from "ember-buffered-proxy/proxy";
+import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
+import { i18n } from 'discourse-i18n';
+import SettingValidationMessage from "admin/components/setting-validation-message";
+import Description from "admin/components/site-settings/description";
 import SettingComponent from "admin/mixins/setting-component";
 import SiteSetting from "admin/models/site-setting";
-import { LinkTo } from "@ember/routing";
-import { hash } from "@ember/helper";
-import i18n from "discourse/helpers/i18n";
-import dIcon from "discourse/helpers/d-icon";
-import DButton from "discourse/components/d-button";
-import Description from "admin/components/site-settings/description";
-import SettingValidationMessage from "admin/components/setting-validation-message";
 
 export default class SiteSettingComponent extends Component.extend(
   SettingComponent
@@ -40,6 +40,7 @@ export default class SiteSettingComponent extends Component.extend(
       updateExistingUsers: this.updateExistingUsers,
     });
   }
+
 <template><div class="setting-label">
   <h3>
     {{this.settingName}}

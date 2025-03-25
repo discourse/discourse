@@ -1,9 +1,10 @@
-import RouteTemplate from 'ember-route-template'
-import DPageHeader from "discourse/components/d-page-header";
-import i18n from "discourse/helpers/i18n";
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import routeAction from "discourse/helpers/route-action";
+import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
+import routeAction from "discourse/helpers/route-action";
+import { i18n } from 'discourse-i18n';
+
 export default RouteTemplate(<template><div class="admin-users admin-config-page">
   <DPageHeader @titleLabel={{i18n "admin.config.users.title"}} @descriptionLabel={{i18n "admin.config.users.header_description"}} @learnMoreUrl="https://meta.discourse.org/t/accessing-a-user-s-admin-page/311859">
     <:breadcrumbs>
@@ -35,4 +36,4 @@ export default RouteTemplate(<template><div class="admin-users admin-config-page
 
 <div class="admin-container admin-config-page__main-area">
   {{outlet}}
-</div></template>)
+</div></template>);

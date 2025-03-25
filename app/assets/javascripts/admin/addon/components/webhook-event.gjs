@@ -2,13 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
-import dIcon from "discourse/helpers/d-icon";
-import DButton from "discourse/components/d-button";
-import i18n0 from "discourse/helpers/i18n";
 
 export default class WebhookEvent extends Component {
   @service dialog;
@@ -102,34 +101,50 @@ export default class WebhookEvent extends Component {
       this.expandDetails = null;
     }
   }
-<template><li>
-  <div class="col first status">
-    {{#if @event.redelivering}}
-      {{dIcon "arrows-rotate"}}
-    {{else}}
-      <span class={{this.statusColorClasses}}>{{@event.status}}</span>
-    {{/if}}
-  </div>
 
-  <div class="col event-id">{{@event.id}}</div>
+  <template>
+    <li>
+      <div class="col first status">
+        {{#if @event.redelivering}}
+          {{dIcon "arrows-rotate"}}
+        {{else}}
+          <span class={{this.statusColorClasses}}>{{@event.status}}</span>
+        {{/if}}
+      </div>
 
-  <div class="col timestamp">{{this.createdAt}}</div>
+      <div class="col event-id">{{@event.id}}</div>
 
-  <div class="col completion">{{this.completion}}</div>
+      <div class="col timestamp">{{this.createdAt}}</div>
 
-  <div class="col actions">
-    <DButton @icon={{this.expandRequestIcon}} @action={{this.toggleRequest}} @label="admin.web_hooks.events.request" />
-    <DButton @icon={{this.expandResponseIcon}} @action={{this.toggleResponse}} @label="admin.web_hooks.events.response" />
-    <DButton @icon="arrows-rotate" @action={{this.redeliver}} @label="admin.web_hooks.events.redeliver" />
-  </div>
+      <div class="col completion">{{this.completion}}</div>
 
-  {{#if this.expandDetails}}
-    <div class="details">
-      <h3>{{i18n0 "admin.web_hooks.events.headers"}}</h3>
-      <pre><code>{{this.headers}}</code></pre>
+      <div class="col actions">
+        <DButton
+          @icon={{this.expandRequestIcon}}
+          @action={{this.toggleRequest}}
+          @label="admin.web_hooks.events.request"
+        />
+        <DButton
+          @icon={{this.expandResponseIcon}}
+          @action={{this.toggleResponse}}
+          @label="admin.web_hooks.events.response"
+        />
+        <DButton
+          @icon="arrows-rotate"
+          @action={{this.redeliver}}
+          @label="admin.web_hooks.events.redeliver"
+        />
+      </div>
 
-      <h3>{{this.bodyLabel}}</h3>
-      <pre><code>{{this.body}}</code></pre>
-    </div>
-  {{/if}}
-</li></template>}
+      {{#if this.expandDetails}}
+        <div class="details">
+          <h3>{{i18n "admin.web_hooks.events.headers"}}</h3>
+          <pre><code>{{this.headers}}</code></pre>
+
+          <h3>{{this.bodyLabel}}</h3>
+          <pre><code>{{this.body}}</code></pre>
+        </div>
+      {{/if}}
+    </li>
+  </template>
+}
