@@ -94,6 +94,14 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("ul ul li", count: 3)
     end
 
+    it "uses 'tight' lists for both ordered and unordered lists by default" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("1. Item 1\n5. Item 2\n\n")
+      composer.type_content("* Item 1\n* Item 2")
+      expect(rich).to have_css("ol[data-tight='true']")
+      expect(rich).to have_css("ul[data-tight='true']")
+    end
+
     it "supports ``` or 4 spaces to create a code block" do
       open_composer_and_toggle_rich_editor
       composer.type_content("```\nThis is a code block")
