@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
@@ -50,9 +51,10 @@ export default class PostCookedHtml extends Component {
           this.#decoratorState.set(decorator, {});
         }
 
+        const owner = getOwner(this);
         const decorationCleanup = decorator(element, {
           data: {
-            post: this.post,
+            post: this.args.post,
             cooked: this.cooked,
             highlightTerm: this.highlightTerm,
             isIgnored: this.isIgnored,
@@ -61,17 +63,27 @@ export default class PostCookedHtml extends Component {
           createDetachedElement: this.#createDetachedElement,
           currentUser: this.currentUser,
           helper,
-          renderNestedCookedContent: (nestedElement, cooked, extraDecorators) =>
-            helper.renderGlimmer(nestedElement, PostCookedHtml, {
+          renderNestedCookedContent: (
+            nestedElement,
+            cooked,
+            extraDecorators
+          ) => {
+            const nestedArguments = {
               cooked,
-              post: this.post,
+              post: this.args.post,
               highlightTerm: this.highlightTerm,
               extraDecorators: [
                 ...this.extraDecorators,
                 ...makeArray(extraDecorators),
               ],
-            }),
-          owner: getOwner(this),
+            };
+
+            helper.renderGlimmer(
+              nestedElement,
+              curryComponent(PostCookedHtml, nestedArguments, owner)
+            );
+          },
+          owner,
           state: this.#decoratorState.get(decorator),
         });
 
@@ -103,30 +115,20 @@ export default class PostCookedHtml extends Component {
     );
   }
 
-  get post() {
-    return this.args.data ? this.args.data.post : this.args.post;
-  }
-
   get cooked() {
     if (this.isIgnored) {
       return i18n("post.ignored");
     }
 
-    return this.args.data ? this.args.data.cooked : this.post.cooked;
+    return this.args.post.cooked;
   }
 
   get highlightTerm() {
-    return this.args.data
-      ? this.args.data.highlightTerm
-      : this.args.highlightTerm;
+    return this.args.highlightTerm;
   }
 
   get extraDecorators() {
-    return makeArray(
-      this.args.data
-        ? this.args.data.extraDecorators
-        : this.args.extraDecorators
-    );
+    return makeArray(this.args.extraDecorators);
   }
 
   get ignoredUsers() {
@@ -135,8 +137,8 @@ export default class PostCookedHtml extends Component {
 
   get isIgnored() {
     return (
-      (this.post.firstPost || this.args.embeddedPost) &&
-      this.ignoredUsers?.includes?.(this.post.username)
+      (this.args.post.firstPost || this.args.embeddedPost) &&
+      this.ignoredUsers?.includes?.(this.args.post.username)
     );
   }
 
@@ -155,7 +157,7 @@ export default class PostCookedHtml extends Component {
       @decorate={{this.decorateBeforeAdopt}}
       @decorateAfterAdopt={{this.decorateAfterAdopt}}
       @html={{htmlSafe this.cooked}}
-      @model={{this.post}}
+      @model={{@post}}
     />
   </template>
 }
