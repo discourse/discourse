@@ -944,6 +944,10 @@ div.ac-wrap {
 
 .mobile-device {
   #reply-control {
+    .grippie {
+      display: none;
+    }
+
     &.open.show-preview {
       height: 70vh;
     }
