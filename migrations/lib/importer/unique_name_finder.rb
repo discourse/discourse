@@ -2,21 +2,36 @@
 
 module Migrations::Importer
   class UniqueNameFinder
+    MAX_USERNAME_LENGTH = 60
+
     def initialize(shared_data)
       @used_usernames_lower = shared_data.load(:usernames)
       @used_group_names_lower = shared_data.load(:group_names)
       @last_suffixes = {}
-      @allowed_name_length_range = User.username_length
+
+      @fallback_username =
+        UserNameSuggester.sanitize_username(I18n.t("fallback_username")).presence ||
+          UserNameSuggester::LAST_RESORT_USERNAME
+      @fallback_group_name = "group"
     end
 
     def find_available_username(username, allow_reserved_username: false)
-      username, username_lower = find_available_name(username, allow_reserved_username:)
+      username, username_lower =
+        find_available_name(
+          username,
+          fallback_name: @fallback_username,
+          max_name_length: MAX_USERNAME_LENGTH,
+          allow_reserved_username:,
+        )
+
       @used_usernames_lower.add(username_lower)
       username
     end
 
     def find_available_group_name(group_name)
-      group_name, group_name_lower = find_available_name(group_name, allow_reserved_username: false)
+      group_name, group_name_lower =
+        find_available_name(group_name, fallback_name: @fallback_group_name)
+
       @used_group_names_lower.add(group_name_lower)
       group_name
     end
@@ -32,75 +47,28 @@ module Migrations::Importer
       true
     end
 
-    # def valid_length?(name)
-    #   @allowed_name_length_range.include?(name.grapheme_clusters.size)
-    # end
-    #
-    # def find_for_long_name(name, allow_reserved_username: false)
-    #   possible_name = name
-    #
-    #   while name_length > (max_name_length = @allowed_name_length_range.end - suffix.length - 1)
-    #   end
-    #
-    #   name_length = possible_name.grapheme_clusters.size
-    #   suffix = next_suffix(possible_name).to_s
-    #
-    #   max_name_length = @allowed_name_length_range.end - suffix.length - 1
-    #   possible_name = UserNameSuggester.truncate(name, max_length)
-    #
-    #   while name_length > (max_name_length = @allowed_name_length_range.end - suffix.length - 1)
-    #     suffix.next!
-    #   end
-    # end
+    def find_available_name(
+      name,
+      fallback_name:,
+      max_name_length: nil,
+      allow_reserved_username: false
+    )
+      name = name.unicode_normalize
+      name = UserNameSuggester.sanitize_username(name)
+      name = fallback_name.dup if name.blank?
+      name = UserNameSuggester.truncate(name, max_name_length) if max_name_length
 
-    def find_available_name(name, allow_reserved_username: false)
-      possible_name = name.unicode_normalize
-      possible_name = UserNameSuggester.sanitize_username(possible_name)
+      if !name_available?(name, allow_reserved_username:)
+        # if the name ends with a number, then use an underscore before appending the suffix
+        suffix_separator = name.match?(/\d$/) ? "_" : ""
+        suffix = next_suffix(name).to_s
 
-      name_length = possible_name.grapheme_clusters.size
-
-      if name_length > @allowed_name_length_range.end
-        possible_name = UserNameSuggester.truncate(possible_name, @allowed_name_length_range.end)
-        name_length = @allowed_name_length_range.end
+        # TODO This needs better logic, because it's possible that the max username length is exceeded
+        name = +"#{name}#{suffix_separator}#{suffix}"
+        name.next! until name_available?(name, allow_reserved_username:)
       end
 
-      if name_length < @allowed_name_length_range.end
-        possible_name = find_name(possible_name, allow_reserved_username:)
-      elsif !name_available?(possible_name, allow_reserved_username:)
-        possible_name = truncate_and_find_name(possible_name, allow_reserved_username:)
-      end
-
-      raise "Couldn't find available name for '#{name}'" if possible_name.nil?
-
-      [possible_name, possible_name.downcase]
-    end
-
-    def find_name(name, allow_reserved_username:)
-      name_length = name.grapheme_clusters.size
-
-      # if the name ends with a number, then use an underscore before appending the suffix
-      suffix_separator = name.match?(/\d$/) ? "_" : ""
-      suffix = next_suffix(name).to_s
-
-      if (min_suffix_length = @allowed_name_length_range.begin - name_length) > 0
-        suffix = suffix.rjust(min_suffix_length - suffix_separator.length, "0")
-      end
-
-      # `#length` is faster than checking `#grapheme_clusters`, so we are calculating
-      # the max length in characters
-      max_length = @allowed_name_length_range.end - name_length + name.length
-      possible_name = +"#{name}#{suffix_separator}#{suffix}"
-
-      while possible_name.length <= max_length
-        possible_name.next!
-
-        if name_available?(possible_name, allow_reserved_username:)
-          store_last_suffix(possible_name)
-          return possible_name
-        end
-      end
-
-      nil
+      [name, name.downcase]
     end
 
     def next_suffix(name)

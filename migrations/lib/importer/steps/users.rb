@@ -56,6 +56,8 @@ module Migrations::Importer::Steps
     private
 
     def transform_row(row)
+      super
+
       emails = JSON.parse(row[:emails])
 
       row[:original_username] ||= row[:username]
@@ -77,7 +79,7 @@ module Migrations::Importer::Steps
         row[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
       end
 
-      super
+      row
     end
 
     def random_email
