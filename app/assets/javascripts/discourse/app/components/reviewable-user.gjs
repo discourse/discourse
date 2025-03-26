@@ -14,6 +14,7 @@ import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 export default class ReviewableUser extends Component {
   @service currentUser;
   @service modal;
+  @service store;
 
   @discourseComputed("reviewable.user_fields")
   userFields(fields) {
@@ -39,12 +40,14 @@ export default class ReviewableUser extends Component {
     });
   }
 
-  scrubRejectedUser(reason) {
-    return ajax({
+  async scrubRejectedUser(reason) {
+    await ajax({
       url: `/review/${this.reviewable.id}/scrub`,
       type: "PUT",
       data: { reason },
     });
+
+    await this.store.find("reviewable", this.reviewable.id);
   }
 
   <template>
