@@ -27,9 +27,12 @@ module Stylesheet
               end
             )
 
-          plugin_assets[asset_name] = stylesheets[
-            plugin_directory_name
-          ] if plugin_directory_name.present?
+          if plugin_directory_name.present?
+            plugin_assets[asset_name] = {
+              plugin_path: plugin.path,
+              stylesheets: stylesheets[plugin_directory_name],
+            }
+          end
         end
       end
     end
@@ -112,21 +115,11 @@ module Stylesheet
       resolved_ids = Theme.transform_ids(theme_id)
 
       if resolved_ids
-        theme = Theme.find_by_id(theme_id)
-
-        contents << "\n\n// Theme SCSS variables\n\n"
-        contents << theme&.scss_variables.to_s.split(";").join(";\n") + ";\n\n"
-        contents << "\n\n"
         Theme
           .list_baked_fields(resolved_ids, :common, :color_definitions)
           .each do |field|
             contents << "\n\n// Color definitions from #{field.theme.name}\n\n"
-
-            if field.theme_id == theme.id
-              contents << field.value
-            else
-              contents << field.compiled_css(prepended_scss)
-            end
+            contents << field.compiled_css(prepended_scss)
             contents << "\n\n"
           end
       end
@@ -198,16 +191,7 @@ module Stylesheet
 
       fields = theme.list_baked_fields(target, attr)
       fields.map do |field|
-        value = field.value
-        if value.present?
-          contents << <<~SCSS
-          // Theme: #{field.theme.name}
-          // Target: #{field.target_name} #{field.name}
-          // Last Edited: #{field.updated_at}
-          SCSS
-
-          contents << value
-        end
+        contents << "@import \"theme-entrypoint/#{field.scss_entrypoint_name}\";\n"
       end
       contents
     end

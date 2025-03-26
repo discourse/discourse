@@ -785,7 +785,7 @@ class Plugin::Instance
     js = "(function(){#{js}})();" if js.present?
 
     result = []
-    result << [css, "css"] if css.present?
+    result << [css, "scss"] if css.present?
     result << [js, "js"] if js.present?
 
     result.map do |asset, extension|

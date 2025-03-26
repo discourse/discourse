@@ -869,12 +869,8 @@ RSpec.describe Stylesheet::Manager do
             manager: manager,
           )
 
-        expect { stylesheet.compile }.to raise_error(Discourse::ScssError)
-
-        Rails.env.stubs(:production?).returns(true)
-        expect(stylesheet.compile).to include(
-          "/* SCSS compilation error: Error: Undefined variable",
-        )
+        expect(stylesheet.compile).to include("--primary:") # core vals preserved
+        expect(File.read(stylesheet.source_map_fullpath)).to include("/* SCSS compilation error:")
       end
 
       it "child theme SCSS includes the default theme's color scheme variables" do
