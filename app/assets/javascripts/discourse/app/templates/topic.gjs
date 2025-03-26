@@ -480,6 +480,8 @@ export default RouteTemplate(
                     @fillGapAfter={{@controller.fillGapAfter}}
                     @showInvite={{routeAction "showInvite"}}
                     @showPagePublish={{routeAction "showPagePublish"}}
+                    @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
+                    @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
                   />
                 {{/unless}}
 
@@ -517,9 +519,9 @@ export default RouteTemplate(
                               <ReviewableCreatedByName
                                 @user={{@controller.currentUser}}
                               />
-                              <div class="post-body"><CookText
-                                  @rawText={{pending.raw}}
-                                /></div>
+                              <div class="post-body">
+                                <CookText @rawText={{pending.raw}} />
+                              </div>
                             </div>
                           </div>
                           <div class="reviewable-actions">
