@@ -1,11 +1,9 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import {
   convertIconClass,
   iconHTML,
   iconNode,
-  isTesting,
 } from "discourse/lib/icon-library";
 
 module("Unit | Utility | icon-library", function (hooks) {
@@ -49,43 +47,18 @@ module("Unit | Utility | icon-library", function (hooks) {
   });
 
   test("fa5 remaps", function (assert) {
-    const stub = sinon.stub(isTesting);
-    stub.returns(false);
+    const adjustIcon = iconHTML("adjust");
+    assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
+    assert.true(adjustIcon.includes('href="#adjust"'), "keeps original icon");
 
-    try {
-      const adjustIcon = iconHTML("adjust");
-      assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
-      assert.true(adjustIcon.includes('href="#adjust"'), "keeps original icon");
-
-      const farIcon = iconHTML("far-dot-circle");
-      assert.true(
-        farIcon.includes("d-icon-far-dot-circle"),
-        "class is maintained"
-      );
-      assert.true(
-        farIcon.includes('href="#far-dot-circle"'),
-        "keeps original icon"
-      );
-    } finally {
-      stub.restore();
-    }
-  });
-
-  test("fa remaps throws error", function (assert) {
-    assert.throws(
-      () => {
-        iconHTML("adjust");
-      },
-      `Missing icon error: The icon name "adjust" has been removed and should be updated to "circle-half-stroke" in your code. More info at https://meta.discourse.org/t/325349.`,
-      "throws an error if icon name is deprecated"
+    const farIcon = iconHTML("far-dot-circle");
+    assert.true(
+      farIcon.includes("d-icon-far-dot-circle"),
+      "class is maintained"
     );
-
-    assert.throws(
-      () => {
-        iconHTML("far-dot-circle");
-      },
-      `Missing icon error: The icon name "far-dot-circle" has been removed and should be updated to "far-circle-dot" in your code. More info at https://meta.discourse.org/t/325349.`,
-      "throws an error if icon name is deprecated"
+    assert.true(
+      farIcon.includes('href="#far-dot-circle"'),
+      "keeps original icon"
     );
   });
 });

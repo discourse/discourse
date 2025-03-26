@@ -1,11 +1,7 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse/lib/attribute-hook";
 import deprecated from "discourse/lib/deprecated";
-import {
-  isDevelopment,
-  isRailsTesting,
-  isTesting,
-} from "discourse/lib/environment";
+import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
@@ -150,10 +146,6 @@ function handleDeprecatedIcon(id) {
 
     // eslint-disable-next-line no-console
     console.error(error_msg);
-
-    if (isRailsTesting() || isTesting()) {
-      throw error_msg;
-    }
   }
 
   return id;
