@@ -21,25 +21,10 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:id)
     id = params[:id]
     update_existing_users = params[:update_existing_user].present?
-    value = params[id]
-
-    new_setting_name =
-      SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
-        if old_name == id
-          if !override
-            raise Discourse::InvalidParameters,
-                  "You cannot change this site setting because it is deprecated, use #{new_name} instead."
-          end
-
-          break new_name
-        end
-      end
-
-    id = new_setting_name if new_setting_name
 
     previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
-    SiteSetting::Update.call(params: { settings: { id => value } }, guardian:) do
+    SiteSetting::Update.call(params: { settings: { id => params[id] } }, guardian:) do
       on_success do |params:|
         if update_existing_users
           params.settings.to_a.each do |setting_name, setting_value|
@@ -47,6 +32,9 @@ class Admin::SiteSettingsController < Admin::AdminController
           end
         end
         render body: nil
+      end
+      on_failed_policy(:settings_are_not_deprecated) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
       end
       on_failed_policy(:settings_are_visible) do |policy|
         raise Discourse::InvalidParameters, policy.reason
