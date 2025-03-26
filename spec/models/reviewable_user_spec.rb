@@ -253,7 +253,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(history.count).to eq(1)
         expect(history.first.details).to include("username: #{user.username}")
 
-        reviewable.scrub(admin, "reason")
+        reviewable.scrub(admin, "reason", Guardian.new(admin))
         history.reload
 
         expect(history.first.details).to include("User details scrubbed by #{admin.username}")
@@ -271,7 +271,7 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.payload["scrubbed_by"]).to be_blank
         expect(reviewable.payload["scrubbed_reason"]).to be_blank
 
-        reviewable.scrub(admin, "reason")
+        reviewable.scrub(admin, "reason", Guardian.new(admin))
         reviewable.reload
 
         expect(reviewable.payload["scrubbed_by"]).to eq(admin.username)

@@ -43,7 +43,7 @@ RSpec.describe ReviewableUserSerializer do
   end
 
   it "includes the scrubbed fields for scrubbed reviewables" do
-    reviewable.scrub(admin, "reason")
+    reviewable.scrub(admin, "reason", Guardian.new(admin))
 
     json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:user_id]).to eq(reviewable.target_id)
