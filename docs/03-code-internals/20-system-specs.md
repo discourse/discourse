@@ -26,7 +26,6 @@ There are various environment flags that can be used to change how the spec is r
 
 - `SELENIUM_HEADLESS` - Set to `0` to open a browser while the spec is running. This will allow you to observe what is going on while the browser is being driven by the test harness. Combine with debugging tools and Chrome devtools to help write and debug specs.
 - `CHROME_DEV_TOOLS` - Set to a position (`top|bottom|left|right`) to automatically open the Chrome devtools when a browser is launched with `SELENIUM_HEADLESS=0`. Greatly aids with debugging, since you can set `debugger` statements in any of our Ember code.
-- `LOAD_PLUGINS` - If you are writing system specs for plugins you must set this to `1` and you must run the plugin system spec from your root discourse repo, e.g. `LOAD_PLUGINS=1 bin/rspec plugins/discourse-docs/spec/system/FILENAME.rb`
 
 ### Rarely Used
 
@@ -358,7 +357,7 @@ There are many more examples in `spec/system/page_objects/components`.
 
 ### Plugins
 
-Plugin system specs work in the same way as core system specs, but must be run from the directory of the discourse core repo, using the environment flag `LOAD_PLUGINS=1`.
+Plugin system specs work in the same way as core system specs, but must be run from the directory of the discourse core repo.
 
 ### I18n
 

@@ -144,5 +144,5 @@ Or even something like this to be even more specific:
 
 ```sh
 my-machine:~/discourse$ d/shell
-discourse@discourse:/src$ LOAD_PLUGINS=1 RAILS_ENV=test /src/bin/rspec plugins/discourse-follow/spec/lib/updater_spec.rb:37
+discourse@discourse:/src$ RAILS_ENV=test /src/bin/rspec plugins/discourse-follow/spec/lib/updater_spec.rb:37
 ```
