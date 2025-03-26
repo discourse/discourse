@@ -110,6 +110,7 @@ RSpec.describe Stylesheet::Compiler do
         expect(css).to include("fill:green")
         expect(css).to include("line-height:1.2em")
         expect(css).to include("border-color:#c00")
+        expect(css).to include("--simple-css-color: red")
       end
     end
   end

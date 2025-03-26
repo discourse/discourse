@@ -24,7 +24,11 @@ module Stylesheet
 
         plugin_assets.each do |src|
           options[:load_paths] << File.expand_path(File.dirname(src))
-          file += "@import \"#{src}\";\n"
+          if src.end_with?(".scss")
+            file += "@import \"#{src}\";\n"
+          else
+            file += File.read(src)
+          end
         end
       else # Core asset
         file += "@import \"#{asset}\";\n"
