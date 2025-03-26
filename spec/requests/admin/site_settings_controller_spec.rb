@@ -239,8 +239,12 @@ RSpec.describe Admin::SiteSettingsController do
         put "/admin/site_settings/bulk_update.json",
             params: {
               settings: {
-                title: "hello",
-                site_description: "world",
+                title: {
+                  value: "hello",
+                },
+                site_description: {
+                  value: "world",
+                },
               },
             }
         expect(response.status).to eq(200)

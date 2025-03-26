@@ -7507,6 +7507,7 @@ en:
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         discard: "Discard"
         save: "Save"
+        dirty_banner: "You have <em>%{dirtyCount}</em> unsaved changes"
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:

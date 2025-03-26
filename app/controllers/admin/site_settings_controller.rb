@@ -18,12 +18,13 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def update
-    params.require(:id)
-    id = params[:id]
+    id = params.require(:id)
 
     if id === "bulk_update"
-      params.require(:settings).permit!
-      settings = params[:settings].to_h
+      settings =
+        params[:settings].to_unsafe_h.map do |setting_name, config|
+          { setting_name:, value: config[:value], backfill: config[:backfill] }
+        end
     else
       backfill = params[:update_existing_user]
       settings = [{ setting_name: id, value: params[id], backfill: }]
