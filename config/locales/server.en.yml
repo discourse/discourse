@@ -341,6 +341,7 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
       site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
       site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
       site_settings_are_unconfigurable: "You are not allowed to change unconfigurable settings: %{setting_names}"
@@ -367,6 +368,7 @@ en:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       x_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
       tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "This setting requires the 'allow anonymous mode' setting to be enabled first."
 
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1734,6 +1736,7 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      full_page_login_check: "Your site has disabled the full page login setting. This setting is deprecated and will be removed on <strong>29 April 2025</strong>. Your site will be updated to use full page signup and login screens on that date. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Learn more</a>."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -2447,8 +2450,8 @@ en:
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
-    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
+    allow_anonymous_mode: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
+    allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_mode`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -4320,6 +4323,18 @@ en:
         You have been silenced from the forum.
 
         Reason - %{reason}
+
+    account_deleted:
+      title: "Account Deleted"
+      subject_template: "[%{email_prefix}] Your account has been deleted"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
+
+        %{flag_reason}
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
     account_exists:
       title: "Account already exists"

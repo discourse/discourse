@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export const LIGHT = "light";
@@ -33,7 +33,7 @@ const NavTab = <template>
       {{on "keydown" @action}}
       ...attributes
     >
-      {{dIcon @icon}}
+      {{icon @icon}}
       <span>{{@label}}</span>
     </a>
   </li>
@@ -133,7 +133,7 @@ const Picker = class extends Component {
       {{on "input" this.onInput}}
       {{on "change" this.onChange}}
     />
-    {{dIcon "hashtag"}}
+    {{icon "hashtag"}}
     <input
       class="color-palette-editor__text-input"
       type="text"

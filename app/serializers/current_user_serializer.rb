@@ -147,7 +147,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_post_anonymously
-    SiteSetting.allow_anonymous_posting &&
+    SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
   end
 

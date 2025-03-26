@@ -95,7 +95,10 @@ fa_IR:
               label: دسته‌بندی‌ها
           created: ساخته شده
           edited: ویرایش شده
-          topics: موضوعات
+          with_images: تصاویر
+          with_links: پیوندها
+          with_code: کد
+          with_uploads: بارگذاری‌ها
         category_created_edited:
           fields:
             restricted_category:
@@ -185,6 +188,11 @@ fa_IR:
           name:
             label: گیره
         automation:
+          runs_today: "%{count} امروز"
+          runs_this_week: "%{count} این هفته"
+          runs_this_month: "%{count} این ماه"
+          runs:
+            label: اجراها
           name:
             label: نام
           trigger:
@@ -201,5 +209,7 @@ fa_IR:
             label: غیرفعال
           last_updated_at:
             label: آخرین به‌روزرسانی
+          last_run:
+            label: آخرین اجرا
           last_updated_by:
             label: به‌روز شده توسط

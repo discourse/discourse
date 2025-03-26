@@ -836,11 +836,27 @@ class Theme < ActiveRecord::Base
   end
 
   def with_scss_load_paths
-    return yield([]) if self.extra_scss_fields.empty?
-
     ThemeStore::ZipExporter
       .new(self)
-      .with_export_dir(extra_scss_only: true) { |dir| yield ["#{dir}/stylesheets"] }
+      .with_export_dir(scss_only: true) do |dir|
+        FileUtils.mkdir_p("#{dir}/_entry_loadpath/theme-entrypoint")
+
+        entrypoints = {
+          "common/common.scss" => "common.scss",
+          "common/embedded.scss" => "embedded.scss",
+          "common/color_definitions.scss" => "color_definitions.scss",
+          "desktop/desktop.scss" => "desktop.scss",
+          "mobile/mobile.scss" => "mobile.scss",
+        }
+
+        entrypoints.each do |source, destination|
+          source_path = "#{dir}/#{source}"
+          destination_path = "#{dir}/_entry_loadpath/theme-entrypoint/#{destination}"
+          FileUtils.mv(source_path, destination_path) if File.exist?(source_path)
+        end
+
+        yield ["#{dir}/_entry_loadpath", "#{dir}/stylesheets"]
+      end
   end
 
   def scss_variables

@@ -2,23 +2,21 @@
 
 RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
   fab!(:user)
-  sso_secret = "mysecretmyprecious"
+
+  let(:sso_secret) { "mysecretmyprecious" }
+
   let!(:sso) do
-    sso = ::DiscourseConnectProvider.new
-    sso.nonce = "mysecurenonce"
-    sso.return_sso_url = "http://hobbit.shire.com/sso"
-    sso.sso_secret = sso_secret
-    sso.require_2fa = true
-    sso
+    ::DiscourseConnectProvider.new.tap do |sso|
+      sso.nonce = "mysecurenonce"
+      sso.return_sso_url = "http://hobbit.shire.com/sso"
+      sso.sso_secret = sso_secret
+      sso.require_2fa = true
+    end
   end
 
   before do
     SiteSetting.enable_discourse_connect_provider = true
     SiteSetting.discourse_connect_provider_secrets = "hobbit.shire.com|#{sso_secret}"
-  end
-
-  def params(hash)
-    ActionController::Parameters.new(hash)
   end
 
   def create_request(query_string)
@@ -206,7 +204,6 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
   describe "#second_factor_auth_completed!" do
     let(:output) do
       request = create_request("")
-      params = params_from_payload("")
       action = create_instance(user, request)
       action.second_factor_auth_completed!(payload: sso.payload)
     end
@@ -223,7 +220,6 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
       wrong_sso.require_2fa = true
 
       request = create_request(wrong_sso.payload)
-      params = params_from_payload(wrong_sso.payload)
       action = create_instance(user, request)
       redirect_url = action.second_factor_auth_completed!(payload: sso.payload)[:sso_redirect_url]
       response_payload = ::DiscourseConnectProvider.parse(URI(redirect_url).query)
@@ -241,8 +237,26 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
     end
 
     it "the response payload contains the user details" do
+      user.update!(uploaded_avatar: Fabricate(:upload))
+      user.user_profile.update!(
+        profile_background_upload: Fabricate(:upload),
+        card_background_upload: Fabricate(:upload),
+      )
+
+      expect(response_payload.name).to eq(user.name)
       expect(response_payload.username).to eq(user.username)
       expect(response_payload.email).to eq(user.email)
+      expect(response_payload.external_id).to eq(user.id.to_s)
+      expect(response_payload.admin).to eq(user.admin?)
+      expect(response_payload.moderator).to eq(user.moderator?)
+      expect(response_payload.groups).to eq(user.groups.pluck(:name).join(","))
+      expect(response_payload.avatar_url).to eq(GlobalPath.full_cdn_url(user.uploaded_avatar.url))
+      expect(response_payload.profile_background_url).to eq(
+        GlobalPath.full_cdn_url(user.user_profile.profile_background_upload.url),
+      )
+      expect(response_payload.card_background_url).to eq(
+        GlobalPath.full_cdn_url(user.user_profile.card_background_upload.url),
+      )
     end
   end
 end

@@ -43,10 +43,12 @@ export default class Contents extends Component {
       return false;
     }
 
-    return (
-      this.siteSettings.search_experience === "search_field" &&
-      !this.args.topicInfoVisible
+    const searchExperience = applyValueTransformer(
+      "site-setting-search-experience",
+      this.siteSettings.search_experience
     );
+
+    return searchExperience === "search_field" && !this.args.topicInfoVisible;
   }
 
   <template>

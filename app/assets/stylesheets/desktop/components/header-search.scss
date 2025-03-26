@@ -59,7 +59,8 @@
             display: none;
           }
 
-          .search-input .search-context ~ #search-term {
+          .search-input .search-context ~ #search-term,
+          .search-input .search-context ~ .search-term__input {
             padding-left: 0.5em;
           }
 
@@ -98,7 +99,8 @@
             padding: 0 0 0 1.5em;
             border-radius: var(--d-input-border-radius);
 
-            #search-term {
+            #search-term,
+            .search-term__input {
               height: 100%;
               width: 100%;
               margin: 0;

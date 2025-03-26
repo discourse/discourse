@@ -277,6 +277,13 @@ module SiteSettings::Validations
     validate_error :tl0_and_anonymous_flag
   end
 
+  def validate_allow_likes_in_anonymous_mode(new_val)
+    return if new_val == "f"
+    return if SiteSetting.allow_anonymous_mode
+
+    validate_error :allow_likes_in_anonymous_mode_without_anonymous_mode_enabled
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)

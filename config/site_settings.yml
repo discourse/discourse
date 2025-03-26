@@ -689,7 +689,7 @@ login:
     min: 1
     max: 175200
   full_page_login:
-    default: false
+    default: true
     client: true
   show_signup_form_email_instructions:
     client: true
@@ -812,10 +812,10 @@ users:
   enable_user_directory:
     client: true
     default: true
-  allow_anonymous_posting:
+  allow_anonymous_mode:
     default: false
     client: true
-  allow_anonymous_likes:
+  allow_likes_in_anonymous_mode:
     default: false
     client: true
   anonymous_posting_min_trust_level:

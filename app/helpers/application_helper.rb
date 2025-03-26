@@ -674,14 +674,16 @@ module ApplicationHelper
         light_href,
         light_elements_media_query,
         "light-scheme",
+        scheme_id,
       )
       result << color_scheme_stylesheet_link_tag(
         dark_href,
         dark_elements_media_query,
         "dark-scheme",
+        dark_scheme_id,
       )
     else
-      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme")
+      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme", scheme_id)
     end
     result.html_safe
   end
@@ -857,7 +859,7 @@ module ApplicationHelper
       end
   end
 
-  def color_scheme_stylesheet_link_tag(href, media, css_class)
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>]
+  def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end

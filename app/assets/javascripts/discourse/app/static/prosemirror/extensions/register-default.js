@@ -1,4 +1,5 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import bulletList from "./bullet-list";
 import codeBlock from "./code-block";
 import emoji from "./emoji";
 import hashtag from "./hashtag";
@@ -10,6 +11,7 @@ import link from "./link";
 import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
+import orderedList from "./ordered-list";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
@@ -41,6 +43,8 @@ const defaultExtensions = [
   typographerReplacements,
   table,
   markdownPaste,
+  orderedList,
+  bulletList,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

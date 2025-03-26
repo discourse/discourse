@@ -220,11 +220,37 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "supports deleting a spammer" do
+      reviewable.perform(moderator, :delete_user)
+      expect(reviewable).to be_approved
+      expect(score.reload).to be_agreed
+      expect(post.reload.deleted_at).to be_present
+      expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
+    end
+
+    it "sends email when deleting a spammer" do
+      expect { reviewable.perform(moderator, :delete_user) }.to change {
+        ActionMailer::Base.deliveries.count
+      }
+      expect(ActionMailer::Base.deliveries.last.subject).to include(
+        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+      )
+    end
+
+    it "supports deleting and blocking a spammer" do
       reviewable.perform(moderator, :delete_user_block)
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post.reload.deleted_at).to be_present
       expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
+    end
+
+    it "sends email when deleting and blocking a spammer" do
+      expect { reviewable.perform(moderator, :delete_user_block) }.to change {
+        ActionMailer::Base.deliveries.count
+      }
+      expect(ActionMailer::Base.deliveries.last.subject).to include(
+        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+      )
     end
 
     it "ignores the flags" do

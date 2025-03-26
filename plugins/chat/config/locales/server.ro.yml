@@ -8,6 +8,9 @@ ro:
   site_settings:
     chat_allowed_groups: "Utilizatorii din aceste grupuri pot discuta pe chat. Reține că administratorii și moderatorii pot accesa întotdeauna chat-ul."
     chat_message_flag_allowed_groups: "Utilizatorii din aceste grupuri au dreptul de a marca mesajele de chat. Reține că administratorii și moderatorii pot marca întotdeauna mesajele de chat."
+    allow_chat_in_anonymous_mode: "Activează această setare pentru a permite utilizatorilor care navighează anonim pe site-ul tău să utilizeze discuțiile. Această setare necesită activarea setării „permite modul anonim”."
+    errors:
+      allow_chat_in_anonymous_mode_invalid: "Această setare necesită mai întâi activarea setării „permite modul anonim”."
   system_messages:
     private_channel_title: "Canal %{id}"
   chat:

@@ -173,14 +173,10 @@ zh_CN:
             restricted_archetype:
               label: 主题类型
               description: 可选，仅允许在主题或个人消息上触发
-            restricted_user_group:
-              label: 受限用户组
-              description: 可选，仅当发帖用户属于此组时才会触发
             restricted_groups:
+              label: 受限制的群组
+            restricted_inbox_groups:
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
-            ignore_group_members:
-              label: 忽略群组成员
-              description: 如果发件人是上面指定的群组的成员，则跳过触发器
             ignore_automated:
               label: 忽略自动源
               description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的帖子
@@ -195,8 +191,11 @@ zh_CN:
               description: "如果帖子是通过电子邮件创建的，则跳过该触发器。"
           created: 创建
           edited: 已编辑
-          topics: 话题
           personal_messages: 个人信息
+          with_images: 图片
+          with_links: 链接
+          with_code: 代码
+          with_uploads: 上传
         user_updated:
           fields:
             user_profile:

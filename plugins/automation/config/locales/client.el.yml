@@ -78,7 +78,10 @@ el:
             restricted_categories:
               label: Κατηγορίες
           created: Δημιουργήθηκε
-          topics: Θέματα
+          with_images: Εικόνες
+          with_links: Σύνδεσμοι
+          with_code: Κωδικός
+          with_uploads: Μεταφορτώσεις
         category_created_edited:
           fields:
             restricted_category:

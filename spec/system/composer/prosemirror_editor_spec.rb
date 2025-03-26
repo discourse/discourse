@@ -94,6 +94,14 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("ul ul li", count: 3)
     end
 
+    it "uses 'tight' lists for both ordered and unordered lists by default" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("1. Item 1\n5. Item 2\n\n")
+      composer.type_content("* Item 1\n* Item 2")
+      expect(rich).to have_css("ol[data-tight='true']")
+      expect(rich).to have_css("ul[data-tight='true']")
+    end
+
     it "supports ``` or 4 spaces to create a code block" do
       open_composer_and_toggle_rich_editor
       composer.type_content("```\nThis is a code block")
@@ -468,10 +476,11 @@ describe "Composer - ProseMirror editor", type: :system do
     it "respects existing marks when pasting a url to make a link" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.write_clipboard("`code` **bold** *italic*")
+      cdp.write_clipboard("not selected `code`**bold**not*italic* not selected")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      page.execute_script("document.execCommand('selectAll',false,null)")
-      cdp.write_clipboard("www.google.com")
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("www.example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("code", text: "code")
@@ -480,7 +489,25 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("[`code` **bold** *italic*](www.google.com)")
+      expect(composer).to have_value(
+        "not selected [`code`**bold**not*italic*](www.example.com) not selected",
+      )
+    end
+
+    it "auto-links pasted URLs from text/html" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard("not selected **bold** not selected")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("<p>www.example.com</p>", html: true)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
     end
   end
 
