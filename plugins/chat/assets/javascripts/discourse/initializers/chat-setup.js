@@ -168,7 +168,7 @@ class ChatSetupInit {
       if (this.chatService.userCanChat) {
         api.headerIcons.add("chat", ChatHeaderIcon, {
           after: "search",
-          before: "user-menu",
+          before: "hamburger",
         });
       }
 
