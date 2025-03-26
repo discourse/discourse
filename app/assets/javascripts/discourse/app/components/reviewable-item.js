@@ -296,25 +296,9 @@ export default class ReviewableItem extends Component {
       let actionMethod =
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
-        if (!this.reviewable.claimed_by) {
-          const claim = this.store.createRecord("reviewable-claimed-topic");
-
-          try {
-            await claim.save({
-              topic_id: this.reviewable.topic.id,
-              automatic: true,
-            });
-            this.reviewable.set("claimed_by", {
-              user: this.currentUser,
-              automatic: true,
-            });
-          } catch (e) {
-            popupAjaxError(e);
-            return;
-          }
+        if (await this._claimReviewable()) {
+          return actionMethod.call(this, reviewable, performAction);
         }
-
-        return actionMethod.call(this, reviewable, performAction);
       } else {
         // eslint-disable-next-line no-console
         console.error(
@@ -418,6 +402,33 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  async _claimReviewable() {
+    if (!this.reviewable.topic) {
+      // We can't claim a reviewable without a topic, so treat it as claimed
+      return true;
+    }
+
+    if (!this.reviewable.claimed_by) {
+      const claim = this.store.createRecord("reviewable-claimed-topic");
+
+      try {
+        await claim.save({
+          topic_id: this.reviewable.topic.id,
+          automatic: true,
+        });
+        this.reviewable.set("claimed_by", {
+          user: this.currentUser,
+          automatic: true,
+        });
+      } catch (e) {
+        popupAjaxError(e);
+        return false;
+      }
+    }
+
+    return this.reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
   @action
   explainReviewable(reviewable, event) {
     event.preventDefault();
@@ -474,7 +485,7 @@ export default class ReviewableItem extends Component {
   }
 
   @action
-  perform(performableAction) {
+  async perform(performableAction) {
     if (this.updating) {
       return;
     }
@@ -486,18 +497,22 @@ export default class ReviewableItem extends Component {
       : actionModalClassMap[performableAction.server_action];
 
     if (message) {
-      this.dialog.confirm({
-        message,
-        didConfirm: () => this._performConfirmed(performableAction),
-      });
+      if (await this._claimReviewable()) {
+        this.dialog.confirm({
+          message,
+          didConfirm: () => this._performConfirmed(performableAction),
+        });
+      }
     } else if (actionModalClass) {
-      this.modal.show(actionModalClass, {
-        model: {
-          reviewable: this.reviewable,
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
-        },
-      });
+      if (await this._claimReviewable()) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
+        });
+      }
     } else {
       return this._performConfirmed(performableAction);
     }

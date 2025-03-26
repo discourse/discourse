@@ -211,7 +211,7 @@ class ReviewablesController < ApplicationController
 
     raise Discourse::InvalidAccess.new if reviewable.payload["scrubbed_by"].present?
 
-    reviewable.scrub(current_user, params[:reason])
+    reviewable.scrub(current_user, params[:reason], @guardian)
 
     render json: success_json
   end

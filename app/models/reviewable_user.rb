@@ -36,7 +36,7 @@ class ReviewableUser < Reviewable
     create_result(:success, :approved)
   end
 
-  def scrub(performed_by, reason)
+  def scrub(performed_by, reason, guardian)
     # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
     UserHistory
       .where(action: UserHistory.actions[:delete_user])
@@ -52,6 +52,12 @@ class ReviewableUser < Reviewable
 
     self.payload = { scrubbed_by: performed_by.username, scrubbed_reason: reason }
     self.save!
+
+    result = create_result(:success)
+
+    notify_users(result, guardian)
+
+    result
   end
 
   def perform_delete_user(performed_by, args)
