@@ -241,7 +241,7 @@ RSpec.describe Admin::SiteSettingsController do
 
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to contain_exactly(
-            "You cannot change old_one because it is deprecated, use new_one instead",
+            "The following settings are deprecated: old_one. Use new_one instead",
           )
         end
       end

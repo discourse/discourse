@@ -4,29 +4,30 @@ class SiteSetting::Policy::SettingsAreNotDeprecated < Service::PolicyBase
   delegate :options, :params, to: :context
 
   def call
-    params.settings.keys.each do |id|
-      SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
-        if old_name.to_sym == id
-          if override
-            options.overridden_setting_names[old_name.to_sym] = new_name
-            break
-          else
-            @old_name = old_name
-            @new_name = new_name
-            return false
+    @hard_deprecations =
+      params.settings.keys.filter_map do |id|
+        SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
+          if old_name.to_sym == id
+            if override
+              options.overridden_setting_names[old_name.to_sym] = new_name
+              break
+            else
+              break old_name, new_name
+            end
           end
         end
       end
-    end
 
-    true
+    @hard_deprecations.empty?
   end
 
   def reason
+    old_names, new_names = @hard_deprecations.transpose
+
     I18n.t(
       "errors.site_settings.site_settings_are_deprecated",
-      old_name: @old_name,
-      new_name: @new_name,
+      old_names: old_names.join(", "),
+      new_names: new_names.join(", "),
     )
   end
 end
