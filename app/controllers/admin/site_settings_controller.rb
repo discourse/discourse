@@ -20,9 +20,14 @@ class Admin::SiteSettingsController < Admin::AdminController
   def update
     params.require(:id)
     id = params[:id]
-    backfill = params[:update_existing_user]
 
-    settings = [{ setting_name: id, value: params[id], backfill: }]
+    if id === "bulk_update"
+      params.require(:settings).permit!
+      settings = params[:settings].to_h
+    else
+      backfill = params[:update_existing_user]
+      settings = [{ setting_name: id, value: params[id], backfill: }]
+    end
 
     SiteSetting::Update.call(params: { settings: }, guardian:) do
       on_success { render body: nil }

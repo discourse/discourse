@@ -235,6 +235,19 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.title).to eq("hello")
       end
 
+      it "bulk updates settings" do
+        put "/admin/site_settings/bulk_update.json",
+            params: {
+              settings: {
+                title: "hello",
+                site_description: "world",
+              },
+            }
+        expect(response.status).to eq(200)
+        expect(SiteSetting.title).to eq("hello")
+        expect(SiteSetting.site_description).to eq("world")
+      end
+
       it "throws an error for hard deprecated settings" do
         stub_deprecated_settings!(override: false) do
           put "/admin/site_settings/old_one.json", params: { old_one: true }
