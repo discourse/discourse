@@ -247,6 +247,8 @@ module Email
         merge_json_x_header("X-MC-Metadata", message_id: @message.message_id)
       when "smtp.sparkpostmail.com"
         merge_json_x_header("X-MSYS-API", metadata: { message_id: @message.message_id })
+      when "smtp.netcorecloud.net"
+        merge_json_x_header["X-APIHEADER"] = @message.message_id
       end
 
       # Parse the HTML again so we can make any final changes before
