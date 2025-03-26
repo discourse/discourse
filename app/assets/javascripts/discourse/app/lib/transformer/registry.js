@@ -15,6 +15,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-available-views",
   "category-description-text",
   "category-display-name",
+  "category-text-color",
   "composer-service-cannot-submit-post",
   "header-notifications-avatar-size",
   "home-logo-href",
