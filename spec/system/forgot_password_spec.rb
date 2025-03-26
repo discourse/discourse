@@ -27,7 +27,7 @@ shared_examples "forgot password scenarios" do
     sign_in(user)
 
     user_preferences_security_page.visit(user)
-    user_preferences_security_page.visit_second_factor("supersecurepassword")
+    user_preferences_security_page.visit_second_factor(user, "supersecurepassword")
 
     find(".security-key .new-security-key").click
     expect(user_preferences_security_page).to have_css("input#security-key-name")
