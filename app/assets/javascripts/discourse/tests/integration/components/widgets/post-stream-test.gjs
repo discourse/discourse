@@ -13,8 +13,7 @@ function postStreamTest(name, attrs) {
     this.set("posts", attrs.posts.call(this));
 
     await render(
-      hbs`
-        <MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
+      hbs`<MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
     );
 
     attrs.test.call(this, assert);

@@ -188,8 +188,7 @@ export default createWidget("poster-name", {
         const badgeIcon = new RenderGlimmer(
           this,
           `span.user-badge-button-${badge.slug}`,
-          hbs`
-            <UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
+          hbs`<UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
           {
             badge,
             user: attrs.user,
