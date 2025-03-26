@@ -1709,9 +1709,8 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
-    // TODO (glimmer-post-stream) what should replace this API?
     deprecated(
-      "`api.addPostTransformCallback` has been deprecated. Use the value transformer `` instead.",
+      "`api.addPostTransformCallback` has been deprecated.",
       POST_STREAM_DEPRECATION_OPTIONS
     );
 
