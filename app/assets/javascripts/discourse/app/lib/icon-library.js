@@ -1,7 +1,11 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse/lib/attribute-hook";
 import deprecated from "discourse/lib/deprecated";
-import { isDevelopment } from "discourse/lib/environment";
+import {
+  isDevelopment,
+  isRailsTesting,
+  isTesting,
+} from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
@@ -142,10 +146,14 @@ function handleDeprecatedIcon(id) {
   newId = remapFromFA5(newId);
 
   if (newId !== id) {
+    const error_msg = `Missing icon error: The icon name "${id}" has been removed and should be updated to "${newId}" in your code. More info at https://meta.discourse.org/t/325349.`;
+
     // eslint-disable-next-line no-console
-    console.error(
-      `Missing icon error: The icon name "${id}" has been removed and should be updated to "${newId}" in your code. More info at https://meta.discourse.org/t/325349.`
-    );
+    console.error(error_msg);
+
+    if (isRailsTesting() || isTesting()) {
+      throw error_msg;
+    }
   }
 
   return id;
