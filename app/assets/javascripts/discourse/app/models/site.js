@@ -112,7 +112,7 @@ export default class Site extends RestModel {
       settingValue === "disabled" &&
       this.currentUser?.use_glimmer_post_stream_mode_auto_mode
     ) {
-      settingValue = "enabled"; // TODO (glimmer-post-stream) this needs to be changed to auto before merging the code
+      settingValue = "auto";
     }
 
     if (settingValue === "disabled") {
