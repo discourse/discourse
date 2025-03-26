@@ -200,18 +200,10 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.appearance.title",
     links: [
       {
-        name: "admin_font_style",
-        route: "adminConfig.fonts.settings",
-        label: "admin.config.font_style.title",
-        description: "admin.config.font_style.header_description",
-        icon: "italic",
-        settings_area: "fonts",
-      },
-      {
-        name: "admin_site_logo",
-        route: "adminConfig.logo.settings",
-        label: "admin.config.logo.title",
-        description: "admin.config.logo.header_description",
+        name: "admin_branding",
+        route: "adminConfig.branding",
+        label: "admin.config.branding.title",
+        description: "admin.config.branding.header_description",
         icon: "fab-discourse",
         settings_category: "branding",
       },
