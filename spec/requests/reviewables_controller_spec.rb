@@ -1021,6 +1021,65 @@ RSpec.describe ReviewablesController do
       end
     end
 
+    describe("#scrub") do
+      it "only allows admins to scrub reviewables" do
+        moderator = Fabricate(:moderator)
+
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(moderator)
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(403)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow scrubbing of reviewables that haven't been rejected" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
+      it "doesn't allow scrubbing of reviewables that don't exist" do
+        sign_in(admin)
+        put "/review/123456789/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
+      it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(403)
+      end
+    end
+
     describe "#count" do
       fab!(:admin)
 

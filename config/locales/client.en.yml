@@ -670,11 +670,16 @@ en:
         name: "Name"
         fields: "Fields"
         reject_reason: "Reason"
-        delete_record:
-          button: Delete Record
-          confirm_title: Delete Record
-          confirm_body: "Are you SURE you want to delete this review queue record? This is permanent!"
-          confirm_button: "Delete Record"
+        scrubbed_by: "Record scrubbed by"
+        scrubbed_reason: "Reason"
+        scrubbed_reject_reason: "User rejected reason"
+        scrub_record:
+          button: Scrub Record
+          confirm_title: Scrub Record
+          confirm_body: "Are you SURE you want to scrub this review queue record? All identifying details will be removed. This is permanent!"
+          reason_title: "A reason for scrubbing this record is required."
+          reason_placeholder: "Reason..."
+          confirm_button: "Scrub Record"
           cancel_button: "Cancel"
 
       user_percentage:

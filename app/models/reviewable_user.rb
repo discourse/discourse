@@ -36,6 +36,24 @@ class ReviewableUser < Reviewable
     create_result(:success, :approved)
   end
 
+  def scrub(performed_by, reason)
+    # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
+    UserHistory
+      .where(action: UserHistory.actions[:delete_user])
+      .where("details LIKE :query", query: "%\nusername: #{payload["username"]}\n%")
+      .update_all(
+        details:
+          I18n.t(
+            "user.destroy_reasons.reviewable_details_scrubbed",
+            staff: performed_by.username,
+            reason: reason,
+          ),
+      )
+
+    self.payload = { scrubbed_by: performed_by.username, scrubbed_reason: reason }
+    self.save!
+  end
+
   def perform_delete_user(performed_by, args)
     # We'll delete the user if we can
     if target.present?
