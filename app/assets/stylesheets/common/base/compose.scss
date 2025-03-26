@@ -474,9 +474,11 @@ html.composer-open {
     flex-grow: 1;
     min-height: 0;
 
-    &:not(.toolbar-visible) {
-      .d-editor-button-bar {
-        display: none;
+    .mobile-view & {
+      &:not(.toolbar-visible) {
+        .d-editor-button-bar {
+          display: none;
+        }
       }
     }
   }
