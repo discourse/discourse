@@ -3,6 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import PostPlaceholder from "discourse/components/post/placeholder";
 import discourseDebounce from "discourse/lib/debounce";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
@@ -235,8 +236,7 @@ export default createWidget("post-stream", {
           ? new RenderGlimmer(
               this,
               "div.post-placeholder-shim",
-              hbs`
-              <Post::Placeholder/>`
+              PostPlaceholder
             )
           : result.push(this.attach("post-placeholder"));
         continue;
@@ -276,8 +276,7 @@ export default createWidget("post-stream", {
             ? new RenderGlimmer(
                 this,
                 "div.post-gap-shim",
-                hbs`
-                <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
+                hbs`<Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
                 {
                   post,
                   gap: beforeGap,
@@ -305,8 +304,7 @@ export default createWidget("post-stream", {
             new RenderGlimmer(
               this,
               "div.time-gap.small-action",
-              hbs`
-                <Post::TimeGap @daysSince={{@data.daysSince}} />`,
+              hbs`<Post::TimeGap @daysSince={{@data.daysSince}} />`,
               { daysSince }
             )
           );
@@ -325,11 +323,10 @@ export default createWidget("post-stream", {
             ? new RenderGlimmer(
                 this,
                 "div.post-small-action-shim",
-                hbs`
-                <Post::SmallAction @post={{@data.post}}
-                                   @deletePost={{@data.deletePost}}
-                                   @editPost={{@data.editPost}}
-                                   @recoverPost={{@data.recoverPost}} />`,
+                hbs`<Post::SmallAction @post={{@data.post}}
+                       @deletePost={{@data.deletePost}}
+                       @editPost={{@data.editPost}}
+                       @recoverPost={{@data.recoverPost}} />`,
                 {
                   post,
                   deletePost: () => this.sendWidgetAction("deletePost", post),
@@ -415,8 +412,7 @@ export default createWidget("post-stream", {
             ? new RenderGlimmer(
                 this,
                 "div.post-gap-shim",
-                hbs`
-                <Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
+                hbs`<Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
                 {
                   post,
                   gap: afterGap,
@@ -445,8 +441,7 @@ export default createWidget("post-stream", {
             ? new RenderGlimmer(
                 this,
                 "div.post-visited-line-shim",
-                hbs`
-                <Post::VisitedLine @post={{@data.post}} />`,
+                hbs`<Post::VisitedLine @post={{@data.post}} />`,
                 {
                   post,
                 }
@@ -470,11 +465,10 @@ export default createWidget("post-stream", {
           ? new RenderGlimmer(
               this,
               "div.post-filtered-notice-shim",
-              hbs`
-              <Post::FilteredNotice @posts={{@data.posts}}
-                                    @cancelFilter={{@data.cancelFilter}}
-                                    @streamFilters={{@data.streamFilters}}
-                                    @filteredPostsCount={{@data.filteredPostsCount}} />`,
+              hbs`<Post::FilteredNotice @posts={{@data.posts}}
+                     @cancelFilter={{@data.cancelFilter}}
+                     @streamFilters={{@data.streamFilters}}
+                     @filteredPostsCount={{@data.filteredPostsCount}} />`,
               {
                 posts: postArray,
                 streamFilters: attrs.streamFilters,
