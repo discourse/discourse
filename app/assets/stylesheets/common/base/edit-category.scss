@@ -1,4 +1,6 @@
-$category-settings-width: unquote("min(500px, 90%)");
+@use "sass:string";
+
+$category-settings-width: string.unquote("min(500px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {
@@ -9,32 +11,110 @@ div.edit-category {
   grid-column-gap: 1.5em;
   grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
 
+  @include breakpoint("mobile-extra-large") {
+    display: block;
+  }
+
   .edit-category-title-bar {
     grid-area: header;
     grid-column: 1 / span 2;
     display: flex;
+    gap: 1em;
     justify-content: space-between;
     align-self: start;
     background-color: var(--primary-very-low);
     padding: 20px;
 
+    @include breakpoint("mobile-extra-large") {
+      justify-content: start;
+      align-items: center;
+      padding-bottom: 1em;
+    }
+
+    h2 {
+      @include ellipsis;
+
+      @include breakpoint("mobile-extra-large") {
+        order: 2;
+        margin-bottom: 0;
+      }
+    }
+
     .category-back {
       height: 2em;
       align-self: flex-end;
+      flex: 0 0 auto;
     }
+  }
+
+  .edit-category-title {
+    min-width: 0;
   }
 
   .edit-category-nav {
     grid-area: sidebar;
     grid-row: 2 / span 3;
 
-    .nav-stacked {
+    @include breakpoint("mobile-extra-large") {
+      width: 100%;
       background-color: var(--secondary);
+      position: relative;
+      border-top: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--primary-low);
+      margin: 0.5em 0;
+      overflow: hidden;
+
+      &::after {
+        background: linear-gradient(
+          to right,
+          rgba(var(--secondary-rgb), 0),
+          rgba(var(--secondary-rgb), 1)
+        );
+        content: "";
+        position: absolute;
+        right: 0;
+        height: 100%;
+        width: 30px;
+      }
+    }
+  }
+
+  .nav-stacked {
+    background-color: var(--secondary);
+
+    @include breakpoint("mobile-extra-large") {
+      white-space: nowrap;
+      flex-wrap: nowrap;
+      overflow-x: scroll;
+      display: inline-flex;
+      width: 100%;
+      margin-bottom: 0;
+
+      li {
+        font-size: var(--font-down-1);
+        border-bottom: none;
+      }
+
+      a.active::after {
+        display: none;
+      }
     }
   }
 
   .edit-category-content {
     grid-area: content;
+
+    @include breakpoint("mobile-extra-large") {
+      padding-top: 1em;
+    }
+
+    .edit-category-tab {
+      display: none;
+    }
+
+    .edit-category-tab.active {
+      display: contents;
+    }
   }
 
   #list-area & h2 {
@@ -59,7 +139,7 @@ div.edit-category {
 
   .edit-category-tab-general {
     .category-chooser {
-      width: unquote("min(340px, 90%)");
+      width: min(340px, 90%);
     }
   }
 
@@ -177,6 +257,7 @@ div.edit-category {
     .required-tag-group-row {
       display: flex;
       gap: 0.5em;
+      margin-bottom: 1em;
 
       > * {
         margin: 0;
@@ -185,7 +266,6 @@ div.edit-category {
       input[type="number"] {
         width: 4em;
       }
-      margin-bottom: 1em;
     }
   }
 

@@ -29,7 +29,7 @@ module("Integration | Component | search-menu", function (hooks) {
       return response(searchFixtures["search/query"]);
     });
 
-    await render(<template><SearchMenu /></template>);
+    await render(<template><SearchMenu @location="test" /></template>);
 
     assert
       .dom(".show-advanced-search")
@@ -71,7 +71,11 @@ module("Integration | Component | search-menu", function (hooks) {
   });
 
   test("clicking outside results hides and blurs input", async function (assert) {
-    await render(<template><div id="click-me"><SearchMenu /></div></template>);
+    await render(
+      <template>
+        <div id="click-me"><SearchMenu @location="test" /></div>
+      </template>
+    );
     await click("#search-term");
 
     assert

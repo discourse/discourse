@@ -11,6 +11,7 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   getElement,
   selectedNode,
@@ -49,6 +50,10 @@ export default class PostTextSelection extends Component {
   @service menu;
 
   @tracked isSelecting = false;
+  @tracked preventClose = applyValueTransformer(
+    "post-text-selection-prevent-close",
+    false
+  );
 
   prevSelectedText;
 
@@ -93,6 +98,9 @@ export default class PostTextSelection extends Component {
 
   @bind
   async hideToolbar() {
+    if (this.preventClose) {
+      return;
+    }
     this.args.quoteState.clear();
     await this.menuInstance?.close();
   }
@@ -285,10 +293,7 @@ export default class PostTextSelection extends Component {
   }
 
   get canCopyQuote() {
-    return (
-      this.siteSettings.enable_quote_copy &&
-      this.currentUser?.get("user_option.enable_quoting")
-    );
+    return this.currentUser?.get("user_option.enable_quoting");
   }
 
   // on Desktop, shows the bar at the beginning of the selection

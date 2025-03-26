@@ -342,6 +342,7 @@ de:
         tabs:
           members: Mitglieder
           settings: Einstellungen
+        remove_member: "Entfernen"
       new_message_modal:
         title: Nachricht senden
         add_user_long: <kbd>Umschalt + Klick</kbd> oder <kbd>Umschalt + Eingabe</kbd><span>@%{username} hinzufügen</span>

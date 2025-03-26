@@ -39,7 +39,7 @@ RSpec.describe DistributedMutex do
   end
 
   it "allows the validity of the lock to be configured" do
-    mutex = DistributedMutex.new(key, validity: 2)
+    mutex = DistributedMutex.new(key, validity: 2.seconds)
 
     mutex.synchronize do
       expect(Discourse.redis.ttl(key)).to be <= 3

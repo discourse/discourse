@@ -8,6 +8,8 @@ RSpec.describe "Chat composer", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:cdp) { PageObjects::CDP.new }
+  let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
+  let(:open_thread) { PageObjects::Pages::ChatThread.new }
 
   before do
     chat_system_bootstrap
@@ -241,6 +243,77 @@ RSpec.describe "Chat composer", type: :system do
         expect(page).to have_css(".chat-composer.is-send-disabled")
         page.find(".chat-composer-upload").hover
         page.find(".chat-composer-upload__remove-btn").click
+      end
+    end
+  end
+
+  context "when sending a react message" do
+    fab!(:react_message) do
+      Fabricate(:chat_message, user: current_user, chat_channel: channel_1, message: "HI!")
+    end
+
+    context "in a channel" do
+      it "adds a reaction to the message" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.send_message("+:+1:")
+
+        expect(channel_page).to have_reaction(react_message, "+1")
+      end
+
+      it "works with literal emoji" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.send_message("+👍")
+
+        expect(channel_page).to have_reaction(react_message, "+1")
+      end
+    end
+
+    context "in a thread" do
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: channel_1, original_message: original_message)
+      end
+
+      fab!(:thread_message) do
+        Fabricate(
+          :chat_message,
+          in_reply_to_id: original_message.id,
+          chat_channel: channel_1,
+          thread_id: thread.id,
+          user: current_user,
+        )
+      end
+
+      before do
+        channel_1.update!(threading_enabled: true)
+        Chat::Thread.update_counts
+        thread.add(current_user)
+      end
+
+      it "adds a reaction to the message" do
+        chat_page.visit_channel(channel_1)
+        channel_page.message_thread_indicator(original_message).click
+
+        expect(side_panel).to have_open_thread(original_message.thread)
+
+        open_thread.send_message("+:+1:")
+
+        expect(open_thread).to have_reaction(thread_message, "+1")
+      end
+
+      it "works with literal emoji" do
+        chat_page.visit_channel(channel_1)
+        channel_page.message_thread_indicator(original_message).click
+
+        expect(side_panel).to have_open_thread(original_message.thread)
+
+        open_thread.send_message("+👍")
+
+        expect(open_thread).to have_reaction(thread_message, "+1")
       end
     end
   end

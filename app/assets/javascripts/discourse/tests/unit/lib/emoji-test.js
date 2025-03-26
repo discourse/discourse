@@ -142,7 +142,10 @@ module("Unit | Utility | emoji", function (hooks) {
 
   test("Emoji search", function (assert) {
     // able to find an alias
-    assert.strictEqual(emojiSearch("+1").length, 1);
+    assert.strictEqual(
+      emojiSearch("+1", { searchAliases: { thumbs_up: ["+1"] } }).length,
+      1
+    );
 
     // able to find middle of line search
     assert.strictEqual(emojiSearch("check", { maxResults: 3 }).length, 3);
@@ -162,15 +165,20 @@ module("Unit | Utility | emoji", function (hooks) {
   });
 
   test("search does not return duplicated results", function (assert) {
-    const matches = emojiSearch("bow").filter(
-      (emoji) => emoji === "bowing_man"
-    );
+    const matches = emojiSearch("bow", {
+      searchAliases: { bowing_man: ["bow"] },
+    }).filter((emoji) => emoji === "man_bowing");
 
-    assert.deepEqual(matches, ["bowing_man"]);
+    assert.deepEqual(matches, ["man_bowing"]);
   });
 
   test("search does partial-match on emoji aliases", function (assert) {
-    const matches = emojiSearch("instru");
+    const matches = emojiSearch("instru", {
+      searchAliases: {
+        woman_teacher: ["instructor", "lecturer", "professor"],
+        violin: ["instrument", "music"],
+      },
+    });
 
     assert.true(matches.includes("woman_teacher"));
     assert.true(matches.includes("violin"));

@@ -242,7 +242,7 @@ sv:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långa för att undvika oavsiktligt hastighetsbegränsande legitima användare."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
-      twitter_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
+      x_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
@@ -1527,7 +1527,7 @@ sv:
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
     apple_touch_icon: "Ikon som används för Apple-pekskärmsenheter. En transparent bakgrund rekommenderas inte. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
-    twitter_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
+    x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2050,9 +2050,7 @@ sv:
     code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformateringsstilen som standard"
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     disable_watched_word_checking_in_user_fields: "inaktivera kontroll av bevakade ord i användarfält"
-    enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
     enable_fast_edit: "Lägger till en knapp i menyn för val av inlägg för att redigera ett litet urval direkt."
-    enable_quote_copy: "Lägger till en knapp i menyn för inläggsurval för att kopiera urvalet till urklipp som ett markdown-citat."
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."
@@ -4363,7 +4361,6 @@ sv:
       new_topics_unless_trust_level: "Användare på låga förtroendenivåer måste ha ämnen godkända av personal. Se %{link}."
       fast_typer: "Ny användare skrev sitt första inlägg misstänkt snabbt, vi misstänker bot- eller skräppostbeteende. Se %{link}."
       auto_silence_regex: "Ny användare vars första inlägg matchar inställningen %{link}"
-      watched_word: "Detta inlägg innehöll ett bevakat ord. Se ditt %{link}."
       staged: "Nya ämnen och inlägg för iscensatta användare måste godkännas av personal. Se %{link}."
       category: "Inlägg i denna kategori kräver manuellt godkännande av personal. Se %{link}."
       must_approve_users: "Alla nya användare måste godkännas av personal. Se %{link}."
@@ -4374,7 +4371,6 @@ sv:
       contains_media: "Detta inlägg innehåller inbäddade media. Se %{link}."
       queued_by_staff: "Personalen tycker att det här inlägget behöver granskas. Det kommer att förbli dolt fram till dess."
       links:
-        watched_word: lista över bevakade ord
         category: kategori inställningar
     actions:
       agree:
@@ -4399,11 +4395,13 @@ sv:
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
+        complete: "Inlägg raderat."
       delete:
         title: "Radera…"
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
+        complete: "Inlägg raderat."
       delete_and_ignore_replies:
         title: "Ignorera flaggning, radera inlägg och svar"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
@@ -4411,6 +4409,7 @@ sv:
       delete_and_agree:
         title: "Radera inlägg"
         description: "Godkänn flaggning och radera detta inlägg. Om det är det första inlägget, radera ämnet också."
+        complete: "Inlägg raderat."
       delete_and_agree_replies:
         title: "Radera inlägg och svar"
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
@@ -4420,29 +4419,37 @@ sv:
         description: "Återställ inlägget så att alla användare kan se det."
       disagree:
         title: "Nej"
+        complete: "Flaggning ignoreras."
       discard_post:
         title: "Kasta inlägg"
       revise_and_reject_post:
         title: "Revidera inlägg..."
       ignore:
         title: "Ignorera"
+        complete: "Flaggning ignoreras."
       ignore_and_do_nothing:
         title: "Gör ingenting"
         description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
+        complete: "Flaggning ignoreras."
       approve:
         title: "Godkänn"
+        complete: "Inlägget godkändes."
       approve_post:
         title: "Godkänn inlägg"
         confirm_closed: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
+        complete: "Inlägget godkändes."
       reject_post:
         title: "Avvisa inlägg"
+        complete: "Inlägget avvisades."
       approve_user:
         title: "Godkänn användare"
+        complete: "Användaren godkändes."
       reject_user:
         title: "Radera användare…"
         delete:
           title: "Ta bort användare"
           description: "Användaren kommer att raderas från forumet."
+          complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
@@ -4461,6 +4468,7 @@ sv:
         title: "Godkänn och återställ inlägg"
       delete_user:
         reason: "Raderad via granskningskön"
+        complete: "Användare raderad."
   email_style:
     html_missing_placeholder: "Html-mallen måste omfatta %{placeholder}"
   notification_level:

@@ -57,6 +57,7 @@
       .formatted-selection {
         margin: 0;
         cursor: pointer;
+
         @include ellipsis;
         display: inline-block;
       }

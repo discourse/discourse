@@ -243,12 +243,6 @@
       background: var(--d-hover);
     }
 
-    .discourse-tag,
-    .discourse-tag:visited,
-    .discourse-tag:hover {
-      color: var(--primary-high);
-    }
-
     &.create-color-row {
       border-left-style: solid;
       border-left-width: 5px;
@@ -258,7 +252,6 @@
   .select-kit-collection {
     overflow-x: hidden;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     margin: 0;
     max-height: 250px;
     width: 100%;

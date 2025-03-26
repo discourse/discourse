@@ -16,6 +16,7 @@ import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
 import {
+  applyBehaviorTransformer,
   applyMutableValueTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
@@ -74,20 +75,18 @@ const defaultDagOptions = {
 };
 
 export default class PostMenu extends Component {
-  @service appEvents;
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
   @service modal;
   @service menu;
-  @service site;
   @service siteSettings;
   @service store;
 
   @tracked collapsed = applyValueTransformer(
-    "post-menu-buttons-collapsed",
+    "post-menu-collapsed",
     true,
-    { post: this.args.post }
+    this.#prepareStaticMethodsState({ collapsed: true })
   );
   @tracked isWhoLikedVisible = false;
   @tracked likedUsers = [];
@@ -120,23 +119,7 @@ export default class PostMenu extends Component {
 
   @cached
   get staticMethodsState() {
-    return Object.freeze({
-      canCreatePost: this.args.canCreatePost,
-      collapsed: this.collapsed,
-      currentUser: this.currentUser,
-      filteredRepliesView: this.args.filteredRepliesView,
-      isWhoLikedVisible: this.isWhoLikedVisible,
-      isWhoReadVisible: this.isWhoReadVisible,
-      isWikiMode: this.isWikiMode,
-      repliesShown: this.args.repliesShown,
-      replyDirectlyBelow:
-        this.args.nextPost?.reply_to_post_number ===
-          this.args.post.post_number &&
-        this.args.post.post_number !== this.args.post.filteredRepliesPostNumber,
-      showReadIndicator: this.args.showReadIndicator,
-      suppressReplyDirectlyBelow:
-        this.siteSettings.suppress_reply_directly_below,
-    });
+    return this.#prepareStaticMethodsState();
   }
 
   @cached
@@ -212,6 +195,8 @@ export default class PostMenu extends Component {
 
     // map to keep track of the labels that should be shown for each button if the plugins wants to override the default
     const buttonLabels = new Map();
+    // map to keep track of the collapsed state of each button if the plugins wants to override the default
+    const collapsedButtons = new Map();
 
     const showMoreButtonPosition = configuredItems.indexOf(
       buttonKeys.SHOW_MORE
@@ -239,6 +224,17 @@ export default class PostMenu extends Component {
             return buttonLabels.delete(key);
           },
         },
+        collapsedButtons: {
+          hide(key) {
+            collapsedButtons.set(key, true);
+          },
+          show(key) {
+            collapsedButtons.set(key, false);
+          },
+          default(key) {
+            return collapsedButtons.delete(key);
+          },
+        },
         buttonKeys,
         firstButtonKey: this.configuredItems[0],
         lastHiddenButtonKey: hiddenButtonKeys.length
@@ -261,6 +257,7 @@ export default class PostMenu extends Component {
           key,
           Component: ButtonComponent,
           apiAdded: addedKeys.has(key), // flag indicating if the button was added using the API
+          hidden: collapsedButtons.get(key),
           owner: getOwner(this), // to be passed as argument to the static methods
           position,
           replacementMap,
@@ -449,26 +446,35 @@ export default class PostMenu extends Component {
 
   @action
   async toggleLike() {
-    if (!this.currentUser) {
-      this.keyValueStore &&
-        this.keyValueStore.set({
-          key: "likedPostId",
-          value: this.args.post.id,
-        });
+    await applyBehaviorTransformer(
+      "post-menu-toggle-like-action",
+      async () => {
+        if (!this.currentUser) {
+          this.keyValueStore &&
+            this.keyValueStore.set({
+              key: "likedPostId",
+              value: this.args.post.id,
+            });
 
-      this.args.showLogin();
-      return;
-    }
+          this.args.showLogin();
+          return;
+        }
 
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(VIBRATE_DURATION);
-    }
+        if (
+          this.capabilities.userHasBeenActive &&
+          this.capabilities.canVibrate
+        ) {
+          navigator.vibrate(VIBRATE_DURATION);
+        }
 
-    await this.args.toggleLike();
+        await this.args.toggleLike();
 
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
+        if (!this.collapsed) {
+          await this.#fetchWhoLiked();
+        }
+      },
+      this.staticMethodsArgs
+    );
   }
 
   @action
@@ -578,8 +584,28 @@ export default class PostMenu extends Component {
     this.isWhoReadVisible = true;
   }
 
+  #prepareStaticMethodsState({ collapsed } = {}) {
+    return Object.freeze({
+      canCreatePost: this.args.canCreatePost,
+      collapsed: collapsed ?? this.collapsed,
+      currentUser: this.currentUser,
+      filteredRepliesView: this.args.filteredRepliesView,
+      isWhoLikedVisible: this.isWhoLikedVisible,
+      isWhoReadVisible: this.isWhoReadVisible,
+      isWikiMode: this.isWikiMode,
+      repliesShown: this.args.repliesShown,
+      replyDirectlyBelow:
+        this.args.nextPost?.reply_to_post_number ===
+          this.args.post.post_number &&
+        this.args.post.post_number !== this.args.post.filteredRepliesPostNumber,
+      showReadIndicator: this.args.showReadIndicator,
+      suppressReplyDirectlyBelow:
+        this.siteSettings.suppress_reply_directly_below,
+    });
+  }
+
   <template>
-    {{! TODO (glimmer-post) The section tag can't be include while we're still using the widget shim }}
+    {{! The section tag can't be include while we're still using the widget shim }}
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
       @name="post-menu"
@@ -589,6 +615,7 @@ export default class PostMenu extends Component {
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
         class={{concatClass
           "post-controls"
+          "glimmer-post-menu"
           (if
             (and
               (this.showMoreButton.shouldRender
@@ -625,46 +652,38 @@ export default class PostMenu extends Component {
           {{/each}}
         </div>
       </nav>
-      {{#if this.isWhoReadVisible}}
-        <SmallUserList
-          class="who-read"
-          @addSelf={{false}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_readers_list_description"
-          }}
-          @count={{if
-            this.remainingReaders
-            this.remainingReaders
-            this.totalReaders
-          }}
-          @description={{if
-            this.remainingReaders
-            "post.actions.people.read_capped"
-            "post.actions.people.read"
-          }}
-          @users={{this.readers}}
-        />
-      {{/if}}
-      {{#if this.isWhoLikedVisible}}
-        <SmallUserList
-          class="who-liked"
-          @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-          @ariaLabel={{i18n
-            "post.actions.people.sr_post_likers_list_description"
-          }}
-          @count={{if
-            this.remainingLikedUsers
-            this.remainingLikedUsers
-            this.totalLikedUsers
-          }}
-          @description={{if
-            this.remainingLikedUsers
-            "post.actions.people.like_capped"
-            "post.actions.people.like"
-          }}
-          @users={{this.likedUsers}}
-        />
-      {{/if}}
+      <SmallUserList
+        class="who-read"
+        @addSelf={{false}}
+        @isVisible={{this.isWhoReadVisible}}
+        @count={{if
+          this.remainingReaders
+          this.remainingReaders
+          this.totalReaders
+        }}
+        @description={{if
+          this.remainingReaders
+          "post.actions.people.read_capped"
+          "post.actions.people.read"
+        }}
+        @users={{this.readers}}
+      />
+      <SmallUserList
+        class="who-liked"
+        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+        @isVisible={{this.isWhoLikedVisible}}
+        @count={{if
+          this.remainingLikedUsers
+          this.remainingLikedUsers
+          this.totalLikedUsers
+        }}
+        @description={{if
+          this.remainingLikedUsers
+          "post.actions.people.like_capped"
+          "post.actions.people.like"
+        }}
+        @users={{this.likedUsers}}
+      />
       {{#if
         (this.showMoreButton.shouldRender
           (hash post=this.post state=this.state)

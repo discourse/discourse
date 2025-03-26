@@ -67,8 +67,8 @@
     }
 
     select {
-      @include appearance-none;
       @include form-item-sizing;
+      appearance: none;
       display: inline-block;
       margin-bottom: var(--space-2);
       color: var(--primary);

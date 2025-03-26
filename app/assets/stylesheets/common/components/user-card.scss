@@ -23,9 +23,6 @@
   overflow: hidden;
 
   &::before {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: placeHolderShimmer 4s linear infinite forwards;
-    }
     position: absolute;
     left: 0;
     content: "";
@@ -37,6 +34,10 @@
     );
     height: var(--avatar-width);
     width: var(--card-width);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
   }
 }
 
@@ -98,6 +99,7 @@
       .name-username-wrapper {
         margin-right: 0;
         flex: 0 1 auto;
+
         @include ellipsis;
       }
 
@@ -150,6 +152,7 @@
   .names__secondary,
   [class*="metadata__"] {
     margin: 0;
+
     @include ellipsis;
   }
 

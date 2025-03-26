@@ -118,7 +118,7 @@ RSpec.describe Jobs::CleanUpUploads do
       mobile_logo_upload = fabricate_upload
       large_icon_upload = fabricate_upload
       opengraph_image_upload = fabricate_upload
-      twitter_summary_large_image_upload = fabricate_upload
+      x_summary_large_image_upload = fabricate_upload
       favicon_upload = fabricate_upload
       apple_touch_icon_upload = fabricate_upload
 
@@ -129,7 +129,7 @@ RSpec.describe Jobs::CleanUpUploads do
       SiteSetting.large_icon = large_icon_upload
       SiteSetting.opengraph_image = opengraph_image_upload
 
-      SiteSetting.twitter_summary_large_image = twitter_summary_large_image_upload
+      SiteSetting.x_summary_large_image = x_summary_large_image_upload
 
       SiteSetting.favicon = favicon_upload
       SiteSetting.apple_touch_icon = apple_touch_icon_upload
@@ -143,7 +143,7 @@ RSpec.describe Jobs::CleanUpUploads do
         mobile_logo_upload,
         large_icon_upload,
         opengraph_image_upload,
-        twitter_summary_large_image_upload,
+        x_summary_large_image_upload,
         favicon_upload,
         apple_touch_icon_upload,
         system_upload,
@@ -321,13 +321,22 @@ RSpec.describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: upload2.id)).to eq(true)
   end
 
-  it "does not delete uploads with an access control post ID (secure uploads)" do
-    upload = fabricate_upload(access_control_post_id: Fabricate(:post).id, secure: true)
+  it "does not delete uploads with an access control post ID that are marked secure" do
+    secure_upload = fabricate_upload(access_control_post_id: Fabricate(:post).id, secure: true)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
-    expect(Upload.exists?(id: upload.id)).to eq(true)
+    expect(Upload.exists?(id: secure_upload.id)).to eq(true)
+  end
+
+  it "does delete uploads with an access control post ID that are not marked secure" do
+    secure_upload = fabricate_upload(access_control_post_id: Fabricate(:post).id, secure: false)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: secure_upload.id)).to eq(false)
   end
 
   it "does not delete custom emojis" do

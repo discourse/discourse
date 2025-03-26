@@ -11,8 +11,14 @@ import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class FKControlWrapper extends Component {
+  constructor() {
+    super(...arguments);
+
+    this.args.field.type = this.args.component.controlType;
+  }
+
   get controlType() {
-    if (this.args.component.controlType === "input") {
+    if (this.args.field.type === "input") {
       return this.args.field.type + "-" + (this.args.type || "text");
     }
 
@@ -95,6 +101,8 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @preview={{@preview}}
+          @includeTime={{@includeTime}}
+          @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}
           @selection={{@selection}}
           @includeNone={{@includeNone}}
           id={{@field.id}}
@@ -106,6 +114,12 @@ export default class FKControlWrapper extends Component {
         >
           {{yield components}}
         </@component>
+
+        {{#if @field.helpText}}
+          <FKText
+            class="form-kit__container-help-text"
+          >{{@field.helpText}}</FKText>
+        {{/if}}
 
         <FKMeta @field={{@field}} @error={{this.error}} />
       </div>

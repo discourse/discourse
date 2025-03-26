@@ -20,6 +20,7 @@
 .chat-message-info__username__name {
   color: var(--secondary-low);
   font-weight: 700;
+
   @include ellipsis;
   max-width: 180px;
 }

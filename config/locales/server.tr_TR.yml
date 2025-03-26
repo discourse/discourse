@@ -314,9 +314,6 @@ tr_TR:
     site_settings:
       invalid_site_setting: "\"%{name}\" adlı bir ayar mevcut değil"
       invalid_category_id: "Mevcut olmayan bir kategori belirttiniz"
-      site_setting_is_hidden: "Gizli ayarları değiştirmenize izin verilmiyor"
-      site_setting_is_shadowed_globally: "Global olarak yapılandırıldığından bu ayarı değiştiremezsiniz"
-      site_setting_is_unconfigurable: "Yapılandırılamayan ayarları değiştirmenize izin verilmiyor"
       invalid_choice:
         one: "\"%{name}\", geçersiz bir seçim."
         other: "\"%{name}\", geçersiz bir seçim."
@@ -338,7 +335,7 @@ tr_TR:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Kullanıcı aracıları, geçerli kullanıcıların yanlışlıkla sınırlandırılmasını önlemek için en az 3 karakter uzunluğunda olmalıdır."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara şu değerlerden herhangi birini ekleyemezsiniz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "\"Besteci medya optimizasyonu görüntüsü etkin\" etkinleştirilmişse şerit görüntü meta verilerini devre dışı bırakamazsınız. Şerit görüntü meta verilerini devre dışı bırakmadan önce \"besteci medya optimizasyonu görüntüsü etkin\" seçeneğini devre dışı bırakın."
-      twitter_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
+      x_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
       tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site contact email\" ya da \"email address to report illegal content\" sağlanmalıdır."
     conflicting_google_user_id: 'Bu hesabın Google Hesap Kimliği değişti; güvenlik nedeniyle personelin müdahalesi gerekiyor. Lütfen personelle iletişime geçin ve onları <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>adresine yönlendirin.'
     onebox:
@@ -1713,7 +1710,7 @@ tr_TR:
     favicon: "Siteniz için bir favicon, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. CDN üzerinden düzgün çalışması için png olmalıdır. 32x32 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
     apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Şeffaf bir arka plan önerilmez. Otomatik olarak 180x180 olarak yeniden boyutlandırılacak. Boş bırakılırsa large_icon kullanılır."
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
-    twitter_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
+    x_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
     email_custom_headers: "Özel e-posta başlıklarının boruyla ayrılmış bir listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2120,7 +2117,6 @@ tr_TR:
     reviewable_default_visibility: "Bu önceliği karşılamadıkları sürece incelenebilir ögeleri göstermeyin"
     reviewable_low_priority_threshold: "Öncelik filtresi, \"(herhangi)\" filtresi kullanılmadığı sürece bu puanı karşılamayan incelenebilir ögeleri gizler."
     high_trust_flaggers_auto_hide_posts: "Yeni kullanıcı gönderileri, bir GS3+ kullanıcı tarafından spam olarak işaretlendikten sonra otomatik olarak gizlenir"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonim kullanıcılar, yasa dışı içeriği bildirmek için yöneticilere e-posta göndermeleri gereken bilgileri görür."
     email_address_to_report_illegal_content: "Boş bırakılırsa varsayılan site yöneticisi e-postası kullanılır."
     cooldown_hours_until_reflag: "Kullanıcıların bir gönderiye yeniden bayrak ekleyebilmeleri için ne kadar süre beklemeleri gerektiği"
     slow_mode_prevents_editing: "\"Yavaş Mod\" editing_grace_period sonrasında düzenlemeyi engeller mi?"
@@ -2225,8 +2221,7 @@ tr_TR:
     enable_group_directory: "Göz atmak için bir grup dizini sağlayın"
     enable_category_group_moderation: "Grupların belirli kategorilerdeki içeriği denetlemesine izin verin"
     group_in_subject: "Kişisel mesajdaki ilk grubun adına e-posta konusunda %%{optional_pm} olarak ayarlayın, bkz.: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standart e-postalar için konu formatını özelleştirme</a>"
-    allow_anonymous_posting: "Kullanıcıların gönderi paylaşmak için anonim moda geçme seçeneğini etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderi veya konu oluştururken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca \"anonim beğenilere izin ver\" bölümüne bakın."
-    allow_anonymous_likes: "Sitenizde anonim olarak gezinen kullanıcıların gönderileri beğenmesine izin vermek için bu ayarı etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderileri veya konuları beğenirken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca `allow_anonymous_posting` ögesine bakın."
+    allow_anonymous_mode: "Kullanıcıların gönderi paylaşmak için anonim moda geçme seçeneğini etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderi veya konu oluştururken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca \"anonim beğenilere izin ver\" bölümüne bakın."
     anonymous_posting_min_trust_level: "Anonim gönderimi etkinleştirmek için gereken minimum güven seviyesi"
     anonymous_posting_allowed_groups: "Anonim gönderimi etkinleştirmesine izin verilen gruplar"
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
@@ -2276,7 +2271,6 @@ tr_TR:
     auto_handle_queued_age: "Şu kadar gün sonra incelenmeyi bekleyen kayıtları otomatik olarak işleyin. Bayraklar göz ardı edilir. Sıraya alınan gönderiler ve kullanıcılar reddedilir. Bu özelliği devre dışı bırakmak için 0 olarak ayarlayın."
     penalty_step_hours: "Kullanıcıları saat cinsinden susturmak veya askıya almak için varsayılan cezalar. İlk suç varsayılan olarak ilk değere, ikinci suç varsayılan olarak ikinci değere vb."
     penalty_include_post_message: "Bir kullanıcıyı sustururken veya askıya alırken rahatsız edici gönderi mesajını otomatik olarak e-posta mesajı şablonuna ekleyin"
-    svg_icon_subset: "Varlıklarınıza dâhil etmek istediğiniz ek FontAwesome simgelerini ekleyin. Katı simgeler için \"fa-\", normal simgeler için \"far-\" ve marka simgeleri için \"fab-\" ön ekini kullanın."
     max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (yazdırmayı devre dışı bırakmak için 0 olarak ayarlayın)"
     full_name_requirement: "Kayıt formunda tam ad alanını zorunlu, isteğe bağlı veya isteğe bağlı ancak gizli bir alan hâline getirin."
     enable_names: "Kullanıcının tam adını profilinde, kullanıcı kartında ve e-postalarında gösterin. Tam adı her yerde gizlemek için devre dışı bırakın."
@@ -2329,9 +2323,7 @@ tr_TR:
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı sayısı."
     disable_watched_word_checking_in_user_fields: "kullanıcı alanlarında izlenen kelime kontrolünü devre dışı bırak"
     watched_words_regular_expressions: "Kelimeleri filtrelemek için düzenli ifadelerin kullanılmasına izin verir. Etkinleştirilirse bu özellik hassas sözcükleri büyük/küçük harf duyarlılıklarına göre gruplar. Ardından, seçilen tüm kelimeleri tek bir düzenli ifadede derler ve düzenli olarak izlenen kelimeler için kelime sınırları ekler. Sonuç olarak, bu regex tabanlı filtreleme yöntemi, daha karmaşık kelime kalıplarını destekleyerek içerik denetimi üzerinde ekstra bir kontrol katmanı ekler. Bu ayar aynı zamanda orijinal metnin yerine tercih edilen metnin kolayca yerleştirilmesine de olanak tanır."
-    enable_diffhtml_preview: "Tam yeniden oluşturma yerine ön izlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
     enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
-    enable_quote_copy: "Seçimi bir markdown alıntısı olarak panoya kopyalamak için yazı seçimi menüsüne bir düğme ekler."
     old_post_notice_days: "Bir gönderi bildiriminin kaç gün sonra eski sayılacağı. Bu, onu sitedeki daha yeni bildirimlerden görsel olarak ayırır."
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."
@@ -2460,7 +2452,6 @@ tr_TR:
     glimmer_post_menu_mode: "Yeni \"parıltı\" gönderi menüsü uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi menüsü uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     experimental_form_templates: "Form şablonları özelliğini etkinleştirin. Şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> bölümünden yönetin."
-    admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
@@ -5038,7 +5029,6 @@ tr_TR:
       new_topics_unless_trust_level: "Düşük güven seviyesindeki kullanıcıların konularının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       fast_typer: "Yeni kullanıcı ilk gönderisini şüpheli bir şekilde hızlı yazdı, bot veya spam davranışından şüpheleniliyor. Bkz. %{link}."
       auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."
-      watched_word: "Bu gönderi bir İzlenen Kelime içeriyor. Bkz. %{link}."
       staged: "Aşamalı kullanıcılar için yeni konu ve gönderilerin personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       category: "Bu kategorideki gönderilerin personel tarafından manuel olarak onaylanması gerekiyor. Bkz. %{link}."
       must_approve_users: "Tüm yeni kullanıcıların personel tarafından onaylanması gerekiyor. Bkz. %{link}."
@@ -5049,7 +5039,6 @@ tr_TR:
       contains_media: "Bu gönderi yerleştirilmiş medya içeriyor. Bkz. %{link}."
       queued_by_staff: "Bir personel bu gönderinin incelenmesi gerektiğini düşünüyor. O zamana kadar gizli kalacak."
       links:
-        watched_word: izlenen kelimeler listesi
         category: kategori ayarları
     actions:
       agree:
@@ -5077,11 +5066,13 @@ tr_TR:
         description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
       delete_single:
         title: "Sil"
+        complete: "Gönderi silindi."
       delete:
         title: "Sil…"
       delete_and_ignore:
         title: "Bayrağı yok say ve gönderiyi sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
+        complete: "Gönderi silindi."
       delete_and_ignore_replies:
         title: "Bayrağı yok say, gönderiyi ve yanıtları sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın, gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
@@ -5089,6 +5080,7 @@ tr_TR:
       delete_and_agree:
         title: "Gönderiyi sil"
         description: "Bayrağı kabul edin ve bu gönderiyi silin; ilk gönderiyse konuyu da silin."
+        complete: "Gönderi silindi."
       delete_and_agree_replies:
         title: "Gönderiyi ve yanıtları sil"
         description: "Bayrağı kabul edin ve bu gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin."
@@ -5098,29 +5090,37 @@ tr_TR:
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"
+        complete: "Bayrak yok sayıldı."
       discard_post:
         title: "Gönderiyi sil"
       revise_and_reject_post:
         title: "Gönderiyi gözden geçir..."
       ignore:
         title: "Yok say"
+        complete: "Bayrak yok sayıldı."
       ignore_and_do_nothing:
         title: "Hiçbir şey yapma"
         description: "Herhangi bir işlem yapmadan kuyruktan kaldırarak bayrağı yok sayın. Gizli gönderiler gizli kalır ve otomatik araçlar tarafından işlenir."
+        complete: "Bayrak yok sayıldı."
       approve:
         title: "Onayla"
+        complete: "Gönderi onaylandı."
       approve_post:
         title: "Gönderiyi Onayla"
         confirm_closed: "Bu konu kapalı. Yine de gönderiyi oluşturmak istiyor musunuz?"
+        complete: "Gönderi onaylandı."
       reject_post:
         title: "Gönderiyi Reddet"
+        complete: "Gönderi reddedildi."
       approve_user:
         title: "Kullanıcıyı Onayla"
+        complete: "Kullanıcı onaylandı."
       reject_user:
         title: "Kullanıcıyı sil…"
         delete:
           title: "Kullanıcıyı Sil"
           description: "Kullanıcı forumdan silinecek."
+          complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
@@ -5139,6 +5139,7 @@ tr_TR:
         title: "Onayla ve Gönderiyi Geri Yükle"
       delete_user:
         reason: "İnceleme kuyruğu aracılığıyla silindi"
+        complete: "Kullanıcı silindi."
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermeli"
   notification_level:

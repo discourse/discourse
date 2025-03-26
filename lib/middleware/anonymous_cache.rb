@@ -18,6 +18,7 @@ module Middleware
         t: "key_cache_theme_ids",
         ca: "key_compress_anon",
         l: "key_locale",
+        cm: "key_forced_color_mode",
       }
     end
 
@@ -176,6 +177,11 @@ module Middleware
         theme_ids.join(",")
       end
 
+      def key_forced_color_mode
+        val = @request.cookies["forced_color_mode"]
+        %w[light dark].include?(val) ? val : ""
+      end
+
       def key_compress_anon
         GlobalSetting.compress_anon_cache
       end
@@ -237,7 +243,7 @@ module Middleware
             nil,
             "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
             GlobalSetting.force_anonymous_min_per_10_seconds,
-            10,
+            10.seconds,
           )
       end
 
@@ -311,7 +317,8 @@ module Middleware
 
         if status == 200 && cache_duration
           if GlobalSetting.anon_cache_store_threshold > 1
-            count = REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration])
+            count =
+              REDIS_STORE_SCRIPT.eval(Discourse.redis, [cache_key_count], [cache_duration.to_i])
 
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i

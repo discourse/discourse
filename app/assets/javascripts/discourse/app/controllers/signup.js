@@ -14,36 +14,42 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-export default class SignupPageController extends Controller.extend(
-  PasswordValidation,
-  UserFieldsValidation
-) {
+export default class SignupPageController extends Controller {
   @service site;
   @service siteSettings;
   @service login;
 
+  @tracked accountName;
+  @tracked accountPassword;
+  @tracked accountEmail;
   @tracked accountUsername;
   @tracked isDeveloper = false;
+  @tracked authOptions;
+  @tracked skipConfirmation;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
-  userFields = null;
   maskPassword = true;
-  passwordValidationVisible = false;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper(this);
+  passwordValidationHelper = new PasswordValidationHelper(this);
+  userFieldsValidationHelper = new UserFieldsValidationHelper({
+    getUserFields: () => this.site.get("user_fields"),
+    getAccountPassword: () => this.accountPassword,
+    showValidationOnInit: false,
+  });
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -53,15 +59,30 @@ export default class SignupPageController extends Controller.extend(
     super.init(...arguments);
 
     if (cookie("email")) {
-      this.set("accountEmail", cookie("email"));
+      this.accountEmail = cookie("email");
     }
 
     this.fetchConfirmationValue();
   }
 
   @dependentKeyCompat
+  get userFields() {
+    return this.userFieldsValidationHelper.userFields;
+  }
+
+  @dependentKeyCompat
+  get userFieldsValidation() {
+    return this.userFieldsValidationHelper.userFieldsValidation;
+  }
+
+  @dependentKeyCompat
   get usernameValidation() {
     return this.usernameValidationHelper.usernameValidation;
+  }
+
+  @dependentKeyCompat
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
   }
 
   get nameTitle() {
@@ -161,33 +182,19 @@ export default class SignupPageController extends Controller.extend(
     );
   }
 
-  @discourseComputed(
-    "passwordValidation.ok",
-    "passwordValidation.reason",
-    "passwordValidationVisible"
-  )
-  showPasswordValidation(
-    passwordValidationOk,
-    passwordValidationReason,
-    passwordValidationVisible
-  ) {
-    return (
-      passwordValidationOk ||
-      (passwordValidationReason && passwordValidationVisible)
-    );
+  get showPasswordValidation() {
+    return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
-  @discourseComputed("usernameValidation.reason")
-  showUsernameInstructions(usernameValidationReason) {
+  get showUsernameInstructions() {
     return (
       this.siteSettings.show_signup_form_username_instructions &&
-      !usernameValidationReason
+      !this.usernameValidation.reason
     );
   }
 
-  @discourseComputed("authOptions.auth_provider")
-  passwordRequired(authProvider) {
-    return isEmpty(authProvider);
+  get passwordRequired() {
+    return isEmpty(this.authOptions?.auth_provider);
   }
 
   @discourseComputed
@@ -243,15 +250,12 @@ export default class SignupPageController extends Controller.extend(
       );
     }
 
-    if (
-      this.get("authOptions.email") === email &&
-      this.get("authOptions.email_valid")
-    ) {
+    if (this.authOptions?.email === email && this.authOptions?.email_valid) {
       return EmberObject.create({
         ok: true,
         reason: i18n("user.email.authenticated", {
           provider: this.authProviderDisplayName(
-            this.get("authOptions.auth_provider")
+            this.authOptions?.auth_provider
           ),
         }),
       });
@@ -266,15 +270,6 @@ export default class SignupPageController extends Controller.extend(
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
-  }
-
-  @action
-  togglePasswordValidation() {
-    if (this.passwordValidation.reason) {
-      this.set("passwordValidationVisible", true);
-    } else {
-      this.set("passwordValidationVisible", false);
-    }
   }
 
   @action
@@ -325,15 +320,10 @@ export default class SignupPageController extends Controller.extend(
       });
   }
 
-  @discourseComputed(
-    "accountEmail",
-    "authOptions.email",
-    "authOptions.email_valid"
-  )
-  emailDisabled() {
+  get emailDisabled() {
     return (
-      this.get("authOptions.email") === this.accountEmail &&
-      this.get("authOptions.email_valid")
+      this.authOptions?.email === this.accountEmail &&
+      this.authOptions?.email_valid
     );
   }
 
@@ -356,7 +346,7 @@ export default class SignupPageController extends Controller.extend(
     }
     if (
       this.get("emailValidation.ok") &&
-      (isEmpty(this.accountUsername) || this.get("authOptions.email"))
+      (isEmpty(this.accountUsername) || this.authOptions?.email)
     ) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
@@ -407,8 +397,8 @@ export default class SignupPageController extends Controller.extend(
 
   handleSkipConfirmation() {
     if (this.skipConfirmation) {
-      this.performAccountCreation().finally(() =>
-        this.set("skipConfirmation", false)
+      this.performAccountCreation().finally(
+        () => (this.skipConfirmation = false)
       );
     }
   }
@@ -433,7 +423,7 @@ export default class SignupPageController extends Controller.extend(
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const destinationUrl = this.get("authOptions.destination_url");
+    const destinationUrl = this.authOptions?.destination_url;
 
     if (!isEmpty(destinationUrl)) {
       cookie("destination_url", destinationUrl, { path: "/" });
@@ -442,9 +432,7 @@ export default class SignupPageController extends Controller.extend(
     // Add the userFields to the data
     if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
-      this.userFields.forEach(
-        (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
-      );
+      this.userFields.forEach((f) => (attrs.userFields[f.field.id] = f.value));
     }
 
     this.set("formSubmitted", true);
@@ -485,7 +473,9 @@ export default class SignupPageController extends Controller.extend(
             this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
-            this.rejectedPasswords.pushObject(attrs.accountPassword);
+            this.passwordValidationHelper.rejectedPasswords.push(
+              attrs.accountPassword
+            );
           }
           this.set("formSubmitted", false);
           removeCookie("destination_url");
@@ -533,8 +523,8 @@ export default class SignupPageController extends Controller.extend(
   createAccount() {
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
+    this.userFieldsValidationHelper.validationVisible = true;
     this.set("emailValidationVisible", true);
-    this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
@@ -560,6 +550,7 @@ export default class SignupPageController extends Controller.extend(
       return;
     }
 
+    this.userFieldsValidationHelper.validationVisible = false;
     this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }

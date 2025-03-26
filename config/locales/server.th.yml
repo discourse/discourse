@@ -543,6 +543,11 @@ th:
         title: "ใช่"
       delete_single:
         title: "ลบ"
+        complete: "โพสต์ถูกลบ."
+      delete_and_ignore:
+        complete: "โพสต์ถูกลบ."
+      delete_and_agree:
+        complete: "โพสต์ถูกลบ."
       disagree:
         title: "ไม่ใช่"
       ignore:
@@ -552,8 +557,11 @@ th:
       reject_user:
         delete:
           title: "ลบผู้ใช้"
+          complete: "ผู้ใช้ถูกลบ."
       reject:
         title: "ละทิ้ง"
+      delete_user:
+        complete: "ผู้ใช้ถูกลบ."
   fallback_username: "ผู้ใช้"
   activemodel:
     errors:

@@ -19,6 +19,7 @@ export default class UserController extends Controller {
   @optionalService adminTools;
 
   @controller("user-notifications") userNotifications;
+
   @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @equal("router.currentRouteName", "user.summary") isSummaryRoute;
@@ -86,7 +87,7 @@ export default class UserController extends Controller {
       ariaLabel: this.collapsedInfo
         ? "user.sr_expand_profile"
         : "user.sr_collapse_profile",
-      action: "toggleProfile",
+      action: this.toggleProfile,
     };
   }
 

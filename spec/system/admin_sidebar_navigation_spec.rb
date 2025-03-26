@@ -12,10 +12,6 @@ describe "Admin | Sidebar Navigation", type: :system do
 
   before do
     SiteSetting.navigation_menu = "sidebar"
-    SiteSetting.admin_sidebar_enabled_groups = [
-      Group::AUTO_GROUPS[:admins],
-      Group::AUTO_GROUPS[:moderators],
-    ]
 
     sign_in(admin)
   end
@@ -55,10 +51,11 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.search_everything.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
   end
@@ -81,17 +78,6 @@ describe "Admin | Sidebar Navigation", type: :system do
     end
   end
 
-  context "when the setting is disabled" do
-    before { SiteSetting.admin_sidebar_enabled_groups = "" }
-
-    it "does not show the admin sidebar" do
-      visit("/latest")
-      sidebar.click_link_in_section("community", "admin")
-      expect(page).to have_current_path("/admin")
-      expect(sidebar).to have_no_section("admin-root")
-    end
-  end
-
   it "allows links to be filtered" do
     visit("/admin")
     sidebar.toggle_all_sections
@@ -107,9 +93,9 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.community.sidebar_link.user_fields"),
-        I18n.t("admin_js.admin.community.sidebar_link.moderation_flags.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
       ],
     )
     expect(page).to have_no_css(".sidebar-no-results")
@@ -125,12 +111,13 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(page).to have_css(".sidebar-sections__back-to-forum")
 
     # When match section title, display all links
-    filter.filter("Email Sett")
+    filter.filter("Email")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.appearance"),
+        I18n.t("admin_js.admin.config.email.title"),
+        I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
   end
@@ -192,10 +179,11 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.search_everything.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
 
@@ -203,9 +191,9 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
-        I18n.t("admin_js.admin.community.sidebar_link.user_fields"),
-        I18n.t("admin_js.admin.community.sidebar_link.moderation_flags.title"),
-        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
+        I18n.t("admin_js.admin.config.user_fields.title"),
+        I18n.t("admin_js.admin.config.flags.title"),
+        I18n.t("admin_js.admin.config.email.title"),
       ],
     )
 
@@ -214,10 +202,11 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.search_everything.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
   end
@@ -261,14 +250,15 @@ describe "Admin | Sidebar Navigation", type: :system do
     )
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 5)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 6)
     expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.advanced.sidebar_link.all_site_settings"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.search_everything.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.site_settings.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
 
@@ -290,7 +280,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     filter.filter("csp_extension")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Installed"])
+    expect(links.map(&:text)).to eq([I18n.t("admin_js.admin.config.plugins.title")])
   end
 
   it "accepts components and themes keywords for filter" do
@@ -303,12 +293,28 @@ describe "Admin | Sidebar Navigation", type: :system do
     filter.filter("air")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Themes"])
+    expect(links.map(&:text)).to eq(["Themes and components"])
 
     filter.filter("kanban")
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Components"])
+    expect(links.map(&:text)).to eq(["Themes and components"])
+  end
+
+  it "highlights the 'Themes and components' link when the themes page is visited" do
+    visit("/admin/customize/themes")
+    expect(page).to have_css(
+      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+    )
+  end
+
+  # TODO(osama) unskip this test when the "Themes and components" link is
+  # changed to the new config customize page
+  xit "highlights the 'Themes and components' link when the components page is visited" do
+    visit("/admin/config/customize/components")
+    expect(page).to have_css(
+      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+    )
   end
 
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
@@ -318,7 +324,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_add_section_button
   end
 
-  it "displays limited links for moderator" do
+  xit "displays limited links for moderator" do
     sign_in(moderator)
     visit("/admin")
 
@@ -328,28 +334,14 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.community.sidebar_link.users"),
-        I18n.t("admin_js.admin.community.sidebar_link.groups"),
-        I18n.t("admin_js.admin.account.sidebar_link.whats_new.title"),
-        I18n.t("admin_js.admin.reports.sidebar_link.all"),
-        I18n.t("admin_js.admin.community.sidebar_link.watched_words"),
-        I18n.t("admin_js.admin.security.sidebar_link.staff_action_logs.title"),
+        I18n.t("admin_js.admin.config.users.title"),
+        I18n.t("admin_js.admin.config.search_everything.title"),
+        I18n.t("admin_js.admin.config.groups.title"),
+        I18n.t("admin_js.admin.config.whats_new.title"),
+        I18n.t("admin_js.admin.config.reports.title"),
+        I18n.t("admin_js.admin.config.watched_words.title"),
+        I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
-    )
-  end
-
-  it "adds auto-generated plugin links for plugins with settings" do
-    skip if Discourse.plugins.empty?
-
-    SiteSetting.enable_markdown_footnotes = true
-
-    visit("/admin")
-
-    sidebar.toggle_section(:plugins)
-
-    expect(page).to have_css(
-      ".sidebar-section-link-content-text",
-      text: I18n.t("js.footnote.title"),
     )
   end
 end

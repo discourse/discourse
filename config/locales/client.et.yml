@@ -163,6 +163,10 @@ et:
     software_update_prompt:
       dismiss: "Ignoreeri"
     back_button: "Tagasi"
+    welcome_banner:
+      header:
+        anonymous_members: "Tere tulemast lehele %{site_name}!"
+      search: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -705,14 +709,14 @@ et:
         modal_yes: "Jah"
     user_action_groups:
       "1": "Meeldimisi antud"
-      "2": "Meeldimisi saadud"
-      "3": "Järjehoidjat"
-      "4": "Teemat"
-      "5": "Vastust"
+      "2": "Meeldimised"
+      "3": "Järjehoidjad"
+      "4": "Teemad"
+      "5": "Vastused"
       "6": "Reaktsioone"
-      "7": "Mainimisi"
+      "7": "Mainimised"
       "9": "Tsitaate"
-      "11": "Redaktsioone"
+      "11": "Redaktsioonid"
       "12": "Saatmisi"
       "13": "Postkast"
       "14": "Ootel"
@@ -1376,13 +1380,6 @@ et:
       password_label: "Parool"
     password_reset:
       continue: "Edasi saidile %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google klassikaline"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Ainult foorumid"
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
@@ -1547,8 +1544,8 @@ et:
       titles:
         watching_first_post: "uus teema"
     upload_selector:
+      delete: "Kustuta"
       uploading: "Laen üles"
-      select_file: "Vali fail"
       default_image_alt_text: pilt
     search:
       sort_by: "Järjesta"
@@ -1634,8 +1631,8 @@ et:
       tabs:
         replies: "Vastused"
         mentions: "Mainimisi"
-        likes: "Meeldimisi antud"
-        bookmarks: "Järjehoidjat"
+        likes: "Meeldimised"
+        bookmarks: "Järjehoidjad"
         profile: "Profiil"
     topics:
       new_messages_marker: "viimane visiit"
@@ -2494,6 +2491,8 @@ et:
         mark_tracking: "%{shortcut} Jälgi teemat"
         mark_watching: "%{shortcut} Vaatle teemat"
         print: "%{shortcut} Prindi teema"
+      admin:
+        title: "Admin"
     badges:
       earned_n_times:
         one: "Teenis selle märgise %{count} kord"
@@ -2631,7 +2630,7 @@ et:
         tags:
           header_link_text: "Sildid"
         categories:
-          header_link_text: "Liigid"
+          header_link_text: "Kategooriad"
         community:
           edit_section:
             header_dropdown: "Kohanda"
@@ -2643,7 +2642,7 @@ et:
             badges:
               content: "Märgised"
             topics:
-              content: "Teemasid"
+              content: "Teemad"
             faq:
               content: "KKK"
             guidelines:
@@ -2662,6 +2661,10 @@ et:
         forum:
           label: Foorum
       filter: "Filter..."
+      footer:
+        interface_color_selector:
+          light: "Hele"
+          dark: "Tume"
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -2688,16 +2691,33 @@ et:
         remove_muted_tags_from_latest:
           always: "alati"
           never: "mitte kunagi"
-      reports:
-        sidebar_link:
-          all: "Kõik aruanded"
+      config_sections:
+        account:
+          title: "Konto"
+        community:
+          title: "Kogukond"
+        email:
+          title: "Meiliaadress"
+        security:
+          title: "Turve"
+        plugins:
+          title: "Pistikprogrammid"
       config:
         developer:
           title: "Arendaja"
+        emojis:
+          title: "Emotikon"
+        flags:
+          title: "Modereerimine"
         files:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        branding:
+          logo:
+            form:
+              mobile: "Mobiil"
+              email: "Meiliaadress"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -2706,7 +2726,7 @@ et:
           title: "Onebox"
         other:
           title: "Muu"
-        search:
+        search_everything:
           title: "Otsi"
         security:
           title: "Turve"
@@ -2714,6 +2734,65 @@ et:
           title: "Spämm"
         user_api:
           title: "Kasutaja API"
+        dashboard:
+          title: "Armatuurlaud"
+        users:
+          title: "Kasutajad"
+        groups:
+          title: "Grupid"
+        backups:
+          title: "Varukoopiad"
+          sub_pages:
+            logs:
+              title: "Logid"
+        badges:
+          title: "Märgised"
+        permalinks:
+          title: "Püsiviited"
+        emoji:
+          title: "Emotikon"
+        themes:
+          title: "Kujundused"
+        components:
+          title: "Komponendid"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Passiivsetele kasutajatele meilitud saadetiste sisu eelvaatlus"
+            templates:
+              title: "Mallid"
+            sent:
+              title: "Saadetud"
+            skipped:
+              title: "Üle hüpatud"
+            bounced:
+              title: "Välja visatud"
+            received:
+              title: "Saadud"
+            rejected:
+              title: "Tagasi lükatud"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kui keegi üritab uut kontot luua, siis kontrollitakse järgmisi meiliaadresse ja vastavuse korral registreerimine peatatakse või tehakse mõni muu toiming"
+            screened_ips:
+              title: "Varjestatud IP-aadressid"
+            screened_urls:
+              title: "Varjestatud URL-d"
+              header_description: "Siin loetletud URL-d esinesid spämmeriteks kuulutatud kasutajate postitustes"
+        webhooks:
+          title: "Veebihaagid"
+        embedding:
+          title: "Sängitamine"
+      search:
+        title: "Otsi"
+        result_types:
+          theme:
+            one: "Kujundusteema"
+            other: "Kujundused"
+          component:
+            one: "Komponent"
+            other: "Komponendid"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2919,9 +2998,6 @@ et:
         sidebar_link:
           emoji: "Emotikon"
           navigation: "Navigatsioon"
-          themes: "Kujundused"
-          components:
-            title: "Komponendid"
       security:
         title: "Turve"
       section_landing_pages:
@@ -2936,7 +3012,6 @@ et:
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
-          header: "Modereerimine"
           description: "Kirjeldus"
           enabled: "Sisse lülitatud?"
           edit: "Muuda"
@@ -2955,12 +3030,19 @@ et:
         embeddable_host:
           edit: "Muuda"
           delete: "Kustuta"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Kohanda"
           themes:
             title: "Kujundused"
+          components:
+            title: "Komponendid"
         user_fields:
           type: "Tüüp"
           delete: "Kustuta"
+        color_palettes:
+          palette_name: "Nimi"
+          colors:
+            title: "Värvid"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -2973,18 +3055,6 @@ et:
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
         learn_more: "Uuri veel"
-        sidebar_link:
-          installed: "Paigaldatud"
-      advanced:
-        sidebar_link:
-          webhooks: "Veebihaagid"
-          developer: "Arendaja"
-          embedding: "Sängitamine"
-          user_api: "Kasutaja API"
-          onebox: "Onebox"
-          files: "Failid"
-          other_options: "Muu"
-          search: "Otsi"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3083,7 +3153,6 @@ et:
           common: "Tavaline"
           desktop: "Töölaud"
           mobile: "Mobiil"
-          settings: "Seaded"
           preview: "Eelvaade"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
@@ -3095,7 +3164,6 @@ et:
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
-          edit_css_html: "Muuda CSS-i/HTML-i"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"
@@ -3107,18 +3175,12 @@ et:
           theme_settings: "Teema seaded"
           scss:
             text: "CSS"
-          header:
-            text: "Päis"
           after_header:
             text: "Pärast päist"
           footer:
             text: "Jalus"
           embedded_scss:
             text: "Sängitatud CSS"
-          body_tag:
-            text: "Sisu"
-          yaml:
-            text: "YAML"
           all_filter: "Kõik"
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"
@@ -3167,6 +3229,9 @@ et:
             description: "Meeldimise nupu värvus."
           selected:
             name: "valitud"
+          editor:
+            light: "Hele"
+            dark: "Tume"
         email_style:
           html: "HTML"
           css: "CSS"
@@ -3486,8 +3551,6 @@ et:
         cant_delete_all_too_many_posts:
           one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitus. (delete_all_posts_max)"
           other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui %{count} postitust. (delete_all_posts_max)"
-        delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja IP-aadress"
-        delete_dont_block: "Kustuta vaid"
         deleted: "See kasutaja kustutati."
         delete_failed: "Viga selle kasutaja kustutamisel. Veendu, et kõik postitused on kustutatud enne kasutaja kustutamist."
         send_activation_email: "Saada aktiveerimismeil"

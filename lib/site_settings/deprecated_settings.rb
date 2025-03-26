@@ -46,6 +46,7 @@ module SiteSettings::DeprecatedSettings
       "3.3",
     ],
     ["min_first_post_typing_time", "fast_typing_threshold", false, "3.4"],
+    ["twitter_summary_large_image", "x_summary_large_image", false, "3.4"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[

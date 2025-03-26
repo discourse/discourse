@@ -13,13 +13,12 @@ ja:
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
-      create: 作成
-      update: 更新
+      back: 戻る
+      edit: 編集
       select_script: スクリプトを選択
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
-      no_automation_yet: 自動化をまだ作成していません。以下のオプションを選択して開始してください。
       filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:
@@ -161,18 +160,10 @@ ja:
             restricted_tags:
               label: タグ
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
-            restricted_category:
+            restricted_categories:
               label: カテゴリ
-              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
-            restricted_group:
-              label: グループ
-              description: オプション。投稿のトピックがこのグループの受信トレイにある個人メッセージである場合にのみトリガーされます。
-            restricted_groups:
-              label: グループ
+            restricted_inbox_groups:
               description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
-            ignore_group_members:
-              label: グループメンバーを無視
-              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
             ignore_automated:
               label: 自動送信元を無視
               description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
@@ -187,6 +178,10 @@ ja:
               description: "投稿がメールで作成された場合はトリガーをスキップします"
           created: 作成
           edited: 編集
+          with_images: 画像
+          with_links: リンク
+          with_code: コード
+          with_uploads: アップロード
         user_updated:
           fields:
             user_profile:

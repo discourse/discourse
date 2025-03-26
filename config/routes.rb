@@ -29,6 +29,7 @@ Discourse::Application.routes.draw do
 
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
+      get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -100,6 +101,7 @@ Discourse::Application.routes.draw do
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "search" => "search#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -386,9 +388,11 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
+
+      get "search/all" => "search#index"
+
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
-
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"
@@ -408,6 +412,9 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
+        get "branding" => "branding#index"
+        put "branding/logo" => "branding#logo"
+        get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -419,11 +426,14 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
 
-        resources :look_and_feel,
-                  path: "look-and-feel",
+        resources :customize,
+                  path: "customize",
                   constraints: AdminConstraint.new,
                   only: %i[index] do
-          collection { get "/themes" => "look_and_feel#themes" }
+          collection do
+            get "/themes" => "customize#themes"
+            get "/components" => "customize#components"
+          end
         end
       end
 
@@ -457,7 +467,10 @@ Discourse::Application.routes.draw do
     get "email/unsubscribed" => "email#unsubscribed", :as => "email_unsubscribed"
     post "email/unsubscribe/:key" => "email#perform_unsubscribe", :as => "email_perform_unsubscribe"
 
-    get "extra-locales/:bundle" => "extra_locales#show"
+    get "extra-locales/:digest/:locale/:bundle" => "extra_locales#show",
+        :constraints => {
+          format: :js,
+        }
 
     resources :session, id: RouteFormat.username, only: %i[create destroy become] do
       get "become" if !Rails.env.production?
@@ -1561,7 +1574,10 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    # Apple accepts either of these paths for the apple-app-site-association file
+    # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     scope "/tag/:tag_id" do
@@ -1718,10 +1734,12 @@ Discourse::Application.routes.draw do
     get "/form-templates" => "form_templates#index"
 
     get "/emojis" => "emojis#index"
+    get "/emojis/search-aliases" => "emojis#search_aliases", :format => :json
 
     if Rails.env.test?
       # Routes that are only used for testing
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
+      get "/test_net_http_headers" => "test_requests#test_net_http_headers"
     end
   end
 end

@@ -24,10 +24,7 @@ body:not(.archetype-private_message) {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-
-    &:has(.topic-map__additional-contents *) {
-      column-gap: 0.75em;
-    }
+    column-gap: 0.75em;
   }
 }
 
@@ -51,7 +48,7 @@ body:not(.archetype-private_message) {
 
   &.--op,
   &.--bottom {
-    @media screen and (max-width: 500px) {
+    @media screen and (width <= 500px) {
       padding-left: 0;
     }
   }
@@ -136,6 +133,7 @@ body:not(.archetype-private_message) {
           font-size: var(--font-down-1);
           color: var(--primary-medium);
           width: 100%;
+
           @include ellipsis;
         }
       }
@@ -253,7 +251,7 @@ body:not(.archetype-private_message) {
       color: var(--primary-medium);
     }
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       display: none;
     }
   }

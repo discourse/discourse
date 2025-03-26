@@ -13,13 +13,12 @@ fi:
             delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
-      create: Aloitus
-      update: Päivitä
+      back: Takaisin
+      edit: Muokkaa
       select_script: Valitse skripti
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
-      no_automation_yet: Et ole vielä luonut automaatioita. Aloita valitsemalla vaihtoehto alta.
       filter_placeholder: Suodata nimen tai kuvauksen mukaan...
       edit_automation:
         trigger_section:
@@ -162,18 +161,10 @@ fi:
             restricted_tags:
               label: Tunnisteet
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
-            restricted_category:
-              label: Alue
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
-            restricted_group:
-              label: Ryhmä
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti tämän ryhmän postilaatikossa
-            restricted_groups:
-              label: Ryhmät
+            restricted_categories:
+              label: Luokat
+            restricted_inbox_groups:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
-            ignore_group_members:
-              label: Ohita ryhmän jäsenet
-              description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
             ignore_automated:
               label: Ohita automaattiset
               description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
@@ -188,6 +179,10 @@ fi:
               description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
           created: Luotu
           edited: Muokattu
+          with_images: Kuvat
+          with_links: Linkit
+          with_code: Koodi
+          with_uploads: Lataukset
         user_updated:
           fields:
             user_profile:

@@ -119,7 +119,8 @@ export default class LoginPageController extends Controller {
   get shouldTriggerRouteAction() {
     return (
       !this.siteSettings.full_page_login ||
-      this.siteSettings.enable_discourse_connect
+      this.siteSettings.enable_discourse_connect ||
+      this.singleExternalLogin
     );
   }
 
@@ -159,6 +160,8 @@ export default class LoginPageController extends Controller {
           } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
+          } else if (this.referrerTopicUrl) {
+            window.location.assign(this.referrerTopicUrl);
           } else {
             window.location.reload();
           }
@@ -220,7 +223,10 @@ export default class LoginPageController extends Controller {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (
+        this.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately
+      ) {
         // we will automatically redirect to the external auth service
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
@@ -333,6 +339,8 @@ export default class LoginPageController extends Controller {
           removeCookie("destination_url");
 
           applyHiddenFormInputValue(destinationUrl, "redirect");
+        } else if (this.referrerTopicUrl) {
+          applyHiddenFormInputValue(this.referrerTopicUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }

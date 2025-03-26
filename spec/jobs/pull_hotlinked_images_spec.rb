@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PullHotlinkedImages do
-  let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
+  let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.gif" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
   let(:encoded_image_url) { "https://example.com/אלחוט-.jpg" }
-  let(:png) do
+  let(:gif) do
     Base64.decode64(
       "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
     )
@@ -21,11 +21,11 @@ RSpec.describe Jobs::PullHotlinkedImages do
   before do
     Jobs.run_immediately!
 
-    stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+    stub_request(:get, image_url).to_return(body: gif, headers: { "Content-Type" => "image/gif" })
     stub_request(:get, encoded_image_url).to_return(
-      body: png,
+      body: gif,
       headers: {
-        "Content-Type" => "image/png",
+        "Content-Type" => "image/gif",
       },
     )
     stub_request(:get, broken_image_url).to_return(status: 404)
@@ -173,7 +173,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
     end
 
     it "replaces correct image URL" do
-      url = image_url.sub("/2e/Longcat1.png", "")
+      url = image_url.sub("/2e/Longcat1.gif", "")
       post = Fabricate(:post, user: user, raw: "[Images](#{url})\n![](#{image_url})")
       stub_image_size
 
@@ -215,7 +215,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
     it "replaces images without extension" do
       url = image_url.sub(/\.[a-zA-Z0-9]+$/, "")
-      stub_request(:get, url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+      stub_request(:get, url).to_return(body: gif, headers: { "Content-Type" => "image/gif" })
       post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
       stub_image_size
 
@@ -459,7 +459,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         https://commons.wikimedia.org/wiki/File:Brisbane_May_2013201.jpg
         <img src='#{broken_image_url}'>
         <a href='#{url}'><img src='#{large_image_url}'></a>
-        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        ![Longcat1](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(%r{<p><img src=.*/uploads})
@@ -481,7 +481,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
         expect(post.raw).to eq(<<~MD.chomp)
         Onebox here:
-        ![](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
+        ![Longcat1](upload://z2QSs1KJWoj51uYhDjb6ifCzxH6.gif)
         MD
 
         expect(post.cooked).to match(%r{<img src=.*/uploads})

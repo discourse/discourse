@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
+
 export default class GroupActivityPostsController extends Controller {
   @controller group;
   @controller groupActivity;

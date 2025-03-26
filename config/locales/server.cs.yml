@@ -59,6 +59,8 @@ cs:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+    too_many_urls: "Do jednoho požadavku nelze vložit více než 10 adres URL."
+    concurrency_not_allowed: "Souběžné požadavky na inline-oneboxing nejsou povoleny. Odešlete prosím vždy jednu žádost."
   components:
     enabled_filter: "Zapnuto"
     disabled_filter: "Vypnuto"
@@ -154,6 +156,93 @@ cs:
         not_valid_boolean_value: "musí být boolean"
         humanize_not_valid_enum_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být jedna z následujících %{choices}."
         not_valid_enum_value: "musí být jedna z následujících: %{choices}"
+        humanize_not_valid_categories_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být pole platných identifikátorů kategorií."
+        not_valid_categories_value: "musí být pole platných identifikátorů kategorií"
+        humanize_categories_value_not_valid_min:
+          one: "Vlastnost v JSON Pointeru '%{property_json_pointer}' musí obsahovat alespoň %{count} ID kategorie."
+          few: "Vlastnost v JSON Pointeru '%{property_json_pointer}' musí obsahovat alespoň %{count} ID kategorií."
+          many: "Vlastnost v JSON Pointeru '%{property_json_pointer}' musí obsahovat alespoň %{count} ID kategorií."
+          other: "Vlastnost v JSON Pointeru '%{property_json_pointer}' musí obsahovat alespoň %{count} ID kategorií."
+        categories_value_not_valid_min:
+          one: "musí obsahovat alespoň %{count} ID kategorie"
+          few: "musí obsahovat alespoň %{count} ID kategorií"
+          many: "musí obsahovat alespoň %{count} ID kategorií"
+          other: "musí obsahovat alespoň %{count} ID kategorií"
+        humanize_categories_value_not_valid_max:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID kategorie."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID kategorií."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID kategorií."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID kategorií."
+        categories_value_not_valid_max:
+          one: "může obsahovat maximálně %{count} ID kategorie"
+          few: "může obsahovat maximálně %{count} ID kategorií"
+          many: "může obsahovat maximálně %{count} ID kategorií"
+          other: "může obsahovat maximálně %{count} ID kategorií"
+        humanize_not_valid_topic_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být platné ID tématu."
+        not_valid_topic_value: "musí být platné ID tématu"
+        humanize_not_valid_post_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být platné ID příspěvku."
+        not_valid_post_value: "musí být platné ID příspěvku"
+        humanize_not_valid_groups_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být pole platných ID skupin."
+        not_valid_groups_value: "musí být pole platných ID skupin"
+        humanize_groups_value_not_valid_min:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} ID skupiny."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} ID skupin."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} ID skupin."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} ID skupin."
+        groups_value_not_valid_min:
+          one: "musí obsahovat alespoň %{count} ID skupiny"
+          few: "musí obsahovat alespoň %{count} ID skupin"
+          many: "musí obsahovat alespoň %{count} ID skupin"
+          other: "musí obsahovat alespoň %{count} ID skupin"
+        humanize_groups_value_not_valid_max:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID skupiny."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID skupin."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID skupin."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} ID skupin."
+        groups_value_not_valid_max:
+          one: "může obsahovat maximálně %{count} ID skupiny"
+          few: "může obsahovat maximálně %{count} ID skupin"
+          many: "může obsahovat maximálně %{count} ID skupin"
+          other: "může obsahovat maximálně %{count} ID skupin"
+        humanize_not_valid_tags_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být pole platných názvů štítků."
+        not_valid_tags_value: "musí být pole platných názvů štítků"
+        humanize_tags_value_not_valid_min:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} název štítku."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí obsahovat alespoň %{count} názvy štítků."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí mít obsahovat %{count} názvů štítků."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí mít obsahovat %{count} názvů štítků."
+        tags_value_not_valid_min:
+          one: "musí obsahovat alespoň %{count} název štítku"
+          few: "musí obsahovat alespoň %{count} názvy štítků"
+          many: "musí obsahovat alespoň %{count} názvů štítků"
+          other: "musí obsahovat alespoň %{count} názvů štítků"
+        humanize_tags_value_not_valid_max:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} název štítku."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} názvy štítků."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} názvů štítků."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' může obsahovat maximálně %{count} názvů štítků."
+        tags_value_not_valid_max:
+          one: "může obsahovat maximálně %{count} název štítku"
+          few: "může obsahovat maximálně %{count} názvy štítků"
+          many: "může obsahovat maximálně %{count} názvů štítků"
+          other: "může obsahovat maximálně %{count} názvů štítků"
+        humanize_not_valid_upload_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být platné ID uploadu."
+        not_valid_upload_value: "musí být platné ID uploadu"
+        humanize_string_value_not_valid_min:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být dlouhá alespoň %{count} znak."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být dlouhá alespoň %{count} znaky."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být dlouhá alespoň %{count} znaků."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být dlouhá alespoň %{count} znaků."
+        string_value_not_valid_min:
+          one: "musí být dlouhé alespoň %{count} znak"
+          few: "musí být dlouhé alespoň %{count} znaky"
+          many: "musí být dlouhé alespoň %{count} znaků"
+          other: "musí být dlouhé alespoň %{count} znaků"
+        humanize_string_value_not_valid_max:
+          one: "Vlastnost v JSON Pointer '%{property_json_pointer}' může být maximálně %{count} znak dlouhá."
+          few: "Vlastnost v JSON Pointer '%{property_json_pointer}' může být maximálně %{count} znaky dlouhá."
+          many: "Vlastnost v JSON Pointer '%{property_json_pointer}' může být maximálně %{count} znaků dlouhá."
+          other: "Vlastnost v JSON Pointer '%{property_json_pointer}' může být maximálně %{count} znaků dlouhá."
         string_value_not_valid_max:
           one: "musí být maximálně %{count} znak"
           few: "musí být maximálně %{count} znaky"
@@ -291,7 +380,7 @@ cs:
       cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
-      twitter_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
+      x_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
       tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
   custom_fields:
     validations:
@@ -388,6 +477,8 @@ cs:
     start_discussion: "Začít diskuzi"
     continue: "Pokračovat v diskuzi"
     error: "Chyba při vkládání"
+    error_topics: "Nastavení webu `embed topics list` nebylo povoleno"
+    configure: "Konfigurace zabudování"
     more_replies:
       one: "%{count} další odpověď"
       few: "%{count} další odpověďi"
@@ -461,6 +552,7 @@ cs:
   prev_page: "← předchozí strana"
   show_post_in_topic: "zobrazit příspěvek v tématu"
   page_num: "Strana %{num}"
+  crawler_content_hidden: "Obsah HTML byl vynechán, protože jste přihlášeni nebo používáte moderní mobilní zařízení."
   home_title: "Domů"
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
@@ -646,6 +738,7 @@ cs:
         name: "Název kategorie"
       topic:
         title: "Název"
+        featured_link: "Doporučený odkaz"
         category_id: "Kategorie"
       post:
         raw: "Tělo"
@@ -728,10 +821,26 @@ cs:
             duration_minutes:
               cannot_be_zero: "musí být větší než 0."
               exceeds_maximum: "nesmí být více než 20 let."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: "Následující interpolační klíč je neplatný: %{keys}"
+                few: "Následující interpolační klíče jsou neplatné: %{keys}"
+                many: "Následující interpolační klíče jsou neplatné: %{keys}"
+                other: "Následující interpolační klíče jsou neplatné: %{keys}"
         watched_word:
           attributes:
             word:
               too_many: "Příliš mnoho slov pro tuto akci"
+            base:
+              invalid_url: "Adresa URL k nahrazení je neplatná"
+              invalid_tag_list: "Seznam štítků k nahrazení je neplatný"
+              invalid_html: "HTML lze použít pouze pro nahrazení"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "není platný"
       <<: *errors
   uncategorized_category_name: "Nezařazené"
   general_category_name: "Obecné"
@@ -959,6 +1068,8 @@ cs:
     title: "Přihlášení e-mailem"
   user_auth_tokens:
     browser:
+      chrome: "Google Chrome"
+      discoursehub: "Aplikace DiscourseHub"
       edge: "Microsoft Edge"
       firefox: "Firefox"
       ie: "Internet Explorer"
@@ -1056,6 +1167,10 @@ cs:
     too_many_drafts:
       title: "Příliš mnoho konceptů"
       description: "Dosáhli jste maximálního počtu povolených konceptů. Prosím odstraňte některé [vaše koncepty](%{base_url}/my/activity/drafts) a zkuste to znovu."
+  webauthn:
+    validation:
+      unknown_cose_algorithm_error: "Algoritmus použitý pro bezpečnostní klíč nebyl rozpoznán."
+      malformed_public_key_credential_error: "Zadaný veřejný klíč je neplatný."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1098,6 +1213,8 @@ cs:
     description: "Předvolby e-mailu pro <b>%{email}</b> byly aktualizovány. Chcete-li změnit nastavení e-mailu, <a href='%{url}'>přejděte do uživatelských předvoleb</a>."
     topic_description: "Chcete-li se znovu přihlásit k odběru %{link}, použijte nastavení upozornění v dolní nebo pravé části tématu."
     private_topic_description: "Chcete-li se znovu přihlásit k odběru, použijte nastavení upozornění v dolní nebo pravé části tématu."
+  uploads:
+    marked_insecure_from_theme_component_reason: "nahraný soubor použitý v komponentě motivu"
   unsubscribe:
     title: "Odhlášení"
     stop_watching_topic: "Přestat sledovat toto téma, %{link}"
@@ -1126,6 +1243,8 @@ cs:
     authorize: "Autorizovat"
     read: "přečteno"
     read_write: "čtení/zápis"
+    description: '„%{application_name}" požaduje následující přístup k vašemu účtu:'
+    instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
     otp_confirmation:
       confirm_title: Pokračovat na %{site_name}
       logging_in_as: Přihlášení jako %{username}
@@ -1468,9 +1587,12 @@ cs:
         user: Uživatel
         location: Poloha
     staff_logins:
+      title: "Přihlášení správců"
       labels:
         user: Uživatel
         location: Poloha
+        login_at: Přihlášen/a
+      description: "Seznam časů a míst přihlášení správců."
     top_uploads:
       labels:
         filename: Název souboru
@@ -1543,6 +1665,7 @@ cs:
       google_analytics_version: "Váš Discourse v současné době používá službu Google Analytics 3, která po červenci 2023 již nebude podporována. Chcete-li i nadále získávat cenné informace a analytické údaje o výkonu svých webových stránek, proveďte nyní <a href='https://meta.discourse.org/t/260498'>upgrade na Google Analytics 4</a>."
       category_style_deprecated: "Váš Discourse v současné době používá zastaralý styl kategorií, který bude odstraněn před vydáním finální beta verze Discourse 3.2. Pokyny, jak zachovat zvolený styl kategorií, naleznete v části <a href='https://meta.discourse.org/t/282441'>Přechod na nastavení webu s jedním stylem kategorií</a>."
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
+      admin_sidebar_deprecation: "Staré rozvržení administrace je zastaralé ve prospěch nového <a href='https://meta.discourse.org/t/-/289281'>rozvržení postranního panelu</a> a bude odstraněno v příští verzi. Nové rozvržení postranního panelu můžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovat</a> již nyní a rozhodnout se pro něj dříve."
     back_from_logster_text: "Zpět na web"
   site_settings:
     allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
@@ -1629,7 +1752,6 @@ cs:
     approve_unless_staged: "Nová témata a příspěvky vytvořené předběžně založenými uživateli musí být schváleny."
     disable_watched_word_checking_in_user_fields: "zakázat kontrolu sledovaných slov v uživatelských polích."
     enable_fast_edit: "Přidá do nabídky výběru příspěvku tlačítko pro úpravu malého výběru v řádku."
-    enable_quote_copy: "Přidá do nabídky výběru příspěvku tlačítko pro zkopírování výběru do schránky jako markdown citaci."
     default_include_tl0_in_digests: "Ve výchozím nastavení zahrnout příspěvky od nových uživatelů do souhrnných e-mailů. Uživatelé si to mohou změnit ve svých osobních nastaveních."
     default_other_skip_new_user_tips: "Přeskočit tipy po registraci nového uživatele."
     default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
@@ -2055,7 +2177,7 @@ cs:
     title: "Nová verze"
     subject_template: "[%{email_prefix}] Nová verze Discourse, k dispozici jsou aktualizace"
     text_body_template: |
-      Hurá, je k dispozici nová verze [Discourse](https://www.discourse.org)!
+      Hurá, k dispozici je nová verze [Discourse](https://www.discourse.org)!
 
       Vaše verze: %{installed_version}
       Nová verze: **%{new_version}**
@@ -2064,12 +2186,12 @@ cs:
 
       - Podívejte se, co je nového v [poznámkách k vydání](https://meta.discourse.org/tag/release-notes) nebo si prohlédněte [protokol změn na GitHubu](https://github.com/discourse/discourse/commits/main)
 
-      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu pro Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
+      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
   new_version_mailer_with_notes:
     title: "Nová verze s poznámkami"
     subject_template: "[%{email_prefix}] k dispozici je aktualizace"
     text_body_template: |
-      Hurá, je k dispozici nová verze [Discourse](https://www.discourse.org)!
+      Hurá, k dispozici je nová verze [Discourse](https://www.discourse.org)!
 
       Vaše verze: %{installed_version}
       Nová verze: **%{new_version}**
@@ -2078,7 +2200,7 @@ cs:
 
       - Podívejte se, co je nového v [poznámkách k vydání](https://meta.discourse.org/tag/release-notes) nebo si prohlédněte [protokol změn na GitHubu](https://github.com/discourse/discourse/commits/main)
 
-      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu pro Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
+      - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
 
       ### Poznámky k vydání
 
@@ -2655,10 +2777,10 @@ cs:
         Nyní můžete opět vytvářet nové odpovědi a témata. Děkujeme vám za trpělivost.
     pending_users_reminder:
       subject_template:
-        one: "%{count} user waiting for approval"
-        few: "%{count} users waiting for approval"
-        many: "%{count} users waiting for approval"
-        other: "%{count} users waiting for approval"
+        one: "%{count} uživatel čeká na schválení"
+        few: "%{count} uživatelé čekají na schválení"
+        many: "%{count} uživatelů čeká na schválení"
+        other: "%{count} uživatelů čeká na schválení"
       text_body_template: |
         Jsou zde nové uživatelské registrace, které čekají na schválení (nebo zamítnutí), než budou mít přístup k tomuto fóru.
 
@@ -3021,6 +3143,7 @@ cs:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
+      subject_template: "[%{email_prefix}] Vaše e-mailová adresa byla změněna"
       text_body_template: |
         Toto je automatická zpráva, která vás informuje, že vaše e-mailová adresa pro
         %{site_name} byla změněna. Pokud k tomu došlo omylem, kontaktujte prosím
@@ -3829,11 +3952,13 @@ cs:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       delete_single:
         title: "Smazat"
+        complete: "Příspěvek smazán."
       delete:
         title: "Odstranit…"
       delete_and_ignore:
         title: "Ignorovat nahlášení a smazat příspěvek"
         description: "Ignorovat nahlášení tím, že jej odstraněníte z fronty a smažete příspěvek; pokud jde o první příspěvek, smaže i téma. "
+        complete: "Příspěvek smazán."
       delete_and_ignore_replies:
         title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
         description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
@@ -3841,6 +3966,7 @@ cs:
       delete_and_agree:
         title: "Odstranit příspěvek"
         description: "Souhlasit s nahlášením a smazat tento příspěvek. Pokud jde o první příspěvek, smaže i téma."
+        complete: "Příspěvek smazán."
       delete_and_agree_replies:
         title: "Smazat příspěvek a odpovědi"
         description: "Souhlasit s nahlášením a odstranit tento příspěvek a všechny jeho odpovědi; pokud jde první příspěvek, smaže i téma."
@@ -3850,29 +3976,37 @@ cs:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
         title: "Ne"
+        complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
       revise_and_reject_post:
         title: "Revize příspěvku..."
       ignore:
         title: "ignorovat"
+        complete: "Nahlášení ignorováno."
       ignore_and_do_nothing:
         title: "Nic nedělat"
         description: "Ignorovat nahlášením odstraněním z fronty bez jakékoli akce. Skryté příspěvky zůstanou skryté a budou řešeny pomocí automatických nástrojů."
+        complete: "Nahlášení ignorováno."
       approve:
         title: "Schválit"
+        complete: "Příspěvek schválen."
       approve_post:
         title: "Schválit příspěvek"
         confirm_closed: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
+        complete: "Příspěvek schválen."
       reject_post:
         title: "Odmítnout příspěvek"
+        complete: "Příspěvek zamítnut."
       approve_user:
         title: "Schválit uživatele"
+        complete: "Uživatel schválen."
       reject_user:
         title: "Odstranit uživatele..."
         delete:
           title: "Smazat uživatele"
           description: "Uživatel bude odstraněn z fóra."
+          complete: "Uživatel smazán."
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
@@ -3891,6 +4025,7 @@ cs:
         title: "Schválit a obnovit příspěvek"
       delete_user:
         reason: "Smazáno prostřednictvím fronty revizí"
+        complete: "Uživatel smazán."
   email_style:
     html_missing_placeholder: "Šablona html musí obsahovat %{placeholder}"
   notification_level:

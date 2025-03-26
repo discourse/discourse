@@ -122,6 +122,10 @@ class AdminUserListSerializer < BasicUserSerializer
     @options[:include_can_be_deleted]
   end
 
+  def silence_reason
+    PrettyText.cleanup(object.silence_reason)
+  end
+
   def include_silence_reason?
     @options[:include_silence_reason]
   end

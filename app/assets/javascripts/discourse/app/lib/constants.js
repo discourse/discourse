@@ -22,6 +22,8 @@ export const SIDEBAR_SECTION = {
   max_title_length: 30,
 };
 
+export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
+
 export const AUTO_GROUPS = {
   everyone: {
     id: 0,
@@ -71,6 +73,8 @@ export const AUTO_GROUPS = {
 
 export const GROUP_SMTP_SSL_MODES = { none: 0, ssl_tls: 1, starttls: 2 };
 
+export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
+
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
 export const TOPIC_VISIBILITY_REASONS = {
@@ -117,3 +121,15 @@ export const REPORT_MODES = {
   inline_table: "inline_table",
   storage_stats: "storage_stats",
 };
+
+export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";
+
+export const ADMIN_SEARCH_RESULT_TYPES = [
+  "page",
+  "setting",
+  "theme",
+  "component",
+  "report",
+];
+
+export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];

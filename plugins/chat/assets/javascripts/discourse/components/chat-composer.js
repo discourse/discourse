@@ -6,15 +6,21 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import $ from "jquery";
-import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { translations } from "pretty-text/emoji/data";
+import {
+  emojiSearch,
+  isSkinTonableEmoji,
+  normalizeEmoji,
+} from "pretty-text/emoji";
+import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
+import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
+import userAutocomplete from "discourse/lib/autocomplete/user";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -248,8 +254,43 @@ export default class ChatComposer extends Component {
       return;
     }
 
+    if (await this.reactingToLastMessage()) {
+      return;
+    }
+
     await this.args.onSendMessage(this.draft);
     this.composer.textarea.refreshHeight();
+  }
+
+  async reactingToLastMessage() {
+    // Check if the message is a reaction to the latest message in the channel.
+    const message = this.draft.message.trim();
+    let reactionCode = "";
+    if (message.startsWith("+")) {
+      const reaction = message.substring(1);
+      // First check if the message is +{emoji}
+      if (replacements[reaction]) {
+        reactionCode = replacements[reaction];
+      } else {
+        // Then check if the message is +:{emoji_code}:
+        const emojiCode = reaction.substring(1, reaction.length - 1);
+        reactionCode = normalizeEmoji(emojiCode);
+      }
+    }
+
+    if (reactionCode && this.lastMessage?.id) {
+      const interactor = new ChatMessageInteractor(
+        getOwner(this),
+        this.lastMessage,
+        this.context
+      );
+
+      await interactor.react(reactionCode, "add");
+      this.resetDraft();
+      return true;
+    }
+
+    return false;
   }
 
   reportReplyingPresence() {
@@ -319,12 +360,6 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Enter") {
-      // if we are inside a code block just insert newline
-      const { pre } = this.composer.textarea.getSelected({ lineVal: true });
-      if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
-        return;
-      }
-
       const shortcutPreference =
         this.currentUser.user_option.chat_send_shortcut;
       const send =
@@ -405,7 +440,7 @@ export default class ChatComposer extends Component {
     }
 
     $textarea.autocomplete({
-      template: findRawTemplate("user-selector-autocomplete"),
+      template: userAutocomplete,
       key: "@",
       width: "100%",
       treatAsTextarea: true,
@@ -468,7 +503,7 @@ export default class ChatComposer extends Component {
     }
 
     $textarea.autocomplete({
-      template: findRawTemplate("emoji-selector-autocomplete"),
+      template: renderEmojiAutocomplete,
       key: ":",
       afterComplete: (text, event) => {
         event.preventDefault();
@@ -478,7 +513,7 @@ export default class ChatComposer extends Component {
       treatAsTextarea: true,
       onKeyUp: (text, cp) => {
         const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
             text.substring(0, cp)
           );
 
@@ -496,7 +531,7 @@ export default class ChatComposer extends Component {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
             component: EmojiPickerDetached,
-            context: `channel_${this.args.channel.id}`,
+            context: "chat",
             modalForMobile: true,
             data: {
               didSelectEmoji: (emoji) => {
@@ -583,13 +618,16 @@ export default class ChatComposer extends Component {
             }
           }
 
-          const options = emojiSearch(term, {
-            maxResults: 5,
-            diversity: this.emojiStore.diversity,
-            exclude: emojiDenied,
-          });
+          loadEmojiSearchAliases().then((searchAliases) => {
+            const options = emojiSearch(term, {
+              maxResults: 5,
+              diversity: this.emojiStore.diversity,
+              exclude: emojiDenied,
+              searchAliases,
+            });
 
-          return resolve(options);
+            resolve(options);
+          });
         })
           .then((list) => {
             if (list === SKIP) {

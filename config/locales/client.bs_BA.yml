@@ -176,6 +176,10 @@ bs_BA:
     software_update_prompt:
       dismiss: "Odpusti"
     back_button: "Prethodno"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -323,8 +327,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      abandon:
-        yes_value: "Odbaci"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -1597,13 +1599,6 @@ bs_BA:
       password_label: "Lozinka"
     password_reset:
       continue: "Nastavi ka %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Samo kategorije"
       categories_with_featured_topics: "Kategorije s istaknutim temama"
@@ -1844,8 +1839,8 @@ bs_BA:
         liked_consolidated: "novi lajkovi"
         post_approved: "post odobreno"
     upload_selector:
+      delete: "Delete"
       uploading: "Učitavam"
-      select_file: "Izaberi fajl"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"
@@ -2359,6 +2354,10 @@ bs_BA:
         one: "tebi i još %{count} se sviđa objava"
         few: "tebi i još %{count} se sviđa objava"
         other: "tebi i još %{count} se sviđa objava"
+      sr_post_like_count_button:
+        one: "Objava se sviđa %{count} osobi."
+        few: "%{count} se sviđa objava."
+        other: "%{count} se sviđa objava."
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2879,6 +2878,9 @@ bs_BA:
         title: "Meni za pretragu"
         prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
         insert_url: "%{shortcut} Umetnite odabir u otvoreni skladatelj"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
     badges:
       earned_n_times:
         one: "Zaradio / la sam ovu oznaku %{count} time"
@@ -3137,15 +3139,38 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
-        sidebar_link:
-          all: "Svi izvještaji"
+      config_sections:
+        account:
+          title: "Račun"
+        reports:
+          title: "Izvještaji"
+        community:
+          title: "Zajednica"
+        appearance:
+          title: "Izgled"
+        email:
+          title: "Email"
+        security:
+          title: "Security"
+        plugins:
+          title: "Pluginovi"
       config:
         developer:
           title: "Developer"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderacija"
         files:
           title: "Files"
         legal:
           title: "Legal"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              mobile: "Mobilno"
+              email: "Email"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3154,7 +3179,7 @@ bs_BA:
           title: "Onebox"
         other:
           title: "Other"
-        search:
+        search_everything:
           title: "Pretraži"
         security:
           title: "Security"
@@ -3162,6 +3187,71 @@ bs_BA:
           title: "Spam"
         user_api:
           title: "Korisnički API"
+        dashboard:
+          title: "Dashboard"
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Groups"
+        backups:
+          title: "Backups"
+          sub_pages:
+            logs:
+              title: "Logs"
+        reports:
+          title: "Izvještaji"
+        badges:
+          title: "Bedž"
+        permalinks:
+          title: "Permalink-ovi"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Teme"
+        components:
+          title: "Komponenti"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
+            templates:
+              title: "Predlošci"
+            sent:
+              title: "Poslano"
+            skipped:
+              title: "Skipped"
+            bounced:
+              title: "Vraćeni"
+            received:
+              title: "Primljeno"
+            rejected:
+              title: "Odbijeni"
+        email_appearance:
+          title: "Izgled"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Embedding"
+      search:
+        title: "Pretraži"
+        result_types:
+          theme:
+            one: "Izgled"
+            few: "Teme"
+            other: "Teme"
+          component:
+            one: "Komponenta"
+            few: "Komponenti"
+            other: "Komponenti"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3421,9 +3511,6 @@ bs_BA:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigacija"
-          themes: "Teme"
-          components:
-            title: "Komponenti"
       email_settings:
         sidebar_link:
           appearance: "Izgled"
@@ -3441,7 +3528,6 @@ bs_BA:
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
-          header: "Moderacija"
           description: "Opis"
           enabled: "Omogućen?"
           edit: "Edit"
@@ -3461,12 +3547,20 @@ bs_BA:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Customize"
+          install: "Instaliraj"
           themes:
             title: "Teme"
+          components:
+            title: "Komponenti"
         user_fields:
           type: "Tip"
           delete: "Delete"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Colors"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -3479,18 +3573,6 @@ bs_BA:
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
         learn_more: "Saznaj više"
-        sidebar_link:
-          installed: "Installed"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          user_api: "Korisnički API"
-          onebox: "Onebox"
-          files: "Files"
-          other_options: "Other"
-          search: "Pretraži"
       backups:
         title: "Backups"
         menu:
@@ -3605,13 +3687,7 @@ bs_BA:
           common: "Nerijetko"
           desktop: "Desktop"
           mobile: "Mobilno"
-          settings: "Postavke"
-          translations: "Prevodi"
-          extra_scss: "Extra SCSS"
           preview: "Pregled"
-          show_advanced: "Prikaži napredna polja"
-          hide_advanced: "Sakrij napredna polja"
-          hide_unused_fields: "Sakrij neiskorišćena polja"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
@@ -3645,9 +3721,6 @@ bs_BA:
           unsaved_changes_alert: "Još niste spremili promjene, želite li ih odbaciti i krenuti dalje?"
           discard: "Odbaci"
           stay: "Ostani"
-          css_html: "Custom CSS / HTML"
-          edit_css_html: "Uredite CSS / HTML"
-          edit_css_html_help: "Niste uredili nijedan CSS ili HTML"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
           import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
@@ -3689,24 +3762,12 @@ bs_BA:
           repo_unreachable: "Nije moguće kontaktirati Git repozitorij ove teme. Poruka o grešci:"
           scss:
             text: "Stylesheet"
-            title: "Unesite prilagođeni CSS, prihvaćamo sve važeće CSS i SCSS stilove"
-          header:
-            text: "Header"
-            title: "Unesite HTML za prikaz iznad zaglavlja stranice"
           after_header:
             text: "After Header"
-            title: "Unesite HTML za prikaz na svim stranicama nakon zaglavlja"
           footer:
             text: "Footer"
-            title: "Unesite HTML za prikaz na podnožju stranice"
           embedded_scss:
             text: "Ugrađeni CSS"
-            title: "Unesite prilagođeni CSS za isporuku s ugrađenom verzijom komentara"
-          body_tag:
-            text: "Tijelo"
-          yaml:
-            text: "YAML"
-            title: "Definirajte postavke teme u YAML formatu"
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
@@ -4145,8 +4206,6 @@ bs_BA:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"
           other: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{count} dana ne mogu biti obrisane.)"
-        delete_and_block: "Delete and <b>block</b> this email and IP address"
-        delete_dont_block: "Delete only"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"

@@ -18,6 +18,7 @@
   --d-nav-border-color--active: var(--d-nav-color--active);
   --d-nav-underline-height: 0.125em;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --nav-space: 0.75em;
 }
 
 // Animation Keyframes
@@ -92,8 +93,9 @@ small {
 }
 
 blockquote {
-  @include post-aside;
   clear: both;
+
+  @include post-aside;
 }
 
 h1,
@@ -208,8 +210,8 @@ input {
   &[type="search"],
   &[type="tel"],
   &[type="color"] {
-    @include appearance-none;
     @include form-item-sizing;
+    appearance: none;
     display: inline-block;
     margin-bottom: 9px;
     color: var(--d-input-text-color);
@@ -220,6 +222,23 @@ input {
 
     &:focus {
       @include default-focus;
+    }
+  }
+
+  &[type="color"] {
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 0;
     }
   }
 
@@ -304,6 +323,8 @@ textarea {
 // Common Classes
 .sortable {
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
 
   .discourse-no-touch & {
     &:hover,
@@ -315,8 +336,6 @@ textarea {
   .d-icon {
     margin-left: 0.25em;
   }
-  @include unselectable;
-  cursor: pointer;
 
   button {
     background: none;
@@ -447,69 +466,6 @@ textarea {
     width: 14px;
     height: 14px;
     display: block;
-  }
-}
-
-.user-menu .quick-access-panel li.user-status .relative-date {
-  text-align: left;
-  font-size: var(--font-down-3);
-  padding-top: 0.45em;
-  margin-left: 0.75em;
-  color: var(--primary-medium);
-}
-
-.user-menu .quick-access-panel li.do-not-disturb {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  background: var(--secondary);
-
-  .do-not-disturb-inner-container {
-    display: flex;
-    width: 100%;
-    align-items: center;
-
-    .do-not-disturb-label {
-      display: flex;
-      align-items: center;
-    }
-
-    .relative-date {
-      text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 3px;
-      margin-left: 0.75em;
-      color: var(--primary-medium);
-    }
-
-    .d-icon-toggle-off,
-    .d-icon-toggle-on {
-      padding-top: 0;
-    }
-
-    .d-icon-toggle-on {
-      color: var(--tertiary);
-    }
-  }
-}
-
-.do-not-disturb-modal {
-  .do-not-disturb-choice {
-    display: grid;
-    grid-template-columns: 2em 1fr auto;
-    grid-template-rows: auto auto;
-    align-items: center;
-    cursor: pointer;
-    padding: 0.5em 0;
-
-    &:hover {
-      background-color: var(--tertiary-low);
-    }
-
-    label {
-      margin-bottom: 0;
-    }
   }
 }
 

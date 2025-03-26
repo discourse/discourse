@@ -73,7 +73,7 @@ export default class ProsemirrorEditor extends Component {
 
   get pluginParams() {
     return {
-      utils,
+      utils: { ...utils, convertFromMarkdown: this.convertFromMarkdown },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
@@ -126,11 +126,10 @@ export default class ProsemirrorEditor extends Component {
     const params = this.pluginParams;
 
     const plugins = [
-      buildInputRules(this.extensions, this.schema, this.args.includeDefault),
+      buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
           this.extensions,
-          this.schema,
           this.keymapFromArgs,
           params,
           this.args.includeDefault
@@ -144,7 +143,11 @@ export default class ProsemirrorEditor extends Component {
     ];
 
     this.parser = new Parser(this.extensions, this.args.includeDefault);
-    this.serializer = new Serializer(this.extensions, this.args.includeDefault);
+    this.serializer = new Serializer(
+      this.extensions,
+      this.pluginParams,
+      this.args.includeDefault
+    );
 
     const state = EditorState.create({ schema: this.schema, plugins });
 

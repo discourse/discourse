@@ -8,6 +8,7 @@ describe "Reviewables", type: :system do
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:moderator) { Fabricate(:moderator) }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }
 
@@ -54,6 +55,7 @@ describe "Reviewables", type: :system do
 
         expect(composer).to be_opened
         expect(composer.composer_input.value).to eq(post.raw)
+        expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
       end
 
       it "should open a modal when suspending a user" do
@@ -69,6 +71,14 @@ describe "Reviewables", type: :system do
           "#discourse-modal-title",
           text: I18n.t("js.flagging.take_action_options.suspend.title"),
         )
+      end
+
+      it "should show a toast when disagreeing with a flag flag" do
+        visit("/review")
+
+        find(".post-disagree").click
+
+        expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
       end
     end
   end
@@ -216,12 +226,21 @@ describe "Reviewables", type: :system do
 
   describe "when there is an unknown plugin reviewable" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable2) { Fabricate(:reviewable) }
 
-    before { reviewable.update_column(:type, "UnknownPlugin") }
+    before do
+      reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
+      reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
+    end
 
     it "informs admin and allows to delete them" do
       visit("/review")
       expect(review_page).to have_information_about_unknown_reviewables_visible
+      expect(review_page).to have_listing_for_unknown_reviewables_plugin(
+        reviewable.type,
+        reviewable.type_source,
+      )
+      expect(review_page).to have_listing_for_unknown_reviewables_unknown_source(reviewable2.type)
       review_page.click_ignore_all_unknown_reviewables
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end

@@ -251,7 +251,7 @@ class SiteSetting < ActiveRecord::Base
     manifest_icon
     favicon
     apple_touch_icon
-    twitter_summary_large_image
+    x_summary_large_image
     opengraph_image
     push_notifications_icon
   ].each do |setting_name|

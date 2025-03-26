@@ -269,6 +269,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
       find("#new-account-password").fill_in(with: "supersecurepassword")
+      find("#new-account-username").fill_in(with: "johndoe")
       find(".username-input").has_css?("#username-validation.good")
       find(".create-account__password-tip-validation").has_css?("#password-validation.good")
       find(".invitation-cta__accept").click
@@ -285,13 +286,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
     find(".invitation-cta__sign-in").click
 
-    if page.has_css?(".d-modal.login-modal", wait: 0)
-      if page.has_css?("html.mobile-view", wait: 0)
-        expect(page).to have_css(".d-modal:not(.is-animating)")
-      end
-      find(".d-modal .modal-close").click
-    else
+    if SiteSetting.full_page_login
+      expect(page).to have_css("#login-form")
       page.go_back
+    else
+      find(".d-modal .modal-close").click
     end
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
@@ -351,12 +350,14 @@ end
 
 describe "Signup", type: :system do
   context "when desktop" do
+    before { SiteSetting.full_page_login = false }
     include_examples "signup scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new
   end
 
   context "when mobile", mobile: true do
+    before { SiteSetting.full_page_login = false }
     include_examples "signup scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new

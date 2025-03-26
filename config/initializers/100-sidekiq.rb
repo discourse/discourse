@@ -66,16 +66,17 @@ else
   #
   # Instead, this patch adds a dedicated logger instance and patches
   # the #add method to forward messages to Rails.logger.
-  Sidekiq.logger = Logger.new(nil)
+  Sidekiq.default_configuration.logger = Logger.new(nil)
   Sidekiq
+    .default_configuration
     .logger
     .define_singleton_method(:add) do |severity, message = nil, progname = nil, &blk|
       Rails.logger.add(severity, message, progname, &blk)
     end
 end
 
-Sidekiq.error_handlers.clear
-Sidekiq.error_handlers << SidekiqLogsterReporter.new
+Sidekiq.default_configuration.error_handlers.clear
+Sidekiq.default_configuration.error_handlers << SidekiqLogsterReporter.new
 
 Sidekiq.strict_args!
 
@@ -84,7 +85,7 @@ Rails.application.config.to_prepare do
   Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") { |f| require(f) } if Rails.env.development?
 
   MiniScheduler.configure do |config|
-    config.redis = Discourse.redis
+    config.redis = DiscourseRedis.new(Discourse.sidekiq_redis_config)
 
     config.job_exception_handler { |ex, context| Discourse.handle_job_exception(ex, context) }
 

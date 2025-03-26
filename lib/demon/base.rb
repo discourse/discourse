@@ -50,14 +50,12 @@ class Demon::Base
   end
 
   attr_reader :pid, :parent_pid, :started, :index
-  attr_accessor :stop_timeout
 
   def initialize(index, rails_root: nil, parent_pid: nil, verbose: false, logger: nil)
     @index = index
     @pid = nil
     @parent_pid = parent_pid || Process.pid
     @started = false
-    @stop_timeout = 10
     @rails_root = rails_root || Rails.root
     @verbose = verbose
     @logger = logger || Logger.new(STDERR)
@@ -88,6 +86,10 @@ class Demon::Base
     "HUP"
   end
 
+  def stop_timeout
+    10
+  end
+
   def restart
     stop
     start
@@ -101,11 +103,11 @@ class Demon::Base
 
       wait_for_stop =
         lambda do
-          timeout = @stop_timeout
+          timeout = stop_timeout
 
           while alive? && timeout > 0
-            timeout -= (@stop_timeout / 10.0)
-            sleep(@stop_timeout / 10.0)
+            timeout -= (stop_timeout / 10.0)
+            sleep(stop_timeout / 10.0)
             begin
               Process.waitpid(@pid, Process::WNOHANG)
             rescue StandardError
@@ -125,7 +127,9 @@ class Demon::Base
       if alive?
         log(
           "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}\n#{caller.join("\n")}",
+          level: :warn,
         )
+
         Process.kill("KILL", @pid)
       end
 
@@ -229,7 +233,7 @@ class Demon::Base
             Process.kill "KILL", Process.pid
           end
         rescue => e
-          log("URGENT monitoring thread had an exception #{e}")
+          log("URGENT monitoring thread had an exception #{e}", level: :error)
         end
         sleep 1
       end

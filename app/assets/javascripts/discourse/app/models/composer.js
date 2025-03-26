@@ -41,7 +41,8 @@ export const CREATE_TOPIC = "createTopic",
   REPLY = "reply",
   EDIT = "edit",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
-  NEW_TOPIC_KEY = "new_topic";
+  NEW_TOPIC_KEY = "new_topic",
+  EDIT_TOPIC_KEY = "topic_";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -65,6 +66,7 @@ const CLOSED = "closed",
     target_recipients: "targetRecipients",
     typing_duration_msecs: "typingTime",
     composer_open_duration_msecs: "composerTime",
+    composer_version: "composerVersion",
     tags: "tags",
     featured_link: "featuredLink",
     shared_draft: "sharedDraft",
@@ -141,6 +143,7 @@ export default class Composer extends RestModel {
   // Draft key
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
   static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
+  static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
 
   // TODO: Replace with injection
   static create(args) {
@@ -192,6 +195,8 @@ export default class Composer extends RestModel {
   }
 
   @service dialog;
+  @service siteSettings;
+  @service keyValueStore;
 
   @tracked topic;
   @tracked post;
@@ -347,6 +352,17 @@ export default class Composer extends RestModel {
     }
 
     return total;
+  }
+
+  get composerVersion() {
+    if (
+      this.siteSettings.rich_editor &&
+      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
+    ) {
+      return 2;
+    }
+
+    return 1;
   }
 
   @discourseComputed("archetypeId")

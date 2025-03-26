@@ -102,6 +102,10 @@ body {
     color: #ddd;
   }
 
+  #qunit-tests .skipped {
+    background-color: #1a1b18;
+  }
+
   ol.qunit-assert-list > li > table > tbody,
   tr.test-expected,
   tr.test-actual,

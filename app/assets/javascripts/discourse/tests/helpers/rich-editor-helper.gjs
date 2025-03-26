@@ -2,12 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
 import DEditor from "discourse/components/d-editor";
 
-export async function testMarkdown(
-  assert,
-  markdown,
-  expectedHtml,
-  expectedMarkdown
-) {
+export async function setupRichEditor(assert, markdown, multiToggle = false) {
   const self = new (class {
     @tracked value = markdown;
     @tracked view;
@@ -16,17 +11,28 @@ export async function testMarkdown(
     self.view = textManipulation.view;
   };
 
-  await render(<template>
-    <DEditor
-      @value={{self.value}}
-      @processPreview={{false}}
-      @onSetup={{handleSetup}}
-    />
-  </template>);
-  await click(".composer-toggle-switch");
+  await render(
+    <template>
+      <DEditor
+        @value={{self.value}}
+        @processPreview={{false}}
+        @onSetup={{handleSetup}}
+      />
+    </template>
+  );
+
+  if (multiToggle) {
+    // ensure toggling to rich editor and back works
+    await click(".composer-toggle-switch");
+    await click(".composer-toggle-switch");
+    await click(".composer-toggle-switch");
+  } else {
+    await click(".composer-toggle-switch");
+  }
 
   await waitFor(".ProseMirror");
   await settled();
+
   const editor = document.querySelector(".ProseMirror");
 
   // typeIn for contentEditable isn't reliable, and is slower
@@ -53,11 +59,29 @@ export async function testMarkdown(
     .replace('<img class="ProseMirror-separator" alt="">', "")
     .replace('<br class="ProseMirror-trailingBreak">', "")
     // or artifacts
-    .replace('class=""', "");
+    .replace(' class=""', "")
+    // or a trailing-paragraph with an optional <br class="ProseMirror-trailingBreak"> inside
+    .replace(/<p>(<br class="ProseMirror-trailingBreak">)?<\/p>$/, "");
+
+  return [self, html];
+}
+
+export async function testMarkdown(
+  assert,
+  markdown,
+  expectedHtml,
+  expectedMarkdown,
+  multiToggle = false
+) {
+  const [editorClass, html] = await setupRichEditor(
+    assert,
+    markdown,
+    multiToggle
+  );
 
   assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
-    self.value,
+    editorClass.value,
     expectedMarkdown,
     `Markdown should match for "${markdown}"`
   );

@@ -12,6 +12,26 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          action_type = automation.trigger_field("action_type")
+          selected_action = action_type["value"]&.to_sym
+
+          if selected_action
+            next if selected_action == :created && action != :create
+            next if selected_action == :edited && action != :edit
+          end
+
+          restricted_archetype = automation.trigger_field("restricted_archetype")["value"]
+          if restricted_archetype.present?
+            if restricted_archetype == "public"
+              next if topic.archetype != Archetype.default
+              next if !topic.category
+              next if topic.category.read_restricted?
+            else
+              topic_archetype = topic.archetype
+              next if restricted_archetype != topic_archetype
+            end
+          end
+
           original_post_only = automation.trigger_field("original_post_only")
           if original_post_only["value"]
             next if topic.posts_count > 1
@@ -38,15 +58,21 @@ module DiscourseAutomation
             next if valid_trust_levels["value"].exclude?(post.user.trust_level)
           end
 
-          restricted_category = automation.trigger_field("restricted_category")
-          if restricted_category["value"]
-            category_ids =
-              if topic.category_id.blank?
-                []
-              else
-                [topic.category_id, topic.category.parent_category_id]
-              end
-            next if !category_ids.include?(restricted_category["value"])
+          restricted_categories = automation.trigger_field("restricted_categories").dup
+          if restricted_category_ids = restricted_categories["value"]
+            exclude_subcategories = automation.trigger_field("exclude_subcategories")["value"]
+
+            if !exclude_subcategories
+              # core api is odd, we only support nesting of 3 anyway, this is efficient
+              restricted_category_ids = restricted_category_ids.to_set
+              # for nesting of 3
+              restricted_category_ids +=
+                Category.where(parent_category_id: restricted_category_ids).pluck(:id)
+              restricted_category_ids +=
+                Category.where(parent_category_id: restricted_category_ids).pluck(:id)
+            end
+
+            next if !restricted_category_ids.include?(topic.category_id)
           end
 
           restricted_tags = automation.trigger_field("restricted_tags")
@@ -54,26 +80,35 @@ module DiscourseAutomation
             next if (restricted_tags["value"] & topic.tags.map(&:name)).empty?
           end
 
-          restricted_group_ids = automation.trigger_field("restricted_groups")["value"]
-          if restricted_group_ids.present?
+          restricted_inbox_group_ids = automation.trigger_field("restricted_inbox_groups")["value"]
+          if restricted_inbox_group_ids.present?
             next if !topic.private_message?
 
             target_group_ids = topic.allowed_groups.pluck(:id)
-            next if (restricted_group_ids & target_group_ids).empty?
-
-            ignore_group_members = automation.trigger_field("ignore_group_members")["value"]
-            next if ignore_group_members && post.user.in_any_groups?(restricted_group_ids)
+            next if (restricted_inbox_group_ids & target_group_ids).empty?
           end
+
+          user_group_ids = automation.trigger_field("restricted_groups")["value"]
+          next if user_group_ids.present? && !post.user.in_any_groups?(user_group_ids)
+
+          excluded_group_ids = automation.trigger_field("excluded_groups")["value"]
+          next if excluded_group_ids.present? && post.user.in_any_groups?(excluded_group_ids)
 
           ignore_automated = automation.trigger_field("ignore_automated")
           next if ignore_automated["value"] && post.incoming_email&.is_auto_generated?
 
-          action_type = automation.trigger_field("action_type")
-          selected_action = action_type["value"]&.to_sym
-
-          if selected_action
-            next if selected_action == :created && action != :create
-            next if selected_action == :edited && action != :edit
+          post_features = automation.trigger_field("post_features")["value"]
+          if post_features.present?
+            cooked = post.cooked
+            # note the only 100% correct way is to lean on an actual HTML parser
+            # however triggers may pop up during the post creation process, we can not afford a full parse
+            next if post_features.include?("with_images") && !cooked.match?(/<img[^>]+>/i)
+            next if post_features.include?("with_links") && !cooked.match?(/<a[^>]+>/i)
+            next if post_features.include?("with_code") && !cooked.match?(/<pre[^>]+>/i)
+            if post_features.include?("with_uploads") &&
+                 !cooked.match?(/<a[^>]+class=["']attachment[^>]+>/i)
+              next
+            end
           end
 
           automation.trigger!(

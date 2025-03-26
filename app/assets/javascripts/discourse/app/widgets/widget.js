@@ -22,6 +22,8 @@ import {
   WidgetMouseOutHook,
   WidgetMouseOverHook,
   WidgetMouseUpHook,
+  WidgetPointerOutHook,
+  WidgetPointerOverHook,
   WidgetTouchEndHook,
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
@@ -83,6 +85,7 @@ export function resetDecorators() {
 }
 
 const _customSettings = {};
+
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};
   _customSettings[widgetName][settingName] = newValue;
@@ -184,6 +187,7 @@ export default class Widget {
   }
 
   init() {}
+
   transform() {
     return {};
   }
@@ -482,6 +486,14 @@ export default class Widget {
 
     if (this.mouseOver) {
       properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
+    }
+
+    if (this.pointerOver) {
+      properties["widget-pointer-over"] = new WidgetPointerOverHook(this);
+    }
+
+    if (this.pointerOut) {
+      properties["widget-pointer-out"] = new WidgetPointerOutHook(this);
     }
 
     if (this.mouseOut) {

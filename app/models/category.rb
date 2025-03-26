@@ -232,6 +232,8 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
+  enum :style_type, { square: 0, icon: 1, emoji: 2 }
+
   def self.preload_user_fields!(guardian, categories)
     category_ids = categories.map(&:id)
 
@@ -871,7 +873,7 @@ class Category < ActiveRecord::Base
 
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
-    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86_400 / num_auto_bump_daily.to_i)
+    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
   end
 
   def clear_auto_bump_cache!
@@ -1381,6 +1383,9 @@ end
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
 #  uploaded_background_dark_id               :integer
+#  style_type                                :integer          default("square"), not null
+#  emoji                                     :string
+#  icon                                      :string
 #
 # Indexes
 #

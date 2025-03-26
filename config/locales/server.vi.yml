@@ -185,7 +185,7 @@ vi:
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
-      twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
+      x_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
@@ -1300,7 +1300,6 @@ vi:
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
-    enable_diffhtml_preview: "Tính năng thử nghiệm sử dụng diffHTML để đồng bộ hóa xem trước thay vì kết xuất lại đầy đủ"
     returning_user_notice_tl: "Cần có mức độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
     review_media_unless_trust_level: "Nhân viên sẽ xem xét các bài đăng của người dùng có mức độ tin cậy thấp hơn nếu chúng chứa phương tiện được nhúng."
@@ -2180,8 +2179,13 @@ vi:
         title: "Đồng ý"
       delete_single:
         title: "Xóa"
+        complete: "Bài viết đã bị xóa."
+      delete_and_ignore:
+        complete: "Bài viết đã bị xóa."
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree:
+        complete: "Bài viết đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
@@ -2201,6 +2205,7 @@ vi:
       reject_user:
         delete:
           title: "Xóa tài khoản"
+          complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
           description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
@@ -2212,6 +2217,8 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      delete_user:
+        complete: "Người dùng đã bị xóa."
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

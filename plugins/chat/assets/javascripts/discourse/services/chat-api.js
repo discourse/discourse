@@ -607,6 +607,16 @@ export default class ChatApi extends Service {
     });
   }
 
+  /**
+   * Remove member from a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {string} userId - The ID of the user to remove.
+   */
+  removeMemberFromChannel(channelId, userId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/${userId}`);
+  }
+
   get #basePath() {
     return "/chat/api";
   }

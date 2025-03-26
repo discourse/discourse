@@ -123,8 +123,7 @@ class Plugin::Instance
     route = self.admin_route
 
     if route.blank?
-      return if !any_settings?
-
+      return if !any_settings? || has_only_enabled_setting?
       route = default_admin_route
     end
 
@@ -137,11 +136,15 @@ class Plugin::Instance
   end
 
   def any_settings?
-    return false if !configurable?
+    configurable? && plugin_settings.values.length.positive?
+  end
 
-    SiteSetting
-      .all_settings(filter_plugin: self.name)
-      .any? { |s| s[:setting] != @enabled_site_setting }
+  def has_only_enabled_setting?
+    any_settings? && plugin_settings.values.one?
+  end
+
+  def plugin_settings
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
   end
 
   def configurable?
@@ -273,8 +276,8 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   add_filter_custom_filter("word_count") do |scope, value|
-  #     scope.where(word_count: value)
+  #   add_filter_custom_filter("word_count") do |scope, value, guardian|
+  #     scope.where(word_count: value) if guardian.admin?
   #   end
   def add_filter_custom_filter(name, &block)
     DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
@@ -782,7 +785,7 @@ class Plugin::Instance
     js = "(function(){#{js}})();" if js.present?
 
     result = []
-    result << [css, "css"] if css.present?
+    result << [css, "scss"] if css.present?
     result << [js, "js"] if js.present?
 
     result.map do |asset, extension|
@@ -1439,6 +1442,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
+  # When loading /categories with topics, preload topic associations
+  # using register_category_list_topics_preloader_associations(:association_name)
+  def register_category_list_topics_preloader_associations(fields)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(fields, self)
+  end
+
   private
 
   def setting_category
@@ -1448,7 +1457,12 @@ class Plugin::Instance
 
   def setting_category_name
     return if setting_category.blank? || setting_category == "plugins"
-    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+    I18n.t("admin_js.#{setting_category_label}")
+  end
+
+  def setting_category_label
+    return if setting_category.blank? || setting_category == "plugins"
+    "admin.site_settings.categories.#{setting_category}"
   end
 
   def validate_directory_column_name(column_name)
@@ -1497,7 +1511,7 @@ class Plugin::Instance
 
   def default_admin_route
     {
-      label: "#{name.underscore}.title",
+      label: setting_category_label || "#{name.underscore}.title",
       location: name,
       use_new_show_route: true,
       auto_generated: true,

@@ -1,4 +1,5 @@
 import renderTag from "discourse/lib/render-tag";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 let callbacks = null;
@@ -42,41 +43,78 @@ export default function (topic, params) {
     }
   }
 
-  let customHtml = null;
+  const separator = (index) => {
+    return applyValueTransformer("tag-separator", ",", {
+      topic,
+      index,
+    });
+  };
+
+  const separatorSpan = (index) => {
+    return `<span class="discourse-tags__tag-separator">${separator(
+      index
+    )}</span>`;
+  };
+
+  const callbackResults = [];
   if (callbacks) {
     callbacks.forEach((c) => {
       const html = c(topic, params);
       if (html) {
-        if (customHtml) {
-          customHtml += html;
-        } else {
-          customHtml = html;
-        }
+        callbackResults.push(html);
       }
     });
   }
 
-  if (customHtml || (tags && tags.length > 0)) {
-    buffer = `<div class='discourse-tags' role='list'
-                aria-label=${i18n("tagging.tags")}>`;
-    if (tags) {
+  const hasContent = (tags && tags.length > 0) || callbackResults.length > 0;
+
+  if (hasContent) {
+    buffer = `<div class='discourse-tags' 
+                   role='list' 
+                   aria-label=${i18n("tagging.tags")}>`;
+
+    let currentIndex = 0;
+
+    if (tags && tags.length > 0) {
       for (let i = 0; i < tags.length; i++) {
-        buffer +=
-          renderTag(tags[i], {
-            description:
-              topic.tags_descriptions && topic.tags_descriptions[tags[i]],
-            isPrivateMessage,
-            tagsForUser,
-            tagName,
-          }) + "";
+        const tag = tags[i];
+        const tagParams = params ? { ...params } : {};
+
+        if (params?.tagClasses && params?.tagClasses[tag]) {
+          tagParams.extraClass = params.tagClasses[tag];
+        }
+
+        buffer += renderTag(tag, {
+          description: topic.tags_descriptions && topic.tags_descriptions[tag],
+          isPrivateMessage,
+          tagsForUser,
+          tagName,
+          ...tagParams,
+        });
+
+        // separator after each tag
+        // except if it's the last tag
+        // and there are no customizations
+        if (i < tags.length - 1 || callbackResults.length > 0) {
+          buffer += separatorSpan(currentIndex);
+          currentIndex++;
+        }
       }
     }
 
-    if (customHtml) {
-      buffer += customHtml;
+    // add custom results with separator
+    for (let i = 0; i < callbackResults.length; i++) {
+      buffer += callbackResults[i];
+
+      // don't add separator to the last item
+      if (i < callbackResults.length - 1) {
+        buffer += separatorSpan(currentIndex);
+        currentIndex++;
+      }
     }
 
     buffer += "</div>";
   }
+
   return buffer;
 }

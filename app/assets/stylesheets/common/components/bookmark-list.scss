@@ -10,10 +10,16 @@ $mobile-breakpoint: 700px;
   .topic-list-data.post-metadata {
     text-align: center;
   }
+
   @media (max-width: $mobile-breakpoint) {
     .main-link {
       padding-right: 0.5em;
     }
+  }
+
+  .author-avatar img.avatar {
+    height: 24px;
+    width: 24px;
   }
 
   .main-link.topic-list-data {

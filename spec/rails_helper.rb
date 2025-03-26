@@ -288,7 +288,7 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    Sidekiq.error_handlers.clear
+    Sidekiq.default_configuration.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
@@ -998,6 +998,10 @@ def silence_stdout
   yield
 ensure
   STDOUT.unstub(:write)
+end
+
+def Rails.logger=(logger)
+  raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."
 end
 
 def track_log_messages

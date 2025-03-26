@@ -9,17 +9,19 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      await render(<template>
-        <Form as |form|>
-          <form.Fieldset
-            @title="Title"
-            @description="Description"
-            @name="a-fieldset"
-          >
-            Yielded content
-          </form.Fieldset>
-        </Form>
-      </template>);
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Fieldset
+              @title="Title"
+              @description="Description"
+              @name="a-fieldset"
+            >
+              Yielded content
+            </form.Fieldset>
+          </Form>
+        </template>
+      );
 
       assert
         .form()

@@ -314,9 +314,6 @@ nl:
     site_settings:
       invalid_site_setting: "Er bestaat geen instelling met de naam '%{name}'"
       invalid_category_id: "Je hebt een categorie opgegeven die niet bestaat"
-      site_setting_is_hidden: "Je mag verborgen instellingen niet wijzigen"
-      site_setting_is_shadowed_globally: "Je kunt deze instelling niet wijzigen omdat deze globaal is geconfigureerd"
-      site_setting_is_unconfigurable: "Je mag niet-configureerbare instellingen niet wijzigen"
       invalid_choice:
         one: "'%{name}' is een ongeldige keuze."
         other: "'%{name}' zijn ongeldige keuzes."
@@ -338,7 +335,7 @@ nl:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents moeten minimaal 3 tekens lang zijn om te voorkomen dat de snelheid van legitieme gebruikers per ongeluk wordt beperkt."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Je kunt de volgende waarden niet toevoegen aan de instelling: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Je kunt megagegevens van afbeeldingen strippen niet uitschakelen als 'composer media optimization image enabled' is ingeschakeld. Schakel 'composer media optimization image enabled' uit voordat je megagegevens van afbeeldingen strippen uitschakelt."
-      twitter_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
+      x_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
       tl0_and_anonymous_flag: "Voor anonieme gebruikers moet ofwel 'site contact email' of 'email address to report illegal content' worden opgegeven."
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is medewerkerinterventie vereist. Neem contact op met een medewerker en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1720,7 +1717,7 @@ nl:
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
     apple_touch_icon: "Pictogram voor Apple touch-apparaten. Een doorzichtige achtergrond wordt niet aanbevolen. De grootte wordt automatisch aangepast naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
-    twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
+    x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2127,7 +2124,6 @@ nl:
     reviewable_default_visibility: "Geen beoordeelbare items weergeven, tenzij ze aan deze prioriteit voldoen"
     reviewable_low_priority_threshold: "Het prioriteitsfilter verbergt beoordeelbare items die niet aan deze score voldoen, tenzij het filter '(alles)' wordt gebruikt."
     high_trust_flaggers_auto_hide_posts: "Berichten van nieuwe gebruikers worden automatisch verborgen nadat ze door een TL3+-gebruiker als spam zijn gemarkeerd"
-    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonieme gebruikers krijgen informatie te zien dat ze een e-mail moeten sturen naar beheerders om illegale content te melden."
     email_address_to_report_illegal_content: "Als dit leeg wordt gelaten, wordt het e-mailadres van de standaard sitebeheerder gebruikt."
     cooldown_hours_until_reflag: "De tijd dat gebruikers moeten wachten voordat ze een bericht opnieuw kunnen markeren"
     slow_mode_prevents_editing: "Verhindert de 'Langzame modus' bewerking na editing_grace_period?"
@@ -2232,8 +2228,7 @@ nl:
     enable_group_directory: "Een lijst van groepen aanbieden om door te bladeren"
     enable_category_group_moderation: "Groepen mogen inhoud in bepaalde categorieën modereren"
     group_in_subject: "Stel %%{optional_pm} in het e-mailonderwerp in op de naam van de eerste groep in PB; zie <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Onderwerpnotatie aanpassen voor standaard e-mails</a>"
-    allow_anonymous_posting: "Schakel deze instelling in om gebruikers toe te staan naar de anonieme modus te schakelen voor het plaatsen van berichten. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics maken op de site. Zie ook `allow anonymous likes`."
-    allow_anonymous_likes: "Schakel deze instelling in om gebruikers die uw site anoniem bezoeken toe te staan berichten te liken. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics liken op de site. Zie ook 'allow_anonymous_posting'."
+    allow_anonymous_mode: "Schakel deze instelling in om gebruikers toe te staan naar de anonieme modus te schakelen voor het plaatsen van berichten. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics maken op de site. Zie ook `allow anonymous likes`."
     anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
     anonymous_posting_allowed_groups: "Groepen die anoniem plaatsen mogen inschakelen"
     anonymous_account_duration_minutes: "Om anonimiteit te beschermen, elke N minuten voor iedere gebruiker een nieuwe anoniem account maken. Voorbeeld: als dit is ingesteld op 600, wordt een nieuwe anonieme account gemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker naar anon overschakelt."
@@ -2283,7 +2278,6 @@ nl:
     auto_handle_queued_age: "Records die dit aantal dagen op beoordeling wachten automatisch verwijderen. Markeringen worden genegeerd. Berichten en gebruikers in de wachtrij worden geweigerd. Stel dit in op 0 om deze functie uit te schakelen."
     penalty_step_hours: "Standaardstraffen bij demping of schorsing van gebruikers in uren. Bij de eerste overtreding wordt standaard de eerste waarde gebruikt, bij de tweede overtreding de tweede waarde, enz."
     penalty_include_post_message: "Beledigend bericht automatisch opnemen in e-mailberichtsjabloon bij dempen of schorsen van een gebruiker"
-    svg_icon_subset: "Voeg extra FontAwesome-pictogrammen toe die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
     max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om afdrukken uit te schakelen)"
     full_name_requirement: "Maak het veld voor de volledige naam verplicht, optioneel of optioneel maar verborgen in het registratieformulier."
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
@@ -2336,9 +2330,7 @@ nl:
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
     disable_watched_word_checking_in_user_fields: "Schakel de controle van geobserveerde woorden uit in gebruikersvelden"
     watched_words_regular_expressions: "Staat het gebruik van reguliere expressies toe voor het filteren van woorden. Als deze functie is ingeschakeld, groepeert hij gevoelige woorden op basis van hun hoofdlettergevoeligheid. Vervolgens worden alle geselecteerde woorden samengevoegd tot een enkele reguliere expressie, waarbij woordgrenzen worden toegevoegd voor regelmatig geobserveerde woorden. Deze op regex gebaseerde filtermethode voegt dus een extra laag toe aan de controle over contentmoderatie door verfijndere woordpatronen te ondersteunen. De instelling maakt het ook mogelijk om eenvoudig de originele tekst te vervangen door de gewenste vervanging."
-    enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
     enable_fast_edit: "Voegt een knop toe aan het berichtselectiemenu om een kleine selectie inline te bewerken."
-    enable_quote_copy: "Voegt een knop toe aan het berichtselectiemenu om de selectie naar het klembord te kopiëren als een markdowncitaat."
     old_post_notice_days: "Het aantal dagen waarna een berichtmelding als oud wordt beschouwd. Dit onderscheidt het visueel van nieuwere berichten op de site."
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
@@ -2466,7 +2458,6 @@ nl:
     glimmer_post_menu_mode: "Bepaal of de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu wordt gebruikt. 'Auto' wordt automatisch ingeschakeld wanneer al je thema's en plug-ins gereed zijn. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     glimmer_post_menu_groups: "Schakel de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu in de 'auto'-modus in voor specifieke gebruikersgroepen. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
-    admin_sidebar_enabled_groups: "Schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
@@ -5085,7 +5076,6 @@ nl:
       new_topics_unless_trust_level: "Gebruikers met een laag vertrouwensniveau moeten topics laten goedkeuren door een medewerker. Zie %{link}."
       fast_typer: "Nieuwe gebruiker typte zijn eerste bericht verdacht snel, vermoed bot- of spammergedrag. Zie %{link}."
       auto_silence_regex: "Nieuwe gebruiker wiens eerste bericht overeenkomt met de instelling %{link}."
-      watched_word: "Dit bericht bevatte een geobserveerd woord. Zie je %{link}."
       staged: "Nieuwe topics en berichten voor gefaseerde gebruikers moeten worden goedgekeurd door een medewerker. Zie %{link}."
       category: "Voor berichten in deze categorie is handmatige goedkeuring door een medewerker vereist. Zie de %{link}."
       must_approve_users: "Alle nieuwe gebruikers moeten worden goedgekeurd door een medewerker. Zie %{link}."
@@ -5096,7 +5086,6 @@ nl:
       contains_media: "Dit bericht bevat ingesloten media. Zie %{link}."
       queued_by_staff: "Een medewerker vindt dat dit bericht moet worden beoordeeld. Het blijft tot die tijd verborgen."
       links:
-        watched_word: lijst van geobserveerde woorden
         category: categorie-instellingen
     actions:
       agree:
@@ -5124,11 +5113,13 @@ nl:
         description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
       delete_single:
         title: "Verwijderen"
+        complete: "Bericht verwijderd."
       delete:
         title: "Verwijderen…"
       delete_and_ignore:
         title: "Markering negeren en bericht verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
+        complete: "Bericht verwijderd."
       delete_and_ignore_replies:
         title: "Markering negeren, bericht en antwoorden verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht en alle antwoorden. Als dit het eerste bericht is, wordt het topic ook verwijderd"
@@ -5136,6 +5127,7 @@ nl:
       delete_and_agree:
         title: "Bericht verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht. Als dit het eerste bericht is, wordt ook het topic verwijderd."
+        complete: "Bericht verwijderd."
       delete_and_agree_replies:
         title: "Bericht en antwoorden verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht en alle antwoorden. Als dit het eerste bericht is, wordt ook het topic verwijderd."
@@ -5145,29 +5137,37 @@ nl:
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
         title: "Nee"
+        complete: "Markering genegeerd."
       discard_post:
         title: "Bericht weggooien"
       revise_and_reject_post:
         title: "Bericht herzien…"
       ignore:
         title: "Negeren"
+        complete: "Markering genegeerd."
       ignore_and_do_nothing:
         title: "Niets doen"
         description: "Negeer de vlag door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen. Verborgen berichten blijven verborgen en worden afgehandeld door de automatische tools."
+        complete: "Markering genegeerd."
       approve:
         title: "Goedkeuren"
+        complete: "Bericht goedgekeurd."
       approve_post:
         title: "Bericht goedkeuren"
         confirm_closed: "Dit topic is gesloten. Wil je het bericht toch maken?"
+        complete: "Bericht goedgekeurd."
       reject_post:
         title: "Bericht weigeren"
+        complete: "Bericht afgekeurd."
       approve_user:
         title: "Gebruiker goedkeuren"
+        complete: "Gebruiker goedgekeurd."
       reject_user:
         title: "Gebruiker verwijderen…"
         delete:
           title: "Gebruiker verwijderen"
           description: "De gebruiker wordt van het forum verwijderd."
+          complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
@@ -5186,6 +5186,7 @@ nl:
         title: "Bericht goedkeuren en herstellen"
       delete_user:
         reason: "Verwijderd via wachtrij voor beoordeling"
+        complete: "Gebruiker verwijderd."
   email_style:
     html_missing_placeholder: "De HTML-sjabloon moet %{placeholder} bevatten"
   notification_level:

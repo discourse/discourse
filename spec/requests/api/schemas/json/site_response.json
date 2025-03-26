@@ -288,6 +288,11 @@
                 "string",
                 "null"
               ]
+            },
+            "automatic": {
+              "type": [
+                "boolean"
+              ]
             }
           },
           "required": [
@@ -295,7 +300,8 @@
             "name",
             "flair_url",
             "flair_bg_color",
-            "flair_color"
+            "flair_color",
+            "automatic"
           ]
         }
     },
@@ -523,12 +529,19 @@
             },
             "is_dark": {
               "type": "boolean"
+            },
+            "theme_id": {
+              "type": ["integer", "null"]
+            },
+            "colors": {
+              "type": "array"
             }
           },
           "required": [
             "id",
             "name",
-            "is_dark"
+            "is_dark",
+            "colors"
           ]
         }
     },
@@ -592,6 +605,21 @@
             },
             "text_color": {
               "type": "string"
+            },
+            "style_type": {
+              "type": "string"
+            },
+            "emoji": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "icon": {
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "slug": {
               "type": "string"

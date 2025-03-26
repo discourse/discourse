@@ -172,21 +172,21 @@ cs:
           - Za všech okolností věříme v [civilizované chování komunity](%{base_uri}/guidelines).
       onebox:
         instructions: |-
-          Dále, můžeš se se mnou podělit o jeden z těchto odkazů? Odpověz **odkazem na samostatném řádku**, a ten se automaticky rozšíří o šikovné shrnutí.
+          A teď, můžeš se se mnou podělit o jeden z těchto odkazů? Odpověz na **odkaz na samostatném řádku**. Ten se tím automaticky rozbalí a bude obsahovat šikovné shrnutí.
 
-          Chceš-li zkopírovat libovolný odkaz, klepni a podrž na mobilním zařízení nebo klikni pravým tlačítkem myši na polohovací zařízení (myš):
+          Chceš-li zkopírovat jakýkoli odkaz, klepni a podrž na mobilu nebo klikni pravým tlačítkem myši svého polohovacího zařízení (myši)í:
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>.
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Super! Toto bude fungovat pro většinu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> odkazů. Nezapomeň, že to musí být na _samostatném_ řádku, bez ničeho dalšího před nebo za ním.
         not_found: |-
-          Promiň, ale odkaz jsem ve tvojí odpovědi nenašel! :cry:
+          Promiň, ve tvojí odpovědi jsem nenašel odkaz! :cry:
 
-          Můžeš zkusit přidat následující odkaz na samostatný řádek do své další odpovědi?
+          Dokážeš ve své další odpovědi zkusit přidat následující odkaz na samostatný řádek?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en. ikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Tady je obrázek jednorožce:

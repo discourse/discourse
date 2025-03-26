@@ -1,9 +1,5 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
-  @include breakpoint(large) {
-    --d-sidebar-width: #{$d-sidebar-narrow-width};
-  }
-
   --d-sidebar-row-horizontal-padding: 1rem;
 
   // ems so height is variable along with font size
@@ -48,6 +44,14 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+
+  @include breakpoint("mobile-extra-large") {
+    --d-sidebar-row-height: 2.4em;
+  }
+
+  @include breakpoint(large) {
+    --d-sidebar-width: #{$d-sidebar-narrow-width};
+  }
 }
 
 .sidebar-row {
@@ -63,19 +67,14 @@
   position: sticky;
   top: var(--main-outlet-offset);
   background: var(--d-sidebar-background);
-
-  @include unselectable;
-
-  // 1dvh with fallback for old browsers
-  --1dvh: 1vh;
-  @supports (height: 1dvh) {
-    --1dvh: 1dvh;
-  }
-  height: calc(
-    var(--composer-vh, var(--1dvh)) * 100 - var(--main-outlet-offset, 0px)
-  );
+  height: calc(var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset, 0px));
   align-self: start;
   overflow-y: auto;
+
+  // back-compat for themes
+  --1dvh: 1dvh;
+
+  @include unselectable;
 
   .sidebar-container {
     display: flex;
@@ -103,10 +102,6 @@
     overflow-x: hidden;
     overflow-y: overlay;
 
-    > .sidebar-section-wrapper:last-child {
-      border-bottom: 0;
-    }
-
     // custom scrollbar styling
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
@@ -114,6 +109,10 @@
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
+
+    > .sidebar-section-wrapper:last-child {
+      border-bottom: 0;
+    }
 
     &::-webkit-scrollbar {
       width: var(--scrollbarWidth);
@@ -130,11 +129,11 @@
 
     &:hover {
       scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+      transition-delay: 0s;
 
       &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbarThumbBg);
       }
-      transition-delay: 0s;
     }
 
     &__back-to-forum {
@@ -207,6 +206,10 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
+    @include breakpoint("mobile-extra-large") {
+      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+    }
+
     &.header {
       padding-bottom: 0;
 
@@ -225,10 +228,15 @@
 
     .link-icon {
       grid-column: 2;
+
+      @include breakpoint("mobile-extra-large") {
+        grid-column: 1;
+      }
     }
 
     .input-group {
       margin: 0 0.5em;
+
       @include breakpoint(mobile-large) {
         margin: 0 0.25em;
       }
@@ -263,7 +271,8 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
-    @include breakpoint(mobile-extra-large) {
+
+    @include breakpoint("mobile-extra-large") {
       grid-template-columns: auto 1fr;
       justify-items: left;
 
@@ -379,11 +388,11 @@
     background: none;
     margin-bottom: 0;
     height: 2em;
+    width: 100%;
 
     &:focus-within {
       outline: 0;
     }
-    width: 100%;
   }
 
   &__clear {

@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  UNKNOWN_TYPE_SOURCE = "unknown"
+
   self.ignored_columns = [:reviewable_by_group_id]
 
   class UpdateConflict < StandardError
@@ -41,6 +43,8 @@ class Reviewable < ActiveRecord::Base
   enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
 
   validates :reject_reason, length: { maximum: 2000 }
+
+  before_save :set_type_source
 
   after_create { log_history(:created, created_by) }
 
@@ -77,6 +81,16 @@ class Reviewable < ActiveRecord::Base
     self.types.map(&:sti_name)
   end
 
+  def self.source_for(type)
+    type = type.sti_name if type.is_a?(Class)
+    return UNKNOWN_TYPE_SOURCE if Reviewable.sti_names.exclude?(type)
+
+    DiscoursePluginRegistry
+      .reviewable_types_lookup
+      .find { |r| r[:klass].sti_name == type }
+      &.dig(:plugin) || "core"
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -87,6 +101,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+  end
+
+  def set_type_source
+    self.type_source = Reviewable.source_for(type)
   end
 
   def created_new!
@@ -181,7 +199,8 @@ class Reviewable < ActiveRecord::Base
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
-    force_review: false
+    force_review: false,
+    context: nil
   )
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
@@ -198,6 +217,7 @@ class Reviewable < ActiveRecord::Base
         meta_topic_id: meta_topic_id,
         take_action_bonus: take_action_bonus,
         created_at: created_at || Time.zone.now,
+        context: context,
       )
     rs.reason = reason.to_s if reason
     rs.save!
@@ -330,7 +350,8 @@ class Reviewable < ActiveRecord::Base
     valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
 
     # Ensure the user has access to the action
-    actions = actions_for(args[:guardian] || Guardian.new(performed_by), args)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+    actions = actions_for(guardian, args)
     raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
@@ -359,6 +380,8 @@ class Reviewable < ActiveRecord::Base
         updated_reviewable_ids: result.remove_reviewable_ids,
       )
     end
+
+    notify_users(result, guardian)
 
     result
   end
@@ -607,6 +630,18 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  def notify_users(result, guardian)
+    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
+
+    if SiteSetting.enable_category_group_moderation? && category
+      group_ids.merge(category.moderating_group_ids)
+    end
+
+    data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
+
+    MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
+  end
+
   def self.scores_with_topics
     ReviewableScore.joins(reviewable: :topic).where("reviewables.type = ?", name)
   end
@@ -766,8 +801,14 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
-  def self.unknown_types
-    Reviewable.pending.distinct.pluck(:type) - Reviewable.sti_names
+  def self.unknown_types_and_sources
+    @known_sources ||= Reviewable.sti_names.map { |n| [n, Reviewable.source_for(n)] }
+
+    known_unknowns = Reviewable.pending.distinct.pluck(:type, :type_source) - @known_sources
+
+    known_unknowns
+      .map { |type, source| { type: type, source: source } }
+      .sort_by { |e| [e[:source] == UNKNOWN_TYPE_SOURCE ? 1 : 0, e[:source], e[:type]] }
   end
 
   def self.destroy_unknown_types!
@@ -804,6 +845,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null

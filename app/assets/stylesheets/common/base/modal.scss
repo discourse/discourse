@@ -123,7 +123,7 @@
   }
 
   &__backdrop {
-    @include user-select(none);
+    user-select: none;
     position: fixed;
     top: 0;
     right: 0;
@@ -150,7 +150,7 @@
 }
 
 .modal-backdrop {
-  @include user-select(none);
+  user-select: none;
   position: fixed;
   top: 0;
   right: 0;
@@ -167,11 +167,12 @@
 .modal-backdrop,
 .modal-backdrop.fade.in {
   animation: fade 0.3s;
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }
-  opacity: 0.9;
-  filter: alpha(opacity=90);
 }
 
 // fade in
@@ -229,11 +230,11 @@
   .nav {
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
 
     li > a {
       font-size: var(--font-0);
     }
-    border-bottom: 1px solid var(--primary-low);
   }
 
   &.hidden {
@@ -264,6 +265,7 @@
     margin-right: 0;
     overflow: hidden;
     width: 100%;
+    border-radius: var(--d-border-radius);
 
     &.dialog-close {
       display: none;
@@ -404,7 +406,8 @@
       width: calc(100% - 36px);
       padding: 10px 4px 4px 4px;
     }
-    @media screen and (max-width: 760px) {
+
+    @media screen and (width <= 760px) {
       .incoming-email-html-part {
         width: calc(100% - 10px);
       }

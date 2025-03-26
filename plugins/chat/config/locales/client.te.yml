@@ -65,6 +65,7 @@ te:
         tabs:
           members: సభ్యులు
           settings: అమరికలు
+        remove_member: "తొలగించు"
       new_message_modal:
         no_items: "అంశాలు లేవు"
         filter: "జల్లెడ"

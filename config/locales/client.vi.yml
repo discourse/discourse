@@ -159,6 +159,10 @@ vi:
       dismiss: "Hủy bỏ"
     bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
+    welcome_banner:
+      header:
+        anonymous_members: "Chào mừng đến với %{site_name}!"
+      search: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -340,11 +344,6 @@ vi:
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
-      abandon:
-        yes_value: "Hủy bỏ"
-        no_value: "Tiếp tục chỉnh sửa"
-      dropdown:
-        view_all: "xem tất cả"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -1794,13 +1793,6 @@ vi:
       password_label: "Mật khẩu"
     password_reset:
       continue: "Tiếp tục truy cập %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Chỉ chuyên mục"
       categories_with_featured_topics: "Các chuyên mục và chủ đề nổi bật"
@@ -2110,9 +2102,8 @@ vi:
         votes_released: "Phiếu bầu đã được phát hành"
         admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
     upload_selector:
+      delete: "Xóa"
       uploading: "Đang tải lên"
-      processing: "Đang xử lý tải lên"
-      select_file: "Chọn Tài liệu"
       default_image_alt_text: hình ảnh
     search:
       sort_by: "Sắp xếp theo"
@@ -2774,9 +2765,7 @@ vi:
       has_likes_title_you:
         other: "bạn và %{count} người khác đã like bài viết này"
       sr_post_like_count_button:
-        other: "%{count} người thích bài đăng này. Bấm để xem"
-      sr_post_read_count_button:
-        other: "%{count} người đọc bài đăng này. Bấm để xem"
+        other: "%{count} người thích bài viết này."
       filtered_replies_hint:
         other: "Xem bài đăng này và %{count} câu trả lời của nó"
       filtered_replies_viewing:
@@ -2866,8 +2855,6 @@ vi:
             other: "và %{count} người khác thích nầy"
           read_capped:
             other: "và %{count} người khác đọc bài này"
-          sr_post_likers_list_description: "người dùng đã thích bài đăng này"
-          sr_post_readers_list_description: "người dùng đã đọc bài đăng này"
         by_you:
           off_topic: "Bạn đã đánh dấu cái nfay là chủ đề đóng"
           spam: "Bạn đã đánh dấu cái này là rác"
@@ -3359,6 +3346,9 @@ vi:
         prev_next: "%{shortcut} Di chuyển lựa chọn lên và xuống"
         insert_url: "%{shortcut} Chèn lựa chọn vào trình chỉnh sửa nội dung"
         full_page_search: "%{shortcut} Khởi chạy tìm kiếm toàn trang"
+      admin:
+        title: "Quản trị"
+        search_prev_next: "%{shortcut} Di chuyển lựa chọn lên và xuống"
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
@@ -3676,15 +3666,40 @@ vi:
       reports:
         title: "Danh sách các báo cáo có sẵn"
         sidebar_title: "Báo cáo"
-        sidebar_link:
-          all: "Tất cả các báo cáo"
+      config_sections:
+        account:
+          title: "Tài khoản"
+        reports:
+          title: "Báo cáo"
+        community:
+          title: "Cộng đồng"
+        appearance:
+          title: "Ngoại hình"
+        email:
+          title: "Email"
+        security:
+          title: "Bảo mật"
+        plugins:
+          title: "Plugins"
+        advanced:
+          title: "Nâng cao"
       config:
         developer:
           title: "Nhà phát triển"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Người kiểm duyệt"
         files:
           title: "Tập tin"
         legal:
           title: "Legal"
+        branding:
+          title: "Xây dựng thương hiệu"
+          logo:
+            form:
+              mobile: "Điện thoại"
+              email: "Email"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -3693,7 +3708,7 @@ vi:
           title: "Onebox"
         other:
           title: "Khác"
-        search:
+        search_everything:
           title: "Tìm kiếm"
         security:
           title: "Bảo mật"
@@ -3701,6 +3716,73 @@ vi:
           title: "Rác"
         user_api:
           title: "API người dùng"
+        dashboard:
+          title: "Bảng điều khiển"
+        users:
+          title: "Thành viên"
+        groups:
+          title: "Nhóm"
+        backups:
+          title: "Bản sao lưu"
+          sub_pages:
+            logs:
+              title: "Log"
+        reports:
+          title: "Báo cáo"
+        badges:
+          title: "Huy hiệu"
+        permalinks:
+          title: "Liên kết cố định"
+          header_description: "Chuyển hướng để áp dụng cho các URL mà diễn đàn không biết"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Themes"
+        components:
+          title: "Các thành phần"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động"
+            templates:
+              title: "Templates"
+            sent:
+              title: "Đã gửi"
+            skipped:
+              title: "Đã bỏ qua"
+            bounced:
+              title: "Bị trả lại"
+            received:
+              title: "Đã nhận"
+            rejected:
+              title: "Từ chối"
+        email_appearance:
+          title: "Ngoại hình"
+          header_description: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "Các URL được liệt kê ở đây được sử dụng trong các bài viết của người dùng đã được xác định là spammer"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Nhúng"
+      search:
+        title: "Tìm kiếm"
+        result_types:
+          report:
+            other: "Báo cáo"
+          setting:
+            other: "Cài đặt"
+          theme:
+            other: "Themes"
+          component:
+            other: "Các thành phần"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
@@ -3867,6 +3949,7 @@ vi:
         title: "API"
         key: "Phím"
         created: Tạo bởi
+        scope: Phạm vi
         updated: Đã cập nhật
         never_used: Không bao giờ
         generate: "Khởi tạo"
@@ -4055,9 +4138,6 @@ vi:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Điều hướng"
-          themes: "Themes"
-          components:
-            title: "Các thành phần"
       email_settings:
         sidebar_link:
           appearance: "Ngoại hình"
@@ -4076,7 +4156,6 @@ vi:
           update: "Cập nhật"
           saved: "đã lưu"
         flags:
-          header: "Người kiểm duyệt"
           description: "Mô tả"
           enabled: "Kích hoạt"
           edit: "Sửa"
@@ -4096,12 +4175,20 @@ vi:
         embeddable_host:
           edit: "Sửa"
           delete: "Xóa"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tùy biến"
+          install: "Cài đặt"
           themes:
             title: "Themes"
+          components:
+            title: "Các thành phần"
         user_fields:
           type: "Loại"
           delete: "Xóa"
+        color_palettes:
+          palette_name: "Tên"
+          colors:
+            title: "Màu sắc"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4114,19 +4201,6 @@ vi:
         howto: "Plugin cài như thế nào?"
         author: "Bởi %{author}"
         learn_more: "Tìm hiểu thêm"
-        sidebar_link:
-          installed: "Đã cài đặt"
-      advanced:
-        title: "Nâng cao"
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Nhà phát triển"
-          embedding: "Nhúng"
-          user_api: "API người dùng"
-          onebox: "Onebox"
-          files: "Tập tin"
-          other_options: "Khác"
-          search: "Tìm kiếm"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:
@@ -4248,16 +4322,10 @@ vi:
           common: "Chung"
           desktop: "Máy tính để bàn"
           mobile: "Điện thoại"
-          settings: "Cài đặt"
-          translations: "Bản dịch"
-          extra_scss: "SCSS bổ sung"
           extra_files: "Các tệp bổ sung"
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
-          show_advanced: "Hiển thị các trường nâng cao"
-          hide_advanced: "Ẩn các trường nâng cao"
-          hide_unused_fields: "Ẩn các trường không sử dụng"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"
@@ -4300,9 +4368,6 @@ vi:
           unsaved_parent_themes: "Bạn chưa gán thành phần cho các chủ đề, bạn có muốn tiếp tục không?"
           discard: "Hủy bỏ"
           stay: "Ở lại"
-          css_html: "CSS / HTML tùy chỉnh"
-          edit_css_html: "Chỉnh sửa CSS / HTML"
-          edit_css_html_help: "Bạn chưa chỉnh sửa bất kỳ CSS hoặc HTML nào"
           delete_upload_confirm: "Xóa nội dung tải lên này? (CSS chủ đề có thể ngừng hoạt động!)"
           component_on_themes: "Bao gồm thành phần trên các chủ đề này"
           included_components: "Các thành phần bao gồm"
@@ -4354,19 +4419,12 @@ vi:
           imported_from_archive: "Theme này đã được nhập từ tệp .zip"
           scss:
             text: "CSS"
-            title: "Nhập CSS tùy chỉnh, chúng tôi chấp nhận tất cả các kiểu CSS và SCSS hợp lệ"
-          header:
-            text: "Header"
-            title: "Nhập HTML để hiển thị phía trên tiêu đề trang web"
           after_header:
             text: "Sau tiêu đề"
-            title: "Nhập HTML để hiển thị trên tất cả các trang sau tiêu đề"
           footer:
             text: "Footer"
-            title: "Nhập HTML để hiển thị cuối website"
           embedded_scss:
             text: "Nhúng CSS"
-            title: "Nhập CSS tùy chỉnh phiên bản có lời chú thích"
           color_definitions:
             text: "Màu sắc"
             title: "Nhập màu tùy chỉnh (chỉ dành cho người dùng nâng cao)"
@@ -4379,13 +4437,6 @@ vi:
               %{example}
 
               Việc đặt tiền tố tên thuộc tính rất được khuyến khích để tránh xung đột với các plugin và/hoặc lõi.
-          head_tag:
-            text: "Đầu"
-          body_tag:
-            text: "Thân"
-          yaml:
-            text: "YAML"
-            title: "Xác định cài đặt chủ đề ở định dạng YAML"
           scss_warning_inline: "Việc sử dụng các biến màu SCSS cốt lõi trong các chủ đề không được dùng nữa."
           all_filter: "All"
           active_filter: "Kích hoạt"
@@ -4904,8 +4955,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết, một số bài viết cũ hơn %{count} ngày. (Thiết lập delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
-        delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
-        delete_dont_block: "Chỉ xóa"
         deleting_user: "Đang xóa người dùng…"
         deleted: "Thành viên này đã bị xóa"
         delete_failed: "Có lỗi trong quá trình xóa thành viên này. Chắc chắn rằng tất cả bài viết đã được xóa trước khi xóa thành viên."

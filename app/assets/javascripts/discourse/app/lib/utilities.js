@@ -87,11 +87,6 @@ export function highlightPost(postNumber) {
   if (postNumber > 1) {
     // Transport screenreader to correct post by focusing it
     element.setAttribute("tabindex", "0");
-    element.addEventListener(
-      "focusin",
-      () => element.removeAttribute("tabindex"),
-      { once: true }
-    );
     element.focus();
   }
 }
@@ -446,9 +441,17 @@ export function prefersReducedMotion() {
 }
 
 export function postRNWebviewMessage(prop, value) {
-  if (window.ReactNativeWebView !== undefined) {
-    window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
+  if (window.ReactNativeWebView === undefined) {
+    return;
   }
+
+  if (prop === "headerBg" && !value.startsWith("rgb(")) {
+    // eslint-disable-next-line no-console
+    console.warn("Skipping unsupported headerBg value:", value);
+    return;
+  }
+
+  window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
 }
 
 function pickMarker(text) {

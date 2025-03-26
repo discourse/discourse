@@ -192,6 +192,10 @@ hy:
       dismiss: "Չեղարկել"
     bootstrap_mode: "Ինչպես սկսել"
     back_button: "Ետ"
+    welcome_banner:
+      header:
+        anonymous_members: "Բարի գալուստ %{site_name}!"
+      search: "Որոնում"
     themes:
       default_description: "Լռելյայն"
       broken_theme_alert: "Ձեր կայքը կարող է չաշխատել, քանի որ թեման / բաղադրիչը սխալներ ունեն:"
@@ -454,12 +458,6 @@ hy:
       remove_confirmation: "Իսկապե՞ս ուզում եք ջնջել այս սևագիրը:"
       new_topic: "Նոր թեմայի սևագիր"
       new_private_message: "Նոր անձնական հաղորդագրության սևագիր"
-      abandon:
-        confirm: "Դուք արդեն ունեք սևագիր: Ի՞նչ կցանկանայիք անել դրա հետ:"
-        yes_value: "Ջնջել"
-        no_value: "Վերսկսել խմբագրումը"
-      dropdown:
-        view_all: "դիտել բոլոը"
     topic_count_all:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
@@ -2153,13 +2151,6 @@ hy:
       password_label: "Գաղտնաբառ"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Միայն Կատեգորիաները"
       categories_with_featured_topics: "Հանրահայտ Թեմաներով Կատեգորիաները"
@@ -2429,8 +2420,8 @@ hy:
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
         admin_problems: "նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
     upload_selector:
+      delete: "Ջնջել"
       uploading: "Վերբեռնվում է"
-      select_file: "Ընտրել Ֆայլ"
       default_image_alt_text: նկար
     search:
       sort_by: "Դասավորել ըստ"
@@ -3008,6 +2999,9 @@ hy:
       has_likes_title_you:
         one: "Դուք և %{count} այլ անձ հավանել եք այս հրապարակումը"
         other: "Դուք և %{count} հոգի հավանել են այս գրառումը"
+      sr_post_like_count_button:
+        one: "%{count} անձ հավանել է այս հրապարակումը."
+        other: "%{count} մարդ հավանել է այս գրառումը."
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3548,6 +3542,9 @@ hy:
         prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
         insert_url: "%{shortcut} Ընտրված հղումը տեղադրել բաց խմբագրի մեջ"
         full_page_search: "%{shortcut} Գործարկում է ամբողջական էջի որոնումը"
+      admin:
+        title: "Ադմին"
+        search_prev_next: "%{shortcut} Տեղաշարժել նշվածը վեր և վար"
     badges:
       earned_n_times:
         one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
@@ -3781,6 +3778,10 @@ hy:
               content: "Վերանայում"
             invite:
               content: "Հրավիրել"
+      footer:
+        interface_color_selector:
+          light: "Բաց"
+          dark: "Մութ"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
@@ -3815,15 +3816,38 @@ hy:
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
         sidebar_title: "Հաշվետվություններ"
-        sidebar_link:
-          all: "Բոլոր հաշվետվությունները"
+      config_sections:
+        account:
+          title: "Հաշիվ"
+        reports:
+          title: "Հաշվետվություններ"
+        community:
+          title: "Համայնք"
+        appearance:
+          title: "Արտաքին տեսք"
+        email:
+          title: "Էլ. փոստ"
+        security:
+          title: "Անվտանգություն"
+        plugins:
+          title: "Հավելումներ"
       config:
         developer:
           title: "Ծրագրավորող"
+        emojis:
+          title: "Էմոջի"
+        flags:
+          title: "Մոդերացիա"
         files:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
+        branding:
+          title: "Բրենդինգ"
+          logo:
+            form:
+              mobile: "Հեռախոսային"
+              email: "Էլ. փոստ"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -3832,7 +3856,7 @@ hy:
           title: "Onebox"
         other:
           title: "Այլ"
-        search:
+        search_everything:
           title: "Որոնում"
         security:
           title: "Անվտանգություն"
@@ -3840,6 +3864,64 @@ hy:
           title: "Սպամ"
         user_api:
           title: "Օգտատիրոջ API"
+        dashboard:
+          title: "Կառավարման վահանակ"
+        users:
+          title: "Օգտատերեր"
+        groups:
+          title: "Խմբեր"
+        backups:
+          title: "Պահուտսներ"
+          sub_pages:
+            logs:
+              title: "Գրառումներ"
+        reports:
+          title: "Հաշվետվություններ"
+        badges:
+          title: "Կրծքանշաններ"
+        permalinks:
+          title: "Մշտահղումներ"
+        emoji:
+          title: "Էմոջի"
+        themes:
+          title: "Թեմաներ"
+        components:
+          title: "Բաղադրիչներ"
+        email:
+          sub_pages:
+            templates:
+              title: "Ձևանմուշներ"
+            sent:
+              title: "Ուղարկված"
+            skipped:
+              title: "Բաց է թողնված"
+            bounced:
+              title: "Վերադարձված է"
+            received:
+              title: "Ստացված է"
+            rejected:
+              title: "Մերժված է"
+        email_appearance:
+          title: "Արտաքին տեսք"
+        staff_action_logs:
+          sub_pages:
+            screened_ips:
+              title: "Ցուցադրված IP-ներ"
+            screened_urls:
+              title: "Ցուցադրված URL-ները"
+        webhooks:
+          title: "Webhook-ներ"
+        embedding:
+          title: "Զետեղում"
+      search:
+        title: "Որոնում"
+        result_types:
+          theme:
+            one: "Թեմա"
+            other: "Թեմաներ"
+          component:
+            one: "Բաղադրիչ"
+            other: "Բաղադրիչներ"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -4113,9 +4195,8 @@ hy:
         sidebar_link:
           emoji: "Էմոջի"
           navigation: "Նավիգացիա"
-          themes: "Թեմաներ"
-          components:
-            title: "Բաղադրիչներ"
+          themes_and_components:
+            keywords: "ընդլայնում"
       email_settings:
         sidebar_link:
           appearance: "Արտաքին տեսք"
@@ -4133,7 +4214,6 @@ hy:
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
-          header: "Մոդերացիա"
           description: "Նկարագրությունը"
           enabled: "Միացվա՞ծ է:"
           edit: "Խմբագրել"
@@ -4157,14 +4237,22 @@ hy:
           delete: "Ջնջել"
           more_options:
             title: "Ավելի շատ տարբերակներ"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Անհատականացնել"
+          install: "Տեղադրել"
           themes:
             title: "Թեմաներ"
+          components:
+            title: "Բաղադրիչներ"
         user_fields:
           type: "Տիպը"
           more_options:
             title: "Ավելի շատ տարբերակներ"
           delete: "Ջնջել"
+        color_palettes:
+          palette_name: "Անուն"
+          colors:
+            title: "Գույներ"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"
@@ -4177,18 +4265,6 @@ hy:
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         author: "%{author}-Ի կողմԻց"
         learn_more: "Իմանալ ավելին"
-        sidebar_link:
-          installed: "Տեղադրված"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhook-ներ"
-          developer: "Ծրագրավորող"
-          embedding: "Զետեղում"
-          user_api: "Օգտատիրոջ API"
-          onebox: "Onebox"
-          files: "Ֆայլեր"
-          other_options: "Այլ"
-          search: "Որոնում"
       backups:
         title: "Պահուստներ"
         menu:
@@ -4301,16 +4377,10 @@ hy:
           common: "Ընդհանուր"
           desktop: "Համակարգչային"
           mobile: "Հեռախոսային"
-          settings: "Կարգավորումներ"
-          translations: "Թարգմանություններ"
-          extra_scss: "Լրացուցիչ SCSS"
           extra_files: "Լրաչուցիչ ֆայլեր"
           extra_files_upload: "Արտահանեք թեման՝ այս ֆայլերը դիտելու համար:"
           extra_files_remote: "Արտահանեք թեման կամ բացեք համապատասխան git պահոցը՝ այս ֆայլերը դիտելու համար:"
           preview: "Նախադիտում"
-          show_advanced: "Ցուցադրել ընդլայնված դաշտերը"
-          hide_advanced: "Թաքցնել ընդլայնված դաշտերը"
-          hide_unused_fields: "Թաքցնել չօգտագործված դաշտերը"
           is_default: "Թեման լռելյայն միացված է"
           user_selectable: "Թեման կարող է ընտրվել օգտատերերի կողմից"
           color_scheme: "Գունապնակ"
@@ -4351,9 +4421,6 @@ hy:
           unsaved_parent_themes: "Դուք դեռևս բաղադրիչ չեք հատկացրել թեմաներին, Դուք ցանկանու՞մ եք անցնել առաջ: "
           discard: "Չեղարկել"
           stay: "Մնալ"
-          css_html: "Մասնավոր CSS/HTML"
-          edit_css_html: "Խմբագրել CSS/HTML-ը"
-          edit_css_html_help: "Դուք չեք խմբագրել որևէ CSS կամ HTML"
           delete_upload_confirm: "Ջնջե՞լ այս վերբեռնումը (Թեմայի CSS-ը կարող է դադարել աշխատել!):"
           component_on_themes: "Ներառել բաղադրիչը՝ այս թեմաների մեջ"
           included_components: "Ներառված բաղադրիչներ"
@@ -4399,24 +4466,12 @@ hy:
           imported_from_archive: "Այս թեման ներմուծվել է .zip ֆայլից"
           scss:
             text: "CSS"
-            title: "Մուտքագրեք մասնավոր CSS, մենք ընդունում ենք բոլոր վավեր CSS և SCSS ոճերը"
-          header:
-            text: "Վերնամաս"
-            title: "Մուտքագրեք HTML՝ կայքի վերնամասի վերևում ցուցադրվելու համար:"
           after_header:
             text: "Վերնամասից Հետո"
-            title: "Մուտքագրեք HTML՝ բոլոր էջերում վերնամասից հետո ցուցադրվելու համար"
           footer:
             text: "Հատակ"
-            title: "Մուտքագրեք HTML ՝ կայքի հատակում ցուցադրվելու համար"
           embedded_scss:
             text: "Զետեղված CSS"
-            title: "Մուտքագրեք մասնավոր CSS՝ մեկնաբանությունների զետեղված տարբերակի վրա կիրառելու համար"
-          body_tag:
-            text: "Բովանդակություն"
-          yaml:
-            text: "YAML"
-            title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
@@ -4469,6 +4524,9 @@ hy:
             description: "Հավանման կոճակի գույնը:"
           selected:
             name: "ընտրված"
+          editor:
+            light: "Բաց"
+            dark: "Մութ"
         robots:
           title: "Վերասահմանեք ձեր կայքի robots.txt ֆայլը."
           warning: "Սա ընդմիշտ կվերասահմանի կայքի հետ կապված ցանկացած կարգավորում :"
@@ -4901,8 +4959,6 @@ hy:
         cant_delete_all_too_many_posts:
           one: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
           other: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
-        delete_and_block: "Ջնջել և <b>արգելափակել</b> այս էլ. և IP հասցեները:"
-        delete_dont_block: "Միայն ջնջել "
         deleted: "Օգտատերը ջնջված է:"
         delete_failed: "Այդ օգտատիրոջը ջնջելիս տեղի է ունեցել սխալ: Համոզվեք, որ բոլոր գրառումները ջնջված են՝ մինչ օգտատիրոջը ջնջել փորձելը:"
         send_activation_email: "Ուղարկել Ակտիվացիայի Էլ. Նամակ"

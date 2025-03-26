@@ -17,7 +17,6 @@ import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import { findAll } from "discourse/models/login-method";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -43,17 +42,6 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
-
-  get isOnlyOneExternalLoginMethod() {
-    return (
-      !this.siteSettings.enable_local_logins &&
-      this.externalLoginMethods.length === 1
-    );
-  }
-
-  get externalLoginMethods() {
-    return findAll();
-  }
 
   @action
   loading(transition) {
@@ -227,21 +215,6 @@ export default class ApplicationRoute extends DiscourseRoute {
     return this.modal.close(initiatedBy);
   }
 
-  /**
-      Hide the modal, but keep it with all its state so that it can be shown again later.
-      This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
-      user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
-    **/
-  @action
-  hideModal() {
-    return this.modal.hide();
-  }
-
-  @action
-  reopenModal() {
-    return this.modal.reopen();
-  }
-
   @action
   editCategory(category) {
     DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
@@ -295,8 +268,8 @@ export default class ApplicationRoute extends DiscourseRoute {
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
-        this.login.externalLogin(this.externalLoginMethods[0]);
+      if (this.login.isOnlyOneExternalLoginMethod) {
+        this.login.singleExternalLogin();
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
@@ -310,6 +283,9 @@ export default class ApplicationRoute extends DiscourseRoute {
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
             canSignUp: this.controller.canSignUp,
+            referrerTopicUrl: DiscourseURL.isInternalTopic(document.referrer)
+              ? document.referrer
+              : null,
           },
         });
       }
@@ -321,11 +297,9 @@ export default class ApplicationRoute extends DiscourseRoute {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (this.login.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
-        this.login.externalLogin(this.externalLoginMethods[0], {
-          signup: true,
-        });
+        this.login.singleExternalLogin({ signup: true });
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {

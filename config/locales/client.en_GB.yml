@@ -118,6 +118,8 @@ en_GB:
       config:
         navigation:
           title: "Navigation"
+        email_appearance:
+          header_description: "Customise the template in which all html emails are rendered, and style using CSS"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:
@@ -136,6 +138,11 @@ en_GB:
           description: "Description"
           form:
             description: "Description"
+        themes_and_components:
+          breadcrumb_title: "Customise"
+        color_palettes:
+          colors:
+            title: "Colours"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"
@@ -147,8 +154,6 @@ en_GB:
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
-          header:
-            text: "Header"
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"

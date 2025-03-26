@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import AsyncContent from "discourse/components/async-content";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
@@ -13,32 +13,25 @@ import AdminSectionLandingWrapper from "admin/components/admin-section-landing-w
 
 export default class AdminReports extends Component {
   @service siteSettings;
-  @tracked reports = null;
-  @tracked filter = "";
-  @tracked isLoading = true;
 
-  constructor() {
-    super(...arguments);
-    this.loadReports();
+  @tracked reports;
+  @tracked filter = "";
+
+  @bind
+  async loadReports() {
+    const response = await ajax("/admin/reports");
+    return response.reports;
   }
 
   @bind
-  loadReports() {
-    ajax("/admin/reports")
-      .then((json) => {
-        this.reports = json.reports;
-      })
-      .finally(() => (this.isLoading = false));
-  }
-
-  get filteredReports() {
-    if (!this.reports) {
+  filterReports(reports, filter) {
+    if (!reports) {
       return [];
     }
 
-    let filteredReports = this.reports;
-    if (this.filter) {
-      const lowerCaseFilter = this.filter.toLowerCase();
+    let filteredReports = reports;
+    if (filter) {
+      const lowerCaseFilter = filter.toLowerCase();
       filteredReports = filteredReports.filter((report) => {
         return (
           (report.title || "").toLowerCase().includes(lowerCaseFilter) ||
@@ -58,28 +51,30 @@ export default class AdminReports extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-      <div class="d-admin-filter admin-reports-header">
-        <div class="admin-filter__input-container">
-          <input
-            type="text"
-            class="admin-filter__input admin-reports-header__filter"
-            placeholder={{i18n "admin.filter_reports"}}
-            value={{this.filter}}
-            {{on "input" (withEventValue (fn (mut this.filter)))}}
-          />
+    <AsyncContent @asyncData={{this.loadReports}}>
+      <:content as |reports|>
+        <div class="d-admin-filter admin-reports-header">
+          <div class="admin-filter__input-container">
+            <input
+              type="text"
+              class="admin-filter__input admin-reports-header__filter"
+              placeholder={{i18n "admin.filter_reports"}}
+              value={{this.filter}}
+              {{on "input" (withEventValue (fn (mut this.filter)))}}
+            />
+          </div>
         </div>
-      </div>
-      <AdminSectionLandingWrapper class="admin-reports-list">
-        {{#each this.filteredReports as |report|}}
-          <AdminSectionLandingItem
-            @titleLabelTranslated={{report.title}}
-            @descriptionLabelTranslated={{report.description}}
-            @titleRoute="adminReports.show"
-            @titleRouteModel={{report.type}}
-          />
-        {{/each}}
-      </AdminSectionLandingWrapper>
-    </ConditionalLoadingSpinner>
+        <AdminSectionLandingWrapper class="admin-reports-list">
+          {{#each (this.filterReports reports this.filter) as |report|}}
+            <AdminSectionLandingItem
+              @titleLabelTranslated={{report.title}}
+              @descriptionLabelTranslated={{report.description}}
+              @titleRoute="adminReports.show"
+              @titleRouteModel={{report.type}}
+            />
+          {{/each}}
+        </AdminSectionLandingWrapper>
+      </:content>
+    </AsyncContent>
   </template>
 }

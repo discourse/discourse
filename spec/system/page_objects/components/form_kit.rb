@@ -48,6 +48,8 @@ module PageObjects
           url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
+        when "toggle"
+          component.find("button[role=\"switch\"]", visible: :all)["aria-checked"] == "true"
         end
       end
 
@@ -91,6 +93,8 @@ module PageObjects
           component.find("input[type='checkbox']").click
         when "password"
           component.find(".form-kit__control-password-toggle").click
+        when "toggle"
+          component.find("button[role=\"switch\"]", visible: :all).ancestor("label").click
         else
           raise "'toggle' is not supported for control type: #{control_type}"
         end

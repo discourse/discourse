@@ -127,6 +127,13 @@
     width: 100%;
   }
 
+  .choose-message,
+  .choose-topic {
+    &__search-results {
+      margin: 0 0 1em 0;
+    }
+  }
+
   .category-chooser {
     margin-bottom: 9px;
   }
@@ -332,7 +339,7 @@
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (width <= 768px) {
     .d-modal {
       &__container {
         width: 100%;
@@ -457,6 +464,7 @@
         border: 0;
         outline: none;
         flex: 1;
+
         @include ellipsis;
         width: 100%;
         justify-content: flex-start;

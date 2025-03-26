@@ -170,21 +170,21 @@ pt_BR:
           - Acreditamos em [comportamento comunitário saudável](%{base_uri}/guidelines) em todos os momentos.
       onebox:
         instructions: |-
-          Em seguida, você pode compartilhar um destes links comigo? Responda com **um link em apenas uma linha**, e ele irá automaticamente se expandir para incluir um belo resumo.
+          Em seguida, você poderia compartilhar um desses links comigo? Envie sua resposta como **uma linha contendo apenas o link**, e ele se expandirá automaticamente para incluir um resumo bacana.
 
-          Para copiar qualquer link, toque e segure em dispositivos móveis, ou clique com o botão direito do mouse:
+          Para copiar qualquer link, toque e segure no celular ou clique com o botão direito do mouse:
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Legal! Isto vai funcionar para a maioria dos <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Lembre-se de que ele precisa estar sozinho em uma linha, com nada mais à frente ou atrás.
         not_found: |-
           Desculpe, não consegui encontrar o link na sua resposta! :cry:
 
-          Você pode tentar adicionar o link abaixo, sozinho em uma linha, na sua próxima resposta?
+          Você poderia tentar enviar o link a seguir, numa linha que não contenha nada além do link, na sua próxima resposta?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Aqui está a foto de um unicórnio:

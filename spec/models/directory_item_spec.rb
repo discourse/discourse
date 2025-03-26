@@ -3,14 +3,12 @@
 RSpec.describe DirectoryItem do
   describe "#period_types" do
     context "when verifying enum sequence" do
-      before { @period_types = DirectoryItem.period_types }
-
       it "'all' should be at 1st position" do
-        expect(@period_types[:all]).to eq(1)
+        expect(described_class.period_types[:all]).to eq(1)
       end
 
       it "'quarterly' should be at 6th position" do
-        expect(@period_types[:quarterly]).to eq(6)
+        expect(described_class.period_types[:quarterly]).to eq(6)
       end
     end
   end
@@ -188,7 +186,7 @@ RSpec.describe DirectoryItem do
       fab!(:group) { Fabricate(:group, users: [user]) }
 
       before do
-        SiteSetting.allow_anonymous_posting = true
+        SiteSetting.allow_anonymous_mode = true
         SiteSetting.anonymous_posting_allowed_groups = group.id.to_s
       end
 

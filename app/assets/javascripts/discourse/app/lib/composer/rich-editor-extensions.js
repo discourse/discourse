@@ -53,6 +53,9 @@
 /** @typedef {((params: PluginParams) => KeymapSpec)} RichKeymapFn */
 /** @typedef {KeymapSpec | RichKeymapFn} RichKeymap */
 
+// @ts-ignore MarkSerializerSpec not currently exported
+/** @typedef {import('prosemirror-markdown').MarkSerializerSpec} MarkSerializerSpec */
+
 /**
  * @typedef {Object} RichEditorExtension
  * @property {Record<string, import('prosemirror-model').NodeSpec>} [nodeSpec]
@@ -64,10 +67,9 @@
  * @property {RichInputRule | Array<RichInputRule>} [inputRules]
  *   ProseMirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
  *   can be a function returning an array or an array of input rules
- * @property {Record<string, SerializeNodeFn>} [serializeNode]
+ * @property {(params: PluginParams) => Record<string, SerializeNodeFn> | Record<string, SerializeNodeFn>} [serializeNode]
  *   Node serialization definition
- * @ts-ignore MarkSerializerSpec not currently exported
- * @property {Record<string, import('prosemirror-markdown').MarkSerializerSpec>} [serializeMark]
+ * @property {(params: PluginParams) => Record<string, MarkSerializerSpec> | Record<string, MarkSerializerSpec>} [serializeMark]
  *   Mark serialization definition
  * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
@@ -93,8 +95,16 @@ export function registerRichEditorExtension(extension) {
   registeredExtensions.push(extension);
 }
 
-export function resetRichEditorExtensions() {
+export function clearRichEditorExtensions() {
   registeredExtensions.length = 0;
+}
+
+export async function resetRichEditorExtensions() {
+  const { default: extensions } = await import(
+    "discourse/static/prosemirror/extensions/register-default"
+  );
+  clearRichEditorExtensions();
+  extensions.forEach(registerRichEditorExtension);
 }
 
 /**

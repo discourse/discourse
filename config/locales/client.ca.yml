@@ -169,6 +169,10 @@ ca:
     software_update_prompt:
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    welcome_banner:
+      header:
+        anonymous_members: "Benvingut a %{site_name}!"
+      search: "Cerca"
     themes:
       default_description: "Per defecte"
     s3:
@@ -325,11 +329,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      abandon:
-        yes_value: "Descarta"
-        no_value: "Reprèn l'edició"
-      dropdown:
-        view_all: "mostra-ho tot"
     topic_count_all:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
@@ -1542,13 +1541,6 @@ ca:
       password_label: "Contrasenya"
     password_reset:
       continue: "Continua a %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Només categories"
       categories_with_featured_topics: "Categories amb temes destacats"
@@ -1787,8 +1779,8 @@ ca:
         post_approved: "publicació aprovada"
         admin_problems: "nou consell al tauler de control del vostre lloc web"
     upload_selector:
+      delete: "Suprimeix"
       uploading: "Carregant"
-      select_file: "Tria un fitxer"
       default_image_alt_text: imatge
     search:
       sort_by: "Ordena per"
@@ -2284,6 +2276,9 @@ ca:
       has_likes_title_you:
         one: "La publicació us agrada a vós i a %{count} persona"
         other: "La publicació us agrada a vós i a %{count} persones"
+      sr_post_like_count_button:
+        one: "La publicació agrada a %{count} persona."
+        other: "La publicació agrada a %{count} persones."
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2767,6 +2762,8 @@ ca:
         mark_tracking: "%{shortcut} Segueix el tema"
         mark_watching: "%{shortcut} Vigila el tema"
         print: "%{shortcut} Imprimeix el tema"
+      admin:
+        title: "Administració"
     badges:
       earned_n_times:
         one: "Ha rebut aquesta insígnia %{count} vegada."
@@ -2954,6 +2951,10 @@ ca:
             invite:
               content: "Convida"
       filter: "Filtre..."
+      footer:
+        interface_color_selector:
+          light: "Clar"
+          dark: "Fosc"
     until: "Fins a:"
     form_templates:
       upload_field:
@@ -2989,15 +2990,38 @@ ca:
       reports:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
-        sidebar_link:
-          all: "Tots els reports"
+      config_sections:
+        account:
+          title: "Compte"
+        reports:
+          title: "Reports"
+        community:
+          title: "Comunitat"
+        appearance:
+          title: "Aparença"
+        email:
+          title: "Correu electrònic"
+        security:
+          title: "Seguretat"
+        plugins:
+          title: "Connectors"
       config:
         developer:
           title: "Desenvolupador"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderació"
         files:
           title: "Fitxers"
         legal:
           title: "Legal"
+        branding:
+          title: "Brànding"
+          logo:
+            form:
+              mobile: "Mòbil"
+              email: "Correu electrònic"
         navigation:
           title: "Navegació"
         notifications:
@@ -3006,7 +3030,7 @@ ca:
           title: "Onebox"
         other:
           title: "Altres"
-        search:
+        search_everything:
           title: "Cerca"
         security:
           title: "Seguretat"
@@ -3014,6 +3038,70 @@ ca:
           title: "Brossa"
         user_api:
           title: "API d'usuari"
+        dashboard:
+          title: "Tauler de control"
+        users:
+          title: "Usuaris"
+        groups:
+          title: "Grups"
+        backups:
+          title: "Còpies de seguretat"
+          sub_pages:
+            logs:
+              title: "Registres"
+        reports:
+          title: "Reports"
+        badges:
+          title: "Insígnies"
+        permalinks:
+          title: "Enllaços permanents"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Aparences"
+        components:
+          title: "Components"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Previsualitza el contingut dels correus de resum enviat a usuaris inactius"
+            templates:
+              title: "Plantilles"
+            sent:
+              title: "Enviat"
+            skipped:
+              title: "Saltat"
+            bounced:
+              title: "Rebotat"
+            received:
+              title: "Rebut"
+            rejected:
+              title: "Rebutjat"
+        email_appearance:
+          title: "Aparença"
+          header_description: "Personalitzeu la plantilla en què es presenten tots els correus electrònics HTML i establiu l'estil amb CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Quan es prova de crear un compte nou, es revisaran les següents adreces i es blocarà el registre o es durà a terme alguna altra acció"
+            screened_ips:
+              title: "IPs sota supervisió"
+            screened_urls:
+              title: "URLs sota supervisió"
+              header_description: "Els URL llistats aquí han estat emprats en publicacions per usuaris identificats com a generadors de brossa"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incrustant"
+      search:
+        title: "Cerca"
+        result_types:
+          theme:
+            one: "Aparença"
+            other: "Aparences"
+          component:
+            one: "Component"
+            other: "Components"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3268,9 +3356,8 @@ ca:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navegació"
-          themes: "Aparences"
-          components:
-            title: "Components"
+          themes_and_components:
+            keywords: "extensió"
       email_settings:
         sidebar_link:
           appearance: "Aparença"
@@ -3288,7 +3375,6 @@ ca:
           optional: "(opcional)"
           saved: "desat!"
         flags:
-          header: "Moderació"
           description: "Descripció"
           enabled: "Activat?"
           edit: "Edita"
@@ -3308,12 +3394,20 @@ ca:
         embeddable_host:
           edit: "Edita"
           delete: "Suprimeix"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalitza"
+          install: "Instal·la"
           themes:
             title: "Aparences"
+          components:
+            title: "Components"
         user_fields:
           type: "Tipus"
           delete: "Suprimeix"
+        color_palettes:
+          palette_name: "Nom"
+          colors:
+            title: "Colors"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -3326,18 +3420,6 @@ ca:
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
         learn_more: "Per a saber-ne més"
-        sidebar_link:
-          installed: "Instal·lat"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Desenvolupador"
-          embedding: "Incrustant"
-          user_api: "API d'usuari"
-          onebox: "Onebox"
-          files: "Fitxers"
-          other_options: "Altres"
-          search: "Cerca"
       backups:
         title: "Còpies de seguretat"
         menu:
@@ -3452,13 +3534,7 @@ ca:
           common: "Comú"
           desktop: "Escriptori"
           mobile: "Mòbil"
-          settings: "Configuració"
-          translations: "Traduccions"
-          extra_scss: "SCSS extra"
           preview: "Previsualitza"
-          show_advanced: "Mostra els camps avançats"
-          hide_advanced: "Amaga els camps avançats"
-          hide_unused_fields: "Amaga els camps no utilitzats"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3494,9 +3570,6 @@ ca:
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
           stay: "Roman"
-          css_html: "CSS/HTML personalitzat"
-          edit_css_html: "Edita CSS/HTML"
-          edit_css_html_help: "No heu editat cap CSS o HTML"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"
           import_file_tip: "fitxer .tar.gz, .zip o .dcstyle.json que conté l'aparença"
@@ -3538,24 +3611,12 @@ ca:
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
           scss:
             text: "CSS"
-            title: "Introduïu el CSS personalitzat. Acceptem tots els estils CSS i SCSS vàlids."
-          header:
-            text: "Capçalera"
-            title: "Introduïu l'HTML que es mostrarà sobre la capçalera del lloc web"
           after_header:
             text: "Després de la capçalera"
-            title: "Introduïu l'HTML que es mostrarà en totes les pàgines després de la capçalera"
           footer:
             text: "Peu"
-            title: "Introduïu l'HTML que es mostrarà en el peu de pàgina"
           embedded_scss:
             text: "CSS incrustat"
-            title: "Introduïu el CSS personalitzat que es lliurarà amb la versió incrustada dels comentaris"
-          body_tag:
-            text: "Cos"
-          yaml:
-            text: "YAML"
-            title: "Definiu la configuració de l'aparença en format YAML"
           all_filter: "Tot"
           active_filter: "Actiu"
           inactive_filter: "Inactiu"
@@ -3608,6 +3669,9 @@ ca:
             description: "El color del botó M'agrada"
           selected:
             name: "seleccionat"
+          editor:
+            light: "Clar"
+            dark: "Fosc"
         robots:
           title: "Substitueix el fitxer robots.txt del lloc web:"
           warning: "Això substituirà permanentment qualsevol configuració del lloc web relacionada."
@@ -4005,8 +4069,6 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
-        delete_dont_block: "Només suprimeix"
         deleted: "S'ha suprimit l'usuari."
         delete_failed: "Hi ha hagut un error en suprimir aquest usuari. Assegureu-vos que totes les seves publicacions són suprimides abans d'intentar suprimir-lo."
         send_activation_email: "Envia el correu d'activació"

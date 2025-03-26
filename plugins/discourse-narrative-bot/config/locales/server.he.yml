@@ -172,21 +172,21 @@ he:
           - אנו דוגלים ב[התנהלות קהילתית מתורבתת](%{base_uri}/guidelines) בכל עת.
       onebox:
         instructions: |-
-          נתקדם, אפשר לבקש ממך לשתף אתי את אחד הקישורים האלה? יש להגיב **עם קישור בשורה נפרדת** והוא יתרחב אוטומטית ויציג פירוט מגניב.
+          עכשיו, אוכל לבקש ממך לשתף איתי את אחד מהקישורים האלה? יש להגיב עם **הקישור בשורה נפרדת**, והוא יתרחב אוטומטית כדי לכלול תקציר מגניב עליו.
 
-          כדי להעתיק אישור כלשהו, עליך לגעת ולהחזיר אותו בנייד, או בלחיצה ימנית בכל מכשיר אחר:
+          כדי להעתיק קישור כלשהו, יש להקיש ולהחזיק במכשירים ניידים, או לחיצה ימנית בהתקן ההצבעה שלך (עכבר/משטח מגע וכו׳):
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           אחלה! השיטה הזו אמורה לעבוד עבור כל הקישורים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. אך חשוב לזכור, הוא חייב להיות בשורה _עצמאית_, ללא שום דבר לפני או אחרי.
         not_found: |-
-          לא הצלחתי למצור את הקישור בתגובה שלך! :cry:
+          לא הצלחתי למצוא את הקישור בתגובה שלך, סליחה! :cry:
 
-          אפשר לבקש ממך להוסיף את הקישור הבא, בשורה נפרדת, בתגובה הבאה שלך?
+          אפשר לנסות להוסיף את הקישור הבא בשורה נפרדת בתגובה הבאה שלך?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           הנה תמונה של חד־קרן:

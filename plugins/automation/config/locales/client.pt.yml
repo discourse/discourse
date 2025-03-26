@@ -7,8 +7,8 @@
 pt:
   js:
     discourse_automation:
-      create: Criar
-      update: Atualização
+      back: Retroceder
+      edit: Editar
       fields:
         user:
           label: Utilizador
@@ -62,13 +62,13 @@ pt:
           fields:
             restricted_tags:
               label: Etiquetas
-            restricted_category:
-              label: Categoria
-            restricted_group:
-              label: Grupo
-            restricted_groups:
-              label: Grupos
+            restricted_categories:
+              label: Categorias
           created: Criado
+          with_images: Imagens
+          with_links: Hiperligações
+          with_code: Código
+          with_uploads: Uploads
         category_created_edited:
           fields:
             restricted_category:

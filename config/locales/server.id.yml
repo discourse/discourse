@@ -210,7 +210,7 @@ id:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari pengguna sah yang secara tidak sengaja dibatasi lajunya."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
-      twitter_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
+      x_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
     conflicting_google_user_id: 'ID Akun Google untuk akun ini telah berubah; intervensi staf diperlukan untuk alasan keamanan. Silakan hubungi staf dan arahkan mereka ke <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini karena server '%{hostname}' tidak dapat ditemukan. Alih-alih pratinjau, hanya tautan yang akan muncul di post Anda. :cry:"
@@ -1290,7 +1290,6 @@ id:
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
     default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
-    admin_sidebar_enabled_groups: "Aktifkan navigasi bilah sisi untuk UI admin untuk grup tertentu, yang menggantikan tombol navigasi admin tingkat atas."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."
@@ -1872,15 +1871,18 @@ id:
         description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
       delete_single:
         title: "Hapus"
+        complete: "Pos dihapus."
       delete_and_ignore:
         title: "Abaikan penanda dan hapus post"
         description: "Abaikan penanda dengan menghapusnya dari antrean dan hapus post; jika post pertama, hapus topiknya juga. "
+        complete: "Pos dihapus."
       delete_and_ignore_replies:
         title: "Abaikan penanda, hapus post dan balasan"
         description: "Abaikan penanda dengan menghapusnya dari antrian, hapus kiriman dan semua balasannya; jika post pertama, hapus topiknya juga"
       delete_and_agree:
         title: "Hapus postingan"
         description: "Setuju dengan menandai dan menghapus postingan ini; jika postingan pertama, hapus juga topiknya."
+        complete: "Pos dihapus."
       delete_and_agree_replies:
         title: "Hapus postingan dan balasan"
         description: "Setuju dengan penanda dan hapus post ini dan semua balasannya; jika post pertama, hapus topiknya juga."
@@ -1888,20 +1890,33 @@ id:
         title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
+        complete: "Penandaan diabaikan."
       discard_post:
         title: "Buang Post"
       ignore:
         title: "Abaikan"
+        complete: "Penandaan diabaikan."
       ignore_and_do_nothing:
         title: "Tidak melakukan apapun"
         description: "Abaikan penanda dengan menghapusnya dari antrean tanpa melakukan tindakan apa pun. Post tersembunyi akan tetap tersembunyi dan ditangani oleh alat otomatis."
+        complete: "Penandaan diabaikan."
       approve:
         title: "Terima"
+        complete: "Post disetujui."
+      approve_post:
+        complete: "Post disetujui."
+      reject_post:
+        complete: "Post ditolak."
+      approve_user:
+        complete: "Pengguna disetujui."
       reject_user:
         delete:
           title: "Hapus Pengguna"
+          complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      delete_user:
+        complete: "Pengguna dihapus."
   fallback_username: "pengguna"
   form_templates:
     errors:

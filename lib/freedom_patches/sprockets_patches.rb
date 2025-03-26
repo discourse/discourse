@@ -60,3 +60,26 @@ Sprockets::Asset.prepend(
     end
   end,
 )
+
+# Sprockets::Cache::FileStore raises `Zlib::BufError: buffer error` sometimes.
+# According to zlib documentation, Z_BUF_ERROR is not fatal and can be retried.
+# https://www.zlib.net/zlib_faq.html#faq05
+Sprockets::Cache::FileStore.prepend(
+  Module.new do
+    def set(key, value)
+      attempts = 3
+
+      begin
+        attempts -= 1
+        super
+      rescue Zlib::BufError
+        if attempts > 0
+          puts "Zlib::BufError while deflating #{key}, retrying #{attempts} more times"
+          retry
+        else
+          raise
+        end
+      end
+    end
+  end,
+)

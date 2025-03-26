@@ -74,7 +74,7 @@ class ReviewablesController < ApplicationController
           total_rows_reviewables: total_rows,
           types: meta_types,
           reviewable_types: Reviewable.types,
-          unknown_reviewable_types: Reviewable.unknown_types,
+          unknown_reviewable_types_and_sources: Reviewable.unknown_types_and_sources,
           score_types:
             ReviewableScore
               .types
@@ -323,7 +323,7 @@ class ReviewablesController < ApplicationController
   end
 
   def meta_types
-    { created_by: "user", target_created_by: "user", reviewed_by: "user", claimed_by: "user" }
+    { created_by: "user", target_created_by: "user", reviewed_by: "user", claimed_by: "claimed_by" }
   end
 
   def ensure_can_see

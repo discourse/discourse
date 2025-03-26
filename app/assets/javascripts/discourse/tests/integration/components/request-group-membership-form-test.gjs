@@ -18,9 +18,11 @@ module(
       });
       const model = { group };
 
-      await render(<template>
-        <RequestGroupMembershipForm @model={{model}} @inline={{true}} />
-      </template>);
+      await render(
+        <template>
+          <RequestGroupMembershipForm @model={{model}} @inline={{true}} />
+        </template>
+      );
 
       assert.dom("textarea").hasValue("plz accept thx");
       assert.dom(".btn-primary").isEnabled();

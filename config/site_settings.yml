@@ -125,10 +125,12 @@ branding:
     type: upload
   manifest_icon:
     default: ""
+    client: true
     type: upload
   manifest_screenshots:
     type: list
     list_type: simple
+    client: true
     default: ""
   favicon:
     default: ""
@@ -140,10 +142,16 @@ branding:
     type: upload
   opengraph_image:
     default: ""
+    client: true
     type: upload
   twitter_summary_large_image:
     default: ""
     type: upload
+    hidden: true
+  x_summary_large_image:
+    default: ""
+    type: upload
+    client: true
 
 basic:
   display_local_time_in_user_card:
@@ -488,6 +496,10 @@ basic:
     default: false
     hidden: true
     client: true
+  interface_color_selector:
+    client: true
+    enum: "InterfaceColorSelectorSetting"
+    default: "disabled"
 
 login:
   invite_only:
@@ -596,12 +608,14 @@ login:
     client: true
   auth_immediately:
     default: true
+    client: true
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_require_interaction: true
   enable_discourse_connect:
     client: true
     default: false
@@ -675,7 +689,7 @@ login:
     min: 1
     max: 175200
   full_page_login:
-    default: false
+    default: true
     client: true
   show_signup_form_email_instructions:
     client: true
@@ -798,10 +812,10 @@ users:
   enable_user_directory:
     client: true
     default: true
-  allow_anonymous_posting:
+  allow_anonymous_mode:
     default: false
     client: true
-  allow_anonymous_likes:
+  allow_likes_in_anonymous_mode:
     default: false
     client: true
   anonymous_posting_min_trust_level:
@@ -898,6 +912,9 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+  max_automatic_membership_email_domains:
+    default: 50
+    hidden: true
 
 posting:
   min_post_length:
@@ -916,6 +933,9 @@ posting:
       ja: 8
       zh_CN: 8
       zh_TW: 8
+  prevent_uploads_only_posts:
+    client: true
+    default: false
   min_personal_message_post_length:
     client: true
     min: 1
@@ -1301,14 +1321,7 @@ posting:
   watched_words_regular_expressions:
     client: true
     default: false
-  enable_diffhtml_preview:
-    hidden: true
-    default: false
-    client: true
   enable_fast_edit:
-    default: true
-    client: true
-  enable_quote_copy:
     default: true
     client: true
   old_post_notice_days:
@@ -1960,7 +1973,7 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  allow_tl0_and_anonymous_users_to_flag_illegal_content:
+  allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
     client: true
@@ -2231,14 +2244,17 @@ security:
     type: list
     default: ""
     list_type: compact
+    requires_confirmation: "simple"
   blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_user_agents:
     type: list
     default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_rate: 60
   content_security_policy:
     default: true
@@ -2659,13 +2675,6 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
-  admin_sidebar_enabled_groups:
-    type: group_list
-    list_type: compact
-    default: "1|2"
-    allow_any: false
-    refresh: true
-    area: "group_permissions|navigation"
 
 embedding:
   embed_by_username:
@@ -2845,6 +2854,11 @@ search:
     client: true
     type: enum
     enum: "SearchSortOrderSiteSetting"
+  search_experience:
+    default: search_icon
+    client: true
+    type: enum
+    enum: "SearchExperienceSiteSetting"
 
 uncategorized:
   version_checks:
@@ -3188,6 +3202,10 @@ uncategorized:
     client: true
     default: true
 
+  enable_welcome_banner:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -3505,6 +3523,9 @@ dashboard:
     client: true
 
 experimental:
+  experimental_auto_grid_images:
+    default: false
+    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -3524,6 +3545,15 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
+  experimental_admin_search_enabled_groups:
+    hidden: true
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
   glimmer_topic_list_mode:
     client: true
     type: enum
@@ -3531,7 +3561,30 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
+  glimmer_post_menu_mode:
+    client: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: enabled
+  glimmer_post_stream_mode_auto_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_stream_mode:
+    client: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
   enable_rich_text_paste:
     client: true
     default: true
@@ -3546,6 +3599,7 @@ experimental:
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
+    client: true
   rich_editor:
     client: true
     default: false

@@ -208,6 +208,10 @@ lt:
       dismiss: "Praleisti"
     bootstrap_mode: "Darbo pradžia"
     back_button: "Atgal"
+    welcome_banner:
+      header:
+        anonymous_members: "Sveiki atvykę į %{site_name}!"
+      search: "Paieška"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
@@ -398,9 +402,6 @@ lt:
       remove_confirmation: "Ar tikrai norite ištrinti šį juodraštį?"
       new_topic: "Naujos temos juodraštis"
       new_private_message: "Naujas asmeninės žinutės juodraštis"
-      abandon:
-        yes_value: "Išmesti"
-        no_value: "Tęsti redagavimą"
     topic_count_all:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -1854,13 +1855,6 @@ lt:
       password_label: "Slaptažodis"
     password_reset:
       continue: "Tėsti į %{site_name}"
-    emoji_set:
-      apple_international: "Apple"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Žinutės"
     category_page_style:
       categories_only: "Tiktai Kategorijos"
       categories_with_featured_topics: "Kategorijos su populiariomis temomis"
@@ -2141,9 +2135,8 @@ lt:
         votes_released: "Balsavimas buvo išleistas"
         admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
+      delete: "Pašalinti"
       uploading: "Įkeliama"
-      processing: "Apdorojamas įkėlimas"
-      select_file: "Pasirinkti failus"
       default_image_alt_text: pveikslėlis
     search:
       sort_by: "Rūšiuoti pagal"
@@ -2777,10 +2770,10 @@ lt:
         many: "tau ir %{count} žmonėms patiko šis įrašas"
         other: "tau ir %{count} žmonėms patiko šis įrašas"
       sr_post_like_count_button:
-        one: "%{count} asmeniui patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
-        few: "%{count} asmenims patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
-        many: "%{count} žmonių patiko šis įrašas. Spustelėkite norėdami peržiūrėti"
-        other: "%{count} žmonėms patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
+        one: "%{count} žmogui patiko šis įrašas."
+        few: "%{count} žmonėms patinka šis įrašas."
+        many: "%{count} žmonėms patinka šis įrašas."
+        other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       errors:
@@ -2869,8 +2862,6 @@ lt:
             few: "ir %{count}kitų mėgsta tai"
             many: "ir %{count}kitų mėgsta tai "
             other: "ir %{count} kitų mėgsta tai"
-          sr_post_likers_list_description: "vartotojai, kuriems patiko šis pranešimas"
-          sr_post_readers_list_description: "vartotojai, kurie perskaitė šį pranešimą"
         by_you:
           off_topic: "Tu pažymėjai tai kaip \"ne į temą\"."
           spam: "Tu pažymėjai tai, kaip šiukšlę"
@@ -3368,6 +3359,9 @@ lt:
         title: "Paieškos meniu"
         prev_next: "%{shortcut} Perkelti pasirinkimą aukštyn ir žemyn"
         full_page_search: "%{shortcut} Paleidžiama viso puslapio paieška"
+      admin:
+        title: "Administratorius"
+        search_prev_next: "%{shortcut} Perkelti pasirinkimą aukštyn ir žemyn"
     badges:
       granted_on: "Suteikta %{date}"
       title: Ženkleliai
@@ -3623,6 +3617,10 @@ lt:
             invite:
               content: "Kviesti"
       filter: "Filtruoti..."
+      footer:
+        interface_color_selector:
+          light: "Šviesi"
+          dark: "Tamsi"
     until: "Iki:"
     form_templates:
       upload_field:
@@ -3659,15 +3657,38 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
-        sidebar_link:
-          all: "Visi pranešimai"
+      config_sections:
+        account:
+          title: "Paskyra"
+        reports:
+          title: "Pranešimai"
+        community:
+          title: "Bendruomenė"
+        appearance:
+          title: "išvaizda"
+        email:
+          title: "El. paštas"
+        security:
+          title: "Apsauga"
+        plugins:
+          title: "Apklausos"
       config:
         developer:
           title: "Programuotojams"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderavimas"
         files:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
+        branding:
+          title: "Prekinis ženklas"
+          logo:
+            form:
+              mobile: "Mobilus"
+              email: "El. paštas"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3676,7 +3697,7 @@ lt:
           title: "Laukelio nustatymai"
         other:
           title: "Kiti"
-        search:
+        search_everything:
           title: "Paieška"
         security:
           title: "Apsauga"
@@ -3684,6 +3705,68 @@ lt:
           title: "Šlamštas"
         user_api:
           title: "Nario API"
+        dashboard:
+          title: "Apžvalga"
+        users:
+          title: "Vartotojai"
+        groups:
+          title: "Grupės"
+        backups:
+          title: "Atsarginės kopijos"
+          sub_pages:
+            logs:
+              title: "Įrašai"
+        reports:
+          title: "Pranešimai"
+        badges:
+          title: "Trofėjai"
+        permalinks:
+          title: "Laikinos Nuorodos"
+          header_description: "Peradresavimai taikyti URL, kurių forumas nežino"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temos"
+        components:
+          title: "Komponentai"
+        email:
+          sub_pages:
+            templates:
+              title: "Juodraščiai"
+            sent:
+              title: "Išsiųsti"
+            skipped:
+              title: "Praleisti"
+            received:
+              title: "Gauta"
+            rejected:
+              title: "Atmesta"
+        email_appearance:
+          title: "išvaizda"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kai kažkas kuria naują paskyrą, naudojamas el. pašto adresas bus patikrintas, o registracija bus užblokuota"
+            screened_ips:
+              title: "Tikrinti IP adresai"
+            screened_urls:
+              title: "Tikrintos nuorodos"
+              header_description: "Sąraše esantys URL buvo naudojami vartotojų, kurie yra pažymėti, kaip kenkėjai"
+        embedding:
+          title: "Įterpimai"
+      search:
+        title: "Paieška"
+        result_types:
+          theme:
+            one: "Tema"
+            few: "Temos"
+            many: "Temos"
+            other: "Temos"
+          component:
+            one: "Komponentas"
+            few: "Komponentai"
+            many: "Komponentai"
+            other: "Komponentai"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -3843,6 +3926,7 @@ lt:
         title: "API"
         key: "Raktas"
         created: Sukurta
+        scope: Apimtis
         updated: Atnaujinta
         never_used: Niekada
         generate: "Generuoti"
@@ -3963,9 +4047,8 @@ lt:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigacija"
-          themes: "Temos"
-          components:
-            title: "Komponentai"
+          themes_and_components:
+            keywords: "išplėtimas"
       email_settings:
         sidebar_link:
           appearance: "išvaizda"
@@ -3984,7 +4067,6 @@ lt:
           update: "Atnaujinti"
           saved: "išsaugota!"
         flags:
-          header: "Moderavimas"
           description: "Aprašymas"
           enabled: "Galimas?"
           edit: "Redaguoti"
@@ -4004,12 +4086,20 @@ lt:
         embeddable_host:
           edit: "Redaguoti"
           delete: "Pašalinti"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Pakeisti"
+          install: "diegti"
           themes:
             title: "Temos"
+          components:
+            title: "Komponentai"
         user_fields:
           type: "Tipas"
           delete: "Pašalinti"
+        color_palettes:
+          palette_name: "Vardas"
+          colors:
+            title: "Spalvos"
       plugins:
         title: "Plugins"
         name: "Vardas"
@@ -4022,17 +4112,6 @@ lt:
         howto: "Kaip galiu instaliuoti plungin'us?"
         author: "Pagal %{author}"
         learn_more: "Sužinoti daugiau"
-        sidebar_link:
-          installed: "Įrašyta"
-      advanced:
-        sidebar_link:
-          developer: "Programuotojams"
-          embedding: "Įterpimai"
-          user_api: "Nario API"
-          onebox: "Laukelio nustatymai"
-          files: "Failai"
-          other_options: "Kiti"
-          search: "Paieška"
       backups:
         title: "Atsarginės kopijos"
         menu:
@@ -4145,16 +4224,10 @@ lt:
           common: "Dažni"
           desktop: "Darbalaukis"
           mobile: "Mobilus"
-          settings: "Nustatymai"
-          translations: "Vertimai"
-          extra_scss: "Papildomas SCSS"
           extra_files: "Papildomi failai"
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
-          show_advanced: "Rodyti išplėstinius laukus"
-          hide_advanced: "Slėpti išplėstinius laukus"
-          hide_unused_fields: "Slėpti nenaudojamus laukus"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
@@ -4197,9 +4270,6 @@ lt:
           unsaved_parent_themes: "Jūs nepriskyrėte komponento temoms, ar norite judėti toliau?"
           discard: "Išmesti"
           stay: "Likti"
-          css_html: "Pasirinktinis CSS/HTML"
-          edit_css_html: "Redaguoti CSS/HTML"
-          edit_css_html_help: "Jūs neredagavote jokio CSS ar HTML"
           delete_upload_confirm: "Ištrinti šį įkėlimą? (Tema CSS gali nustoti veikti!)"
           component_on_themes: "Įtraukite komponentą į šias temas"
           included_components: "Įtraukti komponentai"
@@ -4242,25 +4312,14 @@ lt:
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
           scss:
             text: "CSS"
-            title: "Įveskite pasirinktinį CSS, mes priimame visus galiojančius CSS ir SCSS stilius"
-          header:
-            text: "Viršus"
-            title: "Įveskite HTML, kad būtų rodomas virš svetainės antraštės"
           after_header:
             text: "Po viršaus"
-            title: "Įveskite HTML, kad būtų rodomas visuose puslapiuose po antraštėmis"
           footer:
             text: "Apačia"
-            title: "Įveskite HTML, kad rodyti puslapio apačioje"
           embedded_scss:
             text: "Įterptas CSS"
           color_definitions:
             text: "Spalvų apibrėžimai"
-          body_tag:
-            text: "Turinys"
-          yaml:
-            text: "YAML"
-            title: "Apibrėžkite temos nustatymus YAML formatu"
           all_filter: "Visos"
           active_filter: "Aktyvūs"
           inactive_filter: "Neaktyvus"
@@ -4315,6 +4374,9 @@ lt:
             description: "Mygtuko \"Patinka\" spalva."
           selected:
             name: "pasirinktas"
+          editor:
+            light: "Šviesi"
+            dark: "Tamsi"
         robots:
           title: "Nepaisykite savo svetainės robots.txt failo:"
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."
@@ -4760,8 +4822,6 @@ lt:
           few: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
           many: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
           other: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
-        delete_and_block: "Ištrinti ir <b>užblokuoti</b> šį el. paštą ir IP adresą"
-        delete_dont_block: "Tik Ištrinti"
         deleted: "Šis vartotojas buvo ištrintas."
         delete_failed: "Įvyko klaida ištrinant vartotoją. Įsitikinkite, kad visi pranešimai buvo ištrinti prieš trinant vartotoją."
         send_activation_email: "Siųsti aktyvacijos el. laišką"

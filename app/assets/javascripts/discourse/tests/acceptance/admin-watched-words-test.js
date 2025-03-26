@@ -95,7 +95,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await click(".watched-word-form .btn-primary");
     assert
-      .dom(".watched-words-list .watched-word span:first-of-type")
+      .dom(".watched-words-list .watched-word .watched-word__content")
       .hasText("Discourse");
     assert
       .dom(".watched-words-list .watched-word .case-sensitive")
@@ -108,7 +108,7 @@ acceptance("Admin - Watched Words", function (needs) {
     await click(".watched-word-form .btn-primary");
 
     assert
-      .dom(".watched-words-list .watched-word span:first-of-type")
+      .dom(".watched-words-list .watched-word .watched-word__content")
       .hasText("discourse");
     assert
       .dom(".watched-words-list .watched-word .case-sensitive")

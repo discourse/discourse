@@ -123,12 +123,6 @@ sw:
       onebox:
         reply: |-
           Vizuri! Hii itafaa kwa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> viungo. Kumbuka, inabidi kiwe kwenye mstari mmoja _yenyewe_, bila maneno yoyote mbele, au nyuma yake.
-        not_found: |-
-          Samahani, Sijaona kiungo kwenye jibu lako! :cry:
-
-          Unaweza kuongeza kiungo, kwenye mstari wake pekee, kwenye jibu lako lipya?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Hii ni picha ya farasi:

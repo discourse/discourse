@@ -23,9 +23,11 @@ module("Integration | Helper | raw", function (hooks) {
   test("can render a template", async function (assert) {
     addRawTemplate("raw-test", (params) => `raw test ${params.someArg}`);
 
-    await render(<template>
-      <span>{{raw "raw-test" someArg="foo"}}</span>
-    </template>);
+    await render(
+      <template>
+        <span>{{raw "raw-test" someArg="foo"}}</span>
+      </template>
+    );
 
     assert.dom(`span`).hasText("raw test foo");
   });
@@ -34,9 +36,7 @@ module("Integration | Helper | raw", function (hooks) {
     let willDestroyCalled = false;
 
     class MyComponent extends Component {
-      <template>
-        Hello from glimmer {{@data.someArg}}
-      </template>
+      <template>Hello from glimmer {{@data.someArg}}</template>
 
       willDestroy() {
         super.willDestroy(...arguments);
@@ -58,16 +58,18 @@ module("Integration | Helper | raw", function (hooks) {
       "service:render-glimmer"
     );
 
-    await render(<template>
-      {{! RenderGlimmerContainer is normally rendered by application.hbs
+    await render(
+      <template>
+        {{! RenderGlimmerContainer is normally rendered by application.hbs
           but this is not an acceptance test so we gotta include it manually }}
-      <RenderGlimmerContainer />
-      <span>
-        {{#if testState.showRawTemplate}}
-          {{raw "raw-test" someArg="foo"}}
-        {{/if}}
-      </span>
-    </template>);
+        <RenderGlimmerContainer />
+        <span>
+          {{#if testState.showRawTemplate}}
+            {{raw "raw-test" someArg="foo"}}
+          {{/if}}
+        </span>
+      </template>
+    );
 
     assert.dom(`span`).hasText("Hello from glimmer foo");
     assert.strictEqual(
@@ -96,10 +98,12 @@ module("Integration | Helper | raw", function (hooks) {
       rawRenderGlimmer(this, "span.bar", SimpleTemplate)
     );
 
-    await render(<template>
-      <RenderGlimmerContainer />
-      {{raw "raw-test"}}
-    </template>);
+    await render(
+      <template>
+        <RenderGlimmerContainer />
+        {{raw "raw-test"}}
+      </template>
+    );
 
     assert.dom("span.bar").hasText(/^baz$/);
   });
@@ -113,9 +117,11 @@ module("Integration | Helper | raw", function (hooks) {
     addRawTemplate("raw-test", compile(template));
 
     const items = [1, 2];
-    await render(<template>
-      <span>{{raw "raw-test" string="foo" items=items}}</span>
-    </template>);
+    await render(
+      <template>
+        <span>{{raw "raw-test" string="foo" items=items}}</span>
+      </template>
+    );
 
     assert.dom("span").hasText("foo 1 foo 2");
   });

@@ -47,8 +47,8 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-nav .edit-category-topic-template a");
     assert
-      .dom(".edit-category-tab-topic-template")
-      .isVisible("it can switch to topic template tab");
+      .dom(".edit-category-tab-topic-template.active")
+      .exists("it can switch to the topic template tab");
 
     await click(".edit-category-nav .edit-category-tags a");
     await click("button.add-required-tag-group");
@@ -106,7 +106,7 @@ acceptance("New category preview", function (needs) {
     await visit("/new-category");
 
     let previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
@@ -115,7 +115,7 @@ acceptance("New category preview", function (needs) {
     await fillIn(".hex-input", "FF00FF");
 
     previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 

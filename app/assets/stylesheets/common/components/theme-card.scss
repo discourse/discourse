@@ -17,8 +17,10 @@
   transition: box-shadow 0.3s ease-in-out;
 
   &.--updating {
-    animation: updating 3s ease-in-out 1,
+    animation:
+      updating 3s ease-in-out 1,
       updatingInfinite 3s ease-in-out 3s infinite;
+
     @keyframes updating {
       0% {
         box-shadow: 0 0 0 3px transparent;
@@ -35,6 +37,7 @@
         border: 1px solid var(--success);
       }
     }
+
     @keyframes updatingInfinite {
       0% {
         box-shadow: 0 0 0 3px var(--success-low);
@@ -56,6 +59,7 @@
   &.--updating .d-icon-arrows-rotate {
     animation: rotate 3s linear infinite;
     margin-right: 0.45em;
+
     @keyframes rotate {
       0% {
         transform: rotate(0deg);

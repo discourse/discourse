@@ -28,6 +28,13 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
+    # automatically redirect to the topic if the user is logged in and can see it
+    if current_user
+      if topic = invite.topics.first
+        return redirect_to(topic.url) if current_user.guardian.can_see?(topic)
+      end
+    end
+
     if invite.present? && invite.redeemable?
       show_invite(invite)
     else
@@ -519,7 +526,7 @@ class InvitesController < ApplicationController
 
     hidden_email = email != invite.email
 
-    if hidden_email || invite.email.nil?
+    if hidden_email || invite.email.nil? || !SiteSetting.use_email_for_username_and_name_suggestions
       username = ""
     else
       username = UserNameSuggester.suggest(invite.email)

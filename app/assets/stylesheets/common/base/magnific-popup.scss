@@ -530,8 +530,8 @@ button {
   }
 
   @if $include-mobile-layout-for-image {
-    @media all and (max-width: 800px) and (orientation: landscape),
-      screen and (max-height: 300px) {
+    @media all and (width <= 800px) and (orientation: landscape),
+      screen and (height <= 300px) {
       /**
        * Remove all paddings around the image on small screen
        */
@@ -597,9 +597,9 @@ button {
 }
 
 // Scale navigation arrows and reduce padding from sides
-@media all and (max-width: 900px) {
+@media all and (width <= 900px) {
   .mfp-arrow {
-    @include transform(scale(0.75));
+    transform: scale(0.75);
   }
 
   .mfp-arrow-left {
@@ -620,10 +620,11 @@ button {
   /* start state */
   .mfp-content {
     opacity: 0;
+    transform: scale(0.8);
+
     @media screen and (prefers-reduced-motion: no-preference) {
       transition: all 0.2s;
     }
-    transform: scale(0.8);
   }
 
   &.mfp-bg {
@@ -635,7 +636,7 @@ button {
   &.mfp-ready {
     .mfp-content {
       opacity: 1;
-      @include transform(scale(1));
+      transform: scale(1);
     }
 
     &.mfp-bg {
@@ -646,7 +647,7 @@ button {
   /* animate out */
   &.mfp-removing {
     .mfp-content {
-      @include transform(scale(0.8));
+      transform: scale(0.8);
       opacity: 0;
     }
 

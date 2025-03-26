@@ -1,14 +1,21 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
+  "post-menu-toggle-like-action",
+  "topic-list-item-click",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "admin-reports-show-query-params",
+  "bulk-select-in-nav-controls",
+  "category-available-views",
   "category-description-text",
   "category-display-name",
+  "composer-service-cannot-submit-post",
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
@@ -23,9 +30,20 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "navigation-bar-dropdown-mode",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
+  "post-class",
   "post-menu-buttons",
-  "post-menu-buttons-collapsed",
+  "post-menu-collapsed",
+  "post-meta-data-poster-name-suppress-similar-name",
+  "post-notice-component",
+  "post-show-topic-map",
+  "post-small-action-class",
+  "post-small-action-custom-component",
+  "post-small-action-icon",
+  "post-text-selection-prevent-close",
+  "site-setting-enable-welcome-banner",
+  "site-setting-search-experience",
   "small-user-attrs",
+  "tag-separator",
   "topic-list-class",
   "topic-list-columns",
   "topic-list-header-sortable-column",
