@@ -311,12 +311,6 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("fonts", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("logo", function () {
-          this.route("settings", { path: "/" });
-        });
         this.route("branding");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });

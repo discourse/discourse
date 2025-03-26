@@ -175,3 +175,158 @@
     width: var(--form-kit-small-input) !important;
   }
 }
+
+.admin-fonts-form {
+  &__more {
+    font-size: var(--font-down-1-rem);
+  }
+
+  .form-kit__field-custom {
+    width: 100% !important;
+
+    .form-kit__control-custom {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .admin-fonts-form__button-option {
+        border: 1px solid var(--primary-low);
+        font-size: var(--font-down-1-rem);
+        max-height: 4em;
+        height: 50px;
+        margin-bottom: 1em;
+        padding: 0 0.65em;
+
+        &.active {
+          border: 1px solid var(--tertiary);
+        }
+
+        &.font {
+          width: 32% !important;
+
+          /* stylelint-disable font-family-no-missing-generic-family-keyword */
+          &.arial {
+            font-family: Arial;
+          }
+
+          &.helvetica {
+            font-family: Helvetica;
+          }
+
+          &.inter {
+            font-family: Inter;
+          }
+
+          &.lato {
+            font-family: Lato;
+          }
+
+          &.lora {
+            font-family: Lora;
+          }
+
+          &.merriweather {
+            font-family: Merriweather;
+          }
+
+          &.montserrat {
+            font-family: Monsterrat;
+          }
+
+          &.mukta {
+            font-family: Mukta;
+          }
+
+          &.noto_sans {
+            font-family: "Noto Sans";
+          }
+
+          &.noto_sans_jp {
+            font-family: "Noto Sans JP";
+          }
+
+          &.nunito {
+            font-family: Nunito;
+          }
+
+          &.open_sans {
+            font-family: "Open Sans";
+          }
+
+          &.oswald {
+            font-family: Oswald;
+          }
+
+          &.oxanium {
+            font-family: Oxanium;
+          }
+
+          &.playfair_display {
+            font-family: "Playfair Display";
+          }
+
+          &.poppins {
+            font-family: Poppins;
+          }
+
+          &.ptsans {
+            font-family: "PT Sans";
+          }
+
+          &.raleway {
+            font-family: Raleway;
+          }
+
+          &.roboto {
+            font-family: Roboto;
+          }
+
+          &.roboto_mono {
+            font-family: "Roboto Mono";
+          }
+
+          &.roboto_condensed {
+            font-family: "Roboto Condensed";
+          }
+
+          &.roboto_slab {
+            font-family: "Roboto Slab";
+          }
+
+          &.source_sans_pro {
+            font-family: "Source Sans Pro";
+          }
+
+          &.system {
+            font-family: System;
+          }
+
+          &.ubuntu {
+            font-family: Ubuntu;
+          }
+        }
+
+        &.text-size {
+          width: 24% !important;
+
+          &.smaller {
+            font-size: var(--base-font-size-smaller);
+          }
+
+          &.normal {
+            font-size: var(--base-font-size-normal);
+          }
+
+          &.larger {
+            font-size: var(--base-font-size-larger);
+          }
+
+          &.largest {
+            font-size: var(--base-font-size-largest);
+          }
+        }
+      }
+    }
+  }
+}

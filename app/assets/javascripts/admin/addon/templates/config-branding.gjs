@@ -2,6 +2,7 @@ import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
+import AdminBrandingFontsForm from "admin/components/admin-branding-fonts-form";
 import AdminBrandingLogoForm from "admin/components/admin-branding-logo-form";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
@@ -29,6 +30,19 @@ export default RouteTemplate(
           >
             <:content>
               <AdminBrandingLogoForm />
+            </:content>
+          </AdminConfigAreaCard>
+        </div>
+      </div>
+      <div class="admin-config-area">
+        <div class="admin-config-area__primary-content">
+          <AdminConfigAreaCard
+            @heading="admin.config.branding.fonts.title"
+            @collapsable={{true}}
+            class="admin-config-area-branding__fonts"
+          >
+            <:content>
+              <AdminBrandingFontsForm />
             </:content>
           </AdminConfigAreaCard>
         </div>
