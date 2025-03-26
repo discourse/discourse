@@ -155,6 +155,14 @@ const extension = {
         bbCodeAttrs.push(`multiQuote="true"`);
       }
 
+      if (node.attrs.threadId) {
+        bbCodeAttrs.push(`threadId="${node.attrs.threadId}"`);
+      }
+
+      if (node.attrs.threadTitle) {
+        bbCodeAttrs.push(`threadTitle="${node.attrs.threadTitle}"`);
+      }
+
       state.write(`[chat ${bbCodeAttrs.join(" ")}]\n`);
 
       state.write(node.attrs.rawContent);
