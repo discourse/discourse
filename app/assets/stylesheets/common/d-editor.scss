@@ -322,7 +322,7 @@
     font-size: var(--font-down-1);
   }
 
-  .btn:focus {
+  .btn:focus-visible {
     @include default-focus;
   }
 
