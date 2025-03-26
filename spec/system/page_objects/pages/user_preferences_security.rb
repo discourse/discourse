@@ -10,9 +10,10 @@ module PageObjects
 
       def visit_second_factor(password)
         click_button "Manage Two-Factor Authentication"
-
-        find(".dialog-body input#password").fill_in(with: password)
-        find(".dialog-body .btn-primary").click
+        find(".confirm-session input#password").fill_in(with: password)
+        find(".confirm-session .btn-primary:not([disabled])").click
+        has_no_css?(".confirm-session")
+        self
       end
     end
   end

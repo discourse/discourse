@@ -209,11 +209,11 @@ shared_examples "forgot password scenarios" do
 end
 
 describe "User resetting password", type: :system do
-  skip "when desktop" do
+  describe "when desktop" do
     include_examples "forgot password scenarios"
   end
 
-  skip "when mobile", mobile: true do
+  describe "when mobile", mobile: true do
     include_examples "forgot password scenarios"
   end
 end
