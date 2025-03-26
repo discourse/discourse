@@ -1,15 +1,12 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import sinon from "sinon";
 import {
   convertIconClass,
   iconHTML,
   iconNode,
+  isTesting,
 } from "discourse/lib/icon-library";
-import {
-  disableRaiseOnDeprecation,
-  enableRaiseOnDeprecation,
-} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utility | icon-library", function (hooks) {
   setupTest(hooks);
@@ -52,10 +49,13 @@ module("Unit | Utility | icon-library", function (hooks) {
   });
 
   test("fa5 remaps", function (assert) {
-    withSilencedDeprecations("discourse.fontawesome-6-upgrade", () => {
+    const stub = sinon.stub(isTesting);
+    stub.returns(false);
+
+    try {
       const adjustIcon = iconHTML("adjust");
       assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
-      assert.true(adjustIcon.includes('href="#adjust"'), "has original icon");
+      assert.true(adjustIcon.includes('href="#adjust"'), "keeps original icon");
 
       const farIcon = iconHTML("far-dot-circle");
       assert.true(
@@ -64,18 +64,19 @@ module("Unit | Utility | icon-library", function (hooks) {
       );
       assert.true(
         farIcon.includes('href="#far-dot-circle"'),
-        "has original icon"
+        "keeps original icon"
       );
-    });
+    } finally {
+      stub.restore();
+    }
   });
 
-  test("fa5 remaps throws error", function (assert) {
-    disableRaiseOnDeprecation();
+  test("fa remaps throws error", function (assert) {
     assert.throws(
       () => {
         iconHTML("adjust");
       },
-      /Deprecation notice: The icon name "adjust" has been updated to "circle-half-stroke".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      `Missing icon error: The icon name "adjust" has been removed and should be updated to "circle-half-stroke" in your code. More info at https://meta.discourse.org/t/325349.`,
       "throws an error if icon name is deprecated"
     );
 
@@ -83,9 +84,8 @@ module("Unit | Utility | icon-library", function (hooks) {
       () => {
         iconHTML("far-dot-circle");
       },
-      /Deprecation notice: The icon name "far-dot-circle" has been updated to "far-circle-dot".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      `Missing icon error: The icon name "far-dot-circle" has been removed and should be updated to "far-circle-dot" in your code. More info at https://meta.discourse.org/t/325349.`,
       "throws an error if icon name is deprecated"
     );
-    enableRaiseOnDeprecation();
   });
 });

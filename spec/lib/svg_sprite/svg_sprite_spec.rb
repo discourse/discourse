@@ -99,7 +99,7 @@ RSpec.describe SvgSprite do
 
   it "raises an error in test for deprecated icons" do
     allow(Rails.env).to receive(:test?).and_return(true)
-    expect { SvgSprite.search("fa-gamepad") }.to raise_error(Discourse::Deprecation)
+    expect { SvgSprite.search("fa-gamepad") }.to raise_error(Discourse::MissingIconError)
   end
 
   it "includes icons defined in theme settings" do
