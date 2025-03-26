@@ -549,7 +549,7 @@ createWidget("post-contents", {
 
     const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
     result.push(
-      // TODO (glimmer-post):
+      // TODO (glimmer-post-stream):
       //  Once this widget shim is removed the `<section>...</section>` tag needs to be added to the PostMenu component
       new RenderGlimmer(
         this,
@@ -1180,7 +1180,7 @@ export default createWidget("post", {
   },
 });
 
-// TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+// TODO (glimmer-post-stream): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
 registerWidgetShim(
   "glimmer-post",
   "div",
