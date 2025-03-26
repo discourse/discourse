@@ -27,7 +27,7 @@ export default class ReviewableUser extends Component {
 
   @discourseComputed("reviewable.payload")
   isScrubbed(payload) {
-    return !!payload.scrubbed_by;
+    return !!payload?.scrubbed_by;
   }
 
   @action
