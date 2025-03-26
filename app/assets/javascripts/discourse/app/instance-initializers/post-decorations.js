@@ -247,7 +247,7 @@ export default {
         (element, helper) => {
           schedule("afterRender", () => {
             const tables = element.querySelectorAll(".md-table table");
-            generatePopups(tables, helper.model || helper.widget.attrs);
+            generatePopups(tables, helper.model);
           });
         },
         {
