@@ -65,7 +65,10 @@ lt:
             restricted_categories:
               label: Kategorijos
           created: Sukurta
-          topics: Temos
+          with_images: Paveiksliukai
+          with_links: Nuorodos
+          with_code: Kodas
+          with_uploads: Įkėlimai
         category_created_edited:
           fields:
             restricted_category:

@@ -124,7 +124,6 @@ export default class ComposerService extends Service {
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
-  @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
   @alias("site.categoriesList") categories;
   @alias("topicController.model") topicModel;
   @reads("currentUser.staff") isStaffUser;

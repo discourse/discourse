@@ -65,7 +65,10 @@ gl:
             restricted_categories:
               label: Categorías
           created: Creado
-          topics: Temas
+          with_images: Imaxes
+          with_links: Ligazóns
+          with_code: Código
+          with_uploads: Cargas
         category_created_edited:
           fields:
             restricted_category:

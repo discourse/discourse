@@ -216,4 +216,9 @@ export default class Bookmark extends RestModel {
   bookmarkableTopicAlike(bookmarkable_type) {
     return ["Topic", "Post"].includes(bookmarkable_type);
   }
+
+  @discourseComputed("reminder_at", "name")
+  hasMetadata() {
+    return this.reminder_at || this.name;
+  }
 }

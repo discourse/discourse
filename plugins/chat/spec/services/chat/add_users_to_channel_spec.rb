@@ -65,6 +65,14 @@ RSpec.describe Chat::AddUsersToChannel do
         )
       end
 
+      it "doesn't include users with dms disabled" do
+        users.first.user_option.update!(allow_private_messages: false)
+
+        expect(result.target_users.map(&:username)).to contain_exactly(
+          *users[1..-1].map(&:username),
+        )
+      end
+
       it "creates memberships" do
         expect { result }.to change { channel.user_chat_channel_memberships.count }.by(
           users.count + 1,

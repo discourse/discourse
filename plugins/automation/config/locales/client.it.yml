@@ -163,11 +163,8 @@ it:
               description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
             restricted_categories:
               label: Categorie
-            restricted_groups:
+            restricted_inbox_groups:
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
-            ignore_group_members:
-              label: Ignora i membri del gruppo
-              description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
             ignore_automated:
               label: Ignora automatizzati
               description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai messaggi creati via e-mail
@@ -182,7 +179,10 @@ it:
               description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
           created: Creato
           edited: Modificato
-          topics: Argomenti
+          with_images: Immagini
+          with_links: Collegamenti
+          with_code: Codice
+          with_uploads: Caricamenti
         user_updated:
           fields:
             user_profile:

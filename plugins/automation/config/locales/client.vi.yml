@@ -63,7 +63,10 @@ vi:
             restricted_categories:
               label: Danh mục
           created: Tạo bởi
-          topics: Các chủ đề
+          with_images: Hình ảnh
+          with_links: Liên kết
+          with_code: Mã
+          with_uploads: Tải lên
         category_created_edited:
           fields:
             restricted_category:

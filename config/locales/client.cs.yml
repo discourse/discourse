@@ -252,6 +252,7 @@ cs:
     back_button: "Zpět"
     welcome_banner:
       header:
+        logged_in_members: "Vítejte zpět, %{preferred_display_name}!"
         anonymous_members: "Vítejte v %{site_name}!"
       search: "Vyhledat"
     themes:
@@ -2835,6 +2836,8 @@ cs:
       uploading: "Nahrávání…"
       show_preview: "zobrazit náhled"
       hide_preview: "skrýt náhled"
+      switch_to_markdown: "Přepnout na standardní Markdown editor"
+      switch_to_rich_text: "Přepnout na nový textový editor"
       quote_post_title: "Citovat celý příspěvek"
       bold_label: "B"
       bold_title: "Tučně"
@@ -3072,8 +3075,11 @@ cs:
         new_features: "Byly vydány nové funkce Discourse!"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
+      change: "Změnit"
       delete: "Smazat"
       uploading: "Nahrávám"
+      processing: "Nahrává se"
+      select_file: "Kliknutím nahrajte nebo přetáhněte soubor"
       default_image_alt_text: obrázek
     search:
       sort_by: "Řadit podle"
@@ -5502,7 +5508,6 @@ cs:
           header_description: "Sledovaná slova jsou moderátorské nástroje, které mohou provádět různé akce včetně blokování, cenzurování, propojování nebo nahlašování příspěvků obsahujících určitá slova."
         color_palettes:
           title: "Palety barev"
-          header_description: "Barevné palety definují základní barvy používané napříč rozhraním vašich stránek, zatímco motivy mohou poskytnout další styly, rozložení a komponenty. Obojí se podílí na vytvoření jedinečného vzhledu a pocitu vašeho webu. Mohou být také zpřístupněny uživatelům k výběru jejich předvolby."
         emoji:
           title: "Smajlíky :)"
           header_description: "Přidejte nové emotikony, které budou dostupné všem. Vyberte více souborů a vytvořte emotikony pomocí jejich názvů souborů. Vybraná skupina bude použita pro všechny soubory, které jsou přidány současně."
@@ -6639,7 +6644,6 @@ cs:
           title: "Barvy"
           edit: "Upravit palety barev"
           long_title: "Palety barev"
-          description: "Barevné palety definují základní barvy používané v rozhraní webu, zatímco motivy mohou poskytovat další styly, rozvržení a komponenty – obojí může společně vytvářet jedinečný vzhled webu a obojí lze zpřístupnit uživatelům, aby si mohli vybrat, co jim vyhovuje."
           about: "Upravte barvy používané motivy. Pro začátek vytvořte novou paletu barev."
           new_name: "Nová paleta barev"
           copy_name_prefix: "Kopie"

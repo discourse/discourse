@@ -10,7 +10,7 @@ describe "Post menu", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
-  let(:login_modal) { PageObjects::Modals::Login.new }
+  let(:login_page) { PageObjects::Pages::Login.new }
   let(:modal) { PageObjects::Modals::Base.new }
 
   %w[enabled disabled].each do |value|
@@ -462,7 +462,7 @@ describe "Post menu", type: :system do
           # clicking on the like button should display the login modal
           topic_page.click_post_action_button(post2, :like)
 
-          expect(login_modal).to be_open
+          expect(login_page).to be_open
         end
 
         it "renders the like count as expected" do

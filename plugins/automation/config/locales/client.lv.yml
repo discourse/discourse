@@ -59,7 +59,10 @@ lv:
             restricted_categories:
               label: Sadaļas
           created: Radīts
-          topics: Tēmas
+          with_images: Attēli
+          with_links: Saites
+          with_code: Kods
+          with_uploads: Augšupielādes
         category_created_edited:
           fields:
             restricted_category:

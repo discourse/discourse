@@ -12,18 +12,22 @@ RSpec.describe "Glimmer Header", type: :system do
     expect(page).to have_css("#site-logo")
   end
 
-  it "displays sign up / login buttons" do
+  it "displays sign up button" do
     visit "/"
     expect(page).to have_css("button.sign-up-button")
     expect(page).to have_css("button.login-button")
 
     find("button.sign-up-button").click
-    expect(page).to have_css(".d-modal.create-account")
+    expect(page).to have_css(".signup-fullpage")
+  end
 
-    header.click_outside
+  it "displays login button" do
+    visit "/"
+    expect(page).to have_css("button.sign-up-button")
+    expect(page).to have_css("button.login-button")
 
     find("button.login-button").click
-    expect(page).to have_css(".d-modal.login-modal")
+    expect(page).to have_css(".login-fullpage")
   end
 
   it "shows login button when login required" do

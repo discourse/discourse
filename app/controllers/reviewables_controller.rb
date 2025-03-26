@@ -323,7 +323,7 @@ class ReviewablesController < ApplicationController
   end
 
   def meta_types
-    { created_by: "user", target_created_by: "user", reviewed_by: "user", claimed_by: "user" }
+    { created_by: "user", target_created_by: "user", reviewed_by: "user", claimed_by: "claimed_by" }
   end
 
   def ensure_can_see

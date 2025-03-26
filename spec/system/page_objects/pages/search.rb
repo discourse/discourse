@@ -22,8 +22,12 @@ module PageObjects
         self
       end
 
-      def heading_text
-        find("h1.search-page-heading").text
+      def has_heading_text?(text)
+        has_selector?("h1.search-page-heading", text: text)
+      end
+
+      def has_no_heading_text?(text)
+        has_no_selector?("h1.search-page-heading", text: text)
       end
 
       def click_search_button
@@ -32,6 +36,8 @@ module PageObjects
 
       def click_search_icon
         find(".d-header #search-button").click
+        has_css?(is_mobile? ? ".search-container" : ".search-menu-container")
+        self
       end
 
       def click_in_posts_by_user

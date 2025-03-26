@@ -79,27 +79,19 @@ module SecondFactor::Actions
       sso.admin = current_user.admin?
       sso.moderator = current_user.moderator?
       sso.groups = current_user.groups.pluck(:name).join(",")
-
-      if current_user.uploaded_avatar.present?
-        base_url =
-          Discourse.store.external? ? "#{Discourse.store.absolute_base_url}/" : Discourse.base_url
-        avatar_url =
-          "#{base_url}#{Discourse.store.get_path_for_upload(current_user.uploaded_avatar)}"
-        sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
-      end
+      sso.avatar_url =
+        GlobalPath.full_cdn_url(
+          current_user.uploaded_avatar.url,
+        ) if current_user.uploaded_avatar.present?
 
       if current_user.user_profile.profile_background_upload.present?
         sso.profile_background_url =
-          UrlHelper.absolute(
-            GlobalPath.upload_cdn_path(current_user.user_profile.profile_background_upload.url),
-          )
+          GlobalPath.full_cdn_url(current_user.user_profile.profile_background_upload.url)
       end
 
       if current_user.user_profile.card_background_upload.present?
         sso.card_background_url =
-          UrlHelper.absolute(
-            GlobalPath.upload_cdn_path(current_user.user_profile.card_background_upload.url),
-          )
+          GlobalPath.full_cdn_url(current_user.user_profile.card_background_upload.url)
       end
     end
 

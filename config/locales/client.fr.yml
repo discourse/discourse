@@ -5976,7 +5976,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          description: "Les palettes de couleurs définissent les couleurs de base utilisées dans l'interface de votre site, tandis que les thèmes peuvent fournir un style, des mises en page et des composants supplémentaires. Les deux peuvent fonctionner ensemble pour créer l'apparence unique de votre site et les deux peuvent être mis à la disposition des utilisateurs selon leurs préférences."
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"

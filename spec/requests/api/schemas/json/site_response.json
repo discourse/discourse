@@ -529,12 +529,19 @@
             },
             "is_dark": {
               "type": "boolean"
+            },
+            "theme_id": {
+              "type": ["integer", "null"]
+            },
+            "colors": {
+              "type": "array"
             }
           },
           "required": [
             "id",
             "name",
-            "is_dark"
+            "is_dark",
+            "colors"
           ]
         }
     },

@@ -176,15 +176,15 @@ he:
             restricted_archetype:
               label: סוג נושא
               description: הגדרת רשות, לאפשר להזניק רק על נושאים או הודעות אישיות
-            restricted_user_group:
-              label: קבוצת משתמשים מוגבלת
-              description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא בקבוצה הזאת
             restricted_groups:
+              label: קבוצות מוגבלות
+              description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא באיזושהי קבוצה מהקבוצות האלו
+            restricted_inbox_groups:
               label: קבוצת תיבות דואר נכנס מוגבלות
               description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית באחת מתיבות הדוא״ל הנכנס הקבוצתיות
-            ignore_group_members:
-              label: התעלמות מחברי הקבוצה
-              description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
+            excluded_groups:
+              label: קבוצות מוחרגות
+              description: הגדרת רשות, לדלג על ההנקה אם משתמש הפוסט שייך לאיזושהי קבוצה מהקבוצות האלו
             ignore_automated:
               label: התעלמות מאוטומטי
               description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על פוסטים שנוצרו דרך דוא״ל
@@ -197,10 +197,18 @@ he:
             skip_via_email:
               label: "דילוג דרך דוא״ל"
               description: "לדלג על ההזנקה אם הפוסט נוצר דרך דוא״ל"
+            post_features:
+              label: תכונות פוסט
+              description: "הגדרת רשות, להגביל את ההזנקה רק לפוסטים עם התכונות האלו"
           created: נוצר
           edited: נערכו
-          topics: נושאים
+          topics: כל הנושאים
           personal_messages: הודעות פרטיות
+          public_topics: נושאים ציבוריים (להחריג את כל הקטגוריות המאובטחות)
+          with_images: תמונות
+          with_links: קישורים
+          with_code: קוד
+          with_uploads: העלאות
         user_updated:
           fields:
             user_profile:
@@ -425,6 +433,11 @@ he:
           name:
             label: הזנקה
         automation:
+          runs_today: "%{count} היום"
+          runs_this_week: "%{count} השבוע"
+          runs_this_month: "%{count} החודש"
+          runs:
+            label: ריצות
           name:
             label: שם
           trigger:
@@ -443,5 +456,7 @@ he:
             label: ממלאי מקום
           last_updated_at:
             label: עדכון אחרון
+          last_run:
+            label: ריצה אחרונה
           last_updated_by:
             label: עודכן על ידי

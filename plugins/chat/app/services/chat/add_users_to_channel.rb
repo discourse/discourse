@@ -38,16 +38,18 @@ module Chat
       end
     end
 
-    model :channel
-    policy :can_add_users_to_channel
-    model :target_users, optional: true
-    policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+    lock(:channel_id) do
+      model :channel
+      policy :can_add_users_to_channel
+      model :target_users, optional: true
+      policy :satisfies_dms_max_users_limit,
+             class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
-    transaction do
-      step :upsert_memberships
-      step :recompute_users_count
-      step :notice_channel
+      transaction do
+        step :upsert_memberships
+        step :recompute_users_count
+        step :notice_channel
+      end
     end
 
     private
@@ -67,6 +69,7 @@ module Chat
         usernames: params.usernames,
         groups: params.groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
+        dm_channel: channel.direct_message_channel?,
       )
     end
 
