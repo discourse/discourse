@@ -219,8 +219,8 @@ importers:
         specifier: ^10.4.3
         version: 10.4.5
       html-entities:
-        specifier: ^2.5.2
-        version: 2.5.2
+        specifier: ^2.5.3
+        version: 2.5.3
       html-rewriter-wasm:
         specifier: ^0.4.1
         version: 0.4.1
@@ -565,8 +565,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../float-kit
       html-entities:
-        specifier: ^2.5.2
-        version: 2.5.2
+        specifier: ^2.5.3
+        version: 2.5.3
       imports-loader:
         specifier: ^5.0.0
         version: 5.0.0(webpack@5.98.0(@swc/core@1.11.13)(esbuild@0.25.1))
@@ -5397,8 +5397,8 @@ packages:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
     engines: {node: '>=18'}
 
-  html-entities@2.5.2:
-    resolution: {integrity: sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==}
+  html-entities@2.5.3:
+    resolution: {integrity: sha512-D3AfvN7SjhTgBSA8L1BN4FpPzuEd06uy4lHwSoRWr0lndi9BKaNzPLKGOWZ2ocSGguozr08TTb2jhCLHaemruw==}
 
   html-rewriter-wasm@0.4.1:
     resolution: {integrity: sha512-lNovG8CMCCmcVB1Q7xggMSf7tqPCijZXaH4gL6iE8BFghdQCbaY5Met9i1x2Ex8m/cZHDUtXK9H6/znKamRP8Q==}
@@ -14572,7 +14572,7 @@ snapshots:
     dependencies:
       whatwg-encoding: 3.1.1
 
-  html-entities@2.5.2: {}
+  html-entities@2.5.3: {}
 
   html-rewriter-wasm@0.4.1: {}
 
