@@ -5974,7 +5974,6 @@ nl:
           title: "Kleuren"
           edit: "Kleurenpaletten bewerken"
           long_title: "Kleurenpaletten"
-          description: "Kleurenpaletten bepalen de basiskleuren die in de interface van je site worden gebruikt, terwijl thema's extra stilering, lay-outs en onderdelen kunnen bieden. Beide kunnen samenwerken om de unieke look en feel van je site te creëren en beide kunnen beschikbaar worden gesteld voor gebruikers om hun voorkeur te selecteren."
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"

@@ -575,6 +575,7 @@ de:
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
         claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
+        automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b>überprüft."
       claim:
         title: "dieses Thema reservieren"
       unclaim:
@@ -4818,6 +4819,7 @@ de:
           paste: "Einfügen …"
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
+    safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5041,6 +5043,10 @@ de:
           title: "Komponenten"
           header_description: "Komponenten sind kleinere Anpassungen, die zu Themes hinzugefügt werden können, um bestimmte Stilelemente deines Forumsdesigns zu verändern"
           keywords: "Theme|Komponente|Erweiterung"
+        themes_and_components:
+          title: "Themes und Komponenten"
+          header_description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen"
+          keywords: "Theme|Komponente|Erweiterung|Anpassen"
         site_texts:
           title: "Website-Texte"
           header_description: "Passe jeden in Discourse verwendeten Text an den Stil und Ton deiner Community an"
@@ -5297,6 +5303,7 @@ de:
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            automatic_membership_user_unknown_count: "Benutzer mit einer der neuen E-Mail-Domains werden der Gruppe hinzugefügt."
             automatic_membership_associated_groups: "Benutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels dieses Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
           alert:
@@ -5797,6 +5804,7 @@ de:
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
+          illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
       plugins:
         title: "Plug-ins"
         name: "Name"
@@ -6160,7 +6168,6 @@ de:
           title: "Farben"
           edit: "Farbpaletten bearbeiten"
           long_title: "Farbpaletten"
-          description: "Farbpaletten legen die Grundfarben fest, die auf deiner Website verwendet werden, während Themes zusätzliche Designs, Layouts und Komponenten bereitstellen – beide können zusammenwirken, um das einzigartige Erscheinungsbild deiner Website zu gestalten, und beide können den Benutzern zur Verfügung gestellt werden, um ihren Präferenzen gerecht zu werden."
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"

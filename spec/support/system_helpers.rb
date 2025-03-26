@@ -216,4 +216,8 @@ module SystemHelpers
   def click_logo
     PageObjects::Components::Logo.click
   end
+
+  def is_mobile?
+    !!RSpec.current_example.metadata[:mobile]
+  end
 end

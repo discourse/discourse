@@ -4996,7 +4996,6 @@ pt_BR:
           header_description: "Palavras em acompanhamento são ferramentas de moderação que realizam várias ações diferentes, inclusive bloquear, censurar, vincular ou sinalizar postagens que contenham certas palavras"
         color_palettes:
           title: "Paletas de cores"
-          header_description: "As paletas de cores definem as cores usadas na interface do seu site, já os temas fornecem mais estilos, layouts e componentes. Ambos podem funcionar juntos para criar uma aparência e impressão única para seu site, além de serem disponibilizados para os(as) usuários(as) selecionarem sua preferência."
         emoji:
           title: "Emoji"
           header_description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Selecione vários arquivos para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo."
@@ -6103,7 +6102,6 @@ pt_BR:
           title: "Cores"
           edit: "Editar paletas de cores"
           long_title: "Paletas de cores"
-          description: "As paletas de cores definem as cores usadas na interface do seu site, já os temas fornecem mais estilos, layouts e componentes. Ambos podem funcionar juntos para criar uma aparência e impressão única para seu site, além de serem disponibilizados para os(as) usuários(as) selecionarem sua preferência."
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"

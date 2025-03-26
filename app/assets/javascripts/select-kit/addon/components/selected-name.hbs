@@ -14,7 +14,7 @@
       />
     {{/if}}
 
-    {{#if this.item.icon}}
+    {{#if (and this.renderIcon this.item.icon)}}
       {{d-icon this.item.icon}}
     {{/if}}
 

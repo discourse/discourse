@@ -15,13 +15,37 @@ fa_IR:
       site_settings:
         chat_separate_sidebar_mode:
           always: "همیشه"
+          fullscreen: "وقتی چت تمام صفحه است"
           never: "هرگز"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
+            chat_auto_remove_membership: "عضویت‌ها به طور خودکار از کانال‌ها حذف می‌شوند"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "یک پیام چت در یک کانال مشخص ایجاد کنید."
+      web_hooks:
+        chat_event:
+          group_name: "رویدادهای چت"
+          chat_message_created: "پیام ایجاد شده است"
+          chat_message_edited: "پیام ویرایش شده است"
+          chat_message_trashed: "پیام حذف شده است"
+          chat_message_restored: "پیام بازیابی شده است"
+    about:
+      chat_messages_count: "پیام‌های چت"
+      chat_channels_count: "کانال‌های چت"
+      chat_users_count: "کاربران چت"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} پیام چت"
+          other: "%{formatted_number} پیام چت"
     chat:
+      text_copied: متن در کلیپ بورد کپی شد
+      link_copied: پیوند در کلیپ بورد کپی شد
       back_to_forum: "انجمن"
       deleted_chat_username: حذف شد
       dates:
@@ -35,9 +59,17 @@ fa_IR:
       cancel_reply: "لغو پاسخ"
       chat_channels: "کانال‌ها"
       browse_all_channels: "مرور همه کانال‌ها"
+      see_in: "ببینید در"
       move_to_channel:
         title: "انتقال پیام‌ها به کانال"
+        instructions:
+          one: "شما در حال انتقال <strong>%{count}</strong> پیام هستید. کانال مقصد را انتخاب کنید. یک پیام جایگزین در کانال <strong>%{channelTitle}</strong> ایجاد می‌شود تا نشان دهد این پیام منتقل شده است. توجه داشته باشید که زنجیره‌های پاسخ در کانال جدید حفظ نمی‌شوند و پیام‌های موجود در کانال قدیمی دیگر به عنوان پاسخ به پیام‌های منتقل‌شده نشان داده نمی‌شوند."
+          other: "شما در حال انتقال <strong>%{count}</strong> پیام هستید. کانال مقصد را انتخاب کنید. یک پیام جایگزین در کانال <strong>%{channelTitle}</strong> ایجاد می‌شود تا نشان دهد که این پیام ها منتقل شده اند. توجه داشته باشید که زنجیره‌های پاسخ در کانال جدید حفظ نمی‌شوند و پیام‌های موجود در کانال قدیمی دیگر به عنوان پاسخ به پیام‌های منتقل‌شده نشان داده نمی‌شوند."
         confirm_move: "انتقال پیام‌ها"
+      delete_messages:
+        confirm:
+          one: "آیا مطمئنید که می خواهید این پیام را حذف کنید؟"
+          other: "آیا مطمئنید که می خواهید این %{count} پیام را حذف کنید؟"
       channel_settings:
         title: "تنظیمات کانال"
         edit: "ویرایش"
@@ -48,10 +80,17 @@ fa_IR:
         delete_channel: "حذف کانال"
         join_channel: "پیوستن به کانال"
         leave_channel: "ترک کانال"
+        leave_groupchat_info: "با ترک این چت گروهی، دیگر به آن دسترسی نخواهید داشت و اعلان های مربوط به آن را دریافت نخواهید کرد. برای پیوستن مجدد، باید دوباره توسط یکی از اعضای چت گروهی دعوت شوید."
         join: "عضو شدن"
         leave: "ترک کردن"
+        save_label:
+          mute_channel: "تنظیمات کانال بی صدا ذخیره شد"
+          desktop_notification: "تنظیمات اعلان دسکتاپ ذخیره شد"
+          mobile_notification: "تنظیمات اعلان PUSH تلفن همراه ذخیره شد"
       channel_archive:
         title: "بایگانی کانال"
+        instructions: "<p>بایگانی یک کانال آن را در حالت فقط خواندنی قرار می دهد و همه پیام ها را از کانال به یک موضوع جدید یا موجود منتقل می کند. هیچ پیام جدیدی را نمی توان ارسال کرد و هیچ پیام موجود را نمی توان ویرایش یا حذف کرد.</p><p>آیا مطمئنید که می خواهید کانال <strong>%{channelTitle}</strong> را بایگانی کنید؟</p>"
+        process_started: "فرایند بایگانی آغاز شده است. این پنجره به زودی بسته می شود و پس از اتمام فرآیند بایگانی، یک پیام شخصی دریافت خواهید کرد."
         retry: "تلاش مجدد"
       channel_open:
         title: "باز کردن کانال"
@@ -61,13 +100,20 @@ fa_IR:
         instructions: "بستن کانال از ارسال پیام‌های جدید یا ویرایش پیام‌های قبلی توسط کاربران که همکار نیستن جلوگیری می‌کند. آیا مطمئنید که می‌خواهید اين کانال رو ببنديد؟"
       channel_delete:
         title: "حذف کانال"
+        confirm: "من متوجه عواقب آن هستم، کانال را حذف کنید"
         confirm_channel_name: "نام کانال را وارد کنید"
+        process_started: "روند حذف کانال شروع شده است. این پنجره به زودی بسته می شود، دیگر کانال حذف شده را در هیچ کجا نخواهید دید."
       channels_list_popup:
         browse: "مرور کانال‌ها"
         create: "کانال جدید"
       close: "بستن"
       remove: "پاک کردن"
+      collapse: "جمع کردن کشو چت"
+      expand: "گستردن کشوی چت"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
+      deleted:
+        one: "یک پیام حذف شد [مشاهده]"
+        other: "%{count} پیام حذف شد. [مشاهده همه]"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
       edited: "ویرایش شده"
@@ -77,14 +123,27 @@ fa_IR:
         direct_message_cta: "شروع گفتگوی شخصی"
         direct_message: "شما همچنین می‌توانید یک گفتگو شخصی را با یک یا چند کاربر شروع کنید."
         title: "هیچ کانالی پیدا نشد"
+        my_threads: "شما هنوز هیچ موضوعی ندارید. موضوعاتی که در آنها شرکت می کنید در اینجا نمایش داده می شوند."
       email_frequency:
+        description: "فقط در صورتی که در ۱۵ دقیقه گذشته شما را ندیده باشیم به شما ایمیل ارسال می کنیم."
         never: "هرگز"
         title: "آگاه‌سازی‌های ایمیل"
+        when_away: "فقط وقتی نیستم"
       header_indicator_preference:
+        title: "نمایش نشانگر فعالیت در سربرگ"
         all_new: "همه پیام‌های جدید"
+        dm_and_mentions: "پیام‌های مستقیم، منشن‌ها و موضوعات تماشا شده"
+        only_mentions: "فقط منشن‌ها"
         never: "هرگز"
+      send_shortcut:
+        enter:
+          label: "ارسال با Enter"
+          description: "خط جدید با Shift + Enter"
+        meta_enter:
+          description: "خط جدید توسط Enter"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
+      emoji: "درج ایموجی"
       flagged: "این پیام برای بررسی پرچم گذاری شده است"
       invalid_access: "شما برای مشاهده گفتگوی این کانال دسترسی ندارید"
       in_reply_to: "در پاسخ به"

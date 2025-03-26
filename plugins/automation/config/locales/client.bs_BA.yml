@@ -51,7 +51,10 @@ bs_BA:
             restricted_categories:
               label: Kategorije
           created: Stvoreno
-          topics: Topics
+          with_images: Images
+          with_links: Linkovi
+          with_code: Šifra
+          with_uploads: Uploads
         category_created_edited:
           fields:
             restricted_category:

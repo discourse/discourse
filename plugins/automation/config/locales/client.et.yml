@@ -50,7 +50,10 @@ et:
             restricted_categories:
               label: Liigid
           created: Loodud
-          topics: Teemasid
+          with_images: Pildid
+          with_links: Viited
+          with_code: Kood
+          with_uploads: Üleslaadimised
         category_created_edited:
           fields:
             restricted_category:

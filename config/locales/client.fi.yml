@@ -5975,7 +5975,6 @@ fi:
           title: "Värit"
           edit: "Muokkaa väripaletteja"
           long_title: "Väripaletit"
-          description: "Väripaletit määrittävät sivustosi käyttöliittymässä käytettävät ydinvärit, kun taas teemat voivat tarjota lisätyyliä, asetteluja ja komponentteja – molemmat voivat työskennellä yhdessä luoden sivustollesi ainutlaatuisen ulkoasun ja tunnelman, ja molemmat voidaan tarjota käyttäjille, jotta he voivat valita mieltymyksensä."
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"

@@ -26,7 +26,7 @@ describe "Search", type: :system do
       search_page.click_search_button
 
       expect(search_page).to have_search_result
-      expect(search_page.heading_text).not_to eq("Search")
+      expect(search_page).to have_no_heading_text("Search")
 
       click_logo
       expect(search_page).to be_not_active
@@ -39,7 +39,7 @@ describe "Search", type: :system do
       search_page.click_search_icon
 
       expect(search_page).to have_no_search_result
-      expect(search_page.heading_text).to eq("Search")
+      expect(search_page).to have_heading_text("Search")
     end
 
     it "navigates search results using J/K keys" do

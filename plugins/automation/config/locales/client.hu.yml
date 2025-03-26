@@ -167,15 +167,9 @@ hu:
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
             restricted_categories:
               label: Kategóriák
-            restricted_user_group:
-              label: Korlátozott felhasználói csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés felhasználója ebben a csoportban van
-            restricted_groups:
+            restricted_inbox_groups:
               label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
-            ignore_group_members:
-              label: Csoporttagok figyelmen kívül hagyása
-              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
             ignore_automated:
               label: Automatizált figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
@@ -190,7 +184,10 @@ hu:
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
           edited: Szerkesztve
-          topics: Témák
+          with_images: Képek
+          with_links: Hivatkozások
+          with_code: Kód
+          with_uploads: Feltöltések
         user_updated:
           fields:
             user_profile:

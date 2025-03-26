@@ -2,6 +2,7 @@
   --d-sidebar-section-link-prefix-margin-right: 0.75em;
   --d-sidebar-section-link-prefix-width: 1.35rem;
   --d-sidebar-section-link-icon-size: 0.8em;
+  --d-sidebar-section-link-emoji-size: 0.9em;
 }
 
 .sidebar-section-link-wrapper {
@@ -185,7 +186,8 @@
     }
 
     &.icon,
-    &.span {
+    &.square,
+    &.emoji {
       position: relative;
       color: var(--d-sidebar-link-icon-color);
 
@@ -207,7 +209,12 @@
       }
     }
 
-    .prefix-span {
+    &.emoji img {
+      width: var(--d-sidebar-section-link-emoji-size);
+      height: var(--d-sidebar-section-link-emoji-size);
+    }
+
+    .prefix-square {
       width: 0.8em;
       height: 0.8em;
     }

@@ -44,11 +44,14 @@ export default class ComposerContainer extends Component {
       <div class="grippie"></div>
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
-        <ComposerMessages
-          @composer={{this.composer.model}}
-          @messageCount={{this.composer.messageCount}}
-          @addLinkLookup={{this.composer.addLinkLookup}}
-        />
+
+        {{#unless this.site.mobileView}}
+          <ComposerMessages
+            @composer={{this.composer.model}}
+            @messageCount={{this.composer.messageCount}}
+            @addLinkLookup={{this.composer.addLinkLookup}}
+          />
+        {{/unless}}
 
         {{#if this.composer.showFullScreenPrompt}}
           <ComposerFullscreenPrompt
@@ -292,11 +295,6 @@ export default class ComposerContainer extends Component {
                 {{/if}}
 
                 {{#if this.site.mobileView}}
-                  {{#if this.composer.whisperOrUnlistTopic}}
-                    <span class="whisper">
-                      {{icon "far-eye-slash"}}
-                    </span>
-                  {{/if}}
 
                   {{#if this.composer.model.noBump}}
                     <span class="no-bump">{{icon "anchor"}}</span>
@@ -378,11 +376,11 @@ export default class ComposerContainer extends Component {
                 </div>
               {{/if}}
 
-              <div
-                class={{if this.composer.isUploading "hidden"}}
-                id="draft-status"
-              >
-                {{#if this.composer.model.draftStatus}}
+              {{#if this.composer.model.draftStatus}}
+                <div
+                  class={{if this.composer.isUploading "hidden"}}
+                  id="draft-status"
+                >
                   <span
                     class="draft-error"
                     title={{this.composer.model.draftStatus}}
@@ -400,8 +398,8 @@ export default class ComposerContainer extends Component {
                       {{this.composer.model.draftStatus}}
                     {{/if}}
                   </span>
-                {{/if}}
-              </div>
+                </div>
+              {{/if}}
 
               {{#if (and this.composer.allowPreview this.site.desktopView)}}
                 <DButton

@@ -65,7 +65,10 @@ ur:
             restricted_categories:
               label: اقسام
           created: بنایا گیا
-          topics: ٹاپک
+          with_images: تصاویر
+          with_links: لنکس
+          with_code: کَوڈ
+          with_uploads: اَپ لوڈز
         category_created_edited:
           fields:
             restricted_category:
