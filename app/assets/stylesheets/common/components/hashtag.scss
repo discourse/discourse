@@ -33,12 +33,13 @@ a.hashtag {
   .hashtag-icon-placeholder {
     font-size: var(--font-down-1);
     margin: 0;
+    vertical-align: baseline;
   }
 
   img.emoji {
     width: 15px;
     height: 15px;
-    vertical-align: text-bottom;
+    vertical-align: text-top;
   }
 
   svg {
