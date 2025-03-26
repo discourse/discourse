@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
+import { historyHeat } from "discourse/components/post/meta-data/edits-indicator";
 import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
-import { historyHeat } from "discourse/widgets/post-edits-indicator";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePostEdits extends Component {

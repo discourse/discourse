@@ -24,7 +24,7 @@ describe "User preferences | Security", type: :system do
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
       user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor(password)
+      user_preferences_security_page.visit_second_factor(user, password)
 
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")

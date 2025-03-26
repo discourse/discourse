@@ -42,6 +42,10 @@ class DecoratorHelper {
     return this.widget.attach(name, attrs, state);
   }
 
+  get model() {
+    return this.widget.findAncestorModel();
+  }
+
   /**
    * Returns the model associated with this widget. When decorating
    * posts this will normally be the post.
@@ -54,7 +58,7 @@ class DecoratorHelper {
    * ```
    **/
   getModel() {
-    return this.widget.findAncestorModel();
+    return this.model;
   }
 
   /**
