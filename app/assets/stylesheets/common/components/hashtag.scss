@@ -31,8 +31,8 @@ a.hashtag {
 
   .d-icon,
   .hashtag-icon-placeholder {
-    font-size: var(--font-down-2);
-    margin: 0 0.3em 0 0;
+    font-size: var(--font-down-1);
+    margin: 0;
   }
 
   img.emoji {
@@ -45,12 +45,18 @@ a.hashtag {
     display: inline;
   }
 
-  .hashtag-category-badge {
+  .hashtag-category-square {
     flex: 0 0 auto;
     width: 0.72em;
     height: 0.72em;
     margin-right: 0.25em;
     margin-left: 0.1em;
+    display: inline-block;
+  }
+
+  .hashtag-category-icon,
+  .hashtag-category-emoji {
+    margin-right: 0.25em;
     display: inline-block;
   }
 }
@@ -101,7 +107,7 @@ a.hashtag {
       margin-right: 0.25em;
     }
 
-    .hashtag-category-badge {
+    .hashtag-category-square {
       flex: 0 0 auto;
       width: 15px;
       height: 15px;

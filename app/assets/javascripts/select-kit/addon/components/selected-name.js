@@ -32,9 +32,15 @@ export default class SelectedName extends Component.extend(UtilsMixin) {
       headerTitle: this.getProperty(this.item, "titleProperty"),
       headerLang: this.getProperty(this.item, "langProperty"),
       name: this.getName(this.item),
+      renderIcon: this.canDisplayIcon,
       value:
         this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
     });
+  }
+
+  @computed("selectKit.options.shouldDisplayIcon")
+  get canDisplayIcon() {
+    return this.selectKit.options.shouldDisplayIcon ?? true;
   }
 
   @computed("item", "sanitizedTitle")
