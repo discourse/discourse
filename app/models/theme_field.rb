@@ -480,12 +480,28 @@ class ThemeField < ActiveRecord::Base
     # requests.
   end
 
+  def scss_entrypoint_name
+    if name == "scss"
+      self.target_name
+    elsif target_name == "common" && name == "color_definitions"
+      "color_definitions"
+    elsif target_name == "common" && name == "embedded_scss"
+      "embedded"
+    else
+      raise "Unknown entrypoint for #{target_name}/#{name}"
+    end
+  end
+
   def compile_scss(prepended_scss = nil)
     prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
     self.theme.with_scss_load_paths do |load_paths|
       Stylesheet::Compiler.compile(
-        "#{prepended_scss} #{self.theme.scss_variables} #{self.value}",
+        <<~SCSS,
+          #{prepended_scss}
+          #{self.theme.scss_variables}
+          @import \"theme-entrypoint/#{scss_entrypoint_name}\";
+        SCSS
         "#{Theme.targets[self.target_id]}.scss",
         theme: self.theme,
         load_paths: load_paths,
@@ -501,7 +517,7 @@ class ThemeField < ActiveRecord::Base
         # We don't want to raise a blocking error here
         # admin theme editor or discourse_theme CLI will show it nonetheless
         Rails.logger.error "SCSS compilation error: #{e.message}"
-        ["", nil]
+        ["/* SCSS compilation error: #{e.message} */", nil]
       end
     css
   end

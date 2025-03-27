@@ -606,6 +606,21 @@
             "text_color": {
               "type": "string"
             },
+            "style_type": {
+              "type": "string"
+            },
+            "emoji": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "icon": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "slug": {
               "type": "string"
             },

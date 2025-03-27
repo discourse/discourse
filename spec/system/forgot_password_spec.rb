@@ -27,7 +27,7 @@ shared_examples "forgot password scenarios" do
     sign_in(user)
 
     user_preferences_security_page.visit(user)
-    user_preferences_security_page.visit_second_factor("supersecurepassword")
+    user_preferences_security_page.visit_second_factor(user, "supersecurepassword")
 
     find(".security-key .new-security-key").click
     expect(user_preferences_security_page).to have_css("input#security-key-name")
@@ -209,11 +209,11 @@ shared_examples "forgot password scenarios" do
 end
 
 describe "User resetting password", type: :system do
-  skip "when desktop" do
+  describe "when desktop" do
     include_examples "forgot password scenarios"
   end
 
-  skip "when mobile", mobile: true do
+  describe "when mobile", mobile: true do
     include_examples "forgot password scenarios"
   end
 end

@@ -344,6 +344,10 @@ export default class Item extends Component {
                       class="badge-notification new-topic"
                     ></span></span>
                 {{~/if~}}
+                <PluginOutlet
+                  @name="topic-list-after-badges"
+                  @outletArgs={{hash topic=@topic}}
+                />
                 {{~#if this.expandPinned~}}
                   <TopicExcerpt @topic={{@topic}} />
                 {{~/if~}}

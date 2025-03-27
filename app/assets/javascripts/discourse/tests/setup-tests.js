@@ -212,7 +212,6 @@ export default function setupTests(config) {
     injectInto: null,
     properties: ["spy", "stub", "mock", "clock", "sandbox"],
     useFakeTimers: true,
-    useFakeServer: false,
   };
 
   // Stop the message bus so we don't get ajax calls

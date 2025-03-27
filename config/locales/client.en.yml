@@ -4126,15 +4126,24 @@ en:
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"
+      untitled: "Untitled Category"
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
+      style: "Styles"
+      background_color: "Color"
       foreground_color: "Foreground color"
+      styles:
+        type: "Style"
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          square: "Square"
+          icon: "Icon"
+          emoji: "Emoji"
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
