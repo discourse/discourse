@@ -473,6 +473,7 @@ RSpec.configure do |config|
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       logger: Logger.new($stdout),
       noViewport: true,
+      playwright_cli_executable_path: "./node_modules/.bin/playwright",
     }
 
     Capybara.register_driver(:playwright_chrome) do |app|
