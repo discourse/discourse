@@ -39,8 +39,6 @@ describe "User preferences | Security", type: :system do
         find("input#login-account-name").fill_in(with: user.username)
         find("input#login-account-password").fill_in(with: password)
 
-        find(".d-modal__footer .btn-primary").click
-        find("#security-key .btn-primary").click
         find("#login-button.btn-primary").click
         find("#security-key .btn-primary").click
 
