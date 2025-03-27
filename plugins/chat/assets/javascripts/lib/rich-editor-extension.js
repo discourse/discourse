@@ -237,16 +237,6 @@ const extension = {
     html_raw: { ignore: true, noCloseToken: true },
 
     span: { ignore: true },
-    span_open() {
-      // TODO: not sure if i need to actually do anything here,
-      // its just here to stop it erroring, otherwise I get
-      //
-      // No parser processed span_open token for tag: span, attrs: [["title","2025-03-20T07:12:57Z"]]
-      return true;
-    },
-    span_close() {
-      return true;
-    },
   },
 };
 
