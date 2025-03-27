@@ -38,7 +38,10 @@ module(
 haha **ok** _cool_
 [/chat]
 `;
-      await setupRichEditor(assert, singleMessageSingleUserMarkdown);
+      const [{ value }] = await setupRichEditor(
+        assert,
+        singleMessageSingleUserMarkdown
+      );
       const rootElement = document.querySelector(
         ".ProseMirror .chat-transcript"
       );
@@ -58,17 +61,22 @@ haha **ok** _cool_
         .dom(".chat-transcript-channel", rootElement)
         .hasAttribute("href", "/chat/c/-/95");
       assert.dom(".chat-transcript-channel img[title='tada']").exists();
+
+      assert.strictEqual(value, singleMessageSingleUserMarkdown);
     });
 
     test("multiple messages from multiple different users", async function (assert) {
-      const multiMessagesMultiUserMarkdown = `[chat quote="martin;29853;2025-03-20T07:12:55Z" channel="design gems :tada:" channelId="95" multiQuote="true" chained="true"]
+      const multiMessagesMultiUserMarkdown = `[chat quote="martin;29853;2025-03-20T07:12:55Z" channel="design gems :tada:" channelId="95" chained="true" multiQuote="true"]
 test
 [/chat]
-
 [chat quote="hunter;29856;2025-03-20T07:13:04Z" chained="true"]
 haha **ok** _cool_
-[/chat]`;
-      await setupRichEditor(assert, multiMessagesMultiUserMarkdown);
+[/chat]
+`;
+      const [{ value }] = await setupRichEditor(
+        assert,
+        multiMessagesMultiUserMarkdown
+      );
 
       assert.dom(".chat-transcript").exists({ count: 2 });
       assert.dom(".chat-transcript-messages").exists({ count: 2 });
@@ -100,6 +108,8 @@ haha **ok** _cool_
       assert
         .dom(".chat-transcript-user .chat-transcript-username", rootElement)
         .hasText("hunter");
+
+      assert.strictEqual(value, multiMessagesMultiUserMarkdown);
     });
 
     test("messages in a thread", async function (assert) {
@@ -112,7 +122,7 @@ thread other message
 
 [/chat]
 `;
-      await setupRichEditor(assert, threadMessagesMarkdown);
+      const [{ value }] = await setupRichEditor(assert, threadMessagesMarkdown);
       assert
         .dom(".chat-transcript-meta")
         .hasText("Originally sent in design gems");
@@ -159,6 +169,8 @@ thread other message
       assert
         .dom(".chat-transcript-user .chat-transcript-username", rootElement)
         .hasText("martin");
+
+      assert.strictEqual(value, threadMessagesMarkdown);
     });
   }
 );

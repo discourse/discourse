@@ -144,8 +144,13 @@ const extension = {
       bbCodeAttrs.push(
         `quote="${node.attrs.username};${node.attrs.messageId};${node.attrs.datetime}"`
       );
-      bbCodeAttrs.push(`channel="${node.attrs.channelName}"`);
-      bbCodeAttrs.push(`channelId="${node.attrs.channelId}"`);
+
+      if (node.attrs.channelName) {
+        bbCodeAttrs.push(`channel="${node.attrs.channelName}"`);
+      }
+      if (node.attrs.channelId) {
+        bbCodeAttrs.push(`channelId="${node.attrs.channelId}"`);
+      }
 
       if (node.attrs.chained) {
         bbCodeAttrs.push(`chained="true"`);
