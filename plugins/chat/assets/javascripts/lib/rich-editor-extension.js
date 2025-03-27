@@ -236,7 +236,16 @@ const extension = {
 
     html_raw: { ignore: true, noCloseToken: true },
 
-    span: { ignore: true },
+    span_open(state) {
+      if (state.top().type.name === "chat") {
+        return true;
+      }
+    },
+    span_close(state) {
+      if (state.top().type.name === "chat") {
+        return true;
+      }
+    },
   },
 };
 
