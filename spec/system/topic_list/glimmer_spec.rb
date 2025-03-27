@@ -73,7 +73,7 @@ describe "glimmer topic list", type: :system do
   describe "topic highlighting" do
     # TODO: Those require `Capybara.disable_animation = false`
 
-    skip "highlights newly received topics" do
+    it "highlights newly received topics" do
       Fabricate(:read_topic, current_user: user)
 
       visit("/latest")
@@ -87,7 +87,7 @@ describe "glimmer topic list", type: :system do
       topic_list.has_highlighted_topic?(new_topic)
     end
 
-    skip "highlights the previous topic after navigation" do
+    it "highlights the previous topic after navigation" do
       topic = Fabricate(:read_topic, current_user: user)
 
       visit("/latest")
