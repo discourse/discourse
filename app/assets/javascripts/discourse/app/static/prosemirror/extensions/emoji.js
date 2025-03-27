@@ -26,6 +26,7 @@ function createOnlyEmojiPlugin() {
         let newSet = oldSet.map(tr.mapping, tr.doc);
 
         changedRanges.forEach(({ new: { from, to } }) => {
+          // traverse all text blocks in the changed range
           newState.doc.nodesBetween(from, to, (node, pos) => {
             if (!node.isTextblock) {
               return true;
@@ -40,7 +41,7 @@ function createOnlyEmojiPlugin() {
             const emojiNodes = [];
             let hasOnlyEmojis = true;
 
-            // check if the text block contains only emojis
+            // collect emojis in the current text block
             node.descendants((child, childPos) => {
               if (child.type.name === "emoji") {
                 emojiNodes.push({
