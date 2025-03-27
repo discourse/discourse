@@ -14,7 +14,8 @@ export default RouteTemplate(
     <DPageHeader
       @titleLabel={{i18n "admin.dashboard.title"}}
       @descriptionLabel={{i18n "admin.dashboard.header_description"}}
-      @hideTabs={{true}}>
+      @hideTabs={{true}}
+    >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
