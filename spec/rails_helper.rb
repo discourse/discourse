@@ -357,6 +357,16 @@ RSpec.configure do |config|
       Capybara.default_max_wait_time = 4
     end
 
+    puma_max_threads = (ENV["CAPYBARA_PUMA_SERVER_MAX_THREADS"].presence || 10).to_i
+
+    Capybara.server =
+      :puma,
+      {
+        Threads: "0:#{puma_max_threads}",
+        worker_timeout: Capybara.default_max_wait_time * 2 / 3,
+        Silent: true,
+      }
+
     Capybara.threadsafe = true
     Capybara.disable_animation = true
 
@@ -405,6 +415,7 @@ RSpec.configure do |config|
             if RSpec.current_example
               # Store timeout for later, we'll only raise it if the test otherwise passes
               RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
               raise # re-raise original error
             else
               # Outside an example... maybe a `before(:all)` hook?
