@@ -109,6 +109,7 @@ export default class SiteSettingComponent extends Component.extend(
         <DButton
           @action={{this.cancel}}
           @icon="xmark"
+          @disabled={{this.disableUndoButton}}
           @ariaLabel="admin.settings.cancel"
           class="cancel setting-controls__cancel"
         />
