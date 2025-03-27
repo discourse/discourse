@@ -241,7 +241,7 @@ module Helpers
   # @example Upload a theme and set it as default
   #   upload_theme("/path/to/theme")
   def upload_theme(set_theme_as_default: true)
-    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+    theme = RemoteTheme.import_theme_from_directory(directory_from_caller)
 
     if theme.component
       raise "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
@@ -270,7 +270,7 @@ module Helpers
   # @example Upload a theme component and add it to a specific theme
   #   upload_theme_component("/path/to/theme_component", parent_theme_id: 123)
   def upload_theme_component(parent_theme_id: SiteSetting.default_theme_id)
-    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+    theme = RemoteTheme.import_theme_from_directory(directory_from_caller)
 
     if !theme.component
       raise "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
@@ -295,9 +295,15 @@ module Helpers
     nil
   end
 
+  def enable_current_plugin
+    setting_name =
+      Discourse.plugins_by_name[directory_from_caller.split("/").last].enabled_site_setting
+    SiteSetting.public_send("#{setting_name}=", true)
+  end
+
   private
 
-  def theme_dir_from_caller
+  def directory_from_caller
     caller.each do |line|
       if (split = line.split(%r{/spec/*/.+_spec.rb})).length > 1
         return split.first
