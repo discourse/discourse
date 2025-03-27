@@ -8,8 +8,8 @@ module Migrations::Importer::Steps
     SQL
 
     # requires_shared_data :usernames, :group_names
-    # requires_mapping "SELECT email, user_id FROM user_emails", :emails
-    # requires_mapping "SELECT external_id, user_id FROM single_sign_on_records", :external_ids
+    requires_mapping "SELECT LOWER(email) AS email, user_id FROM user_emails", :emails
+    requires_mapping "SELECT external_id, user_id FROM single_sign_on_records", :external_ids
 
     table_name :users
     column_names %i[
@@ -35,15 +35,25 @@ module Migrations::Importer::Steps
 
     store_mapped_ids true
 
-    total_rows_query <<~SQL
+    total_rows_query <<~SQL, MappingType::USERS
       SELECT COUNT(*)
-      FROM users
+      FROM users u
+      WHERE NOT EXISTS (
+          SELECT 1
+          FROM mapped.ids mu
+          WHERE u.id = mu.original_id AND mu.type = ?
+      )
     SQL
 
-    rows_query <<~SQL
-      SELECT u.*, JSON_GROUP_ARRAY(ue.email) AS emails
+    rows_query <<~SQL, MappingType::USERS
+      SELECT u.*, JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
       FROM users u
            LEFT JOIN user_emails ue ON u.id = ue.user_id
+      WHERE NOT EXISTS (
+          SELECT 1
+          FROM mapped.ids mu
+          WHERE u.id = mu.original_id AND mu.type = ?
+      )
       GROUP BY u.ROWID
       ORDER BY u.ROWID
     SQL
@@ -56,11 +66,28 @@ module Migrations::Importer::Steps
     private
 
     def transform_row(row)
+      return nil if row[:id] % 2 == 0
+
+      # TODO remove this when `original_id` comes form the converter
+      row[:original_id] = row.delete(:id)
+
+      if row[:emails].present?
+        JSON
+          .parse(row[:emails])
+          .each do |email|
+            if (existing_user_id = emails[email])
+              row[:id] = existing_user_id
+              return nil
+            end
+          end
+      end
+
+      if row[:external_id].present? && (existing_user_id = existing_ids[row[:external_id]])
+        row[:id] = existing_user_id
+        return nil
+      end
+
       super
-
-      return nil if row[:original_id] % 2 == 0
-
-      emails = JSON.parse(row[:emails])
 
       row[:original_username] ||= row[:username]
       row[:username] = @unique_name_finder.find_available_username(
@@ -89,8 +116,6 @@ module Migrations::Importer::Steps
     end
 
     def after_commit_of_inserted_rows(rows)
-      super
-
       rows.each do |row|
         if row[:username] && row[:username] != row[:original_username]
           @intermediate_db.insert(

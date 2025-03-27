@@ -19,7 +19,7 @@ module Migrations::Importer
     private
 
     def attach_mappings_db(db_path)
-      ::Migrations::Database.reset!(db_path)
+      # ::Migrations::Database.reset!(db_path)
       ::Migrations::Database.migrate(
         db_path,
         migrations_path: ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,

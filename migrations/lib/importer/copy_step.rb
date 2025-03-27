@@ -72,8 +72,7 @@ module Migrations::Importer
         copied_row_count = copy_data
 
         if (missing_row_count = max_row_count - copied_row_count) > 0
-          @stats.reset
-          @stats.skip_count = missing_row_count
+          @stats.reset(skip_count: missing_row_count)
           update_progressbar(increment_by: 0)
         end
       end
@@ -117,9 +116,10 @@ module Migrations::Importer
         @intermediate_db.query(query, *parameters) do |row|
           if (transformed_row = transform_row(row))
             enumerator << transformed_row
+            @stats.reset
           else
             skipped_rows << row
-            @stats.skip_count = 1
+            @stats.reset(skip_count: 1)
           end
 
           update_progressbar
@@ -139,7 +139,13 @@ module Migrations::Importer
       return if !self.class.store_mapped_ids?
 
       rows.each do |row|
-        @intermediate_db.insert(INSERT_MAPPED_IDS_SQL, [row[:original_id], @mapping_type, row[:id]])
+        # TODO update check when `original_id` is stored in IntermediateDB
+        if row[:original_id]
+          @intermediate_db.insert(
+            INSERT_MAPPED_IDS_SQL,
+            [row[:original_id], @mapping_type, row[:id]],
+          )
+        end
       end
 
       nil

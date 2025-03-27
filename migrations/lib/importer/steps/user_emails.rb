@@ -18,5 +18,11 @@ module Migrations::Importer::Steps
         JOIN mapped.ids mu ON ue.user_id = mu.original_id AND mu.type = ?
       ORDER BY ue.ROWID
     SQL
+
+    private
+
+    def transform_row(row)
+      nil
+    end
   end
 end

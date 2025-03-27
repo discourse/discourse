@@ -39,6 +39,15 @@ module Migrations::Importer
       def dependencies
         @dependencies || []
       end
+
+      def requires_mapping(sql, name)
+        @required_mappings ||= {}
+        @required_mappings[name] = sql
+      end
+
+      def required_mappings
+        @required_mappings || {}
+      end
     end
 
     def initialize(intermediate_db, discourse_db, shared_data)
@@ -51,6 +60,23 @@ module Migrations::Importer
 
     def execute
       puts self.class.title
+      load_required_data
+    end
+
+    private
+
+    def load_required_data
+      required_mappings = self.class.required_mappings
+      return if required_mappings.blank?
+
+      puts "    Loading required data..."
+      required_mappings.each { |name, sql| set_required_data(name, @shared_data.load_mapping(sql)) }
+    end
+
+    def set_required_data(name, value)
+      variable_name = "@#{name}"
+      instance_variable_set(variable_name, value)
+      self.class.define_method(name) { instance_variable_get(variable_name) }
     end
 
     def update_progressbar(increment_by: 1)
