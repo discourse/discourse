@@ -4,6 +4,7 @@
 // throughout the Discourse application
 :root {
   --d-max-width: 1110px;
+  --column-count: 24;
 }
 
 // Base Elements
@@ -154,34 +155,105 @@ select {
   }
 }
 
-body.has-sidebar-page {
-  .wrap {
-    // increase page max-width to accommodate sidebar width
-    max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+body {
+  // won't recalc with max-width change if set at root
+  --max-column-width: calc(var(--d-max-width) / var(--column-count));
+
+  #main-outlet {
+    grid-row: 1;
+    grid-column: 2 / 26;
   }
 
-  #main-outlet-wrapper {
-    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
-    gap: 0 2em;
-    padding-left: 0;
+  &.has-sidebar-page {
+    --d-max-width: 1345px;
 
-    @include breakpoint(large) {
-      gap: 0 1em;
+    #main-outlet-wrapper {
+      .sidebar-wrapper {
+        grid-column: 2 / 6;
+
+        .sidebar-sections {
+          padding-inline: 0;
+        }
+      }
+
+      #main-outlet {
+        grid-column: 7 / 26;
+      }
+    }
+
+    .d-header {
+      .wrap .contents {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+      }
+
+      &__contents-primary {
+        grid-column: 2 / 6;
+        display: flex;
+      }
+
+      &__contents-secondary {
+        grid-column: 7 / 26;
+        display: flex;
+      }
     }
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  body.sidebar-animate {
-    #main-outlet-wrapper {
-      transition-property: grid-template-columns, max-width;
-      transition-timing-function: var(--d-sidebar-animation-ease);
-      transition-duration: var(--d-sidebar-animation-time);
-    }
+.discourse-root {
+  display: grid;
+  grid-template-columns:
+    1fr repeat(var(--column-count), minmax(0, var(--max-column-width)))
+    1fr;
+  gap: 0;
 
-    .d-header-wrap .wrap {
-      transition: max-width var(--d-sidebar-animation-time)
-        var(--d-sidebar-animation-ease);
-    }
+  // give all children a full row this makes unexpected content from plugin outlets predictable
+  > * {
+    grid-column: 1 / -1;
+  }
+}
+
+// pass the subgrid down until we get to header content
+.d-header-wrap,
+.d-header,
+.wrap {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+.d-header {
+  .wrap .contents {
+    grid-column: 2 / 26;
+  }
+
+  &__contents-primary,
+  &__contents-secondary {
+    display: flex;
+  }
+
+  &__contents-primary {
+    margin-right: auto;
+  }
+
+  &__contents-secondary {
+    flex: 1 1 auto;
+  }
+
+  .panel {
+    margin-left: auto;
+  }
+}
+
+#main-outlet-wrapper {
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid !important; /* override core */
+  gap: 0 !important; /* override core */
+  padding: 0;
+
+  // give all children a full row this makes unexpected content from plugin outlets predictable
+  > * {
+    grid-column: 1 / -1;
   }
 }

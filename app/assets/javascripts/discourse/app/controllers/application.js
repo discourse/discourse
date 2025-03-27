@@ -14,6 +14,7 @@ export default class ApplicationController extends Controller {
   @service footer;
   @service header;
   @service sidebarState;
+  @service site;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;

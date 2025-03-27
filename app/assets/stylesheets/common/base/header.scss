@@ -13,7 +13,7 @@
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
-  > .wrap {
+  .wrap {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
