@@ -19,7 +19,7 @@ module CategoryHashtag
           next if slug_path.blank?
 
           if SiteSetting.slug_generation_method == "encoded"
-            slug_path.map! { |slug| CGI.escape(slug) }
+            slug_path.map! { CGI.escape(_1) }
           end
           parent_slug, child_slug = slug_path.last(2)
 
