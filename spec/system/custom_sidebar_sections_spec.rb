@@ -363,6 +363,8 @@ describe "Custom sidebar sections", type: :system do
     section_modal.mark_as_public
     section_modal.save
 
+    expect(section_modal).to be_closed
+
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
     section_modal.mark_as_public
@@ -374,6 +376,7 @@ describe "Custom sidebar sections", type: :system do
 
     section_modal.confirm_update
 
+    expect(section_modal).to be_closed
     expect(sidebar).to have_section("Edited public section")
     expect(page).not_to have_css(
       ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",
