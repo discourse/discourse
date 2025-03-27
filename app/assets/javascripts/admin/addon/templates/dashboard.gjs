@@ -13,7 +13,7 @@ export default RouteTemplate(
 
     <DPageHeader
       @titleLabel={{i18n "admin.dashboard.title"}}
-      @descriptionLabel={{i18n "admin.dashboard.header_description"}}
+      @descriptionLabel={{i18n "admin.config.dashboard.header_description"}}
       @hideTabs={{true}}
     >
       <:breadcrumbs>
