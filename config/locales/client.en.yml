@@ -674,12 +674,12 @@ en:
         scrubbed_reason: "Reason"
         scrubbed_reject_reason: "User rejected reason"
         scrub_record:
-          button: Scrub Record
-          confirm_title: Scrub Record
-          confirm_body: "Are you SURE you want to scrub this review queue record? All identifying details will be removed. This is permanent!"
+          button: Scrub record
+          confirm_title: Remove personal data
+          confirm_body: "Are you SURE you want to scrub this review queue record? All personal information (e.g. username, email, IP address) will be permanently removed from this record."
           reason_title: "A reason for scrubbing this record is required."
           reason_placeholder: "Reason..."
-          confirm_button: "Scrub Record"
+          confirm_button: "Confirm removal"
           cancel_button: "Cancel"
 
       user_percentage:

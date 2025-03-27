@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import ReviewableField from "discourse/components/reviewable-field";
 import getUrl from "discourse/helpers/get-url";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
 import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
@@ -35,11 +35,12 @@ export default class ReviewableUser extends Component {
   showScrubRejectedUserModal() {
     this.modal.show(ScrubRejectedUserModal, {
       model: {
-        confirmScrub: this.scrubRejectedUser.bind(this),
+        confirmScrub: this.scrubRejectedUser,
       },
     });
   }
 
+  @bind
   async scrubRejectedUser(reason) {
     await ajax({
       url: `/review/${this.reviewable.id}/scrub`,
