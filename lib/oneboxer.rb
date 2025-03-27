@@ -527,8 +527,6 @@ module Oneboxer
 
         onebox_options[:cookie] = fd.cookie if fd.cookie
 
-        onebox_options[:user_agent] = user_agent_override if user_agent_override
-
         preview_result = Onebox.preview(uri.to_s, onebox_options)
         result = {
           onebox: WordWatcher.censor(preview_result.to_s),
@@ -662,8 +660,6 @@ module Oneboxer
     if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
       fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
     end
-
-    fd_options[:default_user_agent] = user_agent_override if user_agent_override
 
     fd_options
   end
