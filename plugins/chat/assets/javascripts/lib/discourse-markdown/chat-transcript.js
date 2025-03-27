@@ -1,6 +1,9 @@
 import { performEmojiUnescape } from "pretty-text/emoji";
 import { i18n } from "discourse-i18n";
 
+// NOTE: When updating this file you also must consider the ProseMirror rich editor extension
+// for chat transcripts, because it manually constructs the same HTML structure as this rule.
+
 let customMarkdownCookFn;
 
 const chatTranscriptRule = {

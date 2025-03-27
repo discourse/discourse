@@ -322,7 +322,7 @@ describe Chat::Message do
       COOKED
     end
 
-    it "supports chat quote bbcode" do
+    it "supports chat transcripts" do
       chat_channel = Fabricate(:category_channel, name: "testchannel")
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "chat bbcode quoting in posts" do
+describe "chat transcripts in posts" do
   fab!(:post)
 
   before { SiteSetting.chat_enabled = true }
