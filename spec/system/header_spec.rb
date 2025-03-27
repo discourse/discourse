@@ -283,15 +283,15 @@ RSpec.describe "Glimmer Header", type: :system do
       sign_in current_user
       visit "/"
 
-      header = find(".d-header")
-      expect(header).not_to have_css(".do-not-disturb-background")
+      expect(page).to have_no_css(".d-header .do-not-disturb-background")
 
       current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
-      expect(header).to have_css(".d-header .do-not-disturb-background")
+
+      try_until_success { expect(page).to have_css(".d-header .do-not-disturb-background") }
 
       current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
 
-      expect(header).not_to have_css(".d-header .do-not-disturb-background")
+      expect(page).to have_no_css(".d-header .do-not-disturb-background")
     end
   end
 end
