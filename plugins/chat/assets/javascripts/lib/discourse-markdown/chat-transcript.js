@@ -382,7 +382,7 @@ export function setup(helper) {
 
     const chatAdditionalOpts = opts.discourse.additionalOptions.chat;
 
-    // we need to be able to quote images from chat, but the image rule is usually
+    // We need to be able to quote images from chat, but the image rule is usually
     // banned for chat messages
     const markdownItRules =
       chatAdditionalOpts.limited_pretty_text_markdown_rules.concat("image");
