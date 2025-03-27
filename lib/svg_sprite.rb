@@ -346,7 +346,10 @@ module SvgSprite
           theme_sprites
             .map do |(_theme_id, upload_id, sprite)|
               begin
-                [_theme_id, symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false)]
+                [
+                  _theme_id,
+                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
+                ]
               rescue => e
                 Rails.logger.warn(
                   "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
