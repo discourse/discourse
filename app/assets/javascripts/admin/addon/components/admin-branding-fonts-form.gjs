@@ -127,6 +127,7 @@ export default class AdminBrandingFontsForm extends Component {
           message: i18n("admin.config.branding.fonts.form.saved"),
         },
       });
+      window.location.reload();
     } catch (err) {
       this.toasts.error({
         duration: 3000,

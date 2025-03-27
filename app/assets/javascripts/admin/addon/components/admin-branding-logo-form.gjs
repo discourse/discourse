@@ -81,6 +81,7 @@ export default class AdminBrandingLogoForm extends Component {
           message: i18n("admin.config.branding.logo.form.saved"),
         },
       });
+      window.location.reload();
     } catch (err) {
       this.toasts.error({
         duration: 3000,
