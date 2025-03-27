@@ -66,10 +66,9 @@ module Migrations::Importer::Steps
     private
 
     def transform_row(row)
-      return nil if row[:id] % 2 == 0
+      super
 
-      # TODO remove this when `original_id` comes form the converter
-      row[:original_id] = row.delete(:id)
+      return nil if row[:original_id] % 2 == 0
 
       if row[:emails].present?
         JSON
@@ -82,12 +81,10 @@ module Migrations::Importer::Steps
           end
       end
 
-      if row[:external_id].present? && (existing_user_id = existing_ids[row[:external_id]])
+      if row[:external_id].present? && (existing_user_id = external_ids[row[:external_id]])
         row[:id] = existing_user_id
         return nil
       end
-
-      super
 
       row[:original_username] ||= row[:username]
       row[:username] = @unique_name_finder.find_available_username(
@@ -116,8 +113,10 @@ module Migrations::Importer::Steps
     end
 
     def after_commit_of_inserted_rows(rows)
+      super
+
       rows.each do |row|
-        if row[:username] && row[:username] != row[:original_username]
+        if row[:id] && row[:username] && row[:username] != row[:original_username]
           @intermediate_db.insert(
             INSERT_MAPPED_USERNAMES_SQL,
             [row[:id], row[:original_username], row[:username]],

@@ -140,7 +140,7 @@ module Migrations::Importer
 
       rows.each do |row|
         # TODO update check when `original_id` is stored in IntermediateDB
-        if row[:original_id]
+        if row[:id] && row[:original_id]
           @intermediate_db.insert(
             INSERT_MAPPED_IDS_SQL,
             [row[:original_id], @mapping_type, row[:id]],
