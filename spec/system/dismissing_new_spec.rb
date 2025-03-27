@@ -71,7 +71,7 @@ RSpec.describe "Dismissing New", type: :system do
 
         visit("/new")
 
-        expect(topic_list_controls).to have_new(count: 1)
+        try_until_success { expect(topic_list_controls).to have_new(count: 1) }
       end
 
       topic_list_controls.dismiss_new
@@ -111,7 +111,9 @@ RSpec.describe "Dismissing New", type: :system do
       expect(dismiss_new_modal).to be_closed
       expect(topic_list_controls).to have_new(count: 0)
 
-      using_session(:tab_1) { expect(topic_list_controls).to have_new(count: 0) }
+      using_session(:tab_1) do
+        try_until_success { expect(topic_list_controls).to have_new(count: 0) }
+      end
 
       topic_list_controls.click_latest
 
