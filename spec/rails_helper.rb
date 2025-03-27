@@ -472,12 +472,18 @@ RSpec.configure do |config|
       devtools: ENV["CHROME_DEV_TOOLS"].present?, # playwright recommends https://playwright.dev/docs/debug instead
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       logger: Logger.new($stdout),
-      noViewport: true,
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
     }
 
     Capybara.register_driver(:playwright_chrome) do |app|
-      Capybara::Playwright::Driver.new(app, **driver_options)
+      Capybara::Playwright::Driver.new(
+        app,
+        **driver_options,
+        viewport_size: {
+          width: 1400,
+          height: 1400,
+        },
+      )
     end
 
     Capybara.register_driver(:playwright_mobile_chrome) do |app|
@@ -487,7 +493,14 @@ RSpec.configure do |config|
         :userAgent
       ] = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"
 
-      Capybara::Playwright::Driver.new(app, **driver_options)
+      Capybara::Playwright::Driver.new(
+        app,
+        **driver_options,
+        viewport_size: {
+          width: 390,
+          height: 844,
+        },
+      )
     end
 
     Capybara.default_driver = :playwright_chrome
@@ -660,12 +673,6 @@ RSpec.configure do |config|
   system_tests_initialized = false
 
   config.before(:each, type: :system) do |example|
-    if example.metadata[:mobile]
-      Capybara.current_session.current_window.resize_to(390, 844)
-    else
-      Capybara.current_session.current_window.resize_to(1400, 1400)
-    end
-
     if !system_tests_initialized
       # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
       # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
