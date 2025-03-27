@@ -3,29 +3,24 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const LIGHT = "light";
-const DARK = "dark";
+export const LIGHT = "light";
+export const DARK = "dark";
 
 class Color {
   @tracked lightValue;
   @tracked darkValue;
 
-  constructor({ name, lightValue, darkValue }) {
+  constructor({ name, lightValue, darkValue, description, translatedName }) {
     this.name = name;
     this.lightValue = lightValue;
     this.darkValue = darkValue;
-  }
-
-  get displayName() {
-    return this.name.replaceAll("_", " ");
-  }
-
-  get description() {
-    return i18n(`admin.customize.colors.${this.name}.description`);
+    this.displayName = translatedName;
+    this.description = description;
   }
 }
 
@@ -38,13 +33,15 @@ const NavTab = <template>
       {{on "keydown" @action}}
       ...attributes
     >
-      {{dIcon @icon}}
+      {{icon @icon}}
       <span>{{@label}}</span>
     </a>
   </li>
 </template>;
 
 const Picker = class extends Component {
+  @service toasts;
+
   @action
   onInput(event) {
     const color = event.target.value.replace("#", "");
@@ -67,25 +64,65 @@ const Picker = class extends Component {
     }
   }
 
-  get displayedColor() {
+  @action
+  onTextChange(event) {
+    const color = event.target.value;
     if (this.args.showDark) {
-      return this.args.color.darkValue;
+      this.args.onDarkChange(color);
+      this.args.color.darkValue = color;
     } else {
-      return this.args.color.lightValue;
+      this.args.onLightChange(color);
+      this.args.color.lightValue = color;
     }
+  }
+
+  @action
+  onTextKeypress(event) {
+    const color = event.target.value + event.key;
+
+    if (color && !color.match(/^[0-9A-Fa-f]+$/)) {
+      event.preventDefault();
+      this.toasts.error({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.illegal_character_in_color"
+          ),
+        },
+      });
+    }
+  }
+
+  get displayedColor() {
+    let color;
+    if (this.args.showDark) {
+      color = this.args.color.darkValue ?? this.args.color.lightValue;
+    } else {
+      color = this.args.color.lightValue ?? this.args.color.darkValue;
+    }
+    return this.ensureSixDigitsHex(color);
   }
 
   get activeValue() {
     let color;
     if (this.args.showDark) {
-      color = this.args.color.darkValue;
+      color = this.args.color.darkValue ?? this.args.color.lightValue;
     } else {
-      color = this.args.color.lightValue;
+      color = this.args.color.lightValue ?? this.args.color.darkValue;
     }
 
     if (color) {
-      return `#${color}`;
+      return `#${this.ensureSixDigitsHex(color)}`;
     }
+  }
+
+  ensureSixDigitsHex(hex) {
+    if (hex.length === 3) {
+      return hex
+        .split("")
+        .map((digit) => `${digit}${digit}`)
+        .join("");
+    }
+    return hex;
   }
 
   <template>
@@ -96,10 +133,15 @@ const Picker = class extends Component {
       {{on "input" this.onInput}}
       {{on "change" this.onChange}}
     />
-    {{dIcon "hashtag"}}
-    <span
-      class="color-palette-editor__color-code"
-    >{{this.displayedColor}}</span>
+    {{icon "hashtag"}}
+    <input
+      class="color-palette-editor__text-input"
+      type="text"
+      maxlength="6"
+      value={{this.displayedColor}}
+      {{on "keypress" this.onTextKeypress}}
+      {{on "change" this.onTextChange}}
+    />
   </template>
 };
 
@@ -124,6 +166,8 @@ export default class ColorPaletteEditor extends Component {
         name: color.name,
         lightValue: color.hex,
         darkValue: color.dark_hex,
+        description: color.description,
+        translatedName: color.translatedName,
       });
     });
   }
@@ -134,7 +178,11 @@ export default class ColorPaletteEditor extends Component {
       event.type === "click" ||
       (event.type === "keydown" && event.keyCode === 13)
     ) {
-      this.selectedMode = newMode;
+      if (this.args.onTabSwitch) {
+        this.args.onTabSwitch(newMode);
+      } else {
+        this.selectedMode = newMode;
+      }
     }
   }
 

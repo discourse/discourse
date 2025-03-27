@@ -5,6 +5,7 @@
 
 export const PLUGIN_API_VERSION = "2.1.1";
 
+import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -26,6 +27,8 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
+import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -63,12 +66,13 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
+import { makeArray } from "discourse/lib/helpers";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
@@ -117,9 +121,9 @@ import {
   _registerTransformer,
   transformerTypes,
 } from "discourse/lib/transformer";
+import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -142,7 +146,6 @@ import {
   replaceButton,
 } from "discourse/widgets/post-menu";
 import {
-  addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
@@ -162,11 +165,51 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
+const DEPRECATED_POST_STREAM_WIDGETS = [
+  "actions-summary",
+  "avatar-flair",
+  "embedded-post",
+  "expand-hidden",
+  "expand-post-button",
+  "filter-jump-to-post",
+  "filter-show-all",
+  "post-article",
+  "post-article",
+  "post-avatar-user-info",
+  "post-avatar",
+  "post-body",
+  "post-contents",
+  "post-date",
+  "post-edits-indicator",
+  "post-email-indicator",
+  "post-gap",
+  "post-group-request",
+  "post-links",
+  "post-locked-indicator",
+  "post-meta-data",
+  "post-notice",
+  "post-placeholder",
+  "post-stream",
+  "post",
+  "poster-name",
+  "poster-name-title",
+  "posts-filtered-notice",
+  "reply-to-tab",
+  "select-post",
+  "topic-post-visited-line",
+];
+
 const DEPRECATED_POST_MENU_WIDGETS = [
   "post-menu",
   "post-user-tip-shim",
   "small-user-list",
 ];
+
+const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
+};
 
 const POST_MENU_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta3-dev",
@@ -620,6 +663,14 @@ class PluginApi {
 
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
+    this.onAppEvent(
+      opts.afterAdopt
+        ? "decorate-post-cooked-element:after-adopt"
+        : "decorate-post-cooked-element:before-adopt",
+      callback
+    );
+
+    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -701,52 +752,92 @@ class PluginApi {
     const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, (dec) => {
-      const attrs = dec.attrs;
-      let results = cb(attrs.userCustomFields || {}, attrs);
+    const IconsComponent = class extends Component {
+      get definitions() {
+        return makeArray(
+          cb(
+            this.args.outletArgs.post.user_custom_fields || {},
+            this.args.outletArgs.post
+          )
+        );
+      }
 
-      if (results) {
-        if (!Array.isArray(results)) {
-          results = [results];
-        }
+      <template>
+        {{#each this.definitions as |definition|}}
+          <PostMetaDataPosterNameIcon
+            @className={{definition.className}}
+            @emoji={{definition.emoji}}
+            @emojiTitle={{definition.emojiTitle}}
+            @icon={{definition.icon}}
+            @text={{definition.text}}
+            @title={{definition.title}}
+            @url={{definition.url}}
+          />
+        {{/each}}
+      </template>
+    };
 
-        return results.map((result) => {
-          let iconBody;
+    if (loc === "after") {
+      this.renderAfterWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    } else {
+      this.renderBeforeWrapperOutlet(
+        "post-meta-data-poster-name",
+        IconsComponent
+      );
+    }
 
-          if (result.icon) {
-            iconBody = iconNode(result.icon);
-          } else if (result.emoji) {
-            iconBody = result.emoji.split("|").map((name) => {
-              let widgetAttrs = { name };
-              if (result.emojiTitle) {
-                widgetAttrs.title = true;
-              }
-              return dec.attach("emoji", widgetAttrs);
-            });
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
+    withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+      decorateWidget(`poster-name:${loc}`, (dec) => {
+        const attrs = dec.attrs;
+        let results = cb(attrs.userCustomFields || {}, attrs);
+
+        if (results) {
+          if (!Array.isArray(results)) {
+            results = [results];
           }
 
-          if (result.text) {
-            iconBody = [iconBody, result.text];
-          }
+          return results.map((result) => {
+            let iconBody;
 
-          if (result.url) {
-            iconBody = dec.h(
-              "a",
-              { attributes: { href: result.url } },
+            if (result.icon) {
+              iconBody = iconNode(result.icon);
+            } else if (result.emoji) {
+              iconBody = result.emoji.split("|").map((name) => {
+                let widgetAttrs = { name };
+                if (result.emojiTitle) {
+                  widgetAttrs.title = true;
+                }
+                return dec.attach("emoji", widgetAttrs);
+              });
+            }
+
+            if (result.text) {
+              iconBody = [iconBody, result.text];
+            }
+
+            if (result.url) {
+              iconBody = dec.h(
+                "a",
+                { attributes: { href: result.url } },
+                iconBody
+              );
+            }
+
+            return dec.h(
+              "span.poster-icon",
+              {
+                className: result.className,
+                attributes: { title: result.title },
+              },
               iconBody
             );
-          }
-
-          return dec.h(
-            "span.poster-icon",
-            {
-              className: result.className,
-              attributes: { title: result.title },
-            },
-            iconBody
-          );
-        });
-      }
+          });
+        }
+      });
     });
   }
 
@@ -1142,6 +1233,10 @@ class PluginApi {
    **/
   disableNameSuppressionOnPosts() {
     disableNameSuppression();
+    this.registerValueTransformer(
+      "post-meta-data-poster-name-suppress-similar-name",
+      () => true
+    );
   }
 
   /**
@@ -1445,6 +1540,12 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionIcon(key, icon) {
+    this.registerValueTransformer(
+      "post-small-action-icon",
+      ({ value, context: { code } }) => (key === code ? icon : value)
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostSmallActionIcon(key, icon);
   }
 
@@ -1472,6 +1573,15 @@ class PluginApi {
    * ```
    **/
   addPostSmallActionClassesCallback(callback) {
+    this.registerValueTransformer(
+      "post-small-action-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostSmallActionClassesCallback(callback);
   }
 
@@ -1533,6 +1643,15 @@ class PluginApi {
    * addPostClassesCallback((attrs) => {if (attrs.post_number == 1) return ["first"];})
    **/
   addPostClassesCallback(callback) {
+    this.registerValueTransformer(
+      "post-class",
+      ({ value, context: { post } }) => [
+        ...makeArray(value),
+        ...makeArray(callback(post)),
+      ]
+    );
+
+    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
     addPostClassesCallback(callback);
   }
 
@@ -1590,6 +1709,11 @@ class PluginApi {
    * })
    */
   addPostTransformCallback(callback) {
+    deprecated(
+      "`api.addPostTransformCallback` has been deprecated.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
     addPostTransformCallback(callback);
   }
 
@@ -3408,6 +3532,14 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+      return;
+    }
 
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(

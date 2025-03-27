@@ -3241,33 +3241,46 @@ da:
         description: "Gendan indlægget, så alle brugere kan se det."
       delete_single:
         title: "Slet"
+        complete: "Indlæg slettet."
       delete:
         title: "Slet…"
+      delete_and_ignore:
+        complete: "Indlæg slettet."
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
+      delete_and_agree:
+        complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
         title: "Nej"
+        complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
+        complete: "Rapportering ignoreret."
       ignore_and_do_nothing:
         title: "Gøre ingenting"
+        complete: "Rapportering ignoreret."
       approve:
         title: "Godkend"
+        complete: "Indlæg godkendt."
       approve_post:
         title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
       reject_post:
         title: "Afvis Indlæg"
+        complete: "Indlæg afvist."
       approve_user:
         title: "Godkend Bruger"
+        complete: "Bruger godkendt."
       reject_user:
         title: "Slet Bruger…"
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."
+          complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
@@ -3276,6 +3289,7 @@ da:
         bundle_title: "Afvis…"
       delete_user:
         reason: "Slettet via gennemgangskø"
+        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

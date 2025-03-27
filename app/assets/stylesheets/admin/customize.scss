@@ -112,6 +112,8 @@
     background-color: var(--tertiary-low);
     padding: 10px;
     margin: 10px 0;
+    white-space: nowrap;
+    overflow-x: auto;
   }
 
   .admin-container {
@@ -206,11 +208,11 @@
         justify-content: space-between;
         width: 79.7%;
 
-        @media screen and (max-width: 700px) {
+        @media screen and (width <= 700px) {
           width: 100%;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 768px) {
+        @media screen and (width >= 700px) and (width <= 768px) {
           width: 73%;
         }
 
@@ -398,11 +400,11 @@
     border-left: 1px solid var(--primary-low);
     width: 100%;
 
-    @media screen and (max-height: 1000px) {
+    @media screen and (height <= 1000px) {
       max-height: 50vh;
     }
 
-    @media screen and (max-height: 800px) {
+    @media screen and (height <= 800px) {
       max-height: 40vh;
     }
 
@@ -632,7 +634,11 @@
     }
 
     .ace-wrapper {
-      height: calc(100vh - 200px);
+      height: calc(100vh - 270px);
+    }
+
+    .edit-main-nav ~ .ace-wrapper {
+      height: calc(100vh - 315px);
     }
 
     .wrapper {
@@ -853,6 +859,18 @@
   }
 }
 
+.theme-install-card {
+  &__external-links {
+    display: flex;
+    margin-bottom: 1em;
+    flex-direction: column;
+  }
+
+  &__install-button {
+    width: 100%;
+  }
+}
+
 .add-upload-modal {
   input[type="file"] {
     display: block;
@@ -948,7 +966,7 @@
     }
   }
 
-  @media screen and (max-width: 880px) {
+  @media screen and (width <= 880px) {
     table.grid {
       thead {
         display: none;
@@ -972,7 +990,7 @@
     }
   }
 
-  @media screen and (max-width: 580px) {
+  @media screen and (width <= 580px) {
     table.grid {
       tr td.editing-input {
         grid-column-start: 1;
@@ -1191,8 +1209,11 @@
 
 .desktop-view .admin-customize {
   .show-current-style {
-    padding-left: 2%;
     width: 68%;
+
+    &.legacy {
+      padding-left: 2%;
+    }
 
     .title {
       input {
@@ -1203,6 +1224,10 @@
 
   .themes-list {
     width: 28%;
+  }
+
+  .back-to-themes-and-components {
+    margin-bottom: 1em;
   }
 }
 

@@ -43,7 +43,7 @@ export default class SmallUserList extends Component {
   }
 
   get shouldShow() {
-    return this.users.length && this.args.isVisible;
+    return this.users.length && (this.args.isVisible ?? true);
   }
 
   <template>

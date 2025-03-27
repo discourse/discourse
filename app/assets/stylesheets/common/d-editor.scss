@@ -322,7 +322,7 @@
     font-size: var(--font-down-1);
   }
 
-  .btn:focus {
+  .btn:focus-visible {
     @include default-focus;
   }
 
@@ -330,6 +330,7 @@
     margin: 0;
     background-color: transparent;
     color: var(--primary-medium);
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       color: currentcolor;

@@ -265,6 +265,7 @@
     margin-right: 0;
     overflow: hidden;
     width: 100%;
+    border-radius: var(--d-border-radius);
 
     &.dialog-close {
       display: none;
@@ -406,7 +407,7 @@
       padding: 10px 4px 4px 4px;
     }
 
-    @media screen and (max-width: 760px) {
+    @media screen and (width <= 760px) {
       .incoming-email-html-part {
         width: calc(100% - 10px);
       }

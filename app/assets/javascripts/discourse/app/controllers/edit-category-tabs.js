@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
@@ -11,10 +12,24 @@ import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import { i18n } from "discourse-i18n";
 
+const FIELD_LIST = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "description",
+  "color",
+  "text_color",
+  "style_type",
+  "emoji",
+  "icon",
+];
+
 export default class EditCategoryTabsController extends Controller {
   @service dialog;
   @service site;
   @service router;
+
+  @tracked breadcrumbCategories = this.site.get("categoriesList");
 
   selectedTab = "general";
   saving = false;
@@ -28,18 +43,31 @@ export default class EditCategoryTabsController extends Controller {
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
-  @discourseComputed("saving", "model.name", "model.color", "deleting")
-  disabled(saving, name, color, deleting) {
-    if (saving || deleting) {
+  get formData() {
+    const data = getProperties(this.model, ...FIELD_LIST);
+
+    if (!this.model.styleType) {
+      data.style_type = "square";
+    }
+
+    return data;
+  }
+
+  @action
+  canSaveForm(transientData) {
+    if (!transientData.name) {
+      return false;
+    }
+
+    if (!transientData.color) {
+      return false;
+    }
+
+    if (this.saving || this.deleting) {
       return true;
     }
-    if (!name) {
-      return true;
-    }
-    if (!color) {
-      return true;
-    }
-    return false;
+
+    return true;
   }
 
   @discourseComputed("saving", "deleting")
@@ -81,11 +109,17 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  saveCategory() {
+  isLeavingForm(transition) {
+    return !transition.targetName.startsWith("editCategory.tabs");
+  }
+
+  @action
+  saveCategory(transientData) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
+    this.model.setProperties(transientData);
     this.set("saving", true);
 
     this.model
@@ -105,6 +139,10 @@ export default class EditCategoryTabsController extends Controller {
             Category.slugFor(this.model)
           );
         }
+        // force a reload of the category list to track changes to style type
+        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+          c.id === this.model.id ? this.model : c
+        );
       })
       .catch((error) => {
         popupAjaxError(error);

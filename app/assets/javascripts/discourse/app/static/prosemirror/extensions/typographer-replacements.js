@@ -13,10 +13,6 @@ const extension = {
     {
       match: new RegExp(`(${RARE_RE.source})$`),
       handler: (state, match, start, end) => {
-        if (state.doc.rangeHasMark(start, end, state.schema.marks.code)) {
-          return false;
-        }
-
         return state.tr.replaceWith(
           start,
           end,
@@ -25,12 +21,15 @@ const extension = {
       },
     },
     {
-      match: new RegExp(`(${SCOPED_ABBR_RE.source})$`, "i"),
+      // existing for markdown-it, plus: en-dash + hyphen -> em-dash
+      match: new RegExp(`(${SCOPED_ABBR_RE.source}|\u2013-)$`, "i"),
       handler: (state, match, start, end) => {
         return state.tr.replaceWith(
           start,
           end,
-          state.schema.text(replaceScopedStr(match[0]))
+          state.schema.text(
+            replaceScopedStr(match[0]).replace(/\u2013-$/, "\u2014")
+          )
         );
       },
     },

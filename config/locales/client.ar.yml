@@ -306,6 +306,10 @@ ar:
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
     back_button: "الرجوع"
+    welcome_banner:
+      header:
+        anonymous_members: "مرحبًا بك في %{site_name}!"
+      search: "البحث"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
@@ -649,10 +653,6 @@ ar:
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودة رسالة خاصة جديدة"
       edit_topic: "تعديل مسودة الموضوع"
-      abandon:
-        confirm: "لديك بالفعل مسودة قيد التقدم. ماذا تريد أن تفعل بها؟"
-        yes_value: "تجاهل"
-        no_value: "استئناف التعديل"
       dropdown:
         title: "افتح قائمة أحدث المسودات"
         untitled: "مسودة دون عنوان"
@@ -6503,6 +6503,66 @@ ar:
             failed: "فشل"
       home:
         title: "الصفحة الرئيسية"
+      account:
+        title: "الحساب"
+        sidebar_link:
+          backups: "النسخ الاحتياطية"
+          whats_new:
+            title: "ما الجديد؟"
+            keywords: "سجل التغييرات|الميزة|الإصدار"
+      community:
+        title: "المجتمع"
+        sidebar_link:
+          about_your_site: "نبذة عن موقعك"
+          badges: "الشارات"
+          login_and_authentication: "تسجيل الدخول والمصادقة"
+          notifications: "الإشعارات"
+          permalinks: "الروابط الثابتة"
+          trust_levels: "مستويات الثقة"
+          group_permissions: "أذونات المجموعة"
+          users: "المستخدمون"
+          groups: "المجموعات"
+          user_fields: "حقول المستخدم"
+          watched_words: "الكلمات المُراقَبة"
+          legal: "المسائل القانونية"
+          moderation_flags:
+            title: "الإشراف"
+            keywords: "بلاغ|مراجعة"
+      appearance:
+        title: "المظهر"
+        sidebar_link:
+          font_style: "نمط الخط"
+          site_logo: "شعار الموقع"
+          color_schemes: "لوحات الألوان"
+          emoji: "الرمز التعبيري"
+          navigation: "التنقل"
+          themes_and_components:
+            keywords: "الامتداد"
+          site_texts: "نصوص الموقع"
+      email_settings:
+        title: "إعدادات البريد الإلكتروني"
+        sidebar_link:
+          appearance: "المظهر"
+          server_setup:
+            title: "إعداد الخادم والسجلات"
+            keywords: "البريد الإلكتروني | smtp | mailgun | sendgrid | مُرسَل | تم تخطيه | مرتد | مُستلَم | مرفوض | سجلات البريد الإلكتروني | ملخص المعاينة"
+      security:
+        title: "الأمان"
+        sidebar_link:
+          security: "إعدادات الأمان"
+          spam: "إعدادات البريد العشوائي"
+          staff_action_logs:
+            title: "السجلات والفحص"
+            keywords: "سجلات الأخطاء | إجراءات الموظفين | رسائل البريد الإلكتروني التي تم فحصها | عناوين IP التي تم فحصها | عناوين URL التي تم فحصها | سجلات البحث"
+      section_landing_pages:
+        account:
+          title: "الحساب"
+          backups:
+            title: "النسخ الاحتياطية"
+            description: "قم بعمل نسخة احتياطية من بيانات موقعك"
+          whats_new:
+            title: "ما الجديد؟"
+            description: "اكتشف الإصدارات الجديدة والتحسينات في Discourse"
       config_areas:
         about:
           general_settings: "الإعدادات العامة"
@@ -6596,16 +6656,15 @@ ar:
           delete: "حذف"
           more_options:
             title: "خيارات إضافية"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "تخصيص"
+          install: "تثبيت"
           themes:
-            title: "السمات"
+            title: "الواجهة"
             themes_intro: "قم بتثبيت سمة جديدة للبدء، أو إنشاء سمة خاصة بك من الصفر باستخدام هذه الموارد."
-            themes_intro_img_alt: "عنصر نائب لسمة جديدة"
-            set_default_theme: "التعيين كافتراضية"
-            default_theme: "السمة الافتراضية"
-            themes_description: "تُعد السمات تخصيصات موسَّعة تؤدي إلى تغيير عدة عناصر في نمط تصميم مدونتك، وغالبًا ما يتضمَّن أيضًا ميزات إضافية للواجهة الأمامية."
             new_theme: "سمة جديدة"
-            user_selectable: "قابلة للاختيار من قِبل المستخدم"
+          components:
+            title: "المكوِّنات"
         user_fields:
           field: "الحقل"
           type: "النوع"
@@ -6616,6 +6675,13 @@ ar:
           delete: "حذف"
           delete_successful: "تم حذف حقل المستخدم."
           save_successful: "تم حفظ حقل المستخدم."
+        color_palettes:
+          palette_name: "الاسم"
+          color_options:
+            toggle: "قابلة للاختيار من قِبل المستخدم"
+            toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
+          colors:
+            title: "الألوان"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -6985,7 +7051,6 @@ ar:
           title: "الألوان"
           edit: "تعديل لوحات الألوان"
           long_title: "لوحات الألوان"
-          description: "لوحات الألوان تحدِّد الألوان الأساسية المُستخدَمة في واجهة موقعك، بينما يمكن للسمات أن توفِّر أنماطًا وتخطيطات ومكونات إضافية - وكلاهما يمكنه العمل معًا لإنشاء المظهر والشكل الفريد لموقعك، وكلاهما يمكن توفيرة للمستخدمين لاختيار تفضيلاتهم."
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"

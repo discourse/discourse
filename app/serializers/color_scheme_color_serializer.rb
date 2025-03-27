@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ColorSchemeColorSerializer < ApplicationSerializer
-  attributes :name, :hex, :default_hex, :is_advanced
+  attributes :name, :hex, :default_hex, :is_advanced, :dark_hex
 
   def hex
     object.hex # otherwise something crazy is returned

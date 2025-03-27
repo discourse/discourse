@@ -469,69 +469,6 @@ textarea {
   }
 }
 
-.user-menu .quick-access-panel li.user-status .relative-date {
-  text-align: left;
-  font-size: var(--font-down-3);
-  padding-top: 0.45em;
-  margin-left: 0.75em;
-  color: var(--primary-medium);
-}
-
-.user-menu .quick-access-panel li.do-not-disturb {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  background: var(--secondary);
-
-  .do-not-disturb-inner-container {
-    display: flex;
-    width: 100%;
-    align-items: center;
-
-    .do-not-disturb-label {
-      display: flex;
-      align-items: center;
-    }
-
-    .relative-date {
-      text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 3px;
-      margin-left: 0.75em;
-      color: var(--primary-medium);
-    }
-
-    .d-icon-toggle-off,
-    .d-icon-toggle-on {
-      padding-top: 0;
-    }
-
-    .d-icon-toggle-on {
-      color: var(--tertiary);
-    }
-  }
-}
-
-.do-not-disturb-modal {
-  .do-not-disturb-choice {
-    display: grid;
-    grid-template-columns: 2em 1fr auto;
-    grid-template-rows: auto auto;
-    align-items: center;
-    cursor: pointer;
-    padding: 0.5em 0;
-
-    &:hover {
-      background-color: var(--tertiary-low);
-    }
-
-    label {
-      margin-bottom: 0;
-    }
-  }
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;

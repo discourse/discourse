@@ -218,6 +218,12 @@ en:
     bootstrap_mode: "Getting started"
     back_button: "Back"
 
+    welcome_banner:
+      header:
+        logged_in_members: "Welcome back, %{preferred_display_name}!"
+        anonymous_members: "Welcome to %{site_name}!"
+      search: "Search"
+
     themes:
       default_description: "Default"
       broken_theme_alert: "Your site may not work because a theme / component has errors."
@@ -494,10 +500,6 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
-      abandon:
-        confirm: "You already have a draft in progress. What would you like to do with it?"
-        yes_value: "Discard"
-        no_value: "Resume editing"
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
@@ -630,6 +632,7 @@ en:
         required: "You must claim items before you can review them."
         claimed_by_you: "You've claimed this item and can review it."
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
+        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "claim this topic"
       unclaim:
@@ -2753,6 +2756,8 @@ en:
       show_preview: "show preview"
       hide_preview: "hide preview"
 
+      switch_to_markdown: "Switch to standard Markdown editor"
+      switch_to_rich_text: "Switch to new rich text editor"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -4121,15 +4126,24 @@ en:
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"
+      untitled: "Untitled Category"
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
+      style: "Styles"
+      background_color: "Color"
       foreground_color: "Foreground color"
+      styles:
+        type: "Style"
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          square: "Square"
+          icon: "Icon"
+          emoji: "Emoji"
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
@@ -5156,6 +5170,7 @@ en:
           paste: "Paste..."
           save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
+    safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5376,7 +5391,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
@@ -5387,6 +5402,10 @@ en:
           title: "Components"
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
+        themes_and_components:
+          title: "Themes and components"
+          header_description: "Personalize your Discourse site with themes and components to match your needs"
+          keywords: "theme|component|extension|customize"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
@@ -5648,6 +5667,7 @@ en:
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_unknown_count: "Users with one of the new email domains will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
           alert:
@@ -5956,6 +5976,72 @@ en:
             failed: "Failed"
       home:
         title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "What's new?"
+            keywords: "changelog|feature|release"
+
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "About your site"
+          badges: "Badges"
+          login_and_authentication: "Login & authentication"
+          notifications: "Notifications"
+          permalinks: "Permalinks"
+          trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
+          users: "Users"
+          groups: "Groups"
+          user_fields: "User fields"
+          watched_words: "Watched words"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "flag|review"
+
+      appearance:
+        title: "Appearance"
+        sidebar_link:
+          font_style: "Font style"
+          site_logo: "Site logo"
+          color_schemes: "Color palettes"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes_and_components:
+            title: "Themes and components"
+            keywords: "extension"
+          site_texts: "Site texts"
+
+      email_settings:
+        title: "Email Settings"
+        sidebar_link:
+          appearance: "Appearance"
+          server_setup:
+            title: "Server setup & logs"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+
+      security:
+        title: "Security"
+        sidebar_link:
+          security: "Security settings"
+          spam: "Spam settings"
+          staff_action_logs:
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backups"
+            description: "Take a backup of your site's data"
+          whats_new:
+            title: "What's new?"
+            description: "Discover new releases and improvements to Discourse"
 
       config_areas:
         about:
@@ -6052,16 +6138,21 @@ en:
           delete: "Delete"
           more_options:
             title: "More options"
-        look_and_feel:
+        themes_and_components:
+          title: "Themes and components"
+          description: "Personalize your Discourse site with themes and components to match your needs."
+          breadcrumb_title: "Customize"
+          install: "Install"
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
-            themes_intro_img_alt: "New theme placeholder"
-            set_default_theme: "Set default"
-            default_theme: "Default theme"
-            themes_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
             new_theme: "New theme"
-            user_selectable: "User selectable"
+            back: "Back to themes"
+          components:
+            title: "Components"
+            components_intro: "Install a new component to get started, or create your own from scratch using these resources."
+            new_component: "New component"
+            back: "Back to components"
         user_fields:
           field: "Field"
           type: "Type"
@@ -6072,6 +6163,21 @@ en:
           delete: "Delete"
           delete_successful: "User field deleted."
           save_successful: "User field saved."
+        color_palettes:
+          palette_name: "Name"
+          color_options:
+            title: "Color options"
+            toggle: "User selectable"
+            toggle_description: "Color palette can be selected by users"
+          colors:
+            title: "Colors"
+          fonts_and_logos_hint: "Looking to update your fonts and logos?"
+          go_to_branding: "Go to Branding"
+          save_changes: "Save changes"
+          unsaved_changes: "You have unsaved changes"
+          copy_of: "Copy of %{name}"
+          copy_created: 'A new copy of "%{name}" has been created'
+          illegal_character_in_color: "Colors consist of hexadecimal characters only"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6224,6 +6330,7 @@ en:
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
           themes_intro_new: "Install a new theme to get started, or create your own from scratch using these resources."
+          components_intro_new: "Install a new component to get started, or create your own from scratch using these resources."
           themes_intro_img_alt: "New theme placeholder"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
@@ -6441,7 +6548,6 @@ en:
           title: "Colors"
           edit: "Edit color palettes"
           long_title: "Color palettes"
-          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"

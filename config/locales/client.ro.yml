@@ -222,6 +222,11 @@ ro:
       dismiss: "Respinge"
     bootstrap_mode: "Începe"
     back_button: "Înapoi"
+    welcome_banner:
+      header:
+        logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
+        anonymous_members: "Bine ai venit pe %{site_name}!"
+      search: "Caută"
     themes:
       default_description: "Implicit"
       broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau componentă are erori."
@@ -442,10 +447,6 @@ ro:
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj personal nou"
       edit_topic: "Editează ciornă subiect"
-      abandon:
-        confirm: "Ai deja o ciornă în curs de redactare. Ce ai vrea să faci cu ea?"
-        yes_value: "Renunță"
-        no_value: "Reia editarea"
       dropdown:
         title: "Deschide meniul celei mai recente ciorne"
         untitled: "Ciornă fără titlu"
@@ -551,6 +552,7 @@ ro:
         required: "Trebuie să revendici elementele înainte de a le putea revizui."
         claimed_by_you: "Ai revendicat acest element și îl poți revizui."
         claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
+        automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
         title: "revendică acest subiect"
       unclaim:
@@ -2000,6 +2002,8 @@ ro:
       saving: "Se salvează"
       saved: "Salvat!"
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
+      switch_to_markdown: "Comută la editorul standard Markdown"
+      switch_to_rich_text: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -3480,6 +3484,7 @@ ro:
           paste: "Lipește..."
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
+    safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
@@ -3609,12 +3614,17 @@ ro:
           header_description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         color_palettes:
           title: "Palete de culori"
+          header_description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stilizare, șabloane și componente suplimentare. Ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
         emoji:
           title: "Emoticon"
           header_description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp."
         themes:
           title: "Teme"
           header_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare"
+        themes_and_components:
+          title: "Teme și componente"
+          header_description: "Personalizează-ți site-ul Discourse cu teme și componente pentru a se potrivi nevoilor tale"
+          keywords: "theme|component|extension|customize"
         site_texts:
           title: "Texte site"
         email:
@@ -3790,6 +3800,7 @@ ro:
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
             trust_levels_none: "Nimeni"
             automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
+            automatic_membership_user_unknown_count: "Utilizatorii cu unul dintre noile domenii de email vor fi adăugați în grup."
             primary_group: "Setează automat ca grup principal"
         name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
         primary: "Grup primar"
@@ -3926,6 +3937,54 @@ ro:
             failed: "Eșuată"
       home:
         title: "Acasă"
+      account:
+        title: "Cont"
+        sidebar_link:
+          backups: "Copii de siguranță"
+          whats_new:
+            title: "Ce este nou?"
+      community:
+        title: "Comunitate"
+        sidebar_link:
+          badges: "Insigne"
+          notifications: "Notificări"
+          permalinks: "Legături permanente"
+          trust_levels: "Niveluri de încredere"
+          group_permissions: "Permisiuni grup"
+          users: "Utilizatori"
+          groups: "Grupuri"
+          user_fields: "Câmpuri utilizator"
+          watched_words: "Cuvinte urmărite"
+          legal: "Legal"
+      appearance:
+        title: "Aspect"
+        sidebar_link:
+          font_style: "Stil font"
+          site_logo: "Logo site"
+          color_schemes: "Paletă de culori"
+          emoji: "Emoticon"
+          navigation: "Navigare"
+          site_texts: "Texte site"
+      email_settings:
+        title: "Setări email"
+        sidebar_link:
+          appearance: "Aspect"
+          server_setup:
+            title: "Configurare și jurnale server"
+      security:
+        title: "Securitate"
+        sidebar_link:
+          security: "Setări de securitate"
+          spam: "Setări spam"
+      section_landing_pages:
+        account:
+          title: "Cont"
+          backups:
+            title: "Copii de siguranță"
+            description: "Fă o copie de siguranță a datelor site-ului tău"
+          whats_new:
+            title: "Ce este nou?"
+            description: "Descoperă noile versiuni și îmbunătățiri ale Discourse"
       config_areas:
         about:
           community_title: "Titlu comunitate"
@@ -3979,16 +4038,14 @@ ro:
           delete: "Șterge"
           more_options:
             title: "Mai multe opțiuni"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizare"
           themes:
             title: "Teme"
             themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
-            themes_intro_img_alt: "Substituent nou pentru temă"
-            set_default_theme: "Setare implicită"
-            default_theme: "Temă implicită"
-            themes_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
             new_theme: "Temă nouă"
-            user_selectable: "Selectabil de către utilizator"
+          components:
+            title: "Componente"
         user_fields:
           field: "Câmp"
           type: "Tip"
@@ -3999,6 +4056,18 @@ ro:
           delete: "Șterge"
           delete_successful: "Câmp utilizator șters."
           save_successful: "Câmp utilizator salvat."
+        color_palettes:
+          palette_name: "Nume"
+          color_options:
+            title: "Opțiuni de culoare"
+            toggle: "Selectabil de către utilizator"
+            toggle_description: "Paleta de culori poate fi selectată de utilizatori"
+          colors:
+            title: "Culori"
+          fonts_and_logos_hint: "Vrei să-ți actualizezi fonturile și logo-urile?"
+          save_changes: "Salvează modificări"
+          unsaved_changes: "Ai modificări nesalvate"
+          illegal_character_in_color: "Culorile constau numai din caractere hexazecimale"
       plugins:
         title: "Plugin-uri"
         name: "Nume"
@@ -4192,7 +4261,6 @@ ro:
           title: "Culori"
           edit: "Editează paletă de culori"
           long_title: "Paletă de culori"
-          description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stil, machete și componente suplimentare – ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
           undo: "Anulează acțiunea"

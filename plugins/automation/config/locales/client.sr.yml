@@ -40,7 +40,8 @@ sr:
             restricted_categories:
               label: Kategorije
           created: Napravljeno
-          topics: Teme
+          with_images: Slike
+          with_links: Linkovi
         category_created_edited:
           fields:
             restricted_category:

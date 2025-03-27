@@ -567,7 +567,8 @@ nav.post-controls {
       }
     }
 
-    .widget-button {
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
       &:hover {
         color: currentcolor;
         background: var(--danger-low);
@@ -754,7 +755,7 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
 
-    @media screen and (max-width: 420px) {
+    @media screen and (width <= 420px) {
       flex-direction: column;
       align-items: flex-start;
 
@@ -978,7 +979,8 @@ aside.quote {
   }
 
   &.edits {
-    .widget-button {
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
       display: flex;
       align-items: center;
 
@@ -1410,7 +1412,7 @@ span.mention {
   }
 }
 
-@media all and (max-width: 767px) {
+@media all and (width <= 767px) {
   .reply-to-tab {
     span {
       display: none;
@@ -1500,8 +1502,14 @@ span.mention {
     }
   }
 
-  .post-notice-message p {
-    display: inline;
+  .post-notice-message {
+    p {
+      display: inline;
+    }
+
+    .custom_created_by {
+      display: inline-block;
+    }
   }
 
   p {

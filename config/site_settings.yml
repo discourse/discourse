@@ -689,7 +689,7 @@ login:
     min: 1
     max: 175200
   full_page_login:
-    default: false
+    default: true
     client: true
   show_signup_form_email_instructions:
     client: true
@@ -812,10 +812,10 @@ users:
   enable_user_directory:
     client: true
     default: true
-  allow_anonymous_posting:
+  allow_anonymous_mode:
     default: false
     client: true
-  allow_anonymous_likes:
+  allow_likes_in_anonymous_mode:
     default: false
     client: true
   anonymous_posting_min_trust_level:
@@ -912,6 +912,9 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+  max_automatic_membership_email_domains:
+    default: 50
+    hidden: true
 
 posting:
   min_post_length:
@@ -3199,6 +3202,10 @@ uncategorized:
     client: true
     default: true
 
+  enable_welcome_banner:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -3563,6 +3570,21 @@ experimental:
       - auto
       - enabled
     default: enabled
+  glimmer_post_stream_mode_auto_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_stream_mode:
+    client: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
   enable_rich_text_paste:
     client: true
     default: true
@@ -3577,6 +3599,7 @@ experimental:
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
+    client: true
   rich_editor:
     client: true
     default: false

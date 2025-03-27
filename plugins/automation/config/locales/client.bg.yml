@@ -62,7 +62,9 @@ bg:
             restricted_categories:
               label: Категории
           created: Създадени
-          topics: Теми
+          with_images: Изображения
+          with_links: Връзки
+          with_code: Код
         category_created_edited:
           fields:
             restricted_category:

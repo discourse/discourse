@@ -169,6 +169,10 @@ ca:
     software_update_prompt:
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    welcome_banner:
+      header:
+        anonymous_members: "Benvingut a %{site_name}!"
+      search: "Cerca"
     themes:
       default_description: "Per defecte"
     s3:
@@ -325,9 +329,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      abandon:
-        yes_value: "Descarta"
-        no_value: "Reprèn l'edició"
     topic_count_all:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
@@ -3335,6 +3336,38 @@ ca:
             failed: "Fallits"
       home:
         title: "Pàgina principal"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Còpies de seguretat"
+      community:
+        title: "Comunitat"
+        sidebar_link:
+          badges: "Insígnies"
+          notifications: "Notificacions"
+          permalinks: "Enllaços permanents"
+          users: "Usuaris"
+          groups: "Grups"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderació"
+      appearance:
+        title: "Aparença"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegació"
+          themes_and_components:
+            keywords: "extensió"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparença"
+      security:
+        title: "Seguretat"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Còpies de seguretat"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3361,12 +3394,20 @@ ca:
         embeddable_host:
           edit: "Edita"
           delete: "Suprimeix"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalitza"
+          install: "Instal·la"
           themes:
             title: "Aparences"
+          components:
+            title: "Components"
         user_fields:
           type: "Tipus"
           delete: "Suprimeix"
+        color_palettes:
+          palette_name: "Nom"
+          colors:
+            title: "Colors"
       plugins:
         title: "Connectors"
         name: "Nom"

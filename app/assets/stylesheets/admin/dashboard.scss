@@ -49,8 +49,19 @@
     }
 
     .navigation-link {
+      @include breakpoint("mobile-extra-large") {
+        padding: 0.4em;
+        font-size: var(--font-down-1);
+      }
+
       .emoji {
         margin-right: 0.5em;
+
+        @include breakpoint("mobile-extra-large") {
+          width: 1.3em;
+          height: 1.3em;
+          margin-right: 0;
+        }
       }
     }
   }
@@ -109,7 +120,7 @@
       border-bottom: 1px solid var(--primary-low);
       padding-bottom: 0.5em;
 
-      @media screen and (max-width: 400px) {
+      @media screen and (width <= 400px) {
         flex-wrap: wrap;
       }
 
@@ -231,7 +242,7 @@
       }
     }
 
-    @media screen and (max-width: 400px) {
+    @media screen and (width <= 400px) {
       flex-wrap: wrap;
 
       .storage-stats,
@@ -399,6 +410,12 @@
 
 .activity-metrics {
   margin-bottom: 2em;
+
+  @include breakpoint("mobile-extra-large") {
+    .counters-list {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .user-metrics {
@@ -581,7 +598,7 @@
   .update-header {
     flex: 1 1 100%;
 
-    @media screen and (max-width: 650px) {
+    @media screen and (width <= 650px) {
       margin: 0;
     }
 
@@ -788,6 +805,16 @@
   &__new-feature-version {
     margin-left: auto;
     color: var(--primary-low-mid);
+
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    h3 {
+      margin-right: 0.5em;
+    }
   }
 }
 

@@ -194,6 +194,10 @@ fr:
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     back_button: "Retour"
+    welcome_banner:
+      header:
+        anonymous_members: "Bienvenue sur %{site_name} !"
+      search: "Recherche"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -456,10 +460,6 @@ fr:
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
-      abandon:
-        confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
-        yes_value: "Abandonner"
-        no_value: "Reprendre l'édition"
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
@@ -5456,6 +5456,66 @@ fr:
             failed: "Échec"
       home:
         title: "Accueil"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Sauvegardes"
+          whats_new:
+            title: "Quoi de neuf ?"
+            keywords: "journal des modifications|fonctionnalité|version"
+      community:
+        title: "Communauté"
+        sidebar_link:
+          about_your_site: "À propos de votre site"
+          badges: "Badges"
+          login_and_authentication: "Connexion et authentification"
+          notifications: "Notifications"
+          permalinks: "Permaliens"
+          trust_levels: "Niveaux de confiance"
+          group_permissions: "Autorisations de groupe"
+          users: "Utilisateurs"
+          groups: "Groupes"
+          user_fields: "Champs utilisateur"
+          watched_words: "Mots surveillés"
+          legal: "Mentions légales"
+          moderation_flags:
+            title: "Modération"
+            keywords: "signaler|examiner"
+      appearance:
+        title: "Apparence"
+        sidebar_link:
+          font_style: "Style de police"
+          site_logo: "Logo du site"
+          color_schemes: "Palettes de couleurs"
+          emoji: "Émoji"
+          navigation: "Navigation"
+          themes_and_components:
+            keywords: "extension"
+          site_texts: "Textes du site"
+      email_settings:
+        title: "Paramètres de messagerie"
+        sidebar_link:
+          appearance: "Apparence"
+          server_setup:
+            title: "Configuration du serveur et journaux"
+            keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
+      security:
+        title: "Sécurité"
+        sidebar_link:
+          security: "Paramètres de sécurité"
+          spam: "Paramètres anti-spam"
+          staff_action_logs:
+            title: "Journaux et filtrage"
+            keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Sauvegardes"
+            description: "Effectuez une sauvegarde des données de votre site"
+          whats_new:
+            title: "Quoi de neuf ?"
+            description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
           general_settings: "Paramètres généraux"
@@ -5549,16 +5609,15 @@ fr:
           delete: "Supprimer"
           more_options:
             title: "Plus d'options"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personnaliser"
+          install: "Installer"
           themes:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
-            themes_intro_img_alt: "Nouvel espace réservé au thème"
-            set_default_theme: "Définir par défaut"
-            default_theme: "Thème par défaut"
-            themes_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
             new_theme: "Nouveau thème"
-            user_selectable: "Sélectionnable par l'utilisateur"
+          components:
+            title: "Composants"
         user_fields:
           field: "Champ"
           type: "Type"
@@ -5569,6 +5628,13 @@ fr:
           delete: "Supprimer"
           delete_successful: "Champ utilisateur supprimé."
           save_successful: "Champ utilisateur enregistré."
+        color_palettes:
+          palette_name: "Nom"
+          color_options:
+            toggle: "Sélectionnable par l'utilisateur"
+            toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
+          colors:
+            title: "Couleurs"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -5910,7 +5976,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          description: "Les palettes de couleurs définissent les couleurs de base utilisées dans l'interface de votre site, tandis que les thèmes peuvent fournir un style, des mises en page et des composants supplémentaires. Les deux peuvent fonctionner ensemble pour créer l'apparence unique de votre site et les deux peuvent être mis à la disposition des utilisateurs selon leurs préférences."
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"

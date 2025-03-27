@@ -249,6 +249,10 @@ pl_PL:
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
     back_button: "Poprzednia"
+    welcome_banner:
+      header:
+        anonymous_members: "Witaj na %{site_name}!"
+      search: "Szukaj"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -541,10 +545,6 @@ pl_PL:
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
-      abandon:
-        confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
-        yes_value: "Odrzuć"
-        no_value: "Wznów edycję"
       dropdown:
         title: "Otwórz menu najnowszych wersji roboczych"
         untitled: "Wersja robocza bez tytułu"
@@ -5778,6 +5778,63 @@ pl_PL:
             failed: "Niepowodzenie"
       home:
         title: "Strona główna"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Kopie zapasowe"
+          whats_new:
+            title: "Co nowego?"
+            keywords: "dziennik zmian|funkcja|wydanie"
+      community:
+        title: "Społeczność"
+        sidebar_link:
+          about_your_site: "O Twojej witrynie"
+          badges: "Odznaki"
+          login_and_authentication: "Logowanie i uwierzytelnianie"
+          notifications: "Powiadomienia"
+          permalinks: "Permalinki"
+          trust_levels: "Poziomy zaufania"
+          group_permissions: "Uprawnienia grupy"
+          users: "Użytkownicy"
+          groups: "Grupy"
+          user_fields: "Pola użytkownika"
+          watched_words: "Obserwowane słowa"
+          legal: "Prawne"
+          moderation_flags:
+            title: "Moderacja"
+      appearance:
+        title: "Wygląd"
+        sidebar_link:
+          font_style: "Styl czcionki"
+          site_logo: "Logo witryny"
+          color_schemes: "Palety kolorów"
+          emoji: "Emoji"
+          navigation: "Nawigacja"
+          themes_and_components:
+            keywords: "rozszerzenia"
+          site_texts: "Teksty witryny"
+      email_settings:
+        title: "Ustawienia e-mail"
+        sidebar_link:
+          appearance: "Wygląd"
+          server_setup:
+            title: "Konfiguracja serwera i logi"
+      security:
+        title: "Bezpieczeństwo"
+        sidebar_link:
+          security: "Ustawienia zabezpieczeń"
+          spam: "Ustawienia spamu"
+          staff_action_logs:
+            title: "Logi i kontrola"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Kopie zapasowe"
+            description: "Wykonaj kopię zapasową danych swojej witryny"
+          whats_new:
+            title: "Co nowego?"
+            description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
           general_settings: "Ustawienia główne"
@@ -5855,15 +5912,15 @@ pl_PL:
           delete: "Usuń"
           more_options:
             title: "Więcej opcji"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Wygląd"
+          install: "Zainstaluj"
           themes:
             title: "Motywy"
-            themes_intro_img_alt: "Nowy symbol zastępczy motywu"
-            set_default_theme: "Ustaw domyślne"
-            default_theme: "Motyw domyślny"
-            themes_description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
+            themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
-            user_selectable: "Możliwe do wyboru przez użytkownika"
+          components:
+            title: "Komponenty"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -5874,6 +5931,13 @@ pl_PL:
           delete: "Usuń"
           delete_successful: "Pole użytkownika usunięte."
           save_successful: "Pole użytkownika zapisane."
+        color_palettes:
+          palette_name: "Nazwa"
+          color_options:
+            toggle: "Możliwe do wyboru przez użytkownika"
+            toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
+          colors:
+            title: "Kolory"
       plugins:
         title: "Wtyczki"
         name: "Nazwa"
@@ -6223,7 +6287,6 @@ pl_PL:
           title: "Kolory"
           edit: "Edytuj palety kolorów"
           long_title: "Palety kolorów"
-          description: "Palety kolorów definiują podstawowe kolory używane w interfejsie Twojej witryny, podczas gdy motywy mogą zapewniać dodatkowe stylizacje, układy i komponenty - oba mogą współpracować ze sobą, aby stworzyć unikalny wygląd i styl Twojej witryny, i oba mogą być dostępne dla użytkowników, aby mogli wybrać swoje preferencje."
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"

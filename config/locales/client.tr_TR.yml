@@ -194,6 +194,10 @@ tr_TR:
       dismiss: "Kapat"
     bootstrap_mode: "Başlarken"
     back_button: "Geri"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name}'a hoş geldiniz!"
+      search: "Ara"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -456,10 +460,6 @@ tr_TR:
       remove_confirmation: "Bu taslağı silmek istediğinize emin misiniz?"
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
-      abandon:
-        confirm: "Halihazırda devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
-        yes_value: "Kapat"
-        no_value: "Düzenlemeyi sürdür"
       dropdown:
         title: "En son taslaklar menüsünü açın"
         untitled: "Başlıksız taslak"
@@ -5455,6 +5455,66 @@ tr_TR:
             failed: "Başarısız"
       home:
         title: "Ana Sayfa"
+      account:
+        title: "Hesap"
+        sidebar_link:
+          backups: "Yedeklemeler"
+          whats_new:
+            title: "Yenilikler"
+            keywords: "değişiklik günlüğü|özellik|yayın"
+      community:
+        title: "Topluluk"
+        sidebar_link:
+          about_your_site: "Siteniz hakkında"
+          badges: "Rozetler"
+          login_and_authentication: "Giriş ve kimlik doğrulama"
+          notifications: "Bildirimler"
+          permalinks: "Kalıcı Bağlantılar"
+          trust_levels: "Güven seviyeleri"
+          group_permissions: "Grup izinleri"
+          users: "Kullanıcılar"
+          groups: "Gruplar"
+          user_fields: "Kullanıcı alanları"
+          watched_words: "İzlenen kelimeler"
+          legal: "Yasal"
+          moderation_flags:
+            title: "Moderasyon"
+            keywords: "bayrak|inceleme"
+      appearance:
+        title: "Görünüm"
+        sidebar_link:
+          font_style: "Yazı tipi stili"
+          site_logo: "Site logosu"
+          color_schemes: "Renk paletleri"
+          emoji: "Emoji"
+          navigation: "Navigasyon"
+          themes_and_components:
+            keywords: "uzantı"
+          site_texts: "Site metinleri"
+      email_settings:
+        title: "E-posta Ayarları"
+        sidebar_link:
+          appearance: "Görünüm"
+          server_setup:
+            title: "Sunucu kurulumu ve günlükleri"
+            keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
+      security:
+        title: "Güvenlik"
+        sidebar_link:
+          security: "Güvenlik ayarları"
+          spam: "Spam ayarları"
+          staff_action_logs:
+            title: "Günlükler ve tarama"
+            keywords: "hata günlükleri|personel eylemi|taranan e-postalar|taranan ip'ler|taranan url'ler|arama günlükleri"
+      section_landing_pages:
+        account:
+          title: "Hesap"
+          backups:
+            title: "Yedeklemeler"
+            description: "Sitenizin verilerinin yedeğini alın"
+          whats_new:
+            title: "Yenilikler"
+            description: "Discourse'taki yeni yayınları ve iyileştirmeleri keşfedin"
       config_areas:
         about:
           general_settings: "Genel Ayarlar"
@@ -5548,16 +5608,15 @@ tr_TR:
           delete: "Sil"
           more_options:
             title: "Daha fazla seçenek"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Kişiselleştir"
+          install: "Yükle"
           themes:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
-            themes_intro_img_alt: "Yeni tema yer tutucu"
-            set_default_theme: "Varsayılanı ayarla"
-            default_theme: "Varsayılan tema"
-            themes_description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir."
             new_theme: "Yeni tema"
-            user_selectable: "Kullanıcı tarafından seçilebilir"
+          components:
+            title: "Bileşenler"
         user_fields:
           field: "Alan"
           type: "Tür"
@@ -5568,6 +5627,13 @@ tr_TR:
           delete: "Sil"
           delete_successful: "Kullanıcı alanı silindi."
           save_successful: "Kullanıcı alanı kaydedildi."
+        color_palettes:
+          palette_name: "Ad"
+          color_options:
+            toggle: "Kullanıcı tarafından seçilebilir"
+            toggle_description: "Renk paleti, kullanıcılar tarafından seçilebilir"
+          colors:
+            title: "Renkler"
       plugins:
         title: "Eklentiler"
         name: "Ad"
@@ -5909,7 +5975,6 @@ tr_TR:
           title: "Renkler"
           edit: "Renk paletlerini düzenle"
           long_title: "Renk paletleri"
-          description: "Renk paletleri sitenizin arayüzünde kullanılan temel renkleri tanımlarken, temalar ek stil, düzen ve bileşenler sağlayabilir; her ikisi de sitenizin benzersiz görünümünü ve hissini oluşturmak için birlikte çalışabilir ve her ikisi de kullanıcıların tercihlerini seçmeleri için kullanılabilir."
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
           copy_name_prefix: "Şunun kopyası:"

@@ -16,10 +16,11 @@ import { Promise } from "rsvp";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
+import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
+import userAutocomplete from "discourse/lib/autocomplete/user";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -359,12 +360,6 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Enter") {
-      // if we are inside a code block just insert newline
-      const { pre } = this.composer.textarea.getSelected({ lineVal: true });
-      if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
-        return;
-      }
-
       const shortcutPreference =
         this.currentUser.user_option.chat_send_shortcut;
       const send =
@@ -445,7 +440,7 @@ export default class ChatComposer extends Component {
     }
 
     $textarea.autocomplete({
-      template: findRawTemplate("user-selector-autocomplete"),
+      template: userAutocomplete,
       key: "@",
       width: "100%",
       treatAsTextarea: true,
@@ -508,7 +503,7 @@ export default class ChatComposer extends Component {
     }
 
     $textarea.autocomplete({
-      template: findRawTemplate("emoji-selector-autocomplete"),
+      template: renderEmojiAutocomplete,
       key: ":",
       afterComplete: (text, event) => {
         event.preventDefault();

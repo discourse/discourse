@@ -194,6 +194,10 @@ fi:
       dismiss: "Sulje"
     bootstrap_mode: "Aloittaminen"
     back_button: "Takaisin"
+    welcome_banner:
+      header:
+        anonymous_members: "Tervetuloa sivustolle %{site_name}!"
+      search: "Hae"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -456,10 +460,6 @@ fi:
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi henkilökohtaisen viestin luonnos"
-      abandon:
-        confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
-        yes_value: "Hylkää"
-        no_value: "Jatka muokkausta"
       dropdown:
         title: "Avaa tuoreimpien luonnosten valikko"
         untitled: "Nimetön luonnos"
@@ -5455,6 +5455,66 @@ fi:
             failed: "Epäonnistui"
       home:
         title: "Aloitus"
+      account:
+        title: "Tili"
+        sidebar_link:
+          backups: "Varmuuskopiot"
+          whats_new:
+            title: "Mitä uutta?"
+            keywords: "muutokset|ominaisuus|julkaisu"
+      community:
+        title: "Yhteisö"
+        sidebar_link:
+          about_your_site: "Tietoa sivustostasi"
+          badges: "Kunniamerkit"
+          login_and_authentication: "Kirjautuminen ja todennus"
+          notifications: "Ilmoitukset"
+          permalinks: "Pysyvät linkit"
+          trust_levels: "Luottamustasot"
+          group_permissions: "Ryhmien oikeudet"
+          users: "Käyttäjät"
+          groups: "Ryhmät"
+          user_fields: "Käyttäjäkentät"
+          watched_words: "Tarkkaillut sanat"
+          legal: "Oikeudelliset tiedot"
+          moderation_flags:
+            title: "Valvonta"
+            keywords: "flag|review"
+      appearance:
+        title: "Ulkoasu"
+        sidebar_link:
+          font_style: "Kirjasimen tyyli"
+          site_logo: "Sivuston logo"
+          color_schemes: "Väripaletit"
+          emoji: "Emojit"
+          navigation: "Navigointi"
+          themes_and_components:
+            keywords: "tiedostopääte"
+          site_texts: "Sivuston tekstit"
+      email_settings:
+        title: "Sähköpostiasetukset"
+        sidebar_link:
+          appearance: "Ulkoasu"
+          server_setup:
+            title: "Palvelimen asetukset ja lokit"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+      security:
+        title: "Tietoturva"
+        sidebar_link:
+          security: "Turvallisuusasetukset"
+          spam: "Roskapostiasetukset"
+          staff_action_logs:
+            title: "Lokit ja seulonta"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+      section_landing_pages:
+        account:
+          title: "Tili"
+          backups:
+            title: "Varmuuskopiot"
+            description: "Tee varmuuskopio sivustosi tiedoista"
+          whats_new:
+            title: "Mitä uutta?"
+            description: "Tutustu Discoursen uusiin julkaisuversioihin ja parannuksiin"
       config_areas:
         about:
           general_settings: "Yleiset asetukset"
@@ -5548,16 +5608,15 @@ fi:
           delete: "Poista"
           more_options:
             title: "Lisää vaihtoehtoja"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Mukauta"
+          install: "Asenna"
           themes:
             title: "Teemat"
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
-            themes_intro_img_alt: "Uuden teeman paikkamerkki"
-            set_default_theme: "Aseta oletus"
-            default_theme: "Oletusteema"
-            themes_description: "Teemat ovat laajoja mukautuksia, jotka muuttavat useita foorumisi ulkoasun tyylin elementtejä ja sisältävät usein myös lisäkäyttöliittymäominaisuuksia."
             new_theme: "Uusi teema"
-            user_selectable: "Käyttäjän valittavissa"
+          components:
+            title: "Komponentit"
         user_fields:
           field: "Kenttä"
           type: "Tyyppi"
@@ -5568,6 +5627,13 @@ fi:
           delete: "Poista"
           delete_successful: "Käyttäjäkenttä poistettu."
           save_successful: "Käyttäjäkenttä tallennettu."
+        color_palettes:
+          palette_name: "Nimi"
+          color_options:
+            toggle: "Käyttäjän valittavissa"
+            toggle_description: "Käyttäjät voivat valita väripaletin"
+          colors:
+            title: "Värit"
       plugins:
         title: "Lisäosat"
         name: "Nimi"
@@ -5909,7 +5975,6 @@ fi:
           title: "Värit"
           edit: "Muokkaa väripaletteja"
           long_title: "Väripaletit"
-          description: "Väripaletit määrittävät sivustosi käyttöliittymässä käytettävät ydinvärit, kun taas teemat voivat tarjota lisätyyliä, asetteluja ja komponentteja – molemmat voivat työskennellä yhdessä luoden sivustollesi ainutlaatuisen ulkoasun ja tunnelman, ja molemmat voidaan tarjota käyttäjille, jotta he voivat valita mieltymyksensä."
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"

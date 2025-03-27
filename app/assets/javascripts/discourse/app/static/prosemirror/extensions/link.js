@@ -104,15 +104,15 @@ const extension = {
       mixable: true,
     },
   },
-  inputRules: ({ schema, markInputRule }) =>
-    markInputRule(
+  inputRules: ({ schema, utils }) =>
+    utils.markInputRule(
       /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
       schema.marks.link,
       (match) => {
         return { href: match[2], title: match[3] };
       }
     ),
-  plugins: ({ pmState: { Plugin }, pmModel: { Slice, Fragment }, utils }) =>
+  plugins: ({ pmState: { Plugin }, utils }) =>
     new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs
@@ -121,58 +121,55 @@ const extension = {
             return;
           }
 
-          const marks = $context.marks();
-          const selectedText = view.state.doc.textBetween(
-            view.state.selection.from,
-            view.state.selection.to
-          );
-          const textNode = view.state.schema.text(selectedText, [
-            ...marks,
-            view.state.schema.marks.link.create({ href: text }),
-          ]);
-          return new Slice(Fragment.from(textNode), 0, 0);
+          return addLinkMark(view, text);
         },
 
         // Auto-linkify rich content with a single text node that is a URL
         transformPasted(paste, view) {
-          if (
-            paste.content.childCount === 1 &&
-            paste.content.firstChild.isText &&
-            !paste.content.firstChild.marks.some(
-              (mark) => mark.type.name === "link"
-            )
-          ) {
-            const matches = utils
-              .getLinkify()
-              .match(paste.content.firstChild.text);
-            const isFullMatch =
-              matches &&
-              matches.length === 1 &&
-              matches[0].raw === paste.content.firstChild.text;
+          let node = null;
 
-            if (!isFullMatch) {
-              return paste;
+          if (paste.content.childCount === 1) {
+            if (paste.content.firstChild.isText) {
+              node = paste.content.firstChild;
+            } else if (
+              paste.content.firstChild.type.name === "paragraph" &&
+              paste.content.firstChild.childCount === 1 &&
+              paste.content.firstChild.firstChild.isText
+            ) {
+              node = paste.content.firstChild.firstChild;
             }
-
-            const marks = view.state.selection.$head.marks();
-            const originalText = view.state.doc.textBetween(
-              view.state.selection.from,
-              view.state.selection.to
-            );
-
-            const textNode = view.state.schema.text(originalText, [
-              ...marks,
-              view.state.schema.marks.link.create({
-                href: paste.content.firstChild.text,
-              }),
-            ]);
-            paste = new Slice(Fragment.from(textNode), 0, 0);
           }
-          return paste;
+
+          if (
+            !node?.text ||
+            node?.marks.some((mark) => mark.type.name === "link")
+          ) {
+            return paste;
+          }
+
+          const matches = utils.getLinkify().match(node.text);
+          const isFullMatch =
+            matches && matches.length === 1 && matches[0].raw === node.text;
+
+          if (!isFullMatch) {
+            return paste;
+          }
+
+          return addLinkMark(view, node.text);
         },
       },
     }),
 };
+
+function addLinkMark(view, href) {
+  const { from, to } = view.state.selection;
+  const linkMark = view.state.schema.marks.link.create({ href });
+
+  const tr = view.state.tr;
+  tr.addMark(from, to, linkMark);
+
+  return tr.doc.slice(from, to);
+}
 
 function isPlainURL(link, parent, index) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {

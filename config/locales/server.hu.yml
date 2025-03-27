@@ -2232,8 +2232,7 @@ hu:
     enable_group_directory: "Csoportok könyvtár biztosítása böngészéshez"
     enable_category_group_moderation: "Csoportok számára engedélyezi a tartalom moderálását specifikus kategóriákban"
     group_in_subject: "Állítsa be az e-mail tárgyában a %%{optional_pm} értéket a privát üzenetben szereplő első csoport nevére, lásd: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standard e-mailek tárgyformátumának testreszabása</a>"
-    allow_anonymous_posting: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
-    allow_anonymous_likes: "Engedélyezze ezt a beállítást, hogy a webhelyét névtelenül böngésző felhasználók kedveljék a bejegyzéseket. Ha aktiválva van, a felhasználók választhatják, hogy személyazonosságukat elrejtsék, amikor a webhelyen megjelenő bejegyzéseket vagy témákat kedvelik. Lásd még: \"névtelen_bejegyzés engedélyezése\"."
+    allow_anonymous_mode: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
     anonymous_posting_min_trust_level: "Minimális bizalmi szint a névtelen bejegyzés engedélyezéséhez."
     anonymous_posting_allowed_groups: "Csoportok, amelyek engedélyezik a névtelen bejegyzést"
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
@@ -5068,11 +5067,13 @@ hu:
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
       delete_single:
         title: "Törlés"
+        complete: "Bejegyzés törölve."
       delete:
         title: "Törlés..."
       delete_and_ignore:
         title: "Megjelölés figyelmen kívül hagyása és bejegyzés törlése"
         description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, és törölje a bejegyzést; ha az első hozzászólás, akkor töröld a témát is. "
+        complete: "Bejegyzés törölve."
       delete_and_ignore_replies:
         title: "Megjelölés figyelmen kívül hagyása, bejegyzés és válaszok törlése"
         description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, törölje a bejegyzést és az összes válaszát; ha az első hozzászólás, akkor töröld a témát is"
@@ -5080,6 +5081,7 @@ hu:
       delete_and_agree:
         title: "Bejegyzés törlése"
         description: "Egyetértek a jelöléssel és bejegyzés törlése; ha ez az első hozzászólás, akkor töröld a témát is."
+        complete: "Bejegyzés törölve."
       delete_and_agree_replies:
         title: "Bejegyzés és válaszok törlése"
         description: "Egyetértek a jelöléssek és bejegyzés törlése az össze válasszal; ha ez az első hozzászólás, akkor töröld a témát is."
@@ -5089,29 +5091,37 @@ hu:
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
       disagree:
         title: "Nem"
+        complete: "Megjelölés figyelmen kívül hagyva."
       discard_post:
         title: "Bejegyzés elvetése"
       revise_and_reject_post:
         title: "Bejegyzés felülvizsgálata..."
       ignore:
         title: "Letiltás"
+        complete: "Megjelölés figyelmen kívül hagyva."
       ignore_and_do_nothing:
         title: "Ne csinálj semmit"
         description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne. A rejtett bejegyzések rejtve maradnak, és az automatikus eszközök kezelik őket."
+        complete: "Megjelölés figyelmen kívül hagyva."
       approve:
         title: "Jóváhagyás"
+        complete: "Bejegyzés jóváhagyva."
       approve_post:
         title: "Bejegyzés jóváhagyása"
         confirm_closed: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"
+        complete: "Bejegyzés jóváhagyva."
       reject_post:
         title: "Bejegyzés elutasítása"
+        complete: "Bejegyzés elutasítva."
       approve_user:
         title: "Felhasználó jóváhagyása"
+        complete: "Felhasználó jóváhagyva."
       reject_user:
         title: "Felhasználó törlése"
         delete:
           title: "Felhasználó törlése"
           description: "A felhasználó törlésre kerül a fórumról."
+          complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
           description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
@@ -5130,6 +5140,7 @@ hu:
         title: "Bejegyzés jóváhagyása és visszaállítása"
       delete_user:
         reason: "Törölve az ellenőrzési soron keresztül"
+        complete: "Felhasználó törölve."
   email_style:
     html_missing_placeholder: "A html sablonnak tartalmaznia kell %{placeholder} értéket"
   notification_level:

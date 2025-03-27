@@ -51,6 +51,9 @@ class Admin::Config::AboutController < Admin::AdminController
       },
     ) do
       on_success { render json: success_json }
+      on_failed_policy(:settings_are_not_deprecated) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
       on_failed_policy(:settings_are_visible) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end

@@ -24,7 +24,7 @@ describe "User preferences | Security", type: :system do
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
       user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor(password)
+      user_preferences_security_page.visit_second_factor(user, password)
 
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")
@@ -41,7 +41,7 @@ describe "User preferences | Security", type: :system do
       find("input#login-account-name").fill_in(with: user.username)
       find("input#login-account-password").fill_in(with: password)
 
-      find(".d-modal__footer .btn-primary").click
+      find("#login-button.btn-primary").click
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")

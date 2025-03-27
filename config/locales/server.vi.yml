@@ -2179,8 +2179,13 @@ vi:
         title: "Đồng ý"
       delete_single:
         title: "Xóa"
+        complete: "Bài viết đã bị xóa."
+      delete_and_ignore:
+        complete: "Bài viết đã bị xóa."
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree:
+        complete: "Bài viết đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
@@ -2200,6 +2205,7 @@ vi:
       reject_user:
         delete:
           title: "Xóa tài khoản"
+          complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
           description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
@@ -2211,6 +2217,8 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      delete_user:
+        complete: "Người dùng đã bị xóa."
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

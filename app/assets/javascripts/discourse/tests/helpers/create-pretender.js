@@ -264,6 +264,7 @@ export function applyDefaultHandlers(pretender) {
             name: "bug",
             color: "e9dd00",
             text_color: "000000",
+            style_type: "square",
             slug: "bug",
             read_restricted: false,
             parent_category_id: null,

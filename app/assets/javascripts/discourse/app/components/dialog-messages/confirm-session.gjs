@@ -20,6 +20,7 @@ export default class ConfirmSession extends Component {
 
   @tracked errorMessage;
   @tracked resetEmailSent = null;
+  @tracked isLoading = false;
 
   passwordLabel = i18n("user.password.title");
   instructions = i18n("user.confirm_access.instructions");
@@ -64,22 +65,28 @@ export default class ConfirmSession extends Component {
 
   @action
   async submit() {
-    this.errorMessage = this.password
-      ? null
-      : i18n("user.confirm_access.incorrect_password");
+    try {
+      this.isLoading = true;
 
-    const result = await ajax("/u/confirm-session.json", {
-      type: "POST",
-      data: {
-        password: this.password,
-      },
-    });
+      this.errorMessage = this.password
+        ? null
+        : i18n("user.confirm_access.incorrect_password");
 
-    if (result.success) {
-      this.errorMessage = null;
-      this.dialog.didConfirmWrapped();
-    } else {
-      this.errorMessage = i18n("user.confirm_access.incorrect_password");
+      const result = await ajax("/u/confirm-session.json", {
+        type: "POST",
+        data: {
+          password: this.password,
+        },
+      });
+
+      if (result.success) {
+        this.errorMessage = null;
+        this.dialog.didConfirmWrapped();
+      } else {
+        this.errorMessage = i18n("user.confirm_access.incorrect_password");
+      }
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -140,6 +147,7 @@ export default class ConfirmSession extends Component {
               autofocus="autofocus"
             />
             <DButton
+              @isLoading={{this.isLoading}}
               class="btn-primary"
               @type="submit"
               @action={{this.submit}}

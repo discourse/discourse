@@ -19,7 +19,6 @@ import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { isTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
@@ -80,12 +79,6 @@ async function loadDraft(store, opts = {}) {
 
 const _composerSaveErrorCallbacks = [];
 
-let _checkDraftPopup = !isTesting();
-
-export function toggleCheckDraftPopup(enabled) {
-  _checkDraftPopup = enabled;
-}
-
 export function clearComposerSaveErrorCallback() {
   _composerSaveErrorCallbacks.length = 0;
 }
@@ -131,7 +124,6 @@ export default class ComposerService extends Service {
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
-  @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
   @alias("site.categoriesList") categories;
   @alias("topicController.model") topicModel;
   @reads("currentUser.staff") isStaffUser;
@@ -1391,18 +1383,6 @@ export default class ComposerService extends Service {
       }
 
       await this._setModel(composerModel, opts);
-
-      // otherwise, do the draft check async
-      if (!opts.draft) {
-        let data = await Draft.get(opts.draftKey);
-        data = await this.confirmDraftAbandon(data);
-
-        if (data.draft) {
-          opts.draft = data.draft;
-          opts.draftSequence = data.draft_sequence;
-          await this.open(opts);
-        }
-      }
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
@@ -1551,48 +1531,6 @@ export default class ComposerService extends Service {
     const sequence = draftSequence || this.get("model.draftSequence");
     await Draft.clear(key, sequence);
     this.appEvents.trigger("draft:destroyed", key);
-  }
-
-  confirmDraftAbandon(data) {
-    if (!data.draft) {
-      return data;
-    }
-
-    // do not show abandon dialog if old draft is clean
-    const draft = JSON.parse(data.draft);
-    if (draft.reply === draft.originalText) {
-      data.draft = null;
-      return data;
-    }
-
-    if (!_checkDraftPopup) {
-      data.draft = null;
-      return data;
-    }
-
-    return new Promise((resolve) => {
-      this.dialog.alert({
-        message: i18n("drafts.abandon.confirm"),
-        buttons: [
-          {
-            label: i18n("drafts.abandon.yes_value"),
-            class: "btn-danger",
-            icon: "trash-can",
-            action: () => {
-              this.destroyDraft(data.draft_sequence).finally(() => {
-                data.draft = null;
-                resolve(data);
-              });
-            },
-          },
-          {
-            label: i18n("drafts.abandon.no_value"),
-            class: "btn-resume-editing",
-            action: () => resolve(data),
-          },
-        ],
-      });
-    });
   }
 
   cancelComposer(opts = {}) {

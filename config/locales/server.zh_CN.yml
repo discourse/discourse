@@ -532,6 +532,7 @@ zh_CN:
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
       invalid_domain: "'%{domain}' 不是有效网域。"
+      too_many_domains: "域名过多。最多为 %{max}。"
       invalid_incoming_email: "'%{email}' 不是有效的电子邮件地址。"
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
@@ -540,6 +541,8 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
+      counting_too_many_email_domains:
+        other: "一次最多可统计 %{count} 个电子邮件域名"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
     default_names:
@@ -1567,6 +1570,7 @@ zh_CN:
     support_mixed_text_direction: "支持从左到右和从右到左混合的文本方向"
     min_post_length: "允许的帖子的最小长度，以字符为单位（不包括个人消息）"
     min_first_post_length: "允许的第一个帖子（即话题正文）的最小长度（不包括个人消息）"
+    prevent_uploads_only_posts: "检查最小文章长度时，不计算上传的 Markdown 代码"
     min_personal_message_post_length: "消息的最小允许帖子长度（包括第一个帖子和回复），以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
     topic_featured_link_enabled: "允许用户将功能链接与其话题关联。开启后，话题可以附加一个突出显示的链接，该链接公开可见，如果用户有足够的权限，还可以对其进行编辑。功能链接可以提供相关的附加内容，从而增强话题的可理解性。"
@@ -1586,6 +1590,7 @@ zh_CN:
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
     search_ignore_accents: "如果启用此设置，搜索查询中的重音符号将被忽略，这样即使用户没有输入正确的重音符号，也能找到搜索结果。"
     search_default_sort_order: "整页搜索的默认排序顺序"
+    search_experience: "桌面设备上搜索的默认位置和外观"
     category_search_priority_low_weight: "应用于低类别搜索优先级排名的权重。"
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
     default_composer_category: "创建新话题时用于预填充类别下拉菜单的类别。"
@@ -2162,8 +2167,7 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_posting: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_anonymous_likes: "启用此设置可让匿名浏览网站的用户点赞帖子。激活后，用户在网站上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_posting`。"
+    allow_anonymous_mode: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -4983,88 +4987,117 @@ zh_CN:
       agree_and_keep:
         title: "保留帖子"
         description: "同意举报，但保持此帖子不变。"
+        complete: "帖子保持不变。"
       agree_and_keep_hidden:
         title: "保持帖子隐藏"
         description: "同意举报并保持帖子隐藏。"
+        complete: "帖子保持隐藏。"
       agree_and_suspend:
         title: "封禁用户"
         description: "同意举报并封禁用户。"
+        complete: "用户被暂停。"
       agree_and_silence:
         title: "将用户禁言"
         description: "同意举报并禁言用户。"
+        complete: "用户已禁言。"
       agree_and_restore:
         title: "恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
+        complete: "帖子已恢复。"
       agree_and_hide:
         title: "隐藏帖子"
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
+        complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
         title: "同意并编辑帖子"
         description: "同意举报并打开编辑器窗口以编辑帖子。"
       delete_single:
         title: "删除"
+        complete: "帖子已删除。"
       delete:
         title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
+        complete: "帖子已删除。"
       delete_and_ignore_replies:
         title: "忽略举报，删除帖子和回复"
         description: "忽略举报，将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该话题"
         confirm: "确定要同时删除对帖子的回复吗？"
+        complete: "帖子和回复已删除。"
       delete_and_agree:
         title: "删除帖子"
         description: "同意举报并删除此帖子；如果是第一个帖子，同时删除话题。"
+        complete: "帖子已删除。"
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
         confirm: "确定要同时删除对帖子的回复吗？"
+        complete: "帖子和回复已删除。"
       disagree_and_restore:
         title: "否，恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
+        complete: "帖子已恢复。"
       disagree:
         title: "否"
+        complete: "举报已忽略."
       discard_post:
         title: "舍弃帖子"
+        complete: "帖子已丢弃。"
       revise_and_reject_post:
         title: "修订帖子…"
+        complete: "帖子被拒绝，等待修改。"
       ignore:
         title: "忽略"
+        complete: "举报已忽略."
       ignore_and_do_nothing:
         title: "不进行操作"
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
+        complete: "举报已忽略."
       approve:
         title: "批准"
+        complete: "帖子已批准."
       approve_post:
         title: "批准帖子"
         confirm_closed: "此话题已被关闭。仍要创建帖子吗？"
+        complete: "帖子已批准."
       reject_post:
         title: "拒绝帖子"
+        complete: "帖子被拒绝."
       approve_user:
         title: "批准用户"
+        complete: "用户已批准."
       reject_user:
         title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
+          complete: "用户已删除。"
         block:
           title: "删除并阻止用户"
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
+          complete: "用户已删除并被屏蔽。"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"
       reject_and_suspend:
         title: "拒绝并封禁用户"
+        complete: "帖子被拒绝，用户被暂停。"
       reject_and_silence:
         title: "拒绝并禁言用户"
+        complete: "帖子被拒绝，用户禁言。"
       reject_and_delete:
         title: "拒绝并删除帖子"
+        complete: "帖子被拒绝并删除。"
       reject_and_keep_deleted:
         title: "保持帖子删除"
+        complete: "帖子被拒绝，保持被删除。"
       approve_and_restore:
         title: "批准并恢复帖子"
+        complete: "帖子已批准并恢复。"
       delete_user:
         reason: "已通过审核队列删除"
+        complete: "用户已删除。"
   email_style:
     html_missing_placeholder: "HTML 模板必须包含 %{placeholder}"
   notification_level:

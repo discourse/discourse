@@ -91,7 +91,7 @@ export default Mixin.create({
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
-  setting: null,
+  isSaving: false,
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),
@@ -217,8 +217,12 @@ export default Mixin.create({
     }
   }),
 
-  disableSaveButton: computed("validationMessage", function () {
-    return !!this.validationMessage;
+  disableSaveButton: computed("isSaving", "validationMessage", function () {
+    return !!this.validationMessage || this.isSaving;
+  }),
+
+  disableUndoButton: computed("isSaving", function () {
+    return !!this.isSaving;
   }),
 
   confirmChanges(settingKey) {
@@ -307,10 +311,12 @@ export default Mixin.create({
 
   save: action(async function () {
     try {
+      this.set("isSaving", true);
+
       await this._save();
 
       this.set("validationMessage", null);
-      this.commitBuffer();
+      this.buffered.applyChanges();
       if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
         this.afterSave();
       }
@@ -327,6 +333,8 @@ export default Mixin.create({
       } else {
         this.set("validationMessage", i18n("generic_error"));
       }
+    } finally {
+      this.set("isSaving", false);
     }
   }),
 
@@ -339,7 +347,7 @@ export default Mixin.create({
   }),
 
   cancel: action(function () {
-    this.rollbackBuffer();
+    this.buffered.discardChanges();
     this.set("validationMessage", null);
   }),
 
