@@ -663,7 +663,7 @@ RSpec.configure do |config|
     if example.metadata[:mobile]
       Capybara.current_session.current_window.resize_to(390, 844)
     else
-      Capybara.current_session.current_window.resize_to(1920, 1080)
+      Capybara.current_session.current_window.resize_to(1400, 1400)
     end
 
     if !system_tests_initialized
