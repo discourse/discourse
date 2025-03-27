@@ -46,13 +46,17 @@
 
       .d-icon,
       .emoji {
-        width: 1em;
-        height: 1em;
+        width: 0.74em;
+        height: 0.74em;
       }
     }
 
     &.--style-icon .d-icon {
       color: var(--category-badge-color);
+    }
+
+    &.--style-icon .d-icon + .d-icon {
+      color: var(--primary-medium);
     }
 
     &__name {
