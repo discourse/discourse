@@ -731,10 +731,12 @@ RSpec.configure do |config|
     Scheduler::Defer.do_all_work
   end
 
-  playwright_logger = nil
+  $playwright_logger = nil
 
   config.before(:each, type: :system) do
-    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+    page.driver.with_playwright_page do |pw_page|
+      $playwright_logger = PlaywrightLogger.new(pw_page)
+    end
   end
 
   config.after(:each, type: :system) do |example|
@@ -761,10 +763,10 @@ RSpec.configure do |config|
       if example.exception
         lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
-        if playwright_logger.logs.empty?
+        if $playwright_logger.logs.empty?
           lines << "(no logs)"
         else
-          playwright_logger.logs.each do |log|
+          $playwright_logger.logs.each do |log|
             # System specs are full of image load errors that are just noise, no need
             # to log this.
             if (
@@ -782,7 +784,7 @@ RSpec.configure do |config|
       end
     end
 
-    playwright_logger.logs.each do |log|
+    $playwright_logger.logs.each do |log|
       next if log[:level] != "WARNING"
       deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
       next if deprecation_id.nil?
