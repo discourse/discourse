@@ -136,14 +136,14 @@ module SystemHelpers
   end
 
   def resize_window(width: nil, height: nil)
-    original_size = page.driver.browser.manage.window.size
-    page.driver.browser.manage.window.resize_to(
-      width || original_size.width,
-      height || original_size.height,
+    original_size = Capybara.current_session.current_window.size
+    Capybara.current_session.current_window.resize_to(
+      width || original_size[0],
+      height || original_size[1],
     )
     yield
   ensure
-    page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
+    Capybara.current_session.current_window.resize_to(original_size[0], original_size[1])
   end
 
   def using_browser_timezone(timezone, &example)
