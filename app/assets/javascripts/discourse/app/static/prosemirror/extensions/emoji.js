@@ -5,141 +5,7 @@ import { Decoration, DecorationSet } from "prosemirror-view";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { emojiOptions } from "discourse/lib/text";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
-
-/**
- * Find all paragraphs in the document
- * @param {Object} doc - ProseMirror document
- * @returns {Array} Array of paragraph ranges (start, end)
- */
-function findParagraphs(doc) {
-  const ranges = [];
-  doc.forEach((node, offset) => {
-    ranges.push({ start: offset, end: offset + node.nodeSize });
-  });
-  return ranges;
-}
-
-/**
- * Checks if a paragraph contains only emojis
- * @param {Object} doc - ProseMirror document
- * @param {number} start - Start position of the paragraph
- * @param {number} end - End position of the paragraph
- * @returns {boolean} True if the paragraph contains only emojis and has 3 or fewer
- */
-function hasOnlyEmojis(doc, start, end) {
-  let emojiCount = 0;
-  let hasNonEmptyText = false;
-
-  // Process all content between start and end
-  doc.nodesBetween(start, end, (node) => {
-    if (node.type.name === "emoji") {
-      emojiCount++;
-    } else if (node.type.name === "text") {
-      // Check if text has actual content (ignoring whitespace)
-      if (node.text && node.text.trim().length > 0) {
-        hasNonEmptyText = true;
-        return false; // Stop traversal once we find non-whitespace text
-      }
-    } else if (node.type.name !== "paragraph" && node.type.name !== "doc") {
-      // Any other node type means this isn't an emoji-only paragraph
-      hasNonEmptyText = true;
-      return false;
-    }
-
-    return true;
-  });
-
-  return emojiCount > 0 && emojiCount <= 3 && !hasNonEmptyText;
-}
-
-/**
- * Creates decorations for specific paragraphs in the document
- * @param {Object} doc - ProseMirror document
- * @param {Array} paragraphRanges - Array of paragraph ranges to check
- * @param {DecorationSet} oldSet - Previous decoration set
- * @returns {DecorationSet} Updated decoration set
- */
-function updateParagraphDecorations(doc, paragraphRanges, oldSet) {
-  let newSet = oldSet;
-
-  paragraphRanges.forEach(({ start, end }) => {
-    // Remove old decorations in this range
-    newSet = newSet.remove(newSet.find(start, end));
-
-    if (hasOnlyEmojis(doc, start, end)) {
-      const newDecorations = [];
-
-      // Add the only-emoji class to all emojis in this paragraph
-      doc.nodesBetween(start, end, (node, pos) => {
-        if (node.type.name === "emoji") {
-          newDecorations.push(
-            Decoration.node(pos, pos + node.nodeSize, {
-              class: "only-emoji",
-            })
-          );
-        }
-      });
-
-      if (newDecorations.length > 0) {
-        newSet = newSet.add(doc, newDecorations);
-      }
-    }
-  });
-
-  return newSet;
-}
-
-/**
- * Find the paragraph affected by a transaction
- * @param {Transaction} tr - The transaction
- * @returns {Array} Array of paragraph ranges
- */
-function findAffectedParagraphs(tr) {
-  if (!tr.steps.length) {
-    return [];
-  }
-
-  const from = tr.steps[0].from;
-  if (!from) {
-    return [];
-  }
-
-  const pos = tr.doc.resolve(tr.mapping.map(from));
-  for (let d = pos.depth; d >= 0; d--) {
-    if (pos.node(d).isBlock) {
-      return [{ start: pos.start(d), end: pos.end(d) }];
-    }
-  }
-
-  return [];
-}
-
-/**
- * Creates decorations for the entire document
- * @param {Object} doc - ProseMirror document
- * @returns {DecorationSet} Set of decorations
- */
-function createDecorations(doc) {
-  const paragraphs = findParagraphs(doc);
-  const decorations = [];
-
-  paragraphs.forEach(({ start, end }) => {
-    if (hasOnlyEmojis(doc, start, end)) {
-      // Add the only-emoji class to all emojis in this paragraph
-      doc.nodesBetween(start, end, (node, pos) => {
-        if (node.type.name === "emoji") {
-          decorations.push(
-            Decoration.node(pos, pos + node.nodeSize, {
-              class: "only-emoji",
-            })
-          );
-        }
-      });
-    }
-  });
-
-  return DecorationSet.create(doc, decorations);
-}
+import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
 
 /**
  * Plugin that adds the only-emoji class to emojis
@@ -148,25 +14,69 @@ function createDecorations(doc) {
 function createOnlyEmojiPlugin() {
   return new Plugin({
     state: {
-      init(_, instance) {
-        return createDecorations(instance.doc);
+      init() {
+        return DecorationSet.empty;
       },
-      apply(tr, value) {
+      apply(tr, oldSet, oldState, newState) {
         if (!tr.docChanged) {
-          return value;
+          return oldSet.map(tr.mapping, tr.doc);
         }
 
-        const affectedParagraphs = findAffectedParagraphs(tr);
-        // If we couldn't identify specific paragraphs, update the entire document
-        if (affectedParagraphs.length === 0) {
-          return createDecorations(tr.doc);
-        }
+        const changedRanges = getChangedRanges(tr);
+        let newSet = oldSet.map(tr.mapping, tr.doc);
 
-        return updateParagraphDecorations(
-          tr.doc,
-          affectedParagraphs,
-          value.map(tr.mapping, tr.doc)
-        );
+        changedRanges.forEach(({ new: { from, to } }) => {
+          newState.doc.nodesBetween(from, to, (node, pos) => {
+            if (!node.isTextblock) {
+              return true;
+            }
+
+            const blockFrom = pos;
+            const blockTo = pos + node.nodeSize;
+
+            const existingDecorations = newSet.find(blockFrom, blockTo);
+            newSet = newSet.remove(existingDecorations);
+
+            const emojiNodes = [];
+            let hasOnlyEmojis = true;
+
+            // check if the text block contains only emojis
+            node.descendants((child, childPos) => {
+              if (child.type.name === "emoji") {
+                emojiNodes.push({
+                  from: blockFrom + 1 + childPos,
+                  to: blockFrom + 1 + childPos + child.nodeSize,
+                });
+
+                return true;
+              }
+
+              if (child.type.name === "text" && !child.text?.trim()) {
+                return true;
+              }
+
+              hasOnlyEmojis = false;
+              return false;
+            });
+
+            if (
+              emojiNodes.length > 0 &&
+              emojiNodes.length <= 3 &&
+              hasOnlyEmojis
+            ) {
+              const decorations = emojiNodes.map((emoji) =>
+                Decoration.inline(emoji.from, emoji.to, {
+                  class: "only-emoji",
+                })
+              );
+              newSet = newSet.add(newState.doc, decorations);
+            }
+
+            return false;
+          });
+        });
+
+        return newSet;
       },
     },
     props: {
