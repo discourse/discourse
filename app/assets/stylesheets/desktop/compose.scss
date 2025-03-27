@@ -363,28 +363,3 @@ a.toggle-preview {
     background: none;
   }
 }
-
-@media screen and (min-width: $reply-area-max-width) {
-  .sidebar-wrapper .sidebar-container {
-    .has-sidebar-page & {
-      height: auto;
-    }
-  }
-
-  #reply-control:not(.fullscreen, .hide-preview) {
-    .has-sidebar-page & {
-      width: auto;
-      max-width: calc(
-        (var(--d-max-width) + (var(--d-sidebar-width) / 2)) - 1.5rem
-      );
-      margin-left: 0;
-      margin-right: 0;
-      transform: translateX(
-        calc(
-          ((100vw - var(--d-max-width) - (var(--d-sidebar-width) / 0.5)) / 2) +
-            17em + 1rem
-        )
-      );
-    }
-  }
-}
