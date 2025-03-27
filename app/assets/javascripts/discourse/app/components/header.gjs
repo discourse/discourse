@@ -129,7 +129,12 @@ export default class GlimmerHeader extends Component {
   headerKeyboardTrigger(msg) {
     switch (msg.type) {
       case "search":
-        this.toggleSearchMenu();
+        // This must be done here because toggleSearchMenu is
+        // also called from the search button, we only want to
+        // stop it using the shortcut.
+        if (!this.search.welcomeBannerSearchInViewport) {
+          this.toggleSearchMenu();
+        }
         break;
       case "user":
         this.toggleUserMenu();

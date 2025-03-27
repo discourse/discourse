@@ -17,7 +17,7 @@ export default class FKObject extends Component {
   }
 
   <template>
-    <div class="form-kit__object">
+    <div class="form-kit__object" ...attributes>
       {{yield
         (hash
           Field=(component

@@ -28,6 +28,18 @@ module("Integration | Component | FormKit | Object", function (hooks) {
     assert.form().field("foo.baz").hasValue("2");
   });
 
+  test("...attributes", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Object class="test" />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__object.test").exists();
+  });
+
   test("nested object", async function (assert) {
     await render(
       <template>

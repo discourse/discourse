@@ -74,6 +74,14 @@
       border: none;
       background: var(--primary-very-low);
       padding-inline: var(--pm-padding);
+
+      &:first-of-type {
+        border-radius: var(--pm-border-radius) var(--pm-border-radius) 0 0;
+      }
+
+      &:last-of-type {
+        border-radius: 0 0 var(--pm-border-radius) var(--pm-border-radius);
+      }
     }
 
     .map {

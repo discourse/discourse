@@ -48,7 +48,9 @@ sq:
             restricted_categories:
               label: Categories
           created: Krijuar
-          topics: Topics
+          with_images: Imazhet
+          with_links: Lidhjet
+          with_code: Kodi
         category_created_edited:
           fields:
             restricted_category:

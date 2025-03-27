@@ -186,11 +186,10 @@ export default class SignupPageController extends Controller {
     return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
-  @discourseComputed("usernameValidation.reason")
-  showUsernameInstructions(usernameValidationReason) {
+  get showUsernameInstructions() {
     return (
       this.siteSettings.show_signup_form_username_instructions &&
-      !usernameValidationReason
+      !this.usernameValidation.reason
     );
   }
 

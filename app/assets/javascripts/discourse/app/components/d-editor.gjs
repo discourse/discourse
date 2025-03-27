@@ -22,6 +22,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
+import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
+import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -33,7 +35,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -281,7 +282,7 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: findRawTemplate("emoji-selector-autocomplete"),
+      template: renderEmojiAutocomplete,
       key: ":",
       afterComplete: () => {
         schedule(
@@ -440,7 +441,7 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: findRawTemplate("user-selector-autocomplete"),
+      template: userAutocomplete,
       dataSource: (term) => {
         destroyUserStatuses();
         return userSearch({

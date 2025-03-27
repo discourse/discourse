@@ -275,7 +275,11 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <form.Object @name="scopes" as |scopesObject scopesData|>
+                      <form.Object
+                        @name="scopes"
+                        class="scopes-table__object"
+                        as |scopesObject scopesData|
+                      >
                         {{#each (this.scopesDataKeys scopesData) as |scopeKey|}}
                           <tr class="scope-resource-name">
                             <td><b>{{scopeKey}}</b></td>

@@ -167,11 +167,8 @@ ar:
               description: اختياري، لن يتم تشغيله إلا إذا كان المنشور يحتوي على أي هذه الوسوم
             restricted_categories:
               label: الفئات
-            restricted_groups:
+            restricted_inbox_groups:
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة شخصية في أحد صناديق البريد الوارد للمجموعة
-            ignore_group_members:
-              label: تجاهل أعضاء المجموعة
-              description: تخطي المشغِّل إذا كان المرسل عضوًا في المجموعة المحدَّدة أعلاه
             ignore_automated:
               label: تجاهل الرسائل الآلية
               description: تخطي المشغِّل إذا كان لدى المرسل بريد إلكتروني غير صحيح أو كان من مصدرٍ آلي. لا ينطبق ذلك إلا على المنشورات التي تم إنشاؤها عبر البريد الإلكتروني
@@ -186,7 +183,10 @@ ar:
               description: "تخطي المشغِّل إذا كان المنشور قد تم إنشاؤه عبر البريد الإلكتروني"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
-          topics: الموضوعات
+          with_images: الصور
+          with_links: الروابط
+          with_code: الرمز
+          with_uploads: التحميلات
         user_updated:
           fields:
             user_profile:

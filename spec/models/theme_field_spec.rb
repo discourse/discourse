@@ -36,19 +36,19 @@ RSpec.describe ThemeField do
   end
 
   it "adds an error when optimized image links are included" do
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: <<~HTML)
+    theme_field = theme.set_field(target: :common, name: :body_tag, value: <<~HTML)
       <img src="http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png"/>
     HTML
-    theme_field.ensure_baked!
-    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+    theme.save!
+    expect(theme_field.reload.error).to include(I18n.t("themes.errors.optimized_link"))
 
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: <<~SCSS)
+    theme_field = theme.set_field(target: :common, name: :scss, value: <<~SCSS)
       body {
         background: url(http://mysite.invalid/uploads/default/optimized/1X/6d749a141f513f88f167e750e528515002043da1_2_1282x1000.png);
       }
     SCSS
-    theme_field.ensure_baked!
-    expect(theme_field.error).to include(I18n.t("themes.errors.optimized_link"))
+    theme.save!
+    expect(theme_field.reload.error).to include(I18n.t("themes.errors.optimized_link"))
 
     theme_field.update(value: <<~SCSS)
       body {
@@ -158,19 +158,17 @@ HTML
 
   it "correctly generates errors for transpiled css" do
     css = "body {"
-    field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
-    field.ensure_baked!
-    expect(field.error).not_to eq(nil)
+    field = theme.set_field(target: :common, name: :scss, value: css)
+    theme.save!
+    expect(field.reload.error).to include('Error: expected "}"')
 
-    field.value = "@import 'missingfile';"
-    field.save!
-    field.ensure_baked!
-    expect(field.error).to include("Error: Can't find stylesheet to import.")
+    theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
+    theme.save!
+    expect(field.reload.error).to include("Error: Can't find stylesheet to import.")
 
-    field.value = "body {color: blue};"
-    field.save!
-    field.ensure_baked!
-    expect(field.error).to eq(nil)
+    theme.set_field(target: :common, name: :scss, value: "body {color: blue};")
+    theme.save!
+    expect(field.reload.error).to eq(nil)
   end
 
   it "allows importing scss files" do

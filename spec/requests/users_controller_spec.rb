@@ -695,7 +695,7 @@ RSpec.describe UsersController do
 
   describe "#toggle_anon" do
     it "allows you to toggle anon if enabled" do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 

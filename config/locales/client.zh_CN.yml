@@ -518,6 +518,7 @@ zh_CN:
         required: "您必须先认领条目才能进行审核。"
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
+        automatically_claimed_by: "此项目目前正在由 <b>%{username}</b>审核。"
       claim:
         title: "认领此话题"
       unclaim:
@@ -4757,7 +4758,7 @@ zh_CN:
           header_description: "关注词是一种审核工具，可以执行多种不同的操作，包括屏蔽、审查、链接或举报包含某些词的帖子"
         color_palettes:
           title: "调色板"
-          header_description: "调色板定义了整个网站界面使用的核心颜色，而主题可以提供额外的样式、布局和组件。两者可以协同工作，打造出您网站的独特外观和感觉，并且两者都可供用户选择他们喜欢的颜色"
+          header_description: "调色板定义了整个网站界面使用的核心颜色，而主题可以提供额外的样式、布局和组件。两者可以协同工作，打造出您网站的独特外观和感觉，并且两者都可供用户选择他们喜欢的颜色."
         emoji:
           title: "表情符号"
           header_description: "添加可供所有人使用的新表情符号。选择多个文件，使用其文件名创建表情符号。所选群组将用于同时添加的所有文件。"
@@ -4768,6 +4769,10 @@ zh_CN:
           title: "组件"
           header_description: "组件是更小的自定义设置，可以添加到主题中，以改变论坛设计风格的特定元素"
           keywords: "主题|组件|扩展"
+        themes_and_components:
+          title: "主题和组件"
+          header_description: "使用符合你需求的主题和组件个性化你的 Discourse 网站"
+          keywords: "主题|组件|扩展|自定义"
         site_texts:
           title: "网站文本"
           header_description: "自定义 Discourse 中使用的任何文本，以匹配您社区的声音和语气"
@@ -5866,7 +5871,6 @@ zh_CN:
           title: "颜色"
           edit: "编辑调色板"
           long_title: "调色板"
-          description: "调色板定义网站界面上使用的核心颜色，而主题可以提供额外的样式、布局和组件 – 两者可以协同工作以创建您的网站的独特外观，并且两者都可以供用户选择自己的偏好设置。"
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "副本 -"

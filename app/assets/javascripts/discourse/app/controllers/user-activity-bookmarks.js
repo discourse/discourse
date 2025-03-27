@@ -30,7 +30,7 @@ export default class UserActivityBookmarksController extends Controller {
 
   @computed("q")
   get searchTerm() {
-    return this._searchTerm || this.q;
+    return this._searchTerm !== undefined ? this._searchTerm : this.q;
   }
 
   set searchTerm(value) {

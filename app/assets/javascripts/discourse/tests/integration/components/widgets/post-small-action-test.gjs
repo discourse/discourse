@@ -1,14 +1,19 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module(
   "Integration | Component | Widget | post-small-action",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.glimmer_post_stream_mode = "disabled";
+    });
 
     test("does not have delete/edit/recover buttons by default", async function (assert) {
       const self = this;
@@ -110,9 +115,9 @@ module(
     });
 
     test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
-      try {
-        const self = this;
+      const self = this;
 
+      withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
         withPluginApi("1.6.0", (api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
             if (postAttrs.canRecover) {
@@ -120,35 +125,33 @@ module(
             }
           });
         });
+      });
 
-        this.set("args", { id: 123, canRecover: false });
+      this.set("args", { id: 123, canRecover: false });
 
-        await render(
-          <template>
-            <MountWidget @widget="post-small-action" @args={{self.args}} />
-          </template>
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
+
+      assert
+        .dom(".abcde")
+        .doesNotExist(
+          "custom CSS class is not added when condition is not met"
         );
 
-        assert
-          .dom(".abcde")
-          .doesNotExist(
-            "custom CSS class is not added when condition is not met"
-          );
+      this.set("args", { id: 123, canRecover: true });
 
-        this.set("args", { id: 123, canRecover: true });
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
 
-        await render(
-          <template>
-            <MountWidget @widget="post-small-action" @args={{self.args}} />
-          </template>
-        );
-
-        assert
-          .dom(".abcde")
-          .exists("adds custom CSS class as registered from the plugin API");
-      } finally {
-        resetPostSmallActionClassesCallbacks();
-      }
+      assert
+        .dom(".abcde")
+        .exists("adds custom CSS class as registered from the plugin API");
     });
   }
 );

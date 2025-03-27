@@ -42,6 +42,7 @@ acceptance("Static pages", function () {
   });
 
   test("Login redirect", async function (assert) {
+    this.siteSettings.full_page_login = false;
     await visit("/login");
 
     assert.strictEqual(
@@ -62,6 +63,7 @@ acceptance("Static pages", function () {
   });
 
   test("Signup redirect", async function (assert) {
+    this.siteSettings.full_page_login = false;
     await visit("/signup");
 
     assert.strictEqual(
@@ -72,6 +74,7 @@ acceptance("Static pages", function () {
   });
 
   test("Signup redirect with login_required", async function (assert) {
+    this.siteSettings.full_page_login = false;
     this.siteSettings.login_required = true;
     await visit("/signup");
 

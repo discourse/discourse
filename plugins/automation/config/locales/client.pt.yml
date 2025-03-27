@@ -65,7 +65,10 @@ pt:
             restricted_categories:
               label: Categorias
           created: Criado
-          topics: Tópicos
+          with_images: Imagens
+          with_links: Hiperligações
+          with_code: Código
+          with_uploads: Uploads
         category_created_edited:
           fields:
             restricted_category:

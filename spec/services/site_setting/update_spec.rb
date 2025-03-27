@@ -30,6 +30,33 @@ RSpec.describe SiteSetting::Update do
       it { is_expected.to fail_a_policy(:current_user_is_admin) }
     end
 
+    context "when trying to change a deprecated setting" do
+      let(:hard_deprecated_setting) { ["suggested_topics", "new_suggested_topics", false, "3.3"] }
+
+      let(:soft_deprecated_setting) do
+        ["suggested_topics", "suggested_topics_unread_max_days_old", true, "3.3"]
+      end
+
+      let(:setting_name) { :suggested_topics }
+      let(:new_value) { 3 }
+
+      context "when trying to change a hard deprecated setting" do
+        it "does not pass" do
+          stub_const(SiteSettings::DeprecatedSettings, "SETTINGS", [hard_deprecated_setting]) do
+            is_expected.to fail_a_policy(:settings_are_not_deprecated)
+          end
+        end
+      end
+
+      context "when trying to change a soft deprecated (renamed) setting" do
+        it "updates the new setting" do
+          stub_const(SiteSettings::DeprecatedSettings, "SETTINGS", [soft_deprecated_setting]) do
+            expect { result }.to change { SiteSetting.suggested_topics_unread_max_days_old }.to(3)
+          end
+        end
+      end
+    end
+
     context "when the user changes a hidden setting" do
       let(:setting_name) { :max_category_nesting }
       let(:new_value) { 3 }

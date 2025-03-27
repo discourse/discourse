@@ -15,13 +15,11 @@ export default RouteTemplate(
 
     <div class="container tags-index">
 
-      <div class="list-controls">
-        <div class="container tags-controls">
-          {{#if @controller.canAdminTags}}
-            <TagsAdminDropdown @actionsMapping={{@controller.actionsMapping}} />
-          {{/if}}
-          <h2>{{i18n "tagging.tags"}}</h2>
-        </div>
+      <div class="container tags-controls">
+        {{#if @controller.canAdminTags}}
+          <TagsAdminDropdown @actionsMapping={{@controller.actionsMapping}} />
+        {{/if}}
+        <h2>{{i18n "tagging.tags"}}</h2>
       </div>
 
       <div>
