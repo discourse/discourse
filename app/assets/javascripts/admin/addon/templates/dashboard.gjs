@@ -12,10 +12,9 @@ export default RouteTemplate(
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 
     <DPageHeader
-      @titleLabel="Dashboard"
-      @descriptionLabel="Probably should have a description to break up headings 'Dashboard' and 'Version'?"
-      @hideTabs={{true}}
-    >
+      @titleLabel={{i18n "admin.dashboard.title"}}
+      @descriptionLabel={{i18n "admin.dashboard.header_description"}}
+      @hideTabs={{true}}>
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
