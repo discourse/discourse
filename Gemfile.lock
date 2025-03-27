@@ -143,7 +143,7 @@ GEM
       logger
     execjs (2.10.0)
     exifr (1.4.1)
-    extralite-bundle (2.10)
+    extralite-bundle (2.12)
     fabrication (2.31.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
@@ -862,7 +862,7 @@ CHECKSUMS
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
-  extralite-bundle (2.10) sha256=d765b84abe359f8ed8ee1735de016167ab9f7c7760e3f9b49ba7434fa81ff192
+  extralite-bundle (2.12) sha256=9c9912b7ab592e7064089ee608cf86ab9edd81d20065acb87d1f4fed06052987
   fabrication (2.31.0) sha256=2c79f10d1b88034a2ebd47ce77acba66847fc4636581c8282b3408adc68e85aa
   faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
   fakeweb (1.3.0) sha256=1ec996be13020a00b3464560c09180b424477c698f59f82edf2b99b16cfa09a8
