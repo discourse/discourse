@@ -66,7 +66,7 @@ haha **ok** _cool_
     });
 
     test("multiple messages from multiple different users", async function (assert) {
-      const multiMessagesMultiUserMarkdown = `[chat quote="martin;29853;2025-03-20T07:12:55Z" channel="design gems :tada:" channelId="95" chained="true" multiQuote="true"]
+      const multiMessagesMultiUserMarkdown = `[chat quote="martin;29853;2025-03-20T07:12:55Z" channel="design gems :tada:" channelId="95" multiQuote="true" chained="true"]
 test
 [/chat]
 [chat quote="hunter;29856;2025-03-20T07:13:04Z" chained="true"]

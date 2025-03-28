@@ -10,7 +10,7 @@ const extension = {
         messageId: {},
         username: {},
         datetime: {},
-        channelName: {},
+        channel: {},
         channelId: {},
         html: {},
         rawContent: {},
@@ -39,7 +39,7 @@ const extension = {
 
         let metaElement;
         let channelLinkElement;
-        if (node.attrs.channelName) {
+        if (node.attrs.channel) {
           if (node.attrs.multiQuote) {
             metaElement = document.createElement("div");
             metaElement.classList.add("chat-transcript-meta");
@@ -49,7 +49,7 @@ const extension = {
               : null;
 
             metaElement.innerHTML = i18n("chat.quote.original_channel", {
-              channel: emojiUnescape(node.attrs.channelName),
+              channel: emojiUnescape(node.attrs.channel),
               channelLink,
             });
           } else {
@@ -59,7 +59,7 @@ const extension = {
               `/chat/c/-/${node.attrs.channelId}`
             );
             channelLinkElement.innerHTML = `#${emojiUnescape(
-              node.attrs.channelName
+              node.attrs.channel
             )}`;
           }
         }
@@ -138,41 +138,28 @@ const extension = {
       },
     },
   },
-  serializeNode: {
-    chat(state, node) {
-      const bbCodeAttrs = [];
-      bbCodeAttrs.push(
-        `quote="${node.attrs.username};${node.attrs.messageId};${node.attrs.datetime}"`
-      );
+  serializeNode({ utils: { buildBBCodeAttrs } }) {
+    return {
+      chat(state, node) {
+        let bbCodeAttrs = `quote="${node.attrs.username};${node.attrs.messageId};${node.attrs.datetime}"`;
+        bbCodeAttrs +=
+          " " +
+          buildBBCodeAttrs(node.attrs, {
+            skipAttrs: [
+              "username",
+              "messageId",
+              "datetime",
+              "rawContent",
+              "html",
+              "threadHtml",
+            ],
+          });
 
-      if (node.attrs.channelName) {
-        bbCodeAttrs.push(`channel="${node.attrs.channelName}"`);
-      }
-      if (node.attrs.channelId) {
-        bbCodeAttrs.push(`channelId="${node.attrs.channelId}"`);
-      }
-
-      if (node.attrs.chained) {
-        bbCodeAttrs.push(`chained="true"`);
-      }
-
-      if (node.attrs.multiQuote) {
-        bbCodeAttrs.push(`multiQuote="true"`);
-      }
-
-      if (node.attrs.threadId) {
-        bbCodeAttrs.push(`threadId="${node.attrs.threadId}"`);
-      }
-
-      if (node.attrs.threadTitle) {
-        bbCodeAttrs.push(`threadTitle="${node.attrs.threadTitle}"`);
-      }
-
-      state.write(`[chat ${bbCodeAttrs.join(" ")}]\n`);
-
-      state.write(node.attrs.rawContent);
-      state.write("\n[/chat]\n");
-    },
+        state.write(`[chat ${bbCodeAttrs}]\n`);
+        state.write(node.attrs.rawContent);
+        state.write("\n[/chat]\n");
+      },
+    };
   },
   parse: {
     div_chat_transcript_wrap_open(state, token, tokens, i) {
@@ -202,7 +189,7 @@ const extension = {
         messageId: token.attrGet("data-message-id"),
         username: token.attrGet("data-username"),
         datetime: token.attrGet("data-datetime"),
-        channelName: token.attrGet("data-channel-name"),
+        channel: token.attrGet("data-channel-name"),
         channelId: token.attrGet("data-channel-id"),
         chained: token.attrGet("data-chained"),
         multiQuote: token.attrGet("data-multiquote"),
