@@ -255,10 +255,14 @@ RSpec.describe ReviewableUser, type: :model do
         expect(history.first.ip_address).not_to be_blank
 
         reviewable.scrub("reason", Guardian.new(admin))
+        reviewable.reload
         history.reload
 
         expect(history.first.details).to include("User details scrubbed by #{admin.username}")
         expect(history.first.details).to include("reason")
+        expect(history.first.details).to include(
+          "Timestamp: #{Time.zone.parse(reviewable.payload["scrubbed_at"])}",
+        )
 
         expect(history.first.details).not_to include(user.username)
         expect(history.first.ip_address).to be_blank
@@ -294,6 +298,9 @@ RSpec.describe ReviewableUser, type: :model do
 
         expect(history.last.details).to include("User details scrubbed by #{admin.username}")
         expect(history.last.details).to include("reason")
+        expect(history.last.details).to include(
+          "Timestamp: #{Time.zone.parse(reviewable.payload["scrubbed_at"])}",
+        )
         expect(history.last.details).not_to include(user.username)
         expect(history.last.ip_address).to be_blank
       end
@@ -306,12 +313,14 @@ RSpec.describe ReviewableUser, type: :model do
 
         expect(reviewable.payload["scrubbed_by"]).to be_blank
         expect(reviewable.payload["scrubbed_reason"]).to be_blank
+        expect(reviewable.payload["scrubbed_at"]).to be_blank
 
         reviewable.scrub("reason", Guardian.new(admin))
         reviewable.reload
 
         expect(reviewable.payload["scrubbed_by"]).to eq(admin.username)
         expect(reviewable.payload["scrubbed_reason"]).to eq("reason")
+        expect(reviewable.payload["scrubbed_at"]).to be_present
 
         expect(reviewable.payload["username"]).to be_blank
         expect(reviewable.payload["email"]).to be_blank

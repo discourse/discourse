@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ReviewableField from "discourse/components/reviewable-field";
 import getUrl from "discourse/helpers/get-url";
+import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -22,9 +23,9 @@ export default class ReviewableUser extends Component {
     return this.site.collectUserFields(fields);
   }
 
-  @discourseComputed("reviewable.status", "currentUser")
-  canScrubRejectedUser(status, currentUser) {
-    return status === REJECTED && currentUser.admin && !this.isScrubbed;
+  @discourseComputed("reviewable.status", "currentUser", "isScrubbed")
+  canScrubRejectedUser(status, currentUser, isScrubbed) {
+    return status === REJECTED && currentUser.admin && !isScrubbed;
   }
 
   @discourseComputed("reviewable.payload")
@@ -75,6 +76,12 @@ export default class ReviewableUser extends Component {
             @classes="reviewable-user-details scrubbed-reason"
             @name={{i18n "review.user.scrubbed_reason"}}
             @value={{this.reviewable.payload.scrubbed_reason}}
+          />
+
+          <ReviewableField
+            @classes="reviewable-user-details scrubbed-at"
+            @name={{i18n "review.user.scrubbed_at"}}
+            @value={{rawDate this.reviewable.payload.scrubbed_at}}
           />
         {{else}}
           <div class="reviewable-user-details username">

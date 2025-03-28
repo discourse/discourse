@@ -37,6 +37,7 @@ class ReviewableUser < Reviewable
   end
 
   def scrub(reason, guardian)
+    scrubbed_at = Time.zone.now
     # We need to scrub the UserHistory record for when this user was deleted, as well as this reviewable's payload
     UserHistory
       .where(action: UserHistory.actions[:delete_user])
@@ -48,11 +49,16 @@ class ReviewableUser < Reviewable
             "user.destroy_reasons.reviewable_details_scrubbed",
             staff: guardian.current_user.username,
             reason: reason,
+            timestamp: scrubbed_at,
           ),
         ip_address: nil,
       )
 
-    self.payload = { scrubbed_by: guardian.current_user.username, scrubbed_reason: reason }
+    self.payload = {
+      scrubbed_by: guardian.current_user.username,
+      scrubbed_reason: reason,
+      scrubbed_at:,
+    }
     self.save!
 
     result = create_result(:success)
