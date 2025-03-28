@@ -20,6 +20,28 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });
 
+  test("renders the editor with a null initial value", async function (assert) {
+    await render(<template><ProsemirrorEditor @value={{null}} /></template>);
+    assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+  });
+
+  test("renders the editor with a markdown initial value", async function (assert) {
+    await render(
+      <template>
+        <ProsemirrorEditor
+          @value="the **chickens** have come home to roost _bobby boucher_!"
+        />
+      </template>
+    );
+    assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+    assert
+      .dom(".ProseMirror em")
+      .exists("it renders the italic markdown as HTML");
+    assert
+      .dom(".ProseMirror strong")
+      .exists("it renders the strong markdown as HTML");
+  });
+
   test("renders the editor with minimum extensions", async function (assert) {
     const minimumExtensions = [
       { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
