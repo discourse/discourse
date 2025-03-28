@@ -497,6 +497,16 @@ export default class Category extends RestModel {
     });
   }
 
+  get textColor() {
+    return applyValueTransformer(
+      "category-text-color",
+      this.get("text_color"),
+      {
+        category: this,
+      }
+    );
+  }
+
   @computed("parent_category_id", "site.categories.[]")
   get parentCategory() {
     if (this.parent_category_id) {

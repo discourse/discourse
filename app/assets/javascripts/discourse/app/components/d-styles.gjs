@@ -63,7 +63,7 @@ export default class DStyles extends Component {
       css.push(
         `.badge-category[data-category-id="${category.id}"] { ` +
           `--category-badge-color: var(--category-${category.id}-color); ` +
-          `--category-badge-text-color: #${category.text_color}; ` +
+          `--category-badge-text-color: #${category.textColor}; ` +
           `}`
       );
 

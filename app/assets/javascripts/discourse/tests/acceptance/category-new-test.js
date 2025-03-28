@@ -1,7 +1,9 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -95,6 +97,59 @@ acceptance("Category New", function (needs) {
     assert.true(
       DiscourseURL.routeTo.calledWith("/c/testing/11"),
       "back routing works"
+    );
+  });
+});
+
+acceptance("Category text color", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
+
+    server.get("/c/testing/find_by_slug.json", () => {
+      return helper.response(200, {
+        category: {
+          ...category,
+          color: "EEEEEE",
+          text_color: "000000",
+        },
+      });
+    });
+  });
+
+  test("Category text color is set based on contrast", async function (assert) {
+    await visit("/new-category");
+
+    let previewTextColor = document
+      .querySelector(".category-style .badge-category__wrapper")
+      .style.getPropertyValue("--category-badge-text-color")
+      .trim();
+
+    assert.strictEqual(
+      previewTextColor,
+      "#FFFFFF",
+      "has the default text color"
+    );
+
+    await fillIn("input.category-name", "testing");
+    await fillIn(".category-color-editor .hex-input", "EEEEEE");
+    await click("#save-category");
+
+    assert.strictEqual(
+      currentURL(),
+      "/c/testing/edit/general",
+      "it transitions to the category edit route"
+    );
+
+    previewTextColor = document
+      .querySelector(".category-style .badge-category__wrapper")
+      .style.getPropertyValue("--category-badge-text-color")
+      .trim();
+
+    assert.strictEqual(
+      previewTextColor,
+      "#000000",
+      "sets the contrast text color"
     );
   });
 });
