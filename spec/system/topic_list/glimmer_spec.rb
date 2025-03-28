@@ -84,7 +84,7 @@ describe "glimmer topic list", type: :system do
       topic_list.had_new_topics_alert?
       topic_list.click_new_topics_alert
 
-      expect(topic_list).to have_highlighted_topic(topic)
+      expect(topic_list).to have_highlighted_topic(new_topic)
     end
 
     it "highlights the previous topic after navigation" do
