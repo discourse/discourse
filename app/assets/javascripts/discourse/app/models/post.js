@@ -396,6 +396,14 @@ export default class Post extends RestModel {
     return this.post_type === this.site.post_types.moderator_action;
   }
 
+  get isSmallAction() {
+    // TODO (glimmer-post-stream): introduce a plugin API to add mode action codes that should be considered a small action
+    return (
+      this.post_type === this.site.post_types.small_action ||
+      this.action_code === "split_topic"
+    );
+  }
+
   get liked() {
     return !!this.likeAction?.get("acted");
   }
