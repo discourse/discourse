@@ -23,12 +23,13 @@ describe "Custom sidebar sections", type: :system do
       expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
       section_modal.fill_name("My section")
-
       section_modal.fill_link("Sidebar Tags", "/tags")
+
       expect(section_modal).to have_enabled_save
 
       section_modal.save
 
+      expect(section_modal).to be_closed
       expect(sidebar).to have_section("My section")
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
