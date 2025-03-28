@@ -687,11 +687,12 @@ module DeprecatedIconHandler
     new_name = remap_from_fa5(new_name)
 
     if icon_name != new_name
-      Discourse.deprecate(
-        "The icon `#{icon_name}` is deprecated. Use `#{new_name}` instead.",
-        raise_error: Rails.env.test?,
-      )
-      return new_name
+      error_msg =
+        `Missing icon error: The icon name "#{icon_name}" has been removed and should be updated to "#{new_name}" in your code. More info at https://meta.discourse.org/t/325349.`
+
+      Rails.logger.error(error_msg)
+
+      raise Discourse::MissingIconError.new(error_msg) if Rails.env.test?
     end
 
     icon_name
