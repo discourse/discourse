@@ -1061,6 +1061,15 @@ RSpec.describe ReviewablesController do
         expect(response.status).to eq(404)
       end
 
+      it "doesn't allow scrubbing of reviewables that aren't scrubbable" do
+        reviewable = Fabricate(:reviewable)
+        expect(Reviewable.scrubbable_types).not_to include(reviewable.type)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
       it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true

@@ -205,7 +205,7 @@ class ReviewablesController < ApplicationController
       Reviewable.find_by(
         id: params[:reviewable_id],
         status: Reviewable.statuses[:rejected],
-        type: "ReviewableUser",
+        type: Reviewable.scrubbable_types,
       )
     raise Discourse::NotFound if reviewable.blank?
 

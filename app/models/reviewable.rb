@@ -77,6 +77,10 @@ class Reviewable < ActiveRecord::Base
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
 
+  def self.scrubbable_types
+    [ReviewableUser]
+  end
+
   def self.sti_names
     self.types.map(&:sti_name)
   end
