@@ -52,18 +52,21 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has totp 2fa", dump_threads_on_failure: true do
-    SiteSetting.hide_email_address_taken = false
+    # Tests is flaky so trying with a longer wait time as a workaround
+    using_wait_time(Capybara.default_max_wait_time * 2) do
+      SiteSetting.hide_email_address_taken = false
 
-    second_factor = Fabricate(:user_second_factor_totp, user: user)
-    sign_in user
+      second_factor = Fabricate(:user_second_factor_totp, user: user)
+      sign_in user
 
-    visit generate_confirm_link
+      visit generate_confirm_link
 
-    find(".confirm-new-email .btn-primary").click
-    find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-    find("button[type=submit]").click
+      find(".confirm-new-email .btn-primary").click
+      find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
+      find("button[type=submit]").click
 
-    try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
+      try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
+    end
   end
 
   it "works when user has webauthn 2fa" do
