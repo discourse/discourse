@@ -3552,14 +3552,6 @@ experimental:
       - auto
       - enabled
     default: enabled
-  glimmer_post_menu_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: enabled
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list

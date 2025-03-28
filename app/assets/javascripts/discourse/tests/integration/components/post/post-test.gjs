@@ -51,7 +51,6 @@ module("Integration | Component | Post", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.glimmer_post_stream_mode = "enabled";
-    this.siteSettings.glimmer_post_menu_mode = "enabled";
     this.siteSettings.post_menu_hidden_items = "";
 
     this.store = getOwner(this).lookup("service:store");

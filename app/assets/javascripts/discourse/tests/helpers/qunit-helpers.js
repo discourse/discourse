@@ -102,7 +102,6 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetPostClassesCallback } from "discourse/widgets/post";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -221,7 +220,6 @@ export function testCleanup(container, app) {
   resetCardClickListenerSelector();
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
-  resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearDisabledDefaultKeyboardBindings();
