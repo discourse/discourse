@@ -209,7 +209,8 @@ shared_examples "forgot password scenarios" do
 end
 
 describe "User resetting password", type: :system, dump_threads_on_failure: true do
-  around { |example| using_wait_time(Capybara.default_max_wait_time * 2) { example.run } }
+  # Tests are flaky so trying with a longer wait time as a workaround
+  around { |example| Capybara.using_wait_time(Capybara.default_max_wait_time * 2) { example.run } }
 
   describe "when desktop" do
     include_examples "forgot password scenarios"
