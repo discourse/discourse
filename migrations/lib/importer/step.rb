@@ -68,7 +68,6 @@ module Migrations::Importer
     end
 
     def execute
-      puts self.class.title
       load_required_data
     end
 

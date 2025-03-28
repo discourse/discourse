@@ -5,6 +5,7 @@ module Migrations::Importer
     MappingType = ::Migrations::Importer::MappingType
 
     NOW = "NOW()"
+    SYSTEM_USER_ID = Discourse::SYSTEM_USER_ID
 
     INSERT_MAPPED_IDS_SQL = <<~SQL
       INSERT INTO mapped.ids (original_id, type, discourse_id)

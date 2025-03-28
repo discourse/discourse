@@ -29,9 +29,12 @@ schema:
           - "last_emailed_at"
           - "last_posted_at"
           - "last_seen_reviewable_id"
+          - "previous_visit_at"
           - "required_fields_version"
           - "secure_identifier"
           - "seen_notification_id"
+          - "suspended_at"
+          - "suspended_till"
           - "username_lower"
 
   global:

@@ -20,16 +20,26 @@ module Migrations::Importer::Steps
                    name
                    active
                    trust_level
+                   group_locked_trust_level
+                   manual_locked_trust_level
                    admin
                    moderator
                    date_of_birth
+                   locale
                    ip_address
                    registration_ip_address
                    primary_group_id
+                   flair_group_id
                    suspended_at
                    suspended_till
+                   first_seen_at
                    last_seen_at
                    last_emailed_at
+                   silenced_till
+                   approved
+                   approved_at
+                   approved_by_id
+                   views
                    created_at
                    updated_at
                  ]
@@ -39,23 +49,22 @@ module Migrations::Importer::Steps
     total_rows_query <<~SQL, MappingType::USERS
       SELECT COUNT(*)
       FROM users u
-      WHERE NOT EXISTS (
-                SELECT 1
-                FROM mapped.ids mu
-                WHERE u.original_id = mu.original_id
-                  AND mu.type = ?
-            )
+           LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
+      WHERE mu.original_id IS NULL
     SQL
 
     rows_query <<~SQL, MappingType::USERS
-      SELECT u.*, JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
+      SELECT u.*,
+             us.suspended_at,
+             us.suspended_till,
+             JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
       FROM users u
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
-      WHERE NOT EXISTS (SELECT 1
-                        FROM mapped.ids mu
-                        WHERE u.original_id = mu.original_id
-                          AND mu.type = ?)
-      GROUP BY u.ROWID
+           LEFT JOIN user_suspensions us ON u.original_id = us.user_id AND us.suspended_at < DATETIME() AND
+                                            (us.suspended_till IS NULL OR us.suspended_till > DATETIME())
+           LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
+      WHERE mu.original_id IS NULL
+      GROUP BY u.original_id
       ORDER BY u.ROWID
     SQL
 
@@ -95,6 +104,8 @@ module Migrations::Importer::Steps
       row[:active] = true if row[:active].nil?
       row[:admin] = false if row[:admin].nil?
       row[:moderator] = false if row[:moderator].nil?
+      row[:staged] = false if row[:staged].nil?
+
       row[:last_emailed_at] ||= NOW
       row[:suspended_till] ||= 200.years.from_now if row[:suspended_at].present?
 
@@ -102,6 +113,14 @@ module Migrations::Importer::Steps
       if date_of_birth && date_of_birth.year != 1904
         row[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
       end
+
+      if SiteSetting.must_approve_users || !row[:approved].nil?
+        row[:approved] = true if row[:approved].nil?
+        row[:approved_at] = row[:approved] ? row[:approved_at] || NOW : nil
+        row[:approved_by_id] = row[:approved] ? row[:approved_by_id] || SYSTEM_USER_ID : nil
+      end
+
+      row[:views] ||= 0
 
       super
     end

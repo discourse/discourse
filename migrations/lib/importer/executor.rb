@@ -43,11 +43,16 @@ module Migrations::Importer
     end
 
     def execute_steps
-      step_classes.each do |step_class|
-        step = step_class.new(@intermediate_db, @discourse_db, @shared_data)
-        step.execute
-        puts ""
-      end
+      max = step_classes.size
+
+      step_classes
+        .each
+        .with_index(1) do |step_class, index|
+          puts "#{step_class.title} [#{index}/#{max}]"
+          step = step_class.new(@intermediate_db, @discourse_db, @shared_data)
+          step.execute
+          puts ""
+        end
     end
 
     def cleanup

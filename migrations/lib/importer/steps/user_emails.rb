@@ -11,7 +11,7 @@ module Migrations::Importer::Steps
     total_rows_query <<~SQL, MappingType::USERS
       SELECT COUNT(*)
       FROM users u
-           JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = 1
+           JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
     SQL
 
@@ -21,7 +21,7 @@ module Migrations::Importer::Steps
              COALESCE(ue."primary", TRUE)          AS "primary",
              COALESCE(ue.created_at, u.created_at) AS created_at
       FROM users u
-           JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = 1
+           JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
       ORDER BY ue.ROWID
     SQL
