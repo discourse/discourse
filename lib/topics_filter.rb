@@ -83,8 +83,7 @@ class TopicsFilter
       when "views-max"
         filter_by_number_of_views(max: filter_values)
       else
-        if custom_filter =
-             DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(filter) }
+        if custom_filter = DiscoursePluginRegistry.custom_filter_mappings.find { _1.key?(filter) }
           @scope = custom_filter[filter].call(@scope, filter_values, @guardian) || @scope
         end
       end

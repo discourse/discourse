@@ -143,7 +143,7 @@ GEM
       logger
     execjs (2.10.0)
     exifr (1.4.1)
-    extralite-bundle (2.10)
+    extralite-bundle (2.12)
     fabrication (2.31.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
@@ -169,19 +169,19 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.30.1)
+    google-protobuf (4.30.2)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.1-aarch64-linux)
+    google-protobuf (4.30.2-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.1-arm64-darwin)
+    google-protobuf (4.30.2-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.1-x86_64-darwin)
+    google-protobuf (4.30.2-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.30.1-x86_64-linux)
+    google-protobuf (4.30.2-x86_64-linux)
       bigdecimal
       rake (>= 13)
     guess_html_encoding (0.0.11)
@@ -233,7 +233,7 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     literate_randomizer (0.4.0)
-    logger (1.6.6)
+    logger (1.7.0)
     lograge (0.14.0)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -351,7 +351,7 @@ GEM
     parallel (1.26.3)
     parallel_tests (5.1.0)
       parallel
-    parser (3.3.7.2)
+    parser (3.3.7.3)
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
@@ -484,7 +484,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.74.0)
+    rubocop (1.75.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -492,7 +492,7 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.38.0, < 2.0)
+      rubocop-ast (>= 1.43.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.43.0)
@@ -862,7 +862,7 @@ CHECKSUMS
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
-  extralite-bundle (2.10) sha256=d765b84abe359f8ed8ee1735de016167ab9f7c7760e3f9b49ba7434fa81ff192
+  extralite-bundle (2.12) sha256=9c9912b7ab592e7064089ee608cf86ab9edd81d20065acb87d1f4fed06052987
   fabrication (2.31.0) sha256=2c79f10d1b88034a2ebd47ce77acba66847fc4636581c8282b3408adc68e85aa
   faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
   fakeweb (1.3.0) sha256=1ec996be13020a00b3464560c09180b424477c698f59f82edf2b99b16cfa09a8
@@ -881,11 +881,11 @@ CHECKSUMS
   ffi (1.17.1-x86_64-linux-musl) sha256=3a343086820c96d6fbea4a5ef807fb69105b2b8174678f103b3db210c3f78401
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
-  google-protobuf (4.30.1) sha256=0c88b433866eac8a07d13ea19182e23334b14ac99d2a186cd88b72e2413d0778
-  google-protobuf (4.30.1-aarch64-linux) sha256=5e155eae7b686bd4f826f947f311d1c00b4c3b467ca21b27c47610b400a215c5
-  google-protobuf (4.30.1-arm64-darwin) sha256=f69682f65a0c2f689040714e2c6407c838b9113dce87d76e7e568f1213b7fdeb
-  google-protobuf (4.30.1-x86_64-darwin) sha256=626836baf2470c5590fedda795598cea1c3385f690a97f2ed6d7d43a31110d9a
-  google-protobuf (4.30.1-x86_64-linux) sha256=84c87b239dec7a200dddbcbd9bdb03a59c109f4b32667a50bec84286faa9784e
+  google-protobuf (4.30.2) sha256=0f35168dbeeccf13d928acf6c128cfec17b9a826ae4505246a02c115f4ae16ed
+  google-protobuf (4.30.2-aarch64-linux) sha256=a99d2f31bc2bebf4994b7cd2dd4c1d3ef28a0acc8f1b37be236982f7dc21bd8d
+  google-protobuf (4.30.2-arm64-darwin) sha256=c66a93ceef100fb2390615e76310491cc6e1944f7b9cda2cf1e3279887f817d1
+  google-protobuf (4.30.2-x86_64-darwin) sha256=17f4567dff431f8dd5be5ff6395824ec044413f67d2803a9941ebc8c70dec604
+  google-protobuf (4.30.2-x86_64-linux) sha256=c96993d98732ea185d98279f6c76e130eb9595437dda39610b3398c9e348518e
   guess_html_encoding (0.0.11) sha256=cab6468b945f38673fc41ad147fbbc89693b3c6c34b03b071e2ed669a603e098
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
   hashdiff (1.1.2) sha256=2c30eeded6ed3dce8401d2b5b99e6963fe5f14ed85e60dd9e33c545a44b71a77
@@ -916,7 +916,7 @@ CHECKSUMS
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   literate_randomizer (0.4.0) sha256=05073c9b383983b1ed7e26c40b963468e91bc86e663b3eeff3a4af91b84217b1
-  logger (1.6.6) sha256=dd618d24e637715472732e7eed02e33cfbdf56deaad225edd0f1f89d38024017
+  logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   lograge (0.14.0) sha256=42371a75823775f166f727639f5ddce73dd149452a55fc94b90c303213dc9ae1
   logstash-event (1.2.02) sha256=89a7dc60fac67070a5f60ba07409e541b09cb58906c391e90cb74b9f217467ae
   logster (2.20.1) sha256=a84bbe58e7f99c4eb0246ea3a952ed87950f63aeea3cdbe7147018d10cc9a2a8
@@ -973,7 +973,7 @@ CHECKSUMS
   ostruct (0.6.1) sha256=09a3fb7ecc1fa4039f25418cc05ae9c82bd520472c5c6a6f515f03e4988cb817
   parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
   parallel_tests (5.1.0) sha256=c8cc0eef06577543dc3e09220ac5271809d9a1c65fa52ef86dd759bb4cb5aba5
-  parser (3.3.7.2) sha256=c71de9076be0b84459a268581b5aa75e5eeaac892b564430371d1f8eb55fb65f
+  parser (3.3.7.3) sha256=5803acc132cf1155fac2656bf02d3fb9223dccd66f1aa538dac095b785fa4d64
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
@@ -1032,7 +1032,7 @@ CHECKSUMS
   rss (0.3.1) sha256=b46234c04551b925180f8bedfc6f6045bf2d9998417feda72f300e7980226737
   rswag-specs (2.16.0) sha256=8ba26085c408b0bd2ed21dc8015c80f417c7d34c63720ab7133c2549b5bd2a91
   rtlcss (0.2.1) sha256=213d5a00bf61267f93a7a516d699d77e1cc5f396743abb33c01e3f3243a7bf60
-  rubocop (1.74.0) sha256=06138a35d7d11c963d5abc0148b355e3999007cb0225a619940db0e75521379b
+  rubocop (1.75.1) sha256=c12900c55b0b52e6ed1384f7f7575beb92047019ce37ca14b9572d80239adc29
   rubocop-ast (1.43.0) sha256=92cd649e336ce10212cb2f2b29028f487777ecc477f108f437a1dce1ee3db79a
   rubocop-capybara (2.22.1) sha256=ced88caef23efea53f46e098ff352f8fc1068c649606ca75cb74650970f51c0c
   rubocop-discourse (3.12.1) sha256=ebf7e2224f053047372071419052828c3e3a01bccb14ea1f282ac143547df9bc

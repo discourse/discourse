@@ -1278,37 +1278,60 @@ div.ac-wrap {
   }
 }
 
-@media screen and (min-width: $reply-area-max-width) {
-  .sidebar-wrapper .sidebar-container {
-    .has-sidebar-page & {
-      height: auto;
+// align the previewless composer with the topic content
+#reply-control:not(.fullscreen).hide-preview {
+  --composer-internal-padding: 1em;
+  --layout-gap: 2em;
+  --topic-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+  );
+  width: 100%;
+  max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+}
+
+body:not(.has-sidebar-page) {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: 0.67em;
+
+    // 1100px is equivalent to --d-max-width
+    @media screen and (width >= 1110px) {
+      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    }
+
+    // 790px is equivalent to --topic-width
+    @media screen and (width < 790px) {
+      max-width: calc(100% - calc(0.67em * 2));
+      margin-left: 0.67em;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      max-width: unset;
+      margin-inline: unset;
     }
   }
+}
 
-  #reply-control:not(.fullscreen) {
-    .has-sidebar-page & {
-      width: auto;
-      max-width: calc(
-        (var(--d-max-width) + (var(--d-sidebar-width) / 2)) - 1.5rem
-      );
-      margin-left: 0;
-      margin-right: 0;
-      transform: translateX(
-        calc(
-          ((100vw - var(--d-max-width) - (var(--d-sidebar-width) / 0.5)) / 2) +
-            17em + 1rem
-        )
-      );
+body.has-sidebar-page {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
 
-      &.hide-preview {
-        max-width: calc(740px);
-        transform: translateX(
-          calc(
-            ((100vw - 740px - var(--d-sidebar-width)) / 2) +
-              var(--d-sidebar-width)
-          )
-        );
-      }
+    // 1390px is equivalent to --d-max-width + --d-sidebar-width
+    @media screen and (width >= 1390px) {
+      left: calc(
+        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+      ); // 50% of the whitespace
+      margin-left: var(--layout-gap);
+    }
+
+    // This is when the topic width starts to shrink
+    @media screen and (width <= 1180px) {
+      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+    }
+
+    // sidebar shrinks
+    @media screen and (width <= 1000px) {
+      --layout-gap: 1em;
+      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
     }
   }
 }

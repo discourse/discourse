@@ -380,12 +380,13 @@ export default class Item extends Component {
                       @outletArgs={{hash topic=@topic}}
                     />
                     {{categoryLink @topic.category}}
+                    {{~! no whitespace ~}}
                     <PluginOutlet
                       @name="topic-list-after-category"
                       @outletArgs={{hash topic=@topic}}
-                    />
+                    />{{~! no whitespace ~}}
                   {{/unless}}
-
+                  {{~! no whitespace ~}}
                   {{discourseTags @topic mode="list"}}
                 </span>
 

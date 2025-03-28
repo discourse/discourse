@@ -1442,10 +1442,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
-  # When loading /categories with topics, preload topic associations
-  # using register_category_list_topics_preloader_associations(:association_name)
-  def register_category_list_topics_preloader_associations(fields)
-    DiscoursePluginRegistry.register_category_list_topics_preloader_association(fields, self)
+  ##
+  # Allows plugins to preload topic associations when loading categories with topics.
+  #
+  # @param fields [Array<Symbol>] The topic associations to preload.
+  #
+  # @example Preload custom topic associations
+  #
+  #   register_category_list_topics_preloader_associations(%i[some_topic_association some_other_topic_association])
+  #
+  def register_category_list_topics_preloader_associations(associations)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(associations, self)
   end
 
   private

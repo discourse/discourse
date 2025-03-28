@@ -208,7 +208,7 @@ shared_examples "forgot password scenarios" do
   end
 end
 
-describe "User resetting password", type: :system do
+describe "User resetting password", type: :system, dump_threads_on_failure: true do
   describe "when desktop" do
     include_examples "forgot password scenarios"
   end

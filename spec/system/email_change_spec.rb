@@ -51,7 +51,7 @@ describe "Changing email", type: :system do
     try_until_success { expect(user.reload.primary_email.email).to eq(new_email) }
   end
 
-  it "works when user has totp 2fa" do
+  it "works when user has totp 2fa", dump_threads_on_failure: true do
     SiteSetting.hide_email_address_taken = false
 
     second_factor = Fabricate(:user_second_factor_totp, user: user)

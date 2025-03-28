@@ -324,7 +324,7 @@ module SvgSprite
       cache
         .defer_get_set_bulk(
           Theme.transform_ids(theme_id),
-          lambda { |theme_id| "theme_svg_sprites_#{theme_id}" },
+          lambda { |_theme_id| "theme_svg_sprites_#{_theme_id}" },
         ) do |theme_ids|
           theme_field_uploads =
             ThemeField.where(
@@ -344,12 +344,15 @@ module SvgSprite
           end
 
           theme_sprites
-            .map do |(theme_id, upload_id, sprite)|
+            .map do |(_theme_id, upload_id, sprite)|
               begin
-                [theme_id, symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false)]
+                [
+                  _theme_id,
+                  symbols_for("theme_#{_theme_id}_#{upload_id}.svg", sprite, strict: false),
+                ]
               rescue => e
                 Rails.logger.warn(
-                  "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+                  "Bad XML in custom sprite in theme with ID=#{_theme_id}. Error info: #{e.inspect}",
                 )
               end
             end
