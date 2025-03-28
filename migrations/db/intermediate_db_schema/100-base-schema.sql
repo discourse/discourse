@@ -72,7 +72,7 @@ CREATE TABLE user_options
 
 CREATE TABLE users
 (
-    id                        NUMERIC   NOT NULL PRIMARY KEY,
+    original_id               NUMERIC   NOT NULL PRIMARY KEY,
     active                    BOOLEAN,
     admin                     BOOLEAN,
     approved                  BOOLEAN,

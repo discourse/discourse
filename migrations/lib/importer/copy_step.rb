@@ -128,18 +128,19 @@ module Migrations::Importer
     end
 
     def after_commit_of_inserted_rows(rows)
-      after_commit(rows)
+      return unless self.class.store_mapped_ids?
+
+      rows.each do |row|
+        @intermediate_db.insert(INSERT_MAPPED_IDS_SQL, [row[:original_id], @mapping_type, row[:id]])
+      end
+
+      nil
     end
 
     def after_commit_of_skipped_rows(rows)
-      after_commit(rows)
-    end
-
-    def after_commit(rows)
-      return if !self.class.store_mapped_ids?
+      return unless self.class.store_mapped_ids?
 
       rows.each do |row|
-        # TODO update check when `original_id` is stored in IntermediateDB
         if row[:id] && row[:original_id]
           @intermediate_db.insert(
             INSERT_MAPPED_IDS_SQL,
@@ -152,10 +153,7 @@ module Migrations::Importer
     end
 
     def transform_row(row)
-      if self.class.store_mapped_ids?
-        row[:original_id] = row[:id]
-        row[:id] = (@last_id += 1)
-      end
+      row[:id] = (@last_id += 1) if self.class.store_mapped_ids? && row[:id].nil?
 
       if self.class.timestamp_columns?
         row[:created_at] ||= NOW

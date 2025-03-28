@@ -23,7 +23,7 @@ module Migrations::Converters::Discourse
 
     def process_item(item)
       IntermediateDB::User.create(
-        id: item[:id],
+        original_id: item[:id],
         active: item[:active],
         admin: item[:admin],
         approved: item[:approved],

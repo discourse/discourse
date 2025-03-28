@@ -188,11 +188,23 @@
                       },
                       "datatype": {
                         "$ref": "#/$defs/datatypes"
+                      },
+                      "rename_to": {
+                        "type": "string"
                       }
                     },
                     "additionalProperties": false,
-                    "required": [
-                      "datatype"
+                    "anyOf": [
+                      {
+                        "required": [
+                          "datatype"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "rename_to"
+                        ]
+                      }
                     ],
                     "oneOf": [
                       {

@@ -43,7 +43,7 @@ module Migrations::Database::Schema
       columns =
         filtered_columns_of(table_name, config).map do |column|
           Column.new(
-            name: column.name,
+            name: name_for(column),
             datatype: datatype_for(column),
             nullable: column.null || column.default,
             max_length: column.type == :text ? column.limit : nil,
@@ -79,6 +79,10 @@ module Migrations::Database::Schema
           is_primary_key: primary_key_column_names.include?(column[:name]),
         )
       end
+    end
+
+    def name_for(column)
+      @global.modified_name(column.name) || column.name
     end
 
     def datatype_for(column)

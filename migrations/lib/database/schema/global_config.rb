@@ -15,13 +15,24 @@ module Migrations::Database::Schema
       @excluded_table_names.include?(table_name)
     end
 
+    def modified_name(column_name)
+      if (modified_column = find_modified_column(column_name))
+        modified_column[:rename_to]
+      end
+    end
+
     def modified_datatype(column_name)
-      @modified_columns
-        .find { |column| column[:name] == column_name || column[:name_regex]&.match?(column_name) }
-        &.fetch(:datatype)
+      if (modified_column = find_modified_column(column_name))
+        modified_column[:datatype]
+      end
     end
 
     private
+
+    def find_modified_column(column_name)
+      @modified_columns.find { |column| column[:name] == column_name } ||
+        @modified_columns.find { |column| column[:name_regex]&.match?(column_name) }
+    end
 
     def load_globally_excluded_table_names
       table_names = @schema_config.dig(:global, :tables, :exclude)
@@ -42,7 +53,7 @@ module Migrations::Database::Schema
           column[:name_regex_original] = column[:name_regex]
           column[:name_regex] = Regexp.new(column[:name_regex])
         end
-        column[:datatype] = column[:datatype].to_sym
+        column[:datatype] = column[:datatype]&.to_sym
         column
       end
     end

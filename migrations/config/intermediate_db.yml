@@ -37,9 +37,12 @@ schema:
   global:
     columns:
       modify:
+        - name: "id"
+          datatype: numeric
+          rename_to: "original_id"
         - name_regex: ".*upload.*_id$"
           datatype: text
-        - name_regex: "^(id|.*_id)$"
+        - name_regex: ".*_id$"
           datatype: numeric
       exclude:
         - "updated_at"

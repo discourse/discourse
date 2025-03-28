@@ -8,8 +8,9 @@ module Migrations::Importer::Steps
     SQL
 
     # requires_shared_data :usernames, :group_names
-    requires_mapping "SELECT LOWER(email) AS email, user_id FROM user_emails", :emails
-    requires_mapping "SELECT external_id, user_id FROM single_sign_on_records", :external_ids
+    requires_mapping "SELECT LOWER(email) AS email, user_id FROM user_emails", :user_ids_by_email
+    requires_mapping "SELECT external_id, user_id FROM single_sign_on_records",
+                     :user_ids_by_external_id
 
     table_name :users
     column_names %i[
@@ -41,18 +42,18 @@ module Migrations::Importer::Steps
       WHERE NOT EXISTS (
           SELECT 1
           FROM mapped.ids mu
-          WHERE u.id = mu.original_id AND mu.type = ?
+          WHERE u.original_id = mu.original_id AND mu.type = ?
       )
     SQL
 
     rows_query <<~SQL, MappingType::USERS
       SELECT u.*, JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
       FROM users u
-           LEFT JOIN user_emails ue ON u.id = ue.user_id
+           LEFT JOIN user_emails ue ON u.original_id = ue.user_id
       WHERE NOT EXISTS (
           SELECT 1
           FROM mapped.ids mu
-          WHERE u.id = mu.original_id AND mu.type = ?
+          WHERE u.original_id = mu.original_id AND mu.type = ?
       )
       GROUP BY u.ROWID
       ORDER BY u.ROWID
@@ -66,22 +67,19 @@ module Migrations::Importer::Steps
     private
 
     def transform_row(row)
-      super
-
-      return nil if row[:original_id] % 2 == 0
-
       if row[:emails].present?
         JSON
           .parse(row[:emails])
           .each do |email|
-            if (existing_user_id = emails[email])
+            if (existing_user_id = user_ids_by_email[email])
               row[:id] = existing_user_id
               return nil
             end
           end
       end
 
-      if row[:external_id].present? && (existing_user_id = external_ids[row[:external_id]])
+      if row[:external_id].present? &&
+           (existing_user_id = user_ids_by_external_id[row[:external_id]])
         row[:id] = existing_user_id
         return nil
       end
@@ -105,7 +103,7 @@ module Migrations::Importer::Steps
         row[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
       end
 
-      row
+      super
     end
 
     def random_email

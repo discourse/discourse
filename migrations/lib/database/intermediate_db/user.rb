@@ -8,7 +8,7 @@ module Migrations::Database::IntermediateDB
   module User
     SQL = <<~SQL
       INSERT INTO users (
-        id,
+        original_id,
         active,
         admin,
         approved,
@@ -45,7 +45,7 @@ module Migrations::Database::IntermediateDB
     SQL
 
     def self.create(
-      id:,
+      original_id:,
       active: nil,
       admin: nil,
       approved: nil,
@@ -78,7 +78,7 @@ module Migrations::Database::IntermediateDB
     )
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        id,
+        original_id,
         ::Migrations::Database.format_boolean(active),
         ::Migrations::Database.format_boolean(admin),
         ::Migrations::Database.format_boolean(approved),
