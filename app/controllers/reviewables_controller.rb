@@ -196,6 +196,26 @@ class ReviewablesController < ApplicationController
     render json: success_json
   end
 
+  def scrub
+    raise Discourse::InvalidAccess unless @guardian.is_admin?
+
+    params.require(:reason)
+
+    reviewable =
+      Reviewable.find_by(
+        id: params[:reviewable_id],
+        status: Reviewable.statuses[:rejected],
+        type: Reviewable.scrubbable_types,
+      )
+    raise Discourse::NotFound if reviewable.blank?
+
+    raise Discourse::InvalidAccess if reviewable.payload["scrubbed_by"].present?
+
+    reviewable.scrub(params[:reason], @guardian)
+
+    render json: success_json
+  end
+
   def update
     reviewable = find_reviewable
     if error = claim_error?(reviewable)

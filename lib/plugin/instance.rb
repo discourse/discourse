@@ -891,6 +891,9 @@ class Plugin::Instance
   def register_reviewable_type(reviewable_type_class)
     return unless reviewable_type_class < Reviewable
     extend_list_method(Reviewable, :types, reviewable_type_class)
+    if reviewable_type_class.method_defined?(:scrub)
+      extend_list_method(Reviewable, :scrubbable_types, reviewable_type_class)
+    end
   end
 
   def extend_list_method(klass, method, new_attributes)

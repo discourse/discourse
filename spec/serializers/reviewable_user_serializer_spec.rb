@@ -41,4 +41,18 @@ RSpec.describe ReviewableUserSerializer do
     expect(json[:payload]["name"]).to eq(user.name)
     expect(json[:topic_url]).to be_blank
   end
+
+  it "includes the scrubbed fields for scrubbed reviewables" do
+    reviewable.scrub("reason", Guardian.new(admin))
+
+    json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+    expect(json[:user_id]).to eq(reviewable.target_id)
+    expect(json[:payload]["username"]).to eq(nil)
+    expect(json[:payload]["email"]).to eq(nil)
+    expect(json[:payload]["name"]).to eq(nil)
+    expect(json[:payload]["scrubbed_by"]).to eq(admin.username)
+    expect(json[:payload]["scrubbed_reason"]).to eq("reason")
+    expect(json[:payload]["scrubbed_at"]).to be_present
+    expect(json[:topic_url]).to be_blank
+  end
 end

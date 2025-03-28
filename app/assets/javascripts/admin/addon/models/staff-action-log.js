@@ -99,7 +99,7 @@ export default class StaffActionLog extends RestModel {
 
   @discourseComputed("details")
   useModalForDetails(details) {
-    return details && details.length > 100;
+    return details && (details.length > 100 || details.includes("\n"));
   }
 
   @discourseComputed("action_name")
