@@ -402,7 +402,7 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  async _claimReviewable() {
+  async #claimReviewable() {
     if (!this.reviewable.topic) {
       // We can't claim a reviewable without a topic, so treat it as claimed
       return true;

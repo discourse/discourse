@@ -1021,7 +1021,7 @@ RSpec.describe ReviewablesController do
       end
     end
 
-    describe("#scrub") do
+    describe "#scrub" do
       it "only allows admins to scrub reviewables" do
         moderator = Fabricate(:moderator)
 
