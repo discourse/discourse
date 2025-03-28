@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def has_highlighted_topic?(topic)
-        page.has_css?("#{topic_list_item_class(topic)}.highlighted")
+        page.has_css?("#{topic_list_item_class(topic)}[data-test-was-highlighted]")
       end
 
       def has_topic_checkbox?(topic)

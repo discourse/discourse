@@ -89,6 +89,9 @@ export default class Item extends Component {
   }
 
   highlightRow(element) {
+    element.dataset.testWasHighlighted = true;
+
+    // Remove any existing highlighted class
     element.addEventListener(
       "animationend",
       () => element.classList.remove("highlighted"),
