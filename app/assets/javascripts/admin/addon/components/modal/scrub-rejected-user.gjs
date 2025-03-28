@@ -20,7 +20,7 @@ export default class ScrubRejectedUserModal extends Component {
   }
 
   get scrubButtonDisabled() {
-    return this.isScrubbing || isEmpty(this.scrubReason);
+    return isEmpty(this.scrubReason);
   }
 
   <template>
@@ -47,6 +47,7 @@ export default class ScrubRejectedUserModal extends Component {
         <DButton
           class="btn btn-danger"
           @action={{this.confirmScrub}}
+          @isLoading={{this.isScrubbing}}
           @disabled={{this.scrubButtonDisabled}}
           @label="review.user.scrub_record.confirm_button"
         />
