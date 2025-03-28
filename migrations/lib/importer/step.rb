@@ -40,13 +40,22 @@ module Migrations::Importer
         @dependencies || []
       end
 
-      def requires_mapping(sql, name)
+      def requires_mapping(name, sql)
         @required_mappings ||= {}
         @required_mappings[name] = sql
       end
 
       def required_mappings
         @required_mappings || {}
+      end
+
+      def requires_set(name, sql)
+        @required_sets ||= {}
+        @required_sets[name] = sql
+      end
+
+      def required_sets
+        @required_sets || {}
       end
     end
 
@@ -67,16 +76,26 @@ module Migrations::Importer
 
     def load_required_data
       required_mappings = self.class.required_mappings
-      return if required_mappings.blank?
+      required_sets = self.class.required_sets
+      return if required_mappings.blank? && required_sets.blank?
 
-      puts "    Loading required data..."
-      required_mappings.each { |name, sql| set_required_data(name, @shared_data.load_mapping(sql)) }
+      print "    #{I18n.t("importer.loading_required_data")} "
+
+      runtime =
+        ::Migrations::DateHelper.track_time do
+          required_mappings.each do |name, sql|
+            instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
+          end
+
+          required_sets.each do |name, sql|
+            instance_variable_set("@#{name}", @shared_data.load_set(sql))
+          end
+        end
+
+      puts ::Migrations::DateHelper.human_readable_time(runtime)
     end
 
     def set_required_data(name, value)
-      variable_name = "@#{name}"
-      instance_variable_set(variable_name, value)
-      self.class.define_method(name) { instance_variable_get(variable_name) }
     end
 
     def update_progressbar(increment_by: 1)

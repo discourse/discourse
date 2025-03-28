@@ -8,9 +8,9 @@ module Migrations::Importer::Steps
     SQL
 
     # requires_shared_data :usernames, :group_names
-    requires_mapping "SELECT LOWER(email) AS email, user_id FROM user_emails", :user_ids_by_email
-    requires_mapping "SELECT external_id, user_id FROM single_sign_on_records",
-                     :user_ids_by_external_id
+    requires_mapping :user_ids_by_email, "SELECT LOWER(email) AS email, user_id FROM user_emails"
+    requires_mapping :user_ids_by_external_id,
+                     "SELECT external_id, user_id FROM single_sign_on_records"
 
     table_name :users
     column_names %i[
@@ -40,21 +40,21 @@ module Migrations::Importer::Steps
       SELECT COUNT(*)
       FROM users u
       WHERE NOT EXISTS (
-          SELECT 1
-          FROM mapped.ids mu
-          WHERE u.original_id = mu.original_id AND mu.type = ?
-      )
+                SELECT 1
+                FROM mapped.ids mu
+                WHERE u.original_id = mu.original_id
+                  AND mu.type = ?
+            )
     SQL
 
     rows_query <<~SQL, MappingType::USERS
       SELECT u.*, JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
       FROM users u
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
-      WHERE NOT EXISTS (
-          SELECT 1
-          FROM mapped.ids mu
-          WHERE u.original_id = mu.original_id AND mu.type = ?
-      )
+      WHERE NOT EXISTS (SELECT 1
+                        FROM mapped.ids mu
+                        WHERE u.original_id = mu.original_id
+                          AND mu.type = ?)
       GROUP BY u.ROWID
       ORDER BY u.ROWID
     SQL
@@ -71,7 +71,7 @@ module Migrations::Importer::Steps
         JSON
           .parse(row[:emails])
           .each do |email|
-            if (existing_user_id = user_ids_by_email[email])
+            if (existing_user_id = @user_ids_by_email[email])
               row[:id] = existing_user_id
               return nil
             end
@@ -79,7 +79,7 @@ module Migrations::Importer::Steps
       end
 
       if row[:external_id].present? &&
-           (existing_user_id = user_ids_by_external_id[row[:external_id]])
+           (existing_user_id = @user_ids_by_external_id[row[:external_id]])
         row[:id] = existing_user_id
         return nil
       end
@@ -104,10 +104,6 @@ module Migrations::Importer::Steps
       end
 
       super
-    end
-
-    def random_email
-      "#{SecureRandom.hex}@email.invalid"
     end
 
     def after_commit_of_inserted_rows(rows)

@@ -65,18 +65,7 @@ module Migrations::Importer
 
     def execute
       super
-
-      max_row_count = total_count
-
-      with_progressbar(max_row_count) do
-        copied_row_count = copy_data
-
-        if (missing_row_count = max_row_count - copied_row_count) > 0
-          @stats.reset(skip_count: missing_row_count)
-          update_progressbar(increment_by: 0)
-        end
-      end
-
+      with_progressbar(total_count) { copy_data }
       nil
     end
 
@@ -86,7 +75,6 @@ module Migrations::Importer
       table_name = self.class.table_name || self.class.name&.demodulize&.underscore
       column_names = self.class.column_names || @discourse_db.column_names(table_name)
       skipped_rows = []
-      row_count = 0
 
       if self.class.store_mapped_ids?
         @last_id = @discourse_db.last_id_of(table_name)
@@ -95,19 +83,15 @@ module Migrations::Importer
 
       @discourse_db.copy_data(table_name, column_names, fetch_rows(skipped_rows)) do |inserted_rows|
         after_commit_of_inserted_rows(inserted_rows)
-        row_count += inserted_rows.size
 
         if skipped_rows.any?
           after_commit_of_skipped_rows(skipped_rows)
-          row_count += skipped_rows.size
           skipped_rows.clear
         end
       end
 
       @discourse_db.fix_last_id_of(table_name) if self.class.store_mapped_ids?
       @intermediate_db.commit_transaction
-
-      row_count
     end
 
     def fetch_rows(skipped_rows)

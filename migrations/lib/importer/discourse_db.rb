@@ -14,14 +14,13 @@ module Migrations::Importer
       quoted_column_name_list = column_names.map { |c| quote_identifier(c) }.join(",")
       sql = "COPY #{table_name} (#{quoted_column_name_list}) FROM STDIN"
 
-      # FIXME Move transaction around `copy_data` call ... this is just for testing
-      @connection.transaction do
-        rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
-          # TODO Maybe add error handling and check if all rows fail to insert, or only
-          # some of them fail. Currently, if a single row fails to insert, then an exception
-          # will stop the whole import. Which seems fine because ideally the import script
-          # should ensure all data is valid. We might need to see how this works out in
-          # actual migrations...
+      rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
+        # TODO Maybe add error handling and check if all rows fail to insert, or only
+        # some of them fail. Currently, if a single row fails to insert, then an exception
+        # will stop the whole import. Which seems fine because ideally the import script
+        # should ensure all data is valid. We might need to see how this works out in
+        # actual migrations...
+        @connection.transaction do
           @connection.copy_data(sql, @encoder) do
             sliced_rows.each do |row|
               data = column_names.map { |c| row[c] }
@@ -33,8 +32,6 @@ module Migrations::Importer
           # for example, to store ID mappings
           yield sliced_rows
         end
-
-        raise PG::RollbackTransaction
       end
 
       nil
