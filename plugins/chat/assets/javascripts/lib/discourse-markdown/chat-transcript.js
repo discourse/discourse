@@ -1,13 +1,16 @@
 import { performEmojiUnescape } from "pretty-text/emoji";
 import { i18n } from "discourse-i18n";
 
+// NOTE: When updating this file you also must consider the ProseMirror rich editor extension
+// for chat transcripts, because it manually constructs the same HTML structure as this rule.
+
 let customMarkdownCookFn;
 
 const chatTranscriptRule = {
   tag: "chat",
 
   replace: function (state, tagInfo, content) {
-    // shouldn't really happen but we don't want to break rendering if it does
+    // Shouldn't really happen but we don't want to break rendering if it does
     if (!customMarkdownCookFn) {
       return;
     }
@@ -15,6 +18,8 @@ const chatTranscriptRule = {
     const options = state.md.options.discourse;
     const [username, messageIdStart, messageTimeStart] =
       (tagInfo.attrs.quote && tagInfo.attrs.quote.split(";")) || [];
+
+    // NOTE: Reactions are only included when archiving a channel, not when quoting a message
     const reactions = tagInfo.attrs.reactions;
     const multiQuote = !!tagInfo.attrs.multiQuote;
     const noLink = !!tagInfo.attrs.noLink;
@@ -31,14 +36,15 @@ const chatTranscriptRule = {
     }
 
     const isThread = threadId && content.includes("[chat");
-    let wrapperDivToken = state.push("div_chat_transcript_wrap", "div", 1);
+    const wrapperDivToken = state.push(
+      "div_chat_transcript_wrap_open",
+      "div",
+      1
+    );
 
-    if (channelName && multiQuote) {
-      let metaDivToken = state.push("div_chat_transcript_meta", "div", 1);
-      metaDivToken.attrs = [["class", "chat-transcript-meta"]];
-      const channelToken = state.push("html_inline", "", 0);
-
-      const unescapedChannelName = performEmojiUnescape(channelName, {
+    let unescapedChannelName;
+    if (channelName) {
+      unescapedChannelName = performEmojiUnescape(channelName, {
         getURL: options.getURL,
         emojiSet: options.emojiSet,
         emojiCDNUrl: options.emojiCDNUrl,
@@ -46,12 +52,22 @@ const chatTranscriptRule = {
         inlineEmoji: options.inlineEmoji,
         lazy: true,
       });
+    }
+
+    if (channelName && multiQuote) {
+      const metaDivToken = state.push(
+        "div_chat_transcript_meta_open",
+        "div",
+        1
+      );
+      metaDivToken.attrs = [["class", "chat-transcript-meta"]];
+      const channelToken = state.push("html_inline", "", 0);
 
       channelToken.content = i18n("chat.quote.original_channel", {
         channel: unescapedChannelName,
         channelLink,
       });
-      state.push("div_chat_transcript_meta", "div", -1);
+      state.push("div_chat_transcript_meta_close", "div", -1);
     }
 
     if (isThread) {
@@ -64,18 +80,17 @@ const chatTranscriptRule = {
       const threadHeaderToken = state.push("div_thread_header_open", "div", 1);
       threadHeaderToken.attrs = [["class", "chat-transcript-thread-header"]];
 
-      const thread_svg = state.push("svg_thread_header_open", "svg", 1);
-      thread_svg.block = false;
-      thread_svg.attrs = [
+      const threadSvgHeader = state.push("svg_thread_header_open", "svg", 1);
+      threadSvgHeader.block = false;
+      threadSvgHeader.attrs = [
         ["class", "fa d-icon d-icon-discourse-threads svg-icon svg-node"],
       ];
-      state.push(thread_svg);
-      let thread_use = state.push("use_svg_thread_open", "use", 1);
-      thread_use.block = false;
-      thread_use.attrs = [["href", "#discourse-threads"]];
-      state.push(thread_use);
-      state.push(state.push("use_svg_thread_close", "use", -1));
-      state.push(state.push("svg_thread_header_close", "svg", -1));
+
+      const threadUseSvg = state.push("use_svg_thread_open", "use", 1);
+      threadUseSvg.block = false;
+      threadUseSvg.attrs = [["href", "#discourse-threads"]];
+      state.push("use_svg_thread_close", "use", -1);
+      state.push("svg_thread_header_close", "svg", -1);
 
       const threadTitleContainerToken = state.push(
         "span_thread_title_open",
@@ -104,16 +119,21 @@ const chatTranscriptRule = {
       state.push("div_thread_header_close", "div", -1);
     }
 
-    let wrapperClasses = ["chat-transcript"];
+    const wrapperClasses = ["chat-transcript"];
 
     if (tagInfo.attrs.chained) {
       wrapperClasses.push("chat-transcript-chained");
     }
 
+    wrapperDivToken.content = content;
     wrapperDivToken.attrs = [["class", wrapperClasses.join(" ")]];
     wrapperDivToken.attrs.push(["data-message-id", messageIdStart]);
     wrapperDivToken.attrs.push(["data-username", username]);
     wrapperDivToken.attrs.push(["data-datetime", messageTimeStart]);
+
+    if (tagInfo.attrs.chained) {
+      wrapperDivToken.attrs.push(["data-chained", "true"]);
+    }
 
     if (reactions) {
       wrapperDivToken.attrs.push(["data-reactions", reactions]);
@@ -127,12 +147,24 @@ const chatTranscriptRule = {
       wrapperDivToken.attrs.push(["data-channel-id", channelId]);
     }
 
-    let userDivToken = state.push("div_chat_transcript_user", "div", 1);
+    if (multiQuote) {
+      wrapperDivToken.attrs.push(["data-multiquote", "true"]);
+    }
+
+    if (threadId) {
+      wrapperDivToken.attrs.push(["data-thread-id", threadId]);
+    }
+
+    if (threadTitle) {
+      wrapperDivToken.attrs.push(["data-thread-title", threadTitle]);
+    }
+
+    const userDivToken = state.push("div_chat_transcript_user_open", "div", 1);
     userDivToken.attrs = [["class", "chat-transcript-user"]];
 
     // start: user avatar
-    let avatarDivToken = state.push(
-      "div_chat_transcript_user_avatar",
+    const avatarDivToken = state.push(
+      "div_chat_transcript_user_avatar_open",
       "div",
       1
     );
@@ -148,11 +180,15 @@ const chatTranscriptRule = {
       avatarImgToken.content = avatarImg;
     }
 
-    state.push("div_chat_transcript_user_avatar", "div", -1);
+    state.push("div_chat_transcript_user_avatar_close", "div", -1);
     // end: user avatar
 
     // start: username
-    let usernameDivToken = state.push("div_chat_transcript_username", "div", 1);
+    const usernameDivToken = state.push(
+      "div_chat_transcript_username_open",
+      "div",
+      1
+    );
     usernameDivToken.attrs = [["class", "chat-transcript-username"]];
 
     let displayName;
@@ -165,11 +201,15 @@ const chatTranscriptRule = {
     const usernameToken = state.push("html_inline", "", 0);
     usernameToken.content = displayName;
 
-    state.push("div_chat_transcript_username", "div", -1);
+    state.push("div_chat_transcript_username_close", "div", -1);
     // end: username
 
     // start: time + link to message
-    let datetimeDivToken = state.push("div_chat_transcript_datetime", "div", 1);
+    const datetimeDivToken = state.push(
+      "div_chat_transcript_datetime_open",
+      "div",
+      1
+    );
     datetimeDivToken.attrs = [["class", "chat-transcript-datetime"]];
 
     // for some cases, like archiving, we don't want the link to the
@@ -206,7 +246,7 @@ const chatTranscriptRule = {
       linkToken.block = false;
     }
 
-    state.push("div_chat_transcript_datetime", "div", -1);
+    state.push("div_chat_transcript_datetime_close", "div", -1);
     // end: time + link to message
 
     // start: channel link for !multiQuote
@@ -217,15 +257,19 @@ const chatTranscriptRule = {
         ["href", channelLink],
       ];
       let inlineTextToken = state.push("html_inline", "", 0);
-      inlineTextToken.content = `#${channelName}`;
+      inlineTextToken.content = `#${unescapedChannelName}`;
       channelLinkToken = state.push("link_close", "a", -1);
       channelLinkToken.block = false;
     }
     // end: channel link for !multiQuote
 
-    state.push("div_chat_transcript_user", "div", -1);
+    state.push("div_chat_transcript_user_close", "div", -1);
 
-    let messagesToken = state.push("div_chat_transcript_messages", "div", 1);
+    const messagesToken = state.push(
+      "div_chat_transcript_messages_open",
+      "div",
+      1
+    );
     messagesToken.attrs = [["class", "chat-transcript-messages"]];
 
     if (isThread) {
@@ -256,8 +300,8 @@ const chatTranscriptRule = {
     }
 
     if (reactions) {
-      let emojiHtmlCache = {};
-      let reactionsToken = state.push(
+      const emojiHtmlCache = {};
+      const reactionsToken = state.push(
         "div_chat_transcript_reactions",
         "div",
         1
@@ -290,8 +334,8 @@ const chatTranscriptRule = {
       state.push("div_chat_transcript_reactions", "div", -1);
     }
 
-    state.push("div_chat_transcript_messages", "div", -1);
-    state.push("div_chat_transcript_wrap", "div", -1);
+    state.push("div_chat_transcript_messages_close", "div", -1);
+    state.push("div_chat_transcript_wrap_close", "div", -1);
     return true;
   },
 };
@@ -341,7 +385,7 @@ export function setup(helper) {
 
     const chatAdditionalOpts = opts.discourse.additionalOptions.chat;
 
-    // we need to be able to quote images from chat, but the image rule is usually
+    // We need to be able to quote images from chat, but the image rule is usually
     // banned for chat messages
     const markdownItRules =
       chatAdditionalOpts.limited_pretty_text_markdown_rules.concat("image");
