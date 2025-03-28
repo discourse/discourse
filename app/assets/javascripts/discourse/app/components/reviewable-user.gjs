@@ -6,10 +6,10 @@ import { service } from "@ember/service";
 import ReviewableField from "discourse/components/reviewable-field";
 import getUrl from "discourse/helpers/get-url";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 export default class ReviewableUser extends Component {
