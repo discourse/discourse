@@ -41,6 +41,7 @@ class ReviewableUser < Reviewable
     UserHistory
       .where(action: UserHistory.actions[:delete_user])
       .where("details LIKE :query", query: "%\nusername: #{payload["username"]}\n%")
+      .where(created_at: (updated_at - 10.minutes)..(updated_at + 10.minutes))
       .update_all(
         details:
           I18n.t(
@@ -48,6 +49,7 @@ class ReviewableUser < Reviewable
             staff: guardian.current_user.username,
             reason: reason,
           ),
+        ip_address: nil,
       )
 
     self.payload = { scrubbed_by: guardian.current_user.username, scrubbed_reason: reason }

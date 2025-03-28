@@ -252,6 +252,7 @@ RSpec.describe ReviewableUser, type: :model do
         history = UserHistory.where(action: UserHistory.actions[:delete_user])
         expect(history.count).to eq(1)
         expect(history.first.details).to include("username: #{user.username}")
+        expect(history.first.ip_address).not_to be_blank
 
         reviewable.scrub("reason", Guardian.new(admin))
         history.reload
@@ -260,6 +261,41 @@ RSpec.describe ReviewableUser, type: :model do
         expect(history.first.details).to include("reason")
 
         expect(history.first.details).not_to include(user.username)
+        expect(history.first.ip_address).to be_blank
+      end
+
+      it "doesn't scrub older user history records for the same username" do
+        # Create a history record with the same username but older than the reviewable
+        UserHistory.create!(
+          action: UserHistory.actions[:delete_user],
+          details: "id: #{user.id}\nusername: #{user.username}\nname: ",
+          created_at: 1.day.ago,
+          updated_at: 1.day.ago,
+          ip_address: "1.2.3.4",
+        )
+
+        UserDestroyer.new(admin).destroy(user)
+        reviewable.reload
+
+        history = UserHistory.where(action: UserHistory.actions[:delete_user])
+
+        expect(history.count).to eq(2)
+        expect(history.first.details).to include("username: #{user.username}")
+        expect(history.first.ip_address).not_to be_blank
+        expect(history.last.details).to include("username: #{user.username}")
+        expect(history.last.ip_address).not_to be_blank
+
+        reviewable.scrub("reason", Guardian.new(admin))
+        history.reload
+
+        expect(history.first.details).to include(user.username)
+        expect(history.first.details).to include("username: #{user.username}")
+        expect(history.first.ip_address).not_to be_blank
+
+        expect(history.last.details).to include("User details scrubbed by #{admin.username}")
+        expect(history.last.details).to include("reason")
+        expect(history.last.details).not_to include(user.username)
+        expect(history.last.ip_address).to be_blank
       end
 
       it "replaces the reviewable payload with scrubbed details" do
