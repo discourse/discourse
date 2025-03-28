@@ -29,7 +29,7 @@ $breakpoints: (
 }
 
 @mixin between($from, $until) {
-  @media (#{_get-breakpoint($from)} <= width < #{_get-breakpoint($to)}) {
+  @media (#{_get-breakpoint($from)} <= width < #{_get-breakpoint($until)}) {
     @content;
   }
 }
