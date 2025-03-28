@@ -177,6 +177,7 @@ RSpec.describe Email::Styles do
       styled = Nokogiri::HTML5.fragment(styled)
       expect(styled.at("test")["style"]).to eq("color:red")
     end
+
     it "handles whitespace correctly" do
       frag =
         "<test style=' color :  green ; ; ;   color :    red; background:white;  background:yellow '>hello</test>"
@@ -185,6 +186,7 @@ RSpec.describe Email::Styles do
       styled = Nokogiri::HTML5.fragment(styled)
       expect(styled.at("test")["style"]).to eq("color:red;background:yellow")
     end
+
     it "respects !important" do
       frag = "<test style='color:yellow !important;color:green !important;color:red'>hello</test>"
 
