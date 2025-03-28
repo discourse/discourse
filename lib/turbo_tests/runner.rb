@@ -150,6 +150,7 @@ module TurboTests
         "documentation",
         "--format",
         "TurboTests::Flaky::FlakyDetectorFormatter",
+        "#{@profile ? "--profile" : ""}",
         *Flaky::Manager.potential_flaky_tests,
       ]
 
