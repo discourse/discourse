@@ -13,11 +13,6 @@ export default class ScrubRejectedUserModal extends Component {
   @tracked scrubReason = "";
 
   @action
-  updateScrubReason(event) {
-    this.scrubReason = event.target.value;
-  }
-
-  @action
   async confirmScrub() {
     this.isScrubbing = true;
     await this.args.model.confirmScrub(this.scrubReason);
@@ -45,7 +40,7 @@ export default class ScrubRejectedUserModal extends Component {
           class="scrub-reason"
           id="scrub-reason"
           @placeholderKey="review.user.scrub_record.reason_placeholder"
-          {{on "input" this.updateScrubReason}}
+          {{on "input" (action (mut this.scrubReason) value="target.value")}}
         />
       </:body>
       <:footer>
