@@ -165,11 +165,25 @@ body {
   }
 
   &.has-sidebar-page {
-    --d-max-width: 1345px;
+    --d-max-width: 1500px;
+    --sidebar-column-span: 4;
+    --sidebar-column-gap: 1;
+    --content-column-start: calc(
+      var(--sidebar-column-span) + var(--sidebar-column-gap) + 2
+    );
+    --content-column-span: calc(
+      var(--column-count) - var(--sidebar-column-span) - var(
+          --sidebar-column-gap
+        )
+    );
+
+    @media screen and (width < 1100px) {
+      --sidebar-column-span: 6;
+    }
 
     #main-outlet-wrapper {
       .sidebar-wrapper {
-        grid-column: 2 / 6;
+        grid-column: 2 / span var(--sidebar-column-span);
 
         .sidebar-sections {
           padding-inline: 0;
@@ -177,7 +191,7 @@ body {
       }
 
       #main-outlet {
-        grid-column: 7 / 26;
+        grid-column: var(--content-column-start) / calc(var(--column-count) + 2);
       }
     }
 
@@ -189,12 +203,13 @@ body {
       }
 
       &__contents-primary {
-        grid-column: 2 / 6;
+        grid-column: 2 / span var(--sidebar-column-span);
         display: flex;
+        margin-right: 0.5em;
       }
 
       &__contents-secondary {
-        grid-column: 7 / 26;
+        grid-column: var(--content-column-start) / 26;
         display: flex;
       }
     }
@@ -208,13 +223,14 @@ body {
     1fr;
   gap: 0;
 
-  // give all children a full row this makes unexpected content from plugin outlets predictable
+  // give all children a full row
+  // this makes unexpected content from plugin outlets more predictable
   > * {
     grid-column: 1 / -1;
   }
 }
 
-// pass the subgrid down until we get to header content
+// pass the subgrid down to header contents
 .d-header-wrap,
 .d-header,
 .wrap {
@@ -247,12 +263,8 @@ body {
 }
 
 #main-outlet-wrapper {
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid !important; /* override core */
-  gap: 0 !important; /* override core */
-  padding: 0;
-
-  // give all children a full row this makes unexpected content from plugin outlets predictable
+  // give all children a full row
+  // this makes unexpected content from plugin outlets more predictable
   > * {
     grid-column: 1 / -1;
   }

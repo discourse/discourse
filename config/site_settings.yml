@@ -3604,3 +3604,7 @@ experimental:
     client: true
     default: false
     hidden: true
+  grid_layout:
+    client: true
+    default: true
+    hidden: true

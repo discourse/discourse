@@ -1313,25 +1313,21 @@ body:not(.has-sidebar-page) {
 
 body.has-sidebar-page {
   #reply-control:not(.fullscreen).hide-preview {
-    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+    margin: 0;
+    left: calc(
+      (100vw / var(--column-count)) *
+        (var(--sidebar-column-span) + var(--sidebar-column-gap))
+    );
+    width: calc(
+      (100vw / var(--column-count)) * var(--content-column-span) - 1em
+    );
 
-    // 1390px is equivalent to --d-max-width + --d-sidebar-width
-    @media screen and (width >= 1390px) {
+    @media screen and (width >= 1500px) {
+      margin: 0;
       left: calc(
-        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
-      ); // 50% of the whitespace
-      margin-left: var(--layout-gap);
-    }
-
-    // This is when the topic width starts to shrink
-    @media screen and (width <= 1180px) {
-      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
-    }
-
-    // sidebar shrinks
-    @media screen and (width <= 1000px) {
-      --layout-gap: 1em;
-      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+        ((100vw - var(--d-max-width)) / 2) +
+          ((var(--d-max-width) / var(--column-count)) * 5) - 0.375em
+      );
     }
   }
 }
