@@ -296,7 +296,7 @@ export default class ReviewableItem extends Component {
       let actionMethod =
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
-        if (await this._claimReviewable()) {
+        if (await this.#claimReviewable()) {
           return actionMethod.call(this, reviewable, performAction);
         }
       } else {
@@ -497,14 +497,14 @@ export default class ReviewableItem extends Component {
       : actionModalClassMap[performableAction.server_action];
 
     if (message) {
-      if (await this._claimReviewable()) {
+      if (await this.#claimReviewable()) {
         this.dialog.confirm({
           message,
           didConfirm: () => this._performConfirmed(performableAction),
         });
       }
     } else if (actionModalClass) {
-      if (await this._claimReviewable()) {
+      if (await this.#claimReviewable()) {
         this.modal.show(actionModalClass, {
           model: {
             reviewable: this.reviewable,

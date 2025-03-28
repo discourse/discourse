@@ -281,7 +281,8 @@ RSpec.describe ReviewableUser, type: :model do
         UserDestroyer.new(admin).destroy(user)
         reviewable.reload
 
-        history = UserHistory.where(action: UserHistory.actions[:delete_user]).order(created_at: :desc)
+        history =
+          UserHistory.where(action: UserHistory.actions[:delete_user]).order(created_at: :asc)
 
         expect(history.count).to eq(2)
         expect(history.first.details).to include("username: #{user.username}")
