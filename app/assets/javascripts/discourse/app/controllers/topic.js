@@ -1907,4 +1907,9 @@ export default class TopicController extends Controller {
       }
     }
   }
+
+  @action
+  postsInteracted() {
+    this.appEvents.trigger("topic:interacted", event);
+  }
 }
