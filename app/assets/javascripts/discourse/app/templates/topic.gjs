@@ -283,7 +283,11 @@ export default RouteTemplate(
 
         {{/if}}
 
-        <div class="container posts">
+        <div
+          class="container posts"
+          role="button"
+          {{on "click" @controller.postsInteracted}}
+        >
           <div
             class="selected-posts {{unless @controller.multiSelect 'hidden'}}"
           >
