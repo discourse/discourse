@@ -4,6 +4,10 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import { i18n } from "discourse-i18n";
+import { PageLinkFormatter } from "admin/services/admin-search-data-source";
+
+// NOTE: This test relies on `/admin/search/all.json` from admin-search-fixtures.js
 
 function fabricateVisiblePlugins() {
   return [
@@ -108,4 +112,103 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       null
     );
   });
+
+  test("search - returns empty array if the search term is too small", async function (assert) {
+    await this.subject.buildMap();
+    assert.deepEqual(this.subject.search("a"), []);
+  });
+
+  test("search - limits the returned types", async function (assert) {
+    await this.subject.buildMap();
+    let results = this.subject.search("anonymous");
+    assert.deepEqual(results.length, 3);
+
+    results = this.subject.search("anonymous", { types: ["report"] });
+    assert.deepEqual(results.length, 1);
+    assert.deepEqual(
+      results[0].url,
+      "/admin/reports/page_view_anon_browser_reqs"
+    );
+  });
 });
+
+module(
+  "Unit | Service | AdminSearchDataSource | PageLinkFormatter",
+  function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.router = getOwner(this).lookup("service:router");
+    });
+
+    test("url is correct based on href/route/route models", function (assert) {
+      const navMapSection = {
+        label: "admin.config_sections.account.title",
+        name: "root",
+      };
+      let link = {
+        route: "admin.dashboard.general",
+      };
+      let formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(formatter.format().url, "/admin");
+
+      link = {
+        route: "adminConfig.flags.edit",
+        routeModels: [{ flag_id: 1 }],
+      };
+      formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(formatter.format().url, "/admin/config/flags/1");
+
+      link = {
+        href: "/admin/something",
+      };
+      formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(formatter.format().url, "/admin/something");
+    });
+
+    test("label is correct based on section label, link label, and parent label", async function (assert) {
+      const navMapSection = {
+        label: "admin.config_sections.account.title",
+        name: "root",
+      };
+      let link = {
+        label: "admin.config.backups.title",
+      };
+      let formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(
+        formatter.format().label,
+        i18n(navMapSection.label) + " > " + i18n(link.label),
+        "link uses the section label and link label"
+      );
+
+      link = {
+        label: "admin.config.backups.sub_pages.logs.title",
+      };
+      formatter = new PageLinkFormatter(
+        this.router,
+        navMapSection,
+        link,
+        "admin.config.backups.title"
+      );
+      assert.deepEqual(
+        formatter.format().label,
+        i18n("admin.config.backups.title") +
+          " > " +
+          i18n(navMapSection.label) +
+          " > " +
+          i18n(link.label),
+        "link uses the section label, parent label, and link label for sub-pages"
+      );
+
+      link = {
+        text: "Already translated",
+      };
+      formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(
+        formatter.format().label,
+        "Already translated",
+        "link uses the text property if available"
+      );
+    });
+  }
+);

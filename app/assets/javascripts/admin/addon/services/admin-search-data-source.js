@@ -15,16 +15,93 @@ const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
+function labelOrText(obj, fallback = "") {
+  return obj.text || (obj.label ? i18n(obj.label) : fallback);
+}
+
+function buildKeywords(...keywords) {
+  return keywords
+    .map((kw) => {
+      if (Array.isArray(kw)) {
+        return kw.join(" ");
+      }
+      return kw;
+    })
+    .join(" ")
+    .toLowerCase();
+}
+
+export class PageLinkFormatter {
+  /**
+   * @param {DiscourseRouter} router - The ember router service
+   * @param {Object} navMapSection - The section of the admin nav map that the link belongs to,
+   *                                 used for the parent label.
+   * @param {Object} link - The link object from the admin nav map, with name/route/label etc.
+   * @param {String} parentLabel - The parent label of the link, if any.
+   */
+  constructor(router, navMapSection, link, parentLabel = null) {
+    this.router = router;
+    this.navMapSection = navMapSection;
+    this.link = link;
+    this.parentLabel = parentLabel;
+  }
+
+  format() {
+    let url;
+    if (this.link.route) {
+      if (this.link.routeModels) {
+        url = this.router.urlFor(this.link.route, ...this.link.routeModels);
+      } else {
+        url = this.router.urlFor(this.link.route);
+      }
+    } else if (this.link.href) {
+      url = getURL(this.link.href);
+    }
+
+    const sectionLabel = labelOrText(this.navMapSection);
+    const linkLabel = labelOrText(this.link);
+
+    let label;
+    if (this.parentLabel) {
+      label = sectionLabel;
+      if (sectionLabel) {
+        label += ` ${SEPARATOR} `;
+      }
+      label += `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
+    } else {
+      label = sectionLabel + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+    }
+
+    let keywords = this.link.keywords
+      ? i18n(this.link.keywords).toLowerCase().replaceAll("|", " ")
+      : "";
+    const description = this.link.description
+      ? this.link.description.includes(" ")
+        ? this.link.description
+        : i18n(this.link.description)
+      : "";
+
+    keywords = buildKeywords(
+      keywords,
+      url,
+      label.replace(SEPARATOR, "").toLowerCase().replace(/  +/g, " "),
+      description
+    );
+
+    return { url, label, keywords, description };
+  }
+}
+
 export default class AdminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
 
   plugins = {};
-  pageMapItems = [];
-  settingMapItems = [];
-  themeMapItems = [];
-  componentMapItems = [];
-  reportMapItems = [];
+  pageDataSourceItems = [];
+  settingDataSourceItems = [];
+  themeDataSourceItems = [];
+  componentDataSourceItems = [];
+  reportDataSourceItems = [];
   settingPageMap = {
     categories: {},
     areas: {},
@@ -40,12 +117,12 @@ export default class AdminSearchDataSource extends Service {
       return;
     }
 
-    ADMIN_NAV_MAP.forEach((mapItem) => {
-      mapItem.links.forEach((link) => {
-        let parentLabel = this.#addPageLink(mapItem, link);
+    ADMIN_NAV_MAP.forEach((navMapSection) => {
+      navMapSection.links.forEach((link) => {
+        let parentLabel = this.#addPageLink(navMapSection, link);
 
         link.links?.forEach((subLink) => {
-          this.#addPageLink(mapItem, subLink, parentLabel);
+          this.#addPageLink(navMapSection, subLink, parentLabel);
         });
       });
     });
@@ -89,14 +166,14 @@ export default class AdminSearchDataSource extends Service {
 
     opts.types.forEach((type) => {
       let typeItemCount = 0;
-      this[`${type}MapItems`].forEach((mapItem) => {
+      this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
         // TODO (martin) There is likely a much better way of doing this matching
         // that will support fuzzy searches, for now let's go with the most basic thing.
         if (
-          mapItem.keywords.match(escapedFilterRegExp) &&
+          dataSourceItem.keywords.match(escapedFilterRegExp) &&
           typeItemCount <= perTypeLimit
         ) {
-          filteredResults.push(mapItem);
+          filteredResults.push(dataSourceItem);
           typeItemCount++;
         }
       });
@@ -105,68 +182,41 @@ export default class AdminSearchDataSource extends Service {
     return filteredResults;
   }
 
-  #addPageLink(mapItem, link, parentLabel = "") {
-    let url;
-    if (link.route) {
-      if (link.routeModels) {
-        url = this.router.urlFor(link.route, ...link.routeModels);
-      } else {
-        url = this.router.urlFor(link.route);
-      }
-    } else if (link.href) {
-      url = getURL(link.href);
-    }
+  #addPageLink(navMapSection, link, parentLabel = "") {
+    const formattedPageLink = new PageLinkFormatter(
+      this.router,
+      navMapSection,
+      link,
+      parentLabel
+    ).format();
 
-    const mapItemLabel = this.#labelOrText(mapItem);
-    const linkLabel = this.#labelOrText(link);
-
-    let label;
-    if (parentLabel) {
-      label = mapItemLabel;
-      if (mapItemLabel) {
-        label += ` ${SEPARATOR} `;
-      }
-      label += `${parentLabel} ${SEPARATOR} ${linkLabel}`;
-    } else {
-      label = mapItemLabel + (mapItemLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
-    }
-
-    if (link.settings_area) {
+    // Cache the setting area + category URLs for later use
+    // when building the setting list via #processSettings.
+    if (link.settings_area && !this.settingPageMap.areas[this.settings_area]) {
       this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
-        ? `${url}/settings`
-        : url;
+        ? `${formattedPageLink.url}/settings`
+        : formattedPageLink.url;
     }
 
-    if (link.settings_category) {
+    if (
+      link.settings_category &&
+      !this.settingPageMap.categories[link.settings_category]
+    ) {
       this.settingPageMap.categories[link.settings_category] = link.multi_tabbed
-        ? `${url}/settings`
-        : url;
+        ? `${formattedPageLink.url}/settings`
+        : formattedPageLink.url;
     }
 
-    const linkKeywords = link.keywords
-      ? i18n(link.keywords).toLowerCase().replaceAll("|", " ")
-      : "";
-    const linkDescription = link.description
-      ? link.description.includes(" ")
-        ? link.description
-        : i18n(link.description)
-      : "";
-
-    this.pageMapItems.push({
-      label,
-      url,
-      keywords: this.#buildKeywords(
-        linkKeywords,
-        url,
-        label.replace(SEPARATOR, "").toLowerCase().replace(/  +/g, " "),
-        linkDescription
-      ),
+    this.pageDataSourceItems.push({
+      label: formattedPageLink.label,
+      url: formattedPageLink.url,
+      keywords: formattedPageLink.keywords,
       type: "page",
       icon: link.icon,
-      description: linkDescription,
+      description: formattedPageLink.description,
     });
 
-    return linkLabel;
+    return formattedPageLink.label;
   }
 
   #processSettings(settings) {
@@ -236,11 +286,11 @@ export default class AdminSearchDataSource extends Service {
         );
       }
 
-      this.settingMapItems.push({
+      this.settingDataSourceItems.push({
         label,
         description: setting.description,
         url,
-        keywords: this.#buildKeywords(
+        keywords: buildKeywords(
           setting.setting,
           humanizedSettingName(setting.setting),
           setting.description,
@@ -256,11 +306,11 @@ export default class AdminSearchDataSource extends Service {
   #processThemesAndComponents(themesAndComponents) {
     themesAndComponents.forEach((themeOrComponent) => {
       if (themeOrComponent.component) {
-        this.componentMapItems.push({
+        this.componentDataSourceItems.push({
           label: themeOrComponent.name,
           description: themeOrComponent.description,
           url: getURL(`/admin/customize/components/${themeOrComponent.id}`),
-          keywords: this.#buildKeywords(
+          keywords: buildKeywords(
             "component",
             themeOrComponent.description,
             themeOrComponent.name
@@ -269,11 +319,11 @@ export default class AdminSearchDataSource extends Service {
           icon: "puzzle-piece",
         });
       } else {
-        this.themeMapItems.push({
+        this.themeDataSourceItems.push({
           label: themeOrComponent.name,
           description: themeOrComponent.description,
           url: getURL(`/admin/customize/themes/${themeOrComponent.id}`),
-          keywords: this.#buildKeywords(
+          keywords: buildKeywords(
             "theme",
             themeOrComponent.description,
             themeOrComponent.name
@@ -287,34 +337,14 @@ export default class AdminSearchDataSource extends Service {
 
   #processReports(reports) {
     reports.forEach((report) => {
-      this.reportMapItems.push({
+      this.reportDataSourceItems.push({
         label: report.title,
         description: report.description,
         url: getURL(`/admin/reports/${report.type}`),
         icon: "chart-bar",
-        keywords: this.#buildKeywords(
-          report.title,
-          report.description,
-          report.type
-        ),
+        keywords: buildKeywords(report.title, report.description, report.type),
         type: "report",
       });
     });
-  }
-
-  #labelOrText(obj, fallback = "") {
-    return obj.text || (obj.label ? i18n(obj.label) : fallback);
-  }
-
-  #buildKeywords(...keywords) {
-    return keywords
-      .map((kw) => {
-        if (Array.isArray(kw)) {
-          return kw.join(" ");
-        }
-        return kw;
-      })
-      .join(" ")
-      .toLowerCase();
   }
 }
