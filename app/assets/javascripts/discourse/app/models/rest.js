@@ -33,6 +33,8 @@ export default class RestModel extends EmberObject {
   @equal("__state", "new") isNew;
   @equal("__state", "created") isCreated;
 
+  @tracked __state;
+
   beforeCreate() {}
   afterCreate() {}
 
