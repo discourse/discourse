@@ -105,6 +105,7 @@ schema:
         - "discourse_automation_fields"
         - "discourse_automation_pending_automations"
         - "discourse_automation_pending_pms"
+        - "discourse_automation_stats"
         - "discourse_automation_user_global_notices"
         - "dismissed_topic_users"
         - "do_not_disturb_timings"
