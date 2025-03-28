@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 export default class ReviewableUser extends Component {
@@ -42,13 +43,16 @@ export default class ReviewableUser extends Component {
 
   @bind
   async scrubRejectedUser(reason) {
-    await ajax({
-      url: `/review/${this.reviewable.id}/scrub`,
-      type: "PUT",
-      data: { reason },
-    });
-
-    await this.store.find("reviewable", this.reviewable.id);
+    try {
+      await ajax({
+        url: `/review/${this.reviewable.id}/scrub`,
+        type: "PUT",
+        data: { reason },
+      });
+      this.store.find("reviewable", this.reviewable.id);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   <template>
