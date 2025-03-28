@@ -11,9 +11,14 @@ module Migrations::Importer
     end
 
     def start
-      execute_steps
-    ensure
-      cleanup
+      runtime =
+        ::Migrations::DateHelper.track_time do
+          execute_steps
+        ensure
+          cleanup
+        end
+
+      puts I18n.t("importer.done", runtime: ::Migrations::DateHelper.human_readable_time(runtime))
     end
 
     private
@@ -41,6 +46,7 @@ module Migrations::Importer
       step_classes.each do |step_class|
         step = step_class.new(@intermediate_db, @discourse_db, @shared_data)
         step.execute
+        puts ""
       end
     end
 

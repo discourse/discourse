@@ -99,8 +99,7 @@ module Migrations
 
     def finalize_progressbar(format)
       print "\033[K" # delete the output of progressbar, because it doesn't overwrite longer lines
-      final_format = @max_progress ? "    %a | #{format}" : "    %a | #{format}"
-      @progressbar.format = "#{final_format}#{@extra_information}"
+      @progressbar.format = "    %a | #{format}#{@extra_information}"
       @progressbar.finish
     end
   end

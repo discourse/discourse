@@ -22,6 +22,7 @@ en:
   importer:
     default_step_title: "Importing %{type}"
     loading_required_data: "Loading required data..."
+    done: "Done. Total runtime: %{runtime}"
 
   schema:
     validator:
