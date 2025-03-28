@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import ContentsPrimary from "./contents-primary";
 import ContentsSecondary from "./contents-secondary";
@@ -48,6 +49,7 @@ export default class Contents extends Component {
     <div class="contents">
 
       {{#if this.siteSettings.grid_layout}}
+        {{bodyClass "grid-layout"}}
         <div class="d-header__contents-primary">
           <ContentsPrimary
             @topicInfo={{@topicInfo}}

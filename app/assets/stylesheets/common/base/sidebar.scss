@@ -70,6 +70,10 @@
   align-self: start;
   overflow-y: auto;
 
+  body:not(.grid-layout) & {
+    grid-area: sidebar;
+  }
+
   // back-compat for themes
   --1dvh: 1dvh;
 

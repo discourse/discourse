@@ -155,11 +155,43 @@ select {
   }
 }
 
-body {
+body.has-sidebar-page:not(.grid-layout) {
+  .wrap {
+    // increase page max-width to accommodate sidebar width
+    max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
+    gap: 0 2em;
+    padding-left: 0;
+
+    @include breakpoint(large) {
+      gap: 0 1em;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.sidebar-animate {
+    #main-outlet-wrapper {
+      transition-property: grid-template-columns, max-width;
+      transition-timing-function: var(--d-sidebar-animation-ease);
+      transition-duration: var(--d-sidebar-animation-time);
+    }
+
+    .d-header-wrap .wrap {
+      transition: max-width var(--d-sidebar-animation-time)
+        var(--d-sidebar-animation-ease);
+    }
+  }
+}
+
+body.grid-layout {
   // won't recalc with max-width change if set at root
   --max-column-width: calc(var(--d-max-width) / var(--column-count));
 
-  #main-outlet {
+  #main-outlet-wrapper #main-outlet {
     grid-row: 1;
     grid-column: 2 / 26;
   }
@@ -214,58 +246,41 @@ body {
       }
     }
   }
-}
 
-.discourse-root {
-  display: grid;
-  grid-template-columns:
-    1fr repeat(var(--column-count), minmax(0, var(--max-column-width)))
-    1fr;
-  gap: 0;
+  .discourse-root {
+    display: grid;
+    grid-template-columns:
+      1fr repeat(var(--column-count), minmax(0, var(--max-column-width)))
+      1fr;
+    gap: 0;
 
-  // give all children a full row
-  // this makes unexpected content from plugin outlets more predictable
-  > * {
+    // give all children a full row
+    // this makes unexpected content from plugin outlets more predictable
+    > * {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // pass the subgrid down to header contents
+  .d-header-wrap,
+  .d-header,
+  .wrap {
+    display: grid;
+    grid-template-columns: subgrid;
     grid-column: 1 / -1;
   }
-}
 
-// pass the subgrid down to header contents
-.d-header-wrap,
-.d-header,
-.wrap {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-}
-
-.d-header {
-  .wrap .contents {
-    grid-column: 2 / 26;
+  .d-header {
+    .wrap .contents {
+      grid-column: 2 / 26;
+    }
   }
 
-  &__contents-primary,
-  &__contents-secondary {
-    display: flex;
-  }
-
-  &__contents-primary {
-    margin-right: auto;
-  }
-
-  &__contents-secondary {
-    flex: 1 1 auto;
-  }
-
-  .panel {
-    margin-left: auto;
-  }
-}
-
-#main-outlet-wrapper {
-  // give all children a full row
-  // this makes unexpected content from plugin outlets more predictable
-  > * {
-    grid-column: 1 / -1;
+  #main-outlet-wrapper {
+    // give all children a full row
+    // this makes unexpected content from plugin outlets more predictable
+    > * {
+      grid-column: 1 / -1;
+    }
   }
 }

@@ -79,7 +79,7 @@ export default RouteTemplate(
 
       <div id="main-outlet-wrapper" class="wrap" role="main">
 
-        {{#unless @controller.site.mobileView}}
+        {{#unless @controller.hideMobileWrapper}}
           <div class="sidebar-wrapper">
             {{! empty div allows for animation }}
             {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}

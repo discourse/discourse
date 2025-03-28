@@ -577,6 +577,20 @@ textarea {
 #main-outlet-wrapper {
   box-sizing: border-box;
   width: 100%;
+
+  body:not(.grid-layout) & {
+    display: grid;
+    grid-template-areas:
+      "sidebar content"
+      "sidebar below-content";
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
+    gap: 0;
+
+    #main-outlet {
+      grid-area: content;
+    }
+  }
 }
 
 #main-outlet {
@@ -810,4 +824,25 @@ a#skip-link {
 
 .hbr-ember-outlet {
   display: contents;
+}
+
+.grid-layout {
+  .d-header {
+    &__contents-primary,
+    &__contents-secondary {
+      display: flex;
+    }
+
+    &__contents-primary {
+      margin-right: auto;
+    }
+
+    &__contents-secondary {
+      flex: 1 1 auto;
+    }
+
+    .panel {
+      margin-left: auto;
+    }
+  }
 }

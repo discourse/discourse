@@ -41,6 +41,10 @@ export default class ApplicationController extends Controller {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   }
 
+  get hideMobileWrapper() {
+    return this.siteSettings.grid_layout && this.site.mobileView;
+  }
+
   @discourseComputed
   canSignUp() {
     return (
