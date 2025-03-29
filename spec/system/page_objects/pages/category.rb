@@ -42,7 +42,6 @@ module PageObjects
 
       def save_settings
         find("#save-category").click
-        has_content?("Saving")
         self
       end
 
