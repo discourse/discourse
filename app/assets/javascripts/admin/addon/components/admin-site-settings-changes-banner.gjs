@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -8,9 +9,17 @@ import { i18n } from "discourse-i18n";
 export default class AdminSiteSettingsChangesBanner extends Component {
   @service siteSettingChangeTracker;
 
+  @tracked isSaving = false;
+
   @action
   async save() {
-    await this.siteSettingChangeTracker.save();
+    this.isSaving = true;
+
+    try {
+      await this.siteSettingChangeTracker.save();
+    } finally {
+      this.isSaving = false;
+    }
   }
 
   @action
@@ -40,11 +49,13 @@ export default class AdminSiteSettingsChangesBanner extends Component {
           <DButton
             @label="admin.site_settings.discard"
             @action={{this.discard}}
+            @disabled={{this.isSaving}}
             class="btn-secondary btn-small"
           />
           <DButton
             @label="admin.site_settings.save"
             @action={{this.save}}
+            @isLoading={{this.isSaving}}
             class="btn-primary btn-small"
           />
         </div>
