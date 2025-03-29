@@ -36,6 +36,11 @@ module PageObjects
         )
       end
 
+      def fill_setting(setting_name, value)
+        setting = find_setting(setting_name)
+        setting.fill_in(with: value)
+      end
+
       def toggle_setting(setting_name, text = "")
         setting = find_setting(setting_name)
         setting.find(".setting-value span", text: text).click

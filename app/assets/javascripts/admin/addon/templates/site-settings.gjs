@@ -4,6 +4,7 @@ import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
+import AdminSiteSettingsChangesBanner from "admin/components/admin-site-settings-changes-banner";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
 
 export default RouteTemplate(
@@ -59,5 +60,7 @@ export default RouteTemplate(
     </div>
 
     <div class="clearfix"></div>
+
+    <AdminSiteSettingsChangesBanner />
   </template>
 );

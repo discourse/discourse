@@ -40,6 +40,13 @@ export default class SiteSetting extends EmberObject {
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
 
+  static bulkUpdate(settings) {
+    return ajax(`/admin/site_settings/bulk_update.json`, {
+      type: "PUT",
+      data: { settings },
+    });
+  }
+
   settingObjectHelper = new SettingObjectHelper(this);
 
   @alias("settingObjectHelper.overridden") overridden;
