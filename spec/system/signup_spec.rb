@@ -167,6 +167,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         signup_form.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
+        expect(page).to have_css(".account-created")
 
         visit "/"
         login_form.open
@@ -195,6 +196,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
+        expect(page).to have_css(".account-created")
 
         visit "/"
         login_form.open

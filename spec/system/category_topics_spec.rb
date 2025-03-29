@@ -10,13 +10,6 @@ describe "Viewing categories page", type: :system do
 
   context "when viewing top topics" do
     it "displays and updates new counter" do
-      skip(<<~TEXT)
-    Flaky at the following step:
-
-    expect(category_list).to have_no_new_posts_badge
-       expected `#<PageObjects::Components::CategoryList:0x00007fe27a3d2340>.has_no_new_posts_badge?` to be truthy, got false
-    TEXT
-
       sign_in(user)
 
       visit("/categories")

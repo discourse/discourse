@@ -107,8 +107,11 @@ describe "Admin Users Page", type: :system do
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
 
       expect(confirmation_modal).to be_open
+
       confirmation_modal.fill_in_confirmation_phase(user_count: 2)
       confirmation_modal.confirm_button.click
+
+      expect(confirmation_modal).to have_content("Starting bulk delete…")
       expect(confirmation_modal).to have_successful_log_entry_for_user(
         user: user_1,
         position: 1,
