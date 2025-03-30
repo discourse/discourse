@@ -59,5 +59,17 @@ module Migrations
       return nil if value.nil?
       ::Oj.dump(value, mode: :compat)
     end
+
+    def self.to_date(text)
+      text.present? ? Date.parse(text) : nil
+    end
+
+    def self.to_datetime(text)
+      text.present? ? DateTime.parse(text) : nil
+    end
+
+    def self.to_boolean(value)
+      value == 1
+    end
   end
 end
