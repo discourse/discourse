@@ -3,7 +3,7 @@
 module Migrations::Database
   class Migrator
     def initialize(db_path)
-      @db_path = db_path
+      @db_path = File.expand_path(db_path, ::Migrations.root_path)
       @db = nil
     end
 
@@ -72,7 +72,7 @@ module Migrations::Database
 
           @db.transaction do
             @db.execute(sql)
-            @db.execute(<<~SQL, path: relative_path, sql_hash: sql_hash)
+            @db.execute(<<~SQL, path: relative_path, sql_hash:)
               INSERT INTO schema_migrations (path, created_at, sql_hash)
               VALUES (:path, datetime('now'), :sql_hash)
             SQL

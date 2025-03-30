@@ -8,6 +8,7 @@ module Migrations::Database
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
     def self.open_database(path:)
+      path = File.expand_path(path, ::Migrations.root_path)
       FileUtils.mkdir_p(File.dirname(path))
 
       db = ::Extralite::Database.new(path)
@@ -25,7 +26,7 @@ module Migrations::Database
     attr_reader :db, :path
 
     def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
-      @path = path
+      @path = File.expand_path(path, ::Migrations.root_path)
       @transaction_batch_size = transaction_batch_size
       @db = self.class.open_database(path:)
       @statement_counter = 0
@@ -54,23 +55,33 @@ module Migrations::Database
 
       if (@statement_counter += 1) >= @transaction_batch_size
         commit_transaction
+      end
+    end
+
+    def query(sql, *parameters, &block)
+      @db.query(sql, *parameters, &block)
+    end
+
+    def count(sql, *parameters)
+      @db.query_single_splat(sql, *parameters)
+    end
+
+    def execute(sql, *parameters)
+      @db.execute(sql, *parameters)
+    end
+
+    def begin_transaction
+      @db.execute("BEGIN DEFERRED TRANSACTION") unless @db.transaction_active?
+    end
+
+    def commit_transaction
+      if @db.transaction_active?
+        @db.execute("COMMIT")
         @statement_counter = 0
       end
     end
 
     private
-
-    def begin_transaction
-      return if @db.transaction_active?
-
-      @db.execute("BEGIN DEFERRED TRANSACTION")
-    end
-
-    def commit_transaction
-      return unless @db.transaction_active?
-
-      @db.execute("COMMIT")
-    end
 
     def close_connection(keep_path:)
       return if @db.nil?
