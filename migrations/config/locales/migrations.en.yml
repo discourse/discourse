@@ -1,5 +1,8 @@
 en:
   progressbar:
+    skips:
+      one: "%{count} skip"
+      other: "%{count} skips"
     warnings:
       one: "%{count} warning"
       other: "%{count} warnings"
