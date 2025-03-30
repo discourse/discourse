@@ -19,6 +19,11 @@ en:
     default_step_title: "Converting %{type}"
     max_progress_calculation: "Calculating items took %{duration}"
 
+  importer:
+    default_step_title: "Importing %{type}"
+    loading_required_data: "Loading required data..."
+    done: "Done. Total runtime: %{runtime}"
+
   schema:
     validator:
       include_exclude_not_allowed: "Cannot use `include` and `exclude` together at %{path}"
