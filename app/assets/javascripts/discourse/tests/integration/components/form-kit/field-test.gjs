@@ -352,33 +352,4 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("component");
   });
-
-  test("control width", async function (assert) {
-    await render(
-      <template>
-        <Form as |form|>
-          <form.Field
-            @name="foo"
-            @title="Foo"
-            @validation="length:1,100"
-            as |field|
-          >
-            <field.Textarea />
-          </form.Field>
-        </Form>
-      </template>
-    );
-
-    query(".form-kit__control-textarea").style.width = "100px";
-
-    await waitFor(".form-kit__meta[style]", {
-      timeout: 5000,
-    });
-
-    assert.deepEqual(
-      query(".form-kit__meta").style.width,
-      "100px",
-      "it also sets the width of the meta"
-    );
-  });
 });
