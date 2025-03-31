@@ -1347,6 +1347,24 @@ class Plugin::Instance
     end
   end
 
+  # This method allows plugins to preload topic associations when loading topics
+  # that make use of topic_list.
+  #
+  # @param fields [Array<Symbol>, Symbol, Hash] The topic associations to preload.
+  #   - :association` [Symbol] The association to preload.
+  #   - :condition` [Proc] A function that returns a boolean value indicating whether the association should be preloaded
+  #
+  # @example
+  #   register_topic_preloader_associations(%i[custom_association another_association])
+  #   register_topic_preloader_associations({
+  #     association: :linked_topic, condition: ->(topic) { topic.custom_field.present? }
+  #   })
+  #
+  # @return [void]
+  def register_topic_preloader_associations(fields)
+    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  end
+
   protected
 
   def self.js_path
@@ -1439,10 +1457,6 @@ class Plugin::Instance
 
   def allow_new_queued_post_payload_attribute(attribute_name)
     reloadable_patch { NewPostManager.add_plugin_payload_attribute(attribute_name) }
-  end
-
-  def register_topic_preloader_associations(fields)
-    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
   ##
