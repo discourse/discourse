@@ -397,8 +397,6 @@ module Email
     end
 
     def to_html
-      # needs to be before class + id strip because we need to style redacted
-      # media and also not double-redact already redacted from lower levels
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       replace_relative_urls
       deduplicate_styles
