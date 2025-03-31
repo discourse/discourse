@@ -400,7 +400,6 @@ module Email
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
-      strip_classes_and_ids
       replace_relative_urls
       deduplicate_styles
 
@@ -545,15 +544,6 @@ module Email
             end
           return
           # rubocop:enable Lint/NonLocalExitFromIterator
-        end
-    end
-
-    def strip_classes_and_ids
-      @fragment
-        .css("*")
-        .each do |element|
-          element.delete("class")
-          element.delete("id")
         end
     end
 
