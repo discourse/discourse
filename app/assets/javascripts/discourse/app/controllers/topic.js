@@ -1909,7 +1909,12 @@ export default class TopicController extends Controller {
   }
 
   @action
-  postsInteracted() {
-    this.appEvents.trigger("topic:interacted", event);
+  didStartDrag() {
+    this.appEvents.trigger("topic:interacted");
+  }
+
+  @action
+  didEndDrag() {
+    return;
   }
 }

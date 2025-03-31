@@ -39,6 +39,7 @@ import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
 import routeAction from "discourse/helpers/route-action";
+import draggable from "discourse/modifiers/draggable";
 import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -285,8 +286,11 @@ export default RouteTemplate(
 
         <div
           class="container posts"
-          role="button"
-          {{on "click" @controller.postsInteracted}}
+          {{draggable
+            didStartDrag=@controller.didStartDrag
+            didEndDrag=@controller.didEndDrag
+            dragMove=@controller.dragMove
+          }}
         >
           <div
             class="selected-posts {{unless @controller.multiSelect 'hidden'}}"
