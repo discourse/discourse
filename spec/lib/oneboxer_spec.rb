@@ -906,16 +906,8 @@ RSpec.describe Oneboxer do
   end
 
   describe "#force_get_hosts" do
-    before do
-      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
-    end
-
     it "includes Amazon sites" do
       expect(Oneboxer.force_get_hosts).to include("https://www.amazon.ca")
-    end
-
-    it "includes cache_onebox_response_body_domains" do
-      expect(Oneboxer.force_get_hosts).to include("https://www.example.com")
     end
   end
 
@@ -968,52 +960,6 @@ RSpec.describe Oneboxer do
 
         expect(Oneboxer.preferred_strategy(hostname)).not_to eq(:default)
       end
-    end
-  end
-
-  describe "cache_onebox_response_body" do
-    let(:html) { <<~HTML }
-        <html>
-        <body>
-           <p>cache me if you can</p>
-        </body>
-        <html>
-      HTML
-
-    let(:url) { "https://www.example.com/my/great/content" }
-    let(:url2) { "https://www.example2.com/my/great/content" }
-
-    before do
-      stub_request(:any, url).to_return(status: 200, body: html)
-      stub_request(:any, url2).to_return(status: 200, body: html)
-
-      SiteSetting.cache_onebox_response_body = true
-      SiteSetting.cache_onebox_response_body_domains = "example.net|example.com|example.org"
-    end
-
-    it "caches when domain matches" do
-      preview = Oneboxer.preview(url, invalidate_oneboxes: true)
-      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
-      expect(Oneboxer.fetch_cached_response_body(url)).to eq(html)
-    end
-
-    it "ignores cache when domain not present" do
-      preview = Oneboxer.preview(url2, invalidate_oneboxes: true)
-      expect(Oneboxer.cached_response_body_exists?(url2)).to eq(false)
-    end
-
-    it "separates cache by default_locale" do
-      Oneboxer.preview(url, invalidate_oneboxes: true)
-      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
-      SiteSetting.default_locale = "fr"
-      expect(Oneboxer.cached_response_body_exists?(url)).to eq(false)
-    end
-
-    it "separates cache by onebox_locale, when set" do
-      Oneboxer.preview(url, invalidate_oneboxes: true)
-      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
-      SiteSetting.onebox_locale = "fr"
-      expect(Oneboxer.cached_response_body_exists?(url)).to eq(false)
     end
   end
 

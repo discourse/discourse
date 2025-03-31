@@ -408,7 +408,7 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
 
-      PageObjects::Components::Logo.hover
+      PageObjects::Components::Logo.new.hover
       expect(page).to have_css(
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
