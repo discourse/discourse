@@ -3941,14 +3941,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  glimmer_topic_list_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: enabled
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list

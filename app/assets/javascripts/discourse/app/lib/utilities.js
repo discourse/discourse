@@ -1,4 +1,3 @@
-import Handlebars from "handlebars";
 import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -39,11 +38,6 @@ export function splitString(str, separator = ",") {
 export function escapeExpression(string) {
   if (!string) {
     return "";
-  }
-
-  // don't escape SafeStrings, since they're already safe
-  if (string instanceof Handlebars.SafeString) {
-    return string.toString();
   }
 
   return escape(string);
