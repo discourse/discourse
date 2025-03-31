@@ -4,7 +4,7 @@
 
   @include default-input {
     // reset textarea styles
-    height: 150px !important;
+    height: 150px;
     min-width: auto !important;
     padding: 0.5em !important;
   }
