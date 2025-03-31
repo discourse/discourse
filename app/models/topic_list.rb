@@ -138,13 +138,7 @@ class TopicList
       { category: :parent_category },
     ]
 
-    DiscoursePluginRegistry.topic_preloader_associations.each do |assoc|
-      if assoc.is_a?(Symbol)
-        topic_preloader_associations << assoc
-      elsif assoc.is_a?(Hash) && assoc[:condition].call
-        topic_preloader_associations << assoc[:association]
-      end
-    end
+    topic_preloader_associations.concat(DiscoursePluginRegistry.topic_preloader_associations.to_a)
 
     ActiveRecord::Associations::Preloader.new(
       records: @topics,
