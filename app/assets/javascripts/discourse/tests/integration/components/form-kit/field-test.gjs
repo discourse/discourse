@@ -6,14 +6,12 @@ import {
   resetOnerror,
   settled,
   setupOnerror,
-  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import DTooltip from "float-kit/components/d-tooltip";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
