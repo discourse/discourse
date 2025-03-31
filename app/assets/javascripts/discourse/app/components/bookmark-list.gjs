@@ -22,7 +22,6 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import htmlSafe from "discourse/helpers/html-safe";
-import raw from "discourse/helpers/raw";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -32,6 +31,7 @@ import {
 } from "discourse/lib/click-track";
 import { i18n } from "discourse-i18n";
 import BulkSelectBookmarksDropdown from "select-kit/components/bulk-select-bookmarks-dropdown";
+import ActivityCell from "./topic-list/item/activity-cell.gjs";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {
@@ -401,12 +401,7 @@ export default class BookmarkList extends Component {
                   <td
                     class="post-metadata topic-list-data updated-at"
                   >{{formatDate bookmark.updated_at format="tiny"}}</td>
-                  {{raw
-                    "list/activity-column"
-                    topic=bookmark
-                    class="num post-metadata"
-                    tagName="td"
-                  }}
+                  <ActivityCell class="post-metadata" @topic={{bookmark}} />
                 {{/if}}
                 <td class="topic-list-data">
                   <BookmarkActionsDropdown
