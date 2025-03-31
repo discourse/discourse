@@ -189,7 +189,9 @@
 
 .chat-message-container {
   background-color: var(--d-content-background, var(--secondary));
-  width: 100%;
+  border-radius: var(--d-chat-border-radius, 0);
+  width: calc(100% - var(--d-chat-message-inset, 0) * 2);
+  margin-left: var(--d-chat-message-inset, 0);
 
   &.-errored {
     color: var(--primary-medium);
