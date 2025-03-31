@@ -63,6 +63,7 @@ module Stylesheet
           source_map_contents: true,
           load_paths: load_paths,
           silence_deprecations: %w[color-functions import global-builtin],
+          quiet: ENV["QUIET_SASS_DEPRECATIONS"] == "1",
         )
 
       result = engine.render
