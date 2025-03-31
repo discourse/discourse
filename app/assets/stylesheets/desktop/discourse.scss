@@ -271,8 +271,13 @@ body.grid-layout {
   }
 
   .d-header {
-    .wrap .contents {
-      grid-column: 2 / 26;
+    .wrap {
+      height: auto;
+      min-height: 0; // shrink to fit
+
+      .contents {
+        grid-column: 2 / 26;
+      }
     }
   }
 
