@@ -66,7 +66,6 @@ export default class DEditor extends Component {
   @service emojiStore;
   @service modal;
   @service menu;
-  @service composer;
 
   @tracked editorComponent;
   /** @type {TextManipulation} */
@@ -450,7 +449,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
-          replyingToPostNumber: this.composer.model.post?.post_number,
+          replyingToPostNumber: this.replyingToPostNumber,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;
@@ -636,8 +635,6 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
-    // The ProsemirrorEditor component is loaded here, adding this comment because
-    // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled
       ? TextareaEditor
       : await loadRichEditor();
