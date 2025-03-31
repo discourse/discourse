@@ -1235,6 +1235,9 @@ class UsersController < ApplicationController
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
+    replying_to_post_number = params[:replying_to_post_number].to_i if params[
+      :replying_to_post_number
+    ].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1259,6 +1262,7 @@ class UsersController < ApplicationController
 
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
+    options[:replying_to_post_number] = replying_to_post_number if replying_to_post_number
 
     results =
       if usernames.blank?

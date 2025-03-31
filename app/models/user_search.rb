@@ -8,6 +8,7 @@ class UserSearch
     @term_like = @term.gsub("_", "\\_") + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
+    @replying_to_post_number = opts[:replying_to_post_number]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
@@ -17,6 +18,9 @@ class UserSearch
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
+    if @topic && @replying_to_post_number
+      @replying_to_post = @topic.posts.find_by_post_number(@replying_to_post_number)
+    end
 
     @guardian = Guardian.new(@searching_user)
     @guardian.ensure_can_see_groups_members!(@groups) if @groups
@@ -77,7 +81,19 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 2. in topic
+    # 2. if replying to a post, add the user who created the post but respect the usernames matching
+    if @replying_to_post_number && @replying_to_post
+      user_id = @replying_to_post.user_id
+
+      if user_id.present? && !users.include?(user_id) &&
+           (@term.blank? || @replying_to_post.user.username.include?(@term))
+        users << user_id
+      end
+    end
+
+    return users.to_a if users.size >= @limit
+
+    # 3. in topic
     if @topic_id
       in_topic =
         filtered_by_term_users.where(
@@ -97,7 +113,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 3. in category
+    # 4. in category
     secure_category_id =
       if @category_id
         DB.query_single(<<~SQL, @category_id).first
@@ -152,7 +168,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 4. global matches
+    # 5. global matches
     if @term.present?
       filtered_by_term_users
         .order("last_seen_at DESC NULLS LAST")
@@ -163,7 +179,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 5. last seen users (for search auto-suggestions)
+    # 6. last seen users (for search auto-suggestions)
     if @last_seen_users
       scoped_users
         .order("last_seen_at DESC NULLS LAST")

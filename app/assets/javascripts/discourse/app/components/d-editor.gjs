@@ -66,6 +66,7 @@ export default class DEditor extends Component {
   @service emojiStore;
   @service modal;
   @service menu;
+  @service composer;
 
   @tracked editorComponent;
   /** @type {TextManipulation} */
@@ -449,6 +450,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
+          replyingToPostNumber: this.composer.model.post?.post_number,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;

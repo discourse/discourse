@@ -35,6 +35,7 @@ function performSearch(
   groupMembersOf,
   includeStagedUsers,
   lastSeenUsers,
+  replyingToPostNumber,
   limit,
   resultsFn
 ) {
@@ -64,6 +65,7 @@ function performSearch(
     topic_allowed_users: allowedUsers,
     include_staged_users: includeStagedUsers,
     last_seen_users: lastSeenUsers,
+    replying_to_post_number: replyingToPostNumber,
     limit,
   };
 
@@ -119,6 +121,7 @@ let debouncedSearch = function (
   groupMembersOf,
   includeStagedUsers,
   lastSeenUsers,
+  replyingToPostNumber,
   limit,
   resultsFn
 ) {
@@ -136,6 +139,7 @@ let debouncedSearch = function (
     groupMembersOf,
     includeStagedUsers,
     lastSeenUsers,
+    replyingToPostNumber,
     limit,
     resultsFn,
     300
@@ -247,6 +251,7 @@ export default function userSearch(options) {
     groupMembersOf = options.groupMembersOf,
     includeStagedUsers = options.includeStagedUsers,
     lastSeenUsers = options.lastSeenUsers,
+    replyingToPostNumber = options.replyingToPostNumber,
     limit = options.limit || 6;
 
   if (oldSearch) {
@@ -287,6 +292,7 @@ export default function userSearch(options) {
       groupMembersOf,
       includeStagedUsers,
       lastSeenUsers,
+      replyingToPostNumber,
       limit,
       function (r) {
         cancel(clearPromise);

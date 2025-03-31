@@ -5226,6 +5226,35 @@ RSpec.describe UsersController do
       expect(json["users"].map { |u| u["username"] }).to include(user.username)
     end
 
+    it "brings first the replied to user" do
+      get "/u/search/users.json",
+          params: {
+            term: "",
+            topic_id: topic.id,
+            replying_to_post_number: post1.post_number,
+          }
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["users"].map { |u| u["username"] }).to include(user.username)
+      expect(json["users"].first["username"]).to eq(user.username)
+    end
+
+    it "respects the term when replying to a post" do
+      other_user = Fabricate(:user, username: "other_user")
+      get "/u/search/users.json",
+          params: {
+            term: other_user.username,
+            topic_id: topic.id,
+            replying_to_post_number: post1.post_number,
+          }
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["users"].map { |u| u["username"] }).to include(other_user.username)
+      expect(json["users"].first["username"]).to eq(other_user.username)
+    end
+
     it "searches only for users who have access to private topic" do
       searching_user = Fabricate(:user)
       privileged_user =
