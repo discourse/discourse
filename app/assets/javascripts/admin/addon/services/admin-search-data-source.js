@@ -37,7 +37,7 @@ export class PageLinkFormatter {
    * @param {Object} navMapSection - The section of the admin nav map that the link belongs to,
    *                                 used for the parent label.
    * @param {Object} link - The link object from the admin nav map, with name/route/label etc.
-   * @param {String} parentLabel - The parent label of the link, if any.
+   * @param {String} parentLabel - The parent label of the link, if any, this should be translated.
    */
   constructor(router, navMapSection, link, parentLabel = null) {
     this.router = router;
@@ -89,6 +89,113 @@ export class PageLinkFormatter {
     );
 
     return { url, label, keywords, description };
+  }
+}
+
+export class SettingLinkFormatter {
+  /**
+   * @param {DiscourseRouter} router - The ember router service
+   * @param {Object} setting - The setting object from the site settings API
+   * @param {Object} plugins - The plugins object built from the visible plugins in preload store
+   * @param {Object} settingPageMap - The setting page map object with categories and areas.
+   *                                 This points to the URL of the relevant setting page
+   */
+  constructor(router, setting, plugins, settingPageMap) {
+    this.router = router;
+    this.setting = setting;
+    this.plugins = plugins;
+    this.settingPageMap = settingPageMap;
+    this.settingPluginNames = {};
+  }
+
+  format() {
+    if (this.setting.plugin) {
+      if (!this.settingPluginNames[this.setting.plugin]) {
+        this.settingPluginNames[this.setting.plugin] =
+          this.setting.plugin.replaceAll("_", "-");
+      }
+    }
+
+    const [rootLabel, fullLabel] = this.buildLabel();
+    const url = this.buildURL();
+
+    const keywords = buildKeywords(
+      this.setting.setting,
+      humanizedSettingName(this.setting.setting),
+      this.setting.description,
+      this.setting.keywords,
+      rootLabel
+    );
+
+    return {
+      label: fullLabel,
+      description: this.setting.description,
+      url,
+      keywords,
+    };
+  }
+
+  buildLabel() {
+    let rootLabel;
+
+    if (this.setting.plugin) {
+      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      if (plugin) {
+        rootLabel = plugin.admin_route?.label
+          ? i18n(plugin.admin_route?.label)
+          : i18n("admin.plugins.title");
+      } else {
+        rootLabel = i18n("admin.plugins.title");
+      }
+    } else if (this.setting.primary_area) {
+      rootLabel =
+        I18n.lookup(`admin.config.${this.setting.primary_area}.title`) ||
+        i18n(`admin.site_settings.categories.${this.setting.category}`);
+    } else {
+      rootLabel = i18n(
+        `admin.site_settings.categories.${this.setting.category}`
+      );
+    }
+
+    return [
+      rootLabel,
+      `${rootLabel} ${SEPARATOR} ${humanizedSettingName(this.setting.setting)}`,
+    ];
+  }
+
+  buildURL() {
+    // TODO (martin) These URLs will need to change eventually to anchors
+    // to focus/highlight on a specific element on the page, for now though the filter is fine.
+    let url;
+    if (this.setting.plugin) {
+      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      if (plugin) {
+        url = plugin.admin_route.use_new_show_route
+          ? this.router.urlFor(
+              `adminPlugins.show.settings`,
+              plugin.admin_route.location,
+              { queryParams: { filter: this.setting.setting } }
+            )
+          : this.router.urlFor(`adminPlugins.${plugin.admin_route.location}`);
+      } else {
+        url = getURL(
+          `/admin/site_settings/category/all_results?filter=${this.setting.setting}`
+        );
+      }
+    } else if (this.settingPageMap.areas[this.setting.primary_area]) {
+      url =
+        this.settingPageMap.areas[this.setting.primary_area] +
+        `?filter=${this.setting.setting}`;
+    } else if (this.settingPageMap.categories[this.setting.category]) {
+      url =
+        this.settingPageMap.categories[this.setting.category] +
+        `?filter=${this.setting.setting}`;
+    } else {
+      url = getURL(
+        `/admin/site_settings/category/all_results?filter=${this.setting.setting}`
+      );
+    }
+    return url;
   }
 }
 
@@ -220,83 +327,19 @@ export default class AdminSearchDataSource extends Service {
   }
 
   #processSettings(settings) {
-    const settingPluginNames = {};
-
     settings.forEach((setting) => {
-      let plugin;
-
-      let rootLabel;
-      if (setting.plugin) {
-        if (!settingPluginNames[setting.plugin]) {
-          settingPluginNames[setting.plugin] = setting.plugin.replaceAll(
-            "_",
-            "-"
-          );
-        }
-
-        plugin = this.plugins[settingPluginNames[setting.plugin]];
-
-        if (plugin) {
-          rootLabel = plugin.admin_route?.label
-            ? i18n(plugin.admin_route?.label)
-            : i18n("admin.plugins.title");
-        } else {
-          rootLabel = i18n("admin.plugins.title");
-        }
-      } else if (setting.primary_area) {
-        rootLabel =
-          I18n.lookup(`admin.config.${setting.primary_area}.title`) ||
-          i18n(`admin.site_settings.categories.${setting.category}`);
-      } else {
-        rootLabel = i18n(`admin.site_settings.categories.${setting.category}`);
-      }
-
-      const label = `${rootLabel} ${SEPARATOR} ${humanizedSettingName(
-        setting.setting
-      )}`;
-
-      // TODO (martin) These URLs will need to change eventually to anchors
-      // to focus on a specific element on the page, for now though the filter is fine.
-      let url;
-      if (setting.plugin) {
-        if (plugin) {
-          url = plugin.admin_route.use_new_show_route
-            ? this.router.urlFor(
-                `adminPlugins.show.settings`,
-                plugin.admin_route.location,
-                { queryParams: { filter: setting.setting } }
-              )
-            : this.router.urlFor(`adminPlugins.${plugin.admin_route.location}`);
-        } else {
-          url = getURL(
-            `/admin/site_settings/category/all_results?filter=${setting.setting}`
-          );
-        }
-      } else if (this.settingPageMap.areas[setting.primary_area]) {
-        url =
-          this.settingPageMap.areas[setting.primary_area] +
-          `?filter=${setting.setting}`;
-      } else if (this.settingPageMap.categories[setting.category]) {
-        url =
-          this.settingPageMap.categories[setting.category] +
-          `?filter=${setting.setting}`;
-      } else {
-        url = getURL(
-          `/admin/site_settings/category/all_results?filter=${setting.setting}`
-        );
-      }
+      const formattedSettingLink = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        this.settingPageMap
+      ).format();
 
       this.settingDataSourceItems.push({
-        label,
-        description: setting.description,
-        url,
-        keywords: buildKeywords(
-          setting.setting,
-          humanizedSettingName(setting.setting),
-          setting.description,
-          setting.keywords,
-          rootLabel
-        ),
+        label: formattedSettingLink.label,
+        description: formattedSettingLink.description,
+        url: formattedSettingLink.url,
+        keywords: formattedSettingLink.keywords,
         type: "setting",
         icon: "gear",
       });

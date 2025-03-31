@@ -4,8 +4,12 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { i18n } from "discourse-i18n";
-import { PageLinkFormatter } from "admin/services/admin-search-data-source";
+import {
+  PageLinkFormatter,
+  SettingLinkFormatter,
+} from "admin/services/admin-search-data-source";
 
 // NOTE: This test relies on `/admin/search/all.json` from admin-search-fixtures.js
 
@@ -92,9 +96,9 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
   test("buildMap - uses ADMIN_NAV_MAP to build up a list of page links including sub-pages", async function (assert) {
     await this.subject.buildMap();
 
-    assert.true(this.subject.pageMapItems.length > ADMIN_NAV_MAP.length);
+    assert.true(this.subject.pageDataSourceItems.length > ADMIN_NAV_MAP.length);
 
-    assert.deepEqual(this.subject.pageMapItems[0], {
+    assert.deepEqual(this.subject.pageDataSourceItems[0], {
       label: "Dashboard",
       url: "/admin",
       keywords:
@@ -106,7 +110,7 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     });
 
     assert.notStrictEqual(
-      this.subject.pageMapItems.find(
+      this.subject.pageDataSourceItems.find(
         (page) => page.url === "/admin/backups/logs"
       ),
       null
@@ -188,13 +192,13 @@ module(
         this.router,
         navMapSection,
         link,
-        "admin.config.backups.title"
+        i18n("admin.config.backups.title")
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("admin.config.backups.title") +
+        i18n(navMapSection.label) +
           " > " +
-          i18n(navMapSection.label) +
+          i18n("admin.config.backups.title") +
           " > " +
           i18n(link.label),
         "link uses the section label, parent label, and link label for sub-pages"
@@ -206,8 +210,169 @@ module(
       formatter = new PageLinkFormatter(this.router, navMapSection, link);
       assert.deepEqual(
         formatter.format().label,
-        "Already translated",
+        i18n(navMapSection.label) + " > " + "Already translated",
         "link uses the text property if available"
+      );
+    });
+
+    test("keywords are correct using the link keywords, url, label, and description", async function (assert) {
+      const navMapSection = {
+        label: "admin.config_sections.account.title",
+        name: "root",
+      };
+      let link = {
+        label: "admin.config.flags.title",
+        description: "admin.config.flags.header_description",
+        route: "admin.dashboard.general",
+        keywords: "admin.config.flags.keywords",
+      };
+
+      let formatter = new PageLinkFormatter(this.router, navMapSection, link);
+      assert.deepEqual(
+        formatter.format().keywords,
+        `flag review spam illegal /admin ${i18n("admin.config_sections.account.title").toLowerCase()} ${i18n("admin.config.flags.title").toLowerCase()} ${i18n("admin.config.flags.header_description").toLowerCase()}`
+      );
+    });
+  }
+);
+
+module(
+  "Unit | Service | AdminSearchDataSource | SettingLinkFormatter",
+  function (hooks) {
+    setupTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.router = getOwner(this).lookup("service:router");
+      this.plugins = { chat: fabricateVisiblePlugins()[0] };
+    });
+
+    test("label is correct for a setting that comes from a plugin", async function (assert) {
+      let setting = {
+        plugin: "chat",
+        setting: "enable_chat",
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        {}
+      );
+      assert.deepEqual(
+        formatter.format().label,
+        i18n("chat.admin.title") +
+          " > " +
+          humanizedSettingName(setting.setting),
+        "label uses the plugin admin route label and setting name"
+      );
+    });
+
+    test("label is correct for a setting that has a primary area", async function (assert) {
+      let setting = {
+        setting: "enable_chat",
+        primary_area: "about",
+      };
+      const settingPageMap = {
+        categores: {},
+        areas: { about: "/admin/plugins/chat/settings" },
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        settingPageMap
+      );
+      assert.deepEqual(
+        formatter.format().label,
+        i18n("admin.config.about.title") +
+          " > " +
+          humanizedSettingName(setting.setting),
+        "label uses the primary area and setting name"
+      );
+    });
+
+    test("label is correct for a setting that just belongs to a category", async function (assert) {
+      let setting = {
+        setting: "enable_chat",
+        category: "required",
+      };
+      const settingPageMap = {
+        categories: { required: "/admin/plugins/chat" },
+        areas: {},
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        settingPageMap
+      );
+      assert.deepEqual(
+        formatter.format().label,
+        i18n("admin.site_settings.categories.required") +
+          " > " +
+          humanizedSettingName(setting.setting),
+        "label uses the category and setting name"
+      );
+    });
+
+    test("url is correct for a setting that belongs to a plugin", async function (assert) {
+      let setting = {
+        plugin: "chat",
+        setting: "enable_chat",
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        {}
+      );
+      assert.deepEqual(
+        formatter.format().url,
+        "/admin/plugins/chat/settings?filter=enable_chat",
+        "url uses the plugin admin route location and setting"
+      );
+    });
+
+    test("url is correct for a setting that has a primary area", async function (assert) {
+      let setting = {
+        setting: "enable_chat",
+        primary_area: "about",
+      };
+      const settingPageMap = {
+        categores: {},
+        areas: { about: "/admin/plugins/chat/settings" },
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        settingPageMap
+      );
+      assert.deepEqual(
+        formatter.format().url,
+        "/admin/plugins/chat/settings?filter=enable_chat",
+        "url uses the primary area and setting"
+      );
+    });
+
+    test("url is correct for a setting that only belongs to a category", async function (assert) {
+      let setting = {
+        setting: "enable_chat",
+        category: "required",
+      };
+      const settingPageMap = {
+        categories: { required: "/admin/plugins/chat" },
+        areas: {},
+      };
+      let formatter = new SettingLinkFormatter(
+        this.router,
+        setting,
+        this.plugins,
+        settingPageMap
+      );
+      assert.deepEqual(
+        formatter.format().url,
+        "/admin/plugins/chat?filter=enable_chat",
+        "url uses the category and setting"
       );
     });
   }
