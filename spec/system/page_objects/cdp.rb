@@ -56,6 +56,12 @@ module PageObjects
       end
     end
 
+    def copy_paste(text, html: false)
+      allow_clipboard
+      write_clipboard(text, html: html)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+    end
+
     def with_network_disconnected
       begin
         page.driver.browser.network_conditions = { offline: true }

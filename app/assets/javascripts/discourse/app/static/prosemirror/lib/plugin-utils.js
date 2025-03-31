@@ -3,23 +3,7 @@ import { StepMap } from "prosemirror-transform";
 
 export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
 
-export function buildBBCodeAttrs(attrs, opts = {}) {
-  opts.skipAttrs = opts.skipAttrs ?? [];
-
-  return Object.keys(attrs)
-    .map((key) => {
-      if (
-        attrs[key] === null ||
-        attrs[key] === undefined ||
-        opts.skipAttrs.includes(key)
-      ) {
-        return null;
-      }
-      return `${key}="${attrs[key]}"`;
-    })
-    .filter(Boolean)
-    .join(" ");
-}
+export { buildBBCodeAttrs } from "discourse/lib/text";
 
 // https://discuss.prosemirror.net/t/input-rules-for-wrapping-marks/537
 export function markInputRule(regexp, markType, getAttrs) {
