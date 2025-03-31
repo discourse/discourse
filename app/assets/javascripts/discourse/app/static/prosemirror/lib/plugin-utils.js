@@ -3,6 +3,8 @@ import { StepMap } from "prosemirror-transform";
 
 export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
 
+export { buildBBCodeAttrs } from "discourse/lib/text";
+
 // https://discuss.prosemirror.net/t/input-rules-for-wrapping-marks/537
 export function markInputRule(regexp, markType, getAttrs) {
   return new InputRule(
