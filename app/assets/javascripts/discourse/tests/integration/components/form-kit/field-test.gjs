@@ -6,6 +6,7 @@ import {
   resetOnerror,
   settled,
   setupOnerror,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -370,7 +371,9 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     query(".form-kit__control-textarea").style.width = "100px";
 
-    await settled();
+    await waitFor(".form-kit__meta[style]", {
+      timeout: 5000,
+    });
 
     assert.deepEqual(
       query(".form-kit__meta").style.width,
