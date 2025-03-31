@@ -42,9 +42,10 @@ RSpec.describe Email::Styles do
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
     end
 
-    it "strips classes and ids" do
-      frag = basic_fragment("<div class='foo' id='bar'><div class='foo' id='bar'></div></div>")
-      expect(frag.to_html).to eq("<div><div></div></div>")
+    it "preserves classes and ids" do
+      raw = '<div class="foo" id="bar"><div class="foo" id="bar"></div></div>'
+      frag = basic_fragment(raw)
+      expect(frag.to_html).to eq(raw)
     end
   end
 
