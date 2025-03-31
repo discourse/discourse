@@ -135,7 +135,7 @@ class ThemeField < ActiveRecord::Base
 
         begin
           if is_raw
-            js_compiler.append_raw_template(name, hbs_template)
+            # Ignore - raw templates no longer
           else
             js_compiler.append_ember_template(
               "discourse/templates/#{name.delete_prefix("/")}",

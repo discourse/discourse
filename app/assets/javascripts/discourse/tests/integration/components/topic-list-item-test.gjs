@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TopicListItem from "discourse/components/topic-list/item";
 import TopicList from "discourse/components/topic-list/list";
-import HbrTopicListItem from "discourse/components/topic-list-item";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -17,12 +16,12 @@ module("Integration | Component | topic-list-item", function (hooks) {
 
     await render(
       <template>
-        <HbrTopicListItem
+        <TopicListItem
           @topic={{topic}}
           @bulkSelectEnabled={{true}}
           @selected={{selected}}
         />
-        <HbrTopicListItem
+        <TopicListItem
           @topic={{topic2}}
           @bulkSelectEnabled={{true}}
           @selected={{selected}}

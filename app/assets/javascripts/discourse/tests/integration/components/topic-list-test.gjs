@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import HbrTopicList from "discourse/components/topic-list";
 import TopicList from "discourse/components/topic-list/list";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -19,7 +18,7 @@ module("Integration | Component | topic-list", function (hooks) {
 
     await render(
       <template>
-        <HbrTopicList
+        <TopicList
           @canBulkSelect={{true}}
           @bulkSelectHelper={{bulkSelectHelper}}
           @topics={{topics}}

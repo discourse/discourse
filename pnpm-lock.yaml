@@ -290,9 +290,6 @@ importers:
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.10)
-      discourse-hbr:
-        specifier: workspace:1.0.0
-        version: link:../discourse-hbr
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -631,15 +628,6 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
 
-  app/assets/javascripts/discourse-hbr:
-    dependencies:
-      broccoli-filter:
-        specifier: ^1.3.0
-        version: 1.3.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
-
   app/assets/javascripts/discourse-i18n:
     dependencies:
       '@embroider/addon-shim':
@@ -681,9 +669,6 @@ importers:
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
-      discourse-hbr:
-        specifier: workspace:1.0.0
-        version: link:../discourse-hbr
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs

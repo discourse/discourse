@@ -1,15 +1,13 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { getOwner } from "@ember/owner";
 import {
   attributeBindings,
   classNameBindings,
 } from "@ember-decorators/component";
+import $ from "jquery";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
-import {
-  navigateToTopic,
-  showEntrance,
-} from "discourse/components/topic-list-item";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
@@ -21,7 +19,35 @@ import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 import discourseComputed from "discourse/lib/decorators";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+
+export function showEntrance(e) {
+  let target = $(e.target);
+
+  if (target.hasClass("posts-map") || target.parents(".posts-map").length > 0) {
+    if (target.prop("tagName") !== "A") {
+      target = target.find("a");
+      if (target.length === 0) {
+        target = target.end();
+      }
+    }
+
+    this.appEvents.trigger("topic-entrance:show", {
+      topic: this.topic,
+      position: target.offset(),
+    });
+    return false;
+  }
+}
+
+export function navigateToTopic(topic, href) {
+  const historyStore = getOwner(this).lookup("service:history-store");
+  historyStore.set("lastTopicIdViewed", topic.id);
+
+  DiscourseURL.routeTo(href || topic.get("url"));
+  return false;
+}
 
 @attributeBindings("topic.id:data-topic-id")
 @classNameBindings(":latest-topic-list-item", "unboundClassNames")
