@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges.gjs";
+import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import { showEntrance } from "discourse/components/topic-list-item";
 import TopicStatus from "discourse/components/topic-status";
 import coldAgeClass from "discourse/helpers/cold-age-class";

@@ -11,7 +11,7 @@ import {
 } from "@ember-decorators/component";
 import HighlightSearch from "discourse/components/highlight-search";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopicStatus from "discourse/components/topic-status.gjs";
+import TopicStatus from "discourse/components/topic-status";
 import TrackSelected from "discourse/components/track-selected";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";

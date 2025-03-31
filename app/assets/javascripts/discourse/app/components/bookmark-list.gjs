@@ -14,6 +14,7 @@ import FlatButton from "discourse/components/flat-button";
 import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
@@ -31,7 +32,6 @@ import {
 } from "discourse/lib/click-track";
 import { i18n } from "discourse-i18n";
 import BulkSelectBookmarksDropdown from "select-kit/components/bulk-select-bookmarks-dropdown";
-import ActivityCell from "./topic-list/item/activity-cell.gjs";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {
