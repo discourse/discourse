@@ -10,7 +10,8 @@ RSpec.describe SiteSetting::Update do
 
     fab!(:admin)
     let(:params) { { settings: } }
-    let(:settings) { { setting_name => new_value } }
+    let(:settings) { [{ setting_name: setting_name, value: new_value, backfill: backfill }] }
+    let(:backfill) { false }
     let(:options) { { allow_changing_hidden: } }
     let(:dependencies) { { guardian: } }
     let(:setting_name) { :title }
@@ -114,12 +115,33 @@ RSpec.describe SiteSetting::Update do
     end
 
     context "when one setting is having invalid value" do
-      let(:settings) { { title: "hello this is title", default_categories_watching: "999999" } }
+      let(:settings) do
+        [
+          { setting_name: "title", value: "hello this is title" },
+          { setting_name: "default_categories_watching", value: "999999" },
+        ]
+      end
 
       it { is_expected.to fail_a_policy(:values_are_valid) }
 
       it "does not update valid setting" do
         expect { result }.not_to change { SiteSetting.title }
+      end
+    end
+
+    context "when backfill is requested" do
+      let(:settings) do
+        [
+          { setting_name: "default_hide_profile", value: true, backfill: true },
+          { setting_name: "default_hide_presence", value: true, backfill: false },
+          { setting_name: "title", value: true, backfill: true },
+        ]
+      end
+
+      it "calls the relevant class for backfill" do
+        SiteSettingUpdateExistingUsers.expects(:call).once.with("default_hide_profile", true, false)
+
+        result
       end
     end
   end

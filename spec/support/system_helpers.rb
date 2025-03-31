@@ -214,7 +214,7 @@ module SystemHelpers
   end
 
   def click_logo
-    PageObjects::Components::Logo.click
+    PageObjects::Components::Logo.new.click
   end
 
   def is_mobile?

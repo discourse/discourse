@@ -5,12 +5,12 @@ module PageObjects
     class Logo < PageObjects::Pages::Base
       SELECTOR = "#site-logo"
 
-      def self.click
-        new.find(SELECTOR).click
+      def click
+        find(SELECTOR).click
       end
 
-      def self.hover
-        new.find(SELECTOR).hover
+      def hover
+        find(SELECTOR).hover
       end
     end
   end
