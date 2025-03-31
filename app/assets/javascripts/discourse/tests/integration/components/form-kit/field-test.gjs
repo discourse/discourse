@@ -12,6 +12,7 @@ import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import DTooltip from "float-kit/components/d-tooltip";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
@@ -349,5 +350,32 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     await click(".fk-d-tooltip__trigger");
 
     assert.dom(".fk-d-tooltip__inner-content").hasText("component");
+  });
+
+  test("control width", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="length:1,100"
+            as |field|
+          >
+            <field.Textarea />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    query(".form-kit__control-textarea").style.width = "100px";
+
+    await settled();
+
+    assert.deepEqual(
+      query(".form-kit__meta").style.width,
+      "100px",
+      "it also sets the width of the meta"
+    );
   });
 });
