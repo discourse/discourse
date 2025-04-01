@@ -138,15 +138,13 @@ class TopicList
       { category: :parent_category },
     ]
 
-    DiscoursePluginRegistry.topic_preloader_associations.each do |assoc|
-      if assoc.is_a?(Symbol)
-        topic_preloader_associations << assoc
-      elsif assoc.is_a?(Hash)
-        if assoc.key?(:association) && assoc.key?(:condition)
-          topic_preloader_associations << assoc[:association] if assoc[:condition].call
-        else
-          topic_preloader_associations << assoc
-        end
+    DiscoursePluginRegistry.topic_preloader_associations.each do |a|
+      fields = a[:fields]
+      condition = a[:condition]
+      if condition.present?
+        topic_preloader_associations << fields if condition.present? && condition.call
+      else
+        topic_preloader_associations << fields
       end
     end
 

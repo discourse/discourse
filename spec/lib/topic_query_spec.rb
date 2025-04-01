@@ -1305,22 +1305,11 @@ RSpec.describe TopicQuery do
 
     context "when preloading associations" do
       it "preloads associations" do
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          :topic_embed,
-          Plugin::Instance.new,
-        )
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          { first_post: [:uploads] },
-          Plugin::Instance.new,
-        )
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          { association: :user_warning, condition: -> { true } },
-          Plugin::Instance.new,
-        )
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          { association: :linked_topic, condition: -> { false } },
-          Plugin::Instance.new,
-        )
+        plugin = Plugin::Instance.new
+        plugin.register_topic_preloader_associations(:topic_embed)
+        plugin.register_topic_preloader_associations({ first_post: [:uploads] })
+        plugin.register_topic_preloader_associations(:user_warning) { true }
+        plugin.register_topic_preloader_associations(:linked_topic) { false }
 
         topic = Fabricate(:topic)
         Fabricate(:post, topic: topic)
