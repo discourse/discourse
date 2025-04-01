@@ -18,7 +18,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.add-header-panel",
   "discourse.header-widget-overrides",
   "discourse.plugin-outlet-tag-name",
-  "discourse.post-menu-widget-overrides",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
