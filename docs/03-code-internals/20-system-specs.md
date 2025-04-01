@@ -175,6 +175,42 @@ This works fine in our Ember SPA for the initial navigation and page load. Howev
 page.find(".some-link").click
 ```
 
+### Avoiding direct assertions against database records
+
+Asserting directly against database records within system specs may lead to inconsistent test results if you don't appropriately wait for the backend updates to synchronize with the frontend.
+
+For example, directly checking database states like this in system tests can be problematic:
+
+```ruby
+expect(Topic.count).to eq(2)
+```
+
+This assertion assumes that the backend update has already occurred, ignoring any asynchronous behavior.
+
+To avoid such issues:
+
+1. **Observe Changes in the UI**
+   System specs should focus on what the user can observe via the user interface. Use Capybara's built-in matchers to wait for DOM updates. For example:
+
+   ```ruby
+   expect(page).to have_selector(".success-message")
+   ```
+
+   or
+
+   ```ruby
+   expect(topic_page).to have_topic(topic)
+   ```
+
+2. **Wait for Backend Synchronization**
+   If necessary, use a helper like `try_until_success` to check database state explicitly but sparingly:
+
+   ```ruby
+   try_until_success do
+     expect(Topic.count).to eq(1)
+   end
+   ```
+
 ### Page Objects
 
 To make querying and inspecting parts of the page easier and reusable in between system specs, we are using the concept of Page Objects. A basic Page Object looks like this:
