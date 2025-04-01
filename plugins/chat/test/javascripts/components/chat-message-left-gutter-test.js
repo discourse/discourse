@@ -12,14 +12,12 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const template = hbs`
-      <Chat::Message::LeftGutter @message={{this.message}} />
-    `;
-
     test("default", async function (assert) {
       this.message = new ChatFabricators(getOwner(this)).message();
 
-      await render(template);
+      await render(hbs`
+      <Chat::Message::LeftGutter @message={{this.message}} />
+    `);
 
       assert.dom(".chat-message-left-gutter__date").exists();
     });
@@ -29,7 +27,9 @@ module(
         reviewable_id: 1,
       });
 
-      await render(template);
+      await render(hbs`
+      <Chat::Message::LeftGutter @message={{this.message}} />
+    `);
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
@@ -41,7 +41,9 @@ module(
         user_flag_status: 0,
       });
 
-      await render(template);
+      await render(hbs`
+      <Chat::Message::LeftGutter @message={{this.message}} />
+    `);
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
@@ -53,7 +55,9 @@ module(
         bookmark: new CoreFabricators(getOwner(this)).bookmark(),
       });
 
-      await render(template);
+      await render(hbs`
+      <Chat::Message::LeftGutter @message={{this.message}} />
+    `);
 
       assert.dom(".chat-message-left-gutter__date").exists();
       assert.dom(".chat-message-left-gutter__bookmark").exists();
