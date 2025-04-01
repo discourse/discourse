@@ -52,6 +52,7 @@ export default Mixin.create({
   router: service(),
   site: service(),
   dialog: service(),
+  siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
@@ -69,6 +70,7 @@ export default Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
+    this.siteSettingChangeTracker.remove(this);
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
@@ -88,7 +90,15 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return !deepEqual(bufferVal, settingVal);
+    const dirty = !deepEqual(bufferVal, settingVal);
+
+    if (dirty) {
+      this.siteSettingChangeTracker.add(this);
+    } else {
+      this.siteSettingChangeTracker.remove(this);
+    }
+
+    return dirty;
   }),
 
   preview: computed("setting", "buffered.value", function () {
@@ -189,7 +199,24 @@ export default Mixin.create({
     return !!this.isSaving;
   }),
 
-  confirmChanges(settingKey) {
+  requiresReload() {
+    return AUTO_REFRESH_ON_SAVE.includes(this.setting.setting);
+  },
+
+  requiresConfirmation() {
+    return (
+      this.buffered.get("requires_confirmation") ===
+      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
+    );
+  },
+
+  affectsExistingUsers() {
+    return DEFAULT_USER_PREFERENCES.includes(this.buffered.get("setting"));
+  },
+
+  confirmChanges() {
+    const settingKey = this.buffered.get("setting");
+
     return new Promise((resolve) => {
       // Fallback is needed in case the setting does not have a custom confirmation
       // prompt/confirm defined.
@@ -225,26 +252,8 @@ export default Mixin.create({
     });
   },
 
-  update: action(async function () {
+  async configureBackfill() {
     const key = this.buffered.get("setting");
-
-    let confirm = true;
-    if (
-      this.buffered.get("requires_confirmation") ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    ) {
-      confirm = await this.confirmChanges(key);
-    }
-
-    if (!confirm) {
-      this.cancel();
-      return;
-    }
-
-    if (!DEFAULT_USER_PREFERENCES.includes(key)) {
-      await this.save();
-      return;
-    }
 
     const data = {
       [key]: this.buffered.get("value"),
@@ -256,6 +265,7 @@ export default Mixin.create({
     });
 
     const count = result.user_count;
+
     if (count > 0) {
       await this.modal.show(SiteSettingDefaultCategoriesModal, {
         model: {
@@ -263,10 +273,23 @@ export default Mixin.create({
           setUpdateExistingUsers: this.setUpdateExistingUsers,
         },
       });
-      this.save();
-    } else {
-      await this.save();
     }
+  },
+
+  update: action(async function () {
+    if (this.requiresConfirmation()) {
+      const confirm = await this.confirmChanges();
+
+      if (!confirm) {
+        return;
+      }
+    }
+
+    if (this.affectsExistingUsers()) {
+      await this.configureBackfill();
+    }
+
+    await this.save();
   }),
 
   setUpdateExistingUsers: action(function (value) {
@@ -281,7 +304,7 @@ export default Mixin.create({
 
       this.set("validationMessage", null);
       this.buffered.applyChanges();
-      if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
+      if (this.requiresReload()) {
         this.afterSave();
       }
     } catch (e) {
