@@ -5,18 +5,19 @@ import {
   classNameBindings,
 } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import {
   navigateToTopic,
   showEntrance,
 } from "discourse/components/topic-list-item";
 import TopicPostBadges from "discourse/components/topic-post-badges";
+import TopicStatus from "discourse/components/topic-status";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import raw from "discourse/helpers/raw";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 import discourseComputed from "discourse/lib/decorators";
@@ -85,7 +86,7 @@ export default class LatestTopicListItem extends Component {
     </div>
     <div class="main-link">
       <div class="top-row">
-        {{raw "topic-status" topic=this.topic}}
+        <TopicStatus @topic={{this.topic}} />
         {{topicLink this.topic}}
         {{~#if this.topic.featured_link}}
           &nbsp;{{topicFeaturedLink this.topic}}
@@ -114,7 +115,7 @@ export default class LatestTopicListItem extends Component {
         @connectorTagName="div"
         @outletArgs={{hash topic=this.topic}}
       />
-      {{raw "list/posts-count-column" topic=this.topic tagName="div"}}
+      <ItemRepliesCell @topic={{this.topic}} @tagName="div" />
       <div class="topic-last-activity">
         <a
           href={{this.topic.lastPostUrl}}

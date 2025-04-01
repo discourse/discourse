@@ -14,6 +14,7 @@ import FlatButton from "discourse/components/flat-button";
 import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
@@ -22,7 +23,6 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import htmlSafe from "discourse/helpers/html-safe";
-import raw from "discourse/helpers/raw";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -401,12 +401,7 @@ export default class BookmarkList extends Component {
                   <td
                     class="post-metadata topic-list-data updated-at"
                   >{{formatDate bookmark.updated_at format="tiny"}}</td>
-                  {{raw
-                    "list/activity-column"
-                    topic=bookmark
-                    class="num post-metadata"
-                    tagName="td"
-                  }}
+                  <ActivityCell class="post-metadata" @topic={{bookmark}} />
                 {{/if}}
                 <td class="topic-list-data">
                   <BookmarkActionsDropdown

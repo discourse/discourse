@@ -7,7 +7,7 @@ import {
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import formatAge from "discourse/helpers/format-age";
-import raw from "discourse/helpers/raw";
+import TopicStatus from "./topic-status";
 
 @classNameBindings(":featured-topic")
 @attributeBindings("topic.id:data-topic-id")
@@ -23,7 +23,7 @@ export default class FeaturedTopic extends Component {
   }
 
   <template>
-    {{raw "topic-status" topic=this.topic}}
+    <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
     <a href={{this.topic.lastUnreadUrl}} class="title">{{htmlSafe
         this.topic.fancyTitle
       }}</a>
