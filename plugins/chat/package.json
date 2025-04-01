@@ -7,6 +7,7 @@
     "codemod-resolver": "workspace:*",
     "float-kit": "workspace:*",
     "@ember/optional-features": "^2.2.0",
+    "@ember/render-modifiers": "^3.0.0",
     "ember-cli": "~6.3.0",
     "ember-source": "~5.12.0",
     "ember-auto-import": "^2.10.0",
