@@ -117,6 +117,7 @@ module Discourse
 
     class CommandError < RuntimeError
       attr_reader :status, :stdout, :stderr
+
       def initialize(message, status: nil, stdout: nil, stderr: nil)
         super(message)
         @status = status
@@ -303,6 +304,9 @@ module Discourse
   end
 
   class Deprecation < StandardError
+  end
+
+  class MissingIconError < StandardError
   end
 
   class ScssError < StandardError

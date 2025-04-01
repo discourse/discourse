@@ -670,6 +670,18 @@ en:
         name: "Name"
         fields: "Fields"
         reject_reason: "Reason"
+        scrubbed_by: "Record scrubbed by"
+        scrubbed_reason: "Reason"
+        scrubbed_at: "Scrubbed at"
+        scrubbed_reject_reason: "User rejected reason"
+        scrub_record:
+          button: Scrub record
+          confirm_title: Remove personal data
+          confirm_body: "Are you SURE you want to scrub this review queue record? All personal information (e.g. username, email, IP address) will be permanently removed from this record."
+          reason_title: "A reason for scrubbing this record is required."
+          reason_placeholder: "Reason..."
+          confirm_button: "Confirm removal"
+          cancel_button: "Cancel"
 
       user_percentage:
         summary:
@@ -4135,7 +4147,6 @@ en:
       background_image_dark: "Dark Category Background Image"
       style: "Styles"
       background_color: "Color"
-      foreground_color: "Foreground color"
       styles:
         type: "Style"
         icon: "Icon"
@@ -7503,8 +7514,13 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
-        title: "Site settings"
+        title: "Site settings" 
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        discard: "Discard changes"
+        save: "Save all changes"
+        dirty_banner:
+          one: "You have <em>%{count}</em> unsaved change"
+          other: "You have <em>%{count}</em> unsaved changes"
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:

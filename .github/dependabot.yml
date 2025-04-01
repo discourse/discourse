@@ -84,6 +84,9 @@ updates:
         patterns:
           - "@highlightjs/cdn-assets"
           - "highlight.js"
+      prosemirror:
+        patterns:
+          - "prosemirror-*"
       types:
         patterns:
           - "@types/*"

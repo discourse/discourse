@@ -18,21 +18,20 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def update
-    params.require(:id)
-    id = params[:id]
-    update_existing_users = params[:update_existing_user].present?
+    id = params.require(:id)
 
-    previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
-
-    SiteSetting::Update.call(params: { settings: { id => params[id] } }, guardian:) do
-      on_success do |params:|
-        if update_existing_users
-          params.settings.to_a.each do |setting_name, setting_value|
-            SiteSettingUpdateExistingUsers.call(setting_name.to_s, setting_value, previous_value)
-          end
+    if id === "bulk_update"
+      settings =
+        params[:settings].to_unsafe_h.map do |setting_name, config|
+          { setting_name:, value: config[:value], backfill: config[:backfill] }
         end
-        render body: nil
-      end
+    else
+      backfill = params[:update_existing_user]
+      settings = [{ setting_name: id, value: params[id], backfill: }]
+    end
+
+    SiteSetting::Update.call(params: { settings: }, guardian:) do
+      on_success { render body: nil }
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end

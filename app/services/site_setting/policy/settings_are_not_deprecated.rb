@@ -5,9 +5,9 @@ class SiteSetting::Policy::SettingsAreNotDeprecated < Service::PolicyBase
 
   def call
     @hard_deprecations =
-      params.settings.keys.filter_map do |id|
+      params.settings.filter_map do |setting|
         SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
-          if old_name.to_sym == id
+          if old_name.to_sym == setting.name
             if override
               options.overridden_setting_names[old_name.to_sym] = new_name
               break

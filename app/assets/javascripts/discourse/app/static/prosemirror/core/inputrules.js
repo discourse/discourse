@@ -33,9 +33,11 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
       markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
       markInputRule(/`([^`]+)`$/, schema.marks.code),
-      new InputRule(/^(\u2013-|___\s|\*\*\*\s)$/, horizontalRuleHandler, {
-        inCodeMark: false,
-      })
+      new InputRule(
+        /^(\u2013-|\u2014-|___\s|\*\*\*\s)$/,
+        horizontalRuleHandler,
+        { inCodeMark: false }
+      )
     );
   }
 

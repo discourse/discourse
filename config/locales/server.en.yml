@@ -3091,6 +3091,7 @@ en:
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"
+      reviewable_details_scrubbed: "User details scrubbed by %{staff}\n\nReason: %{reason}\n\nTimestamp: %{timestamp}"
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."

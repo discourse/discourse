@@ -113,6 +113,7 @@ export default class NotificationsTracking extends Component {
         "notifications-tracking-trigger-btn"
         @triggerClass
       }}
+      @contentClass={{@contentClass}}
       @onRegisterApi={{this.registerDmenuApi}}
       @title={{@title}}
       @autofocus={{false}}

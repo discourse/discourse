@@ -163,11 +163,11 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "supports ---, *** or ___ to create a horizontal rule" do
+    it "supports ---, ***, ___, en-dash+hyphen, em-dash+hyphen to create a horizontal rule" do
       open_composer_and_toggle_rich_editor
-      composer.type_content("Hey\n---\nThere\n*** Friend\n___ ")
+      composer.type_content("Hey\n---There\n*** Friend\n___ How\n\u2013-are\n\u2014-you")
 
-      expect(rich).to have_css("hr", count: 3)
+      expect(rich).to have_css("hr", count: 5)
     end
   end
 
@@ -540,6 +540,28 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_no_in_progress_uploads
       expect(rich).to have_css("img", count: 1)
+    end
+  end
+
+  describe "emojis" do
+    it "has the only-emoji class if 1-3 emojis are 'alone'" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("> :smile: ")
+
+      expect(rich).to have_css(".only-emoji", count: 1)
+
+      composer.type_content(":P ")
+
+      expect(rich).to have_css(".only-emoji", count: 2)
+
+      composer.type_content(":D ")
+
+      expect(rich).to have_css(".only-emoji", count: 3)
+
+      composer.type_content("Hey!")
+
+      expect(rich).to have_no_css(".only-emoji")
     end
   end
 end

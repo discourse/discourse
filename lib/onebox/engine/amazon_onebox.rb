@@ -18,13 +18,6 @@ module Onebox
       def url
         @raw ||= nil
 
-        # If possible, fetch the cached HTML body immediately so we can
-        # try to grab the canonical URL from that document,
-        # rather than guess at the best URL structure to use
-        if !@raw && has_cached_body
-          @raw = Onebox::Helpers.fetch_html_doc(@url, http_params, body_cacher)
-        end
-
         if @raw
           canonical_link = @raw.at('//link[@rel="canonical"]/@href')
           return canonical_link.to_s if canonical_link
@@ -80,12 +73,6 @@ module Onebox
       end
 
       private
-
-      def has_cached_body
-        body_cacher.respond_to?("cache_response_body?") &&
-          body_cacher.cache_response_body?(uri.to_s) &&
-          body_cacher.cached_response_body_exists?(uri.to_s)
-      end
 
       def match
         @match ||= @url.match(%r{(?:d|g)p/(?:product/|video/detail/)?(?<id>[A-Z0-9]+)(?:/|\?|$)}mi)

@@ -9,7 +9,10 @@ import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
-import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
+import {
+  DEFAULT_USER_PREFERENCES,
+  SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
+} from "discourse/lib/constants";
 import { deepEqual } from "discourse/lib/object";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
@@ -44,53 +47,16 @@ const CUSTOM_TYPES = [
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
 
-const DEFAULT_USER_PREFERENCES = [
-  "default_email_digest_frequency",
-  "default_include_tl0_in_digests",
-  "default_email_level",
-  "default_email_messages_level",
-  "default_email_mailing_list_mode",
-  "default_email_mailing_list_mode_frequency",
-  "default_email_previous_replies",
-  "default_email_in_reply_to",
-  "default_hide_profile",
-  "default_hide_presence",
-  "default_other_new_topic_duration_minutes",
-  "default_other_auto_track_topics_after_msecs",
-  "default_other_notification_level_when_replying",
-  "default_other_external_links_in_new_tab",
-  "default_other_enable_quoting",
-  "default_other_enable_smart_lists",
-  "default_other_enable_defer",
-  "default_other_dynamic_favicon",
-  "default_other_like_notification_frequency",
-  "default_other_skip_new_user_tips",
-  "default_topics_automatic_unpin",
-  "default_categories_watching",
-  "default_categories_tracking",
-  "default_categories_muted",
-  "default_categories_watching_first_post",
-  "default_categories_normal",
-  "default_tags_watching",
-  "default_tags_tracking",
-  "default_tags_muted",
-  "default_tags_watching_first_post",
-  "default_text_size",
-  "default_title_count_mode",
-  "default_navigation_menu_categories",
-  "default_navigation_menu_tags",
-  "default_sidebar_link_to_filtered_list",
-  "default_sidebar_show_count_of_new_items",
-];
-
 export default Mixin.create({
   modal: service(),
   router: service(),
   site: service(),
   dialog: service(),
+  siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
+  isSaving: false,
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),
@@ -104,6 +70,7 @@ export default Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
+    this.siteSettingChangeTracker.remove(this);
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
@@ -123,7 +90,15 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return !deepEqual(bufferVal, settingVal);
+    const dirty = !deepEqual(bufferVal, settingVal);
+
+    if (dirty) {
+      this.siteSettingChangeTracker.add(this);
+    } else {
+      this.siteSettingChangeTracker.remove(this);
+    }
+
+    return dirty;
   }),
 
   preview: computed("setting", "buffered.value", function () {
@@ -216,11 +191,32 @@ export default Mixin.create({
     }
   }),
 
-  disableSaveButton: computed("validationMessage", function () {
-    return !!this.validationMessage;
+  disableSaveButton: computed("isSaving", "validationMessage", function () {
+    return !!this.validationMessage || this.isSaving;
   }),
 
-  confirmChanges(settingKey) {
+  disableUndoButton: computed("isSaving", function () {
+    return !!this.isSaving;
+  }),
+
+  requiresReload() {
+    return AUTO_REFRESH_ON_SAVE.includes(this.setting.setting);
+  },
+
+  requiresConfirmation() {
+    return (
+      this.buffered.get("requires_confirmation") ===
+      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
+    );
+  },
+
+  affectsExistingUsers() {
+    return DEFAULT_USER_PREFERENCES.includes(this.buffered.get("setting"));
+  },
+
+  confirmChanges() {
+    const settingKey = this.buffered.get("setting");
+
     return new Promise((resolve) => {
       // Fallback is needed in case the setting does not have a custom confirmation
       // prompt/confirm defined.
@@ -256,26 +252,8 @@ export default Mixin.create({
     });
   },
 
-  update: action(async function () {
+  async configureBackfill() {
     const key = this.buffered.get("setting");
-
-    let confirm = true;
-    if (
-      this.buffered.get("requires_confirmation") ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    ) {
-      confirm = await this.confirmChanges(key);
-    }
-
-    if (!confirm) {
-      this.cancel();
-      return;
-    }
-
-    if (!DEFAULT_USER_PREFERENCES.includes(key)) {
-      await this.save();
-      return;
-    }
 
     const data = {
       [key]: this.buffered.get("value"),
@@ -287,6 +265,7 @@ export default Mixin.create({
     });
 
     const count = result.user_count;
+
     if (count > 0) {
       await this.modal.show(SiteSettingDefaultCategoriesModal, {
         model: {
@@ -294,10 +273,23 @@ export default Mixin.create({
           setUpdateExistingUsers: this.setUpdateExistingUsers,
         },
       });
-      this.save();
-    } else {
-      await this.save();
     }
+  },
+
+  update: action(async function () {
+    if (this.requiresConfirmation()) {
+      const confirm = await this.confirmChanges();
+
+      if (!confirm) {
+        return;
+      }
+    }
+
+    if (this.affectsExistingUsers()) {
+      await this.configureBackfill();
+    }
+
+    await this.save();
   }),
 
   setUpdateExistingUsers: action(function (value) {
@@ -306,11 +298,13 @@ export default Mixin.create({
 
   save: action(async function () {
     try {
+      this.set("isSaving", true);
+
       await this._save();
 
       this.set("validationMessage", null);
       this.buffered.applyChanges();
-      if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
+      if (this.requiresReload()) {
         this.afterSave();
       }
     } catch (e) {
@@ -326,6 +320,8 @@ export default Mixin.create({
       } else {
         this.set("validationMessage", i18n("generic_error"));
       }
+    } finally {
+      this.set("isSaving", false);
     }
   }),
 

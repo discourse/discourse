@@ -118,7 +118,7 @@ module Chat
 
     validate :validate_message
     def validate_message
-      WatchedWordsValidator.new(attributes: [:message]).validate(self)
+      WatchedWordsValidator.new(attributes: [:message]).validate(self) if !user&.bot?
 
       if self.new_record? || self.changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate

@@ -11,14 +11,24 @@ export default RouteTemplate(
   <template>
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 
-    <DPageHeader @hideTabs={{true}}>
+    <DPageHeader
+      @titleLabel={{i18n "admin.dashboard.title"}}
+      @descriptionLabel={{i18n "admin.config.dashboard.header_description"}}
+      @hideTabs={{true}}
+    >
       <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
           @path="/admin"
           @label={{i18n "admin.dashboard.title"}}
         />
       </:breadcrumbs>
     </DPageHeader>
+
+    <PluginOutlet
+      @name="admin-dashboard-after-header"
+      @connectorTagName="div"
+    />
 
     {{#if @controller.showVersionChecks}}
       <div class="section-top">
