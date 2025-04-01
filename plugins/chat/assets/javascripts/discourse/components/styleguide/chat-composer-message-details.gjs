@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
@@ -35,18 +35,21 @@ export default class ChatStyleguideChatComposerMessageDetails extends Component 
     }
   }
 
-<template><StyleguideExample @title="<ChatComposerMessageDetails>">
-  <Component0>
-    <ChatComposerMessageDetails @message={{this.message}} />
-  </Component0>
+  <template>
+    <StyleguideExample @title="<ChatComposerMessageDetails>">
+      <StyleguideComponent>
+        <ChatComposerMessageDetails @message={{this.message}} />
+      </StyleguideComponent>
 
-  <Controls>
-    <Row @name="Mode">
-      {{#if this.message.editing}}
-        <DButton @action={{this.toggleMode}} @translatedLabel="Reply" />
-      {{else}}
-        <DButton @action={{this.toggleMode}} @translatedLabel="Editing" />
-      {{/if}}
-    </Row>
-  </Controls>
-</StyleguideExample></template>}
+      <Controls>
+        <Row @name="Mode">
+          {{#if this.message.editing}}
+            <DButton @action={{this.toggleMode}} @translatedLabel="Reply" />
+          {{else}}
+            <DButton @action={{this.toggleMode}} @translatedLabel="Editing" />
+          {{/if}}
+        </Row>
+      </Controls>
+    </StyleguideExample>
+  </template>
+}
