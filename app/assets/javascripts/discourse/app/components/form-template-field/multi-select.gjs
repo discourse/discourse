@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import noop from "discourse/helpers/noop";
 
 export default class FormTemplateFieldMultiSelect extends Component {
   @action

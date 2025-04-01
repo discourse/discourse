@@ -44,6 +44,7 @@ import {
 import { i18n } from "discourse-i18n";
 import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
+
 let _createCallbacks = [];
 
 export function addToolbarCallback(func) {

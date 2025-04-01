@@ -2,6 +2,8 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import noop from "discourse/helpers/noop";
+import { on } from "@ember/modifier";
 
 const Input0 = <template>
   <div class="control-group form-template-field" data-field-type="input">
