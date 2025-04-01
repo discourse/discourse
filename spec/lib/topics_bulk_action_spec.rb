@@ -558,15 +558,18 @@ RSpec.describe TopicsBulkAction do
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      topic.tags = [tag1, tag2]
+      TopicTag.create!(topic: topic, tag: tag1)
+      TopicTag.create!(topic: topic, tag: tag2)
     end
 
     it "can remove all tags" do
+      expect(tag1.reload.staff_topic_count).to eq(1)
       tba = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags")
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
       expect(topic.tags.size).to eq(0)
+      expect(tag1.reload.staff_topic_count).to eq(0)
     end
 
     context "when user can't edit topic" do
