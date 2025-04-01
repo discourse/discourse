@@ -9,15 +9,13 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = hbs`
-    <ChatMessage @message={{this.message}} />
-  `;
-
   test("Message with edits", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       edited: true,
     });
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert.dom(".chat-message-edited").exists("has the correct css class");
   });
@@ -27,7 +25,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       user: this.currentUser,
       deleted_at: moment(),
     });
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".chat-message-text.-deleted .chat-message-expand")
@@ -38,7 +38,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     this.message = new ChatFabricators(getOwner(this)).message({
       hidden: true,
     });
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".chat-message-text.-hidden .chat-message-expand")
@@ -51,7 +53,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       user: new CoreFabricators(getOwner(this)).user({ id: -10 }),
     });
     await this.message.cook();
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert.dom(".chat-message-container.is-bot").exists("has the bot class");
   });
@@ -61,7 +65,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       message: "what <mark>test</mark>",
     });
     await this.message.cook();
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".chat-message-text")
@@ -72,7 +78,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     this.message = new ChatFabricators(getOwner(this)).message({
       inReplyTo: new ChatFabricators(getOwner(this)).message(),
     });
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".chat-message-container.has-reply")
@@ -88,7 +96,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".stop-streaming-btn")
@@ -104,7 +114,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".stop-streaming-btn")
@@ -122,7 +134,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(template);
+    await render(hbs`
+    <ChatMessage @message={{this.message}} />
+  `);
 
     assert
       .dom(".stop-streaming-btn")
