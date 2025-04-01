@@ -597,6 +597,10 @@ nl:
         name: "Naam"
         fields: "Velden"
         reject_reason: "Reden"
+        scrubbed_reason: "Reden"
+        scrub_record:
+          reason_placeholder: "Reden..."
+          cancel_button: "Annuleren"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (van laatste markering)"
@@ -3798,9 +3802,13 @@ nl:
       logo_dark: "Categorielogoafbeelding donkere modus"
       background_image: "Achtergrondafbeelding van categorie"
       background_image_dark: "Achtergrondafbeelding uit donkere categorie"
-      badge_colors: "Badgekleuren"
-      background_color: "Achtergrondkleur"
-      foreground_color: "Voorgrondkleur"
+      background_color: "Kleur"
+      styles:
+        icon: "Pictogram"
+        emoji: "Emoji"
+        options:
+          icon: "Pictogram"
+          emoji: "Emoji"
       color_used: "Kleur in gebruik"
       predefined_colors: "Voorgedefinieerde kleuropties"
       name_placeholder: "Maximaal een of twee woorden"

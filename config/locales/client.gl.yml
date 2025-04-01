@@ -425,6 +425,10 @@ gl:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Razón"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Razón..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (%{count} alertas en total)"
@@ -2764,9 +2768,13 @@ gl:
       description: "Descrición"
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
-      badge_colors: "Cores das insignias"
-      background_color: "Cor do fondo"
-      foreground_color: "Cor do primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Dúas palabras como máximo"
       color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"

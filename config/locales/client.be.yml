@@ -223,6 +223,9 @@ be:
         email: "Электронная пошта"
         name: "Імя"
         reject_reason: "прычына"
+        scrubbed_reason: "прычына"
+        scrub_record:
+          cancel_button: "Адмяніць"
       topics:
         topic: "Тэма"
         reviewable_count: "падлічваць"
@@ -1194,9 +1197,13 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      badge_colors: "колеру значка"
-      background_color: "колер фону"
-      foreground_color: "колер тэксту"
+      background_color: "колер"
+      styles:
+        icon: "Абразка"
+        emoji: "Emoji"
+        options:
+          icon: "Абразка"
+          emoji: "Emoji"
       name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"

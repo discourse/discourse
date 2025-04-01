@@ -554,6 +554,13 @@ zh_CN:
         name: "姓名"
         fields: "字段"
         reject_reason: "原因"
+        scrubbed_reason: "原因"
+        scrub_record:
+          confirm_title: 删除个人数据
+          confirm_body: "你确定要删除此审核队列记录吗？所有个人信息（如用户名、电子邮件、IP 地址）都将从该记录中永久删除。"
+          reason_placeholder: "原因..."
+          confirm_button: "确认删除"
+          cancel_button: "取消"
       user_percentage:
         summary:
           other: "%{agreed}，%{disagreed}，%{ignored}（共 %{count} 个举报）"
@@ -3612,9 +3619,13 @@ zh_CN:
       logo_description: "建议宽高比为 1:1，最小尺寸为 200px。如果留空，将不会显示图片。"
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
-      badge_colors: "徽章颜色"
-      background_color: "背景色"
-      foreground_color: "前景色"
+      background_color: "颜色"
+      styles:
+        icon: "图标"
+        emoji: "表情符号"
+        options:
+          icon: "图标"
+          emoji: "表情符号"
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
       name_placeholder: "应该简明扼要"
@@ -6774,6 +6785,10 @@ zh_CN:
       site_settings:
         title: "网站设置"
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
+        discard: "放弃更改"
+        save: "保存所有更改"
+        dirty_banner:
+          other: "你有 <em>%{count}</em> 个未保存的更改"
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
           add_emoji_button:

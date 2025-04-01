@@ -693,6 +693,10 @@ pl_PL:
         name: "Imię"
         fields: "Pola"
         reject_reason: "Powód"
+        scrubbed_reason: "Powód"
+        scrub_record:
+          reason_placeholder: "Powód..."
+          cancel_button: "Anuluj"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (z ostatniej flagi)"
@@ -4077,9 +4081,13 @@ pl_PL:
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
-      badge_colors: "Kolor Etykiety"
-      background_color: "Kolor tła"
-      foreground_color: "Kolor pierwszego planu"
+      background_color: "Kolor"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
