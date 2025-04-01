@@ -67,7 +67,8 @@ const TXT_FIXTURE = {
 module("Discourse Chat | Component | chat-upload", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("with an image", async function (assert) {const self = this;
+  test("with an image", async function (assert) {
+    const self = this;
 
     this.set("upload", IMAGE_FIXTURE);
 
@@ -95,7 +96,8 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       );
   });
 
-  test("with a video", async function (assert) {const self = this;
+  test("with a video", async function (assert) {
+    const self = this;
 
     this.set("upload", VIDEO_FIXTURE);
 
@@ -112,7 +114,8 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       );
   });
 
-  test("with a audio", async function (assert) {const self = this;
+  test("with a audio", async function (assert) {
+    const self = this;
 
     this.set("upload", AUDIO_FIXTURE);
 
@@ -129,7 +132,8 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       );
   });
 
-  test("non image upload", async function (assert) {const self = this;
+  test("non image upload", async function (assert) {
+    const self = this;
 
     this.set("upload", TXT_FIXTURE);
 

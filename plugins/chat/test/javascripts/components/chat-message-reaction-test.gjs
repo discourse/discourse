@@ -8,33 +8,48 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adds reacted class when user reacted", async function (assert) {
-    await render(<template>
-      <ChatMessageReaction @reaction={{hash emoji="heart" reacted=true}} />
-    </template>);
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart" reacted=true}} />
+      </template>
+    );
 
     assert.dom(".chat-message-reaction.reacted").exists();
   });
 
   test("adds reaction name as class", async function (assert) {
-    await render(<template><ChatMessageReaction @reaction={{hash emoji="heart"}} /></template>);
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart"}} />
+      </template>
+    );
 
     assert.dom(`.chat-message-reaction[data-emoji-name="heart"]`).exists();
   });
 
   test("title/alt attributes", async function (assert) {
-    await render(<template><ChatMessageReaction @reaction={{hash emoji="heart"}} /></template>);
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart"}} />
+      </template>
+    );
 
     assert.dom(".chat-message-reaction").hasAttribute("title", ":heart:");
     assert.dom(".chat-message-reaction img").hasAttribute("alt", ":heart:");
   });
 
-  test("count of reactions", async function (assert) {const self = this;
+  test("count of reactions", async function (assert) {
+    const self = this;
 
     this.set("count", 0);
 
-    await render(<template>
-      <ChatMessageReaction @reaction={{hash emoji="heart" count=self.count}} />
-    </template>);
+    await render(
+      <template>
+        <ChatMessageReaction
+          @reaction={{hash emoji="heart" count=self.count}}
+        />
+      </template>
+    );
 
     assert.dom(".chat-message-reaction .count").doesNotExist();
 
@@ -43,21 +58,32 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   });
 
   test("reaction’s image", async function (assert) {
-    await render(<template><ChatMessageReaction @reaction={{hash emoji="heart"}} /></template>);
+    await render(
+      <template>
+        <ChatMessageReaction @reaction={{hash emoji="heart"}} />
+      </template>
+    );
 
     assert.dom(".chat-message-reaction img").hasAttribute("src", /heart\.png/);
   });
 
-  test("click action", async function (assert) {const self = this;
+  test("click action", async function (assert) {
+    const self = this;
 
     this.set("count", 0);
     this.set("react", () => {
       this.set("count", 1);
     });
 
-    await render(<template>
-      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=self.count}} @onReaction={{self.react}} />
-    </template>);
+    await render(
+      <template>
+        <ChatMessageReaction
+          class="show"
+          @reaction={{hash emoji="heart" count=self.count}}
+          @onReaction={{self.react}}
+        />
+      </template>
+    );
 
     assert.dom(".chat-message-reaction .count").doesNotExist();
 

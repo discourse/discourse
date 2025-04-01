@@ -12,56 +12,60 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("default", async function (assert) {const self = this;
+    test("default", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message();
 
-      await render(<template>
-      <LeftGutter @message={{self.message}} />
-    </template>);
+      await render(
+        <template><LeftGutter @message={{self.message}} /></template>
+      );
 
       assert.dom(".chat-message-left-gutter__date").exists();
     });
 
-    test("with reviewable", async function (assert) {const self = this;
+    test("with reviewable", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message({
         reviewable_id: 1,
       });
 
-      await render(<template>
-      <LeftGutter @message={{self.message}} />
-    </template>);
+      await render(
+        <template><LeftGutter @message={{self.message}} /></template>
+      );
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
         .hasAttribute("title", i18n("chat.flagged"));
     });
 
-    test("with flag status", async function (assert) {const self = this;
+    test("with flag status", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message({
         user_flag_status: 0,
       });
 
-      await render(<template>
-      <LeftGutter @message={{self.message}} />
-    </template>);
+      await render(
+        <template><LeftGutter @message={{self.message}} /></template>
+      );
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
         .hasAttribute("title", i18n("chat.you_flagged"));
     });
 
-    test("bookmark", async function (assert) {const self = this;
+    test("bookmark", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message({
         bookmark: new CoreFabricators(getOwner(this)).bookmark(),
       });
 
-      await render(<template>
-      <LeftGutter @message={{self.message}} />
-    </template>);
+      await render(
+        <template><LeftGutter @message={{self.message}} /></template>
+      );
 
       assert.dom(".chat-message-left-gutter__date").exists();
       assert.dom(".chat-message-left-gutter__bookmark").exists();

@@ -228,22 +228,49 @@ export default class ChatDrawer extends Component {
     this.chatDrawerSize.size = { width, height };
   }
 
-<template>{{#if this.chatStateManager.isDrawerActive}}
-  {{bodyClass "chat-drawer-active"}}
-{{/if}}
+  <template>
+    {{#if this.chatStateManager.isDrawerActive}}
+      {{bodyClass "chat-drawer-active"}}
+    {{/if}}
 
-{{#if this.chatStateManager.isDrawerExpanded}}
-  {{bodyClass "chat-drawer-expanded"}}
-{{/if}}
+    {{#if this.chatStateManager.isDrawerExpanded}}
+      {{bodyClass "chat-drawer-expanded"}}
+    {{/if}}
 
-{{#if this.chatStateManager.isDrawerActive}}
-  <div data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}} data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}} class={{concatClass "chat-drawer" (if this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed")}} {{chatResizableNode ".chat-drawer-resizer" this.didResize}} style={{this.drawerStyle}}>
-    <div class="chat-drawer-container">
-      <div class="chat-drawer-resizer"></div>
+    {{#if this.chatStateManager.isDrawerActive}}
+      <div
+        data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
+        data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
+        class={{concatClass
+          "chat-drawer"
+          (if
+            this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed"
+          )
+        }}
+        {{chatResizableNode ".chat-drawer-resizer" this.didResize}}
+        style={{this.drawerStyle}}
+      >
+        <div class="chat-drawer-container">
+          <div class="chat-drawer-resizer"></div>
 
-      <PluginOutlet @name="chat-drawer-before-content" @outletArgs={{hash currentRouteName=this.chatDrawerRouter.currentRouteName}} />
+          <PluginOutlet
+            @name="chat-drawer-before-content"
+            @outletArgs={{hash
+              currentRouteName=this.chatDrawerRouter.currentRouteName
+            }}
+          />
 
-      <this.chatDrawerRouter.component @params={{this.chatDrawerRouter.params}} @model={{this.chatDrawerRouter.model}} @openURL={{this.openURL}} @openInFullPage={{this.openInFullPage}} @toggleExpand={{this.toggleExpand}} @close={{this.close}} @drawerActions={{this.drawerActions}} />
-    </div>
-  </div>
-{{/if}}</template>}
+          <this.chatDrawerRouter.component
+            @params={{this.chatDrawerRouter.params}}
+            @model={{this.chatDrawerRouter.model}}
+            @openURL={{this.openURL}}
+            @openInFullPage={{this.openInFullPage}}
+            @toggleExpand={{this.toggleExpand}}
+            @close={{this.close}}
+            @drawerActions={{this.drawerActions}}
+          />
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}

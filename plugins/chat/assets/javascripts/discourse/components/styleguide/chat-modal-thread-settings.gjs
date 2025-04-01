@@ -18,8 +18,11 @@ export default class ChatStyleguideChatModalThreadSettings extends Component {
     });
   }
 
-<template><StyleguideExample @title="<Chat::Modal::ThreadSettings>">
-  <Row>
-    <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
-  </Row>
-</StyleguideExample></template>}
+  <template>
+    <StyleguideExample @title="<Chat::Modal::ThreadSettings>">
+      <Row>
+        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+      </Row>
+    </StyleguideExample>
+  </template>
+}

@@ -9,91 +9,98 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Message with edits", async function (assert) {const self = this;
+  test("Message with edits", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       edited: true,
     });
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert.dom(".chat-message-edited").exists("has the correct css class");
   });
 
-  test("Deleted message", async function (assert) {const self = this;
+  test("Deleted message", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       user: this.currentUser,
       deleted_at: moment(),
     });
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".chat-message-text.-deleted .chat-message-expand")
       .exists("has the correct css class and expand button within");
   });
 
-  test("Hidden message", async function (assert) {const self = this;
+  test("Hidden message", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       hidden: true,
     });
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".chat-message-text.-hidden .chat-message-expand")
       .exists("has the correct css class and expand button within");
   });
 
-  test("Message by a bot", async function (assert) {const self = this;
+  test("Message by a bot", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       message: "what <mark>test</mark>",
       user: new CoreFabricators(getOwner(this)).user({ id: -10 }),
     });
     await this.message.cook();
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert.dom(".chat-message-container.is-bot").exists("has the bot class");
   });
 
-  test("Message with mark html tag", async function (assert) {const self = this;
+  test("Message with mark html tag", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       message: "what <mark>test</mark>",
     });
     await this.message.cook();
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".chat-message-text")
       .includesHtml("<p>what <mark>test</mark></p>");
   });
 
-  test("Message with reply", async function (assert) {const self = this;
+  test("Message with reply", async function (assert) {
+    const self = this;
 
     this.message = new ChatFabricators(getOwner(this)).message({
       inReplyTo: new ChatFabricators(getOwner(this)).message(),
     });
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".chat-message-container.has-reply")
       .exists("has the correct css class");
   });
 
-  test("Message with streaming", async function (assert) {const self = this;
+  test("Message with streaming", async function (assert) {
+    const self = this;
 
     // admin
     this.currentUser.admin = true;
@@ -103,9 +110,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".stop-streaming-btn")
@@ -121,9 +128,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".stop-streaming-btn")
@@ -141,9 +148,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       streaming: true,
     });
     await this.message.cook();
-    await render(<template>
-    <ChatMessage @message={{self.message}} />
-  </template>);
+    await render(
+      <template><ChatMessage @message={{self.message}} /></template>
+    );
 
     assert
       .dom(".stop-streaming-btn")

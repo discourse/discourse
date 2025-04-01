@@ -22,8 +22,11 @@ export default class ChatStyleguideChatModalArchiveChannel extends Component {
     });
   }
 
-<template><StyleguideExample @title="<Chat::Modal::ArchiveChannel>">
-  <Row>
-    <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
-  </Row>
-</StyleguideExample></template>}
+  <template>
+    <StyleguideExample @title="<Chat::Modal::ArchiveChannel>">
+      <Row>
+        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+      </Row>
+    </StyleguideExample>
+  </template>
+}

@@ -11,7 +11,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("direct message to self shows Jot something down", async function (assert) {const self = this;
+    test("direct message to self shows Jot something down", async function (assert) {
+      const self = this;
 
       pretender.get("/emojis.json", () => [200, [], {}]);
 
@@ -30,7 +31,8 @@ module(
         .hasAttribute("placeholder", "Jot something down");
     });
 
-    test("direct message to multiple folks shows their names  when not a group", async function (assert) {const self = this;
+    test("direct message to multiple folks shows their names  when not a group", async function (assert) {
+      const self = this;
 
       pretender.get("/emojis.json", () => [200, [], {}]);
 
@@ -53,7 +55,8 @@ module(
         .hasAttribute("placeholder", "Chat with Tomtom, Steaky, @zorro");
     });
 
-    test("direct message to group shows Chat in group", async function (assert) {const self = this;
+    test("direct message to group shows Chat in group", async function (assert) {
+      const self = this;
 
       pretender.get("/chat/emojis.json", () => [200, [], {}]);
 
@@ -77,7 +80,8 @@ module(
         .hasAttribute("placeholder", i18n("chat.placeholder_group"));
     });
 
-    test("message to channel shows send message to channel name", async function (assert) {const self = this;
+    test("message to channel shows send message to channel name", async function (assert) {
+      const self = this;
 
       pretender.get("/emojis.json", () => [200, [], {}]);
 

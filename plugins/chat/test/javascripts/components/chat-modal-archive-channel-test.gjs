@@ -11,14 +11,20 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("channel title is escaped in instructions correctly", async function (assert) {const self = this;
+    test("channel title is escaped in instructions correctly", async function (assert) {
+      const self = this;
 
       this.channel = new ChatFabricators(getOwner(this)).channel({
         title: `<script>someeviltitle</script>`,
       });
 
       await render(
-        <template><ArchiveChannel @inline={{true}} @model={{hash channel=self.channel}} /></template>
+        <template>
+          <ArchiveChannel
+            @inline={{true}}
+            @model={{hash channel=self.channel}}
+          />
+        </template>
       );
 
       assert

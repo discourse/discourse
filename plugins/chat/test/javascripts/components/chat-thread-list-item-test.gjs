@@ -8,14 +8,13 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Discourse Chat | Component | chat-thread-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it safely renders title", async function (assert) {const self = this;
+  test("it safely renders title", async function (assert) {
+    const self = this;
 
     const title = "<style>body { background: red;}</style>";
     this.thread = new ChatFabricators(getOwner(this)).thread({ title });
 
-    await render(<template>
-      <Item @thread={{self.thread}} />
-    </template>);
+    await render(<template><Item @thread={{self.thread}} /></template>);
 
     assert
       .dom(".chat-thread-list-item__title")

@@ -11,16 +11,25 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("channel title is escaped in instructions correctly", async function (assert) {const self = this;
+    test("channel title is escaped in instructions correctly", async function (assert) {
+      const self = this;
 
       this.channel = new ChatFabricators(getOwner(this)).channel({
         title: "<script>someeviltitle</script>",
       });
       this.selectedMessageIds = [this.channel.id];
 
-      await render(<template>
-        <MoveMessageToChannel @inline={{true}} @model={{hash sourceChannel=self.channel selectedMessageIds=self.selectedMessageIds}} />
-      </template>);
+      await render(
+        <template>
+          <MoveMessageToChannel
+            @inline={{true}}
+            @model={{hash
+              sourceChannel=self.channel
+              selectedMessageIds=self.selectedMessageIds
+            }}
+          />
+        </template>
+      );
 
       assert
         .dom(".chat-modal-move-message-to-channel")

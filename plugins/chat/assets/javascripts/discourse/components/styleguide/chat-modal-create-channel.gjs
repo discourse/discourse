@@ -14,8 +14,11 @@ export default class ChatStyleguideChatModalCreateChannel extends Component {
     return this.modal.show(ChatModalCreateChannel);
   }
 
-<template><StyleguideExample @title="<Chat::Modal::CreateChannel>">
-  <Row>
-    <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
-  </Row>
-</StyleguideExample></template>}
+  <template>
+    <StyleguideExample @title="<Chat::Modal::CreateChannel>">
+      <Row>
+        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+      </Row>
+    </StyleguideExample>
+  </template>
+}

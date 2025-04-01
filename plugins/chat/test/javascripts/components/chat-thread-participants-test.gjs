@@ -11,38 +11,19 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("no participants", async function (assert) {const self = this;
+    test("no participants", async function (assert) {
+      const self = this;
 
       this.thread = new ChatFabricators(getOwner(this)).thread();
-      await render(<template><ChatThreadParticipants @thread={{self.thread}} /></template>);
+      await render(
+        <template><ChatThreadParticipants @thread={{self.thread}} /></template>
+      );
 
       assert.dom(".chat-thread-participants").doesNotExist();
     });
 
-    test("@includeOriginalMessageUser=true", async function (assert) {const self = this;
-
-      const originalMessageUser = new CoreFabricators(getOwner(this)).user({
-        username: "bob",
-      });
-      this.thread = new ChatFabricators(getOwner(this)).thread({
-        original_message: new ChatFabricators(getOwner(this)).message({
-          user: originalMessageUser,
-        }),
-        preview: new ChatFabricators(getOwner(this)).threadPreview({
-          channel: this.channel,
-          participant_users: [
-            originalMessageUser,
-            new CoreFabricators(getOwner(this)).user({ username: "alice" }),
-          ],
-        }),
-      });
-
-      await render(<template><ChatThreadParticipants @thread={{self.thread}} /></template>);
-
-      assert.dom(".chat-user-avatar[data-username]").exists({ count: 2 });
-    });
-
-    test("@includeOriginalMessageUser=false", async function (assert) {const self = this;
+    test("@includeOriginalMessageUser=true", async function (assert) {
+      const self = this;
 
       const originalMessageUser = new CoreFabricators(getOwner(this)).user({
         username: "bob",
@@ -61,7 +42,38 @@ module(
       });
 
       await render(
-        <template><ChatThreadParticipants @thread={{self.thread}} @includeOriginalMessageUser={{false}} /></template>
+        <template><ChatThreadParticipants @thread={{self.thread}} /></template>
+      );
+
+      assert.dom(".chat-user-avatar[data-username]").exists({ count: 2 });
+    });
+
+    test("@includeOriginalMessageUser=false", async function (assert) {
+      const self = this;
+
+      const originalMessageUser = new CoreFabricators(getOwner(this)).user({
+        username: "bob",
+      });
+      this.thread = new ChatFabricators(getOwner(this)).thread({
+        original_message: new ChatFabricators(getOwner(this)).message({
+          user: originalMessageUser,
+        }),
+        preview: new ChatFabricators(getOwner(this)).threadPreview({
+          channel: this.channel,
+          participant_users: [
+            originalMessageUser,
+            new CoreFabricators(getOwner(this)).user({ username: "alice" }),
+          ],
+        }),
+      });
+
+      await render(
+        <template>
+          <ChatThreadParticipants
+            @thread={{self.thread}}
+            @includeOriginalMessageUser={{false}}
+          />
+        </template>
       );
 
       assert.dom('.chat-user-avatar[data-username="bob"]').doesNotExist();

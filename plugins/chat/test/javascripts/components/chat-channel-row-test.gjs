@@ -17,9 +17,14 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     ).directMessageChannel();
   });
 
-  test("links to correct channel", async function (assert) {const self = this;
+  test("links to correct channel", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert
       .dom(".chat-channel-row")
@@ -29,16 +34,26 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
       );
   });
 
-  test("allows tabbing", async function (assert) {const self = this;
+  test("allows tabbing", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").hasAttribute("tabindex", "0");
   });
 
-  test("channel id data attribute", async function (assert) {const self = this;
+  test("channel id data attribute", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert
       .dom(".chat-channel-row")
@@ -48,23 +63,33 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
       );
   });
 
-  test("renders correct channel title", async function (assert) {const self = this;
+  test("renders correct channel title", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert
       .dom(".chat-channel-name__label")
       .hasText(this.categoryChatChannel.title);
   });
 
-  test("renders correct channel metadata", async function (assert) {const self = this;
+  test("renders correct channel metadata", async function (assert) {
+    const self = this;
 
     this.categoryChatChannel.lastMessage = new ChatFabricators(
       getOwner(this)
     ).message({
       created_at: moment().toISOString(),
     });
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert
       .dom(".chat-channel__metadata-date")
@@ -73,71 +98,118 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
       );
   });
 
-  test("renders membership toggling button when necessary", async function (assert) {const self = this;
+  test("renders membership toggling button when necessary", async function (assert) {
+    const self = this;
 
     this.site.desktopView = false;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".toggle-channel-membership-button").doesNotExist();
 
     this.categoryChatChannel.currentUserMembership.following = true;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".toggle-channel-membership-button").doesNotExist();
 
     this.site.desktopView = true;
 
     await render(
-      <template><ChatChannelRow @channel={{self.categoryChatChannel}} @options={{hash leaveButton=true}} /></template>
+      <template>
+        <ChatChannelRow
+          @channel={{self.categoryChatChannel}}
+          @options={{hash leaveButton=true}}
+        />
+      </template>
     );
 
     assert.dom(".toggle-channel-membership-button").exists();
   });
 
-  test("focused channel has correct class", async function (assert) {const self = this;
+  test("focused channel has correct class", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").doesNotHaveClass("focused");
 
     this.categoryChatChannel.focused = true;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").hasClass("focused");
   });
 
-  test("muted channel has correct class", async function (assert) {const self = this;
+  test("muted channel has correct class", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").doesNotHaveClass("muted");
 
     this.categoryChatChannel.currentUserMembership.muted = true;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").hasClass("muted");
   });
 
-  test("leaveButton options adds correct class", async function (assert) {const self = this;
+  test("leaveButton options adds correct class", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").doesNotHaveClass("can-leave");
 
     await render(
-      <template><ChatChannelRow @channel={{self.categoryChatChannel}} @options={{hash leaveButton=true}} /></template>
+      <template>
+        <ChatChannelRow
+          @channel={{self.categoryChatChannel}}
+          @options={{hash leaveButton=true}}
+        />
+      </template>
     );
 
     assert.dom(".chat-channel-row").hasClass("can-leave");
   });
 
-  test("active channel adds correct class", async function (assert) {const self = this;
+  test("active channel adds correct class", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").doesNotHaveClass("active");
 
@@ -145,32 +217,51 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
       .lookup("service:chat")
       .set("activeChannel", { id: this.categoryChatChannel.id });
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").hasClass("active");
   });
 
-  test("unreads adds correct class", async function (assert) {const self = this;
+  test("unreads adds correct class", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").doesNotHaveClass("has-unread");
 
     this.categoryChatChannel.tracking.unreadCount = 1;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".chat-channel-row").hasClass("has-unread");
   });
 
-  test("user status with category channel", async function (assert) {const self = this;
+  test("user status with category channel", async function (assert) {
+    const self = this;
 
-    await render(<template><ChatChannelRow @channel={{self.categoryChatChannel}} /></template>);
+    await render(
+      <template>
+        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+      </template>
+    );
 
     assert.dom(".user-status-message").doesNotExist();
   });
 
-  test("user status with direct message channel", async function (assert) {const self = this;
+  test("user status with direct message channel", async function (assert) {
+    const self = this;
 
     this.directMessageChannel.chatable = new ChatFabricators(
       getOwner(this)
@@ -181,13 +272,16 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     this.directMessageChannel.chatable.users[0].status = status;
 
     await render(
-      <template><ChatChannelRow @channel={{self.directMessageChannel}} /></template>
+      <template>
+        <ChatChannelRow @channel={{self.directMessageChannel}} />
+      </template>
     );
 
     assert.dom(".user-status-message").exists();
   });
 
-  test("user status with direct message channel and multiple users", async function (assert) {const self = this;
+  test("user status with direct message channel and multiple users", async function (assert) {
+    const self = this;
 
     const status = { description: "Off to dentist", emoji: "tooth" };
     this.directMessageChannel.chatable.users[0].status = status;
@@ -200,7 +294,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     });
 
     await render(
-      <template><ChatChannelRow @channel={{self.directMessageChannel}} /></template>
+      <template>
+        <ChatChannelRow @channel={{self.directMessageChannel}} />
+      </template>
     );
 
     assert.dom(".user-status-message").doesNotExist();
