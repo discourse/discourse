@@ -15,12 +15,14 @@ import { next } from "@ember/runloop";
 
 
 const FormTemplateField = <template>
+  {{log @content}}
   <@component
     @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @tagGroup={{@content.tag_group}}
     @onChange={{@onChange}}
   />
 </template>;
