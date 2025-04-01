@@ -1306,7 +1306,11 @@ RSpec.describe TopicQuery do
     context "when preloading associations" do
       it "preloads associations" do
         DiscoursePluginRegistry.register_topic_preloader_association(
-          :first_post,
+          :topic_embed,
+          Plugin::Instance.new,
+        )
+        DiscoursePluginRegistry.register_topic_preloader_association(
+          { first_post: [:uploads] },
           Plugin::Instance.new,
         )
         DiscoursePluginRegistry.register_topic_preloader_association(
@@ -1323,7 +1327,9 @@ RSpec.describe TopicQuery do
 
         new_topic = topic_query.list_new.topics.first
         expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
-        expect(new_topic.association(:first_post).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:topic_embed).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:first_post).loaded?).to eq(true) # Nested preloaded association
+        expect(new_topic.first_post.association(:uploads).loaded?).to eq(true) # Nested preloaded association
         expect(new_topic.association(:user_warning).loaded?).to eq(true) # Conditionally loaded
         expect(new_topic.association(:linked_topic).loaded?).to eq(false) # Failed condition
         expect(new_topic.association(:user).loaded?).to eq(false) # Testing the negative
