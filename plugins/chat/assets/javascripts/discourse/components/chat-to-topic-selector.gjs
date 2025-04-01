@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { alias, equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import discourseComputed from "discourse/lib/decorators";
-import RadioButton from "discourse/components/radio-button";
-import i18n from "discourse/helpers/i18n";
-import TextField from "discourse/components/text-field";
-import CategoryChooser from "select-kit/components/category-chooser";
-import { fn } from "@ember/helper";
-import TagChooser from "select-kit/components/tag-chooser";
 import ChooseTopic from "discourse/components/choose-topic";
+import RadioButton from "discourse/components/radio-button";
+import TextField from "discourse/components/text-field";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
+import CategoryChooser from "select-kit/components/category-chooser";
+import TagChooser from "select-kit/components/tag-chooser";
 import and from "truth-helpers/helpers/and";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
@@ -48,68 +48,107 @@ export default class ChatToTopicSelector extends Component {
   newMessageInstruction() {
     return htmlSafe(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
-<template><div class="chat-to-topic-selector">
-  <div class="radios">
-    <label class="radio-label" for="move-to-new-topic">
-      <RadioButton @id="move-to-new-topic" @name="move-to-entity" @value={{this.newTopicSelection}} @selection={{this.selection}} />
-      <b>{{i18n "topic.split_topic.radio_label"}}</b>
-    </label>
 
-    <label class="radio-label" for="move-to-existing-topic">
-      <RadioButton @id="move-to-existing-topic" @name="move-to-entity" @value={{this.existingTopicSelection}} @selection={{this.selection}} />
-      <b>{{i18n "topic.merge_topic.radio_label"}}</b>
-    </label>
+  <template>
+    <div class="chat-to-topic-selector">
+      <div class="radios">
+        <label class="radio-label" for="move-to-new-topic">
+          <RadioButton
+            @id="move-to-new-topic"
+            @name="move-to-entity"
+            @value={{this.newTopicSelection}}
+            @selection={{this.selection}}
+          />
+          <b>{{i18n "topic.split_topic.radio_label"}}</b>
+        </label>
 
-    {{#if this.allowNewMessage}}
-      <label class="radio-label" for="move-to-new-message">
-        <RadioButton @id="move-to-new-message" @name="move-to-entity" @value={{this.newMessageSelection}} @selection={{this.selection}} />
-        <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
-      </label>
-    {{/if}}
-  </div>
+        <label class="radio-label" for="move-to-existing-topic">
+          <RadioButton
+            @id="move-to-existing-topic"
+            @name="move-to-entity"
+            @value={{this.existingTopicSelection}}
+            @selection={{this.selection}}
+          />
+          <b>{{i18n "topic.merge_topic.radio_label"}}</b>
+        </label>
 
-  {{#if this.newTopic}}
-    <p>{{this.newTopicInstruction}}</p>
+        {{#if this.allowNewMessage}}
+          <label class="radio-label" for="move-to-new-message">
+            <RadioButton
+              @id="move-to-new-message"
+              @name="move-to-entity"
+              @value={{this.newMessageSelection}}
+              @selection={{this.selection}}
+            />
+            <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
+          </label>
+        {{/if}}
+      </div>
 
-    <form>
-      <label for="split-topic-name">
-        {{i18n "topic.split_topic.topic_name"}}
-      </label>
+      {{#if this.newTopic}}
+        <p>{{this.newTopicInstruction}}</p>
 
-      <TextField @value={{this.topicTitle}} @placeholderKey="composer.title_placeholder" @id="split-topic-name" />
+        <form>
+          <label for="split-topic-name">
+            {{i18n "topic.split_topic.topic_name"}}
+          </label>
 
-      <label>{{i18n "categories.category"}}</label>
+          <TextField
+            @value={{this.topicTitle}}
+            @placeholderKey="composer.title_placeholder"
+            @id="split-topic-name"
+          />
 
-      <CategoryChooser @id="new-topic-category-selector" @value={{this.categoryId}} @onChange={{fn (mut this.categoryId)}} class="small" />
+          <label>{{i18n "categories.category"}}</label>
 
-      {{#if this.canAddTags}}
-        <label>{{i18n "tagging.tags"}}</label>
-        <TagChooser @tags={{this.tags}} @filterable={{true}} @categoryId={{this.categoryId}} />
+          <CategoryChooser
+            @id="new-topic-category-selector"
+            @value={{this.categoryId}}
+            @onChange={{fn (mut this.categoryId)}}
+            class="small"
+          />
+
+          {{#if this.canAddTags}}
+            <label>{{i18n "tagging.tags"}}</label>
+            <TagChooser
+              @tags={{this.tags}}
+              @filterable={{true}}
+              @categoryId={{this.categoryId}}
+            />
+          {{/if}}
+        </form>
       {{/if}}
-    </form>
-  {{/if}}
 
-  {{#if this.existingTopic}}
-    <p>{{this.existingTopicInstruction}}</p>
-    <form>
-      <ChooseTopic @topicChangedCallback={{@topicChangedCallback}} @selectedTopicId={{@selectedTopicId}} />
-    </form>
-  {{/if}}
-
-  {{#if (and this.allowNewMessage this.newMessage)}}
-    <p>{{this.newMessageInstruction}}</p>
-
-    <form>
-      <label for="split-message-title">
-        {{i18n "topic.move_to_new_message.message_title"}}
-      </label>
-
-      <TextField @value={{this.topicTitle}} @placeholderKey="composer.title_placeholder" @id="split-message-title" />
-
-      {{#if this.canTagMessages}}
-        <label>{{i18n "tagging.tags"}}</label>
-        <TagChooser @tags={{this.tags}} @filterable={{true}} />
+      {{#if this.existingTopic}}
+        <p>{{this.existingTopicInstruction}}</p>
+        <form>
+          <ChooseTopic
+            @topicChangedCallback={{@topicChangedCallback}}
+            @selectedTopicId={{@selectedTopicId}}
+          />
+        </form>
       {{/if}}
-    </form>
-  {{/if}}
-</div></template>}
+
+      {{#if (and this.allowNewMessage this.newMessage)}}
+        <p>{{this.newMessageInstruction}}</p>
+
+        <form>
+          <label for="split-message-title">
+            {{i18n "topic.move_to_new_message.message_title"}}
+          </label>
+
+          <TextField
+            @value={{this.topicTitle}}
+            @placeholderKey="composer.title_placeholder"
+            @id="split-message-title"
+          />
+
+          {{#if this.canTagMessages}}
+            <label>{{i18n "tagging.tags"}}</label>
+            <TagChooser @tags={{this.tags}} @filterable={{true}} />
+          {{/if}}
+        </form>
+      {{/if}}
+    </div>
+  </template>
+}
