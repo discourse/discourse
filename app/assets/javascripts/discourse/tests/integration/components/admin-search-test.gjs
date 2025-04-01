@@ -64,6 +64,8 @@ module("Integration | Component | AdminSearch", function (hooks) {
   test("navigates search results with keyboard, getting back to the input when reaching the end of results", async function (assert) {
     await render(<template><AdminSearch /></template>);
     await fillIn(".admin-search__input-field", "site");
+    assert.dom(".admin-search__results").exists();
+
     await triggerKeyEvent(".admin-search__input-field", "keydown", "ArrowDown");
     assert
       .dom(
