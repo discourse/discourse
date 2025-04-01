@@ -44,23 +44,18 @@ class Admin::Config::BrandingController < Admin::AdminController
     SiteSetting::Update.call(
       guardian:,
       params: {
-        settings: {
-          base_font: params[:base_font],
-          heading_font: params[:heading_font],
-          default_text_size: params[:default_text_size],
-        },
+        settings: [
+          { setting_name: "base_font", value: params[:base_font] },
+          { setting_name: "heading_font", value: params[:heading_font] },
+          {
+            setting_name: "default_text_size",
+            value: params[:default_text_size],
+            backfill: params[:update_existing_users].present?,
+          },
+        ],
       },
     ) do
-      on_success do
-        if params[:update_existing_users].present?
-          SiteSettingUpdateExistingUsers.call(
-            "default_text_size",
-            params[:default_text_size],
-            previous_default_text_size,
-          )
-        end
-        render json: success_json
-      end
+      on_success { render json: success_json }
       on_failed_policy(:settings_are_visible) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end

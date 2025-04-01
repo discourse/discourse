@@ -14,6 +14,7 @@ import SimpleList from "admin/components/simple-list";
 
 export default class AdminBrandingLogoForm extends Component {
   @service siteSettings;
+  @service siteSettingChangeTracker;
   @service toasts;
 
   @tracked placeholders = {};
@@ -81,7 +82,7 @@ export default class AdminBrandingLogoForm extends Component {
           message: i18n("admin.config.branding.logo.form.saved"),
         },
       });
-      window.location.reload();
+      this.siteSettingChangeTracker.refreshPage();
     } catch (err) {
       this.toasts.error({
         duration: 3000,

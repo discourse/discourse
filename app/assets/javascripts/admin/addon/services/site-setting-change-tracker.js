@@ -10,6 +10,8 @@ import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-
 export default class SiteSettingChangeTracker extends Service {
   @service dialog;
   @service modal;
+  @service site;
+  @service siteSettings;
 
   @tracked dirtySiteSettings = new TrackedSet();
 
@@ -179,6 +181,33 @@ export default class SiteSettingChangeTracker extends Service {
     this.dirtySiteSettings.forEach((setting) => {
       setting.isSaving = false;
     });
+  }
+
+  refreshPage() {
+    document.documentElement.style.setProperty(
+      "--font-family",
+      this.siteSettings.base_font
+    );
+    document.documentElement.style.setProperty(
+      "--heading-font-family",
+      this.siteSettings.heading_font
+    );
+    document.documentElement.classList.remove("text-size-smaller");
+    document.documentElement.classList.remove("text-size-normal");
+    document.documentElement.classList.remove("text-size-larger");
+    document.documentElement.classList.remove("text-size-largest");
+    document.documentElement.classList.add(
+      `text-size-${this.siteSettings.default_text_size}`
+    );
+    if (this.site.mobileView) {
+      document
+        .getElementById("site-logo")
+        .setAttribute("src", this.siteSettings.mobile_logo);
+    } else {
+      document
+        .getElementById("site-logo")
+        .setAttribute("src", this.siteSettings.logo);
+    }
   }
 
   get count() {

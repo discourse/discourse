@@ -14,27 +14,27 @@ import { i18n } from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 
 const FONTS = [
-  "Arial",
   "Helvetica",
   "Inter",
   "Lato",
-  "Lora",
-  "Merriweather",
   "Montserrat",
+  "OpenSans",
+  "Poppins",
+  "Roboto",
+  "Merriweather",
   "Mukta",
-  "NotoSans",
 ];
 const MORE_FONTS = [
+  "Arial",
+  "Lora",
+  "NotoSans",
   "NotoSansJP",
   "Nunito",
-  "OpenSans",
   "Oswald",
   "Oxanium",
   "PT Sans",
   "PlayfairDisplay",
-  "Poppins",
   "Raleway",
-  "Roboto",
   "RobotoCondensed",
   "RobotoMono",
   "RobotoSlab",
@@ -47,8 +47,10 @@ const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
 
 export default class AdminBrandingFontsForm extends Component {
   @service siteSettings;
+  @service siteSettingChangeTracker;
   @service toasts;
   @service modal;
+  @service router;
 
   @tracked moreBaseFonts = MORE_FONTS.includes(
     classify(this.siteSettings.base_font)
@@ -127,7 +129,7 @@ export default class AdminBrandingFontsForm extends Component {
           message: i18n("admin.config.branding.fonts.form.saved"),
         },
       });
-      window.location.reload();
+      this.siteSettingChangeTracker.refreshPage();
     } catch (err) {
       this.toasts.error({
         duration: 3000,
