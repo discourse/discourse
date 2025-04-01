@@ -19,254 +19,248 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 ["enabled", "disabled"].forEach((postStreamMode) => {
-  ["enabled", "disabled"].forEach((postMenuMode) => {
-    acceptance(
-      `Topic (glimmer_post_stream_mode = ${postStreamMode}) (glimmer_post_menu_mode = ${postMenuMode})`,
-      function (needs) {
-        needs.user();
-        needs.settings({
-          post_menu:
-            "read|like|share|flag|edit|bookmark|delete|admin|reply|copyLink",
-          glimmer_post_menu_mode: postMenuMode,
-          glimmer_post_stream_mode: postStreamMode,
+  acceptance(
+    `Topic (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.settings({
+        post_menu:
+          "read|like|share|flag|edit|bookmark|delete|admin|reply|copyLink",
+        glimmer_post_stream_mode: postStreamMode,
+      });
+      needs.pretender((server, helper) => {
+        server.get("/c/2/visible_groups.json", () =>
+          helper.response(200, {
+            groups: [],
+          })
+        );
+
+        server.get("/c/feature/find_by_slug.json", () => {
+          return helper.response(200, CategoryFixtures["/c/1/show.json"]);
         });
-        needs.pretender((server, helper) => {
-          server.get("/c/2/visible_groups.json", () =>
-            helper.response(200, {
-              groups: [],
-            })
+        server.put("/posts/398/wiki", () => {
+          return helper.response({});
+        });
+      });
+
+      test("Reply as new topic", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("button.share:nth-of-type(1)");
+        await click("button.new-topic");
+
+        assert.dom(".d-editor-input").exists("the composer input is visible");
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue(
+            `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):\n\n`,
+            "fills composer with the ring string"
+          );
+        assert.strictEqual(
+          selectKit(".category-chooser").header().value(),
+          "2",
+          "fills category selector with the right category"
+        );
+      });
+
+      test("Reply as new message", async function (assert) {
+        await visit("/t/pm-for-testing/12");
+        await click("button.share:nth-of-type(1)");
+        await click("button.new-topic");
+
+        assert.dom(".d-editor-input").exists("the composer input is visible");
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue(
+            `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):\n\n`,
+            "fills composer with the ring string"
           );
 
-          server.get("/c/feature/find_by_slug.json", () => {
-            return helper.response(200, CategoryFixtures["/c/1/show.json"]);
-          });
-          server.put("/posts/398/wiki", () => {
-            return helper.response({});
-          });
-        });
+        const privateMessageUsers = selectKit("#private-message-users");
+        assert.strictEqual(
+          privateMessageUsers.header().value(),
+          "someguy,test,Group",
+          "fills up the composer correctly"
+        );
+      });
 
-        test("Reply as new topic", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-          await click("button.share:nth-of-type(1)");
-          await click("button.new-topic");
+      test("Share Modal", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click(".topic-post:first-child button.share");
 
-          assert.dom(".d-editor-input").exists("the composer input is visible");
+        assert.dom(".share-topic-modal").exists("shows the share modal");
+      });
 
-          assert
-            .dom(".d-editor-input")
-            .hasValue(
-              `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):\n\n`,
-              "fills composer with the ring string"
-            );
-          assert.strictEqual(
-            selectKit(".category-chooser").header().value(),
-            "2",
-            "fills category selector with the right category"
+      test("Copy Link Button", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click(
+          ".topic-post:first-child button.post-action-menu__copy-link"
+        );
+
+        assert
+          .dom(".post-action-menu__copy-link-checkmark")
+          .exists("shows the Link Copied! message");
+      });
+
+      test("Showing and hiding the edit controls", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        await click("#topic-title .d-icon-pencil");
+
+        assert.dom("#edit-title").exists("shows the editing controls");
+        assert
+          .dom(".title-wrapper .remove-featured-link")
+          .doesNotExist("link to remove featured link is not shown");
+
+        await fillIn("#edit-title", "this is the new title");
+        await click("#topic-title .cancel-edit");
+        assert.dom("#edit-title").doesNotExist("hides the editing controls");
+      });
+
+      test("Updating the topic title and category", async function (assert) {
+        const categoryChooser = selectKit(".title-wrapper .category-chooser");
+
+        await visit("/t/internationalization-localization/280");
+
+        await click("#topic-title .d-icon-pencil");
+        await fillIn("#edit-title", "this is the new title");
+        await categoryChooser.expand();
+        await categoryChooser.selectRowByValue(4);
+        await click("#topic-title .submit-edit");
+
+        assert
+          .dom("#topic-title .badge-category")
+          .hasText("faq", "displays the new category");
+        assert
+          .dom(".fancy-title")
+          .hasText("this is the new title", "displays the new title");
+      });
+
+      test("Marking a topic as wiki", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        assert.dom("a.wiki").doesNotExist("does not show the wiki icon");
+
+        await click(".topic-post:nth-of-type(1) button.show-more-actions");
+        await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
+        await click(".btn.wiki");
+
+        assert.dom("button.wiki").exists("shows the wiki icon");
+      });
+
+      test("Visit topic routes", async function (assert) {
+        await visit("/t/12");
+
+        assert
+          .dom(".fancy-title")
+          .hasText("PM for testing", "routes to the right topic");
+
+        await visit("/t/280/20");
+
+        assert
+          .dom(".fancy-title")
+          .hasText(
+            "Internationalization / localization",
+            "routes to the right topic"
           );
-        });
+      });
 
-        test("Reply as new message", async function (assert) {
-          await visit("/t/pm-for-testing/12");
-          await click("button.share:nth-of-type(1)");
-          await click("button.new-topic");
+      test("Updating the topic title with emojis", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("#topic-title .d-icon-pencil");
 
-          assert.dom(".d-editor-input").exists("the composer input is visible");
+        await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
 
-          assert
-            .dom(".d-editor-input")
-            .hasValue(
-              `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):\n\n`,
-              "fills composer with the ring string"
-            );
+        await click("#topic-title .submit-edit");
 
-          const privateMessageUsers = selectKit("#private-message-users");
-          assert.strictEqual(
-            privateMessageUsers.header().value(),
-            "someguy,test,Group",
-            "fills up the composer correctly"
+        assert
+          .dom(".fancy-title")
+          .includesHtml("bike.png", "displays the new title with emojis");
+      });
+
+      test("Updating the topic title with unicode emojis", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await click("#topic-title .d-icon-pencil");
+
+        await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
+
+        await click("#topic-title .submit-edit");
+
+        assert
+          .dom(".fancy-title")
+          .includesHtml("man_farmer.png", "displays the new title with emojis");
+      });
+
+      test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
+        this.siteSettings.enable_inline_emoji_translation = true;
+        await visit("/t/internationalization-localization/280");
+        await click("#topic-title .d-icon-pencil");
+
+        await fillIn("#edit-title", "Test🙂Title");
+
+        await click("#topic-title .submit-edit");
+
+        assert
+          .dom(".fancy-title")
+          .includesHtml(
+            "slightly_smiling_face.png",
+            "displays the new title with emojis"
           );
-        });
+      });
 
-        test("Share Modal", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-          await click(".topic-post:first-child button.share");
+      test("Suggested topics", async function (assert) {
+        await visit("/t/internationalization-localization/280");
 
-          assert.dom(".share-topic-modal").exists("shows the share modal");
-        });
+        assert
+          .dom("#suggested-topics-title")
+          .hasText(i18n("suggested_topics.title"));
+      });
 
-        test("Copy Link Button", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-          await click(
-            ".topic-post:first-child button.post-action-menu__copy-link"
-          );
+      test("Deleting a topic", async function (assert) {
+        this.siteSettings.min_topic_views_for_delete_confirm = 10000;
+        await visit("/t/internationalization-localization/280");
+        await click(".topic-post:nth-of-type(1) button.show-more-actions");
+        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(".toggle-admin-menu");
+        assert.dom(".topic-admin-recover").exists("shows the recover button");
+      });
 
-          assert
-            .dom(".post-action-menu__copy-link-checkmark")
-            .exists("shows the Link Copied! message");
-        });
+      test("Deleting a popular topic displays confirmation modal", async function (assert) {
+        this.siteSettings.min_topic_views_for_delete_confirm = 10;
+        await visit("/t/internationalization-localization/280");
+        await click(".topic-post:nth-of-type(1) button.show-more-actions");
+        await click(".topic-post:nth-of-type(1) button.delete");
+        assert
+          .dom(".delete-topic-confirm-modal")
+          .exists("shows the delete confirmation modal");
 
-        test("Showing and hiding the edit controls", async function (assert) {
-          await visit("/t/internationalization-localization/280");
+        await click(".delete-topic-confirm-modal .btn-primary");
+        assert
+          .dom(".delete-topic-confirm-modal")
+          .doesNotExist("hides the delete confirmation modal");
+        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(".delete-topic-confirm-modal .btn-danger");
+        await click(".toggle-admin-menu");
+        assert.dom(".topic-admin-recover").exists("shows the recover button");
+      });
 
-          await click("#topic-title .d-icon-pencil");
+      test("Group category moderator posts", async function (assert) {
+        await visit("/t/topic-for-group-moderators/2480");
 
-          assert.dom("#edit-title").exists("shows the editing controls");
-          assert
-            .dom(".title-wrapper .remove-featured-link")
-            .doesNotExist("link to remove featured link is not shown");
+        assert.dom(".category-moderator").exists("has a class applied");
+        assert.dom(".d-icon-shield-halved").exists("shows an icon");
+      });
 
-          await fillIn("#edit-title", "this is the new title");
-          await click("#topic-title .cancel-edit");
-          assert.dom("#edit-title").doesNotExist("hides the editing controls");
-        });
+      test("Suspended user posts", async function (assert) {
+        await visit("/t/topic-from-suspended-user/54077");
 
-        test("Updating the topic title and category", async function (assert) {
-          const categoryChooser = selectKit(".title-wrapper .category-chooser");
-
-          await visit("/t/internationalization-localization/280");
-
-          await click("#topic-title .d-icon-pencil");
-          await fillIn("#edit-title", "this is the new title");
-          await categoryChooser.expand();
-          await categoryChooser.selectRowByValue(4);
-          await click("#topic-title .submit-edit");
-
-          assert
-            .dom("#topic-title .badge-category")
-            .hasText("faq", "displays the new category");
-          assert
-            .dom(".fancy-title")
-            .hasText("this is the new title", "displays the new title");
-        });
-
-        test("Marking a topic as wiki", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-
-          assert.dom("a.wiki").doesNotExist("does not show the wiki icon");
-
-          await click(".topic-post:nth-of-type(1) button.show-more-actions");
-          await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
-          await click(".btn.wiki");
-
-          assert.dom("button.wiki").exists("shows the wiki icon");
-        });
-
-        test("Visit topic routes", async function (assert) {
-          await visit("/t/12");
-
-          assert
-            .dom(".fancy-title")
-            .hasText("PM for testing", "routes to the right topic");
-
-          await visit("/t/280/20");
-
-          assert
-            .dom(".fancy-title")
-            .hasText(
-              "Internationalization / localization",
-              "routes to the right topic"
-            );
-        });
-
-        test("Updating the topic title with emojis", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-          await click("#topic-title .d-icon-pencil");
-
-          await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
-
-          await click("#topic-title .submit-edit");
-
-          assert
-            .dom(".fancy-title")
-            .includesHtml("bike.png", "displays the new title with emojis");
-        });
-
-        test("Updating the topic title with unicode emojis", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-          await click("#topic-title .d-icon-pencil");
-
-          await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
-
-          await click("#topic-title .submit-edit");
-
-          assert
-            .dom(".fancy-title")
-            .includesHtml(
-              "man_farmer.png",
-              "displays the new title with emojis"
-            );
-        });
-
-        test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
-          this.siteSettings.enable_inline_emoji_translation = true;
-          await visit("/t/internationalization-localization/280");
-          await click("#topic-title .d-icon-pencil");
-
-          await fillIn("#edit-title", "Test🙂Title");
-
-          await click("#topic-title .submit-edit");
-
-          assert
-            .dom(".fancy-title")
-            .includesHtml(
-              "slightly_smiling_face.png",
-              "displays the new title with emojis"
-            );
-        });
-
-        test("Suggested topics", async function (assert) {
-          await visit("/t/internationalization-localization/280");
-
-          assert
-            .dom("#suggested-topics-title")
-            .hasText(i18n("suggested_topics.title"));
-        });
-
-        test("Deleting a topic", async function (assert) {
-          this.siteSettings.min_topic_views_for_delete_confirm = 10000;
-          await visit("/t/internationalization-localization/280");
-          await click(".topic-post:nth-of-type(1) button.show-more-actions");
-          await click(".topic-post:nth-of-type(1) button.delete");
-          await click(".toggle-admin-menu");
-          assert.dom(".topic-admin-recover").exists("shows the recover button");
-        });
-
-        test("Deleting a popular topic displays confirmation modal", async function (assert) {
-          this.siteSettings.min_topic_views_for_delete_confirm = 10;
-          await visit("/t/internationalization-localization/280");
-          await click(".topic-post:nth-of-type(1) button.show-more-actions");
-          await click(".topic-post:nth-of-type(1) button.delete");
-          assert
-            .dom(".delete-topic-confirm-modal")
-            .exists("shows the delete confirmation modal");
-
-          await click(".delete-topic-confirm-modal .btn-primary");
-          assert
-            .dom(".delete-topic-confirm-modal")
-            .doesNotExist("hides the delete confirmation modal");
-          await click(".topic-post:nth-of-type(1) button.delete");
-          await click(".delete-topic-confirm-modal .btn-danger");
-          await click(".toggle-admin-menu");
-          assert.dom(".topic-admin-recover").exists("shows the recover button");
-        });
-
-        test("Group category moderator posts", async function (assert) {
-          await visit("/t/topic-for-group-moderators/2480");
-
-          assert.dom(".category-moderator").exists("has a class applied");
-          assert.dom(".d-icon-shield-halved").exists("shows an icon");
-        });
-
-        test("Suspended user posts", async function (assert) {
-          await visit("/t/topic-from-suspended-user/54077");
-
-          assert
-            .dom(".topic-post.user-suspended > #post_1")
-            .exists("has a class applied");
-        });
-      }
-    );
-  });
+        assert
+          .dom(".topic-post.user-suspended > #post_1")
+          .exists("has a class applied");
+      });
+    }
+  );
 
   acceptance(
     `Topic featured links (glimmer_post_stream_mode = ${postStreamMode})`,
