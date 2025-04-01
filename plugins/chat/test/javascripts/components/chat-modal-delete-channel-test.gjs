@@ -1,10 +1,10 @@
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import DeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
-import { hash } from "@ember/helper";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | <Chat::Modal::DeleteChannel />",

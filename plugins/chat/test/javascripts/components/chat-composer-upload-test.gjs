@@ -1,9 +1,9 @@
+import { fn } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
-import { fn } from "@ember/helper";
 
 module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
   setupRenderingTest(hooks);

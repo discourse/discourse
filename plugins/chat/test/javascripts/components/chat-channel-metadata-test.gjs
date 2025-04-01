@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);

@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import Header from "discourse/plugins/chat/discourse/components/chat/thread/header";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-thread-header", function (hooks) {
   setupRenderingTest(hooks);

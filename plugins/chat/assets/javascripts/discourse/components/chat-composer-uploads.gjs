@@ -3,13 +3,13 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import PickFilesButton from "discourse/components/pick-files-button";
 import { bind } from "discourse/lib/decorators";
 import { cloneJSON } from "discourse/lib/object";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
-import PickFilesButton from "discourse/components/pick-files-button";
 
 @classNames("chat-composer-uploads")
 export default class ChatComposerUploads extends Component {
@@ -139,6 +139,7 @@ export default class ChatComposerUploads extends Component {
       inProgressUploadsCount: this.inProgressUploads?.length,
     });
   }
+
 <template>{{#if this.showUploadsContainer}}
   <div class="chat-composer-uploads-container">
     {{#each this.uploads as |upload|}}

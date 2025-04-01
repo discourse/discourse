@@ -1,6 +1,7 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
+import { i18n } from 'discourse-i18n';
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
-import i18n from "discourse/helpers/i18n";
+
 export default RouteTemplate(<template><div class="c-routes --browse">
   <Navbar as |navbar|>
     <navbar.BackButton />
@@ -13,4 +14,4 @@ export default RouteTemplate(<template><div class="c-routes --browse">
   </Navbar>
 
   {{outlet}}
-</div></template>)
+</div></template>);

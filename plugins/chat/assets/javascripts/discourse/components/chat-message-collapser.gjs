@@ -2,15 +2,15 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import DecoratedHtml from "discourse/components/decorated-html";
+import htmlSafe0 from "discourse/helpers/html-safe";
 import domFromString from "discourse/lib/dom-from-string";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import lightbox from "../lib/lightbox";
-import DecoratedHtml from "discourse/components/decorated-html";
-import htmlSafe0 from "discourse/helpers/html-safe";
-import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
+import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
+import lightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
@@ -150,6 +150,7 @@ export default class ChatMessageCollapser extends Component {
       return acc;
     }, []);
   }
+
 <template><div class="chat-message-collapser">
   {{#if this.hasUploads}}
     <DecoratedHtml @html={{htmlSafe0 @cooked}} @decorate={{@decorate}} @className="chat-cooked" />

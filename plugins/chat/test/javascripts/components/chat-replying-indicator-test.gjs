@@ -3,8 +3,8 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { joinChannel, leaveChannel } from "discourse/tests/helpers/presence-pretender";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/chat-replying-indicator";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 async function addUser(id, username, channelName = "/chat-reply/1") {
   await joinChannel(channelName, {

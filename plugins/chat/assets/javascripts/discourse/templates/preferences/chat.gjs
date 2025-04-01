@@ -1,12 +1,13 @@
-import RouteTemplate from 'ember-route-template'
-import i18n from "discourse/helpers/i18n";
 import { Input } from "@ember/component";
-import ComboBox from "select-kit/components/combo-box";
-import { hash, fn, concat } from "@ember/helper";
-import eq from "truth-helpers/helpers/eq";
+import { concat,fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import withEventValue from "discourse/helpers/with-event-value";
+import RouteTemplate from 'ember-route-template';
 import SaveControls from "discourse/components/save-controls";
+import withEventValue from "discourse/helpers/with-event-value";
+import { i18n } from 'discourse-i18n';
+import ComboBox from "select-kit/components/combo-box";
+import eq from "truth-helpers/helpers/eq";
+
 export default RouteTemplate(<template><label class="control-label">{{i18n "chat.title_capitalized"}}</label>
 
 <div class="control-group chat-setting" data-setting-name="user_chat_enabled">
@@ -84,4 +85,4 @@ export default RouteTemplate(<template><label class="control-label">{{i18n "chat
   </div>
 </div>
 
-<SaveControls @id="user_chat_preference_save" @model={{@controller.model}} @action={{action "save"}} @saved={{@controller.saved}} /></template>)
+<SaveControls @id="user_chat_preference_save" @model={{@controller.model}} @action={{action "save"}} @saved={{@controller.saved}} /></template>);
