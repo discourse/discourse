@@ -11,16 +11,14 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = hbs`
-    <Chat::Message::Info @message={{this.message}} @show={{true}} />
-  `;
-
   test("chat_webhook_event", async function (assert) {
     this.message = new ChatFabricators(getOwner(this)).message({
       chat_webhook_event: { username: "discobot" },
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert
       .dom(".chat-message-info__username")
@@ -33,7 +31,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { username: "discobot" },
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert
       .dom(".chat-message-info__username")
@@ -46,7 +46,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       created_at: moment(),
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert.dom(".chat-message-info__date").exists();
   });
@@ -60,7 +62,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }),
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert
       .dom(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
@@ -78,7 +82,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }
     );
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert.dom(".chat-message-info__bookmark .d-icon-bookmark").exists();
   });
@@ -89,7 +95,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { status },
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert.dom(".chat-message-info__status .user-status-message").exists();
   });
@@ -100,7 +108,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user_flag_status: 0,
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
@@ -113,7 +123,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user_flag_status: 0,
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
@@ -131,7 +143,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       },
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert.dom(".chat-message-info__username.is-staff").exists();
     assert.dom(".chat-message-info__username.is-admin").exists();
@@ -145,7 +159,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { username: "discobot" },
     });
 
-    await render(template);
+    await render(hbs`
+    <Chat::Message::Info @message={{this.message}} @show={{true}} />
+  `);
 
     assert.dom(".chat-message-info__username.is-staff").doesNotExist();
     assert.dom(".chat-message-info__username.is-admin").doesNotExist();
