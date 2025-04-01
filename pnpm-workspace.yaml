@@ -16,3 +16,4 @@ packages:
 - "app/assets/javascripts/theme-transpiler"
 - "app/assets/javascripts/truth-helpers"
 - "app/assets/javascripts/codemod-resolver"
+- "plugins/chat"
