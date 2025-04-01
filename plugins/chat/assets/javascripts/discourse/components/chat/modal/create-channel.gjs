@@ -10,7 +10,7 @@ import { htmlSafe } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -291,7 +291,7 @@ export default class ChatModalCreateChannel extends Component {
           <label for="slug" class="chat-modal-create-channel__label">
             {{i18n "chat.create_channel.slug"}}&nbsp;
             <span>
-              {{dIcon "circle-info"}}
+              {{icon "circle-info"}}
               <DTooltip>
                 {{i18n "chat.channel_edit_name_slug_modal.slug_description"}}
               </DTooltip>
