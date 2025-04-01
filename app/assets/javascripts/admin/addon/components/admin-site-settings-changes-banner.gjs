@@ -37,7 +37,7 @@ export default class AdminSiteSettingsChangesBanner extends Component {
 
   get bannerLabel() {
     return i18n("admin.site_settings.dirty_banner", {
-      dirtyCount: this.dirtyCount,
+      count: this.dirtyCount,
     });
   }
 

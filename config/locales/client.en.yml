@@ -7503,11 +7503,13 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
-        title: "Site settings"
+        title: "Site settings" 
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
-        discard: "Discard"
-        save: "Save"
-        dirty_banner: "You have <em>%{dirtyCount}</em> unsaved changes"
+        discard: "Discard changes"
+        save: "Save all changes"
+        dirty_banner:
+          one: "You have <em>%{count}</em> unsaved change"
+          other: "You have <em>%{count}</em> unsaved changes"
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:
