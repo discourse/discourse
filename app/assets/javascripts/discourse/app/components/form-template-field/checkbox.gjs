@@ -1,6 +1,8 @@
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import noop from "discourse/helpers/noop";
 
 const Checkbox = <template>
   <div class="control-group form-template-field" data-field-type="checkbox">
@@ -11,6 +13,7 @@ const Checkbox = <template>
         @checked={{@value}}
         @type="checkbox"
         required={{if @validations.required "required" ""}}
+        {{on "input" (if @onChange @onChange (noop))}}
       />
       {{@attributes.label}}
       {{#if @validations.required}}

@@ -18,6 +18,7 @@ const FormTemplateField = <template>
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @onChange={{@onChange}}
   />
 </template>;
 
@@ -84,6 +85,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @component={{get this.fieldTypes content.type}}
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
+            @onChange={{@onChange}}
           />
         {{/each}}
       </div>
