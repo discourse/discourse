@@ -14,6 +14,7 @@ if (!fs.existsSync(destinationDir)) {
 // Perform glob to find all files in the source directory
 fs.glob(`${sourceDir}/**/*.*`, (err, files) => {
   if (err) {
+    // eslint-disable-next-line no-console
     console.error("Error during glob operation:", err);
     process.exit(1);
   }
@@ -32,6 +33,7 @@ fs.glob(`${sourceDir}/**/*.*`, (err, files) => {
       `export { default } from "${moduleName}";\n`,
       "utf8"
     );
+    // eslint-disable-next-line no-console
     console.log(`Created: ${destinationPath}`);
   });
 });
