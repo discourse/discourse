@@ -11,7 +11,8 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("when current user can send direct messages", async function (assert) {const self = this;
+    test("when current user can send direct messages", async function (assert) {
+      const self = this;
 
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
@@ -19,13 +20,16 @@ module(
       this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
-        <template><DirectMessageButton @user={{self.user}} @modal={{true}} /></template>
+        <template>
+          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+        </template>
       );
 
       assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
     });
 
-    test("when current user can’t send direct messages", async function (assert) {const self = this;
+    test("when current user can’t send direct messages", async function (assert) {
+      const self = this;
 
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
@@ -33,7 +37,9 @@ module(
       this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
-        <template><DirectMessageButton @user={{self.user}} @modal={{true}} /></template>
+        <template>
+          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+        </template>
       );
 
       assert
@@ -41,7 +47,8 @@ module(
         .doesNotExist("it doesn’t show the chat button");
     });
 
-    test("when displayed user has disabled PMs / DMs", async function (assert) {const self = this;
+    test("when displayed user has disabled PMs / DMs", async function (assert) {
+      const self = this;
 
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
@@ -52,7 +59,9 @@ module(
       });
 
       await render(
-        <template><DirectMessageButton @user={{self.user}} @modal={{true}} /></template>
+        <template>
+          <DirectMessageButton @user={{self.user}} @modal={{true}} />
+        </template>
       );
 
       assert

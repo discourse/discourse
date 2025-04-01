@@ -8,7 +8,8 @@ import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat
 module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("file - uploading in progress", async function (assert) {const self = this;
+  test("file - uploading in progress", async function (assert) {
+    const self = this;
 
     this.set("upload", {
       progress: 50,
@@ -16,13 +17,16 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       fileName: "test.pdf",
     });
 
-    await render(<template><ChatComposerUpload @upload={{self.upload}} /></template>);
+    await render(
+      <template><ChatComposerUpload @upload={{self.upload}} /></template>
+    );
 
     assert.dom(".upload-progress[value='50']").exists();
     assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
-  test("image - uploading in progress", async function (assert) {const self = this;
+  test("image - uploading in progress", async function (assert) {
+    const self = this;
 
     this.set("upload", {
       extension: ".png",
@@ -30,14 +34,17 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       fileName: "test.png",
     });
 
-    await render(<template><ChatComposerUpload @upload={{self.upload}} /></template>);
+    await render(
+      <template><ChatComposerUpload @upload={{self.upload}} /></template>
+    );
 
     assert.dom(".d-icon-far-image").exists();
     assert.dom(".upload-progress[value='78']").exists();
     assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
-  test("image - preprocessing upload in progress", async function (assert) {const self = this;
+  test("image - preprocessing upload in progress", async function (assert) {
+    const self = this;
 
     this.set("upload", {
       extension: ".png",
@@ -46,12 +53,15 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       processing: true,
     });
 
-    await render(<template><ChatComposerUpload @upload={{self.upload}} /></template>);
+    await render(
+      <template><ChatComposerUpload @upload={{self.upload}} /></template>
+    );
 
     assert.dom(".processing").hasText(i18n("processing"));
   });
 
-  test("file - upload complete", async function (assert) {const self = this;
+  test("file - upload complete", async function (assert) {
+    const self = this;
 
     this.set("upload", {
       type: ".pdf",
@@ -60,7 +70,9 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     });
 
     await render(
-      <template><ChatComposerUpload @isDone={{true}} @upload={{self.upload}} /></template>
+      <template>
+        <ChatComposerUpload @isDone={{true}} @upload={{self.upload}} />
+      </template>
     );
 
     assert.dom(".d-icon-file-lines").exists();
@@ -68,7 +80,8 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     assert.dom(".extension-pill").hasText("pdf");
   });
 
-  test("image - upload complete", async function (assert) {const self = this;
+  test("image - upload complete", async function (assert) {
+    const self = this;
 
     this.set("upload", {
       type: ".png",
@@ -78,13 +91,16 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     });
 
     await render(
-      <template><ChatComposerUpload @isDone={{true}} @upload={{self.upload}} /></template>
+      <template>
+        <ChatComposerUpload @isDone={{true}} @upload={{self.upload}} />
+      </template>
     );
 
     assert.dom("img.preview-img[src='/images/avatar.png']").exists();
   });
 
-  test("removing completed upload", async function (assert) {const self = this;
+  test("removing completed upload", async function (assert) {
+    const self = this;
 
     this.set("uploadRemoved", false);
     this.set("removeUpload", () => {
@@ -98,14 +114,21 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     });
 
     await render(
-      <template><ChatComposerUpload @isDone={{true}} @upload={{self.upload}} @onCancel={{fn self.removeUpload self.upload}} /></template>
+      <template>
+        <ChatComposerUpload
+          @isDone={{true}}
+          @upload={{self.upload}}
+          @onCancel={{fn self.removeUpload self.upload}}
+        />
+      </template>
     );
 
     await click(".chat-composer-upload__remove-btn");
     assert.true(this.uploadRemoved);
   });
 
-  test("cancelling in progress upload", async function (assert) {const self = this;
+  test("cancelling in progress upload", async function (assert) {
+    const self = this;
 
     this.set("uploadRemoved", false);
     this.set("removeUpload", () => {
@@ -119,7 +142,12 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     });
 
     await render(
-      <template><ChatComposerUpload @upload={{self.upload}} @onCancel={{fn self.removeUpload self.upload}} /></template>
+      <template>
+        <ChatComposerUpload
+          @upload={{self.upload}}
+          @onCancel={{fn self.removeUpload self.upload}}
+        />
+      </template>
     );
 
     await click(".chat-composer-upload__remove-btn");

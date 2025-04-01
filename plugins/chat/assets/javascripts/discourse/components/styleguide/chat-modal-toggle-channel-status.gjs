@@ -18,8 +18,11 @@ export default class ChatStyleguideChatModalToggleChannelStatus extends Componen
     });
   }
 
-<template><StyleguideExample @title="<Chat::Modal::ToggleChannelStatus>">
-  <Row>
-    <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
-  </Row>
-</StyleguideExample></template>}
+  <template>
+    <StyleguideExample @title="<Chat::Modal::ToggleChannelStatus>">
+      <Row>
+        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+      </Row>
+    </StyleguideExample>
+  </template>
+}

@@ -25,9 +25,14 @@ module(
       this.siteSettings.chat_enabled = true;
     });
 
-    test("channel title", async function (assert) {const self = this;
+    test("channel title", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-name__label")
@@ -38,20 +43,30 @@ module(
         .exists("shows the category hashtag badge");
     });
 
-    test("channel description", async function (assert) {const self = this;
+    test("channel description", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__description")
         .hasText(this.channel.description, "the channel description is shown");
     });
 
-    test("no channel description", async function (assert) {const self = this;
+    test("no channel description", async function (assert) {
+      const self = this;
 
       this.channel.description = null;
 
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__description")
@@ -64,28 +79,43 @@ module(
         .exists("adds a modifier class for styling");
     });
 
-    test("join", async function (assert) {const self = this;
+    test("join", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".toggle-channel-membership-button.-join")
         .exists("shows the join channel button");
     });
 
-    test("browse all", async function (assert) {const self = this;
+    test("browse all", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__browse-all")
         .exists("shows a link to browse all channels");
     });
 
-    test("closed channel", async function (assert) {const self = this;
+    test("closed channel", async function (assert) {
+      const self = this;
 
       this.channel.status = "closed";
-      await render(<template><ChatChannelPreviewCard @channel={{self.channel}} /></template>);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__join-channel-btn")

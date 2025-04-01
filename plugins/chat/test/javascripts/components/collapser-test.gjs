@@ -7,7 +7,8 @@ import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders header", async function (assert) {const self = this;
+  test("renders header", async function (assert) {
+    const self = this;
 
     this.set("header", htmlSafe(`<div class="cat">tomtom</div>`));
 
@@ -17,11 +18,13 @@ module("Discourse Chat | Component | collapser", function (hooks) {
   });
 
   test("collapses and expands yielded body", async function (assert) {
-    await render(<template>
-      <Collapser>
-        <div class="cat">body text</div>
-      </Collapser>
-    </template>);
+    await render(
+      <template>
+        <Collapser>
+          <div class="cat">body text</div>
+        </Collapser>
+      </template>
+    );
 
     assert.dom(".cat").isVisible();
 

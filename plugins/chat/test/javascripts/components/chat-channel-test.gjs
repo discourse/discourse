@@ -68,9 +68,12 @@ module(
       this.appEvents = this.container.lookup("service:app-events");
     });
 
-    test("it shows status on mentions", async function (assert) {const self = this;
+    test("it shows status on mentions", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       assertStatusIsRendered(
         assert,
@@ -79,9 +82,12 @@ module(
       );
     });
 
-    test("it updates status on mentions", async function (assert) {const self = this;
+    test("it updates status on mentions", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       const newStatus = {
         description: "off to dentist",
@@ -102,9 +108,12 @@ module(
       );
     });
 
-    test("it deletes status on mentions", async function (assert) {const self = this;
+    test("it deletes status on mentions", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       this.appEvents.trigger("user-status:changed", {
         [mentionedUser.id]: null,
@@ -115,9 +124,12 @@ module(
       assert.dom(selector).doesNotExist("status is deleted");
     });
 
-    test("it shows status on mentions on messages that came from Message Bus", async function (assert) {const self = this;
+    test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       await receiveChatMessageViaMessageBus();
 
@@ -128,9 +140,12 @@ module(
       );
     });
 
-    test("it updates status on mentions on messages that came from Message Bus", async function (assert) {const self = this;
+    test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
       await receiveChatMessageViaMessageBus();
 
       const newStatus = {
@@ -150,9 +165,12 @@ module(
       );
     });
 
-    test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {const self = this;
+    test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /></template>);
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
       await receiveChatMessageViaMessageBus();
 
       this.appEvents.trigger("user-status:changed", {
@@ -164,9 +182,14 @@ module(
       assert.dom(selector).doesNotExist("status is deleted");
     });
 
-    test("it shows status tooltip", async function (assert) {const self = this;
+    test("it shows status tooltip", async function (assert) {
+      const self = this;
 
-      await render(<template><ChatChannel @channel={{self.channel}} /><DTooltips /></template>);
+      await render(
+        <template>
+          <ChatChannel @channel={{self.channel}} /><DTooltips />
+        </template>
+      );
       await triggerEvent(statusSelector(mentionedUser.username), "pointermove");
 
       assert

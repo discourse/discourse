@@ -17,19 +17,23 @@ function containerSelector(user, options = {}) {
 module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("when user is not online", async function (assert) {const self = this;
+  test("when user is not online", async function (assert) {
+    const self = this;
 
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = { presenceChannel: { users: [] } };
 
     await render(
-      <template><ChatUserAvatar @chat={{self.chat}} @user={{self.user}} /></template>
+      <template>
+        <ChatUserAvatar @chat={{self.chat}} @user={{self.user}} />
+      </template>
     );
 
     assert.dom(containerSelector(this.user, { online: false })).exists();
   });
 
-  test("user is online", async function (assert) {const self = this;
+  test("user is online", async function (assert) {
+    const self = this;
 
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
@@ -37,13 +41,16 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
     };
 
     await render(
-      <template><ChatUserAvatar @chat={{self.chat}} @user={{self.user}} /></template>
+      <template>
+        <ChatUserAvatar @chat={{self.chat}} @user={{self.user}} />
+      </template>
     );
 
     assert.dom(containerSelector(this.user, { online: true })).exists();
   });
 
-  test("@showPresence=false", async function (assert) {const self = this;
+  test("@showPresence=false", async function (assert) {
+    const self = this;
 
     this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
@@ -51,18 +58,27 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
     };
 
     await render(
-      <template><ChatUserAvatar @showPresence={{false}} @chat={{self.chat}} @user={{self.user}} /></template>
+      <template>
+        <ChatUserAvatar
+          @showPresence={{false}}
+          @chat={{self.chat}}
+          @user={{self.user}}
+        />
+      </template>
     );
 
     assert.dom(containerSelector(this.user, { online: false })).exists();
   });
 
-  test("@interactive=true", async function (assert) {const self = this;
+  test("@interactive=true", async function (assert) {
+    const self = this;
 
     this.user = new CoreFabricators(getOwner(this)).user();
 
     await render(
-      <template><ChatUserAvatar @interactive={{false}} @user={{self.user}} /></template>
+      <template>
+        <ChatUserAvatar @interactive={{false}} @user={{self.user}} />
+      </template>
     );
 
     assert.dom(".clickable").doesNotExist();

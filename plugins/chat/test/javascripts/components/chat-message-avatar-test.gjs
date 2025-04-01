@@ -9,7 +9,8 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("chat_webhook_event", async function (assert) {const self = this;
+  test("chat_webhook_event", async function (assert) {
+    const self = this;
 
     this.message = ChatMessage.create(
       new ChatFabricators(getOwner(this)).channel(),
@@ -23,7 +24,8 @@ module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
     assert.dom(".chat-emoji-avatar .emoji").hasAttribute("title", "heart");
   });
 
-  test("user", async function (assert) {const self = this;
+  test("user", async function (assert) {
+    const self = this;
 
     this.message = ChatMessage.create(
       new ChatFabricators(getOwner(this)).channel(),

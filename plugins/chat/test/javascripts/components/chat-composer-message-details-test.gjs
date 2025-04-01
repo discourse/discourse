@@ -10,12 +10,15 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("data-id attribute", async function (assert) {const self = this;
+    test("data-id attribute", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert
@@ -23,20 +26,24 @@ module(
         .hasAttribute("data-id", this.message.id.toString());
     });
 
-    test("editing a message has the pencil icon", async function (assert) {const self = this;
+    test("editing a message has the pencil icon", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message({
         editing: true,
       });
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert.dom(".chat-composer-message-details .d-icon-pencil").exists();
     });
 
-    test("replying to a message has the reply icon", async function (assert) {const self = this;
+    test("replying to a message has the reply icon", async function (assert) {
+      const self = this;
 
       const firstMessage = new ChatFabricators(getOwner(this)).message();
       this.message = new ChatFabricators(getOwner(this)).message({
@@ -44,18 +51,23 @@ module(
       });
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert.dom(".chat-composer-message-details .d-icon-reply").exists();
     });
 
-    test("displays user avatar", async function (assert) {const self = this;
+    test("displays user avatar", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert
@@ -63,23 +75,29 @@ module(
         .hasAttribute("title", this.message.user.username);
     });
 
-    test("displays message excerpt", async function (assert) {const self = this;
+    test("displays message excerpt", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert.dom(".chat-reply__excerpt").hasText(this.message.excerpt);
     });
 
-    test("displays user’s username", async function (assert) {const self = this;
+    test("displays user’s username", async function (assert) {
+      const self = this;
 
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
-        <template><ChatComposerMessageDetails @message={{self.message}} /></template>
+        <template>
+          <ChatComposerMessageDetails @message={{self.message}} />
+        </template>
       );
 
       assert.dom(".chat-reply__username").hasText(this.message.user.username);

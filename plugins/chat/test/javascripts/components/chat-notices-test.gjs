@@ -11,7 +11,8 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("displays all notices for a channel", async function (assert) {const self = this;
+  test("displays all notices for a channel", async function (assert) {
+    const self = this;
 
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
@@ -30,7 +31,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       text_content: "N/A",
     });
 
-    await render(<template><ChatNotices @channel={{self.channel}} /></template>);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     const notices = queryAll(".chat-notices .chat-notices__notice");
 
@@ -40,7 +43,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     assert.dom(notices[1]).includesText("goodbye");
   });
 
-  test("Notices can be cleared", async function (assert) {const self = this;
+  test("Notices can be cleared", async function (assert) {
+    const self = this;
 
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
@@ -51,7 +55,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       text_content: "hello",
     });
 
-    await render(<template><ChatNotices @channel={{self.channel}} /></template>);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     assert.strictEqual(
       queryAll(".chat-notices .chat-notices__notice").length,
@@ -67,7 +73,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       "Notice was cleared"
     );
   });
-  test("MentionWithoutMembership notice renders", async function (assert) {const self = this;
+  test("MentionWithoutMembership notice renders", async function (assert) {
+    const self = this;
 
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
@@ -80,7 +87,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       data: { user_ids: [1], message_id: 1, text },
     });
 
-    await render(<template><ChatNotices @channel={{self.channel}} /></template>);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     assert.strictEqual(
       queryAll(
