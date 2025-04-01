@@ -77,6 +77,17 @@
     <%- if authentication_data %>
       <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
+
+    <script nonce="<%= csp_nonce_placeholder %>">
+      const darkModeMediaQuery = <%= dark_elements_media_query.to_json.html_safe %>;
+      const darkModeMediaQueryListener = window.matchMedia(darkModeMediaQuery);
+      const darkModeMediaQueryHandler = (e) => {
+        document.documentElement.classList.toggle('dark-mode', e.matches);
+        document.documentElement.classList.toggle('light-mode', !e.matches);
+      };
+      darkModeMediaQueryListener.addListener(darkModeMediaQueryHandler);
+      darkModeMediaQueryHandler(darkModeMediaQueryListener);
+    </script>
   </head>
 
   <body class="<%= body_classes %>">
