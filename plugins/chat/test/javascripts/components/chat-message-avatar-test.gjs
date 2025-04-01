@@ -2,9 +2,9 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import Avatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import Avatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 
 module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
   setupRenderingTest(hooks);

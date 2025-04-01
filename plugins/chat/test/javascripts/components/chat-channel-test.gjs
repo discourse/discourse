@@ -4,9 +4,9 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
 import DTooltips from "float-kit/components/d-tooltips";
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | chat-channel | status on mentions",

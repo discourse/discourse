@@ -5,8 +5,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatNotices from "discourse/plugins/chat/discourse/components/chat-notices";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);

@@ -3,9 +3,9 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES, channelStatusIcon } from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 
 module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   setupRenderingTest(hooks);

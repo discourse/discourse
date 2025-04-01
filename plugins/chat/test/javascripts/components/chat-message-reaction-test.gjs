@@ -1,8 +1,8 @@
+import { hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import { hash } from "@ember/helper";
 
 module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);

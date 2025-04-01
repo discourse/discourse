@@ -11,7 +11,6 @@ import { isBlank, isPresent } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
-import i18n0 from "discourse/helpers/i18n";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
@@ -269,7 +268,7 @@ export default class ChatModalCreateChannel extends Component {
       @closeModal={{@closeModal}}
       class="chat-modal-create-channel"
       @inline={{@inline}}
-      @title={{i18n0 "chat.create_channel.title"}}
+      @title={{i18n "chat.create_channel.title"}}
       @flash={{this.flash}}
       @tagName="form"
       {{on "submit" this.onSave}}
@@ -277,7 +276,7 @@ export default class ChatModalCreateChannel extends Component {
       <:body>
         <div class="chat-modal-create-channel__control -name">
           <label for="name" class="chat-modal-create-channel__label">
-            {{i18n0 "chat.create_channel.name"}}
+            {{i18n "chat.create_channel.name"}}
           </label>
           <Input
             name="name"
@@ -290,11 +289,11 @@ export default class ChatModalCreateChannel extends Component {
 
         <div class="chat-modal-create-channel__control -slug">
           <label for="slug" class="chat-modal-create-channel__label">
-            {{i18n0 "chat.create_channel.slug"}}&nbsp;
+            {{i18n "chat.create_channel.slug"}}&nbsp;
             <span>
               {{dIcon "circle-info"}}
               <DTooltip>
-                {{i18n0 "chat.channel_edit_name_slug_modal.slug_description"}}
+                {{i18n "chat.channel_edit_name_slug_modal.slug_description"}}
               </DTooltip>
             </span>
           </label>
@@ -309,7 +308,7 @@ export default class ChatModalCreateChannel extends Component {
 
         <div class="chat-modal-create-channel__control -description">
           <label for="description" class="chat-modal-create-channel__label">
-            {{i18n0 "chat.create_channel.description"}}
+            {{i18n "chat.create_channel.description"}}
           </label>
           <Input
             name="description"
@@ -321,7 +320,7 @@ export default class ChatModalCreateChannel extends Component {
 
         <div class="chat-modal-create-channel__control">
           <label class="chat-modal-create-channel__label">
-            {{i18n0 "chat.create_channel.choose_category.label"}}
+            {{i18n "chat.create_channel.choose_category.label"}}
           </label>
           <CategoryChooser
             @value={{this.categoryId}}
@@ -354,16 +353,16 @@ export default class ChatModalCreateChannel extends Component {
               />
               <div class="auto-join-channel">
                 <span class="chat-modal-create-channel__label-title">
-                  {{i18n0 "chat.settings.auto_join_users_label"}}
+                  {{i18n "chat.settings.auto_join_users_label"}}
                 </span>
                 <p class="chat-modal-create-channel__label-description">
                   {{#if this.categoryName}}
-                    {{i18n0
+                    {{i18n
                       "chat.settings.auto_join_users_info"
                       category=this.categoryName
                     }}
                   {{else}}
-                    {{i18n0 "chat.settings.auto_join_users_info_no_category"}}
+                    {{i18n "chat.settings.auto_join_users_info_no_category"}}
                   {{/if}}
                 </p>
               </div>
@@ -380,10 +379,10 @@ export default class ChatModalCreateChannel extends Component {
             />
             <div class="threading-channel">
               <span class="chat-modal-create-channel__label-title">
-                {{i18n0 "chat.create_channel.threading.label"}}
+                {{i18n "chat.create_channel.threading.label"}}
               </span>
               <p class="chat-modal-create-channel__label-description">
-                {{i18n0 "chat.settings.channel_threading_description"}}
+                {{i18n "chat.settings.channel_threading_description"}}
               </p>
             </div>
           </label>
@@ -395,7 +394,7 @@ export default class ChatModalCreateChannel extends Component {
           disabled={{this.createDisabled}}
           type="submit"
         >
-          {{i18n0 "chat.create_channel.create"}}
+          {{i18n "chat.create_channel.create"}}
         </button>
       </:footer>
     </DModal>

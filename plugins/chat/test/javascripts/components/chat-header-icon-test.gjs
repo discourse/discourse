@@ -3,8 +3,8 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
+import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 module("Discourse Chat | Component | chat-header-icon", function (hooks) {
   setupRenderingTest(hooks);

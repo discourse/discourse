@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
-import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
-import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import not from "truth-helpers/helpers/not";
-import { on } from "@ember/modifier";
+import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;
@@ -100,6 +100,7 @@ export default class ChatStyleguideChatMessage extends Component {
       ];
     }
   }
+
 <template><StyleguideExample @title="<ChatMessage>">
   <Component0>
     <ChatMessage @message={{this.message}} @context="channel" />

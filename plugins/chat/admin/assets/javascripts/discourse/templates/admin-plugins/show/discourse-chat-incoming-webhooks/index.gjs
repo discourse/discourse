@@ -1,8 +1,9 @@
-import RouteTemplate from 'ember-route-template'
+import RouteTemplate from 'ember-route-template';
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import i18n from "discourse/helpers/i18n";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import { i18n } from 'discourse-i18n';
 import AdminChatIncomingWebhooksList from "discourse/plugins/chat/admin/components/admin-chat-incoming-webhooks-list";
+
 export default RouteTemplate(<template><DBreadcrumbsItem @path="/admin/plugins/chat/hooks" @label={{i18n "chat.incoming_webhooks.title"}} />
 
 <div class="discourse-chat-incoming-webhooks admin-detail">
@@ -19,4 +20,4 @@ export default RouteTemplate(<template><DBreadcrumbsItem @path="/admin/plugins/c
       {{i18n "chat.incoming_webhooks.none"}}
     {{/if}}
   </div>
-</div></template>)
+</div></template>);
