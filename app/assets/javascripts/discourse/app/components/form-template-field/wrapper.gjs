@@ -14,12 +14,14 @@ import TextareaField from "./textarea";
 import UploadField from "./upload";
 
 const FormTemplateField = <template>
+  {{log @content}}
   <@component
     @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @tagGroup={{@content.tag_group}}
     @onChange={{@onChange}}
   />
 </template>;
