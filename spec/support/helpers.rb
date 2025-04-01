@@ -6,6 +6,11 @@ GIT_INITIAL_BRANCH_SUPPORTED =
 module Helpers
   extend ActiveSupport::Concern
 
+  class NotAThemeError < StandardError
+  end
+  class NotAComponentThemeError < StandardError
+  end
+
   def self.next_seq
     @next_seq = (@next_seq || 0) + 1
   end
@@ -244,7 +249,8 @@ module Helpers
     theme = RemoteTheme.import_theme_from_directory(directory_from_caller)
 
     if theme.component
-      raise "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
+      raise NotAThemeError,
+            "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
     end
 
     theme.set_default! if set_theme_as_default
@@ -273,11 +279,18 @@ module Helpers
     theme = RemoteTheme.import_theme_from_directory(directory_from_caller)
 
     if !theme.component
-      raise "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
+      raise NotAComponentThemeError,
+            "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
     end
 
     Theme.find(parent_theme_id).child_themes << theme
     theme
+  end
+
+  def upload_theme_or_component
+    upload_theme
+  rescue NotAThemeError
+    upload_theme_component
   end
 
   # Runs named migration for a given theme.
