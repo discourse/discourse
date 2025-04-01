@@ -22,6 +22,7 @@ export default class SearchMenuPanel extends Component {
         @inlineResults={{true}}
         @autofocusInput={{true}}
         @location="header"
+        @searchInputId={{@searchInputId}}
       />
     </MenuPanel>
   </template>

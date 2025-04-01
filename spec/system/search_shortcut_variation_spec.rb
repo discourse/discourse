@@ -19,7 +19,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_visible
         page.send_keys("/")
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-term")
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
@@ -29,10 +29,20 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_visible
         search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-term")
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
+
+      # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+      #   visit("/")
+      #   expect(welcome_banner).to be_visible
+      #   search_page.browser_search_shortcut
+      #   expect(search_page).to have_search_menu
+      #   expect(current_active_element[:id]).to eq("welcome-banner-search-input")
+      #   search_page.browser_search_shortcut
+      #   expect(search_page).to have_no_search_menu_visible
+      # end
 
       context "when welcome banner is not in the viewport" do
         before do
@@ -44,7 +54,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
-          expect(current_active_element[:id]).to eq("search-term")
+          expect(current_active_element[:id]).to eq("header-search-input")
           page.send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
@@ -53,10 +63,20 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           expect(welcome_banner).to be_invisible
           search_page.browser_search_shortcut
           expect(search_page).to have_search_menu
-          expect(current_active_element[:id]).to eq("search-term")
+          expect(current_active_element[:id]).to eq("header-search-input")
           page.send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
+
+        # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+        #   expect(welcome_banner).to be_invisible
+        #   search_page.browser_search_shortcut
+        #   expect(search_page).to have_search_menu
+        #   expect(current_active_element[:id]).to eq("header-search-input")
+        #   search_page.browser_search_shortcut
+        #   search_page.browser_search_shortcut
+        #   expect(current_active_element[:id]).to eq(nil)
+        # end
       end
     end
 
@@ -68,7 +88,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_hidden
         page.send_keys("/")
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("search-term")
+        expect(current_active_element[:id]).to eq("header-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
@@ -78,7 +98,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_hidden
         search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("search-term")
+        expect(current_active_element[:id]).to eq("header-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
@@ -96,7 +116,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_visible
         page.send_keys("/")
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-term")
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
@@ -106,10 +126,20 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_visible
         search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-term")
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
+
+      # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+      #   visit("/")
+      #   expect(welcome_banner).to be_visible
+      #   search_page.browser_search_shortcut
+      #   expect(search_page).to have_search_menu
+      #   expect(current_active_element[:id]).to eq("welcome-banner-search-input")
+      #   search_page.browser_search_shortcut
+      #   expect(search_page).to have_no_search_menu_visible
+      # end
 
       context "when welcome banner is not in the viewport" do
         before do
@@ -121,7 +151,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
-          expect(current_active_element[:id]).to eq("search-term")
+          expect(current_active_element[:id]).to eq("icon-search-input")
           page.send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
@@ -136,7 +166,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(welcome_banner).to be_hidden
         page.send_keys("/")
         expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("search-term")
+        expect(current_active_element[:id]).to eq("icon-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
@@ -151,6 +181,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           visit "/t/#{topic.slug}/#{topic.id}"
           search_page.browser_search_shortcut
           expect(search_page).to have_search_menu_visible
+          expect(current_active_element[:id]).to eq("icon-search-input")
           search_page.browser_search_shortcut
           expect(search_page).to have_no_search_menu_visible
         end

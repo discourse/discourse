@@ -93,6 +93,7 @@ export default class Results extends Component {
             <div class="no-results">{{i18n "search.no_results"}}</div>
           {{else if this.renderInitialOptions}}
             <InitialOptions
+              @searchInputId={{@searchInputId}}
               @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
             />
@@ -100,6 +101,7 @@ export default class Results extends Component {
             {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
+                @searchInputId={{@searchInputId}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
