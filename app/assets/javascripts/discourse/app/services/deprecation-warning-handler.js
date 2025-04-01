@@ -19,7 +19,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.header-widget-overrides",
   "discourse.plugin-outlet-tag-name",
   "discourse.post-menu-widget-overrides",
-  "discourse.fontawesome-6-upgrade",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
