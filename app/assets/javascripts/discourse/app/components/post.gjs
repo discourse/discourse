@@ -442,7 +442,10 @@ export default class Post extends Component {
                 )
               }}
             >
-              <PluginOutlet @name="post-content-cooked-html" @post={{@post}}>
+              <PluginOutlet
+                @name="post-content-cooked-html"
+                @outletArgs={{hash post=@post}}
+              >
                 <PostCookedHtml
                   @post={{@post}}
                   @highlightTerm={{this.search.highlightTerm}}
