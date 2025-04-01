@@ -1907,14 +1907,4 @@ export default class TopicController extends Controller {
       }
     }
   }
-
-  @action
-  didStartDrag() {
-    this.appEvents.trigger("topic:interacted");
-  }
-
-  @action
-  didEndDrag() {
-    return;
-  }
 }
