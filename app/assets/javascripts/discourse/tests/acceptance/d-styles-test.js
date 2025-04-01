@@ -1,4 +1,5 @@
-import { visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Session from "discourse/models/session";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -54,6 +55,17 @@ const SITE_DATA = {
   ],
 };
 
+const LIGHT_STYLES = [
+  "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
+  "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }",
+].join(" ");
+
+const DARK_STYLES = [
+  "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
+  "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }",
+  "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }",
+].join(" ");
+
 acceptance("DStyles - category backgrounds", function (needs) {
   needs.user();
   needs.site(SITE_DATA);
@@ -61,26 +73,17 @@ acceptance("DStyles - category backgrounds", function (needs) {
   test("CSS classes are generated", async function (assert) {
     await visit("/");
 
-    assert
-      .dom("#d-styles")
-      .includesHtml(
-        "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }"
-      );
-    assert
-      .dom("#d-styles")
-      .includesHtml(
-        "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }"
-      );
+    assert.dom("#d-styles").includesHtml(LIGHT_STYLES);
   });
 });
 
-acceptance("DStyles - category backgrounds (dark)", function (needs) {
+acceptance("DStyles - updates based on dark mode", function (needs) {
   needs.user();
   needs.site(SITE_DATA);
 
   needs.hooks.beforeEach(function () {
     const session = Session.current();
-    session.set("darkModeAvailable", true);
+    session.set("darkModeAvailable", false);
     session.set("defaultColorSchemeIsDark", false);
   });
 
@@ -93,48 +96,20 @@ acceptance("DStyles - category backgrounds (dark)", function (needs) {
   test("CSS classes are generated", async function (assert) {
     await visit("/");
 
-    const css = [
-      "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
-      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }",
-      "@media (prefers-color-scheme: dark) {",
-      "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }",
-      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }",
-      "}",
-    ].join(" ");
-    assert.dom("#d-styles").includesHtml(css);
+    assert.dom("#d-styles").includesHtml(LIGHT_STYLES);
+    assert.dom("#d-styles").doesNotIncludeHtml(DARK_STYLES);
+
+    getOwner(this)
+      .lookup("service:session")
+      .set("defaultColorSchemeIsDark", true);
+    getOwner(this).lookup("service:session").set("darkModeAvailable", true);
+
+    await settled();
+
+    assert.dom("#d-styles").includesHtml(DARK_STYLES);
+    assert.dom("#d-styles").doesNotIncludeHtml(LIGHT_STYLES);
   });
 });
-
-acceptance(
-  "DStyles - category backgrounds (default theme is dark)",
-  function (needs) {
-    needs.user();
-    needs.site(SITE_DATA);
-
-    needs.hooks.beforeEach(function () {
-      const session = Session.current();
-      session.set("darkModeAvailable", true);
-      session.set("defaultColorSchemeIsDark", true);
-    });
-
-    needs.hooks.afterEach(function () {
-      const session = Session.current();
-      session.set("darkModeAvailable", null);
-      session.set("defaultColorSchemeIsDark", null);
-    });
-
-    test("CSS classes are generated", async function (assert) {
-      await visit("/");
-
-      const css = [
-        "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
-        "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }",
-        "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }",
-      ].join(" ");
-      assert.dom("#d-styles").includesHtml(css);
-    });
-  }
-);
 
 acceptance("DStyles - category badges", function (needs) {
   needs.user();
