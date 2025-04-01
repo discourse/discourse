@@ -1,13 +1,17 @@
 .composer-toggle-switch {
-  --toggle-switch-width: 40px;
-  --toggle-switch-height: 24px;
+  --toggle-switch-width: 4em;
+  --toggle-switch-height: 1.25em;
+
+  @include breakpoint("mobile-extra-large") {
+    --toggle-switch-width: 3em;
+  }
   height: 100%;
   grid-column: span 2;
-  justify-content: center;
   display: flex;
+  justify-content: center;
   align-items: center;
   border: 0;
-  padding: 0;
+  padding: 0 0.5em;
   background: transparent;
 
   &:focus-visible {
@@ -20,8 +24,9 @@
   }
 
   &__slider {
-    display: inline-block;
-    background: var(--primary-low);
+    display: inline-flex;
+    background: var(--primary-100);
+    border: 1px solid var(--primary-200);
     width: var(--toggle-switch-width);
     height: var(--toggle-switch-height);
     position: relative;
@@ -38,21 +43,24 @@
       display: block;
       position: absolute;
       background-color: var(--tertiary-low);
-      width: calc(var(--toggle-switch-height) - 2px);
-      height: calc(var(--toggle-switch-height) - 4px);
-      top: 2px;
-      transition:
-        left 0.25s,
-        right 0.25s;
-      border-radius: 0.25em;
-      box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+      width: 1.75em;
+      top: -1px;
+      bottom: -1px;
+      transition: transform 0.25s;
+      border-radius: 0.15em;
+      border: 1px solid var(--tertiary-400);
+      border-bottom-width: 2px;
+
+      @include breakpoint("mobile-extra-large") {
+        width: 1.5em;
+      }
 
       .--markdown & {
-        left: 2px;
+        transform: translateX(-1px);
       }
 
       .--rte & {
-        right: 2px;
+        transform: translateX(calc(100% + 1px));
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -63,35 +71,51 @@
 
   &__left-icon,
   &__right-icon {
-    display: inline-block;
-    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
-    transition:
-      opacity 0.25s left 0.25s,
-      right 0.25s;
     height: 100%;
-    width: calc(var(--toggle-switch-height) - 2px);
+    width: calc(1.7em + 2px);
 
     @media (prefers-reduced-motion: reduce) {
       transition-duration: 0ms;
     }
 
     .--markdown & {
-      left: 2px;
-    }
-
-    .--rte & {
-      right: 2px;
+      margin-left: -1px;
     }
 
     &.--active {
       opacity: 1;
+      transition: opacity 0.25s;
+      transition-delay: 0.1s;
     }
 
     .d-icon {
       font-size: var(--font-down-1);
-      color: var(--primary);
+      color: var(--tertiary);
       vertical-align: text-bottom;
+    }
+  }
+
+  // vertical alignment adjustments
+  .d-icon-a {
+    height: 0.95em;
+    width: 100%;
+    right: -2px;
+
+    @include breakpoint("mobile-extra-large") {
+      right: -4px;
+    }
+  }
+
+  .d-icon-fab-markdown {
+    height: 1.15em;
+    width: 100%;
+
+    @include breakpoint("mobile-extra-large") {
+      height: 1em;
     }
   }
 }
