@@ -357,6 +357,8 @@ RSpec.configure do |config|
       Capybara.default_max_wait_time = 4
     end
 
+    puts "TIMEOUT: #{Capybara.default_max_wait_time}"
+
     Capybara.threadsafe = true
     Capybara.disable_animation = true
 
@@ -412,6 +414,8 @@ RSpec.configure do |config|
                   .reduce([]) { |array, thread| array << thread.backtrace }
                   .uniq
               end
+
+              puts "SPECIAL END: #{Time.now.to_i}"
 
               raise # re-raise original error
             else

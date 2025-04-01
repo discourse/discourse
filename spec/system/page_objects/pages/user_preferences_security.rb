@@ -12,7 +12,8 @@ module PageObjects
         click_button "Manage Two-Factor Authentication"
         find(".confirm-session input#password").fill_in(with: password)
         find(".confirm-session .btn-primary:not([disabled])").click
-        expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
+        puts "SPECIAL START: #{Time.now.to_i}"
+        expect(page).to have_current_path("/u/#{user.username}/preerences/second-factor")
         self
       end
     end
