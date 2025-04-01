@@ -36,9 +36,9 @@ a.hashtag {
   }
 
   img.emoji {
-    width: 15px;
-    height: 15px;
-    vertical-align: text-top;
+    width: 0.93em;
+    height: 0.93em;
+    vertical-align: middle;
   }
 
   svg {
@@ -56,7 +56,6 @@ a.hashtag {
 
   .hashtag-category-icon,
   .hashtag-category-emoji {
-    margin-right: 0.25em;
     display: inline-block;
   }
 }
@@ -111,8 +110,8 @@ a.hashtag {
     .hashtag-category-icon,
     .hashtag-category-emoji {
       flex: 0 0 auto;
-      width: 15px;
-      height: 15px;
+      width: 1em;
+      height: 1em;
       margin-right: 5px;
       display: inline-block;
     }
@@ -121,7 +120,7 @@ a.hashtag {
     .hashtag-category-emoji .emoji {
       width: 15px;
       height: 15px;
-      vertical-align: top;
+      vertical-align: middle;
     }
   }
 
