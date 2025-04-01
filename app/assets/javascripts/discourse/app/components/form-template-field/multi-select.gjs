@@ -57,7 +57,6 @@ export default class FormTemplateFieldMultiSelect extends Component {
 
   @action
   updateComposerTags(selectedValues) {
-    debugger;
     let previousTags = this.previousTags || [];
     this.previousTags = [...selectedValues];
 
