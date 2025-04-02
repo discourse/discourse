@@ -5,6 +5,8 @@
 
   &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
     font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    font-variant-ligatures: none;
   }
 }
 
