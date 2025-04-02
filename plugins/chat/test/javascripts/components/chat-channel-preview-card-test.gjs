@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import ChatChannelPreviewCard from "discourse/plugins/chat/discourse/components/chat-channel-preview-card";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -26,7 +26,13 @@ module(
     });
 
     test("channel title", async function (assert) {
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-name__label")
@@ -38,7 +44,13 @@ module(
     });
 
     test("channel description", async function (assert) {
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__description")
@@ -46,9 +58,15 @@ module(
     });
 
     test("no channel description", async function (assert) {
+      const self = this;
+
       this.channel.description = null;
 
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__description")
@@ -62,7 +80,13 @@ module(
     });
 
     test("join", async function (assert) {
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".toggle-channel-membership-button.-join")
@@ -70,7 +94,13 @@ module(
     });
 
     test("browse all", async function (assert) {
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__browse-all")
@@ -78,8 +108,14 @@ module(
     });
 
     test("closed channel", async function (assert) {
+      const self = this;
+
       this.channel.status = "closed";
-      await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
+      await render(
+        <template>
+          <ChatChannelPreviewCard @channel={{self.channel}} />
+        </template>
+      );
 
       assert
         .dom(".chat-channel-preview-card__join-channel-btn")

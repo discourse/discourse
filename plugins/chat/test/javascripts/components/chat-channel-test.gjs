@@ -1,10 +1,11 @@
 import { getOwner } from "@ember/owner";
 import { render, triggerEvent, waitFor } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
+import DTooltips from "float-kit/components/d-tooltips";
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -68,7 +69,11 @@ module(
     });
 
     test("it shows status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       assertStatusIsRendered(
         assert,
@@ -78,7 +83,11 @@ module(
     });
 
     test("it updates status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       const newStatus = {
         description: "off to dentist",
@@ -100,7 +109,11 @@ module(
     });
 
     test("it deletes status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       this.appEvents.trigger("user-status:changed", {
         [mentionedUser.id]: null,
@@ -112,7 +125,11 @@ module(
     });
 
     test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
 
       await receiveChatMessageViaMessageBus();
 
@@ -124,7 +141,11 @@ module(
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
       await receiveChatMessageViaMessageBus();
 
       const newStatus = {
@@ -145,7 +166,11 @@ module(
     });
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      const self = this;
+
+      await render(
+        <template><ChatChannel @channel={{self.channel}} /></template>
+      );
       await receiveChatMessageViaMessageBus();
 
       this.appEvents.trigger("user-status:changed", {
@@ -158,7 +183,13 @@ module(
     });
 
     test("it shows status tooltip", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} /><DTooltips />`);
+      const self = this;
+
+      await render(
+        <template>
+          <ChatChannel @channel={{self.channel}} /><DTooltips />
+        </template>
+      );
       await triggerEvent(statusSelector(mentionedUser.username), "pointermove");
 
       assert

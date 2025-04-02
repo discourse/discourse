@@ -2,9 +2,13 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
+import Collapser from "discourse/plugins/chat/discourse/components/collapser";
+import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
 import lightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
@@ -145,6 +149,56 @@ export default class ChatMessageCollapser extends Component {
       return acc;
     }, []);
   }
+
+  <template>
+    <div class="chat-message-collapser">
+      {{#if this.hasUploads}}
+        <DecoratedHtml
+          @html={{htmlSafe @cooked}}
+          @decorate={{@decorate}}
+          @className="chat-cooked"
+        />
+
+        <Collapser
+          @header={{this.uploadsHeader}}
+          @onToggle={{@onToggleCollapse}}
+        >
+          <div class="chat-uploads" {{this.lightbox}}>
+            {{#each @uploads as |upload|}}
+              <ChatUpload @upload={{upload}} />
+            {{/each}}
+          </div>
+        </Collapser>
+      {{else}}
+        {{#each this.cookedBodies as |cooked|}}
+          {{#if cooked.needsCollapser}}
+            <Collapser
+              @header={{cooked.header}}
+              @onToggle={{@onToggleCollapse}}
+            >
+              {{#if cooked.videoAttributes}}
+                <div class="chat-message-collapser-lazy-video">
+                  <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+                </div>
+              {{else}}
+                <DecoratedHtml
+                  @html={{htmlSafe cooked.body}}
+                  @decorate={{@decorate}}
+                  @className="chat-cooked"
+                />
+              {{/if}}
+            </Collapser>
+          {{else}}
+            <DecoratedHtml
+              @html={{htmlSafe cooked.body}}
+              @decorate={{@decorate}}
+              @className="chat-cooked"
+            />
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
+  </template>
 }
 
 function lazyVideoPredicate(e) {
@@ -223,45 +277,3 @@ export function isCollapsible(cooked, uploads) {
     hasGallery(elements)
   );
 }
-
-<div class="chat-message-collapser">
-  {{#if this.hasUploads}}
-    <DecoratedHtml
-      @html={{html-safe @cooked}}
-      @decorate={{@decorate}}
-      @className="chat-cooked"
-    />
-
-    <Collapser @header={{this.uploadsHeader}} @onToggle={{@onToggleCollapse}}>
-      <div class="chat-uploads" {{this.lightbox}}>
-        {{#each @uploads as |upload|}}
-          <ChatUpload @upload={{upload}} />
-        {{/each}}
-      </div>
-    </Collapser>
-  {{else}}
-    {{#each this.cookedBodies as |cooked|}}
-      {{#if cooked.needsCollapser}}
-        <Collapser @header={{cooked.header}} @onToggle={{@onToggleCollapse}}>
-          {{#if cooked.videoAttributes}}
-            <div class="chat-message-collapser-lazy-video">
-              <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
-            </div>
-          {{else}}
-            <DecoratedHtml
-              @html={{html-safe cooked.body}}
-              @decorate={{@decorate}}
-              @className="chat-cooked"
-            />
-          {{/if}}
-        </Collapser>
-      {{else}}
-        <DecoratedHtml
-          @html={{html-safe cooked.body}}
-          @decorate={{@decorate}}
-          @className="chat-cooked"
-        />
-      {{/if}}
-    {{/each}}
-  {{/if}}
-</div>

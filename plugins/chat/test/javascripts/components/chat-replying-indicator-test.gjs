@@ -1,12 +1,12 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   joinChannel,
   leaveChannel,
 } from "discourse/tests/helpers/presence-pretender";
+import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/chat-replying-indicator";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 async function addUser(id, username, channelName = "/chat-reply/1") {
@@ -30,7 +30,9 @@ module(
 
     test("not displayed when no one is replying", async function (assert) {
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       assert.dom(".chat-replying-indicator__text").doesNotExist();
@@ -38,7 +40,11 @@ module(
 
     test("working for thread", async function (assert) {
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1/thread/1" />`
+        <template>
+          <ChatReplyingIndicator
+            @presenceChannelName="/chat-reply/1/thread/1"
+          />
+        </template>
       );
 
       await addUser(1, "sam", "/chat-reply/1/thread/1");
@@ -48,10 +54,14 @@ module(
 
     test("doesn’t leak in other indicators", async function (assert) {
       await render(
-        hbs`
-          <div class="channel"><ChatReplyingIndicator @presenceChannelName="/chat-reply/1" /></div>
-          <div class="thread"><ChatReplyingIndicator @presenceChannelName="/chat-reply/1/thread/1" /></div>
-        `
+        <template>
+          <div class="channel"><ChatReplyingIndicator
+              @presenceChannelName="/chat-reply/1"
+            /></div>
+          <div class="thread"><ChatReplyingIndicator
+              @presenceChannelName="/chat-reply/1/thread/1"
+            /></div>
+        </template>
       );
 
       await addUser(1, "sam");
@@ -72,7 +82,9 @@ module(
 
     test("displays indicator when user is replying", async function (assert) {
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       await addUser(1, "sam");
@@ -84,7 +96,9 @@ module(
       this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       await addUser(1, "sam");
@@ -99,7 +113,9 @@ module(
       this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       await addUser(1, "sam");
@@ -115,7 +131,9 @@ module(
       this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
-        hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       await addUser(1, "sam");
@@ -132,7 +150,9 @@ module(
       this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
-        hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
+        <template>
+          <ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />
+        </template>
       );
 
       await addUser(1, "sam");
@@ -142,12 +162,18 @@ module(
     });
 
     test("resets presence when channel changes", async function (assert) {
+      const self = this;
+
       this.set("presenceChannelName", "/chat-reply/1");
 
       await addUser(1, "sam");
 
       await render(
-        hbs`<ChatReplyingIndicator @presenceChannelName={{this.presenceChannelName}} />`
+        <template>
+          <ChatReplyingIndicator
+            @presenceChannelName={{self.presenceChannelName}}
+          />
+        </template>
       );
 
       assert.dom(".chat-replying-indicator__text").hasText("sam is typing");

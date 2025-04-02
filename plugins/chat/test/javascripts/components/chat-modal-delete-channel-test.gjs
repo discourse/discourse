@@ -1,8 +1,9 @@
+import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -11,12 +12,19 @@ module(
     setupRenderingTest(hooks);
 
     test("channel title is escaped in instructions correctly", async function (assert) {
+      const self = this;
+
       this.channel = new ChatFabricators(getOwner(this)).channel({
         title: `<script>someeviltitle</script>`,
       });
 
       await render(
-        hbs`<Chat::Modal::DeleteChannel @inline={{true}} @model={{hash channel=this.channel}} />`
+        <template>
+          <DeleteChannel
+            @inline={{true}}
+            @model={{hash channel=self.channel}}
+          />
+        </template>
       );
 
       assert

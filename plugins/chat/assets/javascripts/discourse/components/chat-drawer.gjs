@@ -1,14 +1,19 @@
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")
 export default class ChatDrawer extends Component {
@@ -222,46 +227,50 @@ export default class ChatDrawer extends Component {
   didResize(element, { width, height }) {
     this.chatDrawerSize.size = { width, height };
   }
-}
 
-{{#if this.chatStateManager.isDrawerActive}}
-  {{bodyClass "chat-drawer-active"}}
-{{/if}}
+  <template>
+    {{#if this.chatStateManager.isDrawerActive}}
+      {{bodyClass "chat-drawer-active"}}
+    {{/if}}
 
-{{#if this.chatStateManager.isDrawerExpanded}}
-  {{bodyClass "chat-drawer-expanded"}}
-{{/if}}
+    {{#if this.chatStateManager.isDrawerExpanded}}
+      {{bodyClass "chat-drawer-expanded"}}
+    {{/if}}
 
-{{#if this.chatStateManager.isDrawerActive}}
-  <div
-    data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
-    data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
-    class={{concat-class
-      "chat-drawer"
-      (if this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed")
-    }}
-    {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
-    style={{this.drawerStyle}}
-  >
-    <div class="chat-drawer-container">
-      <div class="chat-drawer-resizer"></div>
-
-      <PluginOutlet
-        @name="chat-drawer-before-content"
-        @outletArgs={{hash
-          currentRouteName=this.chatDrawerRouter.currentRouteName
+    {{#if this.chatStateManager.isDrawerActive}}
+      <div
+        data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
+        data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
+        class={{concatClass
+          "chat-drawer"
+          (if
+            this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed"
+          )
         }}
-      />
+        {{chatResizableNode ".chat-drawer-resizer" this.didResize}}
+        style={{this.drawerStyle}}
+      >
+        <div class="chat-drawer-container">
+          <div class="chat-drawer-resizer"></div>
 
-      <this.chatDrawerRouter.component
-        @params={{this.chatDrawerRouter.params}}
-        @model={{this.chatDrawerRouter.model}}
-        @openURL={{this.openURL}}
-        @openInFullPage={{this.openInFullPage}}
-        @toggleExpand={{this.toggleExpand}}
-        @close={{this.close}}
-        @drawerActions={{this.drawerActions}}
-      />
-    </div>
-  </div>
-{{/if}}
+          <PluginOutlet
+            @name="chat-drawer-before-content"
+            @outletArgs={{hash
+              currentRouteName=this.chatDrawerRouter.currentRouteName
+            }}
+          />
+
+          <this.chatDrawerRouter.component
+            @params={{this.chatDrawerRouter.params}}
+            @model={{this.chatDrawerRouter.model}}
+            @openURL={{this.openURL}}
+            @openInFullPage={{this.openInFullPage}}
+            @toggleExpand={{this.toggleExpand}}
+            @close={{this.close}}
+            @drawerActions={{this.drawerActions}}
+          />
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}

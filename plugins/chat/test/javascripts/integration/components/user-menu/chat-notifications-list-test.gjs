@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
+import ChatNotificationsList from "discourse/plugins/chat/discourse/components/user-menu/chat-notifications-list";
 
 module(
   "Integration | Component | user-menu | chat-notifications-list",
@@ -16,7 +16,7 @@ module(
       });
     });
 
-    const template = hbs`<UserMenu::ChatNotificationsList/>`;
+    const template = <template><ChatNotificationsList /></template>;
 
     test("empty state when there are no notifications", async function (assert) {
       await render(template);

@@ -1,9 +1,9 @@
 import { click, render, waitFor } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
 
 const fakeUpload = {
   type: ".png",
@@ -42,22 +42,36 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   setupRenderingTest(hooks);
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
+    const self = this;
+
     this.existingUploads = [fakeUpload];
 
-    await render(hbs`
-      <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" />
-    `);
+    await render(
+      <template>
+        <ChatComposerUploads
+          @existingUploads={{self.existingUploads}}
+          @fileUploadElementId="chat-widget-uploader"
+        />
+      </template>
+    );
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
 
   test("upload starts and completes", async function (assert) {
+    const self = this;
+
     setupUploadPretender();
     this.set("onUploadChanged", () => {});
 
-    await render(hbs`
-      <ChatComposerUploads @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
-    `);
+    await render(
+      <template>
+        <ChatComposerUploads
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{self.onUploadChanged}}
+        />
+      </template>
+    );
 
     const done = assert.async();
     this.appEvents = this.container.lookup("service:app-events");
@@ -80,14 +94,22 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("removing a completed upload", async function (assert) {
+    const self = this;
+
     this.set("changedUploads", null);
     this.set("onUploadChanged", () => {});
 
     this.existingUploads = [fakeUpload];
 
-    await render(hbs`
-      <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
-    `);
+    await render(
+      <template>
+        <ChatComposerUploads
+          @existingUploads={{self.existingUploads}}
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{self.onUploadChanged}}
+        />
+      </template>
+    );
 
     assert.dom(".chat-composer-upload").exists({ count: 1 });
 
@@ -97,6 +119,8 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
+    const self = this;
+
     setupUploadPretender();
 
     this.set("changedUploads", null);
@@ -104,9 +128,14 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
       this.set("changedUploads", uploads);
     });
 
-    await render(hbs`
-      <ChatComposerUploads @fileUploadElementId="chat-widget-uploader" @onUploadChanged={{this.onUploadChanged}} />
-    `);
+    await render(
+      <template>
+        <ChatComposerUploads
+          @fileUploadElementId="chat-widget-uploader"
+          @onUploadChanged={{self.onUploadChanged}}
+        />
+      </template>
+    );
 
     const image = createFile("avatar.png");
     const done = assert.async();

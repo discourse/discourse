@@ -1,13 +1,21 @@
-<div class="c-routes --browse">
-  <Chat::Navbar as |navbar|>
-    <navbar.BackButton />
-    <navbar.Title @title={{i18n "chat.browse.title"}} />
+import RouteTemplate from "ember-route-template";
+import { i18n } from "discourse-i18n";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
-    <navbar.Actions as |a|>
-      <a.NewChannelButton />
-      <a.OpenDrawerButton />
-    </navbar.Actions>
-  </Chat::Navbar>
+export default RouteTemplate(
+  <template>
+    <div class="c-routes --browse">
+      <Navbar as |navbar|>
+        <navbar.BackButton />
+        <navbar.Title @title={{i18n "chat.browse.title"}} />
 
-  {{outlet}}
-</div>
+        <navbar.Actions as |a|>
+          <a.NewChannelButton />
+          <a.OpenDrawerButton />
+        </navbar.Actions>
+      </Navbar>
+
+      {{outlet}}
+    </div>
+  </template>
+);

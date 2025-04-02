@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
+import Channel from "discourse/plugins/chat/discourse/components/chat/composer/channel";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 module(
@@ -12,6 +12,8 @@ module(
     setupRenderingTest(hooks);
 
     test("direct message to self shows Jot something down", async function (assert) {
+      const self = this;
+
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.currentUser.set("id", 1);
@@ -22,7 +24,7 @@ module(
         },
       });
 
-      await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
+      await render(<template><Channel @channel={{self.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -30,6 +32,8 @@ module(
     });
 
     test("direct message to multiple folks shows their names  when not a group", async function (assert) {
+      const self = this;
+
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -44,7 +48,7 @@ module(
         },
       });
 
-      await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
+      await render(<template><Channel @channel={{self.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -52,6 +56,8 @@ module(
     });
 
     test("direct message to group shows Chat in group", async function (assert) {
+      const self = this;
+
       pretender.get("/chat/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -67,7 +73,7 @@ module(
         },
       });
 
-      await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
+      await render(<template><Channel @channel={{self.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -75,6 +81,8 @@ module(
     });
 
     test("message to channel shows send message to channel name", async function (assert) {
+      const self = this;
+
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -82,7 +90,7 @@ module(
         title: "just-cats",
       });
 
-      await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
+      await render(<template><Channel @channel={{self.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")

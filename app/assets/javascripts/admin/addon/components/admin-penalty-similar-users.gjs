@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import avatar from "discourse/helpers/avatar";
 import formatDuration from "discourse/helpers/format-duration";
@@ -11,7 +12,6 @@ import htmlSafe from "discourse/helpers/html-safe";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
-import not from "truth-helpers/helpers/not";
 
 export default class AdminPenaltySimilarUsers extends Component {
   @tracked isLoading;

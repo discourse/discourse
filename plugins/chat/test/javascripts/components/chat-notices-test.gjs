@@ -1,17 +1,19 @@
 import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+import ChatNotices from "discourse/plugins/chat/discourse/components/chat-notices";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays all notices for a channel", async function (assert) {
+    const self = this;
+
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
@@ -29,7 +31,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       text_content: "N/A",
     });
 
-    await render(hbs`<ChatNotices @channel={{this.channel}} />`);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     const notices = queryAll(".chat-notices .chat-notices__notice");
 
@@ -40,6 +44,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
   });
 
   test("Notices can be cleared", async function (assert) {
+    const self = this;
+
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
@@ -49,7 +55,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       text_content: "hello",
     });
 
-    await render(hbs`<ChatNotices @channel={{this.channel}} />`);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     assert.strictEqual(
       queryAll(".chat-notices .chat-notices__notice").length,
@@ -66,6 +74,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     );
   });
   test("MentionWithoutMembership notice renders", async function (assert) {
+    const self = this;
+
     this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
@@ -77,7 +87,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       data: { user_ids: [1], message_id: 1, text },
     });
 
-    await render(hbs`<ChatNotices @channel={{this.channel}} />`);
+    await render(
+      <template><ChatNotices @channel={{self.channel}} /></template>
+    );
 
     assert.strictEqual(
       queryAll(

@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
 import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 module("Discourse Chat | Component | chat-header-icon", function (hooks) {
@@ -15,7 +15,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .stub(this.owner.lookup("service:chat-state-manager"), "isFullPageActive")
       .value(true);
 
-    await render(hbs`<Chat::Header::Icon />`);
+    await render(<template><Icon /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -31,7 +31,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .stub(this.owner.lookup("service:chat-state-manager"), "isFullPageActive")
       .value(true);
 
-    await render(hbs`<Chat::Header::Icon />`);
+    await render(<template><Icon /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -44,7 +44,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
   test("mobile", async function (assert) {
     this.site.mobileView = true;
 
-    await render(hbs`<Chat::Header::Icon />`);
+    await render(<template><Icon /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -63,7 +63,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .stub(this.owner.lookup("service:chat-state-manager"), "isFullPageActive")
       .value(true);
 
-    await render(hbs`<Chat::Header::Icon @urgentCount={{1}} />`);
+    await render(<template><Icon @urgentCount={{1}} /></template>);
 
     assert
       .dom(".icon.btn-flat")
@@ -78,7 +78,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
     this.currentUser.user_option.chat_header_indicator_preference =
       HEADER_INDICATOR_PREFERENCE_ALL_NEW;
 
-    await render(hbs`<Chat::Header::Icon @urgentCount={{1}} />`);
+    await render(<template><Icon @urgentCount={{1}} /></template>);
 
     assert
       .dom(".icon.btn-flat")

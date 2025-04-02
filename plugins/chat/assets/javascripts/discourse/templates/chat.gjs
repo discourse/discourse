@@ -1,22 +1,34 @@
-<div id="chat-progress-bar-container"></div>
+import RouteTemplate from "ember-route-template";
+import concatClass from "discourse/helpers/concat-class";
+import ChannelsList from "discourse/plugins/chat/discourse/components/channels-list";
+import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
 
-<div
-  class={{concat-class
-    "full-page-chat"
-    (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
-  }}
->
-  {{#if this.shouldUseChatSidebar}}
-    <ChannelsList />
-  {{/if}}
+export default RouteTemplate(
+  <template>
+    <div id="chat-progress-bar-container"></div>
 
-  <div
-    id="main-chat-outlet"
-    class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
-  >
-    {{outlet}}
-    {{#if this.shouldUseChatFooter}}
-      <ChatFooter />
-    {{/if}}
-  </div>
-</div>
+    <div
+      class={{concatClass
+        "full-page-chat"
+        (if @controller.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
+      }}
+    >
+      {{#if @controller.shouldUseChatSidebar}}
+        <ChannelsList />
+      {{/if}}
+
+      <div
+        id="main-chat-outlet"
+        class={{concatClass
+          "main-chat-outlet"
+          @controller.mainOutletModifierClasses
+        }}
+      >
+        {{outlet}}
+        {{#if @controller.shouldUseChatFooter}}
+          <ChatFooter />
+        {{/if}}
+      </div>
+    </div>
+  </template>
+);

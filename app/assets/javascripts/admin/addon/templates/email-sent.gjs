@@ -1,6 +1,7 @@
 import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import { gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
@@ -10,7 +11,6 @@ import formatDate from "discourse/helpers/format-date";
 import slice from "discourse/helpers/slice";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
-import gt from "truth-helpers/helpers/gt";
 
 export default RouteTemplate(
   <template>

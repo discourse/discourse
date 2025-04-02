@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import ChatMessageCollapser from "discourse/plugins/chat/discourse/components/chat-message-collapser";
 
 const youtubeCooked =
   "<p>written text</p>" +
@@ -50,8 +50,12 @@ module("Discourse Chat | Component | chat message collapser", function (hooks) {
   setupRenderingTest(hooks);
 
   test("escapes uploads header", async function (assert) {
+    const self = this;
+
     this.set("uploads", [{ original_filename: evilString }]);
-    await render(hbs`<ChatMessageCollapser @uploads={{this.uploads}} />`);
+    await render(
+      <template><ChatMessageCollapser @uploads={{self.uploads}} /></template>
+    );
 
     assert
       .dom(".chat-message-collapser-link-small")
@@ -65,6 +69,8 @@ module(
     setupRenderingTest(hooks);
 
     test("escapes youtube header", async function (assert) {
+      const self = this;
+
       this.set(
         "cooked",
         youtubeCooked.replace(
@@ -72,7 +78,9 @@ module(
           `https://www.youtube.com/watch?v=${evilString}`
         )
       );
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       assert
         .dom(".chat-message-collapser-link")
@@ -83,9 +91,13 @@ module(
     });
 
     test("shows youtube link in header", async function (assert) {
+      const self = this;
+
       this.set("cooked", youtubeCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const link = queryAll(".chat-message-collapser-link");
 
@@ -99,10 +111,14 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
+      const self = this;
+
       youtubeCooked.youtubeid;
       this.set("cooked", youtubeCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const text = queryAll(".chat-message-collapser p");
 
@@ -117,9 +133,13 @@ module(
     });
 
     test("collapses and expands cooked youtube", async function (assert) {
+      const self = this;
+
       this.set("cooked", youtubeCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const youtubeDivs = queryAll(".youtube-onebox");
 
@@ -173,11 +193,18 @@ module(
     const imageTextCooked = "<p>A picture of Tomtom</p>";
 
     test("shows filename for one image", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageTextCooked);
       this.set("uploads", [{ original_filename: "tomtom.jpeg" }]);
 
       await render(
-        hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
+        <template>
+          <ChatMessageCollapser
+            @cooked={{self.cooked}}
+            @uploads={{self.uploads}}
+          />
+        </template>
       );
 
       assert
@@ -186,17 +213,26 @@ module(
     });
 
     test("shows number of files for multiple images", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageTextCooked);
       this.set("uploads", [{}, {}]);
 
       await render(
-        hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
+        <template>
+          <ChatMessageCollapser
+            @cooked={{self.cooked}}
+            @uploads={{self.uploads}}
+          />
+        </template>
       );
 
       assert.dom(".chat-message-collapser-link-small").includesText("2 files");
     });
 
     test("collapses and expands images", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageTextCooked);
       this.set("uploads", [
         {
@@ -208,7 +244,12 @@ module(
       ]);
 
       await render(
-        hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
+        <template>
+          <ChatMessageCollapser
+            @cooked={{self.cooked}}
+            @uploads={{self.uploads}}
+          />
+        </template>
       );
 
       assert.dom(".chat-uploads").isVisible();
@@ -231,9 +272,13 @@ module(
     setupRenderingTest(hooks);
 
     test("shows links for animated image", async function (assert) {
+      const self = this;
+
       this.set("cooked", animatedImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
@@ -247,9 +292,13 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
+      const self = this;
+
       this.set("cooked", animatedImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const text = queryAll(".chat-message-collapser p");
 
@@ -260,9 +309,13 @@ module(
     });
 
     test("collapses and expands animated image onebox", async function (assert) {
+      const self = this;
+
       this.set("cooked", animatedImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const animatedOneboxes = queryAll(".animated.onebox");
 
@@ -303,9 +356,13 @@ module(
     setupRenderingTest(hooks);
 
     test("shows links for animated image", async function (assert) {
+      const self = this;
+
       this.set("cooked", externalImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
@@ -317,9 +374,13 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
+      const self = this;
+
       this.set("cooked", externalImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const text = queryAll(".chat-message-collapser p");
 
@@ -330,9 +391,13 @@ module(
     });
 
     test("collapses and expands image oneboxes", async function (assert) {
+      const self = this;
+
       this.set("cooked", externalImageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const imageOneboxes = queryAll(".onebox");
 
@@ -373,13 +438,17 @@ module(
     setupRenderingTest(hooks);
 
     skip("escapes link", async function (assert) {
+      const self = this;
+
       this.set(
         "cooked",
         imageCooked
           .replace("shows alt", evilString)
           .replace("/images/d-logo-sketch-small.png", evilString)
       );
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const links = [
         ...document.querySelectorAll(".chat-message-collapser-link-small"),
@@ -392,9 +461,13 @@ module(
     });
 
     test("shows alt or links (if no alt) for linked image", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
@@ -408,9 +481,13 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const text = queryAll(".chat-message-collapser p");
 
@@ -421,9 +498,13 @@ module(
     });
 
     test("collapses and expands images", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const images = queryAll("img");
 
@@ -457,9 +538,13 @@ module(
     });
 
     test("does not show collapser for emoji images", async function (assert) {
+      const self = this;
+
       this.set("cooked", imageCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const links = queryAll("a.chat-message-collapser-link-small");
       const images = queryAll("img");
@@ -478,13 +563,17 @@ module(
     setupRenderingTest(hooks);
 
     test("escapes title/link", async function (assert) {
+      const self = this;
+
       this.set(
         "cooked",
         galleryCooked
           .replace("https://imgur.com/gallery/yyVx5lJ", evilString)
           .replace("Le tomtom album", evilString)
       );
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       assert
         .dom(".chat-message-collapser-link-small")
@@ -493,17 +582,25 @@ module(
     });
 
     test("removes album title overlay", async function (assert) {
+      const self = this;
+
       this.set("cooked", galleryCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       assert.dom(".album-title").doesNotExist("album title removed");
     });
 
     test("shows gallery link", async function (assert) {
+      const self = this;
+
       this.set("cooked", galleryCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       assert
         .dom(".chat-message-collapser-link-small")
@@ -511,9 +608,13 @@ module(
     });
 
     test("shows all user written text", async function (assert) {
+      const self = this;
+
       this.set("cooked", galleryCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       const text = queryAll(".chat-message-collapser p");
 
@@ -523,9 +624,13 @@ module(
     });
 
     test("collapses and expands images", async function (assert) {
+      const self = this;
+
       this.set("cooked", galleryCooked);
 
-      await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
+      await render(
+        <template><ChatMessageCollapser @cooked={{self.cooked}} /></template>
+      );
 
       assert.dom("img").isVisible("image visible initially");
 

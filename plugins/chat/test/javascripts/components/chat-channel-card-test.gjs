@@ -1,9 +1,9 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-card", function (hooks) {
@@ -16,58 +16,90 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("escapes channel title", async function (assert) {
+    const self = this;
+
     this.channel.title = "<div class='xss'>evil</div>";
 
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".xss").doesNotExist();
   });
 
   test("escapes channel description", async function (assert) {
+    const self = this;
+
     this.channel.description = "<div class='xss'>evil</div>";
 
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".xss").doesNotExist();
   });
 
   test("Closed channel", async function (assert) {
+    const self = this;
+
     this.channel.status = "closed";
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card.--closed").exists();
   });
 
   test("Archived channel", async function (assert) {
+    const self = this;
+
     this.channel.status = "archived";
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card.--archived").exists();
   });
 
   test("Muted channel", async function (assert) {
+    const self = this;
+
     this.channel.currentUserMembership.muted = true;
     this.channel.currentUserMembership.following = true;
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card__muted").exists();
   });
 
   test("Joined channel", async function (assert) {
+    const self = this;
+
     this.channel.currentUserMembership.following = true;
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
     assert.dom(".toggle-channel-membership-button.-leave").exists();
   });
 
   test("Joinable channel", async function (assert) {
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    const self = this;
+
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card__join-btn").exists();
   });
 
   test("Memberships count", async function (assert) {
+    const self = this;
+
     this.channel.membershipsCount = 4;
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert
       .dom(".chat-channel-card__members")
@@ -75,14 +107,22 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("No description", async function (assert) {
+    const self = this;
+
     this.channel.description = null;
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card__description").doesNotExist();
   });
 
   test("Description", async function (assert) {
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    const self = this;
+
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert
       .dom(".chat-channel-card__description")
@@ -90,14 +130,22 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("Name", async function (assert) {
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    const self = this;
+
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
 
     assert.dom(".chat-channel-card__name").hasText(this.channel.title);
   });
 
   test("Read restricted chatable", async function (assert) {
+    const self = this;
+
     this.channel.chatable.read_restricted = true;
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
+    await render(
+      <template><ChatChannelCard @channel={{self.channel}} /></template>
+    );
     assert.dom(".d-icon-lock").exists();
   });
 });

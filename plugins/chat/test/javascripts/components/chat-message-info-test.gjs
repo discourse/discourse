@@ -1,26 +1,26 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import Info from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = hbs`
-    <Chat::Message::Info @message={{this.message}} @show={{true}} />
-  `;
-
   test("chat_webhook_event", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       chat_webhook_event: { username: "discobot" },
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert
       .dom(".chat-message-info__username")
@@ -29,11 +29,15 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("user", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert
       .dom(".chat-message-info__username")
@@ -41,17 +45,23 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("date", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       created_at: moment(),
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert.dom(".chat-message-info__date").exists();
   });
 
   test("bookmark (with reminder)", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       bookmark: Bookmark.create({
@@ -60,7 +70,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }),
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert
       .dom(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
@@ -68,6 +80,8 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (no reminder)", async function (assert) {
+    const self = this;
+
     this.message = ChatMessage.create(
       new ChatFabricators(getOwner(this)).channel(),
       {
@@ -78,29 +92,39 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }
     );
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert.dom(".chat-message-info__bookmark .d-icon-bookmark").exists();
   });
 
   test("user status", async function (assert) {
+    const self = this;
+
     const status = { description: "off to dentist", emoji: "tooth" };
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { status },
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert.dom(".chat-message-info__status .user-status-message").exists();
   });
 
   test("flag status", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       user_flag_status: 0,
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
@@ -108,12 +132,16 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("reviewable", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
       user_flag_status: 0,
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
@@ -121,6 +149,8 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("with username classes", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: {
         username: "discobot",
@@ -131,7 +161,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       },
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert.dom(".chat-message-info__username.is-staff").exists();
     assert.dom(".chat-message-info__username.is-admin").exists();
@@ -141,11 +173,15 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("without username classes", async function (assert) {
+    const self = this;
+
     this.message = new ChatFabricators(getOwner(this)).message({
       user: { username: "discobot" },
     });
 
-    await render(template);
+    await render(
+      <template><Info @message={{self.message}} @show={{true}} /></template>
+    );
 
     assert.dom(".chat-message-info__username.is-staff").doesNotExist();
     assert.dom(".chat-message-info__username.is-admin").doesNotExist();
