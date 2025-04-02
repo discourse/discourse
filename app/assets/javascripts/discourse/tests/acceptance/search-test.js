@@ -394,6 +394,16 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.dom(".search-menu-panel").doesNotExist();
   });
+
+  test("pressing Ctrl+F correctly opens the menu, pressing it again closes it", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keydown", "F", { ctrlKey: true });
+    assert
+      .dom(document.activeElement)
+      .hasAttribute("id", "welcome-banner-search-input");
+    await triggerKeyEvent(document, "keydown", "F", { ctrlKey: true });
+    assert.strictEqual(document.activeElement, null);
+  });
 });
 
 acceptance("Search - Authenticated", function (needs) {

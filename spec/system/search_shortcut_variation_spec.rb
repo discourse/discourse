@@ -34,15 +34,15 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(search_page).to have_no_search_menu_visible
       end
 
-      # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-      #   visit("/")
-      #   expect(welcome_banner).to be_visible
-      #   search_page.browser_search_shortcut
-      #   expect(search_page).to have_search_menu
-      #   expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-      #   search_page.browser_search_shortcut
-      #   expect(search_page).to have_no_search_menu_visible
-      # end
+      it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+        visit("/")
+        expect(welcome_banner).to be_visible
+        search_page.browser_search_shortcut
+        expect(search_page).to have_search_menu
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
+        search_page.browser_search_shortcut
+        try_until_success { expect(current_active_element[:id]).to eq(nil) }
+      end
 
       context "when welcome banner is not in the viewport" do
         before do
@@ -68,15 +68,14 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           expect(search_page).to have_no_search_menu_visible
         end
 
-        # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-        #   expect(welcome_banner).to be_invisible
-        #   search_page.browser_search_shortcut
-        #   expect(search_page).to have_search_menu
-        #   expect(current_active_element[:id]).to eq("header-search-input")
-        #   search_page.browser_search_shortcut
-        #   search_page.browser_search_shortcut
-        #   expect(current_active_element[:id]).to eq(nil)
-        # end
+        it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+          expect(welcome_banner).to be_invisible
+          search_page.browser_search_shortcut
+          expect(search_page).to have_search_menu
+          expect(current_active_element[:id]).to eq("header-search-input")
+          search_page.browser_search_shortcut
+          try_until_success { expect(current_active_element[:id]).to eq(nil) }
+        end
       end
     end
 
@@ -131,15 +130,18 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(search_page).to have_no_search_menu_visible
       end
 
-      # it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-      #   visit("/")
-      #   expect(welcome_banner).to be_visible
-      #   search_page.browser_search_shortcut
-      #   expect(search_page).to have_search_menu
-      #   expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-      #   search_page.browser_search_shortcut
-      #   expect(search_page).to have_no_search_menu_visible
-      # end
+      it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
+        visit("/")
+        expect(welcome_banner).to be_visible
+        search_page.browser_search_shortcut
+        expect(search_page).to have_search_menu
+        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
+
+        try_until_success do
+          search_page.browser_search_shortcut
+          expect(current_active_element[:id]).to eq(nil)
+        end
+      end
 
       context "when welcome banner is not in the viewport" do
         before do
@@ -183,7 +185,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           expect(search_page).to have_search_menu_visible
           expect(current_active_element[:id]).to eq("icon-search-input")
           search_page.browser_search_shortcut
-          expect(search_page).to have_no_search_menu_visible
+          try_until_success { expect(current_active_element[:id]).to eq(nil) }
         end
       end
     end
