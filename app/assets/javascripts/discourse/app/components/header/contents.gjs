@@ -16,6 +16,7 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service router;
   @service sidebarState;
 
   get sidebarIcon() {
@@ -39,7 +40,10 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    if (
+      this.site.mobileView ||
+      this.router.currentURL.match(/\/(signup|login)/)
+    ) {
       return false;
     }
 
