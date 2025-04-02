@@ -5227,12 +5227,7 @@ RSpec.describe UsersController do
     end
 
     it "brings first the replied to user" do
-      get "/u/search/users.json",
-          params: {
-            term: "",
-            topic_id: topic.id,
-            replying_to_post_number: post1.post_number,
-          }
+      get "/u/search/users.json", params: { term: "", topic_id: topic.id, user_id: post1.user_id }
 
       expect(response.status).to eq(200)
       json = response.parsed_body
@@ -5246,7 +5241,7 @@ RSpec.describe UsersController do
           params: {
             term: other_user.username,
             topic_id: topic.id,
-            replying_to_post_number: post1.post_number,
+            user_id: post1.user_id,
           }
 
       expect(response.status).to eq(200)

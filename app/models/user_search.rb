@@ -8,7 +8,7 @@ class UserSearch
     @term_like = @term.gsub("_", "\\_") + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
-    @replying_to_post_number = opts[:replying_to_post_number]
+    @user_id = opts[:user_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
@@ -18,9 +18,7 @@ class UserSearch
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
-    if @topic && @replying_to_post_number
-      @replying_to_post = @topic.posts.find_by_post_number(@replying_to_post_number)
-    end
+    @replying_to_user = User.find_by_id(@user_id) if @user_id
 
     @guardian = Guardian.new(@searching_user)
     @guardian.ensure_can_see_groups_members!(@groups) if @groups
@@ -82,11 +80,11 @@ class UserSearch
     return users.to_a if users.size >= @limit
 
     # 2. if replying to a post, add the user who created the post but respect the usernames matching
-    if @replying_to_post_number && @replying_to_post
-      user_id = @replying_to_post.user_id
+    if @replying_to_user
+      user_id = @replying_to_user.id
 
       if user_id.present? && !users.include?(user_id) &&
-           (@term.blank? || @replying_to_post.user.username.include?(@term))
+           (@term.blank? || @replying_to_user.username.include?(@term))
         users << user_id
       end
     end

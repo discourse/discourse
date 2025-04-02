@@ -180,42 +180,32 @@ RSpec.describe UserSearch do
     end
 
     it "prioritises the replying to user" do
-      results = search_for("mr", topic_id: topic.id, replying_to_post_number: post1.post_number)
+      results = search_for("mr", topic_id: topic.id, user_id: post1.user_id)
       expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
 
-      results = search_for("mr", topic_id: topic.id, replying_to_post_number: post3.post_number)
+      results = search_for("mr", topic_id: topic.id, user_id: post3.user_id)
       expect(results).to eq [mr_orange, mr_pink, mr_b, mr_brown, mr_blue].map(&:username)
 
-      results = search_for("mr", topic_id: topic.id, replying_to_post_number: post4.post_number)
+      results = search_for("mr", topic_id: topic.id, user_id: post4.user_id)
       expect(results).to eq [mr_pink, mr_orange, mr_b, mr_brown, mr_blue].map(&:username)
     end
 
     it "returns the replying to user if the term includes the username" do
-      results =
-        search_for(mr_blue.username, topic_id: topic.id, replying_to_post_number: post1.post_number)
+      results = search_for(mr_blue.username, topic_id: topic.id, user_id: post1.user_id)
       expect(results).to eq [mr_blue].map(&:username)
-      results =
-        search_for(mr_blue.username, topic_id: topic.id, replying_to_post_number: post3.post_number)
+      results = search_for(mr_blue.username, topic_id: topic.id, user_id: post3.user_id)
       expect(results).to eq [mr_blue].map(&:username)
     end
 
     it "returns firstly the replying to user if the term is blank" do
-      results = search_for("", topic_id: topic.id, replying_to_post_number: post1.post_number)
+      results = search_for("", topic_id: topic.id, user_id: post1.user_id)
       expect(results).to eq [mr_b, mr_pink, mr_orange].map(&:username)
 
-      results = search_for("", topic_id: topic.id, replying_to_post_number: post3.post_number)
+      results = search_for("", topic_id: topic.id, user_id: post3.user_id)
       expect(results).to eq [mr_orange, mr_pink, mr_b].map(&:username)
 
-      results = search_for("", topic_id: topic.id, replying_to_post_number: post4.post_number)
+      results = search_for("", topic_id: topic.id, user_id: post4.user_id)
       expect(results).to eq [mr_pink, mr_orange, mr_b].map(&:username)
-    end
-
-    it "requires `topic_id` for `replying_to_post_number`" do
-      results = search_for("mr", replying_to_post_number: post1.post_number)
-      expect(results).to eq [mr_brown, mr_pink, mr_orange, mr_blue, mr_b].map(&:username)
-
-      results = search_for("mr", topic_id: topic.id, replying_to_post_number: post1.post_number)
-      expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
     end
 
     it "does not reveal whisper users" do
