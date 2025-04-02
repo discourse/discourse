@@ -601,6 +601,10 @@ fa_IR:
         name: "نام"
         fields: "فیلدها"
         reject_reason: "دلیل"
+        scrubbed_reason: "دلیل"
+        scrub_record:
+          reason_placeholder: "دلیل..."
+          cancel_button: "انصراف"
       user_percentage:
         summary:
           one: "%{agreed}، %{disagreed}، %{ignored} (از پرچم آخر)"
@@ -3811,9 +3815,13 @@ fa_IR:
       logo: "تصویر لوگو برای دسته‌بندی"
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
-      badge_colors: "رنگ نشان‌ها"
-      background_color: "رنگ پس‌زمینه"
-      foreground_color: "رنگ پیش‌زمینه"
+      background_color: "رنگ"
+      styles:
+        icon: "آیکن"
+        emoji: "شکلک"
+        options:
+          icon: "آیکن"
+          emoji: "شکلک"
       color_used: "رنگ در حال استفاده"
       predefined_colors: "گزینه‌های رنگ از پیش تعریف شده"
       name_placeholder: "حداکثر یک یا دو کلمه"

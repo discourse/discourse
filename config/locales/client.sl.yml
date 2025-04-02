@@ -512,6 +512,10 @@ sl:
         name: "Polno ime"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Prekliči"
       topics:
         topic: "Tema"
         reviewable_count: "Število"
@@ -2985,9 +2989,13 @@ sl:
       description: "Opis"
       logo: "Logotip slika kategorije"
       background_image: "Slika ozadja kategorije"
-      badge_colors: "Barve značk"
-      background_color: "Barva ozadja"
-      foreground_color: "Barva ospredja"
+      background_color: "Barva"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Največ ena ali dve besede"
       color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"

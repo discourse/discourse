@@ -491,6 +491,10 @@ bg:
         name: "Име"
         fields: "Полета"
         reject_reason: "Причина"
+        scrubbed_reason: "Причина"
+        scrub_record:
+          reason_placeholder: "Причина..."
+          cancel_button: "Прекрати"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (от последния флаг)"
@@ -2939,9 +2943,13 @@ bg:
       description: "Описание"
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
-      badge_colors: "Цветове на значките"
-      background_color: "Цвят на фона"
-      foreground_color: "Цвят на преден план"
+      background_color: "Цвят"
+      styles:
+        icon: "Икона"
+        emoji: "Емотикони"
+        options:
+          icon: "Икона"
+          emoji: "Емотикони"
       name_placeholder: "Максимум една или две думи"
       color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
