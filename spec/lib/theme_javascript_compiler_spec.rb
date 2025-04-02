@@ -78,12 +78,6 @@ RSpec.describe ThemeJavascriptCompiler do
   end
 
   describe "error handling" do
-    it "handles syntax errors in raw templates" do
-      expect do
-        compiler.append_raw_template("sometemplate.hbr", "{{invalidtemplate")
-      end.to raise_error(ThemeJavascriptCompiler::CompileError, /Parse error on line 1/)
-    end
-
     it "handles syntax errors in ember templates" do
       expect do
         compiler.append_ember_template("sometemplate", "{{invalidtemplate")

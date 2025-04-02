@@ -135,7 +135,10 @@ class ThemeField < ActiveRecord::Base
 
         begin
           if is_raw
-            # Ignore - raw templates no longer
+            js_compiler.append_js_error(
+              "discourse/templates/#{name}",
+              "Raw templates are no longer supported",
+            )
           else
             js_compiler.append_ember_template(
               "discourse/templates/#{name.delete_prefix("/")}",
