@@ -174,7 +174,7 @@ export default RouteTemplate(
     <SaveControls
       @id="user_chat_preference_save"
       @model={{@controller.model}}
-      @action={{action "save"}}
+      @action={{@controller.save}}
       @saved={{@controller.saved}}
     />
   </template>
