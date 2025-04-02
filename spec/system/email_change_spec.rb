@@ -52,8 +52,8 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has totp 2fa", dump_threads_on_failure: true do
-    # Tests is flaky so trying with a longer wait time as a workaround
-    Capybara.using_wait_time(Capybara.default_max_wait_time * 2) do
+    # Test is flaky so trying with a longer wait time as a workaround
+    using_wait_time(Capybara.default_max_wait_time * 2) do
       SiteSetting.hide_email_address_taken = false
 
       second_factor = Fabricate(:user_second_factor_totp, user: user)
@@ -70,8 +70,8 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has webauthn 2fa" do
-    # Tests is flaky so trying with a longer wait time as a workaround
-    Capybara.using_wait_time(Capybara.default_max_wait_time * 2) do
+    # Test is flaky so trying with a longer wait time as a workaround
+    using_wait_time(Capybara.default_max_wait_time * 2) do
       begin
         # enforced 2FA flow needs a user created > 5 minutes ago
         user.created_at = 6.minutes.ago
