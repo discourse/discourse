@@ -10,6 +10,7 @@ import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-
 export default class SiteSettingChangeTracker extends Service {
   @service dialog;
   @service modal;
+  @service session;
   @service site;
   @service siteSettings;
 
@@ -199,15 +200,31 @@ export default class SiteSettingChangeTracker extends Service {
     document.documentElement.classList.add(
       `text-size-${this.siteSettings.default_text_size}`
     );
+    let logo;
+
     if (this.site.mobileView) {
-      document
-        .getElementById("site-logo")
-        .setAttribute("src", this.siteSettings.mobile_logo);
-    } else {
-      document
-        .getElementById("site-logo")
-        .setAttribute("src", this.siteSettings.logo);
+      if (
+        this.session.defaultColorSchemeIsDark ||
+        this.session.darkModeAvailable
+      ) {
+        logo = this.siteSettings.mobile_logo_dark;
+      } else {
+        logo = this.siteSettings.mobile_logo;
+      }
     }
+
+    if (
+      !logo &&
+      (this.session.defaultColorSchemeIsDark || this.session.darkModeAvailable)
+    ) {
+      logo = this.siteSettings.logo_dark;
+    }
+
+    if (!logo) {
+      logo = this.siteSettings.logo;
+    }
+
+    document.getElementById("site-logo").setAttribute("src", logo);
   }
 
   get count() {
