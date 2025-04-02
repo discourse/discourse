@@ -71,7 +71,7 @@ export default RouteTemplate(
         @content={{@controller.chatSounds}}
         @value={{@controller.model.user_option.chat_sound}}
         @id="user_chat_sounds"
-        @onChange={{action "onChangeChatSound"}}
+        @onChange={{@controller.onChangeChatSound}}
       />
     </div>
 

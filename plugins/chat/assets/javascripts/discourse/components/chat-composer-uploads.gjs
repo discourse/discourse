@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
@@ -147,14 +148,14 @@ export default class ChatComposerUploads extends Component {
           <ChatComposerUpload
             @upload={{upload}}
             @isDone={{true}}
-            @onCancel={{action "removeUpload" upload}}
+            @onCancel={{fn this.removeUpload upload}}
           />
         {{/each}}
 
         {{#each this.inProgressUploads as |upload|}}
           <ChatComposerUpload
             @upload={{upload}}
-            @onCancel={{action "cancelUploading" upload}}
+            @onCancel={{fn this.cancelUploading upload}}
           />
         {{/each}}
       </div>
