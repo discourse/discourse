@@ -1,3 +1,7 @@
+import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
+
+export default class ChatChannelChooserHeader extends ComboBoxSelectBoxHeaderComponent {}
+
 <div class="select-kit-header-wrapper">
   {{#if this.selectedContent}}
     <ChannelTitle @channel={{this.selectedContent}} />
