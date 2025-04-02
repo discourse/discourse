@@ -180,13 +180,13 @@ RSpec.describe UserSearch do
     end
 
     it "prioritises the replying to user" do
-      results = search_for("mr", topic_id: topic.id, user_id: post1.user_id)
+      results = search_for("mr", topic_id: topic.id, user_id: mr_b.id)
       expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
 
-      results = search_for("mr", topic_id: topic.id, user_id: post3.user_id)
+      results = search_for("mr", topic_id: topic.id, user_id: mr_orange.id)
       expect(results).to eq [mr_orange, mr_pink, mr_b, mr_brown, mr_blue].map(&:username)
 
-      results = search_for("mr", topic_id: topic.id, user_id: post4.user_id)
+      results = search_for("mr", topic_id: topic.id, user_id: mr_pink.id)
       expect(results).to eq [mr_pink, mr_orange, mr_b, mr_brown, mr_blue].map(&:username)
     end
 
