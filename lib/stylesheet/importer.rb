@@ -72,10 +72,14 @@ module Stylesheet
           :root {
             --d-font-family--monospace: #{jetbrains_mono[:stack]};
           }
+
         CSS
       else
         contents << <<~CSS
-          --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
+          :root {
+            --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
+          }
+
         CSS
       end
 
