@@ -75,9 +75,7 @@ module Stylesheet
         CSS
       else
         contents << <<~CSS
-          --d-font-family--monospace:
-            ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo,
-            monaco, consolas, monospace;
+          --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
         CSS
       end
 
