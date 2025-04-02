@@ -64,7 +64,6 @@ module Stylesheet
 
         CSS
 
-      # conditionally enable Jetbrains Mono font on rich editor
       if SiteSetting.rich_editor
         contents << <<~CSS
           #{font_css(jetbrains_mono)}
