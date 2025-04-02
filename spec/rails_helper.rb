@@ -413,6 +413,10 @@ RSpec.configure do |config|
                   .uniq
               end
 
+              puts "END: #{Time.now.to_i}"
+              puts "CAPYBARA: #{Capybara.default_max_wait_time}"
+              puts "SESSION: #{seconds}"
+
               raise # re-raise original error
             else
               # Outside an example... maybe a `before(:all)` hook?

@@ -23,7 +23,8 @@ module PageObjects
       end
 
       def has_logged_in_user?
-        page.has_css?(".header-dropdown-toggle.current-user")
+        puts "START: #{Time.now.to_i}"
+        page.has_css?(".headr-dropdown-toggle.current-user")
       end
 
       def use_totp
