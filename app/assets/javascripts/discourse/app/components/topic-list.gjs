@@ -5,8 +5,8 @@ import List from "discourse/components/topic-list/list";
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class TopicListShim extends Component {
   <template>
-    {{#let (curryComponent List this.args) as |curriedComponent|}}
-      <curriedComponent />
+    {{#let (curryComponent List this.args) as |CurriedComponent|}}
+      <CurriedComponent />
     {{/let}}
   </template>
 }
