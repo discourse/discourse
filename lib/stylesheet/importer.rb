@@ -64,7 +64,28 @@ module Stylesheet
 
         CSS
 
+      # conditionally enable Jetbrains Mono font on rich editor
+      if SiteSetting.rich_editor
+        contents << <<~CSS
+          #{font_css(jetbrains_mono)}
+          #{render_font_special_properties(jetbrains_mono, "body")}
+          :root {
+            --d-font-family--monospace: #{jetbrains_mono[:stack]};
+          }
+        CSS
+      else
+        contents << <<~CSS
+          --d-font-family--monospace:
+            ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo,
+            monaco, consolas, monospace;
+        CSS
+      end
+
       contents
+    end
+
+    def jetbrains_mono
+      @@jetbrains_mono ||= DiscourseFonts.fonts.find { |f| f[:key] == "jet_brains_mono" }
     end
 
     def wizard_fonts
@@ -262,6 +283,12 @@ module Stylesheet
       else
         contents << "#{" " * indent}font-feature-settings: normal;\n"
       end
+
+      # avoiding adding normal to the CSS cause it is not needed in this case
+      if font[:font_variant_ligatures].present?
+        contents << "#{" " * indent}font-variant-ligatures: #{font[:font_variant_ligatures]};\n"
+      end
+
       contents
     end
   end
