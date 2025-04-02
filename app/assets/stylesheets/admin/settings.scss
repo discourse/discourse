@@ -173,4 +173,12 @@
     margin-top: 0.5em;
     margin-bottom: 0.2em;
   }
+
+  .discourse-tags {
+    gap: var(--space-1);
+
+    .simple {
+      margin-right: var(--space-1);
+    }
+  }
 }
