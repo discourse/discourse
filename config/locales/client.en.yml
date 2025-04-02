@@ -2516,9 +2516,9 @@ en:
         title: "Sign in with Google"
         sr_title: "Sign in with Google"
       twitter:
-        name: "Twitter"
-        title: "Sign in with Twitter"
-        sr_title: "Sign in with Twitter"
+        name: "X"
+        title: "Sign in with X"
+        sr_title: "Sign in with X"
       instagram:
         name: "Instagram"
         title: "Log in with Instagram"
@@ -7514,7 +7514,7 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
-        title: "Site settings" 
+        title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         discard: "Discard changes"
         save: "Save all changes"
