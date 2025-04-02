@@ -293,7 +293,7 @@ class PluginApi {
 
     let klass;
     if (!blockedModifications.includes(normalized)) {
-      klass = this.container.lookupFactory(normalized);
+      klass = this.container.factoryFor(normalized);
     }
 
     if (!klass) {
