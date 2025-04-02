@@ -2518,12 +2518,12 @@ rate_limits:
     min: 0
     default: 10
   invite_link_max_redemptions_limit:
-    min: 2
+    min: 1
     max: 1000000
     default: 5000
     client: true
   invite_link_max_redemptions_limit_users:
-    min: 2
+    min: 1
     max: 1000000
     default: 10
     client: true
