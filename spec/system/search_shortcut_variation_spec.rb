@@ -40,8 +40,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-        search_page.browser_search_shortcut
-        try_until_success { expect(current_active_element[:id]).to eq(nil) }
+        # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
+        # not change the document acive element, leaving it here as a reminder to manually test
+        # this behavior.
+        # search_page.browser_search_shortcut
+        # expect(current_active_element[:id]).to eq(nil)
       end
 
       context "when welcome banner is not in the viewport" do
@@ -73,8 +76,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           search_page.browser_search_shortcut
           expect(search_page).to have_search_menu
           expect(current_active_element[:id]).to eq("header-search-input")
-          search_page.browser_search_shortcut
-          try_until_success { expect(current_active_element[:id]).to eq(nil) }
+          # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
+          # not change the document acive element, leaving it here as a reminder to manually test
+          # this behavior.
+          # search_page.browser_search_shortcut
+          # expect(current_active_element[:id]).to eq(nil)
         end
       end
     end
@@ -137,10 +143,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("welcome-banner-search-input")
 
-        try_until_success do
-          search_page.browser_search_shortcut
-          expect(current_active_element[:id]).to eq(nil)
-        end
+        # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
+        # not change the document acive element, leaving it here as a reminder to manually test
+        # this behavior.
+        # search_page.browser_search_shortcut
+        # expect(current_active_element[:id]).to eq(nil)
       end
 
       context "when welcome banner is not in the viewport" do
@@ -184,8 +191,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           search_page.browser_search_shortcut
           expect(search_page).to have_search_menu_visible
           expect(current_active_element[:id]).to eq("icon-search-input")
-          search_page.browser_search_shortcut
-          try_until_success { expect(current_active_element[:id]).to eq(nil) }
+          # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
+          # not change the document acive element, leaving it here as a reminder to manually test
+          # this behavior.
+          # search_page.browser_search_shortcut
+          # expect(current_active_element[:id]).to eq(nil)
         end
       end
     end
