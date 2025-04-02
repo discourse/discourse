@@ -199,6 +199,8 @@ const POST_STREAM_DEPRECATION_OPTIONS = {
   // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
 };
 
+const blockedModifications = ["component:topic-list"];
+
 const appliedModificationIds = new WeakMap();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -289,7 +291,11 @@ class PluginApi {
       return;
     }
 
-    const klass = this.container.factoryFor(normalized);
+    let klass;
+    if (!blockedModifications.includes(normalized)) {
+      klass = this.container.lookupFactory(normalized);
+    }
+
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
