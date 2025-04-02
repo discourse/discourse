@@ -179,11 +179,7 @@ export default Mixin.create({
     }
   }),
 
-  disableSaveButton: computed("setting.isSaving", function () {
-    return !!this.setting.isSaving;
-  }),
-
-  disableUndoButton: computed("setting.isSaving", function () {
+  disableControls: computed("setting.isSaving", function () {
     return !!this.setting.isSaving;
   }),
 

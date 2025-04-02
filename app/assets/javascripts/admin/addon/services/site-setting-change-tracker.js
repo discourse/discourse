@@ -124,6 +124,26 @@ export default class SiteSettingChangeTracker extends Service {
     });
   }
 
+  async confirmTransition() {
+    await new Promise((resolve) => {
+      this.dialog.confirm({
+        message: i18n("admin.site_settings.dirty_banner", {
+          count: this.count,
+        }),
+        confirmButtonLabel: "admin.site_settings.save",
+        cancelButtonLabel: "admin.site_settings.discard",
+        didConfirm: async () => {
+          await this.save();
+          resolve(true);
+        },
+        didCancel: () => {
+          this.discard();
+          resolve(false);
+        },
+      });
+    });
+  }
+
   async configureBackfill(setting) {
     const key = setting.buffered.get("setting");
 
