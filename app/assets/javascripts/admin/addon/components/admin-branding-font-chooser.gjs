@@ -6,22 +6,9 @@ import { service } from "@ember/service";
 import { classify, decamelize, underscore } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { FONTS } from "discourse/lib/constants";
+import { MAIN_FONTS, MORE_FONTS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
-
-const MAIN_FONTS = [
-  "Helvetica",
-  "Inter",
-  "Lato",
-  "Montserrat",
-  "OpenSans",
-  "Poppins",
-  "Roboto",
-  "Merriweather",
-  "Mukta",
-];
-const MORE_FONTS = FONTS.filter((font) => !MAIN_FONTS.includes(font));
 
 export default class AdminBrandingFontChooser extends Component {
   @tracked showMoreFonts = MORE_FONTS.includes(

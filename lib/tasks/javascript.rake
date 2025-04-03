@@ -153,6 +153,8 @@ task "javascript:update_constants" => :environment do
     export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
   JS
 
+  MAIN_FONTS = %w[Helvetica Inter Lato Montserrat OpenSans Poppins Roboto Merriweather Mukta]
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -188,7 +190,9 @@ task "javascript:update_constants" => :environment do
 
     export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
 
-    export const FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] }}
+    export const MAIN_FONTS = #{MAIN_FONTS}
+
+    export const MORE_FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] } - MAIN_FONTS}
 
     export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
