@@ -34,6 +34,61 @@ RSpec.describe UserGuardian do
   fab!(:trust_level_1)
   fab!(:trust_level_2)
 
+  describe "#can_claim_reviewable_topic?" do
+    fab!(:topic)
+    context "with anon user" do
+      let(:guardian) { Guardian.new }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
+      end
+    end
+
+    context "with current user" do
+      let(:guardian) { Guardian.new(user) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(false)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(false)
+      end
+    end
+
+    context "with moderator" do
+      let(:guardian) { Guardian.new(moderator) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
+      end
+    end
+
+    context "with admin" do
+      let(:guardian) { Guardian.new(admin) }
+
+      it "should return the right value for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(topic)).to eq(true)
+      end
+
+      it "should return the right value for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_pick_avatar?" do
     let :guardian do
       Guardian.new(user)

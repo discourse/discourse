@@ -341,9 +341,10 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
-      site_setting_is_hidden: "You are not allowed to change hidden settings"
-      site_setting_is_shadowed_globally: "You cannot change this setting because it is globally configured"
-      site_setting_is_unconfigurable: "You are not allowed to change unconfigurable settings"
+      site_settings_are_deprecated: "The following settings are deprecated: %{old_names}. Use %{new_names} instead"
+      site_settings_are_hidden: "You are not allowed to change hidden settings: %{setting_names}"
+      site_settings_are_shadowed_globally: "You cannot change those settings because they are globally configured: %{setting_names}"
+      site_settings_are_unconfigurable: "You are not allowed to change unconfigurable settings: %{setting_names}"
       invalid_choice:
         one: "'%{name}' is an invalid choice."
         other: "'%{name}' are invalid choices."
@@ -365,8 +366,9 @@ en:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
-      twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      x_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
       tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "This setting requires the 'allow anonymous mode' setting to be enabled first."
 
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -630,6 +632,7 @@ en:
         one: "'%{username}' is already a member of this group."
         other: "The following users are already members of this group: %{username}"
       invalid_domain: "'%{domain}' is not a valid domain."
+      too_many_domains: "Too many domains. Maximum of %{max}."
       invalid_incoming_email: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
@@ -639,6 +642,9 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      counting_too_many_email_domains:
+        one: "Maximum %{count} email domain can be counted at once"
+        other: "Maximum %{count} email domains can be counted at once"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
     default_names:
@@ -1730,6 +1736,7 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      full_page_login_check: "Your site has disabled the full page login setting. This setting is deprecated and will be removed on <strong>29 April 2025</strong>. Your site will be updated to use full page signup and login screens on that date. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Learn more</a>."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1766,6 +1773,7 @@ en:
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Accent marks in search queries are disregarded if this setting is enabled, allowing users to find results even if they don't input the correct accents."
     search_default_sort_order: "Default sort order for full-page search"
+    search_experience: "The default position and appearance of search on desktop devices"
     category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
@@ -1833,7 +1841,7 @@ en:
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
     apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
-    twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
+    x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -2442,8 +2450,8 @@ en:
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
-    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
+    allow_anonymous_mode: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
+    allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_mode`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -2532,7 +2540,7 @@ en:
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     penalty_include_post_message: "Automatically include offending post message in email message template when silencing or suspending a user"
-    svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
+    svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use no prefix for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_requirement: "Make the full name field a required, optional, or optional but hidden field in the signup form."
@@ -2742,6 +2750,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
@@ -2749,12 +2758,12 @@ en:
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     glimmer_topic_list_mode: "Control whether the new 'glimmer' topic-list implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. See <a href='https://meta.discourse.org/t/343404'>the Meta topic</a> for more information."
-    glimmer_post_menu_mode: "Control whether the new 'glimmer' post menu implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
-    glimmer_post_menu_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
-    admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    experimental_admin_search_enabled_groups: "Enable the new admin search for users in these groups. This will enable the use of the keyboard shortcut to open the admin search, as well as visiting <a href='%{base_path}/admin/search'>the full page search</a>."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -3083,6 +3092,7 @@ en:
       inactive_user: "Inactive user"
       reviewable_reject_auto: "Auto handle queued reviewables"
       reviewable_reject: "Reviewable user rejected"
+      reviewable_details_scrubbed: "User details scrubbed by %{staff}\n\nReason: %{reason}\n\nTimestamp: %{timestamp}"
     email_in_spam_header: "User's first email was flagged as spam"
     already_silenced: "User was already silenced by %{staff} %{time_ago}."
     already_suspended: "User was already suspended by %{staff} %{time_ago}."
@@ -4016,10 +4026,15 @@ en:
     header_instructions: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
     reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
+    reply_by_email_button_only: "[Visit Topic](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Visit Message](%{base_url}%{url})"
     only_reply_by_email: "Reply to this email to respond."
     only_reply_by_email_pm: "Reply to this email to respond to %{participants}."
+    only_reply_by_email_pm_button_only: "[Visit Message](%{base_url}%{url})"
     visit_link_to_respond: "[Visit Topic](%{base_url}%{url}) to respond."
     visit_link_to_respond_pm: "[Visit Message](%{base_url}%{url}) to respond to %{participants}."
+    visit_link_to_respond_button_only: "[Visit Topic](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Visit Message](%{base_url}%{url})"
     reply_above_line: "## Please type your reply above this line. ##"
 
     posted_by: "Posted by %{username} on %{post_date}"
@@ -4308,6 +4323,18 @@ en:
         You have been silenced from the forum.
 
         Reason - %{reason}
+
+    account_deleted:
+      title: "Account Deleted"
+      subject_template: "[%{email_prefix}] Your account has been deleted"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
+
+        %{flag_reason}
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
     account_exists:
       title: "Account already exists"
@@ -5559,6 +5586,7 @@ en:
       revoked: Revoked
       restored: Restored
     bulk_user_delete: "deleted in a bulk delete operation"
+    cli_bulk_post_delete: "Bulk deleted from rake task"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
@@ -5583,7 +5611,9 @@ en:
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
       auto_silence_regex: "New user whose first post matches the %{link} setting."
-      watched_word: "This post included a Watched Word. See your %{link}."
+      watched_word:
+        one: "This post included a Watched Word, the flagged word is: %{words}. Check the %{link} for more."
+        other: "This post included Watched Words, the flagged words are: %{words}. Check the %{link} for more."
       staged: "New topics and posts for staged users must be approved by staff. See %{link}."
       category: "Posts in this category require manual approval by staff. See the %{link}."
       must_approve_users: "All new users must be approved by staff. See %{link}."
@@ -5594,8 +5624,10 @@ en:
       contains_media: "This post includes embedded media. See %{link}."
       queued_by_staff: "A staff member thinks this post needs review. It'll remain hidden until then."
       links:
-        watched_word: list of watched words
+        watched_word: watched word settings
         category: category settings
+      no_context:
+        watched_word: "This post included a Watched Word. Check the %{link} for more."
 
     actions:
       agree:
@@ -5603,88 +5635,118 @@ en:
       agree_and_keep:
         title: "Keep post"
         description: "Agree with flag but keep this post unchanged."
+        complete: "Post kept unchanged."
       agree_and_keep_hidden:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
+        complete: "Post kept hidden."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
+        complete: "User suspended."
       agree_and_silence:
         title: "Silence user"
         description: "Agree with flag and silence the user."
+        complete: "User silenced."
       agree_and_restore:
         title: "Restore post"
         description: "Restore the post so that all users can see it."
+        complete: "Post restored."
       agree_and_hide:
         title: "Hide post"
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
+        complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Agree and Edit Post"
         description: "Agree with flag and open a composer window to edit the post."
+        complete: "Flag acknowledged, you can now edit the post."
       delete_single:
         title: "Delete"
+        complete: "Post deleted."
       delete:
         title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
+        complete: "Post deleted."
       delete_and_ignore_replies:
         title: "Ignore flag, delete post and replies"
         description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
+        complete: "Post and replies deleted."
       delete_and_agree:
         title: "Delete post"
         description: "Agree with flag and delete this post; if the first post, delete the topic as well."
+        complete: "Post deleted."
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
+        complete: "Post and replies deleted."
       disagree_and_restore:
         title: "No, restore post"
         description: "Restore the post so that all users can see it."
+        complete: "Post restored."
       disagree:
         title: "No"
+        complete: "Flag ignored."
       discard_post:
         title: "Discard Post"
+        complete: "Post discarded."
       revise_and_reject_post:
         title: "Revise Post..."
+        complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
+        complete: "Flag ignored."
       approve:
         title: "Approve"
+        complete: "Post approved."
       approve_post:
         title: "Approve Post"
         confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        complete: "Post approved."
       reject_post:
         title: "Reject Post"
+        complete: "Post rejected."
       approve_user:
         title: "Approve User"
+        complete: "User approved."
       reject_user:
         title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
+          complete: "User deleted."
         block:
           title: "Delete and Block User"
           description: "The user will be deleted, and we'll block their IP and email address."
+          complete: "User deleted and blocked."
       reject:
         title: "Reject"
         bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
+        complete: "Post rejected and user suspended."
       reject_and_silence:
         title: "Reject and Silence user"
+        complete: "Post rejected and user silenced."
       reject_and_delete:
         title: "Reject and Delete the post"
+        complete: "Post rejected and deleted."
       reject_and_keep_deleted:
         title: "Keep post deleted"
+        complete: "Post rejected and kept deleted."
       approve_and_restore:
         title: "Approve and Restore post"
+        complete: "Post approved and restored."
       delete_user:
         reason: "Deleted via review queue"
+        complete: "User deleted."
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"

@@ -157,6 +157,10 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "Dámoslle a benvida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -308,9 +312,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      abandon:
-        yes_value: "Desbotar"
-        no_value: "Retomar a edición"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -424,6 +425,10 @@ gl:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Razón"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Razón..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (%{count} alertas en total)"
@@ -1697,13 +1702,6 @@ gl:
       password_label: "Contrasinal"
     password_reset:
       continue: "Continuar en %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Só categorías"
       categories_with_featured_topics: "Categorías con temas de actualidade"
@@ -1989,8 +1987,8 @@ gl:
         votes_released: "O voto foi liberado"
         admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
+      delete: "Eliminar"
       uploading: "Cargando"
-      select_file: "Seleccionar ficheiro"
       default_image_alt_text: imaxe
     search:
       sort_by: "Ordenar por"
@@ -2569,6 +2567,9 @@ gl:
       has_likes_title_you:
         one: "vostede e %{count} máis apreciaron esta publicación"
         other: "vostede %{count} máis apreciaron esta publicación"
+      sr_post_like_count_button:
+        one: "A %{count} persoa gustoulle esta publicación."
+        other: "A %{count} persoas gustoulles esta publicación."
       filtered_replies_hint:
         one: "Ver esta publicación e a súa resposta"
         other: "Ver esta publicación e as súas %{count} respostas"
@@ -2767,9 +2768,13 @@ gl:
       description: "Descrición"
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
-      badge_colors: "Cores das insignias"
-      background_color: "Cor do fondo"
-      foreground_color: "Cor do primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Dúas palabras como máximo"
       color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
@@ -3142,6 +3147,9 @@ gl:
         title: "Menú de busca"
         prev_next: "%{shortcut} Mover a selección arriba e abaixo"
         insert_url: "%{shortcut} Introducir selección no panel de composición"
+      admin:
+        title: "Administrador"
+        search_prev_next: "%{shortcut} Mover a selección arriba e abaixo"
     badges:
       earned_n_times:
         one: "Gañou esta insignia %{count} vez"
@@ -3406,15 +3414,42 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
-        sidebar_link:
-          all: "Todos os informes"
+      config_sections:
+        account:
+          title: "Conta"
+        reports:
+          title: "Informes"
+        community:
+          title: "Comunidade"
+        appearance:
+          title: "Aparencia"
+        email:
+          title: "Enderezo de correo"
+        security:
+          title: "Seguranza"
+        plugins:
+          title: "Complementos"
       config:
         developer:
           title: "Desenvolvedor"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderación"
         files:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        branding:
+          title: "Logo"
+          logo:
+            form:
+              mobile: "Móbil"
+              email: "Enderezo de correo"
+              manifest_screenshots:
+                description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
+              opengraph_image:
+                description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
         navigation:
           title: "Navegación"
         notifications:
@@ -3423,7 +3458,7 @@ gl:
           title: "Onebox"
         other:
           title: "Outro"
-        search:
+        search_everything:
           title: "Buscar"
         security:
           title: "Seguranza"
@@ -3431,6 +3466,71 @@ gl:
           title: "Lixo"
         user_api:
           title: "API de usuario"
+        dashboard:
+          title: "Panel"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        backups:
+          title: "Copias de seguranza"
+          sub_pages:
+            logs:
+              title: "Rexistros"
+        reports:
+          title: "Informes"
+        badges:
+          title: "Insignias"
+        permalinks:
+          title: "Ligazóns permanentes"
+          header_description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temas"
+        components:
+          title: "Compoñentes"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
+            templates:
+              title: "Modelos"
+            sent:
+              title: "Enviada"
+            skipped:
+              title: "Saltada"
+            bounced:
+              title: "Rebotada"
+            received:
+              title: "Recibidas"
+            rejected:
+              title: "Rexeitada"
+        email_appearance:
+          title: "Aparencia"
+          header_description: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo e bloquearase o rexistro ou se tomará outra medida"
+            screened_ips:
+              title: "IP controlados"
+            screened_urls:
+              title: "URL controlados"
+              header_description: "Os URL listados aquí utilizáronse en publicacións de usuarios que foron identificados como emisores de lixo"
+        webhooks:
+          title: "Enganches de web (webhooks)"
+        embedding:
+          title: "Incorporando"
+      search:
+        title: "Buscar"
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temas"
+          component:
+            one: "Compoñente"
+            other: "Compoñentes"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3719,9 +3819,8 @@ gl:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navegación"
-          themes: "Temas"
-          components:
-            title: "Compoñentes"
+          themes_and_components:
+            keywords: "extensión"
       email_settings:
         sidebar_link:
           appearance: "Aparencia"
@@ -3740,7 +3839,6 @@ gl:
           update: "Actualizar"
           saved: "gardado!"
         flags:
-          header: "Moderación"
           description: "Descrición"
           enabled: "Activado?"
           edit: "Editar"
@@ -3760,12 +3858,20 @@ gl:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Compoñentes"
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Complementos"
         name: "Nome"
@@ -3778,18 +3884,6 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        sidebar_link:
-          webhooks: "Enganches de web (webhooks)"
-          developer: "Desenvolvedor"
-          embedding: "Incorporando"
-          user_api: "API de usuario"
-          onebox: "Onebox"
-          files: "Ficheiros"
-          other_options: "Outro"
-          search: "Buscar"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3904,16 +3998,10 @@ gl:
           common: "Común"
           desktop: "Escritorio"
           mobile: "Móbil"
-          settings: "Configuración"
-          translations: "Traducións"
-          extra_scss: "SCSS extra"
           extra_files: "Ficheiros extra"
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          show_advanced: "Amosar campos avanzados"
-          hide_advanced: "Ocultar campos avanzados"
-          hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
@@ -3955,9 +4043,6 @@ gl:
           unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
           stay: "Deixar"
-          css_html: "Personalizar CSS/HTML"
-          edit_css_html: "Editar CSS/HTML"
-          edit_css_html_help: "Non editou ningún CSS ou HTML"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"
           included_components: "Compoñentes incluídos"
@@ -4007,19 +4092,12 @@ gl:
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
           scss:
             text: "CSS"
-            title: "Escriba CSS personalizado, aceptamos todo CSS válido e estilos SCSS"
-          header:
-            text: "Cabeceira"
-            title: "Escriba o HTML que se presentará enriba da cabeceira do sitio"
           after_header:
             text: "Despois da cabeceira"
-            title: "Escriba HTML que se presentará en todas as páxinas despois da cabeceira do sitio"
           footer:
             text: "Rodapé"
-            title: "Escriba HTML que se presentará no rodapé"
           embedded_scss:
             text: "CSS encaixado"
-            title: "Escriba CSS personalizado para entregar coa versión incorporada dos comentarios"
           color_definitions:
             text: "Definicións de cor"
             title: "Escriba definicións de cor personalizadas (só para usuarios avanzados)"
@@ -4034,11 +4112,6 @@ gl:
               }
 
               Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
-          body_tag:
-            text: "Corpo"
-          yaml:
-            text: "YAML"
-            title: "Definir os axustes do tema en formato YAML"
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
@@ -4101,6 +4174,9 @@ gl:
             description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
+          editor:
+            light: "Claro"
+            dark: "Escuro"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."

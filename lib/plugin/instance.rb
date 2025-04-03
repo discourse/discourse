@@ -276,8 +276,8 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   add_filter_custom_filter("word_count") do |scope, value|
-  #     scope.where(word_count: value)
+  #   add_filter_custom_filter("word_count") do |scope, value, guardian|
+  #     scope.where(word_count: value) if guardian.admin?
   #   end
   def add_filter_custom_filter(name, &block)
     DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
@@ -785,7 +785,7 @@ class Plugin::Instance
     js = "(function(){#{js}})();" if js.present?
 
     result = []
-    result << [css, "css"] if css.present?
+    result << [css, "scss"] if css.present?
     result << [js, "js"] if js.present?
 
     result.map do |asset, extension|
@@ -891,6 +891,9 @@ class Plugin::Instance
   def register_reviewable_type(reviewable_type_class)
     return unless reviewable_type_class < Reviewable
     extend_list_method(Reviewable, :types, reviewable_type_class)
+    if reviewable_type_class.method_defined?(:scrub)
+      extend_list_method(Reviewable, :scrubbable_types, reviewable_type_class)
+    end
   end
 
   def extend_list_method(klass, method, new_attributes)
@@ -1344,6 +1347,24 @@ class Plugin::Instance
     end
   end
 
+  # This method allows plugins to preload topic associations when loading topics
+  # that make use of topic_list.
+  #
+  # @param fields [Symbol, Array<Symbol>, Hash] The topic associations to preload.
+  #
+  # @example
+  #   register_topic_preloader_associations(:first_post)
+  #   register_topic_preloader_associations([:first_post, :topic_embeds])
+  #   register_topic_preloader_associations({ first_post: :uploads })
+  #   register_topic_preloader_associations({ first_post: :uploads }) do
+  #     SiteSetting.some_setting_enabled?
+  #   end
+  #
+  # @return [void]
+  def register_topic_preloader_associations(fields, &condition)
+    DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
+  end
+
   protected
 
   def self.js_path
@@ -1438,8 +1459,17 @@ class Plugin::Instance
     reloadable_patch { NewPostManager.add_plugin_payload_attribute(attribute_name) }
   end
 
-  def register_topic_preloader_associations(fields)
-    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  ##
+  # Allows plugins to preload topic associations when loading categories with topics.
+  #
+  # @param fields [Array<Symbol>] The topic associations to preload.
+  #
+  # @example Preload custom topic associations
+  #
+  #   register_category_list_topics_preloader_associations(%i[some_topic_association some_other_topic_association])
+  #
+  def register_category_list_topics_preloader_associations(associations)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(associations, self)
   end
 
   private
@@ -1451,7 +1481,12 @@ class Plugin::Instance
 
   def setting_category_name
     return if setting_category.blank? || setting_category == "plugins"
-    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+    I18n.t("admin_js.#{setting_category_label}")
+  end
+
+  def setting_category_label
+    return if setting_category.blank? || setting_category == "plugins"
+    "admin.site_settings.categories.#{setting_category}"
   end
 
   def validate_directory_column_name(column_name)
@@ -1500,7 +1535,7 @@ class Plugin::Instance
 
   def default_admin_route
     {
-      label: "#{name.underscore}.title",
+      label: setting_category_label || "#{name.underscore}.title",
       location: name,
       use_new_show_route: true,
       auto_generated: true,

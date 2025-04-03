@@ -34,9 +34,11 @@ module("Plugin Outlet - Decorator", function (hooks) {
   });
 
   test("Calls the plugin callback with the rendered outlet", async function (assert) {
-    await render(<template>
-      <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
-    </template>);
+    await render(
+      <template>
+        <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
+      </template>
+    );
 
     assert.dom(".my-outlet-name-outlet.foo").exists();
     assert
@@ -46,19 +48,23 @@ module("Plugin Outlet - Decorator", function (hooks) {
       .dom(".my-outlet-name-outlet.bar")
       .doesNotHaveStyle("backgroundColor");
 
-    await render(<template>
-      <PluginOutlet
-        @connectorTagName="div"
-        @name="my-outlet-name"
-        @outletArgs={{hash value=true}}
-      />
-    </template>);
+    await render(
+      <template>
+        <PluginOutlet
+          @connectorTagName="div"
+          @name="my-outlet-name"
+          @outletArgs={{hash value=true}}
+        />
+      </template>
+    );
 
     assert.dom(".my-outlet-name-outlet.foo").hasClass("has-value");
 
-    await render(<template>
-      <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
-    </template>);
+    await render(
+      <template>
+        <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
+      </template>
+    );
 
     assert.dom(".my-outlet-name-outlet.foo").doesNotHaveClass("has-value");
   });

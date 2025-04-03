@@ -194,6 +194,10 @@ tr_TR:
       dismiss: "Kapat"
     bootstrap_mode: "Başlarken"
     back_button: "Geri"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name}'a hoş geldiniz!"
+      search: "Ara"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -456,10 +460,6 @@ tr_TR:
       remove_confirmation: "Bu taslağı silmek istediğinize emin misiniz?"
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
-      abandon:
-        confirm: "Halihazırda devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
-        yes_value: "Kapat"
-        no_value: "Düzenlemeyi sürdür"
       dropdown:
         title: "En son taslaklar menüsünü açın"
         untitled: "Başlıksız taslak"
@@ -597,6 +597,10 @@ tr_TR:
         name: "Ad"
         fields: "Alanlar"
         reject_reason: "Sebep"
+        scrubbed_reason: "Sebep"
+        scrub_record:
+          reason_placeholder: "Sebep..."
+          cancel_button: "İptal et"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (son bayraktan)"
@@ -2344,13 +2348,6 @@ tr_TR:
       password_label: "Şifre"
     password_reset:
       continue: "%{site_name} adresine devam edin"
-    emoji_set:
-      apple_international: "Apple/Uluslararası"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Öne Çıkan Konuları içeren Kategoriler"
@@ -2734,9 +2731,8 @@ tr_TR:
         new_features: "Yeni Discourse özellikleri çıktı!"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
+      delete: "Sil"
       uploading: "Yükleniyor"
-      processing: "Yükleme İşleniyor"
-      select_file: "Dosya seç"
       default_image_alt_text: görüntü
     search:
       sort_by: "Sıralama ölçütü"
@@ -3561,11 +3557,8 @@ tr_TR:
         one: "siz ve %{count} kişi daha bu gönderiyi beğendi"
         other: "siz ve %{count} kişi daha bu gönderiyi beğendi"
       sr_post_like_count_button:
-        one: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
-        other: "%{count} kişi bu gönderiyi beğendi. Görüntülemek için tıklayın"
-      sr_post_read_count_button:
-        one: "%{count} kişi bu gönderiyi okudu. Görüntülemek için tıklayın"
-        other: "%{count} kişi bu gönderiyi okudu. Görüntülemek için tıklayın"
+        one: "%{count} kişi bu gönderiyi beğendi."
+        other: "%{count} kişi bu gönderiyi beğendi."
       filtered_replies_hint:
         one: "Bu gönderiyi ve yanıtını görüntüleyin"
         other: "Bu gönderiyi ve %{count} yanıtını görüntüleyin"
@@ -3682,8 +3675,6 @@ tr_TR:
           read_capped:
             one: "ve %{count} kişi daha bunu okudu"
             other: "ve %{count} kişi daha bunu okudu"
-          sr_post_likers_list_description: "bu gönderiyi beğenen kullanıcılar"
-          sr_post_readers_list_description: "bu gönderiyi okuyan kullanıcılar"
         by_you:
           off_topic: "Buna konu dışı bayrağı eklediniz"
           spam: "Buna spam bayrağı eklediniz"
@@ -3811,9 +3802,13 @@ tr_TR:
       logo_dark: "Koyu Mod Kategorisi Logo Görüntüsü"
       background_image: "Kategori Arka Plan Görüntüsü"
       background_image_dark: "Koyu Kategori Arka Plan Resmi"
-      badge_colors: "Rozet renkleri"
-      background_color: "Arka plan rengi"
-      foreground_color: "Ön plan rengi"
+      background_color: "Renk"
+      styles:
+        icon: "Simge"
+        emoji: "Emoji"
+        options:
+          icon: "Simge"
+          emoji: "Emoji"
       color_used: "Kullanılan renk"
       predefined_colors: "Önceden tanımlanmış renk seçenekleri"
       name_placeholder: "En fazla bir veya iki kelime"
@@ -4273,6 +4268,9 @@ tr_TR:
         prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
         insert_url: "%{shortcut} Seçimi açık besteciye ekle"
         full_page_search: "%{shortcut} Tam sayfa aramayı başlatır"
+      admin:
+        title: "Yönetici"
+        search_prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
     badges:
       earned_n_times:
         one: "Bu rozeti %{count} kez kazandı"
@@ -4794,15 +4792,39 @@ tr_TR:
         meta_doc: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
-        sidebar_link:
-          all: "Tüm raporlar"
+      config_sections:
+        account:
+          title: "Hesap"
+        reports:
+          title: "Raporlar"
+        community:
+          title: "Topluluk"
+        appearance:
+          title: "Görünüm"
+        email:
+          title: "E-posta"
+        security:
+          title: "Güvenlik"
+        plugins:
+          title: "Eklentiler"
+        advanced:
+          title: "Gelişmiş"
       config:
+        about:
+          title: "Siteniz hakkında"
+          header_description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
         developer:
           title: "Geliştirici"
           header_description: "Hız limitlerini, çarpanları ve hesaplamaları, güvenli modu ve diğer gelişmiş özellikleri kontrol etmek için geliştirici ayarları"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
+        emojis:
+          title: "Emoji"
+          header_description: "Herkesin kullanabileceği yeni emoji ekleyin. Dosya adlarını kullanarak emoji'ler oluşturmak için birden fazla dosya seçin. Seçilen grup aynı anda eklenen tüm dosyalar için kullanılır"
+        flags:
+          title: "Moderasyon"
+          header_description: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
         font_style:
           title: "Yazı tipi stili"
           header_description: "Temalarınız tarafından kullanılan yazı tipi stillerini özelleştirin"
@@ -4818,6 +4840,18 @@ tr_TR:
         logo:
           title: "Site logosu"
           header_description: "Site logonuzun varyasyonlarını özelleştirin"
+        branding:
+          title: "Markalaşma"
+          logo:
+            form:
+              logo:
+                title: "Birincil logo"
+              mobile: "Mobil"
+              email: "E-posta"
+              manifest_screenshots:
+                description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
+              opengraph_image:
+                description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -4834,8 +4868,9 @@ tr_TR:
           title: "Oran limitleri"
           header_description: "Kullanıcıların konu oluşturma, mesaj gönderme ve yanıt paylaşma gibi belirli eylemleri ne sıklıkta gerçekleştirebileceğini yapılandırma"
         search:
-          title: "Ara"
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
+        search_everything:
+          title: "Ara"
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -4851,6 +4886,110 @@ tr_TR:
         group_permissions:
           title: "Grup izinleri"
           header_description: "Discourse dâhilindeki çeşitli özelliklere erişimi kontrol eden tüm grup tabanlı uygulama izinleri burada yönetilir"
+        dashboard:
+          title: "Pano"
+        users:
+          title: "Kullanıcılar"
+        groups:
+          title: "Grup"
+        site_settings:
+          title: "Tüm site ayarları"
+        whats_new:
+          title: "Yenilikler"
+          keywords: "değişiklik günlüğü|özellik|yayın"
+        backups:
+          title: "Yedeklemeler"
+          header_description: "Discourse yedeklemeleri, sitedeki her şeyi içeren tam site veri tabanını içerir: konular, gönderiler, kullanıcılar, gruplar, ayarlar, temalar, vb. Yedekleme dosyasının nasıl oluşturulduğuna bağlı olarak, yüklemeleri içerebilir veya içermeyebilir."
+          sub_pages:
+            logs:
+              title: "Günlükler"
+        reports:
+          title: "Raporlar"
+          header_description: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
+        badges:
+          title: "Rozetler"
+          header_description: "Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir"
+        permalinks:
+          title: "Kalıcı Bağlantılar"
+        user_fields:
+          title: "Kullanıcı alanları"
+          header_description: "Topluluk üyeleriniz hakkında ekstra ayrıntılar toplamak için özel kullanıcı alanları oluşturun. Kayıt sırasında hangi bilgilerin gerekli olduğunu, profillerde nelerin gösterileceğini ve kullanıcıların neleri güncelleyebileceğini seçebilirsiniz."
+        watched_words:
+          title: "İzlenen kelimeler"
+          header_description: "İzlenen kelimeler, belirli kelimeleri içeren gönderileri engelleme, sansürleme, bağlantı verme veya işaretleme dâhil olmak üzere birden fazla farklı eylem gerçekleştirebilen moderasyon araçlarıdır"
+        color_palettes:
+          title: "Renk paletleri"
+        emoji:
+          title: "Emoji"
+          header_description: "Herkesin kullanabileceği yeni emoji ekleyin. Dosya adlarını kullanarak emoji'ler oluşturmak için birden fazla dosya seçin. Seçilen grup aynı anda eklenen tüm dosyalar için kullanılır."
+        themes:
+          title: "Temalar"
+          header_description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir"
+        components:
+          title: "Bileşenler"
+          header_description: "Bileşenler, forum tasarımınızın stilinin belirli unsurlarını değiştirmek için temalara eklenebilen daha küçük özelleştirmelerdir"
+        site_texts:
+          title: "Site metinleri"
+        email:
+          title: "Sunucu kurulumu ve günlükleri"
+          header_description: "E-posta oluşturmak için kullanılan şablonları özelleştirin, gönderilecek özet e-postaları ön izleyin ve e-posta günlüklerini görüntüleyin"
+          keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
+          sub_pages:
+            preview_summary:
+              title: "Özeti ön izle"
+              header_description: "Aktif olmayan kullanıcılara gönderilen özet e-postaların içeriğini ön izleyin"
+            advanced_test:
+              title: "Gelişmiş test"
+            templates:
+              title: "Şablonlar"
+            sent:
+              title: "Gönderilen"
+            skipped:
+              title: "Atlandı"
+            bounced:
+              title: "Geri Döndü"
+            received:
+              title: "Alındı"
+            rejected:
+              title: "Reddedildi"
+        email_appearance:
+          title: "Görünüm"
+          header_description: "Tüm html e-postalarının oluşturulduğu şablonu özelleştirin ve CSS kullanarak stil verin"
+        staff_action_logs:
+          title: "Günlükler ve tarama"
+          header_description: "Günlükler ve tarama, topluluğunuzu izlemenize ve yönetmenize, güvenli ve saygılı kalmasını sağlamanıza olanak tanır. Personel üyeleri tarafından gerçekleştirilen tüm eylemlerin günlüklerini, arama günlüklerini ve kullanıcı tarama yapılandırmasını görüntüleyebilirsiniz"
+          keywords: "hata günlükleri|personel eylemi|taranan e-postalar|taranan ip'ler|taranan url'ler|arama günlükleri"
+          sub_pages:
+            screened_emails:
+              title: "Taranan e-postalar"
+              header_description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilir ve kayıt engellenir veya başka bir işlem gerçekleştirilir"
+            screened_ips:
+              title: "Taranan IP'ler"
+            screened_urls:
+              title: "Taranan URL'ler"
+              header_description: "Burada listelenen URL'ler, spam gönderen olarak tanımlanan kullanıcılar tarafından gönderilerde kullanılmıştır"
+            search_logs:
+              title: "Arama günlükleri"
+        plugins:
+          title: "Yüklü eklentiler"
+          header_description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür"
+        api_keys:
+          title: "API anahtarları"
+          header_description: "API anahtarları özelliği, Discourse'u harici sistemlerle güvenli bir şekilde entegre etmenize ve eylemleri otomatikleştirmenize olanak tanır. Yöneticiler, kaynaklara ve hassas verilere erişimi kontrol etmek için belirli kapsamlara sahip anahtarlar oluşturabilir. Kapsamlar işlevselliği sınırlayarak gelişmiş güvenlik sağlar."
+        webhooks:
+          title: "Web Kancaları"
+        embedding:
+          title: "Gömme"
+          header_description: "Discourse, IFRAME oluşturan bir Javascript API'si kullanarak bir konudaki yorumları uzak bir siteye yerleştirme yeteneğine sahiptir"
+      search:
+        title: "Ara"
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temalar"
+          component:
+            one: "Bileşen"
+            other: "Bileşenler"
       new_features:
         title: "Yenilikler"
         check_for_updates: "Güncellemeleri kontrol et"
@@ -5076,6 +5215,7 @@ tr_TR:
         key: "Anahtar"
         keys: "Anahtarlar"
         created: 'Oluşturan:'
+        scope: Kapsam
         updated: Güncellendi
         last_used: Son kullanılan
         never_used: Asla
@@ -5356,10 +5496,8 @@ tr_TR:
           color_schemes: "Renk paletleri"
           emoji: "Emoji"
           navigation: "Navigasyon"
-          themes: "Temalar"
-          components:
-            title: "Bileşenler"
-            keywords: "tema|uzantı"
+          themes_and_components:
+            keywords: "uzantı"
           site_texts: "Site metinleri"
       email_settings:
         title: "E-posta Ayarları"
@@ -5387,8 +5525,6 @@ tr_TR:
             description: "Discourse'taki yeni yayınları ve iyileştirmeleri keşfedin"
       config_areas:
         about:
-          header: "Siteniz hakkında"
-          description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
           general_settings: "Genel Ayarlar"
           community_name: "Topluluk adı"
           community_name_placeholder: "Örnek Topluluk"
@@ -5438,9 +5574,7 @@ tr_TR:
             your_organization_saved: "Kuruluşunuz kaydedildi"
           saved: "kaydedildi!"
         flags:
-          header: "Moderasyon"
           edit_header: "Bayrağı düzenle"
-          subheader: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
           description: "Açıklama"
           enabled: "Etkin mi?"
           add: "Bayrak ekle"
@@ -5482,18 +5616,15 @@ tr_TR:
           delete: "Sil"
           more_options:
             title: "Daha fazla seçenek"
-        look_and_feel:
-          title: "Görünüm ve his"
-          description: "Discourse sitenizi özelleştirip markalaştırarak ona ayırt edici bir stil kazandırın."
+        themes_and_components:
+          breadcrumb_title: "Kişiselleştir"
+          install: "Yükle"
           themes:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
-            themes_intro_img_alt: "Yeni tema yer tutucu"
-            set_default_theme: "Varsayılanı ayarla"
-            default_theme: "Varsayılan tema"
-            themes_description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir."
             new_theme: "Yeni tema"
-            user_selectable: "Kullanıcı tarafından seçilebilir"
+          components:
+            title: "Bileşenler"
         user_fields:
           field: "Alan"
           type: "Tür"
@@ -5504,10 +5635,15 @@ tr_TR:
           delete: "Sil"
           delete_successful: "Kullanıcı alanı silindi."
           save_successful: "Kullanıcı alanı kaydedildi."
+        color_palettes:
+          palette_name: "Ad"
+          color_options:
+            toggle: "Kullanıcı tarafından seçilebilir"
+            toggle_description: "Renk paleti, kullanıcılar tarafından seçilebilir"
+          colors:
+            title: "Renkler"
       plugins:
         title: "Eklentiler"
-        installed: "Yüklü eklentiler"
-        description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür."
         name: "Ad"
         none_installed: "Yüklü herhangi bir eklentiniz yok."
         version: "Sürüm"
@@ -5522,25 +5658,6 @@ tr_TR:
         author: "Yazan: %{author}"
         experimental_badge: "deneysel"
         learn_more: "Daha fazla bilgi edinin"
-        sidebar_link:
-          installed: "Yüklendi"
-      advanced:
-        title: "Gelişmiş"
-        sidebar_link:
-          api_keys:
-            title: "API anahtarları"
-            keywords: "token"
-          webhooks: "Web Kancaları"
-          developer: "Geliştirici"
-          embedding: "Gömme"
-          rate_limits: "Oran limitleri"
-          user_api: "Kullanıcı API'si"
-          onebox: "Onebox"
-          files: "Dosyalar"
-          other_options: "Diğer"
-          search: "Ara"
-          experimental: "Deneysel"
-          all_site_settings: "Tüm site ayarları"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
@@ -5548,7 +5665,6 @@ tr_TR:
       backups:
         title: "Yedeklemeler"
         files_title: "Yedekleme dosyaları"
-        description: "Discourse yedeklemeleri, sitedeki her şeyi içeren tam site veri tabanını içerir: konular, gönderiler, kullanıcılar, gruplar, ayarlar, temalar, vb. Yedekleme dosyasının nasıl oluşturulduğuna bağlı olarak, yüklemeleri içerebilir veya içermeyebilir."
         menu:
           backups: "Yedeklemeler"
           backup_files: "Yedekleme dosyaları"
@@ -5692,17 +5808,11 @@ tr_TR:
           common: "Yaygın"
           desktop: "Masaüstü"
           mobile: "Mobil"
-          settings: "Ayarlar"
-          translations: "Çeviriler"
-          extra_scss: "Ekstra SCSS"
           extra_files: "Ekstra dosyalar"
           extra_files_upload: "Bu dosyaları görüntülemek için temayı dışa aktarın."
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
           settings_editor: "Ayar Düzenleyici"
-          show_advanced: "Gelişmiş alanları göster"
-          hide_advanced: "Gelişmiş alanları gizle"
-          hide_unused_fields: "Kullanılmayan alanları gizle"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
           color_scheme_user_selectable: "Renk paleti, kullanıcılar tarafından seçilebilir"
@@ -5756,9 +5866,6 @@ tr_TR:
           unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "Kapat"
           stay: "Kal"
-          css_html: "Özel CSS/HTML"
-          edit_css_html: "CSS/HTML'yi düzenle"
-          edit_css_html_help: "Herhangi bir CSS veya HTML düzenlemediniz"
           delete_upload_confirm: "Bu yükleme silinsin mi? (Tema CSS çalışmayı durdurabilir!)"
           component_on_themes: "Bu temalara bileşen ekle"
           included_components: "Dahil edilen bileşenler"
@@ -5819,22 +5926,14 @@ tr_TR:
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
           scss:
             text: "CSS"
-            title: "Özel CSS girin, tüm geçerli CSS ve SCSS stillerini kabul ediyoruz"
-          header:
-            text: "Başlık"
-            title: "Site başlığının üstünde görüntülenecek HTML'yi girin"
           after_header:
             text: "Başlıktan Sonra"
-            title: "Üstbilgiden sonra tüm sayfalarda görüntülenecek HTML'yi girin"
           footer:
             text: "Altbilgi"
-            title: "Sayfa altbilgisinde görüntülenecek HTML'yi girin"
           embedded_scss:
             text: "Gömülü CSS"
-            title: "Yorumların gömülü sürümü ile teslim etmek için özel CSS girin"
           embedded_header:
             text: "Gömülü Başlık"
-            title: "Yorumların gömülü sürümünün üzerinde gösterilecek HTML'yi girin"
           color_definitions:
             text: "Renk Tanımları"
             title: "Özel renk tanımları girin (yalnızca ileri seviye kullanıcılar)"
@@ -5847,15 +5946,6 @@ tr_TR:
               %{example}
 
               Eklentiler ve/veya çekirdek ile çakışmaları önlemek için özellik adlarının önüne eklenmesi önemle tavsiye edilir.
-          head_tag:
-            text: "Kafa"
-            title: "Kafa etiketinden önce eklenecek HTML"
-          body_tag:
-            text: "Gövde"
-            title: "Gövde etiketinden önce eklenecek HTML"
-          yaml:
-            text: "YAML"
-            title: "Tema ayarlarını YAML biçiminde tanımlayın"
           scss_color_variables_warning: 'Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir. Lütfen bunun yerine CSS özel özelliklerini kullanın. Daha fazla ayrıntı için <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">bu kılavuza</a> bakın.'
           scss_warning_inline: "Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir."
           all_filter: "Tümü"
@@ -5893,7 +5983,6 @@ tr_TR:
           title: "Renkler"
           edit: "Renk paletlerini düzenle"
           long_title: "Renk paletleri"
-          description: "Renk paletleri sitenizin arayüzünde kullanılan temel renkleri tanımlarken, temalar ek stil, düzen ve bileşenler sağlayabilir; her ikisi de sitenizin benzersiz görünümünü ve hissini oluşturmak için birlikte çalışabilir ve her ikisi de kullanıcıların tercihlerini seçmeleri için kullanılabilir."
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
           copy_name_prefix: "Şunun kopyası:"
@@ -5948,6 +6037,9 @@ tr_TR:
           hover:
             name: "üzerine gelin"
             description: "Liste ögeleri gibi ögelerin üzerine gelindiğinde veya klavye odağına sahip olduklarında arka plan rengi."
+          editor:
+            light: "Açık"
+            dark: "Koyu"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."

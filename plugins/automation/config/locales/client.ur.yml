@@ -62,13 +62,13 @@ ur:
           fields:
             restricted_tags:
               label: ٹیگز
-            restricted_category:
-              label: زمرہ
-            restricted_group:
-              label: گروپ
-            restricted_groups:
-              label: گروپس
+            restricted_categories:
+              label: اقسام
           created: بنایا گیا
+          with_images: تصاویر
+          with_links: لنکس
+          with_code: کَوڈ
+          with_uploads: اَپ لوڈز
         category_created_edited:
           fields:
             restricted_category:

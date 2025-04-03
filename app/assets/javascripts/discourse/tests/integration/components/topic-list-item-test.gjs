@@ -15,18 +15,20 @@ module("Integration | Component | topic-list-item", function (hooks) {
     const topic2 = store.createRecord("topic", { id: 24235 });
     const selected = [topic];
 
-    await render(<template>
-      <HbrTopicListItem
-        @topic={{topic}}
-        @bulkSelectEnabled={{true}}
-        @selected={{selected}}
-      />
-      <HbrTopicListItem
-        @topic={{topic2}}
-        @bulkSelectEnabled={{true}}
-        @selected={{selected}}
-      />
-    </template>);
+    await render(
+      <template>
+        <HbrTopicListItem
+          @topic={{topic}}
+          @bulkSelectEnabled={{true}}
+          @selected={{selected}}
+        />
+        <HbrTopicListItem
+          @topic={{topic2}}
+          @bulkSelectEnabled={{true}}
+          @selected={{selected}}
+        />
+      </template>
+    );
 
     const checkboxes = [...document.querySelectorAll("input.bulk-select")];
     assert.dom(checkboxes[0]).isChecked();
@@ -49,10 +51,12 @@ module("Integration | Component | topic-list-item", function (hooks) {
     const store = this.owner.lookup("service:store");
     const topic = store.createRecord("topic", { id: 1234, foo: true });
     const topic2 = store.createRecord("topic", { id: 1235, foo: false });
-    await render(<template>
-      <TopicListItem @topic={{topic}} />
-      <TopicListItem @topic={{topic2}} />
-    </template>);
+    await render(
+      <template>
+        <TopicListItem @topic={{topic}} />
+        <TopicListItem @topic={{topic2}} />
+      </template>
+    );
 
     assert.dom(".topic-list-item[data-topic-id='1234']").hasClass("bar");
     assert

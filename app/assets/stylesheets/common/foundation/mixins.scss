@@ -8,6 +8,7 @@
 @use "sass:color";
 @use "sass:math";
 @use "sass:string";
+@use "sass:map";
 
 $breakpoints: (
   mobile-small: 320px,
@@ -120,14 +121,16 @@ $hpad: 0.65em;
   padding: $vpad $hpad;
 }
 
+// Used to handle -webkit prefix, but now we have autoprefixer
+// Keeping for backward-compat with plugins/themes only
 @mixin user-select($mode) {
-  -webkit-user-select: $mode;
   user-select: $mode;
 }
 
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 @mixin unselectable {
   cursor: default;
+
   @include user-select(none);
 }
 
@@ -221,6 +224,7 @@ $hpad: 0.65em;
   @if global-variable-exists(public_image_path) {
     @if string.index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");
+
       @return url("#{$plugin_asset_path}#{$path}");
     } @else {
       @return url("#{$public_image_path}#{$path}");

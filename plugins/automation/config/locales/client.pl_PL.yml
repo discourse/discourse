@@ -156,16 +156,8 @@ pl_PL:
             restricted_tags:
               label: Tagi
               description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
-            restricted_category:
-              label: Kategoria
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
-            restricted_group:
-              label: Grupa
-            restricted_groups:
-              label: Grupy
-            ignore_group_members:
-              label: Ignoruj członków grupy
-              description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
+            restricted_categories:
+              label: Kategorie
             ignore_automated:
               label: Ignoruj automatyczne
             first_post_only:
@@ -176,6 +168,10 @@ pl_PL:
               label: "Pomiń przez e-mail"
           created: Utworzono
           edited: Edytowany
+          with_images: Obrazy
+          with_links: Odnośniki
+          with_code: Kod
+          with_uploads: Pliki
         user_updated:
           fields:
             user_profile:

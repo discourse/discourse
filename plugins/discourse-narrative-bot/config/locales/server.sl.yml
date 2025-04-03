@@ -157,22 +157,8 @@ sl:
 
           - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
-        instructions: |-
-          Kot naslednji korak, ali lahko delite enega od spodnjih povezav z menoj? Odgovorite s **povezavo v svoji vrstici**, in se bo samodejno razširila tako, da bo vsebovala kratkek povzetek.
-
-          Za kopiranje poljubne povezave, pritisnite in držite na mobilni napravi ali kliknite na desen gumb na vaši miški:
-
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Super! To bo delovalo za večino <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> povezav. Zapomnite si le, da mora biti povezava _sama v vrstici_, brez česarkoli pred ali za njo.
-        not_found: |-
-          Oprostite, nisem našel povezave v vašem odgovoru! :cry:
-
-          Ali lahko v vašem naslednjem odgovoru poskusite dodati to povezavo, v svoji vrstici?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Tu je slika samoroga:

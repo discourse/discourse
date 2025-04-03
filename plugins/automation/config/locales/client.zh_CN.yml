@@ -164,18 +164,19 @@ zh_CN:
             restricted_tags:
               label: 标签
               description: 可选，仅在帖子具有以下任意标签时触发
-            restricted_category:
+            restricted_categories:
               label: 类别
-              description: 可选，仅在帖子所属话题属于此类别时触发
-            restricted_group:
-              label: 群组
-              description: 可选，仅在帖子的话题是此群组收件箱中的个人消息时触发
+              description: 可选，只有当帖子的主题属于以下类别时才会触发
+            exclude_subcategories:
+              label: 排除子类别
+              description: 可选，仅当帖子的主题完全属于上述指定类别时才会触发
+            restricted_archetype:
+              label: 主题类型
+              description: 可选，仅允许在主题或个人消息上触发
             restricted_groups:
-              label: 群组
+              label: 受限制的群组
+            restricted_inbox_groups:
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
-            ignore_group_members:
-              label: 忽略群组成员
-              description: 如果发件人是上面指定的群组的成员，则跳过触发器
             ignore_automated:
               label: 忽略自动源
               description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的帖子
@@ -190,6 +191,11 @@ zh_CN:
               description: "如果帖子是通过电子邮件创建的，则跳过该触发器。"
           created: 创建
           edited: 已编辑
+          personal_messages: 个人信息
+          with_images: 图片
+          with_links: 链接
+          with_code: 代码
+          with_uploads: 上传
         user_updated:
           fields:
             user_profile:

@@ -854,7 +854,7 @@ RSpec.describe Stylesheet::Manager do
         expect(stylesheet).to include("--child-definition: #fff")
       end
 
-      it "fails gracefully for broken SCSS" do
+      it "fails gracefully in production for broken SCSS" do
         scss = "$test: $missing-var;"
         theme.set_field(target: :common, name: "color_definitions", value: scss)
         theme.save!
@@ -869,7 +869,8 @@ RSpec.describe Stylesheet::Manager do
             manager: manager,
           )
 
-        expect { stylesheet.compile }.not_to raise_error
+        expect(stylesheet.compile).to include("--primary:") # core vals preserved
+        expect(File.read(stylesheet.source_map_fullpath)).to include("/* SCSS compilation error:")
       end
 
       it "child theme SCSS includes the default theme's color scheme variables" do

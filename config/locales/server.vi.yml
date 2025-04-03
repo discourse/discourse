@@ -185,7 +185,7 @@ vi:
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
-      twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
+      x_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
@@ -2179,8 +2179,13 @@ vi:
         title: "Đồng ý"
       delete_single:
         title: "Xóa"
+        complete: "Bài viết đã bị xóa."
+      delete_and_ignore:
+        complete: "Bài viết đã bị xóa."
       delete_and_ignore_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree:
+        complete: "Bài viết đã bị xóa."
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
@@ -2200,6 +2205,7 @@ vi:
       reject_user:
         delete:
           title: "Xóa tài khoản"
+          complete: "Người dùng đã bị xóa."
         block:
           title: "Xóa và Chặn Người Dùng"
           description: "Người dùng sẽ bị xóa và chúng tôi sẽ chặn IP và địa chỉ email của họ."
@@ -2211,6 +2217,8 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      delete_user:
+        complete: "Người dùng đã bị xóa."
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

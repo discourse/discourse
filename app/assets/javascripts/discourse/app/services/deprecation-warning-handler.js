@@ -18,10 +18,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.add-header-panel",
   "discourse.header-widget-overrides",
   "discourse.plugin-outlet-tag-name",
-  "discourse.plugin-outlet-parent-view",
-  "discourse.d-button-action-string",
-  "discourse.post-menu-widget-overrides",
-  "discourse.fontawesome-6-upgrade",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
@@ -33,6 +29,10 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.qunit.global-exists",
   "discourse.post-stream.trigger-new-post",
   "discourse.hbr-topic-list-overrides",
+  "discourse.mobile-templates",
+  "discourse.mobile-view",
+  "discourse.mobile-templates",
+  "discourse.component-template-overrides",
 ];
 
 if (DEBUG) {
@@ -76,7 +76,7 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    const source = identifySource();
+    const source = opts.source || identifySource();
     if (source?.type === "browser-extension") {
       return;
     }

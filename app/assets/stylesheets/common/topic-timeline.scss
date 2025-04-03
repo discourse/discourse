@@ -16,11 +16,12 @@
 
   &.timeline-fullscreen.show {
     max-height: 700px;
+
     @media (prefers-reduced-motion: no-preference) {
       transition: max-height 0.4s ease-out;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       max-height: 75vh;
     }
 
@@ -55,7 +56,7 @@
       transition: max-height 0.3s ease-in;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       padding-top: 10px;
     }
 
@@ -71,16 +72,24 @@
       display: table;
       touch-action: none;
 
+      .topic-category {
+        margin-bottom: 0.5rem;
+      }
+
       .timeline-date-wrapper {
         text-align: right;
+
+        @include ellipsis;
       }
 
       .post-excerpt {
         max-width: 650px;
         line-height: var(--line-height-large);
         display: block;
+
         @include line-clamp(8);
-        @media screen and (max-height: 425px) {
+
+        @media screen and (height <= 425px) {
           @include line-clamp(5);
         }
       }
@@ -103,6 +112,7 @@
           display: block;
           line-height: var(--line-height-medium);
           font-size: var(--font-up-2);
+
           @include line-clamp(4);
         }
 
@@ -176,6 +186,11 @@
       content: "";
       display: table;
       clear: both;
+    }
+
+    .start-date,
+    .now-date {
+      padding: 0.5em 0;
     }
   }
 

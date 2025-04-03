@@ -34,6 +34,7 @@ import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/us
 import ChatComposerThread from "./chat/composer/thread";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
+import ChatChannelPreviewCard from "./chat-channel-preview-card";
 import Message from "./chat-message";
 import ChatMessagesContainer from "./chat-messages-container";
 import ChatMessagesScroller from "./chat-messages-scroller";
@@ -69,6 +70,11 @@ export default class ChatThread extends Component {
 
   get messagesManager() {
     return this.args.thread.messagesManager;
+  }
+
+  get showChannelPreview() {
+    const channel = this.args.thread.channel;
+    return channel?.isCategoryChannel && !channel?.isFollowing;
   }
 
   @action
@@ -582,13 +588,17 @@ export default class ChatThread extends Component {
           @messagesManager={{this.messagesManager}}
         />
       {{else}}
-        <ChatComposerThread
-          @channel={{@channel}}
-          @thread={{@thread}}
-          @onSendMessage={{this.onSendMessage}}
-          @uploadDropZone={{this.uploadDropZone}}
-          @scroller={{this.scroller}}
-        />
+        {{#if this.showChannelPreview}}
+          <ChatChannelPreviewCard @channel={{@thread.channel}} />
+        {{else}}
+          <ChatComposerThread
+            @channel={{@channel}}
+            @thread={{@thread}}
+            @onSendMessage={{this.onSendMessage}}
+            @uploadDropZone={{this.uploadDropZone}}
+            @scroller={{this.scroller}}
+          />
+        {{/if}}
       {{/if}}
 
       <ChatUploadDropZone @model={{@thread}} />

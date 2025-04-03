@@ -2,6 +2,8 @@
 // It is compiled to CSS separately from the rest of the app.
 // The source variables come from color_transformations.scss and variables.scss
 :root {
+  color-scheme: #{schemeType()};
+
   --scheme-type: #{schemeType()};
   --primary: #{$primary};
   --secondary: #{$secondary};

@@ -191,13 +191,28 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
-  @bind
   emojiSelected(code) {
+    let index = 0;
+
+    const value = this.autocompleteHandler.getValue();
+    const match = value.match(/\B:(\w*)$/);
+    if (match) {
+      index = value.length - match.index;
+    }
+
+    const { from, to } = this.view.state.selection;
+
     this.view.dispatch(
       this.view.state.tr
-        .replaceSelectionWith(this.schema.nodes.emoji.create({ code }))
+        .replaceRangeWith(
+          from - index,
+          to,
+          this.schema.nodes.emoji.create({ code })
+        )
         .insertText(" ")
     );
+
+    next(() => this.focus());
   }
 
   @bind
@@ -337,8 +352,6 @@ class ProsemirrorAutocompleteHandler {
   /**
    * Replaces the term between start-end in the currently selected text block
    *
-   * It uses input rules to convert it to a node if possible
-   *
    * @param {number} start
    * @param {number} end
    * @param {String} term
@@ -389,10 +402,17 @@ class ProsemirrorAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return (
-      this.view.state.selection.$from.parent.type ===
-      this.schema.nodes.code_block
-    );
+    const { schema, view } = this;
+    const { selection } = view.state;
+
+    const isInCodeBlock =
+      selection.$from.parent.type === schema.nodes.code_block;
+
+    const hasCodeMark = selection.$from
+      .marks()
+      .some((mark) => mark.type === schema.marks.code);
+
+    return isInCodeBlock || hasCodeMark;
   }
 }
 

@@ -75,13 +75,13 @@ el:
               label: Μόνο η αρχική ανάρτηση
             restricted_tags:
               label: Ετικέτες
-            restricted_category:
-              label: Κατηγορία
-            restricted_group:
-              label: Ομάδα
-            restricted_groups:
-              label: Ομάδες
+            restricted_categories:
+              label: Κατηγορίες
           created: Δημιουργήθηκε
+          with_images: Εικόνες
+          with_links: Σύνδεσμοι
+          with_code: Κωδικός
+          with_uploads: Μεταφορτώσεις
         category_created_edited:
           fields:
             restricted_category:

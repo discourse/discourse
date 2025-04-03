@@ -170,21 +170,21 @@ hu:
           - Mindig hiszünk a [civilizált közösségi viselkedésben](%{base_uri}/guidelines).
       onebox:
         instructions: |-
-          Következőként meg tudná osztani velem az egyik hivatkozást? Válaszoljon egy olyan **sorral, mely az egyik hivatkozást** tartalmazza, és az automatikusan le fog nyílni, és egy összefoglalót fog tartalmazni.
+          Következő, megosztaná velem valamelyik linket? Válaszoljon a **egy sorban található hivatkozással**, és az automatikusan kibővül egy remek összefoglalóval.
 
-          Bármelyik hivatkozás másolásához csak érintse meg és tartsa hosszan lenyomva mobilon, vagy kattintson rá a jobb egérgombbal:
+          Bármely hivatkozás másolásához érintse meg hosszan a mobileszközt, vagy kattintson jobb gombbal a mutatóeszközre:
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Menő! Ez a legtöbb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> hivatkozás esetén működik. Ne feledje, hogy egy vonalon kell lennie _önmagában_, semmi más ne legyen előtte vagy utána.
         not_found: |-
-          Sajnálom, de nem találtam a hivatkozást a válaszában! :cry:
+          Elnézést, nem találtam a linket a válaszban! :cry:
 
-          Megpróbálná hozzáadni a következő hivatkozást, külön sorban, a következő válaszához?
+          Megpróbálja hozzáadni a következő linket a saját sorához a következő válasz üzenetben?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Itt egy kép egy egyszarvúról:

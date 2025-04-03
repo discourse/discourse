@@ -314,9 +314,6 @@ it:
     site_settings:
       invalid_site_setting: "Non esiste alcuna impostazione di nome '%{name}'"
       invalid_category_id: "Hai specificato una categoria che non esiste"
-      site_setting_is_hidden: "Non disponi dei permessi per modificare le impostazioni nascoste"
-      site_setting_is_shadowed_globally: "Non è possibile modificare questa impostazione perché è configurata a livello globale."
-      site_setting_is_unconfigurable: "Non disponi dei permessi per modificare le impostazioni non configurabili"
       invalid_choice:
         one: "'%{name}' è una scelta non valida."
         other: "'%{name}' sono scelte non valide."
@@ -338,7 +335,7 @@ it:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Gli user agent devono essere lunghi almeno 3 caratteri per evitare di limitare accidentalmente le richieste degli utenti legittimi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Non puoi aggiungere nessuno dei seguenti valori all'impostazione: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Non è possibile disabilitare i metadati delle immagini eliminate se è abilitata l'opzione \"Ottimizzazione multimediale del compositore abilitata\". Disattiva questa opzione prima di disabilitare i metadati delle immagini eliminate."
-      twitter_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
+      x_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
       tl0_and_anonymous_flag: "Per gli utenti anonimi è necessario fornire 'site contact email' o 'email address to report illegal content'."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -1720,7 +1717,7 @@ it:
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere un'immagine PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
     apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Si sconsiglia l'uso di sfondi trasparenti.Verrà automaticamente ridimensionata a 180x180. Se lasciata vuota, verrà usato il formato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
-    twitter_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
+    x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato oggetto personalizzabile per e-mail standard. Vedi <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2231,8 +2228,7 @@ it:
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     enable_category_group_moderation: "Consenti ai gruppi di moderare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
-    allow_anonymous_posting: "Abilita l'opzione che consente all'utente di passare alla modalità anonima per pubblicare. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando pubblica messaggi o argomenti sul sito. Vedi anche `allow anonymous likes`."
-    allow_anonymous_likes: "Abilita l'opzione che consente all'utente che naviga sul tuo sito di mettere \"mi piace\" anonimi. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando mette \"mi piace\" a messaggi o argomenti sul sito. Vedi anche `allow_anonymous_posting`."
+    allow_anonymous_mode: "Abilita l'opzione che consente all'utente di passare alla modalità anonima per pubblicare. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando pubblica messaggi o argomenti sul sito. Vedi anche `allow anonymous likes`."
     anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_posting_allowed_groups: "Gruppi a cui è consentito abilitare la pubblicazione anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
@@ -2282,7 +2278,6 @@ it:
     auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Impostare su 0 per disattivare questa funzionalità."
     penalty_step_hours: "Penalità predefinite per silenziare o sospendere gli utenti definite in ore. La prima infrazione porta una penalità pari al primo valore, la seconda infrazione porta una penalità pari al secondo valore, ecc."
     penalty_include_post_message: "Quando si silenzia o si sospende un utente, il messaggio offensivo pubblicato viene incluso automaticamente nel modello email"
-    svg_icon_subset: "Aggiungi ulteriori icone FontAwesome che desideri includere nelle tue risorse. Usa il prefisso 'fa-' per le icone solide, 'far-' per le icone regolari e 'fab-' per le icone di marchi."
     max_prints_per_hour_per_user: "Numero massimo di pagine da stampare (imposta a 0 per disattivare stampa)"
     full_name_requirement: "Rendi il campo del nome completo obbligatorio, facoltativo oppure facoltativo ma nascosto nel modulo di registrazione."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
@@ -2462,8 +2457,8 @@ it:
     glimmer_topic_list_mode: "Controlla se è in uso la nuova implementazione della topic-list \"glimmer\". \"auto\" verrà abilitata automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/343404'>l'argomento su Meta</a>."
     glimmer_post_menu_mode: "Controlla se viene utilizzata la nuova implementazione del menu dei messaggi \"glimmer\". \"automatica\" verrà abilitato automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. Questa implementazione è in fase di sviluppo attivo e non è pensata per l'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
     glimmer_post_menu_groups: "Abilita la nuova implementazione del menu dei messaggi \"glimmer\" in modalità \"automatica\" per i gruppi di utenti specificati. Questa implementazione è in fase di sviluppo attivo e non è destinata all'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
+    glimmer_post_stream_mode_auto_groups: "Abilita la nuova implementazione del menu dei messaggi \"glimmer\" in modalità \"automatica\" per i gruppi di utenti specificati. Questa implementazione è in fase di sviluppo attivo e non è destinata all'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
     experimental_form_templates: "Abilita la funzionalità dei modelli di modulo. Gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
-    admin_sidebar_enabled_groups: "Abilita la navigazione della barra laterale dell'interfaccia di amministrazione per i gruppi specificati. Sostituisce i pulsanti di navigazione degli amministratori di livello superiore."
     lazy_load_categories_groups: "Caricamento lazy delle informazioni di categoria solo per gli utenti di questi gruppi. Migliora le prestazioni sui siti con numerose categorie."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     show_user_menu_avatars: "Mostra gli avatar utente nel menu utente"
@@ -4682,7 +4677,6 @@ it:
       new_topics_unless_trust_level: "Gli argomenti iniziati da utenti con un basso livello di attendibilità devono essere approvati dallo staff. Vedi %{link}"
       fast_typer: "Un nuovo utente ha digitato il suo primo messaggio in modo troppo rapido. Sembra il comportamento di un bot o di uno spammer. Vedi %{link}."
       auto_silence_regex: "Nuovo utente il cui primo messaggio corrisponde all'impostazione %{link} ."
-      watched_word: "Questo messaggio includeva una parola osservata. Vedi il tuo %{link}."
       staged: "I nuovi argomenti e messaggi per gli utenti temporanei devono essere approvati dallo staff. Vedi %{link}"
       category: "I messaggi in questa categoria richiedono l'approvazione manuale da parte dello staff. Vedi %{link}."
       must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi %{link}."
@@ -4693,7 +4687,6 @@ it:
       contains_media: "Questo messaggio include contenuti multimediali incorporati. Vedi %{link}."
       queued_by_staff: "Un membro dello staff pensa che questo messaggio debba essere rivisto. Rimarrà nascosto fino ad allora."
       links:
-        watched_word: lista delle parole osservate
         category: impostazioni della categoria
     actions:
       agree:
@@ -4721,11 +4714,13 @@ it:
         description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
       delete_single:
         title: "Elimina"
+        complete: "Messaggio eliminato."
       delete:
         title: "Elimina…"
       delete_and_ignore:
         title: "Ignora segnalazione ed elimina post"
         description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, elimina anche l'argomento. "
+        complete: "Messaggio eliminato."
       delete_and_ignore_replies:
         title: "Ignora segnalazione, elimina messaggio e risposte"
         description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio e tutte le sue risposte; se è li primo messaggio, elimina anche l'argomento"
@@ -4733,6 +4728,7 @@ it:
       delete_and_agree:
         title: "Elimina messaggio"
         description: "Accetta segnalazione ed elimina questo messaggio; se è il primo messaggio, elimina anche l'argomento."
+        complete: "Messaggio eliminato."
       delete_and_agree_replies:
         title: "Elimina messaggio e risposte"
         description: "Accetta segnalazione ed elimina questo messaggio; se è i primo messaggio, elimina anche l'argomento."
@@ -4742,29 +4738,37 @@ it:
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:
         title: "No"
+        complete: "Segnalazione ignorata."
       discard_post:
         title: "Annulla messaggio"
       revise_and_reject_post:
         title: "Revisiona il messaggio..."
       ignore:
         title: "Ignora"
+        complete: "Segnalazione ignorata."
       ignore_and_do_nothing:
         title: "Non fare nulla"
         description: "Ignora segnalazione rimuovendola dalla coda senza intraprendere alcuna azione. I messaggi nascosti rimarranno nascosti e saranno gestiti dagli strumenti automatici."
+        complete: "Segnalazione ignorata."
       approve:
         title: "Approva"
+        complete: "Messaggio approvato."
       approve_post:
         title: "Approva Messaggio"
         confirm_closed: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
+        complete: "Messaggio approvato."
       reject_post:
         title: "Rifiuta Messaggio"
+        complete: "Messaggio rifiutato."
       approve_user:
         title: "Approva Utente"
+        complete: "Utente approvato."
       reject_user:
         title: "Elimina utente…"
         delete:
           title: "Cancella utente"
           description: "L'utente sarà eliminato dal forum."
+          complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
@@ -4783,6 +4787,7 @@ it:
         title: "Approva e ripristina il messaggio"
       delete_user:
         reason: "Eliminato tramite la coda di revisione"
+        complete: "Utente eliminato."
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"
   notification_level:

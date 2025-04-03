@@ -8,8 +8,10 @@
   border: 1px solid var(--primary-300);
   background: transparent;
   cursor: pointer;
-  @include user-select(none);
-  transition: background 0.2s, border-color 0.2s;
+  user-select: none;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 
   &.reacted {
     border-color: var(--tertiary-medium);

@@ -7,16 +7,18 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image", async function (assert) {
-    await render(<template>
-      <UppyImageUploader
-        @type="avatar"
-        @id="uploader"
-        @imageUrl="/images/avatar.png"
-        @placeholderUrl="/not/used.png"
-      />
-    </template>);
+    await render(
+      <template>
+        <UppyImageUploader
+          @type="avatar"
+          @id="uploader"
+          @imageUrl="/images/avatar.png"
+          @placeholderUrl="/not/used.png"
+        />
+      </template>
+    );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").exists("displays the trash icon");
 
     assert
@@ -29,11 +31,13 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   });
 
   test("without image", async function (assert) {
-    await render(<template>
-      <UppyImageUploader @type="site_setting" @id="uploader" />
-    </template>);
+    await render(
+      <template>
+        <UppyImageUploader @type="site_setting" @id="uploader" />
+      </template>
+    );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
@@ -42,15 +46,17 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   });
 
   test("with placeholder", async function (assert) {
-    await render(<template>
-      <UppyImageUploader
-        @type="composer"
-        @id="uploader"
-        @placeholderUrl="/images/avatar.png"
-      />
-    </template>);
+    await render(
+      <template>
+        <UppyImageUploader
+          @type="composer"
+          @id="uploader"
+          @placeholderUrl="/images/avatar.png"
+        />
+      </template>
+    );
 
-    assert.dom(".d-icon-far-image").exists("displays the upload icon");
+    assert.dom(".d-icon-upload").exists("displays the upload icon");
     assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
@@ -61,10 +67,12 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   });
 
   test("when dragging image", async function (assert) {
-    await render(<template>
-      <UppyImageUploader @type="composer" @id="uploader1" />
-      <UppyImageUploader @type="composer" @id="uploader2" />
-    </template>);
+    await render(
+      <template>
+        <UppyImageUploader @type="composer" @id="uploader1" />
+        <UppyImageUploader @type="composer" @id="uploader2" />
+      </template>
+    );
 
     const dropImage = async (target) => {
       const dataTransfer = new DataTransfer();

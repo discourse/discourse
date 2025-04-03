@@ -11,17 +11,19 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     let data = { foo: "item-2" };
     const mutateData = (x) => (data = x);
 
-    await render(<template>
-      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Menu as |menu|>
-            <menu.Item @value="item-1">Item 1</menu.Item>
-            <menu.Item @value="item-2">Item 2</menu.Item>
-            <menu.Item @value="item-3">Item 3</menu.Item>
-          </field.Menu>
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Menu as |menu|>
+              <menu.Item @value="item-1">Item 1</menu.Item>
+              <menu.Item @value="item-2">Item 2</menu.Item>
+              <menu.Item @value="item-3">Item 3</menu.Item>
+            </field.Menu>
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.deepEqual(data, { foo: "item-2" });
     assert.form().field("foo").hasValue("item-2");
@@ -34,13 +36,15 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
   });
 
   test("when disabled", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-          <field.Menu />
-        </form.Field>
-      </Form>
-    </template>);
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Menu />
+          </form.Field>
+        </Form>
+      </template>
+    );
 
     assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
   });

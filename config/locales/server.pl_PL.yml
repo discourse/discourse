@@ -291,9 +291,6 @@ pl_PL:
     site_settings:
       invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
-      site_setting_is_hidden: "Nie masz uprawnień do zmiany ukrytych ustawień"
-      site_setting_is_shadowed_globally: "Nie możesz zmienić tego ustawienia, ponieważ jest ono skonfigurowane globalnie"
-      site_setting_is_unconfigurable: "Nie masz uprawnień do zmiany ustawień niekonfigurowalnych"
       invalid_choice:
         one: "'%{name}' jest nieprawidłowym wyborem."
         few: "'%{name}' są nieprawidłowym wyborem."
@@ -317,7 +314,7 @@ pl_PL:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć przypadkowego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
-      twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
+      x_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -1762,7 +1759,7 @@ pl_PL:
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
     apple_touch_icon: "Ikona używana w urządzeniach dotykowych Apple. Przezroczyste tło nie jest zalecane. Zostanie automatycznie zmniejszona do rozmiaru 180x180. Jeśli pozostanie pusta, użyta zostanie ikona large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
-    twitter_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
+    x_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2262,7 +2259,6 @@ pl_PL:
     enable_group_directory: "Udostępnij katalog grup do przeglądania"
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
-    allow_anonymous_likes: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają Twoją witrynę anonimowo, polubienie postów. Po włączeniu tej opcji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas polubienia postów lub tematów w całej witrynie. Zobacz także `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
     anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
@@ -2312,7 +2308,6 @@ pl_PL:
     auto_handle_queued_age: "Automatycznie obsługuj rekordy, które czekają na przejrzenie po tylu dniach. Flagi zostaną zignorowane, a posty oczekujące w kolejce i użytkownicy zostaną odrzuceni. Ustaw na 0, aby wyłączyć tę funkcję."
     penalty_step_hours: "Domyślne kary za wyciszanie lub zawieszanie użytkowników w godzinach. Pierwsze wykroczenie domyślnie jest pierwszą wartością, drugie wykroczenie jest domyślne do drugiej wartości, itd."
     penalty_include_post_message: "Automatycznie dołączaj obraźliwą wiadomość do szablonu wiadomości e-mail podczas wyciszania lub zawieszania użytkownika."
-    svg_icon_subset: "Dodaj dodatkowe ikony FontAwesome, które chcesz uwzględnić w swoich zasobach. Użyj przedrostka \"fa-\" dla ikon jednolitych, \"far-\" dla ikon zwykłych i \"fab-\" dla ikon marki."
     max_prints_per_hour_per_user: "Maksymalna liczba wyświetleń strony /print (ustaw na 0, aby wyłączyć drukowanie)"
     full_name_requirement: "Ustaw pole pełnej nazwy jako wymagane, opcjonalne lub opcjonalne, ale ukryte w formularzu rejestracji."
     enable_names: "Pokaż pełną nazwę użytkownika w jego profilu, karcie użytkownika i w e-mailach. Wyłącz, aby ukryć pełną nazwę użytkownika wszędzie."
@@ -2482,7 +2477,6 @@ pl_PL:
     navigation_menu: "Określ pasek boczny lub menu rozwijane nagłówka jako główne menu nawigacyjne witryny. Zalecany jest pasek boczny."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
-    admin_sidebar_enabled_groups: "Włącz nawigację boczną w interfejsie administracyjnym dla określonych grup, co zastępuje przyciski nawigacyjne na górnej belce."
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
@@ -5036,7 +5030,6 @@ pl_PL:
       new_topics_unless_trust_level: "Użytkownicy o niskim poziomie zaufania muszą mieć tematy zatwierdzone przez personel. Zobacz %{link}."
       fast_typer: "Nowy użytkownik napisał swój pierwszy post podejrzanie szybko, a to zachowanie jest podobne do bota lub spamera. Zobacz %{link}."
       auto_silence_regex: "Nowy użytkownik, którego pierwszy post odpowiada ustawieniu %{link}"
-      watched_word: "Ten post zawierał obserwowane słowo. Zobacz swoje %{link}."
       staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz %{link}."
       category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz %{link}."
       must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz %{link}."
@@ -5047,7 +5040,6 @@ pl_PL:
       contains_media: "Ten post zawiera osadzone media. Zobacz %{link}."
       queued_by_staff: "Pracownik uważa, że ten wpis wymaga przeglądu. Do tego czasu pozostanie ukryty."
       links:
-        watched_word: lista obserwowanych słów
         category: ustawienia kategorii
     actions:
       agree:
@@ -5075,11 +5067,13 @@ pl_PL:
         description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
       delete_single:
         title: "Usuń"
+        complete: "Wpis usunięty."
       delete:
         title: "Usuń…"
       delete_and_ignore:
         title: "Zignoruj flagę i usuń post"
         description: "Zignoruj flagę, usuwając ją z kolejki i usuń post; jeśli jest to pierwszy post, usuń również temat. "
+        complete: "Wpis usunięty."
       delete_and_ignore_replies:
         title: "Zignoruj flagę, usuń post i odpowiedzi"
         description: "Zignoruj flagę, usuwając ją z kolejki, usuń post i wszystkie jego odpowiedzi; jeśli jest to pierwszy post, usuń także temat."
@@ -5087,6 +5081,7 @@ pl_PL:
       delete_and_agree:
         title: "Usuń post"
         description: "Zgódź się z flagą i usuń ten post; jeśli to pierwszy post, usuń również temat."
+        complete: "Wpis usunięty."
       delete_and_agree_replies:
         title: "Usuń post i odpowiedzi"
         description: "Zgódź się z flagą i usuń ten post oraz wszystkie jego odpowiedzi; jeśli to pierwszy post, usuń również temat."
@@ -5096,29 +5091,37 @@ pl_PL:
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
       disagree:
         title: "Nie"
+        complete: "Flaga zignorowana."
       discard_post:
         title: "Odrzuć post"
       revise_and_reject_post:
         title: "Popraw post..."
       ignore:
         title: "Ignoruj"
+        complete: "Flaga zignorowana."
       ignore_and_do_nothing:
         title: "Nic nie rób"
         description: "Zignoruj flagę, usuwając ją z kolejki bez podejmowania żadnych działań. Ukryte posty pozostaną ukryte i będą obsługiwane przez automatyczne narzędzia."
+        complete: "Flaga zignorowana."
       approve:
         title: "Zatwierdź"
+        complete: "Post zatwierdzony."
       approve_post:
         title: "Zatwierdź post"
         confirm_closed: "Ten temat jest zamknięty. Czy mimo to chcesz utworzyć wpis?"
+        complete: "Post zatwierdzony."
       reject_post:
         title: "Odrzuć post"
+        complete: "Post odrzucony."
       approve_user:
         title: "Zatwierdź użytkownika"
+        complete: "Użytkownik zatwierdzony."
       reject_user:
         title: "Usuń użytkownika…"
         delete:
           title: "Usuń użytkownika"
           description: "Użytkownik zostanie usunięty z forum."
+          complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
@@ -5137,6 +5140,7 @@ pl_PL:
         title: "Zatwierdź i przywróć post"
       delete_user:
         reason: "Skasowano z poziomu kolejki moderacji"
+        complete: "Użytkownik usunięty."
   email_style:
     html_missing_placeholder: "Szablon HTML musi zawierać %{placeholder}"
   notification_level:

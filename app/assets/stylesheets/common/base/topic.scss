@@ -29,7 +29,7 @@
   }
 
   // timeline
-  @media screen and (min-width: 925px) {
+  @media screen and (width >= 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
@@ -72,7 +72,7 @@
   }
 
   // progress bar
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
 
@@ -166,17 +166,43 @@
 }
 
 #topic-title {
+  z-index: z("base");
+  margin-bottom: 1em;
+
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
-    @media screen and (min-width: 925px) {
+
+    @media screen and (width >= 925px) {
       width: 90%; // topic title isn't full-width on wide screens
+    }
+
+    input#edit-title {
+      width: 100%;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      .topic-category {
+        margin-top: 0.25em;
+      }
     }
   }
 
   h1 {
     margin-bottom: 0;
+    font-size: var(--font-up-4);
+    line-height: var(--line-height-medium);
+    overflow-wrap: break-word;
     width: 100%;
+    z-index: z("base");
+
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-up-3);
+    }
+
+    a {
+      color: var(--primary);
+    }
   }
 
   a.edit-topic .d-icon {
@@ -210,6 +236,7 @@
 
   .edit-category__wrapper {
     flex: 1 1 5%;
+
     @include breakpoint(tablet) {
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
@@ -221,6 +248,7 @@
 
   .edit-tags__wrapper {
     flex: 1 1 33%;
+
     @include breakpoint(tablet) {
       flex: 1 1 100%; // force full row on narrow screens
     }
@@ -232,6 +260,7 @@
     .select-kit-header--filter {
       flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
       min-width: 0;
+
       @include breakpoint(tablet) {
         flex-wrap: wrap; // individual tags will need to wrap on narrow screens
       }
@@ -284,6 +313,7 @@
 
       .mini-tag-chooser {
         margin-left: 0;
+
         @include breakpoint(mobile-large, min-width) {
           .selected-name {
             max-width: 500px;
@@ -419,4 +449,36 @@ a.topic-featured-link {
 
 a[data-clicks]::after {
   @include click-counter-badge;
+}
+
+.post-info a {
+  color: var(--primary-medium);
+}
+
+.topic-error {
+  padding: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: var(--font-up-4);
+  line-height: var(--line-height-medium);
+  width: 60%;
+
+  @include breakpoint("mobile-extra-large") {
+    width: 90%;
+  }
+
+  @include breakpoint("mobile-extra-large", min-width) {
+    text-align: center;
+  }
+
+  .topic-retry {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 28px;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-top: 20px;
+    }
+  }
 }

@@ -193,6 +193,10 @@ sq:
       dismiss: "Hiqe"
     bootstrap_mode: "Material Hyrës"
     back_button: "Kthehu mbrapa"
+    welcome_banner:
+      header:
+        anonymous_members: "Mirë se vini tek %{site_name}!"
+      search: "Kërko"
     themes:
       default_description: "Paracaktuar"
       broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
@@ -454,10 +458,6 @@ sq:
       remove_confirmation: "Je të sigurt që dëshironi ta fshini këtë draft?"
       new_topic: "Draft i ri për temën"
       new_private_message: "Draft i ri i mesazhit personal"
-      abandon:
-        confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
-        yes_value: "Harroni"
-        no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
     topic_count_all:
@@ -589,6 +589,9 @@ sq:
         name: "Emri"
         fields: "Fushat"
         reject_reason: "Arsye"
+        scrubbed_reason: "Arsye"
+        scrub_record:
+          cancel_button: "Anulo"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (i flamurit të fundit)"
@@ -2338,13 +2341,6 @@ sq:
       password_label: "Fjalëkalimi"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vetëm kategoritë"
       categories_with_featured_topics: "Kategoritë dhe temat e zgjedhura"
@@ -2727,9 +2723,8 @@ sq:
         new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
+      delete: "Fshij"
       uploading: "Duke ngarkuar"
-      processing: "Ngarkimi po përpunohet"
-      select_file: "Zgjdhni një Skedar"
       default_image_alt_text: imazh
     search:
       sort_by: "Rendit sipas"
@@ -3429,6 +3424,9 @@ sq:
       has_likes_title_you:
         one: "ju dhe %{count} person tjetër pëlqyet këtë postim"
         other: "ju dhe %{count} të tjerë pëlqyen këtë postim"
+      sr_post_like_count_button:
+        one: "%{count} person pëlqeu këtë postim."
+        other: "%{count} vetë pëlqyen këtë postim."
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3531,9 +3529,13 @@ sq:
       description: "Përshkrimi"
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
-      badge_colors: "Ngjyrat e stemës"
-      background_color: " Ngjyra e sfondit"
-      foreground_color: "Foreground color"
+      background_color: "Ngjyra"
+      styles:
+        icon: "Ikonë"
+        emoji: "Emoji"
+        options:
+          icon: "Ikonë"
+          emoji: "Emoji"
       name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
@@ -3800,6 +3802,8 @@ sq:
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
+      admin:
+        title: "Admin"
     badges:
       earned_n_times:
         one: "Kjo stemë është fituar %{count} herë"
@@ -3981,13 +3985,31 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      config_sections:
+        account:
+          title: "Llogaria"
+        community:
+          title: "Komuniteti"
+        email:
+          title: "Email"
+        security:
+          title: "Siguria"
+        plugins:
+          title: "Pluginet"
       config:
         developer:
           title: "Developer"
+        emojis:
+          title: "Emoji"
         files:
           title: "Skedarë"
         legal:
           title: "Legale"
+        branding:
+          logo:
+            form:
+              mobile: "Mobile"
+              email: "Email"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -3996,7 +4018,7 @@ sq:
           title: "Onebox"
         other:
           title: "Të tjerë"
-        search:
+        search_everything:
           title: "Kërko"
         security:
           title: "Siguria"
@@ -4004,6 +4026,54 @@ sq:
           title: "Spam"
         user_api:
           title: "API e përdoruesit"
+        dashboard:
+          title: "Paneli i kontrollit"
+        users:
+          title: "Users"
+        groups:
+          title: "Grupet"
+        whats_new:
+          title: "Çfarë ka të re?"
+        backups:
+          title: "Rezervat"
+          sub_pages:
+            logs:
+              title: "Ditari"
+        badges:
+          title: "Stemat"
+        permalinks:
+          title: "Permalinks"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "Shabllonet"
+            sent:
+              title: "Dërguar"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Marrë"
+            rejected:
+              title: "Rejected"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed"
+            screened_ips:
+              title: "Kontroll IP-sh"
+            screened_urls:
+              title: "Kontroll URL-sh"
+              header_description: "The URLs listed here were used in posts by users who have been identified as spammers"
+        api_keys:
+          title: "Çelësat API"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Embedding"
+      search:
+        title: "Kërko"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -4128,6 +4198,8 @@ sq:
         title: "Llogaria"
         sidebar_link:
           backups: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       community:
         title: "Komuniteti"
         sidebar_link:
@@ -4141,6 +4213,8 @@ sq:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Shfletimi"
+      email_settings:
+        title: "Cilësimet e emailit"
       security:
         title: "Siguria"
       section_landing_pages:
@@ -4148,6 +4222,8 @@ sq:
           title: "Llogaria"
           backups:
             title: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       config_areas:
         about:
           your_organization: "Organizata juaj"
@@ -4174,9 +4250,15 @@ sq:
           delete: "Fshij"
           more_options:
             title: "Më shumë mundësi"
+        themes_and_components:
+          breadcrumb_title: "Personalizo"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
+        color_palettes:
+          palette_name: "Emri"
+          colors:
+            title: "Ngjyrat"
       plugins:
         title: "Pluginet"
         name: "Emri"
@@ -4189,18 +4271,6 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
-        sidebar_link:
-          installed: "Instaluar"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Developer"
-          embedding: "Embedding"
-          user_api: "API e përdoruesit"
-          onebox: "Onebox"
-          files: "Skedarë"
-          other_options: "Të tjerë"
-          search: "Kërko"
       backups:
         title: "Rezervat"
         menu:
@@ -4285,7 +4355,6 @@ sq:
           save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
-          settings: "Rregullimet"
           preview: "Parashikimi"
           cancel: "Anulo"
           upload: "Ngarko"
@@ -4298,14 +4367,10 @@ sq:
           add: "Shto"
           scss:
             text: "CSS"
-          header:
-            text: "Ballina"
           footer:
             text: "Fundi i faqes"
           embedded_scss:
             text: "CSS e ngjitur"
-          body_tag:
-            text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
           schema:

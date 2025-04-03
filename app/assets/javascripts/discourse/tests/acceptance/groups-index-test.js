@@ -15,13 +15,10 @@ acceptance("Groups", function () {
       .exists("shows button to request for group membership");
 
     await click(".group-index-join");
-    assert.dom(".modal.login-modal").exists("shows the login modal");
 
-    await click(".login-modal .modal-close");
-    assert.dom(".modal.login-modal").doesNotExist("closes the login modal");
+    assert.dom(".login-fullpage").exists("shows the login page");
 
-    await click(".group-index-request");
-    assert.dom(".modal.login-modal").exists("shows the login modal");
+    await visit("/g");
 
     await click("a[href='/g/discourse/members']");
     assert
@@ -29,6 +26,6 @@ acceptance("Groups", function () {
       .hasText("Awesome Team", "it displays the group page");
 
     await click(".group-index-join");
-    assert.dom(".modal.login-modal").exists("shows the login modal");
+    assert.dom(".login-fullpage").exists("shows the login page");
   });
 });

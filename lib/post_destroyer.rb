@@ -85,7 +85,7 @@ class PostDestroyer
       UserActionManager.topic_destroyed(@topic)
       DiscourseEvent.trigger(:topic_destroyed, @topic, @user)
       if WebHook.active_web_hooks(:topic_destroyed).exists?
-        topic_view = TopicView.new(@topic.id, Discourse.system_user, skip_staff_action: true)
+        topic_view = TopicView.new(@topic, Discourse.system_user, skip_staff_action: true)
         topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
         WebHook.enqueue_topic_hooks(:topic_destroyed, @topic, topic_payload)
       end
@@ -166,7 +166,7 @@ class PostDestroyer
     # All posts in the topic must be force deleted if the first is force
     # deleted (except @post which is destroyed by current instance).
     if @topic && @post.is_first_post? && permanent?
-      @topic.ordered_posts.with_deleted.reverse_order.find_each do |post|
+      @topic.posts.with_deleted.find_each do |post|
         PostDestroyer.new(@user, post, @opts).destroy if post.id != @post.id
       end
     end

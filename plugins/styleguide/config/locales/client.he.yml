@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "מדריך סגנון של Discourse"
   js:
     styleguide:
       title: "מדריך סגנון"

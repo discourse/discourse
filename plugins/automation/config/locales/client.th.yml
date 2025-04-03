@@ -44,13 +44,12 @@ th:
           fields:
             restricted_tags:
               label: ป้าย
-            restricted_category:
+            restricted_categories:
               label: หมวดหมู่
-            restricted_group:
-              label: กลุ่ม
-            restricted_groups:
-              label: กลุ่ม
           created: สร้างเมื่อ
+          with_images: รูปภาพ
+          with_links: ลิงก์
+          with_uploads: อัปโหลด
         pm_created:
           fields:
             restricted_user:

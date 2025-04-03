@@ -175,7 +175,7 @@ class UploadCreator
         )
       @upload.original_sha1 = SiteSetting.secure_uploads? ? sha1 : nil
       @upload.url = ""
-      @upload.origin = @opts[:origin][0...1000] if @opts[:origin]
+      @upload.origin = @opts[:origin][0...2000] if @opts[:origin]
       @upload.extension = image_type || File.extname(@filename)[1..10]
 
       if is_image && !external_upload_too_big

@@ -250,6 +250,11 @@ he:
       dismiss: "התעלמות"
     bootstrap_mode: "איך מתחילים"
     back_button: "חזרה"
+    welcome_banner:
+      header:
+        logged_in_members: "ברוך שובך, %{preferred_display_name}!"
+        anonymous_members: "ברוך בואך אל %{site_name}!"
+      search: "חיפוש"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -554,10 +559,7 @@ he:
       remove_confirmation: "למחוק את הטיוטה הזאת?"
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
-      abandon:
-        confirm: "כבר יש טיוטה שהתחלת לערוך. מה לעשות אתה?"
-        yes_value: "להשליך"
-        no_value: "לחזור לעריכה"
+      edit_topic: "עריכת טיוטת נושא"
       dropdown:
         title: "פתיחת תפריט הטיוטות האחרונות"
         untitled: "טיוטה ללא שם"
@@ -647,6 +649,8 @@ he:
           many: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
           other: "יש לך פריטים שממתינים לבדיקה מתוספים מושבתים:"
         instruction: "אי אפשר להציג אותם כראוי עד להפעלת התוסף המתאים. נא להפעיל את התוסף ולרענן את העמוד. לחלופין, אפשר להתעלם מהם. <a href='%{url}' target='_blank'>מידע נוסף…</a>"
+        reviewable_unknown_source: "%{reviewableType} (תוסף לא ידוע)"
+        reviewable_known_source: "%{reviewableType} (מהתוסף ‚%{pluginName}’)"
         ignore_all: "התעלמות מהכול"
         enable_plugins: "הפעלת תוספים"
         delete_confirm: "למחוק את כל הביקורות שנוצרו על ידי תוספים שהושבתו?"
@@ -685,6 +689,7 @@ he:
         required: "עליך לדרוש פריטים לפני שיתאפשר לך לסקור אותם."
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
+        automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
       claim:
         title: "דרישת נושא זה"
       unclaim:
@@ -723,6 +728,10 @@ he:
         name: "שם"
         fields: "שדות"
         reject_reason: "סיבה"
+        scrubbed_reason: "סיבה"
+        scrub_record:
+          reason_placeholder: "סיבה..."
+          cancel_button: "ביטול"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (של הסימון האחרון)"
@@ -2308,6 +2317,8 @@ he:
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
         required: "נדרש"
+        date_before_or_equal: "חייב להיות לפני או שווה ל־%{date}"
+        date_after_or_equal: "חייב להיות אחרי או שווה ל־%{date}"
         invalid_url: "חייבת להיות כתובת תקפה"
         not_an_integer: "חייב להיות מספר שלם"
         not_accepted: "חובה לאשר"
@@ -2608,12 +2619,17 @@ he:
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
-      apple_international: "אפל/בינלאומי"
-      google: "Google"
-      twitter: "טוויטר"
-      win10: "חלונות 10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
+      apple_international: "Apple/International (הוחלף ב־Twemoji)"
+      google: "Google (הוחלף ב־Noto Emoji)"
+      twitter: "טוויטר (הוחלף ב־Twemoji)"
+      win10: "Win10 (הוחלף ב־Fluent Emoji)"
+      google_classic: "Google Classic (הוחלף ב־Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (הוחלף ברגיל)"
+      openmoji: OpenMoji
+      standard: רגיל
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "קטגוריות בלבד"
       categories_with_featured_topics: "קטגוריות עם נושאים מומלצים"
@@ -2820,6 +2836,8 @@ he:
       uploading: "בהליכי העלאה…"
       show_preview: "להציג תצוגה מקדימה"
       hide_preview: "להסתיר תצוגה מקדימה"
+      switch_to_markdown: "החלפה לעורך ה־Markdown הרגיל"
+      switch_to_rich_text: "החלפה לעורך טקסט עשיר החדש"
       quote_post_title: "ציטוט פוסט בשלמותו"
       bold_label: "B"
       bold_title: "מודגש"
@@ -3057,9 +3075,11 @@ he:
         new_features: "יכולות חדשות של Discourse יצאו לאור!"
         admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
+      change: "החלפה"
+      delete: "מחיקה"
       uploading: "מעלה"
-      processing: "ההעלאה עוברת עיבוד"
-      select_file: "בחירת קובץ"
+      processing: "ההעלאה מעובדת"
+      select_file: "לחיצה או גרירה תאפשרנה להעלות קובץ"
       default_image_alt_text: תמונה
     search:
       sort_by: "מיון על פי"
@@ -3108,6 +3128,9 @@ he:
       browser_tip_description: "שוב כדי להשתמש בחיפוש המקורי של הדפדפן"
       recent: "חיפושים אחרונים"
       clear_recent: "ניקוי חיפושים אחרונים"
+      experience:
+        search_field: "שדה חיפוש בכותרת האתר"
+        search_icon: "סמל חיפוש ליד התמונה הייצוגית של הפרופיל"
       type:
         default: "נושאים/פוסטים"
         users: "משתמשים"
@@ -3977,16 +4000,6 @@ he:
         two: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         many: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         other: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
-      sr_post_like_count_button:
-        one: "מישהו או מישהי (%{count}) אהבו את הפוסט הזה. לחיצה תציג מי"
-        two: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
-        many: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
-        other: "%{count} אנשים אהבו את הפוסט הזה. לחיצה תציג מי"
-      sr_post_read_count_button:
-        one: "מישהו או מישהי (%{count}) קראו את הפוסט הזה. לחיצה תציג מי"
-        two: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
-        many: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
-        other: "%{count} אנשים קראו את הפוסט הזה. לחיצה תציג מי"
       filtered_replies_hint:
         one: "הצגת הפוסט הזה ואת התגובה עליו"
         two: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
@@ -4123,8 +4136,6 @@ he:
             two: "ו־%{count} נוספים קראו את זה"
             many: "ו־%{count} נוספים קראו את זה"
             other: "ו־%{count} נוספים קראו את זה"
-          sr_post_likers_list_description: "משתמשים שאהבו את הפוסט הזה"
-          sr_post_readers_list_description: "משתמשים שקראו את הפוסט הזה"
         by_you:
           off_topic: "סימנת את זה כחורג מהנושא"
           spam: "סימנת את זה כספאם"
@@ -4254,11 +4265,16 @@ he:
       description: "תיאור"
       logo: "תמונת לוגו לקטגוריה"
       logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
+      logo_description: "מומלץ יחס תצוגה של 1:1 בגודל של 200 פיקסלים לכל הפחות. אם האפשרות נשארת ריקה לא תופיע תמונה."
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
-      badge_colors: "צבעי העיטורים"
-      background_color: "צבע רקע"
-      foreground_color: "צבע קדמי"
+      background_color: "צבע"
+      styles:
+        icon: "סמל"
+        emoji: "אמוג׳י"
+        options:
+          icon: "סמל"
+          emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
       predefined_colors: "אפשרויות צבע מוגדרות מראש"
       name_placeholder: "מילה או שתיים לכל היותר"
@@ -4752,6 +4768,11 @@ he:
         prev_next: "%{shortcut} העברת הבחירה למעלה ולמטה"
         insert_url: "%{shortcut} הוספת הבחירה לחלון כתיבת ההודעה הפתוח"
         full_page_search: "%{shortcut} טוען חיפוש בעמוד מלא"
+      admin:
+        title: "הנהלה"
+        search_prev_next: "%{shortcut} העברת הבחירה למעלה ולמטה"
+        search_open: "%{shortcut} פתיחת חיפוש במנשק הניהול"
+        search_full_page: "%{shortcut} פתיחת חיפוש בדף הניהול במלואו"
     badges:
       earned_n_times:
         one: "עיטור זה הוענק פעם אחת (%{count})"
@@ -5191,10 +5212,12 @@ he:
       collapse_all_sections: "צמצום כל הסעיפים"
       expand_all_sections: "הרחבת כל הסעיפים"
       filter: "סינון..."
+      filter_links: "סינון קישורים…"
       clear_filter: "פינוי המסנן"
       no_results:
         title: "אין תוצאות"
         description: 'לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">לחפש בהגדרות האתר</a> או ב<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">רשימת משתמשי ההנהלה?</a>'
+        description_admin_search: 'לא הצלחנו למצוא שום דבר שעונה לחיפוש ‘%{filter}’.<br><br>כדאי <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">לחפש בכל מנשק הניהול</a>.'
       footer:
         interface_color_selector:
           light: "בהיר"
@@ -5309,6 +5332,7 @@ he:
           paste: "הדבקה…"
           save: "שמירה בשם…"
     powered_by_discourse: "מופעל על גבי Discourse"
+    safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -5326,15 +5350,40 @@ he:
         meta_doc: "דוחות הם כלי רב עוצמה שמאפשר לך להבין מה קורה באתר שלך. הם יכולים לסייע לך לזהות מגמות, לאתר בעיות ולהחליט על בסיס נתונים."
         sidebar_title: "דוחות"
         back: "חזרה לכל הדוחות"
-        sidebar_link:
-          all: "כל הדיווחים"
+      config_sections:
+        account:
+          title: "חשבון"
+        reports:
+          title: "דוחות"
+        community:
+          title: "קהילה"
+        appearance:
+          title: "מראה"
+        email:
+          title: "דוא״ל"
+        security:
+          title: "אבטחה"
+        plugins:
+          title: "תוספים"
+        advanced:
+          title: "מתקדם"
       config:
+        about:
+          title: "על האתר שלך"
+          header_description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו. מוצג ב<a href='%{basePath}/about'>עמוד על</a> האתר שלך."
         developer:
           title: "מפתחים"
           header_description: "הגדרות מפתחים לשליטה במגבלות קצב, מכפילים וחישובים, מצב בטוח ושלל יכולות מתקדמות"
         experimental:
           title: "ניסיוני"
           header_description: "הפעלת/כיבוי יכולות ניסיוניות לאתר שלך, ברובן אפשר לשלוט לפי קבוצות"
+        emojis:
+          title: "אמוג׳י"
+          header_description: "הוספת אמוג׳י חדש שיהיה נגיש לכולם. נא לבחור מספר קבצים כדי ליצור אמוג׳ים עם שמות הקבצים שלהם. הקבוצה הנבחרת תשמש לכל הקבצים שנוספים יחד"
+        flags:
+          title: "פיקוח"
+          header_description: "מערכת הסימון ב־Discourse מסייעת לך ולצוות הפיקוח שלך לנהל את התוכן ואת התנהגות המשתמשים ומעניקה לך כלים לשמור על קהילה מכבדת ובריאה. ברירות המחדל מתאימות לרוב הקהילות ואין צורך לשנות אותן. עם זאת, אם לאתר שלך יש דרישות מסוימות אפשר לבטל סוגי סימון שאינם נחוצים ולהוסיף סוגי סימון משלך."
+          keywords: "דגל|סימון|ביקורת|דואר זבל|לא חוקי|ספאם|שגוי|פוגעני"
         font_style:
           title: "סגנון גופן"
           header_description: "התאמת סגנונות הגופנים שערכות העיצוב שלך משתמשות בהן"
@@ -5347,12 +5396,78 @@ he:
         localization:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
+          keywords: "מקום|שפה|אזור זמן|unicode|rtl"
         login_and_authentication:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
         logo:
           title: "לוגו האתר"
           header_description: "התאמת הגווני לוגו האתר שלך"
+        branding:
+          title: "מיתוג"
+          logo:
+            title: "לוגו"
+            form:
+              saved: "הגדרות הלוגו נשמרות."
+              logo:
+                title: "לוגו עיקרי"
+                description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
+                help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
+              logo_dark:
+                required: "האם להשתמש בלוגו אחר עבור מצב כהה?"
+                title: "לוגו עיקרי כהה"
+                help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
+              large_icon:
+                title: "סמל מרובע"
+                description: "גרסה מרובעת של תמונת הלוגו מופיעה בחלק העליון של הניהול והיא גם לוגו היישומון במסך הבית של המכשיר הנייד."
+                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+              square_icon_dark:
+                required: "האם להשתמש בסמל מרובע אחר עבור מצב כהה?"
+                title: "סמל מרובע כהה"
+                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+              favicon:
+                title: "Favicon (סמל אתר)"
+                description: "הלוגו יופיע בתור הסמל בלשוניות הדפדפנים ובמועדפים/סימניות בדפדפנים."
+              logo_small:
+                title: "לוגו קטן"
+                description: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. במקרה של העדר בחירה, תופיע אות הבית."
+                help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
+              logo_small_dark:
+                required: "האם להשתמש בלוגו קטן אחר עבור מצב כהה?"
+                title: "לוגו קטן כהה"
+                help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
+              mobile: "נייד"
+              email: "דוא״ל"
+              social_media: "רשתות חברתיות"
+              mobile_logo:
+                title: "לוגו לנייד"
+                description: "הלוגו לשימוש לגרסה של האתר שלך לניידים. בהעדר בחירה, ייעשה שימוש בתמונה מהגדרת `logo` (לוגו)."
+                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
+              mobile_logo_dark:
+                required: "האם להשתמש בלוגו אחר לנייד עבור מצב כהה?"
+                title: "לוגו כהה לנייד"
+                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
+              manifest_icon:
+                title: "סמל ייצוגי"
+                description: "תמונה שתשמש כתמונת לוגו/פתיחה ב־Android. אם הבחירה תישאר ריקה, יוגדר ל־large_icon (סמל גדול)."
+                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+              manifest_screenshots:
+                title: "תמונות מסך ייצוגיות"
+                description: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
+              apple_touch_icon:
+                title: "סמל Apple touch"
+                description: "סמל המשמש למכשירי Apple touch. אם נותר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+                help_text: "הגודל המומלץ הוא 180 × 180 פיקסלים. לא מומלץ רקע שקוף."
+              digest_logo:
+                title: "לוגו תמצית"
+                description: "תמונת הלוגו החלופית בה נעשה שימוש בתקצירי הדוא״ל שנשלחים מהאתר שלך. במקרה של העדר בחירה, ייעשה שימוש בהגדרות התמונה מה־`logo`."
+                help_text: "כדאי להשתמש בתמונה מרובעת. לא להשתמש בתמונת SVG."
+              opengraph_image:
+                title: "תמונת OpenGraph"
+                description: "תמונת opengraph כברירת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+              x_summary_large_image:
+                title: "תמונה גדולה לתקציר ב־X"
+                help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
         navigation:
           title: "ניווט"
           header_description: "הגדרת קישורי הניווט ופריטי התפריט לאתר שלך. לרבות המקום וההתנהגות של תפריט הניווט הראשי, הקישורים המהירים בראש עמוד הבית לרבות סרגל צד הניהול"
@@ -5369,8 +5484,11 @@ he:
           title: "מגבלות קצב"
           header_description: "הגדרה באיזו תדירות יוכלו המשתמשים לבצע פעולות מסוימות כגון יצירת פוסטים, שליחת הודעות ופרסום תגובות"
         search:
-          title: "חיפוש"
+          title: "חיפוש בהגדרות"
           header_description: "הגדרת תצורת חיפוש לרבות תיעוד ופירוק לאסימונים בסינית וביפנית"
+        search_everything:
+          title: "חיפוש"
+          header_description: "מכאן ניתן למצוא כל דבר במנשק הניהול. אפשר לסנן את התוצאות להלן וההעדפות שלך תישמרנה."
         security:
           title: "אבטחה"
           header_description: "הגדרת תצורת אבטחה, לרבות אימות דו־שלבי, סמכויות מפקחים ומדיניות אבטחת תוכן"
@@ -5386,6 +5504,157 @@ he:
         group_permissions:
           title: "הרשאות קבוצתיות"
           header_description: "כל הרשאות היישום הקבוצתיות מנוהלות כאן, הן שולטות בגישה למגוון יכולות ב־Discourse"
+        dashboard:
+          title: "לוח בקרה"
+          header_description: "לוח המחוונים מספק תמונת מצב של מצב הקהילה שלך, כולל תנועה, פעילות משתמשים ומדדי מפתח אחרים"
+        users:
+          title: "משתמשים"
+          header_description: "הצגה וניהול של משתמשים, שליחת הזמנות וייצוא נתוני משתמשים"
+        groups:
+          title: "קבוצות"
+          header_description: "יצירה וניהול של קבוצות, הגדרת הרשאות קבוצה והצגת פעילות ותיבות דואר נכנס של קבוצות"
+        site_settings:
+          title: "כל הגדרות האתר"
+          header_description: "אפשר לכוון את כל הגדרות אתר ה־Discourse שלך כדי להתאים את המראה, היכולות וחוויית המשתמש שלך"
+        whats_new:
+          title: "מה חדש?"
+          header_description: "התעדכנות ביכולות העדכניות ובחידושים ב־Discourse"
+          keywords: "יומן שינויים|יכולת|מהדורה"
+        backups:
+          title: "גיבויים"
+          header_description: "הגיבויים של Discourse כולל את מסד הנתונים המלא של האתר שמכיל את כל תוכן האתר: נושאים, פוסטים, משתמשים, קבוצות, הגדרות, ערכות עיצוב ועוד, הוא עשוי להכיל את הקבצים שהועלו כתלות באופן יצירת קובץ הגיבוי."
+          sub_pages:
+            logs:
+              title: "יומנים"
+              header_description: "הצגה וניהול של יומנים לגיבויים, שחזורים והעלאות"
+        reports:
+          title: "דוחות"
+          header_description: "דוחות הם כלי רב עוצמה שמאפשר לך להבין מה קורה באתר שלך. הם יכולים לסייע לך לזהות מגמות, לאתר בעיות ולהחליט על בסיס נתונים."
+        badges:
+          title: "עיטורים"
+          header_description: "עיטורים מתגמלים משתמשים על הפעילויות שלהם וההישגים כדי להוקיר, לתקף ולעודד התנהגות ומעורבות חיובית בתוך הקהילה"
+        permalinks:
+          title: "קישורים קבועים"
+          header_description: "הפניות להחיל על כתובות שאינן מוכרות לפורום"
+        user_fields:
+          title: "שדות משתמש"
+          header_description: "אפשר ליצור שדות מותאמים אישית למשתמשים כדי לאסוף פרטים נוספים על חברי הקהילה שלך. אפשר לבחור אילו פרטים נחוצים במהלך ההרשמה, מה מופיע בפרופילים ומה המשתמשים יכולים לעדכן."
+        watched_words:
+          title: "מילים במעקב"
+          header_description: "מילים במעקב הן כלי פיקוח שיכול לבצע מספר פעולות לרבות חסימה, צנזור, קישור או סימון פוסטים שמכילים מילים מסוימות"
+        color_palettes:
+          title: "ערכות צבעים"
+          header_description: "לוחות צבעים מגדירים את צבעי היסוד שממשק האתר שלך משתמש בהם, על אף שערכות עיצוב יכולות לספק עיצוב, פריסות ורכיבים בנוסף - שני אלו יכולים לעבוד יחד כדי ליצור את המראה והתחושה הייחודיים של האתר שלך ואת שניהם אפשר להגיש למשתמשים כדי שיוכלו לבחור מביניהם."
+        emoji:
+          title: "אמוג׳י"
+          header_description: "הוספת אמוג׳י חדש שיהיה נגיש לכולם. נא לבחור מספר קבצים כדי ליצור אמוג׳ים עם שמות הקבצים שלהם. הקבוצה הנבחרת תשמש לכל הקבצים שנוספים יחד."
+        themes:
+          title: "תמות"
+          header_description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש"
+        components:
+          title: "רכיבים"
+          header_description: "רכיבים הם פריטי התאמה קטנים יותר שאפשר להוסיף לערכות עיצוב כדי לשנות קטעים מסוימים של סגנון עיצוב הפורום שלך"
+          keywords: "ערכת עיצוב|רכיב|הרחבה|עיצוב"
+        themes_and_components:
+          title: "ערכות עיצוב ורכיבים"
+          header_description: "התאמת אתר ה־Discourse לטעמך עם ערכות עיצוב ורכיבים שיענו על הצרכים שלך"
+          keywords: "ערכת עיצוב|רכיב|הרחבה|התאמה|עיצוב"
+        site_texts:
+          title: "טקסטים של האתר"
+          header_description: "אפשר להתאים את המלל שנעשה בו שימוש ב־Discourse כדי שיתאים לאופן השיח של הקהילה שלך"
+        email:
+          title: "הגדרות שרת ויומנים"
+          header_description: "אפשר להתאים את התבנית שמשמשת ליצירת הודעות דוא״ל, הודעות תקציר בדוא״ל שתישלחנה ולצפות ביומני דוא״ל"
+          keywords: "דוא״ל|דוא\"ל|דואל|מייל|אימייל|smtp|mailgun|sendgrid|sent|דולג|נפסח|הוקפץ|הוחזר|התקבל|התקבלה|נדחה|נדחתה|יומני דוא״ל|תקציר תצוגה מקדימה"
+          sub_pages:
+            preview_summary:
+              title: "תצוגה מקדימה של תמצית"
+              header_description: "תצוגה מקדימה של הודעת סיכום שנשלחת בדוא״ל למשתמשים לא פעילים"
+            advanced_test:
+              title: "בדיקה מתקדמת"
+              header_description: "הצגה של האופן בו תהליכי Discourse קיבלו הודעות דוא״ל"
+            templates:
+              title: "תבניות"
+              header_description: "התאמת התבניות שמשמשות ליצירת הודעות דוא״ל"
+            sent:
+              title: "נשלח"
+              header_description: "הצגת יומן של הודעות דוא״ל שנשלחו"
+            skipped:
+              title: "דולג"
+              header_description: "הצגת יומן של הודעות דוא״ל שנפסחו"
+            bounced:
+              title: "הוחזר"
+              header_description: "הצגת יומן של הודעות דוא״ל שהוקפצו"
+            received:
+              title: "התקבל"
+              header_description: "הצגת יומן של הודעות דוא״ל שהתקבלו"
+            rejected:
+              title: "נדחה"
+              header_description: "הצגת יומן של הודעות דוא״ל שנדחו"
+        email_appearance:
+          title: "מראה"
+          header_description: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS"
+        staff_action_logs:
+          title: "יומנים וסינון"
+          header_description: "יומנים ובחינה מאפשרים לך לעקוב ולנהל את הקהילה שלך כדי לוודא שהיא נשארת בטוחה ומכבדת. אפשר לצפות ביומני כל הפעולות שננקטו על ידי חברי הסגל, לחפש ביומנים ולבחון התנהגות של משתמשים"
+          keywords: "יומני שגיאות|פעולת סגל|פעולות סגל|הודעות במעקב|IP במעקב|יומני חיפוש"
+          sub_pages:
+            screened_emails:
+              title: "הודעות דוא״ל מסוננות"
+              header_description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות"
+            screened_ips:
+              title: "כתובות IP מפוקחות"
+              header_description: "כתובות IP במעקב. אפשר להוסיף לרשימת ההיתר כתובות IP פרטניות."
+            screened_urls:
+              title: "כתובות מפוקחות"
+              header_description: "הכתובות הרשומות כאן היו בשימוש בפוסטים מאת משתמשים שזוהו כספאמרים"
+            search_logs:
+              title: "חיפוש ביומנים"
+              header_description: "הצגת יומן של חיפושים שבוצעו"
+        plugins:
+          title: "תוספים מותקנים"
+          header_description: "תוספי Discourse שהתקנת או תוספים שמותקנים באירוח של Discourse באופן מובנה, כל אלו יופיעו ברשימה הזאת"
+        api_keys:
+          title: "מפתחות API"
+          header_description: "יכולת מפתחות ה־API מאפשר לך לשלב את Discourse מול מערכות חיצוניות ולבצע פעולות אוטומטית. מנהלים יכולים ליצור מפתחות עם תחומי הרשאה מסוימים כדי לשלוט בגישה למשאבים ולנתונים רגישים. תחומי הרשאה מגבילים יכולות, כדי לשפר את אבטחת המידע."
+          keywords: "אסימון|טווח|היקף"
+        webhooks:
+          title: "התליות (Webhooks)"
+          header_description: "התליות (Webhooks) מאפשרות ל־Discourse להודיע לשירותים חיצוניים מתי מתרחשים אירועים מסוימים באתר שלך. כאשר ההתליה מתרחשת, תישלח בקשת POST לכתובות שצוינו."
+          keywords: "אירוע|מטען|כתובת"
+        embedding:
+          title: "שילוב (embedding)"
+          header_description: "ל־Discourse יש יכולת להטמיע הערות מנושא לאתר מרוחק עם API ב־Javascript שיוצר IFRAME (חלונית פנימית)"
+      search:
+        modal_title: "חיפוש כל דבר שהוא בניהול"
+        title: "חיפוש"
+        instructions: "אפשר להקליד כדי לחפש אחר עמודים, הגדרות, דוחות, ערכות עיצוב, רכיבים ועוד…"
+        result_types:
+          page:
+            one: "עמוד"
+            two: "עמודים"
+            many: "עמודים"
+            other: "עמודים"
+          report:
+            one: "דוח"
+            two: "דוחות"
+            many: "דוחות"
+            other: "דוחות"
+          setting:
+            one: "הגדרה"
+            two: "הגדרות"
+            many: "הגדרות"
+            other: "הגדרות"
+          theme:
+            one: "תמה"
+            two: "תמות"
+            many: "תמות"
+            other: "תמות"
+          component:
+            one: "רכיב"
+            two: "רכיבים"
+            many: "רכיבים"
+            other: "רכיבים"
       new_features:
         title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
@@ -5566,6 +5835,7 @@ he:
               two: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
               many: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
               other: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
+            automatic_membership_user_unknown_count: "משתמשים עם אחד משמות תחום הדוא״ל החדשים יתווספו לקבוצה."
             automatic_membership_associated_groups: "משתמשים שהם חברים בקבוצה בשירות שמופיע כאן יתווספו לקבוצה הזאת אוטומטית עם כניסתם לשירות."
             primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
           alert:
@@ -5626,6 +5896,7 @@ he:
         key: "מפתח"
         keys: "מפתחות"
         created: נוצר על ידי
+        scope: היקף
         updated: עודכן
         last_used: שימוש אחרון
         never_used: לעולם לא
@@ -5899,9 +6170,6 @@ he:
           group_permissions: "הרשאות קבוצתיות"
           users: "משתמשים"
           groups: "קבוצות"
-          localization:
-            title: "תרגום"
-            keywords: "מקום|שפה|אזור זמן|unicode|rtl"
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
@@ -5916,10 +6184,9 @@ he:
           color_schemes: "ערכות צבעים"
           emoji: "אמוג׳י"
           navigation: "ניווט"
-          themes: "תמות"
-          components:
-            title: "רכיבים"
-            keywords: "ערכת עיצוב|הרחבה"
+          themes_and_components:
+            title: "ערכות עיצוב ורכיבים"
+            keywords: "סיומת"
           site_texts: "טקסטים של האתר"
       email_settings:
         title: "הגדרות דוא״ל"
@@ -5947,8 +6214,6 @@ he:
             description: "חשיפת מהדורות חדשות ושיפורים ב־Discourse"
       config_areas:
         about:
-          header: "על האתר שלך"
-          description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו. מוצג ב<a href='%{basePath}/about'>עמוד על</a> האתר שלך."
           general_settings: "הגדרות כלליות"
           community_name: "שם הקהילה"
           community_name_placeholder: "קהילה לדוגמה"
@@ -6000,9 +6265,7 @@ he:
             your_organization_saved: "הארגון שלך נשמר"
           saved: "נשמר!"
         flags:
-          header: "פיקוח"
           edit_header: "עריכת סימון"
-          subheader: "מערכת הסימון ב־Discourse מסייעת לך ולצוות הפיקוח שלך לנהל את התוכן ואת התנהגות המשתמשים ומעניקה לך כלים לשמור על קהילה מכבדת ובריאה. ברירות המחדל מתאימות לרוב הקהילות ואין צורך לשנות אותן. עם זאת, אם לאתר שלך יש דרישות מסוימות אפשר לבטל סוגי סימון שאינם נחוצים ולהוסיף סוגי סימון משלך."
           description: "תיאור"
           enabled: "מאופשר?"
           add: "הוספת סימון"
@@ -6044,18 +6307,21 @@ he:
           delete: "מחיקה"
           more_options:
             title: "אפשרויות נוספות"
-        look_and_feel:
-          title: "מראה ותחושה"
-          description: "אפשר להתאים ולמתג את אתר ה־Discourse שלך כדי להעניק לו סגנון ייחודי."
+        themes_and_components:
+          title: "ערכות עיצוב ורכיבים"
+          description: "התאמת אתר ה־Discourse לטעמך עם ערכות עיצוב ורכיבים שיענו על הצרכים שלך."
+          breadcrumb_title: "התאמה אישית"
+          install: "התקנה"
           themes:
             title: "תמות"
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
-            themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
-            set_default_theme: "הגדרת ברירת מחדל"
-            default_theme: "ערכת עיצוב כברירת מחדל"
-            themes_description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
             new_theme: "ערכת עיצוב חדשה"
-            user_selectable: "לבחירת המשתמש"
+            back: "חזרה לערכות עיצוב"
+          components:
+            title: "רכיבים"
+            components_intro: "יש להתקין רכיב כדי להתחיל או ליצור אחד משלך מאפס באמצעות המשאבים האלה."
+            new_component: "רכיב חדש"
+            back: "חזרה לרכיבים"
         user_fields:
           field: "שדה"
           type: "סוג"
@@ -6066,10 +6332,23 @@ he:
           delete: "מחיקה"
           delete_successful: "שדה משתמש נמחק."
           save_successful: "שדה משתמש נשמר."
+        color_palettes:
+          palette_name: "שם"
+          color_options:
+            title: "אפשרויות צבע"
+            toggle: "לבחירת המשתמש"
+            toggle_description: "המשתמשים יכולים לבחור את ערכת הצבעים"
+          colors:
+            title: "צבעים"
+          fonts_and_logos_hint: "מעניין אותך לעדכן את הגופנים והלוגואים שלך?"
+          go_to_branding: "מעבר למיתוג"
+          save_changes: "שמירת השינויים"
+          unsaved_changes: "יש שינויים שלא נשמרו"
+          copy_of: "עותק של %{name}"
+          copy_created: 'נוצר עותק חדש של „%{name}”'
+          illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
       plugins:
         title: "תוספים"
-        installed: "תוספים מותקנים"
-        description: "תוספי Discourse שהתקנת או תוספים שמותקנים באירוח של Discourse באופן מובנה, כל אלו יופיעו ברשימה הזאת."
         name: "שם"
         none_installed: "אין לך הרחבות מותקנות"
         version: "גרסה"
@@ -6084,25 +6363,6 @@ he:
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
         learn_more: "מידע נוסף"
-        sidebar_link:
-          installed: "הותקן"
-      advanced:
-        title: "מתקדם"
-        sidebar_link:
-          api_keys:
-            title: "מפתחות API"
-            keywords: "אסימון"
-          webhooks: "Webhooks"
-          developer: "מפתחים"
-          embedding: "שילוב (embedding)"
-          rate_limits: "מגבלות קצב"
-          user_api: "API של משתמש"
-          onebox: "תיבת תחימה"
-          files: "קבצים"
-          other_options: "אחר"
-          search: "חיפוש"
-          experimental: "ניסיוני"
-          all_site_settings: "כל הגדרות האתר"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
@@ -6110,7 +6370,6 @@ he:
       backups:
         title: "גיבויים"
         files_title: "גיבוי קבצים"
-        description: "הגיבויים של Discourse כולל את מסד הנתונים המלא של האתר שמכיל את כל תוכן האתר: נושאים, פוסטים, משתמשים, קבוצות, הגדרות, ערכות עיצוב ועוד, הוא עשוי להכיל את הקבצים שהועלו כתלות באופן יצירת קובץ הגיבוי."
         menu:
           backups: "גיבויים"
           backup_files: "גיבוי קבצים"
@@ -6234,6 +6493,7 @@ he:
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
           themes_intro_new: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
+          components_intro_new: "יש להתקין רכיב כדי להתחיל או ליצור אחד משלך מאפס באמצעות המשאבים האלה."
           themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
           beginners_guide_title: "המדריך למתחילים בערכות העיצוב של Discourse"
           developers_guide_title: "המדריך למפתחי ערכות עיצוב של Discourse"
@@ -6254,17 +6514,12 @@ he:
           common: "משותף"
           desktop: "מחשב-שולחני"
           mobile: "נייד"
-          settings: "הגדרות"
-          translations: "תרגומים"
-          extra_scss: "SCSS נוסף"
           extra_files: "קבצים נוספים"
           extra_files_upload: "יש לייצא את ערכת העיצוב כדי לצפות בקבצים האלה."
           extra_files_remote: "יש לייצא את ערכת הנושא או לבדוק את מאגר ה־git כדי לצפות בקבצים אלה."
           preview: "תצוגה מקדימה"
           settings_editor: "עורך הגדרות"
-          show_advanced: "הצגת שדות מתקדמים"
-          hide_advanced: "הסתרת שדות מתקדמים"
-          hide_unused_fields: "הסתרת שדות שאינם בשימוש"
+          show_advanced: "הצגת מתקדם"
           is_default: "ערכת עיצוב פעילה כברירת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
@@ -6322,9 +6577,9 @@ he:
           unsaved_parent_themes: "לא הקצית את הרכיבים לערכות עיצוב, אפשר לדלג?"
           discard: "להשליך"
           stay: "להישאר"
-          css_html: "CSS/HTML מותאמים"
-          edit_css_html: "עריכת CSS/HTML"
-          edit_css_html_help: "לא ערכתם אף CSS או HTML"
+          css_html: "קוד מותאם אישית"
+          edit_css_html: "עריכת קוד"
+          edit_css_html_help: "לא ערכת קוד כלשהו עדיין."
           delete_upload_confirm: "להסיר העלאה זו? (ערכת נושא CSS עלולה להפסיק לעבוד!)"
           component_on_themes: "לכלול רכיבים בערכות הנושא האלו"
           included_components: "רכיבים כלולים"
@@ -6387,22 +6642,22 @@ he:
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
           scss:
             text: "CSS"
-            title: "עריכת CSS מותאם, אנחנו מקבלים כל סגנון CSS ו SCSS תקני"
+            title: "כללי CSS מותאמים אישית עם תמיכה בתחביר SCSS"
           header:
-            text: "כותרת"
-            title: "הכניסו HTML להצגה מעל הכותרת"
+            text: "לפי הכותרת העליונה"
+            title: "HTML בסיסי שיעובד מעל הכותרת העליונה של Discourse"
           after_header:
             text: "אחרי הכותרת"
-            title: "הכניסו HTML להצגה בכל הדפים אחרי הכותרת"
+            title: "HTML בסיסי שיעובד מתחת הכותרת העליונה של Discourse"
           footer:
             text: "תחתית"
-            title: "הכניסו HTML להצגה בתחתית הדף"
+            title: "HTML בסיסי שיעובד בתחתית העמוד."
           embedded_scss:
             text: "CSS משולב"
-            title: "הכניסו CSS מותאם לשליחה עם הגרסה המשולבת של ההערות"
+            title: "CSS שיש לכלול כשההערות מ־Discourse מוטמעות באתר אחר"
           embedded_header:
             text: "כותרת מוטבעת"
-            title: "נא למלא HTML כדי להציג מעל הגרסה המוטבעת של הערות"
+            title: "HTML בסיסי שיוצג מעל הערות Discourse כאשר הוא מוטמע באתר אחר"
           color_definitions:
             text: "ערכות צבע"
             title: "למלא ערכות צבע מותאמות אישית (משתמשים מתקדמים בלבד)"
@@ -6416,14 +6671,13 @@ he:
 
               מומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה.
           head_tag:
-            text: "Head"
-            title: "HTML שיתווסף לפני התגית ‎head"
+            text: "<head>"
+            title: "HTML להוספה בסוף ה־<head>, עם תמיכה בתגיות script"
           body_tag:
-            text: "Body"
-            title: "HTML שיתווסף לפני התגית body"
-          yaml:
-            text: "YAML"
-            title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"
+            text: "<body>"
+            title: "HTML להוספה בסוף ה־<body>, עם תמיכה בתגיות script"
+          js:
+            text: "JS"
           scss_color_variables_warning: 'השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט. נא להשתמש במאפייני CSS מותאמים אישית במקום. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">במדריך הזה</a> יש פרטים נוספים.'
           scss_warning_inline: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט."
           all_filter: "הכול"
@@ -6469,7 +6723,6 @@ he:
           title: "צבעים"
           edit: "עריכת לוחות צבעים"
           long_title: "ערכות צבעים"
-          description: "לוחות צבעים מגדירים את צבעי היסוד שממשק האתר שלך משתמש בהם, על אף שערכות עיצוב יכולות לספק עיצוב, פריסות ורכיבים בנוסף - שני אלו יכולים לעבוד יחד כדי ליצור את המראה והתחושה הייחודיים של האתר שלך ואת שניהם אפשר להגיש למשתמשים כדי שיוכלו לבחור מביניהם."
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
@@ -6524,6 +6777,9 @@ he:
           hover:
             name: "ריחוף"
             description: "צבע הרקע של רכיבים כגון פריטי רשימות כשעוברים מעליהם עם העכבר או שהמיקוד עובר אליהם מהמקלדת."
+          editor:
+            light: "בהיר"
+            dark: "כהה"
         robots:
           title: "דריסת קובץ ה־robots.txt של האתר שלך:"
           warning: "הגדרה זו תדרוס הגדרות אתר כלשהן שקשורות לכך."
@@ -6609,7 +6865,7 @@ he:
             title: "סינון"
             user_placeholder: "שם משתמש"
             address_placeholder: "name@example.com"
-            type_placeholder: "סיכום, הרשמה…"
+            type_placeholder: "תמצית, הרשמה…"
             reply_key_placeholder: "מפתח תגובה"
             smtp_transaction_response_placeholder: "מזהה SMTP"
           email_addresses:
@@ -7402,6 +7658,13 @@ he:
       site_settings:
         title: "הגדרות האתר"
         description: "אפשר לכוון את הגדרות אתר ה־Discourse שלך כדי להתאים את המראה, היכולות וחוויית המשתמש שלך."
+        discard: "התעלמות מהשינויים"
+        save: "שמירת כל השינויים"
+        dirty_banner:
+          one: "יש לך שינוי שלא נשמר"
+          two: "יש לך <em>שני</em> שינויים שלא נשמרו"
+          many: "יש לך <em>%{count}</em> שינויים שלא נשמרו"
+          other: "יש לך <em>%{count}</em> שינויים שלא נשמרו"
         emoji_list:
           invalid_input: "רשימות האמוג׳י אמורה להכיל רק שמות סימני אמוג׳י תקניים, למשל: hugs (חיבוקים)"
           add_emoji_button:

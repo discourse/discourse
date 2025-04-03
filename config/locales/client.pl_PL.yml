@@ -249,6 +249,10 @@ pl_PL:
       dismiss: "Odrzuć"
     bootstrap_mode: "Pierwsze kroki"
     back_button: "Poprzednia"
+    welcome_banner:
+      header:
+        anonymous_members: "Witaj na %{site_name}!"
+      search: "Szukaj"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -541,10 +545,6 @@ pl_PL:
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
-      abandon:
-        confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
-        yes_value: "Odrzuć"
-        no_value: "Wznów edycję"
       dropdown:
         title: "Otwórz menu najnowszych wersji roboczych"
         untitled: "Wersja robocza bez tytułu"
@@ -693,6 +693,10 @@ pl_PL:
         name: "Imię"
         fields: "Pola"
         reject_reason: "Powód"
+        scrubbed_reason: "Powód"
+        scrub_record:
+          reason_placeholder: "Powód..."
+          cancel_button: "Anuluj"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (z ostatniej flagi)"
@@ -2451,13 +2455,6 @@ pl_PL:
       password_label: "Hasło"
     password_reset:
       continue: "Przejdź do %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Międzynarodowy"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tylko kategorie"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
@@ -2897,9 +2894,8 @@ pl_PL:
         new_features: "Nowe funkcje Discourse zostały udostępnione!"
         admin_problems: "nowe porady w panelu administratora"
     upload_selector:
+      delete: "Usuń"
       uploading: "Wgrywanie"
-      processing: "Przetwarzanie przesłanego pliku"
-      select_file: "Wybierz plik"
       default_image_alt_text: Obraz
     search:
       sort_by: "Sortuj po"
@@ -3820,15 +3816,10 @@ pl_PL:
         many: "ty i %{count} innych osób polubiło ten wpis"
         other: "ty i %{count} innych osób polubiło ten wpis"
       sr_post_like_count_button:
-        one: "%{count} osoba polubiła ten post. Kliknij, aby zobaczyć"
-        few: "%{count} osoby polubiły ten post. Kliknij, aby zobaczyć"
-        many: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
-        other: "%{count} osób polubiło ten post. Kliknij, aby zobaczyć"
-      sr_post_read_count_button:
-        one: "%{count} osoba przeczytała ten post. Kliknij, aby wyświetlić"
-        few: "%{count} osoby przeczytały ten post. Kliknij, aby wyświetlić"
-        many: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
-        other: "%{count} osób przeczytało ten post. Kliknij, aby wyświetlić"
+        one: "%{count} osoba lajkuje ten wpis."
+        few: "%{count} osoby lajkują ten wpis."
+        many: "%{count} osób lajkuje ten wpis."
+        other: "%{count} osób polubiło ten wpis."
       filtered_replies_hint:
         one: "Zobacz ten post i jego odpowiedź"
         few: "Zobacz ten post i jego %{count} odpowiedzi"
@@ -3959,8 +3950,6 @@ pl_PL:
             few: "i %{count} innych przeczytało to"
             many: "i %{count} innych przeczytało to"
             other: "i %{count} innych przeczytało to"
-          sr_post_likers_list_description: "użytkownicy, którzy polubili ten post"
-          sr_post_readers_list_description: "użytkownicy, którzy przeczytali ten post"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
@@ -4092,9 +4081,13 @@ pl_PL:
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
-      badge_colors: "Kolor Etykiety"
-      background_color: "Kolor tła"
-      foreground_color: "Kolor pierwszego planu"
+      background_color: "Kolor"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
@@ -4570,6 +4563,9 @@ pl_PL:
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
         insert_url: "%{shortcut} Wstaw zaznaczenie do otwartego edytora"
         full_page_search: "%{shortcut} Uruchamia wyszukiwanie na całej stronie"
+      admin:
+        title: "Administratorzy"
+        search_prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
     badges:
       earned_n_times:
         one: "Otrzymano tę odznakę %{count} raz"
@@ -5137,15 +5133,38 @@ pl_PL:
       reports:
         title: "Lista dostępnych zgłoszeń"
         sidebar_title: "Zgłoszenia"
-        sidebar_link:
-          all: "Wszystkie zgłoszenia"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Zgłoszenia"
+        community:
+          title: "Społeczność"
+        appearance:
+          title: "Wygląd"
+        email:
+          title: "E-mail"
+        security:
+          title: "Bezpieczeństwo"
+        plugins:
+          title: "Wtyczki"
+        advanced:
+          title: "Zaawansowane"
       config:
+        about:
+          title: "O Twojej witrynie"
         developer:
           title: "Deweloperskie"
           header_description: "Ustawienia deweloperskie do kontrolowania limitów szybkości, mnożników i obliczeń, trybu bezpiecznego i innych zaawansowanych funkcji."
         experimental:
           title: "Eksperymentalne"
           header_description: "Włączaj lub wyłączaj eksperymentalne funkcje dla swojej witryny, większość z nich może być kontrolowana dla grupy."
+        emojis:
+          title: "Emoji"
+          header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie"
+        flags:
+          title: "Moderacja"
+          header_description: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
         font_style:
           title: "Styl czcionki"
           header_description: "Dostosuj style czcionek używane w Twoich motywach"
@@ -5161,6 +5180,18 @@ pl_PL:
         logo:
           title: "Logo witryny"
           header_description: "Dostosuj warianty logo swojej witryny"
+        branding:
+          title: "Brandowanie"
+          logo:
+            form:
+              logo:
+                title: "Podstawowe logo"
+              mobile: "Mobilnie"
+              email: "E-mail"
+              manifest_screenshots:
+                description: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
+              opengraph_image:
+                description: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon."
         navigation:
           title: "Nawigacja"
           header_description: "Skonfiguruj łącza nawigacyjne i elementy menu dla swojej witryny. Obejmuje to lokalizację i zachowanie głównego menu nawigacyjnego, szybkich linków u góry strony głównej, a także paska bocznego administratora"
@@ -5177,8 +5208,9 @@ pl_PL:
           title: "Ograniczenia szybkości"
           header_description: "Skonfiguruj, jak często użytkownicy mogą wykonywać określone czynności, takie jak tworzenie tematów, wysyłanie wiadomości i publikowanie odpowiedzi."
         search:
-          title: "Szukaj"
           header_description: "Skonfiguruj ustawienia wyszukiwania, w tym rejestrowanie i tokenizację dla języków chińskiego i japońskiego."
+        search_everything:
+          title: "Szukaj"
         security:
           title: "Bezpieczeństwo"
           header_description: "Skonfiguruj ustawienia zabezpieczeń, w tym uwierzytelnianie dwuskładnikowe, uprawnienia moderatora i zasady bezpieczeństwa treści."
@@ -5194,6 +5226,102 @@ pl_PL:
         group_permissions:
           title: "Uprawnienia grupy"
           header_description: "Tutaj zarządzane są wszystkie uprawnienia aplikacji oparte na grupach, które kontrolują dostęp do różnych funkcji w Discourse"
+        dashboard:
+          title: "Panel"
+        users:
+          title: "Użytkownicy"
+        groups:
+          title: "Grupy"
+        site_settings:
+          title: "Wszystkie ustawienia witryny"
+        whats_new:
+          title: "Co nowego?"
+          keywords: "dziennik zmian|funkcja|wydanie"
+        backups:
+          title: "Kopie zapasowe"
+          header_description: "Kopie zapasowe Discourse obejmują pełną bazę danych witryny, która zawiera wszystko na stronie: tematy, posty, użytkownicy, grupy, ustawienia, motywy itp. W zależności od tego, jak tworzony jest plik kopii zapasowej, może on zawierać przesłane pliki lub nie."
+          sub_pages:
+            logs:
+              title: "Logi"
+        reports:
+          title: "Zgłoszenia"
+        badges:
+          title: "Odznaki"
+          header_description: "Odznaki nagradzają użytkowników za ich aktywność, wkład i osiągnięcia, aby rozpoznawać, potwierdzać i zachęcać do pozytywnych zachowań i zaangażowania w społeczności"
+        permalinks:
+          title: "Permalinki"
+          header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
+        user_fields:
+          title: "Pola użytkownika"
+          header_description: "Twórz niestandardowe pola użytkownika, aby zbierać dodatkowe informacje o członkach społeczności. Możesz wybrać, jakie informacje są wymagane podczas rejestracji, co jest wyświetlane w profilach i co użytkownicy mogą aktualizować."
+        watched_words:
+          title: "Obserwowane słowa"
+          header_description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
+        color_palettes:
+          title: "Palety kolorów"
+        emoji:
+          title: "Emoji"
+          header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie."
+        themes:
+          title: "Motywy"
+          header_description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe"
+        components:
+          title: "Komponenty"
+        site_texts:
+          title: "Teksty witryny"
+        email:
+          title: "Konfiguracja serwera i logi"
+          sub_pages:
+            preview_summary:
+              header_description: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników"
+            templates:
+              title: "Szablony"
+            sent:
+              title: "Wysłane"
+            skipped:
+              title: "Pominięte"
+            bounced:
+              title: "Odbite"
+            received:
+              title: "Otrzymane"
+            rejected:
+              title: "Odrzucony"
+        email_appearance:
+          title: "Wygląd"
+          header_description: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS"
+        staff_action_logs:
+          title: "Logi i kontrola"
+          sub_pages:
+            screened_emails:
+              header_description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana"
+            screened_ips:
+              title: "Ekranowane adresy IP"
+            screened_urls:
+              title: "Ekranowane URLe"
+              header_description: "URLe wypisane tutaj były używane we wpisach przez użytkowników wykrytych jako spamerzy"
+        plugins:
+          title: "Zainstalowane wtyczki"
+          header_description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście"
+        api_keys:
+          title: "Klucze API"
+        webhooks:
+          title: "Webhooki"
+        embedding:
+          title: "Osadzanie"
+          header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+      search:
+        title: "Szukaj"
+        result_types:
+          theme:
+            one: "Motyw"
+            few: "Motywy"
+            many: "Motywy"
+            other: "Motywy"
+          component:
+            one: "Komponent"
+            few: "Komponenty"
+            many: "Komponenty"
+            other: "Komponenty"
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
@@ -5413,6 +5541,7 @@ pl_PL:
         key: "Klucz"
         keys: "Klucze"
         created: Utworzony przez
+        scope: Zakres
         updated: Zaktualizowane
         last_used: Ostatnio używany
         never_used: Nigdy
@@ -5689,10 +5818,8 @@ pl_PL:
           color_schemes: "Palety kolorów"
           emoji: "Emoji"
           navigation: "Nawigacja"
-          themes: "Motywy"
-          components:
-            title: "Komponenty"
-            keywords: "motyw|rozszerzenie"
+          themes_and_components:
+            keywords: "rozszerzenia"
           site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
@@ -5718,7 +5845,6 @@ pl_PL:
             description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
-          header: "O Twojej witrynie"
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
           community_name_placeholder: "Przykładowa społeczność"
@@ -5752,9 +5878,7 @@ pl_PL:
             your_organization_saved: "Twoja organizacja została zapisana"
           saved: "zapisano!"
         flags:
-          header: "Moderacja"
           edit_header: "Edytuj flagę"
-          subheader: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
           description: "Opis"
           enabled: "Włączona?"
           add: "Dodaj flagę"
@@ -5796,16 +5920,15 @@ pl_PL:
           delete: "Usuń"
           more_options:
             title: "Więcej opcji"
-        look_and_feel:
-          title: "Wygląd i odczucia"
+        themes_and_components:
+          breadcrumb_title: "Wygląd"
+          install: "Zainstaluj"
           themes:
             title: "Motywy"
-            themes_intro_img_alt: "Nowy symbol zastępczy motywu"
-            set_default_theme: "Ustaw domyślne"
-            default_theme: "Motyw domyślny"
-            themes_description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
+            themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
-            user_selectable: "Możliwe do wyboru przez użytkownika"
+          components:
+            title: "Komponenty"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -5816,10 +5939,15 @@ pl_PL:
           delete: "Usuń"
           delete_successful: "Pole użytkownika usunięte."
           save_successful: "Pole użytkownika zapisane."
+        color_palettes:
+          palette_name: "Nazwa"
+          color_options:
+            toggle: "Możliwe do wyboru przez użytkownika"
+            toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
+          colors:
+            title: "Kolory"
       plugins:
         title: "Wtyczki"
-        installed: "Zainstalowane wtyczki"
-        description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście."
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"
@@ -5834,24 +5962,6 @@ pl_PL:
         author: "Przez %{author}"
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
-        sidebar_link:
-          installed: "Zainstalowane"
-      advanced:
-        title: "Zaawansowane"
-        sidebar_link:
-          api_keys:
-            title: "Klucze API"
-          webhooks: "Webhooki"
-          developer: "Deweloperskie"
-          embedding: "Osadzanie"
-          rate_limits: "Ograniczenia szybkości"
-          user_api: "API użytkownika"
-          onebox: "Onebox"
-          files: "Pliki"
-          other_options: "Inne"
-          search: "Szukaj"
-          experimental: "Eksperymentalne"
-          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5859,7 +5969,6 @@ pl_PL:
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
-        description: "Kopie zapasowe Discourse obejmują pełną bazę danych witryny, która zawiera wszystko na stronie: tematy, posty, użytkownicy, grupy, ustawienia, motywy itp. W zależności od tego, jak tworzony jest plik kopii zapasowej, może on zawierać przesłane pliki lub nie."
         menu:
           backups: "Kopie zapasowe"
           backup_files: "Pliki kopii zapasowej"
@@ -5999,17 +6108,11 @@ pl_PL:
           common: "Wspólne"
           desktop: "Komputer"
           mobile: "Mobilnie"
-          settings: "Ustawienia"
-          translations: "Tłumaczenia"
-          extra_scss: "Dodatkowy SCSS"
           extra_files: "Dodatkowe pliki"
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
           settings_editor: "Edytor ustawień"
-          show_advanced: "Pokaż pola zaawansowane"
-          hide_advanced: "Ukryj pola zaawansowane"
-          hide_unused_fields: "Ukryj nieużywane pola"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
@@ -6067,9 +6170,6 @@ pl_PL:
           unsaved_parent_themes: "Nie przypisałeś/łaś komponentu do motywów, czy chcesz przejść dalej?"
           discard: "Odrzuć"
           stay: "Zostań"
-          css_html: "Własny CSS/HTML"
-          edit_css_html: "Edytuj CSS/HTML"
-          edit_css_html_help: "Nie modyfikowałeś/łaś CSS ani HTML"
           delete_upload_confirm: "Czy usunąć ten plik? (CSS motywu może przestać działać!)"
           component_on_themes: "Dołącz komponent do tych motywów"
           included_components: "Dołączone komponenty"
@@ -6130,22 +6230,14 @@ pl_PL:
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
           scss:
             text: "CSS"
-            title: "Wstaw własny CSS, przyjmujemy wszystkie prawidłowe style CSS i SCSS"
-          header:
-            text: "Nagłówek"
-            title: "Wstaw kod HTML do wyświetlenia powyżej nagłówka"
           after_header:
             text: "Po nagłówku"
-            title: "Wstaw kod HTML do wyświetlenia po nagłówku"
           footer:
             text: "Stopka"
-            title: "Wstaw kod HTML do wyświetlenia w stopce strony"
           embedded_scss:
             text: "Osadzony CSS"
-            title: "Podaj spersonalizowany kod CSS dostarczany w ramkowej wersji komentarzy"
           embedded_header:
             text: "Wbudowany nagłówek"
-            title: "Wprowadź HTML, aby wyświetlić nad osadzoną wersją komentarzy"
           color_definitions:
             text: "Definicje kolorów"
             title: "Określ własne kolory (tylko dla zaawansowanych użytkowników)"
@@ -6158,15 +6250,6 @@ pl_PL:
               %{example}
 
               Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
-          head_tag:
-            text: "Nagłówek"
-            title: "HTML, który zostanie wstawiony przed tagiem head"
-          body_tag:
-            text: "Body"
-            title: "HTML, który zostanie wstawiony przed tagiem body"
-          yaml:
-            text: "YAML"
-            title: "Zdefiniuj ustawienia motywu w formacie YAML"
           scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
           scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
           all_filter: "Wszystkie"
@@ -6212,7 +6295,6 @@ pl_PL:
           title: "Kolory"
           edit: "Edytuj palety kolorów"
           long_title: "Palety kolorów"
-          description: "Palety kolorów definiują podstawowe kolory używane w interfejsie Twojej witryny, podczas gdy motywy mogą zapewniać dodatkowe stylizacje, układy i komponenty - oba mogą współpracować ze sobą, aby stworzyć unikalny wygląd i styl Twojej witryny, i oba mogą być dostępne dla użytkowników, aby mogli wybrać swoje preferencje."
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"
@@ -6267,6 +6349,9 @@ pl_PL:
           hover:
             name: "najechanie"
             description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
+          editor:
+            light: "Jasny"
+            dark: "Ciemny"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."

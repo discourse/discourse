@@ -85,6 +85,7 @@
 
   #site-text-logo {
     margin: 0;
+
     @include ellipsis;
   }
 
@@ -305,6 +306,7 @@
     overflow: hidden;
     width: 100%;
     animation: fadein 0.5s;
+
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
@@ -316,7 +318,6 @@
       "title title"
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
-    align-items: baseline;
     gap: 0 0.5em;
 
     .header-title {
@@ -339,6 +340,7 @@
   .topic-link {
     color: var(--header_primary);
     display: block;
+
     @include ellipsis;
   }
 
@@ -363,11 +365,13 @@
     display: inline-flex;
     flex: 0 1 auto;
     gap: 0 0.5em;
+
     @include ellipsis;
   }
 
   .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
+
     @include ellipsis;
 
     .badge-category {
@@ -383,7 +387,7 @@
 
     .discourse-tags {
       display: inline;
-      color: var(--header_primary-high);
+
       @include ellipsis;
 
       .discourse-tag {
@@ -411,6 +415,7 @@ $mobile-avatar-height: 1.532em;
   display: flex;
   align-items: center;
   font-size: var(--font-down-1);
+
   @include ellipsis;
 
   &:not(:first-child) {
@@ -445,6 +450,7 @@ $mobile-avatar-height: 1.532em;
     border: 1px solid var(--primary-low);
     border-radius: 0.25em;
     min-width: 3em;
+
     @include ellipsis;
 
     .icon {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "distributed_mutex"
-
 module DiscourseNarrativeBot
   class NewUserNarrative < Base
     I18N_KEY = "discourse_narrative_bot.new_user_narrative".freeze
@@ -269,9 +267,15 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      @post.post_analyzer.cook(@post.raw, {})
+      # NOTE: This can be a bit brittle if people change the site text for
+      # discourse_narrative_bot.new_user_narrative.onebox.instructions, or if
+      # the user drops some other random link, but we accept that risk for now.
+      found_link =
+        @post.raw.match(
+          %r{https://en\.wikipedia\.org/wiki/(Inherently_funny_word|Death_by_coconut|Calculator_spelling)},
+        )
 
-      if @post.post_analyzer.found_oneboxes?
+      if found_link
         raw = <<~MD
           #{I18n.t("#{I18N_KEY}.onebox.reply", i18n_post_args)}
 

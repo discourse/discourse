@@ -118,7 +118,7 @@ module Chat
 
     validate :validate_message
     def validate_message
-      WatchedWordsValidator.new(attributes: [:message]).validate(self)
+      WatchedWordsValidator.new(attributes: [:message]).validate(self) if !user&.bot?
 
       if self.new_record? || self.changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate
@@ -166,6 +166,10 @@ module Chat
 
     def push_notification_excerpt
       Emoji.gsub_emoji_to_unicode(message).truncate(400)
+    end
+
+    def only_uploads?
+      self.message.blank? && self.uploads.present?
     end
 
     def to_markdown

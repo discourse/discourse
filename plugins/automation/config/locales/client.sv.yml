@@ -143,13 +143,13 @@ sv:
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_tags:
               label: Taggar
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Skapade
+          with_images: Bilder
+          with_links: Länkar
+          with_code: Kod
+          with_uploads: Uppladdningar
         category_created_edited:
           fields:
             restricted_category:

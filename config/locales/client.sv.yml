@@ -192,6 +192,10 @@ sv:
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
     back_button: "Tillbaka"
+    welcome_banner:
+      header:
+        anonymous_members: "Välkommen till %{site_name}!"
+      search: "Sök"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -387,10 +391,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      abandon:
-        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
-        yes_value: "Förkasta"
-        no_value: "Återuppta redigering"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -521,6 +521,10 @@ sv:
         name: "Namn"
         fields: "Fält"
         reject_reason: "Anledning"
+        scrubbed_reason: "Anledning"
+        scrub_record:
+          reason_placeholder: "Anledning..."
+          cancel_button: "Avbryt"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (av den senaste flaggan)"
@@ -2079,13 +2083,6 @@ sv:
       password_label: "Lösenord"
     password_reset:
       continue: "Fortsätt till %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Endast kategorier"
       categories_with_featured_topics: "Kategorier med utvalda ämnen"
@@ -2453,9 +2450,8 @@ sv:
         new_features: "Nya Discourse-funktioner har släppts!"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
+      delete: "Radera"
       uploading: "Laddar upp"
-      processing: "Bearbetar uppladdning"
-      select_file: "Välj fil"
       default_image_alt_text: bild
     search:
       sort_by: "Sortera efter"
@@ -3243,11 +3239,8 @@ sv:
         one: "du och %{count} annan person gillade det här inlägget"
         other: "du och %{count} andra personer gillade det här inlägget"
       sr_post_like_count_button:
-        one: "%{count} person gillade det här inlägget. Klicka för att se"
-        other: "%{count} personer gillade det här inlägget. Klicka för att se"
-      sr_post_read_count_button:
-        one: "%{count} person läste det här inlägget. Klicka för att se"
-        other: "%{count} personer läste det här inlägget. Klicka för att se"
+        one: "%{count} person gillade detta inlägg."
+        other: "%{count} personer gillade detta inlägg."
       filtered_replies_hint:
         one: "Visa detta inlägg och dess svar"
         other: "Visa detta inlägg och dess %{count} svar"
@@ -3356,8 +3349,6 @@ sv:
           read_capped:
             one: "och %{count} annan läste detta"
             other: "och %{count} andra läste detta"
-          sr_post_likers_list_description: "användare som gillade detta inlägg"
-          sr_post_readers_list_description: "användare som läste detta inlägg"
         by_you:
           off_topic: "Du flaggade detta som irrelevant"
           spam: "Du flaggade detta som skräppost"
@@ -3484,9 +3475,13 @@ sv:
       logo_dark: "Kategorilogotypbild för mörkt läge"
       background_image: "Kategori bakgrundsbild"
       background_image_dark: "Bakgrundsbild för mörk kategori"
-      badge_colors: "Utmärkelsefärg"
-      background_color: "Bakgrundsfärg"
-      foreground_color: "Förgrundsfärg"
+      background_color: "Färg"
+      styles:
+        icon: "Ikon"
+        emoji: "Emoji"
+        options:
+          icon: "Ikon"
+          emoji: "Emoji"
       name_placeholder: "Ett eller två ord max"
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
@@ -3899,6 +3894,9 @@ sv:
         prev_next: "%{shortcut} Flytta markering upp eller ner"
         insert_url: "%{shortcut} Infoga urval i öppen redigerare"
         full_page_search: "%{shortcut} Startar helsidessökning"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Flytta markering upp eller ner"
     badges:
       earned_n_times:
         one: "Förtjänade den här utmärkelsen %{count} gång"
@@ -4388,17 +4386,48 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
-        sidebar_link:
-          all: "Alla rapporter"
+      config_sections:
+        account:
+          title: "Konto"
+        reports:
+          title: "Rapporter"
+        community:
+          title: "Community"
+        appearance:
+          title: "Utseende"
+        email:
+          title: "E-postadress"
+        security:
+          title: "Säkerhet"
+        plugins:
+          title: "Tillägg"
+        advanced:
+          title: "Avancerat"
       config:
+        about:
+          title: "Om din webbplats"
         developer:
           title: "Utvecklare"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderering"
         files:
           title: "Filer"
         legal:
           title: "Juridik"
         logo:
           title: "Webbplatsens logotyp"
+        branding:
+          title: "Varumärke"
+          logo:
+            form:
+              logo:
+                title: "Primär logotyp"
+              mobile: "Mobil"
+              email: "E-postadress"
+              manifest_screenshots:
+                description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
         navigation:
           title: "Navigering"
         notifications:
@@ -4407,7 +4436,7 @@ sv:
           title: "Onebox"
         other:
           title: "Övrigt"
-        search:
+        search_everything:
           title: "Sök"
         security:
           title: "Säkerhet"
@@ -4415,6 +4444,71 @@ sv:
           title: "Skräppost"
         user_api:
           title: "Användar-API"
+        dashboard:
+          title: "Översiktspanel"
+        users:
+          title: "Användare"
+        groups:
+          title: "Grupper"
+        backups:
+          title: "Säkerhetskopior"
+          sub_pages:
+            logs:
+              title: "Loggar"
+        reports:
+          title: "Rapporter"
+        badges:
+          title: "Utmärkelser"
+        permalinks:
+          title: "Permalänkar"
+          header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Teman"
+        components:
+          title: "Komponenter"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
+            templates:
+              title: "Mallar"
+            sent:
+              title: "Skickade"
+            skipped:
+              title: "Överhoppade"
+            bounced:
+              title: "Studsade"
+            received:
+              title: "Mottagna"
+            rejected:
+              title: "Avvisade"
+        email_appearance:
+          title: "Utseende"
+          header_description: "Anpassa mallen där alla e-post renderas, samt stil genom CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas"
+            screened_ips:
+              title: "Granskade IP-adresser"
+            screened_urls:
+              title: "Granskade URL:er"
+              header_description: "URL:erna i denna lista har använts i inlägg av användare som har identifierats som skräppostare"
+        webhooks:
+          title: "Webhookar"
+        embedding:
+          title: "Inbäddning"
+      search:
+        title: "Sök"
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Teman"
+          component:
+            one: "Komponent"
+            other: "Komponenter"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4599,6 +4693,7 @@ sv:
         key: "Key"
         keys: "Nycklar"
         created: Skapad av
+        scope: Omfattning
         updated: Uppdaterad
         never_used: Aldrig
         generate: "Generera"
@@ -4841,9 +4936,8 @@ sv:
           site_logo: "Webbplatsens logotyp"
           emoji: "Emoji"
           navigation: "Navigering"
-          themes: "Teman"
-          components:
-            title: "Komponenter"
+          themes_and_components:
+            keywords: "filnamnstillägg"
       email_settings:
         title: "E-postinställningar"
         sidebar_link:
@@ -4857,7 +4951,6 @@ sv:
             title: "Säkerhetskopior"
       config_areas:
         about:
-          header: "Om din webbplats"
           community_name: "Forumets namn"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
@@ -4869,7 +4962,6 @@ sv:
           update: "Uppdatera"
           saved: "sparat!"
         flags:
-          header: "Moderering"
           description: "Beskrivning"
           enabled: "Aktiverad?"
           edit: "Redigera"
@@ -4890,13 +4982,20 @@ sv:
         embeddable_host:
           edit: "Redigera"
           delete: "Radera"
-        look_and_feel:
-          title: "Utseende och känsla"
+        themes_and_components:
+          breadcrumb_title: "Anpassa"
+          install: "Installera"
           themes:
             title: "Teman"
+          components:
+            title: "Komponenter"
         user_fields:
           type: "Typ"
           delete: "Radera"
+        color_palettes:
+          palette_name: "Namn"
+          colors:
+            title: "Färger"
       plugins:
         title: "Tillägg"
         name: "Namn"
@@ -4912,19 +5011,6 @@ sv:
         author: "Av %{author}"
         experimental_badge: "experimentell"
         learn_more: "Läs mer"
-        sidebar_link:
-          installed: "Installerad"
-      advanced:
-        title: "Avancerat"
-        sidebar_link:
-          webhooks: "Webhookar"
-          developer: "Utvecklare"
-          embedding: "Inbäddning"
-          user_api: "Användar-API"
-          onebox: "Onebox"
-          files: "Filer"
-          other_options: "Övrigt"
-          search: "Sök"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"
@@ -5064,17 +5150,11 @@ sv:
           common: "Vanlig"
           desktop: "Skrivbord"
           mobile: "Mobil"
-          settings: "Inställningar"
-          translations: "Översättningar"
-          extra_scss: "Extra SCSS"
           extra_files: "Extra filer"
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
           settings_editor: "Inställningar för redigerare"
-          show_advanced: "Visa avancerade fält"
-          hide_advanced: "Dölj avancerade fält"
-          hide_unused_fields: "Dölj oanvända fält"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
           auto_update: "Uppdatera automatiskt när Discourse uppdateras"
@@ -5122,9 +5202,6 @@ sv:
           unsaved_parent_themes: "Du har inte tilldelat komponenter till teman, vill du fortsätta?"
           discard: "Förkasta"
           stay: "Stanna"
-          css_html: "Anpassa CSS/HTML"
-          edit_css_html: "Redigera CSS/HTML"
-          edit_css_html_help: "Du har inte redigerat någon CSS eller HTML"
           delete_upload_confirm: "Radera denna uppladdning? (Temats CSS kan sluta fungera!)"
           component_on_themes: "Inkludera komponent i dessa teman"
           included_components: "Inkluderade komponenter"
@@ -5181,22 +5258,14 @@ sv:
           imported_from_archive: "Detta tema importerades från en .zip-fil"
           scss:
             text: "CSS"
-            title: "Ange anpassad CSS, vi godtar alla giltiga CSS- och SCSS-typer"
-          header:
-            text: "Sidhuvud"
-            title: "Ange HTML att visa ovanför sidans rubrik"
           after_header:
             text: "Efter rubrik"
-            title: "Ange HTML att visa på alla sidor efter rubriken"
           footer:
             text: "Sidfot"
-            title: "Ange HTML att visa i sidfoten"
           embedded_scss:
             text: "Inbäddad CSS"
-            title: "Ange anpassad CSS som ska levereras med inbäddad version av kommentarer"
           embedded_header:
             text: "Inbäddad rubrik"
-            title: "Ange HTML som ska visas ovanför den inbäddade versionen av kommentarerna"
           color_definitions:
             text: "Färgdefinitioner"
             title: "Ange anpassade färgdefinitioner (endast avancerade användare)"
@@ -5209,15 +5278,6 @@ sv:
               %{example}
 
               Användning av prefix för egenskapsnamnen rekommenderas starkt för att undvika konflikter mellan tillägg och/eller grundläggande program.
-          head_tag:
-            text: "Huvud"
-            title: "HTML som kommer att infogas före huvudtaggen"
-          body_tag:
-            text: "Huvuddel"
-            title: "HTML som kommer att infogas innan kroppstaggen"
-          yaml:
-            text: "YAML"
-            title: "Definiera temainställningar i YAML-format"
           scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
           scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
           all_filter: "Alla"
@@ -5287,6 +5347,9 @@ sv:
           hover:
             name: "hovra"
             description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
+          editor:
+            light: "Ljust"
+            dark: "Mörkt"
         robots:
           title: "Åsidosätt din sidas robots.txt-fil:"
           warning: "Detta kommer att permanent åsidosätta alla relaterade webbplatsinställningar."

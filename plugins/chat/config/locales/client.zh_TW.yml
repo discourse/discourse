@@ -148,6 +148,7 @@ zh_TW:
         tabs:
           members: 成員
           settings: 設定
+        remove_member: "移除"
       new_message_modal:
         title: 傳送訊息
         add_user_short: <span>新增使用者</span>

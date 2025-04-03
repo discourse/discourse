@@ -2,7 +2,7 @@
 
 module Chat
   class ChannelFetcher
-    MAX_PUBLIC_CHANNEL_RESULTS = 50
+    MAX_PUBLIC_CHANNEL_RESULTS = 100
 
     # NOTE: this should always be > than `DIRECT_MESSAGE_CHANNELS_LIMIT` in `chat-channel-manager.js`
     MAX_DM_CHANNEL_RESULTS = 75

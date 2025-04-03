@@ -125,10 +125,12 @@ branding:
     type: upload
   manifest_icon:
     default: ""
+    client: true
     type: upload
   manifest_screenshots:
     type: list
     list_type: simple
+    client: true
     default: ""
   favicon:
     default: ""
@@ -140,10 +142,16 @@ branding:
     type: upload
   opengraph_image:
     default: ""
+    client: true
     type: upload
   twitter_summary_large_image:
     default: ""
     type: upload
+    hidden: true
+  x_summary_large_image:
+    default: ""
+    type: upload
+    client: true
 
 basic:
   display_local_time_in_user_card:
@@ -681,7 +689,7 @@ login:
     min: 1
     max: 175200
   full_page_login:
-    default: false
+    default: true
     client: true
   show_signup_form_email_instructions:
     client: true
@@ -804,10 +812,10 @@ users:
   enable_user_directory:
     client: true
     default: true
-  allow_anonymous_posting:
+  allow_anonymous_mode:
     default: false
     client: true
-  allow_anonymous_likes:
+  allow_likes_in_anonymous_mode:
     default: false
     client: true
   anonymous_posting_min_trust_level:
@@ -904,6 +912,9 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+  max_automatic_membership_email_domains:
+    default: 50
+    hidden: true
 
 posting:
   min_post_length:
@@ -2338,16 +2349,6 @@ onebox:
     secret: true
   block_onebox_on_redirect:
     default: false
-  cache_onebox_response_body:
-    default: false
-    hidden: true
-  cache_onebox_response_body_domains:
-    default: ""
-    type: list
-    hidden: true
-  cache_onebox_user_agent:
-    default: ""
-    hidden: true
   github_onebox_access_tokens:
     default: ""
     type: list
@@ -2517,12 +2518,12 @@ rate_limits:
     min: 0
     default: 10
   invite_link_max_redemptions_limit:
-    min: 2
+    min: 1
     max: 1000000
     default: 5000
     client: true
   invite_link_max_redemptions_limit_users:
-    min: 2
+    min: 1
     max: 1000000
     default: 10
     client: true
@@ -2664,13 +2665,6 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
-  admin_sidebar_enabled_groups:
-    type: group_list
-    list_type: compact
-    default: "1|2"
-    allow_any: false
-    refresh: true
-    area: "group_permissions|navigation"
 
 embedding:
   embed_by_username:
@@ -2850,6 +2844,11 @@ search:
     client: true
     type: enum
     enum: "SearchSortOrderSiteSetting"
+  search_experience:
+    default: search_icon
+    client: true
+    type: enum
+    enum: "SearchExperienceSiteSetting"
 
 uncategorized:
   version_checks:
@@ -3193,6 +3192,10 @@ uncategorized:
     client: true
     default: true
 
+  enable_welcome_banner:
+    client: true
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -3532,6 +3535,14 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
+  experimental_admin_search_enabled_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
   glimmer_topic_list_mode:
     client: true
     type: enum
@@ -3539,15 +3550,22 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
-  glimmer_post_menu_mode:
+    default: enabled
+  glimmer_post_stream_mode_auto_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_stream_mode:
     client: true
     type: enum
     choices:
       - disabled
       - auto
       - enabled
-    default: enabled
+    default: disabled
   enable_rich_text_paste:
     client: true
     default: true
@@ -3562,6 +3580,7 @@ experimental:
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
+    client: true
   rich_editor:
     client: true
     default: false

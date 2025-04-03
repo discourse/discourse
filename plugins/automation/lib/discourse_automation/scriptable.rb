@@ -73,14 +73,14 @@ module DiscourseAutomation
       end
     end
 
-    def placeholder(name = nil, triggerable: nil, &block)
+    def placeholder(placeholder_name = nil, triggerable: nil, &block)
       if block_given?
         result = yield(@automation.serialized_fields, @automation)
         Array(result).each do |name|
           @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
         end
-      elsif name
-        @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
+      elsif placeholder_name
+        @placeholders << { name: placeholder_name.to_sym, triggerable: triggerable&.to_sym }
       end
     end
 

@@ -28,13 +28,15 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
     const categories = this.site.categoriesList;
     const category = categories.findBy("id", 2);
 
-    await render(<template>
-      <TagDrop
-        @currentCategory={{category}}
-        @tagId="jeff"
-        @options={{hash tagId="jeff"}}
-      />
-    </template>);
+    await render(
+      <template>
+        <TagDrop
+          @currentCategory={{category}}
+          @tagId="jeff"
+          @options={{hash tagId="jeff"}}
+        />
+      </template>
+    );
 
     await this.subject.expand();
 

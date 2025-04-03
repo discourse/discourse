@@ -7,8 +7,10 @@ const DARK = "dark";
 const LIGHT = "light";
 
 export default class InterfaceColor extends Service {
+  @service appEvents;
   @service siteSettings;
   @service session;
+
   @tracked forcedColorMode;
 
   get lightModeForced() {
@@ -68,6 +70,7 @@ export default class InterfaceColor extends Service {
         darkStylesheet.media = "none";
       }
     }
+    this.appEvents.trigger("interface-color:changed", LIGHT);
   }
 
   forceDarkMode({ flipStylesheets = true } = {}) {
@@ -85,6 +88,7 @@ export default class InterfaceColor extends Service {
         darkStylesheet.media = "all";
       }
     }
+    this.appEvents.trigger("interface-color:changed", DARK);
   }
 
   removeColorModeOverride() {
@@ -94,11 +98,13 @@ export default class InterfaceColor extends Service {
     const lightStylesheet = this.#lightColorsStylesheet();
     if (lightStylesheet) {
       lightStylesheet.media = "(prefers-color-scheme: light)";
+      this.appEvents.trigger("interface-color:changed", LIGHT);
     }
 
     const darkStylesheet = this.#darkColorsStylesheet();
     if (darkStylesheet) {
       darkStylesheet.media = "(prefers-color-scheme: dark)";
+      this.appEvents.trigger("interface-color:changed", DARK);
     }
   }
 

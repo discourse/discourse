@@ -59,6 +59,7 @@ cs:
     deleted_chat_username: smazáno
     errors:
       users_cant_be_added_to_channel: "Do tohoto kanálu nelze přidat uživatele."
+      user_cant_be_removed_from_channel: "Uživatele nelze z tohoto kanálu odebrat"
       channel_exists_for_category: "Kanál pro tuto kategorii a název již existuje"
       channel_new_message_disallowed:
         archived: "Kanál je archivován, nelze odesílat žádné nové zprávy"
@@ -265,6 +266,16 @@ cs:
           few: "[%{site_name}] Nové zprávy"
           many: "[%{site_name}] Nové zprávy"
           other: "[%{site_name}] Nové zprávy"
+        watched_thread:
+          one: "[%{site_name}] Nová zpráva ve vlákně %{channel}"
+          few: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+          many: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+          other: "[%{site_name}] Nové zprávy ve vlákně %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalším"
+          few: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
+          many: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
+          other: "[%{site_name}] Nové zprávy ve vlákně %{channel} and %{count} dalších"
         chat_dm_1:
           one: "[%{site_name}] Nová zpráva od %{name}"
           few: "[%{site_name}] Nové zprávy od %{name}"

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -11,8 +12,16 @@ import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class FKControlWrapper extends Component {
+  @tracked controlWidth = "auto";
+
+  constructor() {
+    super(...arguments);
+
+    this.args.field.type = this.args.component.controlType;
+  }
+
   get controlType() {
-    if (this.args.component.controlType === "input") {
+    if (this.args.field.type === "input") {
       return this.args.field.type + "-" + (this.args.type || "text");
     }
 
@@ -95,8 +104,11 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @preview={{@preview}}
+          @includeTime={{@includeTime}}
+          @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}
           @selection={{@selection}}
           @includeNone={{@includeNone}}
+          @onControlWidthChange={{fn (mut this.controlWidth)}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if this.error "true"}}
@@ -113,7 +125,11 @@ export default class FKControlWrapper extends Component {
           >{{@field.helpText}}</FKText>
         {{/if}}
 
-        <FKMeta @field={{@field}} @error={{this.error}} />
+        <FKMeta
+          @field={{@field}}
+          @error={{this.error}}
+          @controlWidth={{this.controlWidth}}
+        />
       </div>
     </div>
   </template>

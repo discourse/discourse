@@ -194,6 +194,10 @@ fr:
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     back_button: "Retour"
+    welcome_banner:
+      header:
+        anonymous_members: "Bienvenue sur %{site_name} !"
+      search: "Recherche"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -456,10 +460,6 @@ fr:
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
-      abandon:
-        confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
-        yes_value: "Abandonner"
-        no_value: "Reprendre l'édition"
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
@@ -597,6 +597,10 @@ fr:
         name: "Nom"
         fields: "Champs"
         reject_reason: "Raison"
+        scrubbed_reason: "Motif d'attribution"
+        scrub_record:
+          reason_placeholder: "Raison ..."
+          cancel_button: "Annuler"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
@@ -2344,13 +2348,6 @@ fr:
       password_label: "Mot de passe"
     password_reset:
       continue: "Continuer vers %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Classique Google"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Catégories seules"
       categories_with_featured_topics: "Catégories avec sujets à la une"
@@ -2734,9 +2731,8 @@ fr:
         new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
         admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
+      delete: "Supprimer"
       uploading: "En cours d'envoi"
-      processing: "Traitement du téléversement"
-      select_file: "Sélectionner un fichier"
       default_image_alt_text: image
     search:
       sort_by: "Trier par"
@@ -3561,11 +3557,8 @@ fr:
         one: "vous et %{count} autre personne avez aimé ce message"
         other: "vous et %{count} autres personnes avez aimé ce message"
       sr_post_like_count_button:
-        one: "%{count} personne a aimé ce message. Cliquez pour voir"
-        other: "%{count} personnes ont aimé ce message. Cliquez pour voir"
-      sr_post_read_count_button:
-        one: "%{count} personne a lu ce message. Cliquez pour voir"
-        other: "%{count} personnes ont lu ce message. Cliquez pour voir"
+        one: "%{count} personne a aimé ce message."
+        other: "%{count} personnes ont aimé ce message."
       filtered_replies_hint:
         one: "Voir ce message et sa réponse"
         other: "Voir ce message et ses %{count} réponses"
@@ -3682,8 +3675,6 @@ fr:
           read_capped:
             one: "et %{count} autre a lu ceci"
             other: "et %{count} autres ont lu ceci"
-          sr_post_likers_list_description: "utilisateurs ayant aimé ce message"
-          sr_post_readers_list_description: "utilisateurs ayant lu ce message"
         by_you:
           off_topic: "Vous avez signalé ceci comme étant hors-sujet"
           spam: "Vous avez signalé ceci comme étant du spam"
@@ -3811,9 +3802,13 @@ fr:
       logo_dark: "Image du logo de la catégorie en mode sombre"
       background_image: "Image de fond de la catégorie"
       background_image_dark: "Image d'arrière-plan de la catégorie sombre"
-      badge_colors: "Couleurs du badge"
-      background_color: "Couleur du fond"
-      foreground_color: "Couleur du texte"
+      background_color: "Couleur"
+      styles:
+        icon: "Icône"
+        emoji: "Émoji"
+        options:
+          icon: "Icône"
+          emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
       name_placeholder: "Un ou deux mots maximum"
@@ -4273,6 +4268,9 @@ fr:
         prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
         insert_url: "%{shortcut} Insérer la sélection dans l'éditeur ouvert"
         full_page_search: "%{shortcut} Lance la recherche pleine page"
+      admin:
+        title: "Administrateur"
+        search_prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -4794,15 +4792,39 @@ fr:
         meta_doc: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
-        sidebar_link:
-          all: "Tous les rapports"
+      config_sections:
+        account:
+          title: "Compte"
+        reports:
+          title: "Rapports"
+        community:
+          title: "Communauté"
+        appearance:
+          title: "Apparence"
+        email:
+          title: "E-mail"
+        security:
+          title: "Sécurité"
+        plugins:
+          title: "Extensions"
+        advanced:
+          title: "Avancé"
       config:
+        about:
+          title: "À propos de votre site"
+          header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
         developer:
           title: "Développeur"
           header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
+        emojis:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps"
+        flags:
+          title: "Modération"
+          header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
         font_style:
           title: "Style de police"
           header_description: "Personnalisez les styles de police utilisés par vos thèmes"
@@ -4818,6 +4840,18 @@ fr:
         logo:
           title: "Logo du site"
           header_description: "Personnalisez les variantes du logo de votre site"
+        branding:
+          title: "Branding"
+          logo:
+            form:
+              logo:
+                title: "Logo principal"
+              mobile: "Mobile"
+              email: "E-mail"
+              manifest_screenshots:
+                description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+              opengraph_image:
+                description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -4834,8 +4868,9 @@ fr:
           title: "Limites d'utilisation"
           header_description: "Configurez la fréquence à laquelle les utilisateurs peuvent effectuer certaines actions, telles que créer des sujets, envoyer des messages et publier des réponses"
         search:
-          title: "Recherche"
           header_description: "Configurer les paramètres de recherche, y compris la journalisation et la tokenisation pour les langues chinoise et japonaise"
+        search_everything:
+          title: "Recherche"
         security:
           title: "Sécurité"
           header_description: "Configurez les paramètres de sécurité, notamment l'authentification à deux facteurs, les privilèges de modérateur et les politiques de sécurité du contenu"
@@ -4851,6 +4886,111 @@ fr:
         group_permissions:
           title: "Autorisations de groupe"
           header_description: "Toutes les autorisations des applications basées sur les groupes sont gérées ici, ce qui permet de contrôler l'accès aux différentes fonctionnalités de Discourse"
+        dashboard:
+          title: "Tableau de bord"
+        users:
+          title: "Utilisateurs"
+        groups:
+          title: "Groupes"
+        site_settings:
+          title: "Tous les paramètres du site"
+        whats_new:
+          title: "Quoi de neuf ?"
+          keywords: "journal des modifications|fonctionnalité|version"
+        backups:
+          title: "Sauvegardes"
+          header_description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
+          sub_pages:
+            logs:
+              title: "Journaux"
+        reports:
+          title: "Rapports"
+          header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
+        badges:
+          title: "Badges"
+          header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et interactions positives au sein de la communauté"
+        permalinks:
+          title: "Permaliens"
+          header_description: "Redirections à appliquer pour les URL non connues par le forum"
+        user_fields:
+          title: "Champs utilisateur"
+          header_description: "Créez des champs utilisateur personnalisés pour recueillir des informations supplémentaires concernant les membres de votre communauté. Vous pouvez choisir les informations requises lors de l'inscription, celles qui apparaissent sur les profils et les informations que les utilisateurs peuvent mettre à jour."
+        watched_words:
+          title: "Mots surveillés"
+          header_description: "Les mots surveillés sont des outils de modération qui peuvent effectuer de multiples actions, notamment le blocage, la censure, la création de liens ou le signalement de publications contenant certains mots"
+        color_palettes:
+          title: "Palettes de couleurs"
+        emoji:
+          title: "Émoji"
+          header_description: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. Sélectionnez plusieurs fichiers pour créer des émojis en utilisant leurs noms de fichiers. Le groupe sélectionné sera utilisé pour tous les fichiers ajoutés en même temps."
+        themes:
+          title: "Thèmes"
+          header_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires"
+        components:
+          title: "Composants"
+          header_description: "Les composants sont de petites personnalisations qui peuvent être ajoutées aux thèmes afin de modifier des éléments spécifiques du style de conception de votre forum"
+        site_texts:
+          title: "Textes du site"
+        email:
+          title: "Configuration du serveur et journaux"
+          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
+          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
+          sub_pages:
+            preview_summary:
+              title: "Prévisualiser le résumé"
+              header_description: "Prévisualiser le contenu des résumés par e-mail envoyés aux utilisateurs inactifs"
+            advanced_test:
+              title: "Test avancé"
+            templates:
+              title: "Modèles"
+            sent:
+              title: "Envoyés"
+            skipped:
+              title: "Ignorés"
+            bounced:
+              title: "Non délivrés"
+            received:
+              title: "Reçus"
+            rejected:
+              title: "Rejetés"
+        email_appearance:
+          title: "Apparence"
+          header_description: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS"
+        staff_action_logs:
+          title: "Journaux et filtrage"
+          header_description: "Les journaux et le filtrage vous permettent de surveiller et de gérer votre communauté, en veillant à ce qu'elle reste sûre et respectueuse. Vous pouvez consulter les journaux de toutes les actions entreprises par les membres du personnel, les journaux de recherche et la configuration du filtrage des utilisateurs"
+          keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
+          sub_pages:
+            screened_emails:
+              title: "E-mails filtrés"
+              header_description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses e-mail suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée"
+            screened_ips:
+              title: "IP sous surveillance"
+            screened_urls:
+              title: "URL sous surveillance"
+              header_description: "Les URL listées ici ont été utilisées dans des messages publiés par des utilisateurs ayant été identifiés comme spammeurs"
+            search_logs:
+              title: "Journaux de recherche"
+        plugins:
+          title: "Extensions installées"
+          header_description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste"
+        api_keys:
+          title: "Clés d'API"
+          header_description: "La fonctionnalité des clés d'API vous permet d'intégrer Discourse à des systèmes externes en toute sécurité et d'automatiser les actions. Les administrateurs peuvent créer des clés avec des autorisations spécifiques pour contrôler l'accès aux ressources et aux données sensibles. Les autorisations limitent les fonctionnalités et garantissent ainsi une sécurité accrue."
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Intégration"
+          header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+      search:
+        title: "Recherche"
+        result_types:
+          theme:
+            one: "Thème"
+            other: "Thèmes"
+          component:
+            one: "Composant"
+            other: "Composants"
       new_features:
         title: "Quoi de neuf ?"
         check_for_updates: "Vérifier les mises à jour"
@@ -5076,6 +5216,7 @@ fr:
         key: "Clé"
         keys: "Clés"
         created: Créé par 
+        scope: Permissions
         updated: Mis à jour
         last_used: Dernière utilisation
         never_used: Jamais
@@ -5356,10 +5497,8 @@ fr:
           color_schemes: "Palettes de couleurs"
           emoji: "Émoji"
           navigation: "Navigation"
-          themes: "Thèmes"
-          components:
-            title: "Composants"
-            keywords: "thème|extension"
+          themes_and_components:
+            keywords: "extension"
           site_texts: "Textes du site"
       email_settings:
         title: "Paramètres de messagerie"
@@ -5387,8 +5526,6 @@ fr:
             description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
-          header: "À propos de votre site"
-          description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui se cache derrière elle et comment vous contacter en cas de problème. Affiché sur la page <a href='%{basePath}/about'>about</a> de votre site."
           general_settings: "Paramètres généraux"
           community_name: "Nom de la communauté"
           community_name_placeholder: "Exemple de communauté"
@@ -5438,9 +5575,7 @@ fr:
             your_organization_saved: "Votre organisation enregistrée"
           saved: "enregistré !"
         flags:
-          header: "Modération"
           edit_header: "Modifier le signalement"
-          subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
           enabled: "Activé ?"
           add: "Ajouter un signalement"
@@ -5482,18 +5617,15 @@ fr:
           delete: "Supprimer"
           more_options:
             title: "Plus d'options"
-        look_and_feel:
-          title: "Apparence"
-          description: "Personnalisez et marquez votre site Discourse en lui donnant un style distinctif."
+        themes_and_components:
+          breadcrumb_title: "Personnaliser"
+          install: "Installer"
           themes:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
-            themes_intro_img_alt: "Nouvel espace réservé au thème"
-            set_default_theme: "Définir par défaut"
-            default_theme: "Thème par défaut"
-            themes_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
             new_theme: "Nouveau thème"
-            user_selectable: "Sélectionnable par l'utilisateur"
+          components:
+            title: "Composants"
         user_fields:
           field: "Champ"
           type: "Type"
@@ -5504,10 +5636,15 @@ fr:
           delete: "Supprimer"
           delete_successful: "Champ utilisateur supprimé."
           save_successful: "Champ utilisateur enregistré."
+        color_palettes:
+          palette_name: "Nom"
+          color_options:
+            toggle: "Sélectionnable par l'utilisateur"
+            toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
+          colors:
+            title: "Couleurs"
       plugins:
         title: "Extensions"
-        installed: "Extensions installées"
-        description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste."
         name: "Nom"
         none_installed: "Vous n'avez aucune extension installée."
         version: "Version"
@@ -5522,25 +5659,6 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
-        sidebar_link:
-          installed: "Installé"
-      advanced:
-        title: "Avancé"
-        sidebar_link:
-          api_keys:
-            title: "Clés d'API"
-            keywords: "jeton"
-          webhooks: "Webhooks"
-          developer: "Développeur"
-          embedding: "Intégration"
-          rate_limits: "Limites d'utilisation"
-          user_api: "API utilisateur"
-          onebox: "Onebox"
-          files: "Fichiers"
-          other_options: "Autre"
-          search: "Recherche"
-          experimental: "Expérimental"
-          all_site_settings: "Tous les paramètres du site"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -5548,7 +5666,6 @@ fr:
       backups:
         title: "Sauvegardes"
         files_title: "Fichiers de sauvegarde"
-        description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
         menu:
           backups: "Sauvegardes"
           backup_files: "Fichiers de sauvegarde"
@@ -5692,17 +5809,11 @@ fr:
           common: "Général"
           desktop: "Bureau"
           mobile: "Mobile"
-          settings: "Paramètres"
-          translations: "Traductions"
-          extra_scss: "Extra SCSS"
           extra_files: "Fichiers supplémentaires"
           extra_files_upload: "Exportez le thème pour voir ces fichiers."
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
           settings_editor: "Éditeur de paramètres"
-          show_advanced: "Afficher les champs avancés"
-          hide_advanced: "Masquer les champs avancés"
-          hide_unused_fields: "Masquer les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
           color_scheme_user_selectable: "La palette de couleurs peut être sélectionnée par les utilisateurs"
@@ -5756,9 +5867,6 @@ fr:
           unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
           stay: "Rester"
-          css_html: "CSS/HTML personnalisé"
-          edit_css_html: "Modifier le CSS/HTML"
-          edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer ce fichier envoyé ? (Le thème CSS pourrait ne plus fonctionner !)"
           component_on_themes: "Inclure ce composant dans ces thèmes"
           included_components: "Composants inclus"
@@ -5819,22 +5927,14 @@ fr:
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
           scss:
             text: "CSS"
-            title: "Entrez du CSS personnalisé, nous acceptons tous les styles CSS et SCSS valides."
-          header:
-            text: "En-tête"
-            title: "Saisissez du code HTML à afficher au-dessus de l'en-tête du site"
           after_header:
             text: "Après l'en-tête"
-            title: "Saisissez du code HTML à afficher sur toutes les pages après l'en-tête"
           footer:
             text: "Pied de page"
-            title: "Saisissez du code HTML à afficher dans le pied de page"
           embedded_scss:
             text: "CSS intégré"
-            title: "Entrez du CSS personnalisé pour la version intégrée des commentaires"
           embedded_header:
             text: "En-tête intégré"
-            title: "Saisissez le code HTML pour afficher au-dessus de la version intégrée des commentaires"
           color_definitions:
             text: "Définitions de couleur"
             title: "Entrez des définitions de couleurs personnalisées (utilisateurs avancés uniquement)"
@@ -5847,15 +5947,6 @@ fr:
               %{example}
 
               Il est fortement recommandé de préfixer les noms des propriétés CSS pour éviter tout conflit avec Discourse ou ses extensions.
-          head_tag:
-            text: "Tête"
-            title: "HTML qui sera inséré avant la balise <head>"
-          body_tag:
-            text: "Corps"
-            title: "HTML qui sera inséré avant la balise <body>"
-          yaml:
-            text: "YAML"
-            title: "Définir les paramètres du thème au format YAML"
           scss_color_variables_warning: 'L''utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée, ces variables ne seront plus prises en charge dans les versions ultérieures. Pour obtenir davantage d''informations, nous vous invitons à consulter <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ce guide</a> (en anglais).'
           scss_warning_inline: "L'utilisation de variables SCSS standard pour définir des couleurs dans un thème est dépréciée."
           all_filter: "Tout"
@@ -5893,7 +5984,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          description: "Les palettes de couleurs définissent les couleurs de base utilisées dans l'interface de votre site, tandis que les thèmes peuvent fournir un style, des mises en page et des composants supplémentaires. Les deux peuvent fonctionner ensemble pour créer l'apparence unique de votre site et les deux peuvent être mis à la disposition des utilisateurs selon leurs préférences."
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
@@ -5948,6 +6038,9 @@ fr:
           hover:
             name: "survol"
             description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
+          editor:
+            light: "Clair"
+            dark: "Sombre"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."

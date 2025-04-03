@@ -10,6 +10,10 @@ acceptance("User Drafts", function (needs) {
     await visit("/u/eviltrout/activity/drafts");
     assert.dom(".user-stream-item").exists({ count: 3 }, "has drafts");
 
+    assert
+      .dom(".user-stream-item .expand-item")
+      .doesNotExist("Draft doesn't show expand button");
+
     await click(".user-stream-item:first-child .remove-draft");
     assert.dom(".dialog-body").exists();
 

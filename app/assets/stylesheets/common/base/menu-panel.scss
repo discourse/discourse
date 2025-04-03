@@ -267,7 +267,8 @@
       position: relative;
       border-radius: 0;
       padding: 0.857em;
-      @media screen and (max-height: 400px) {
+
+      @media screen and (height <= 400px) {
         // helps with 400% zoom level
         font-size: var(--font-down-1);
         padding: 0.5em 0.875em;
@@ -283,7 +284,8 @@
         right: 6px;
         top: 6px;
         font-size: var(--font-down-3);
-        @media screen and (max-height: 400px) {
+
+        @media screen and (height <= 400px) {
           // helps with 400% zoom level
           right: 0;
           top: 0;
@@ -464,7 +466,6 @@
   }
 
   li {
-    background-color: var(--secondary);
     box-sizing: border-box;
     list-style-type: none;
 

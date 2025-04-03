@@ -204,6 +204,10 @@ sl:
       dismiss: "Opusti"
     bootstrap_mode: "Začetki"
     back_button: "Nazaj"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Išči"
     themes:
       default_description: "Privzeto"
       broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema/komponenta napake."
@@ -389,9 +393,6 @@ sl:
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
       new_private_message: "Nov osnutek osebnega sporočila"
-      abandon:
-        yes_value: "Zavrzi"
-        no_value: "Nadaljujt urejanje"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -511,6 +512,10 @@ sl:
         name: "Polno ime"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Prekliči"
       topics:
         topic: "Tema"
         reviewable_count: "Število"
@@ -1896,13 +1901,6 @@ sl:
       password_label: "Geslo"
     password_reset:
       continue: "Nadaljujte na %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Samo kategorije"
       categories_with_featured_topics: "Kategorije z izpostavljenimi temami"
@@ -2183,8 +2181,8 @@ sl:
         post_approved: "prispevek odobren"
         admin_problems: "nov nasvet na vaši nadzorni plošči"
     upload_selector:
+      delete: "Izbriši"
       uploading: "Nalagam"
-      select_file: "Izberite datoteko"
       default_image_alt_text: slika
     search:
       sort_by: "Uredi po"
@@ -2799,6 +2797,11 @@ sl:
         two: "vam in %{count} drugima uporabnikoma je prispevek všeč"
         few: "vam in %{count} drugim uporabnikom je prispevek všeč"
         other: "vam in %{count} drugim uporabnikom je prispevek všeč"
+      sr_post_like_count_button:
+        one: "%{count} uporabniku je prispevek všeč."
+        two: "%{count} uporabnikoma je prispevek všeč."
+        few: "%{count} uporabnikom je prispevek všeč."
+        other: "%{count} uporabnikom je prispevek všeč."
       filtered_replies_hint:
         one: "Oglejte si to objavo in njen odgovor"
         two: "Oglejte si to objavo in njena %{count} odgovora"
@@ -2986,9 +2989,13 @@ sl:
       description: "Opis"
       logo: "Logotip slika kategorije"
       background_image: "Slika ozadja kategorije"
-      badge_colors: "Barve značk"
-      background_color: "Barva ozadja"
-      foreground_color: "Barva ospredja"
+      background_color: "Barva"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Največ ena ali dve besede"
       color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
@@ -3386,6 +3393,9 @@ sl:
         title: "Iskalni meni"
         prev_next: "%{shortcut} Prestavi izbor gor in dol"
         insert_url: "%{shortcut} Vstavi izbor v odprti urejevalnik"
+      admin:
+        title: "Admin"
+        search_prev_next: "%{shortcut} Prestavi izbor gor in dol"
     badges:
       earned_n_times:
         one: "Prislužili to značko %{count} krat"
@@ -3707,15 +3717,37 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
-        sidebar_link:
-          all: "Vsa poročila"
+      config_sections:
+        account:
+          title: "Račun"
+        reports:
+          title: "Poročila"
+        community:
+          title: "Skupnost"
+        appearance:
+          title: "Videz"
+        email:
+          title: "E-naslov"
+        security:
+          title: "Varnost"
+        plugins:
+          title: "Vtičniki"
       config:
         developer:
           title: "Razvijalci"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderiranje"
         files:
           title: "Datoteke"
         legal:
           title: "Pravno"
+        branding:
+          logo:
+            form:
+              mobile: "Mobilno"
+              email: "E-naslov"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3724,7 +3756,7 @@ sl:
           title: "Onebox"
         other:
           title: "Drugo"
-        search:
+        search_everything:
           title: "Išči"
         security:
           title: "Varnost"
@@ -3732,6 +3764,58 @@ sl:
           title: "Neželeno"
         user_api:
           title: "Uporabniški API"
+        dashboard:
+          title: "Nadzorna plošča"
+        users:
+          title: "Uporabniki"
+        groups:
+          title: "Skupine"
+        backups:
+          title: "Varnostne kopije"
+          sub_pages:
+            logs:
+              title: "Dnevniki"
+        reports:
+          title: "Poročila"
+        badges:
+          title: "Značke"
+        permalinks:
+          title: "Trajne povezave"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Videzi"
+        email:
+          sub_pages:
+            templates:
+              title: "Predloge"
+            sent:
+              title: "Poslano"
+            received:
+              title: "Prejeto"
+            rejected:
+              title: "Zavrnjeno"
+        email_appearance:
+          title: "Videz"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Nadzorovani e-naslovi se bodo preverili ob vsaki novi registraciji uporabniškega računa - vsak poskus bo blokiran ali bo izvedena druga akcija"
+            screened_ips:
+              title: "Nadzorovani IPji"
+            screened_urls:
+              title: "Nadzorovani URLji"
+              header_description: "Spodnji URLji se pogosto uporabljeni v prispevkih uporabnikov, ki so bili identificirani kot spamerji"
+        embedding:
+          title: "Vdelovanje"
+      search:
+        title: "Išči"
+        result_types:
+          theme:
+            one: "Videz"
+            two: "Videzi"
+            few: "Videzi"
+            other: "Videzi"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3962,7 +4046,6 @@ sl:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigacija"
-          themes: "Videzi"
       email_settings:
         sidebar_link:
           appearance: "Videz"
@@ -3979,7 +4062,6 @@ sl:
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
-          header: "Moderiranje"
           description: "Opis"
           enabled: "Vključeno?"
           edit: "Uredi"
@@ -3999,12 +4081,17 @@ sl:
         embeddable_host:
           edit: "Uredi"
           delete: "Izbriši"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Prilagodi"
           themes:
             title: "Videzi"
         user_fields:
           type: "Tip"
           delete: "Izbriši"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Barve"
       plugins:
         title: "Vtičniki"
         name: "Ime"
@@ -4017,17 +4104,6 @@ sl:
         author: "Od %{author}"
         experimental_badge: "eksperimentalno"
         learn_more: "Več o tem"
-        sidebar_link:
-          installed: "Nameščeno"
-      advanced:
-        sidebar_link:
-          developer: "Razvijalci"
-          embedding: "Vdelovanje"
-          user_api: "Uporabniški API"
-          onebox: "Onebox"
-          files: "Datoteke"
-          other_options: "Drugo"
-          search: "Išči"
       backups:
         title: "Varnostne kopije"
         menu:
@@ -4101,9 +4177,7 @@ sl:
           common: "Skupno"
           desktop: "Namizno"
           mobile: "Mobilno"
-          settings: "Nastavitve"
           preview: "Predogled"
-          show_advanced: "Pokaži napredna polja"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"
@@ -4113,9 +4187,6 @@ sl:
           upload: "Prenesi"
           unsaved_changes_alert: "Niste shranili sprememb - ali jih želite zavreči in nadaljevati?"
           discard: "Zavrzi"
-          css_html: "CSS/HTML po meri"
-          edit_css_html: "Uredi CSS/HTML"
-          edit_css_html_help: "Niste uredili še nobenega CSS ali HTML."
           direct_install_tip: "Ali ste prepričani, da želite namestiti <strong>%{name}</strong> iz spodaj navedenega skladišča?"
           installed: "Nameščeno"
           install_popular: "Zanimivo"
@@ -4129,8 +4200,6 @@ sl:
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
           scss:
             text: "CSS"
-          header:
-            text: "Glava"
           all_filter: "Vse"
           active_filter: "Aktivni"
           inactive_filter: "Nedejaven"

@@ -19,22 +19,25 @@ RSpec.describe Jobs::DisableBootstrapMode do
 
     it "turns off bootstrap mode if bootstrap_mode_min_users is set to 0" do
       SiteSetting.bootstrap_mode_min_users = 0
-      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(4)
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
       Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
+      expect(SiteSetting.bootstrap_mode_enabled).to eq(false)
     end
 
     it "does not amend setting that is not in bootstrap state" do
       SiteSetting.bootstrap_mode_min_users = 0
       SiteSetting.default_trust_level = TrustLevel[3]
-      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(2)
       Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
+      expect(SiteSetting.bootstrap_mode_enabled).to eq(false)
     end
 
     it "successfully turns off bootstrap mode" do
       SiteSetting.bootstrap_mode_min_users = 5
       6.times { Fabricate(:user) }
-      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(4)
+      StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
       Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
+      expect(SiteSetting.bootstrap_mode_enabled).to eq(false)
     end
   end
 end

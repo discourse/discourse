@@ -2,21 +2,32 @@ import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import deprecated from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
-import { isTesting } from "discourse/lib/environment";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
-
-let THROW_GJS_ERROR = isTesting();
-
-/** For use in tests/integration/component-templates-test only */
-export function overrideThrowGjsError(value) {
-  THROW_GJS_ERROR = value;
-}
+import { getThemeInfo } from "discourse/lib/source-identifier";
 
 // We're using a patched version of Ember with a modified GlimmerManager to make the code below work.
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
 
 const LEGACY_TOPIC_LIST_OVERRIDES = ["topic-list", "topic-list-item"];
+
+function sourceForModuleName(name) {
+  const pluginMatch = name.match(/^discourse\/plugins\/([^\/]+)\//)?.[1];
+  if (pluginMatch) {
+    return {
+      type: "plugin",
+      name: pluginMatch,
+    };
+  }
+
+  const themeMatch = name.match(/^discourse\/theme-(\d+)\//)?.[1];
+  if (themeMatch) {
+    return {
+      ...getThemeInfo(parseInt(themeMatch, 10)),
+      type: "theme",
+    };
+  }
+}
 
 export default {
   after: ["populate-template-map", "mobile"],
@@ -31,11 +42,15 @@ export default {
       }
 
       let componentName = templateKey;
+      const finalOverrideModuleName = moduleNames.at(-1);
+
       if (mobile) {
         deprecated(
           `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${templateKey}]`,
           {
             id: "discourse.mobile-templates",
+            url: "https://meta.discourse.org/t/355668",
+            source: sourceForModuleName(finalOverrideModuleName),
           }
         );
         if (this.site.mobileView) {
@@ -57,32 +72,24 @@ export default {
       // patched function: Ember's OG won't return overridden templates. This version will.
       // it's safe to call it original template here because the override wasn't set yet.
       const originalTemplate = GlimmerManager.getComponentTemplate(component);
-      const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
-      const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
-      if (isStrictMode) {
-        const message =
-          `[${finalOverrideModuleName}] ${componentName} was authored using gjs and its template cannot be overridden. ` +
-          `Ignoring override. For more information on the future of template overrides, see https://meta.discourse.org/t/247487`;
-        if (THROW_GJS_ERROR) {
-          throw new Error(message);
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(message);
-        }
-      } else if (originalTemplate) {
+      if (originalTemplate) {
         if (LEGACY_TOPIC_LIST_OVERRIDES.includes(componentName)) {
           // Special handling for these, with a different deprecation id, so the auto-feature-flag works correctly
           deprecated(
             `Overriding '${componentName}' template is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-            RAW_TOPIC_LIST_DEPRECATION_OPTIONS
+            {
+              ...RAW_TOPIC_LIST_DEPRECATION_OPTIONS,
+              source: sourceForModuleName(finalOverrideModuleName),
+            }
           );
         } else {
           deprecated(
-            `[${finalOverrideModuleName}] Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead.`,
+            `Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead. [${finalOverrideModuleName}]`,
             {
               id: "discourse.component-template-overrides",
-              url: "https://meta.discourse.org/t/247487",
+              url: "https://meta.discourse.org/t/355668",
+              source: sourceForModuleName(finalOverrideModuleName),
             }
           );
         }

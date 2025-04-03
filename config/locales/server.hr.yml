@@ -2389,19 +2389,37 @@ hr:
         title: "Da"
       delete_single:
         title: "Pobriši"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
+        complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
+        complete: "Zastava zanemarena."
       ignore_and_do_nothing:
         title: "Ne radi ništa"
+        complete: "Zastava zanemarena."
       approve:
         title: "Odobri"
+        complete: "Objava odobrena."
+      approve_post:
+        complete: "Objava odobrena."
+      reject_post:
+        complete: "Objava je odbijena."
+      approve_user:
+        complete: "Korisnik odobren."
       reject_user:
         delete:
           title: "Obriši korisnika"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "korisnik"
   activemodel:
     errors:

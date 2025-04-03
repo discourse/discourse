@@ -107,6 +107,11 @@ RSpec.describe TopicsBulkAction do
 
       PostDestroyer.new(Fabricate(:admin), p).destroy
 
+      TopicTrackingState.expects(:publish_dismiss_new_posts).with(
+        post1.user_id,
+        topic_ids: [post1.topic_id],
+      )
+
       TopicsBulkAction.new(post1.user, [post1.topic_id], type: "dismiss_posts").perform!
 
       tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
@@ -553,15 +558,18 @@ RSpec.describe TopicsBulkAction do
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      topic.tags = [tag1, tag2]
+      TopicTag.create!(topic: topic, tag: tag1)
+      TopicTag.create!(topic: topic, tag: tag2)
     end
 
     it "can remove all tags" do
+      expect(tag1.reload.staff_topic_count).to eq(1)
       tba = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags")
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
       expect(topic.tags.size).to eq(0)
+      expect(tag1.reload.staff_topic_count).to eq(0)
     end
 
     context "when user can't edit topic" do

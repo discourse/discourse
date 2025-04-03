@@ -131,14 +131,14 @@ da:
               label: Gyldige tillidsniveauer
             restricted_tags:
               label: Mærker
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Gruppe
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Oprettet
           edited: Redigeret
+          with_images: Billeder
+          with_links: Links
+          with_code: Kode
+          with_uploads: Overførsler
         category_created_edited:
           fields:
             restricted_category:

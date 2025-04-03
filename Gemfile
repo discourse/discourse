@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ruby "~> 3.3"
+
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
@@ -31,9 +33,7 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
-# Rework this when upgrading to redis client 5.0 and above.
-gem "redis", "< 5.0"
+gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -52,6 +52,7 @@ gem "active_model_serializers", "~> 0.8.3"
 gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
+gem "discourse-emojis", require: "discourse_emojis"
 
 gem "message_bus"
 
@@ -99,7 +100,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.18.pre1"
+gem "mini_racer"
 
 gem "highline", require: false
 
@@ -157,7 +158,6 @@ group :test, :development do
   gem "annotate"
 
   gem "syntax_tree"
-  gem "syntax_tree-disable_ternary"
 
   gem "rspec-multi-mock"
 end
@@ -173,11 +173,11 @@ end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
   gem "discourse_dev_assets"
-  gem "faker", "~> 2.16"
+  gem "faker"
 else
   group :development, :test do
     gem "discourse_dev_assets"
-    gem "faker", "~> 2.16"
+    gem "faker"
   end
 end
 

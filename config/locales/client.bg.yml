@@ -190,6 +190,10 @@ bg:
       dismiss: "Отмени"
     bootstrap_mode: "Първи стъпки"
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Добре дошли в %{site_name}!"
+      search: "Търсене"
     themes:
       default_description: "По подразбиране"
       broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
@@ -360,10 +364,6 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
-      abandon:
-        confirm: "Вече имате чернова за тази тема. Какво бихте искали да направите с нея?"
-        yes_value: "Отхвърляне"
-        no_value: "Възобновете редактирането"
     topic_count_all:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
@@ -491,6 +491,10 @@ bg:
         name: "Име"
         fields: "Полета"
         reject_reason: "Причина"
+        scrubbed_reason: "Причина"
+        scrub_record:
+          reason_placeholder: "Причина..."
+          cancel_button: "Прекрати"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (от последния флаг)"
@@ -1966,13 +1970,6 @@ bg:
       password_label: "Парола"
     password_reset:
       continue: "Продължете към %{site_name}"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Само категории"
       categories_with_featured_topics: "Категории с избрани теми"
@@ -2258,9 +2255,8 @@ bg:
         reaction: "нова реакция"
         votes_released: "Гласуването беше публикувано"
     upload_selector:
+      delete: "Изтрий"
       uploading: "Качване "
-      processing: "Обработка на качване"
-      select_file: "Избери файл"
       default_image_alt_text: изображение
     search:
       sort_by: "Сортирай по"
@@ -2796,6 +2792,9 @@ bg:
       has_likes_title_you:
         one: "вие и още %{count} човек сте харесали този пост"
         other: "вие и %{count} човека сте харесали този пост"
+      sr_post_like_count_button:
+        one: "%{count} човек харесва тази публикация."
+        other: "%{count} човека харесват тази публикация."
       filtered_replies_hint:
         one: "Вижте тази публикация и нейния отговор"
         other: "Вижте тази публикация и нейните %{count} отговора"
@@ -2944,9 +2943,13 @@ bg:
       description: "Описание"
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
-      badge_colors: "Цветове на значките"
-      background_color: "Цвят на фона"
-      foreground_color: "Цвят на преден план"
+      background_color: "Цвят"
+      styles:
+        icon: "Икона"
+        emoji: "Емотикони"
+        options:
+          icon: "Икона"
+          emoji: "Емотикони"
       name_placeholder: "Максимум една или две думи"
       color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
@@ -3239,6 +3242,8 @@ bg:
         mark_muted: "%{shortcut} Заглушете темата"
         mark_tracking: "%{shortcut} Следете темата"
         mark_watching: "%{shortcut} Наблюдаване на темата"
+      admin:
+        title: "Администратор"
     badges:
       granted_on: "Разрешен %{date}"
       title: Значки
@@ -3436,13 +3441,31 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
+      config_sections:
+        account:
+          title: "Профил"
+        community:
+          title: "Общност "
+        email:
+          title: "Имейл "
+        security:
+          title: "Сигурност"
+        plugins:
+          title: "Приставки"
       config:
         developer:
           title: "Разработчик"
+        emojis:
+          title: "Емотикони"
         files:
           title: "Файлове"
         legal:
           title: "Правни"
+        branding:
+          logo:
+            form:
+              mobile: "Мобилен"
+              email: "Имейл "
         navigation:
           title: "Навигация"
         notifications:
@@ -3451,12 +3474,56 @@ bg:
           title: "Onebox"
         other:
           title: "Други"
-        search:
+        search_everything:
           title: "Търсене"
         security:
           title: "Сигурност"
         spam:
           title: "Спам"
+        dashboard:
+          title: "Работен плот"
+        users:
+          title: "Потребители"
+        groups:
+          title: "Групи"
+        backups:
+          title: "Бекъпи"
+          sub_pages:
+            logs:
+              title: "Логове"
+        badges:
+          title: "Значки"
+        permalinks:
+          title: "Постоянни адреси"
+        emoji:
+          title: "Емотикони"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
+            templates:
+              title: "Шаблони"
+            sent:
+              title: "Изпрати"
+            skipped:
+              title: "Пропусни"
+            received:
+              title: "Получени"
+            rejected:
+              title: "Отхвърлени"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Когато някой се опита да създаде нов профил, следните имейл адреси ще бъдат проверени и регистрацията ще бъде отказана или ще бъде предприето друго действие"
+            screened_ips:
+              title: "Проверени IP-та"
+            screened_urls:
+              title: "Проверени URL-та"
+              header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
+        embedding:
+          title: "Ембедване"
+      search:
+        title: "Търсене"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3633,9 +3700,15 @@ bg:
         embeddable_host:
           edit: "Редактирай"
           delete: "Изтрий"
+        themes_and_components:
+          breadcrumb_title: "Персонализация"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
+        color_palettes:
+          palette_name: "Име"
+          colors:
+            title: "Цветове"
       plugins:
         title: "Приставки"
         name: "Име"
@@ -3648,16 +3721,6 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
-        sidebar_link:
-          installed: "Инсталирани"
-      advanced:
-        sidebar_link:
-          developer: "Разработчик"
-          embedding: "Ембедване"
-          onebox: "Onebox"
-          files: "Файлове"
-          other_options: "Други"
-          search: "Търсене"
       navigation_menu:
         sidebar: "Странична лента"
       backups:
@@ -3750,7 +3813,6 @@ bg:
           save: "Запази "
           edit: "Редактирай"
           mobile: "Мобилен"
-          settings: "Настройки"
           preview: "Преглед"
           cancel: "Прекрати"
           collapse: Намали
@@ -3765,14 +3827,10 @@ bg:
           add: "Добави"
           scss:
             text: "CSS"
-          header:
-            text: "Хедър"
           footer:
             text: "Футър"
           embedded_scss:
             text: "ембеднато CSS"
-          body_tag:
-            text: "Тяло"
           all_filter: "Всички"
           active_filter: "Активни"
           schema:

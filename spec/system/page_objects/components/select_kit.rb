@@ -26,8 +26,8 @@ module PageObjects
       end
 
       def expanded_component
-        expand_if_needed
-        find(@context + ".is-expanded", wait: 5)
+        return expand if is_collapsed?
+        find(@context + ".is-expanded")
       end
 
       def collapsed_component
@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def is_collapsed?
-        has_css?(context + ":not(.is-expanded)", wait: 0)
+        has_css?(context) && has_css?("#{context}:not(.is-expanded)", wait: 0)
       end
 
       def is_not_disabled?
@@ -75,7 +75,7 @@ module PageObjects
       end
 
       def expand
-        collapsed_component.find(":not(.is-expanded) .select-kit-header", visible: :all).click
+        collapsed_component.find(".select-kit-header", visible: :all).click
         expanded_component
       end
 
@@ -98,10 +98,6 @@ module PageObjects
 
       def select_row_by_index(index)
         expanded_component.find(".select-kit-row[data-index='#{index}']").click
-      end
-
-      def expand_if_needed
-        expand if is_collapsed?
       end
     end
   end

@@ -30,10 +30,12 @@ he:
     chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     chat_preferred_index: "לשונית מועדפת בעת טעינת ‎/chat."
+    allow_chat_in_anonymous_mode: "יש להפעיל את ההגדרה הזאת כדי לאפשר למשתמשים שגולשים באתר שלך באלמוניות להשתמש בצ׳אט. ההגדרה הזאת דורשת שההגדרה `allow anonymous mode` (לאפשר מצב אלמוני) תהיה פעילה."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
+      allow_chat_in_anonymous_mode_invalid: "ההגדרה הזאת דורשת את הפעלת ההגדרה ‚לאפשר מצב אלמוני’ תחילה."
   system_messages:
     private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ he:
     deleted_chat_username: נמחק
     errors:
       users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
+      user_cant_be_removed_from_channel: "אי אפשר להסיר את המשתמש מהערוץ הזה"
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
       channel_new_message_disallowed:
         archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
@@ -265,6 +268,16 @@ he:
           two: "[%{site_name}] הודעות חדשות"
           many: "[%{site_name}] הודעות חדשות"
           other: "[%{site_name}] הודעות חדשות"
+        watched_thread:
+          one: "[%{site_name}] הודעת שרשור חדשה תחת %{channel}"
+          two: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          many: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+          other: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
+        watched_threads:
+          one: "[%{site_name}] הודעת שרשור חדשה בערוץ %{channel} ובעוד %{count}"
+          two: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          many: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
+          other: "[%{site_name}] הודעות שרשור חדשות בערוץ %{channel} ובעוד %{count}"
         chat_dm_1:
           one: "[%{site_name}] הודעה חדשה מאת %{name}"
           two: "[%{site_name}] הודעות חדשות מאת %{name}"

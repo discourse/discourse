@@ -117,6 +117,7 @@ module Discourse
 
     class CommandError < RuntimeError
       attr_reader :status, :stdout, :stderr
+
       def initialize(message, status: nil, stdout: nil, stderr: nil)
         super(message)
         @status = status
@@ -169,13 +170,8 @@ module Discourse
         stdout, stderr, status = Open3.capture3(*args, chdir: chdir)
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
-          failure_message = "#{failure_message}\n" if !failure_message.blank?
-          raise CommandError.new(
-                  "#{caller[0]}: #{failure_message}#{stderr}",
-                  stdout: stdout,
-                  stderr: stderr,
-                  status: status,
-                )
+          message = [command.join(" "), failure_message, stderr].filter(&:present?).join("\n")
+          raise CommandError.new(message, stdout: stdout, stderr: stderr, status: status)
         end
 
         stdout
@@ -215,7 +211,7 @@ module Discourse
     return if ex.class == Jobs::HandledExceptionWrapper
 
     context ||= {}
-    parent_logger ||= Sidekiq
+    parent_logger ||= Sidekiq.default_configuration
 
     job = context[:job]
 
@@ -308,6 +304,9 @@ module Discourse
   end
 
   class Deprecation < StandardError
+  end
+
+  class MissingIconError < StandardError
   end
 
   class ScssError < StandardError
@@ -490,7 +489,7 @@ module Discourse
       frame_height: 500,
     ), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
-    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-x-twitter"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
     Auth::AuthProvider.new(
       authenticator: Auth::LinkedInOidcAuthenticator.new,
@@ -855,6 +854,14 @@ module Discourse
     GitUtils.try_git(git_cmd, default_value)
   end
 
+  def self.user_agent
+    if git_version.present?
+      @user_agent ||= "Discourse/#{VERSION::STRING}-#{git_version}; +https://www.discourse.org/"
+    else
+      @user_agent ||= "Discourse/#{VERSION::STRING}; +https://www.discourse.org/"
+    end
+  end
+
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user =
@@ -927,10 +934,7 @@ module Discourse
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
-    # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |conn| conn.disconnect! }
-    # re-establish
-    Sidekiq.redis = sidekiq_redis_config
+    Sidekiq.redis_pool.reload(&:close)
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
@@ -1035,8 +1039,7 @@ module Discourse
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
-      rescue Redis::CommandError => e
-        raise unless e.message =~ /READONLY/
+      rescue Redis::ReadOnlyError
       end
     end
     warning
@@ -1044,10 +1047,12 @@ module Discourse
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config
-    conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = SIDEKIQ_NAMESPACE
-    conf
+  def self.sidekiq_redis_config(old: false)
+    GlobalSetting
+      .redis_config
+      .dup
+      .except(:client_implementation, :custom)
+      .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
   end
 
   def self.static_doc_topic_ids

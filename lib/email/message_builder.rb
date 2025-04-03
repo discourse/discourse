@@ -7,6 +7,7 @@ module Email
     attr_reader :template_args, :reply_by_email_key
 
     ALLOW_REPLY_BY_EMAIL_HEADER = "X-Discourse-Allow-Reply-By-Email"
+    INSTRUCTIONS_SEPARATOR = "---\n"
 
     def initialize(to, opts = nil)
       @to = to
@@ -18,61 +19,83 @@ module Email
         user_preferences_url: "#{Discourse.base_url}/my/preferences",
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
-      if @template_args[:url].present?
-        @template_args[:header_instructions] ||= I18n.t(
-          "user_notifications.header_instructions",
-          @template_args,
-        )
-        @visit_link_to_respond_key =
-          DiscoursePluginRegistry.apply_modifier(
-            :message_builder_visit_link_to_respond,
-            "user_notifications.visit_link_to_respond",
-            @opts,
-            @to,
-          )
-        @reply_by_email_key =
-          DiscoursePluginRegistry.apply_modifier(
-            :message_builder_reply_by_email,
-            "user_notifications.reply_by_email",
-            @opts,
-            @to,
-          )
 
-        if @opts[:include_respond_instructions] == false
-          @template_args[:respond_instructions] = ""
+      return if @template_args[:url].blank?
+
+      @template_args[:header_instructions] ||= I18n.t(
+        "user_notifications.header_instructions",
+        @template_args,
+      )
+      @visit_link_to_respond_key =
+        DiscoursePluginRegistry.apply_modifier(
+          :message_builder_visit_link_to_respond,
+          "user_notifications.visit_link_to_respond",
+          @opts,
+          @to,
+        )
+      @reply_by_email_key =
+        DiscoursePluginRegistry.apply_modifier(
+          :message_builder_reply_by_email,
+          "user_notifications.reply_by_email",
+          @opts,
+          @to,
+        )
+
+      if @opts[:include_respond_instructions] == false
+        if @opts[:private_reply]
           @template_args[:respond_instructions] = I18n.t(
             "user_notifications.pm_participants",
             @template_args,
-          ) if @opts[:private_reply]
+          )
         else
-          if @opts[:only_reply_by_email]
-            string = +"user_notifications.only_reply_by_email"
-            string << "_pm" if @opts[:private_reply]
-          else
-            string =
-              (
-                if allow_reply_by_email?
-                  +@reply_by_email_key
-                else
-                  +@visit_link_to_respond_key
-                end
-              )
-            string << "_pm" if @opts[:private_reply]
-          end
-          @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
+          @template_args[:respond_instructions] = ""
         end
-
-        if @opts[:add_unsubscribe_link]
-          unsubscribe_string =
-            if @opts[:mailing_list_mode]
-              "unsubscribe_mailing_list"
-            elsif SiteSetting.unsubscribe_via_email_footer
-              "unsubscribe_link_and_mail"
+      else
+        if @opts[:only_reply_by_email]
+          respond_instructions_key = +"user_notifications.only_reply_by_email"
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
             else
-              "unsubscribe_link"
+              respond_instructions_key << "_pm"
             end
-          @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
+          end
+        else
+          respond_instructions_key =
+            (
+              if allow_reply_by_email?
+                +@reply_by_email_key
+              else
+                +@visit_link_to_respond_key
+              end
+            )
+          if @opts[:private_reply]
+            if @opts[:username] == Discourse.system_user.username
+              respond_instructions_key << "_pm_button_only"
+            else
+              respond_instructions_key << "_pm"
+            end
+          end
         end
+        @template_args[:respond_instructions] = (
+          if respond_instructions_key != ""
+            INSTRUCTIONS_SEPARATOR + I18n.t(respond_instructions_key, @template_args)
+          else
+            ""
+          end
+        )
+      end
+
+      if @opts[:add_unsubscribe_link]
+        unsubscribe_string =
+          if @opts[:mailing_list_mode]
+            "unsubscribe_mailing_list"
+          elsif SiteSetting.unsubscribe_via_email_footer
+            "unsubscribe_link_and_mail"
+          else
+            "unsubscribe_link"
+          end
+        @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
       end
     end
 

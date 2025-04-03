@@ -355,6 +355,7 @@ pl_PL:
         tabs:
           members: Członkowie
           settings: Ustawienia
+        remove_member: "Usuń"
       new_message_modal:
         title: Wyślij wiadomość
         add_user_long: <kbd>shift + click</kbd> lub <kbd>shift + enter</kbd><span>Dodaj @%{username}</span>

@@ -290,9 +290,9 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
-      site_setting_is_hidden: "您无权更改隐藏设置"
-      site_setting_is_shadowed_globally: "您无法更改此设置，因为它在全局级别配置"
-      site_setting_is_unconfigurable: "您无权更改不可配置的设置"
+      site_settings_are_hidden: "你无权更改隐藏设置： %{setting_names}"
+      site_settings_are_shadowed_globally: "你无法更改这些设置，因为它们是全局配置的： %{setting_names}"
+      site_settings_are_unconfigurable: "你无权更改不可配置的设置： %{setting_names}"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
@@ -313,7 +313,7 @@ zh_CN:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度必须至少为 3 个字符，以避免意外限制合法用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中：%{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了 'composer media optimization image enabled'，则无法禁用带状图片元数据。在禁用带状图片元数据之前，禁用 'composer media optimization image enabled'。"
-      twitter_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
+      x_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
       tl0_and_anonymous_flag: "对于匿名用户，必须提供 'site contact email' 或 'email address to report illegal content'。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -532,6 +532,7 @@ zh_CN:
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
       invalid_domain: "'%{domain}' 不是有效网域。"
+      too_many_domains: "域名过多。最多为 %{max}。"
       invalid_incoming_email: "'%{email}' 不是有效的电子邮件地址。"
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
@@ -540,6 +541,8 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
+      counting_too_many_email_domains:
+        other: "一次最多可统计 %{count} 个电子邮件域名"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
     default_names:
@@ -1552,6 +1555,7 @@ zh_CN:
       category_style_deprecated: "您的 Discourse 目前使用的是过时的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>迁移至单一类别样式网站设置</a>，了解如何保留所选类别样式。"
       maxmind_db_configuration: '服务器已被配置为使用 MaxMind 数据库进行反向 IP 查找，但尚未配置有效的 MaxMind 帐户 ID，这可能导致 MaxMind 数据库将来无法下载。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">请参阅本指南了解更多详情</a>。'
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
+      full_page_login_check: "你的网站已禁用全页面登录设置。该设置已过时，将于<strong>2025年4月29日</strong>移除。届时，你的网站将更新为使用全页注册和登录屏幕。<a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>了解更多信息</a>。"
     back_from_logster_text: "返回网站"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
@@ -1567,6 +1571,7 @@ zh_CN:
     support_mixed_text_direction: "支持从左到右和从右到左混合的文本方向"
     min_post_length: "允许的帖子的最小长度，以字符为单位（不包括个人消息）"
     min_first_post_length: "允许的第一个帖子（即话题正文）的最小长度（不包括个人消息）"
+    prevent_uploads_only_posts: "检查最小文章长度时，不计算上传的 Markdown 代码"
     min_personal_message_post_length: "消息的最小允许帖子长度（包括第一个帖子和回复），以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
     topic_featured_link_enabled: "允许用户将功能链接与其话题关联。开启后，话题可以附加一个突出显示的链接，该链接公开可见，如果用户有足够的权限，还可以对其进行编辑。功能链接可以提供相关的附加内容，从而增强话题的可理解性。"
@@ -1586,6 +1591,7 @@ zh_CN:
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
     search_ignore_accents: "如果启用此设置，搜索查询中的重音符号将被忽略，这样即使用户没有输入正确的重音符号，也能找到搜索结果。"
     search_default_sort_order: "整页搜索的默认排序顺序"
+    search_experience: "桌面设备上搜索的默认位置和外观"
     category_search_priority_low_weight: "应用于低类别搜索优先级排名的权重。"
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
     default_composer_category: "创建新话题时用于预填充类别下拉菜单的类别。"
@@ -1651,7 +1657,7 @@ zh_CN:
     favicon: "您的网站的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
     apple_touch_icon: "用于 Apple 触摸设备的图标。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
-    twitter_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
+    x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -2162,8 +2168,7 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_posting: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_anonymous_likes: "启用此设置可让匿名浏览网站的用户点赞帖子。激活后，用户在网站上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_posting`。"
+    allow_anonymous_mode: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -2213,7 +2218,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
-    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。使用前缀 'fa-' 表示实心图标，使用 'far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
+    svg_icon_subset: "添加你希望包含在资产中的其他 FontAwesome 图标。实心图标不使用前缀，普通图标使用 \"far-\"，品牌图标使用 \"fab-\"。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_requirement: "将全名字段设为注册表单中的必选字段、可选字段或可选但隐藏的字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
@@ -2393,8 +2398,8 @@ zh_CN:
     glimmer_topic_list_mode: "控制是否使用新的 'glimmer' 话题列表实现。在所有主题和插件准备就绪后，'auto' 将自动启用。有关详情，请参阅 <a href='https://meta.discourse.org/t/343404'>Meta 话题</a>。"
     glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    glimmer_post_stream_mode_auto_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
-    admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -4943,6 +4948,7 @@ zh_CN:
       revoked: 已撤消
       restored: 已恢复
     bulk_user_delete: "已通过批量删除操作删除"
+    cli_bulk_post_delete: "从 rake 任务中批量删除"
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
@@ -4966,7 +4972,6 @@ zh_CN:
       new_topics_unless_trust_level: "低信任级别的用户的话题必须由管理人员批准。请参阅%{link}。"
       fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾信息发布者所为。请参阅%{link}。"
       auto_silence_regex: "第一个帖子与%{link}设置匹配的新用户。"
-      watched_word: "此帖子包括一个关注词。请查看您的%{link}。"
       staged: "暂存用户的新话题和帖子必须由管理人员批准。请参阅%{link}。"
       category: "此类别中的帖子要求管理人员手动审批。请参阅%{link}。"
       must_approve_users: "所有新用户都必须由管理人员审批。请参阅%{link}。"
@@ -4977,7 +4982,6 @@ zh_CN:
       contains_media: "此帖子包括嵌入式媒体。请参阅%{link}。"
       queued_by_staff: "一名管理人员认为此帖子需要审核。在此之前，它将保持隐藏。"
       links:
-        watched_word: 关注词的列表
         category: 类别设置
     actions:
       agree:
@@ -4985,88 +4989,117 @@ zh_CN:
       agree_and_keep:
         title: "保留帖子"
         description: "同意举报，但保持此帖子不变。"
+        complete: "帖子保持不变。"
       agree_and_keep_hidden:
         title: "保持帖子隐藏"
         description: "同意举报并保持帖子隐藏。"
+        complete: "帖子保持隐藏。"
       agree_and_suspend:
         title: "封禁用户"
         description: "同意举报并封禁用户。"
+        complete: "用户被暂停。"
       agree_and_silence:
         title: "将用户禁言"
         description: "同意举报并禁言用户。"
+        complete: "用户已禁言。"
       agree_and_restore:
         title: "恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
+        complete: "帖子已恢复。"
       agree_and_hide:
         title: "隐藏帖子"
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
+        complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
         title: "同意并编辑帖子"
         description: "同意举报并打开编辑器窗口以编辑帖子。"
       delete_single:
         title: "删除"
+        complete: "帖子已删除。"
       delete:
         title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
+        complete: "帖子已删除。"
       delete_and_ignore_replies:
         title: "忽略举报，删除帖子和回复"
         description: "忽略举报，将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该话题"
         confirm: "确定要同时删除对帖子的回复吗？"
+        complete: "帖子和回复已删除。"
       delete_and_agree:
         title: "删除帖子"
         description: "同意举报并删除此帖子；如果是第一个帖子，同时删除话题。"
+        complete: "帖子已删除。"
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
         confirm: "确定要同时删除对帖子的回复吗？"
+        complete: "帖子和回复已删除。"
       disagree_and_restore:
         title: "否，恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
+        complete: "帖子已恢复。"
       disagree:
         title: "否"
+        complete: "举报已忽略."
       discard_post:
         title: "舍弃帖子"
+        complete: "帖子已丢弃。"
       revise_and_reject_post:
         title: "修订帖子…"
+        complete: "帖子被拒绝，等待修改。"
       ignore:
         title: "忽略"
+        complete: "举报已忽略."
       ignore_and_do_nothing:
         title: "不进行操作"
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
+        complete: "举报已忽略."
       approve:
         title: "批准"
+        complete: "帖子已批准."
       approve_post:
         title: "批准帖子"
         confirm_closed: "此话题已被关闭。仍要创建帖子吗？"
+        complete: "帖子已批准."
       reject_post:
         title: "拒绝帖子"
+        complete: "帖子被拒绝."
       approve_user:
         title: "批准用户"
+        complete: "用户已批准."
       reject_user:
         title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
+          complete: "用户已删除。"
         block:
           title: "删除并阻止用户"
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
+          complete: "用户已删除并被屏蔽。"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"
       reject_and_suspend:
         title: "拒绝并封禁用户"
+        complete: "帖子被拒绝，用户被暂停。"
       reject_and_silence:
         title: "拒绝并禁言用户"
+        complete: "帖子被拒绝，用户禁言。"
       reject_and_delete:
         title: "拒绝并删除帖子"
+        complete: "帖子被拒绝并删除。"
       reject_and_keep_deleted:
         title: "保持帖子删除"
+        complete: "帖子被拒绝，保持被删除。"
       approve_and_restore:
         title: "批准并恢复帖子"
+        complete: "帖子已批准并恢复。"
       delete_user:
         reason: "已通过审核队列删除"
+        complete: "用户已删除。"
   email_style:
     html_missing_placeholder: "HTML 模板必须包含 %{placeholder}"
   notification_level:

@@ -126,7 +126,8 @@ nav.post-controls button.reply .d-icon {
 .post-admin-menu {
   bottom: -50px;
   left: 135px;
-  @media screen and (max-width: 374px) {
+
+  @media screen and (width <= 374px) {
     left: 50px;
   }
 }

@@ -141,12 +141,8 @@ bs_BA:
         message: |-
           Hvala što ste se pridružili %{title}, i dobrodošli! - Ja sam samo robot, ali [naše ljubazno osoblje] (%{base_uri} / about) takođe je tu da pomogne ako treba da dođe do osobe. - Iz sigurnosnih razloga, privremeno ograničavamo što novi korisnici mogu učiniti. Dobit ćete [nove sposobnosti] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [značke] (%{base_uri} / badges)) kako vas upoznamo. - Mi vjerujemo u [civilizirano ponašanje zajednice] (%{base_uri} / smjernice) u svako doba.
       onebox:
-        instructions: |-
-          Dalje, možete li podijeliti jednu od ovih veza sa mnom? Odgovorite sa ** linkom na liniji po sebi ** i automatski će se proširiti da uključi divan sažetak. Da biste kopirali bilo koju vezu, kucnite i držite na mobilnom uređaju ili desnim klikom na pokazivački uređaj: <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Cool! Ovo će raditi za većinu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkovi. Zapamtite, on mora biti na liniji _all by same_, sa ništa drugo ispred ili iza.
-        not_found: |-
-          Žao mi je, nisam mogao naći link u vašem odgovoru! : cry: Možete li pokušati da dodate sljedeći link, u svojoj liniji, u sljedećem odgovoru? <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           Evo slike jednoroga: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520"> Ako vam se sviđa (a ko ne bi!) Idite naprijed i pritisnite slično: srce: dugme ispod ovog posta da me obavijestite. Možete li ** odgovoriti sa slikom? ** Svaka slika će učiniti! Prevucite i ispustite, pritisnite dugme za otpremanje, ili ga čak kopirajte i nalepite.

@@ -113,6 +113,10 @@
   }
 }
 
+.scrub-rejected-user {
+  width: 100%;
+}
+
 .no-review {
   margin-top: 1em;
 }
@@ -250,6 +254,7 @@
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
+
     @include breakpoint("mobile-large") {
       float: left;
       margin-bottom: 1em;
@@ -265,6 +270,7 @@
     margin-top: 1em;
     min-width: 275px;
     word-break: break-word;
+
     @include breakpoint("mobile-large", min-width) {
       display: flex;
     }
@@ -561,6 +567,7 @@
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
+
         @include ellipsis;
       }
     }
@@ -574,6 +581,7 @@
       &:not(:empty) {
         padding: 0.5em;
       }
+
       @include breakpoint("mobile-large") {
         @include ellipsis;
         padding-right: 0.5em;

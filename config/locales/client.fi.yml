@@ -194,6 +194,10 @@ fi:
       dismiss: "Sulje"
     bootstrap_mode: "Aloittaminen"
     back_button: "Takaisin"
+    welcome_banner:
+      header:
+        anonymous_members: "Tervetuloa sivustolle %{site_name}!"
+      search: "Hae"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -456,10 +460,6 @@ fi:
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi henkilökohtaisen viestin luonnos"
-      abandon:
-        confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
-        yes_value: "Hylkää"
-        no_value: "Jatka muokkausta"
       dropdown:
         title: "Avaa tuoreimpien luonnosten valikko"
         untitled: "Nimetön luonnos"
@@ -597,6 +597,10 @@ fi:
         name: "Nimi"
         fields: "Kentät"
         reject_reason: "Syy"
+        scrubbed_reason: "Syy"
+        scrub_record:
+          reason_placeholder: "Syy..."
+          cancel_button: "Peruuta"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (edellisestä liputuksesta)"
@@ -2344,13 +2348,6 @@ fi:
       password_label: "Salasana"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Kansainvälinen"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Vain alueet"
       categories_with_featured_topics: "Alueet, joissa on esiteltyjä ketjuja"
@@ -2734,9 +2731,8 @@ fi:
         new_features: "Uusia Discoursen ominaisuuksia on julkaistu!"
         admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
+      delete: "Poista"
       uploading: "Ladataan"
-      processing: "Latausta käsitellään"
-      select_file: "Valitse tiedosto"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -3561,11 +3557,8 @@ fi:
         one: "Sinä ja %{count} muuta tykkäsitte tästä viestistä"
         other: "Sinä ja %{count} muuta tykkäsitte tästä viestistä"
       sr_post_like_count_button:
-        one: "%{count} henkilö tykkäsi tästä viestistä. Katso klikkaamalla."
-        other: "%{count} henkilöä tykkäsi tästä viestistä. Katso klikkaamalla."
-      sr_post_read_count_button:
-        one: "%{count} henkilö luki tämän viestin. Katso klikkaamalla."
-        other: "%{count} henkilöä luki tämän viestin. Katso klikkaamalla."
+        one: "%{count} käyttäjä tykkäsi tästä viestistä."
+        other: "%{count} käyttäjää tykkäsi tästä viestistä."
       filtered_replies_hint:
         one: "Näytä tämä viesti ja siihen liittyvä vastaus"
         other: "Näytä tämä viesti ja %{count} siihen liittyvää vastausta"
@@ -3682,8 +3675,6 @@ fi:
           read_capped:
             one: "ja %{count} muu lukivat tämän"
             other: "ja %{count} muuta lukivat tämän"
-          sr_post_likers_list_description: "käyttäjät, jotka tykkäsivät tästä viestistä"
-          sr_post_readers_list_description: "käyttäjät, jotka ovat lukeneet tämän viestin"
         by_you:
           off_topic: "Liputit tämän eksyvän aiheesta"
           spam: "Liputit tämän roskapostiksi"
@@ -3811,9 +3802,13 @@ fi:
       logo_dark: "Tumman tilan alueen logokuva"
       background_image: "Alueen taustakuva"
       background_image_dark: "Kategorioiden tumma taustakuva"
-      badge_colors: "Kunniamerkin värit"
-      background_color: "Taustaväri"
-      foreground_color: "Edustaväri"
+      background_color: "Väri"
+      styles:
+        icon: "Kuvake"
+        emoji: "Emojit"
+        options:
+          icon: "Kuvake"
+          emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
       name_placeholder: "Enintään yksi tai kaksi sanaa"
@@ -4273,6 +4268,9 @@ fi:
         prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
         insert_url: "%{shortcut} Lisää valinta avoinna olevaan kirjoitustyökaluun"
         full_page_search: "%{shortcut} Käynnistää koko sivun haun"
+      admin:
+        title: "Ylläpitäjä"
+        search_prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
     badges:
       earned_n_times:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
@@ -4794,15 +4792,39 @@ fi:
         meta_doc: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
         sidebar_title: "Raportit"
         back: "Takaisin kaikkiin raportteihin"
-        sidebar_link:
-          all: "Kaikki raportit"
+      config_sections:
+        account:
+          title: "Tili"
+        reports:
+          title: "Raportit"
+        community:
+          title: "Yhteisö"
+        appearance:
+          title: "Ulkoasu"
+        email:
+          title: "Sähköpostiosoite"
+        security:
+          title: "Tietoturva"
+        plugins:
+          title: "Lisäosat"
+        advanced:
+          title: "Lisäasetukset"
       config:
+        about:
+          title: "Tietoa sivustostasi"
+          header_description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
         developer:
           title: "Kehittäjä"
           header_description: "Kehittäjäasetukset, joilla voi hallita nopeusrajoja, kertoimia ja laskelmia, vikasietotilaa ja muita edistyneitä ominaisuuksia"
         experimental:
           title: "Kokeellinen"
           header_description: "Ota sivustosi kokeellisia ominaisuukssia käyttöön tai poista niitä käytöstä. Useimpia niistä voi hallita ryhmäkohtaisesti."
+        emojis:
+          title: "Emojit"
+          header_description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan"
+        flags:
+          title: "Valvonta"
+          header_description: "Discoursen liputusjärjestelmä auttaa sinua ja valvojatiimiäsi hallitsemaan sisältöä ja käyttäjien käyttäytymistä sekä pitämään yhteisösi kunnioittavana ja terveenä. Oletusasetukset sopivat useimmille yhteisöille, eikä niitä tarvitse muuttaa. Jos sivustollasi on kuitenkin erityisiä vaatimuksia, voit poistaa tarpeettomat liput käytöstä ja lisätä omia mukautettuja lippuja."
         font_style:
           title: "Kirjasimen tyyli"
           header_description: "Mukauta teemojesi käyttämiä kirjasintyylejä"
@@ -4818,6 +4840,18 @@ fi:
         logo:
           title: "Sivuston logo"
           header_description: "Mukauta sivustosi logon muunnelmia"
+        branding:
+          title: "Brändäys"
+          logo:
+            form:
+              logo:
+                title: "Ensisijainen logo"
+              mobile: "Mobiili"
+              email: "Sähköpostiosoite"
+              manifest_screenshots:
+                description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
+              opengraph_image:
+                description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
         navigation:
           title: "Navigointi"
           header_description: "Määritä sivustosi navigointilinkit ja valikon kohteet. Tämä sisältää ensisijaisen navigointivalikon sijainnin ja toiminnan, etusivun yläosassa olevat pikalinkit sekä ylläpitäjän sivupalkin"
@@ -4834,8 +4868,9 @@ fi:
           title: "Rajat"
           header_description: "Määritä, kuinka usein käyttäjät voivat tehdä tiettyjä toimintoja, kuten luoda ketjuja, lähettää viestejä ja lähettää vastauksia"
         search:
-          title: "Hae"
           header_description: "Määritä kiinan ja japanin kielten hakuasetukset, mukaan lukien lokikirjaus ja tokenointi"
+        search_everything:
+          title: "Hae"
         security:
           title: "Tietoturva"
           header_description: "Määritä suojausasetukset, mukaan lukien kaksivaiheinen tunnistus, valvojan oikeudet ja sisällön suojauskäytännöt"
@@ -4851,6 +4886,111 @@ fi:
         group_permissions:
           title: "Ryhmien oikeudet"
           header_description: "Täällä hallitaan kaikkia ryhmäpohjaisia sovellusten käyttöoikeuksia, joilla hallitaan pääsyä Discoursen eri ominaisuuksiin"
+        dashboard:
+          title: "Hallintapaneeli"
+        users:
+          title: "Käyttäjiä"
+        groups:
+          title: "Ryhmät"
+        site_settings:
+          title: "Kaikki sivustoasetukset"
+        whats_new:
+          title: "Mitä uutta?"
+          keywords: "muutokset|ominaisuus|julkaisu"
+        backups:
+          title: "Varmuuskopiot"
+          header_description: "Discoursen varmuuskopioihin sisältyy koko sivuston tietokanta, joka sisältää kaiken sivustolla: ketjut, viestit, käyttäjät, ryhmät, asetukset, teemat jne. Varmuuskopiotiedoston luontitavasta riippuen se saattaa sisältää tai olla sisältämättä latauksia."
+          sub_pages:
+            logs:
+              title: "Lokit"
+        reports:
+          title: "Raportit"
+          header_description: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
+        badges:
+          title: "Kunniamerkit"
+          header_description: "Kunniamerkit palkitsevat käyttäjiä heidän toiminnastaan, panoksestaan ja saavutuksistaan. Tämä auttaa tunnustamaan, validoimaan ja kannustamaan positiivista käyttäytymistä ja aktiivisuutta yhteisössä"
+        permalinks:
+          title: "Pysyvät linkit"
+          header_description: "Aseta uudelleenohjauksia URL-osoitteille, joita sivusto ei tunne"
+        user_fields:
+          title: "Käyttäjäkentät"
+          header_description: "Luo mukautettuja käyttäjäkenttiä kerätäksesi lisätietoja yhteisösi jäsenistä. Voit valita, mitä tietoja vaaditaan rekisteröitymisen yhteydessä, mitä profiileissa näytetään ja mitä käyttäjät voivat päivittää."
+        watched_words:
+          title: "Tarkkaillut sanat"
+          header_description: "Tarkkaillut sanat ovat valvontatyökaluja, jotka voivat suorittaa useita erilaisia toimintoja, kuten estää, sensuroida, linkittää tai liputtaa tiettyjä sanoja sisältäviä viestejä"
+        color_palettes:
+          title: "Väripaletit"
+        emoji:
+          title: "Emojit"
+          header_description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan."
+        themes:
+          title: "Teemat"
+          header_description: "Teemat ovat laajoja mukautuksia, jotka muuttavat useita foorumisi ulkoasun tyylin elementtejä ja sisältävät usein myös lisäkäyttöliittymäominaisuuksia"
+        components:
+          title: "Komponentit"
+          header_description: "Komponentit ovat pienempiä mukautuksia, joita voidaan lisätä teemoihin foorumin ulkoasun tyylin tiettyjen elementtien muuttamiseksi"
+        site_texts:
+          title: "Sivuston tekstit"
+        email:
+          title: "Palvelimen asetukset ja lokit"
+          header_description: "Mukauta sähköpostien luomiseen käytettyjä malleja, esikatsele lähetettäviä yhteenvetosähköposteja ja tarkastele sähköpostilokeja"
+          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          sub_pages:
+            preview_summary:
+              title: "Esikatsele yhteenveto"
+              header_description: "Esikatsele ei-aktiivisille käyttäjille lähetettyjen yhteenvetosähköpostien sisältöä"
+            advanced_test:
+              title: "Edistynyt testi"
+            templates:
+              title: "Mallit"
+            sent:
+              title: "Lähetetyt"
+            skipped:
+              title: "Ohitettu"
+            bounced:
+              title: "Toimitus epäonnistui"
+            received:
+              title: "Vastaanotetut"
+            rejected:
+              title: "Hylätty"
+        email_appearance:
+          title: "Ulkoasu"
+          header_description: "Mukauta mallia, jossa kaikki HTML-sähköpostit hahmonnetaan, ja muotoile käyttämällä CSS:ää"
+        staff_action_logs:
+          title: "Lokit ja seulonta"
+          header_description: "Lokien ja seulonnan avulla voit tarkkailla ja hallita yhteisöäsi varmistaen, että se pysyy turvallisena ja kunnioittavana. Voit tarkastella lokeja kaikista henkilökunnan jäsenten toimista, hakulokeja ja käyttäjien seulontamäärityksiä"
+          keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+          sub_pages:
+            screened_emails:
+              title: "Seulottavat sähköpostit"
+              header_description: "Uuden tilin luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä"
+            screened_ips:
+              title: "Seulottavat IP:t"
+            screened_urls:
+              title: "Seulottavat URL-osoitteet"
+              header_description: "Tässä listatut URL-osoitteet ovat olleet roskapostittajiksi tunnistettujen käyttäjien käytössä"
+            search_logs:
+              title: "Hakulokit"
+        plugins:
+          title: "Asennetut lisäosat"
+          header_description: "Kaikki asentamasi Discourse-lisäosat tai lisäosat, jotka kuuluvat esiasennettuina Discourse-isännöintiin, näkyvät tässä luettelossa"
+        api_keys:
+          title: "API-avaimet"
+          header_description: "API-avainten avulla voit integroida turvallisesti Discoursen ulkoisiin järjestelmiin ja automatisoida toimintoja. Ylläpitäjät voivat luoda avaimia tietyillä laajuuksilla hallitakseen pääsyä resursseihin ja arkaluontoisiin tietoihin. Laajuudet rajoittavat toimintoja ja näin ollen parantavat turvallisuutta."
+        webhooks:
+          title: "Webhookit"
+        embedding:
+          title: "Upottaminen"
+          header_description: "Discourse voi upottaa kommentit ketjusta etäsivustolla Javascript APIn avulla, joka luo iframen"
+      search:
+        title: "Hae"
+        result_types:
+          theme:
+            one: "Värimaailma"
+            other: "Teemat"
+          component:
+            one: "Komponentti"
+            other: "Komponentit"
       new_features:
         title: "Mitä uutta?"
         check_for_updates: "Tarkista päivitykset"
@@ -5076,6 +5216,7 @@ fi:
         key: "Avain"
         keys: "Avaimet"
         created: Luonut
+        scope: Näkyvyysalue
         updated: Päivitetty
         last_used: Viimeksi käytetty
         never_used: Ei koskaan
@@ -5355,10 +5496,8 @@ fi:
           color_schemes: "Väripaletit"
           emoji: "Emojit"
           navigation: "Navigointi"
-          themes: "Teemat"
-          components:
-            title: "Komponentit"
-            keywords: "teema|laajennus"
+          themes_and_components:
+            keywords: "tiedostopääte"
           site_texts: "Sivuston tekstit"
       email_settings:
         title: "Sähköpostiasetukset"
@@ -5386,8 +5525,6 @@ fi:
             description: "Tutustu Discoursen uusiin julkaisuversioihin ja parannuksiin"
       config_areas:
         about:
-          header: "Tietoa sivustostasi"
-          description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
           general_settings: "Yleiset asetukset"
           community_name: "Yhteisön nimi"
           community_name_placeholder: "Esimerkkiyhteisö"
@@ -5437,9 +5574,7 @@ fi:
             your_organization_saved: "Organisaatiosi tallennettiin"
           saved: "tallennettu!"
         flags:
-          header: "Valvonta"
           edit_header: "Muokkaa lippua"
-          subheader: "Discoursen liputusjärjestelmä auttaa sinua ja valvojatiimiäsi hallitsemaan sisältöä ja käyttäjien käyttäytymistä sekä pitämään yhteisösi kunnioittavana ja terveenä. Oletusasetukset sopivat useimmille yhteisöille, eikä niitä tarvitse muuttaa. Jos sivustollasi on kuitenkin erityisiä vaatimuksia, voit poistaa tarpeettomat liput käytöstä ja lisätä omia mukautettuja lippuja."
           description: "Kuvaus"
           enabled: "Otettu käyttöön?"
           add: "Lisää lippu"
@@ -5481,18 +5616,15 @@ fi:
           delete: "Poista"
           more_options:
             title: "Lisää vaihtoehtoja"
-        look_and_feel:
-          title: "Ulkoasu ja tuntuma"
-          description: "Mukauta ja brändää Discourse-sivustoasi ja antamalla sille erityinen tyyli."
+        themes_and_components:
+          breadcrumb_title: "Mukauta"
+          install: "Asenna"
           themes:
             title: "Teemat"
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
-            themes_intro_img_alt: "Uuden teeman paikkamerkki"
-            set_default_theme: "Aseta oletus"
-            default_theme: "Oletusteema"
-            themes_description: "Teemat ovat laajoja mukautuksia, jotka muuttavat useita foorumisi ulkoasun tyylin elementtejä ja sisältävät usein myös lisäkäyttöliittymäominaisuuksia."
             new_theme: "Uusi teema"
-            user_selectable: "Käyttäjän valittavissa"
+          components:
+            title: "Komponentit"
         user_fields:
           field: "Kenttä"
           type: "Tyyppi"
@@ -5503,10 +5635,15 @@ fi:
           delete: "Poista"
           delete_successful: "Käyttäjäkenttä poistettu."
           save_successful: "Käyttäjäkenttä tallennettu."
+        color_palettes:
+          palette_name: "Nimi"
+          color_options:
+            toggle: "Käyttäjän valittavissa"
+            toggle_description: "Käyttäjät voivat valita väripaletin"
+          colors:
+            title: "Värit"
       plugins:
         title: "Lisäosat"
-        installed: "Asennetut lisäosat"
-        description: "Kaikki asentamasi Discourse-lisäosat tai lisäosat, jotka kuuluvat esiasennettuina Discourse-isännöintiin, näkyvät tässä luettelossa."
         name: "Nimi"
         none_installed: "Sinulla ei ole yhtään asennettua lisäosaa."
         version: "Versio"
@@ -5521,25 +5658,6 @@ fi:
         author: "Käyttäjältä %{author}"
         experimental_badge: "kokeellinen"
         learn_more: "Lue lisää"
-        sidebar_link:
-          installed: "Asennettu"
-      advanced:
-        title: "Lisäasetukset"
-        sidebar_link:
-          api_keys:
-            title: "API-avaimet"
-            keywords: "tunnus"
-          webhooks: "Webhookit"
-          developer: "Kehittäjä"
-          embedding: "Upottaminen"
-          rate_limits: "Rajat"
-          user_api: "Käyttäjä-API"
-          onebox: "Onebox"
-          files: "Tiedostot"
-          other_options: "Muut"
-          search: "Hae"
-          experimental: "Kokeellinen"
-          all_site_settings: "Kaikki sivustoasetukset"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"
@@ -5547,7 +5665,6 @@ fi:
       backups:
         title: "Varmuuskopiot"
         files_title: "Varmuuskopiotiedostot"
-        description: "Discoursen varmuuskopioihin sisältyy koko sivuston tietokanta, joka sisältää kaiken sivustolla: ketjut, viestit, käyttäjät, ryhmät, asetukset, teemat jne. Varmuuskopiotiedoston luontitavasta riippuen se saattaa sisältää tai olla sisältämättä latauksia."
         menu:
           backups: "Varmuuskopiot"
           backup_files: "Varmuuskopiotiedostot"
@@ -5691,17 +5808,11 @@ fi:
           common: "Yhteiset"
           desktop: "Työpöytä"
           mobile: "Mobiili"
-          settings: "Asetukset"
-          translations: "Käännökset"
-          extra_scss: "Lisä-SCSS"
           extra_files: "Lisätiedostot"
           extra_files_upload: "Vie teema nähdäksesi nämä tiedostot."
           extra_files_remote: "Vie teema tai katso git-tietovarasto nähdäksesi nämä tiedostot."
           preview: "Esikatselu"
           settings_editor: "Asetuseditori"
-          show_advanced: "Näytä lisäasetukset"
-          hide_advanced: "Piilota lisäasetukset"
-          hide_unused_fields: "Piilota tyhjät kentät"
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
           color_scheme_user_selectable: "Käyttäjät voivat valita väripaletin"
@@ -5755,9 +5866,6 @@ fi:
           unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
           stay: "Jää"
-          css_html: "Mukautettu CSS/HTML"
-          edit_css_html: "Muokkaa CSS:ää-/HTML:ää"
-          edit_css_html_help: "Et ole muokannut CSS:ää tai HTML:ää"
           delete_upload_confirm: "Poistetaanko ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           component_on_themes: "Sisällytä komponentti näihin teemoihin"
           included_components: "Sisältää komponentit"
@@ -5818,22 +5926,14 @@ fi:
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
           scss:
             text: "CSS"
-            title: "Lisää mukautettua CSS:ää, hyväksymme kaikki kelvolliset CSS- ja SCSS-tyylit"
-          header:
-            text: "Yläpalkki"
-            title: "Lisää HTML:ää, joka näytetään sivuston yläpalkin yläpuolella"
           after_header:
             text: "Yläpalkin jälkeen"
-            title: "Lisää HTML:ää, joka näytetään kaikilla sivuilla yläpalkin jälkeen"
           footer:
             text: "Alatunniste"
-            title: "Lisää HTML:ää, joka näytetään sivun alatunnisteessa"
           embedded_scss:
             text: "Upotettu CSS"
-            title: "Anna mukautettua CSS-koodia, joka toimitetaan kommenttien upotetun version kanssa"
           embedded_header:
             text: "Upotettu yläpalkki"
-            title: "Kirjoita HTML, joka näytetään kommenttien upotetun version yläpuolella"
           color_definitions:
             text: "Värimääritykset"
             title: "Syötä mukautetut värimääritykset (vain kokeneille käyttäjille)"
@@ -5846,15 +5946,6 @@ fi:
               %{example}
 
               Etuliitteen lisääminen CSS-kuvauksiin on erittäin suositeltavaa, jotta vältät ristiriidat lisäosien tai ydinsovelluksen kanssa.
-          head_tag:
-            text: "Head"
-            title: "HTML, joka sijoitetaan ennen head-tunnistetta"
-          body_tag:
-            text: "Leipäteksti"
-            title: "HTML, joka sijoitetaan ennen body-tunnistetta"
-          yaml:
-            text: "YAML"
-            title: "Määritä teeman asetukset YAML-muodossa"
           scss_color_variables_warning: 'Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tästä oppaasta</a>.'
           scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
           all_filter: "Kaikki"
@@ -5892,7 +5983,6 @@ fi:
           title: "Värit"
           edit: "Muokkaa väripaletteja"
           long_title: "Väripaletit"
-          description: "Väripaletit määrittävät sivustosi käyttöliittymässä käytettävät ydinvärit, kun taas teemat voivat tarjota lisätyyliä, asetteluja ja komponentteja – molemmat voivat työskennellä yhdessä luoden sivustollesi ainutlaatuisen ulkoasun ja tunnelman, ja molemmat voidaan tarjota käyttäjille, jotta he voivat valita mieltymyksensä."
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"
@@ -5947,6 +6037,9 @@ fi:
           hover:
             name: "osoitus"
             description: "Elementtien, kuten luettelon kohteiden, taustaväri, kun niitä osoitetaan tai kohdistus on siirretty niihin näppäimistöllä."
+          editor:
+            light: "Vaalea"
+            dark: "Tumma"
         robots:
           title: "Ohita sivustosi robots.txt-tiedosto:"
           warning: "Tämä ohittaa pysyvästi kaikki asiaankuuluvat sivuston asetukset."

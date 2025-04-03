@@ -157,7 +157,7 @@ aside.onebox {
       float: left;
       margin-right: 1em;
 
-      @media all and (max-width: 600px) {
+      @media all and (width <= 600px) {
         max-width: 35%;
       }
 
@@ -328,6 +328,7 @@ aside.onebox {
   width: 60px;
   height: 50px;
   float: left;
+
   @include gdocs-logo("docs");
   @include gdocs-logo("forms");
   @include gdocs-logo("sheets");
@@ -768,6 +769,7 @@ aside.onebox.twitterstatus .onebox-body {
     font-size: var(--font-down-1);
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
+
     @include ellipsis;
     max-width: 100%;
     padding: 5px 0;
@@ -776,6 +778,7 @@ aside.onebox.twitterstatus .onebox-body {
       padding-left: 10px;
       padding-right: 10px;
       overflow: hidden;
+
       @include ellipsis;
 
       .album-title {
@@ -884,6 +887,11 @@ aside.onebox.xkcd .onebox-body img {
       color: var(--primary-medium);
       align-self: center;
     }
+  }
+
+  .discourse-tag:not(:last-child)::after {
+    content: ",";
+    margin-right: 0.15em;
   }
 }
 
@@ -1080,6 +1088,7 @@ iframe.loom-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }

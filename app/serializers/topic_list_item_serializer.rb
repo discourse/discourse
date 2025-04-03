@@ -18,7 +18,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :featured_link,
              :featured_link_root_domain,
              :allowed_user_count,
-             :participant_groups
+             :participant_groups,
+             :is_hot
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -36,7 +37,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_op_can_like?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def op_can_like
@@ -58,7 +59,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_op_liked?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def op_liked
@@ -72,7 +73,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_first_post_id?
-    theme_modifier_helper.serialize_topic_op_likes_data
+    serialize_topic_op_likes_data_enabled?
   end
 
   def first_post_id
@@ -142,7 +143,25 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.private_message?
   end
 
+  def is_hot
+    TopicHotScore.hottest_topic_ids.include?(object.id)
+  end
+
+  def include_is_hot?
+    theme_enabled = theme_modifier_helper.serialize_topic_is_hot
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_is_hot, false)
+
+    theme_enabled || plugin_enabled
+  end
+
   private
+
+  def serialize_topic_op_likes_data_enabled?
+    theme_enabled = theme_modifier_helper.serialize_topic_op_likes_data
+    plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_op_likes_data, false)
+
+    theme_enabled || plugin_enabled
+  end
 
   def theme_modifier_helper
     @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)

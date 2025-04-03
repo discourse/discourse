@@ -30,14 +30,19 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
 
     const decorate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
-      helper.renderGlimmer(element, <template>
-        <div id="render-glimmer">Hello from Glimmer Component</div>
-      </template>);
+      helper.renderGlimmer(
+        element,
+        <template>
+          <div id="render-glimmer">Hello from Glimmer Component</div>
+        </template>
+      );
     };
 
-    await render(<template>
-      <DecoratedHtml @html={{state.html}} @decorate={{decorate}} />
-    </template>);
+    await render(
+      <template>
+        <DecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+      </template>
+    );
 
     assert.dom("h1").hasText("Initial");
     assert.dom("#appended").hasText("Appended");

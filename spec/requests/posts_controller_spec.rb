@@ -211,25 +211,32 @@ RSpec.describe PostsController do
 
     it "supports pagination" do
       parent = Fabricate(:post)
+
+      child_posts = []
+
       30.times do
         reply = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
         PostReply.create!(post: parent, reply:)
+        child_posts << reply
       end
 
       get "/posts/#{parent.id}/replies.json", params: { after: parent.post_number }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(20)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[0..19].map(&:id))
 
       after = replies.last["post_number"]
 
       get "/posts/#{parent.id}/replies.json", params: { after: }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(10)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[20..-1].map(&:id))
       expect(replies[0][:post_number]).to eq(after + 1)
 
       get "/posts/#{parent.id}/replies.json", params: { after: 999_999 }
+
       expect(response.status).to eq(200)
       expect(response.parsed_body.size).to eq(0)
     end
@@ -1494,6 +1501,29 @@ RSpec.describe PostsController do
         expect(topic.visible).to eq(true)
       end
 
+      describe "posts_controller_create_user modifier" do
+        fab!(:different_user) { Fabricate(:admin) }
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :posts_controller_create_user }
+        let!(:block) { Proc.new { different_user } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "can alter the user used to create the post" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.user).to eq(different_user)
+        end
+      end
+
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
         it "should return a 400 response code when no custom fields has been permitted" do
           sign_in(user)
@@ -1851,6 +1881,19 @@ RSpec.describe PostsController do
           expect(response.parsed_body["errors"]).to include(
             I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist"),
           )
+        end
+
+        context "with apply_modifier" do
+          it "can modify groups" do
+            plugin = Plugin::Instance.new
+            modifier = :mentionable_groups
+            proc = Proc.new { Group.all }
+            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+            expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+          end
         end
       end
     end

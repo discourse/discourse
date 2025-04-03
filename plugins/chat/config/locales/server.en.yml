@@ -24,10 +24,12 @@ en:
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
     chat_preferred_index: "Preferred tab when loading /chat."
+    allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the `allow anonymous mode` setting to be enabled."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
       chat_upload_not_allowed_secure_uploads: "Chat uploads are not allowed when secure uploads site setting is enabled."
+      allow_chat_in_anonymous_mode_invalid: "This setting requires the 'allow anonymous mode' setting to be enabled first."
   system_messages:
     private_channel_title: "Channel %{id}"
     chat_channel_archive_complete:
@@ -54,6 +56,7 @@ en:
     deleted_chat_username: deleted
     errors:
       users_cant_be_added_to_channel: "Users can't be added to this channel."
+      user_cant_be_removed_from_channel: "User can't be removed from this channel"
       channel_exists_for_category: "A channel already exists for this category and name"
       channel_new_message_disallowed:
         archived: "The channel is archived, no new messages can be sent"
@@ -241,6 +244,12 @@ en:
         private_email:
           one: "[%{site_name}] New message"
           other: "[%{site_name}] New messages"
+        watched_thread:
+          one: "[%{site_name}] New thread message in %{channel}"
+          other: "[%{site_name}] New thread messages in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] New thread messages in %{channel} and %{count} other"
+          other: "[%{site_name}] New thread messages in %{channel} and %{count} others"
         chat_dm_1:
           one: "[%{site_name}] New message from %{name}"
           other: "[%{site_name}] New messages from %{name}"

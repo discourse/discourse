@@ -19,9 +19,11 @@
     padding-bottom: 0.5em;
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
+
     @include breakpoint(tablet) {
       padding-bottom: 0;
     }
+
     @include breakpoint(mobile-large) {
       padding-bottom: 0.5em;
     }
@@ -40,6 +42,7 @@
       padding: 0;
       border: none;
     }
+
     @include breakpoint(tablet) {
       width: 100%;
       margin-top: 0.5em;
@@ -108,7 +111,7 @@
   }
 
   &:not(.--mode-inline) {
-    .-tag-revisions span {
+    .-tag-revisions .tag-revision__wrapper {
       flex: 0 1 50%;
       min-width: 0;
       align-self: start;
@@ -203,6 +206,7 @@
         @include ellipsis;
       }
     }
+
     @include breakpoint(tablet) {
       width: 100%;
       flex: 1 1 100%;

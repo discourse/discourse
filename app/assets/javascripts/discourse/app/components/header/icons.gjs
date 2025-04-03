@@ -5,6 +5,7 @@ import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 
@@ -54,8 +55,21 @@ export default class Icons extends Component {
     return !this.args.sidebarEnabled || this.site.mobileView;
   }
 
-  get hideSearchButton() {
-    return this.header.headerButtonsHidden.includes("search");
+  get showSearchButton() {
+    if (this.header.headerButtonsHidden.includes("search")) {
+      return false;
+    }
+
+    const searchExperience = applyValueTransformer(
+      "site-setting-search-experience",
+      this.siteSettings.search_experience
+    );
+
+    return (
+      this.site.mobileView ||
+      searchExperience === "search_icon" ||
+      this.args.topicInfoVisible
+    );
   }
 
   @action
@@ -71,7 +85,7 @@ export default class Icons extends Component {
     <ul class="icons d-header-icons">
       {{#each (headerIcons.resolve) as |entry|}}
         {{#if (eq entry.key "search")}}
-          {{#unless this.hideSearchButton}}
+          {{#if this.showSearchButton}}
             <Dropdown
               @title="search.title"
               @icon="magnifying-glass"
@@ -82,7 +96,7 @@ export default class Icons extends Component {
               @className="search-dropdown"
               @targetSelector=".search-menu-panel"
             />
-          {{/unless}}
+          {{/if}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
             <Dropdown

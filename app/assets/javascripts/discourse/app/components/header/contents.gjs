@@ -6,6 +6,7 @@ import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argume
 import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
+import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
 import SidebarToggle from "./sidebar-toggle";
 import TopicInfo from "./topic/info";
@@ -15,6 +16,7 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service router;
   @service sidebarState;
 
   get sidebarIcon() {
@@ -35,6 +37,22 @@ export default class Contents extends Component {
         showSidebar: this.args.showSidebar,
       }
     );
+  }
+
+  get showHeaderSearch() {
+    if (
+      this.site.mobileView ||
+      this.router.currentURL?.match(/\/(signup|login)/)
+    ) {
+      return false;
+    }
+
+    const searchExperience = applyValueTransformer(
+      "site-setting-search-experience",
+      this.siteSettings.search_experience
+    );
+
+    return searchExperience === "search_field" && !this.args.topicInfoVisible;
   }
 
   <template>
@@ -84,6 +102,10 @@ export default class Contents extends Component {
         <div class="d-header-mode">
           <BootstrapModeNotice />
         </div>
+      {{/if}}
+
+      {{#if this.showHeaderSearch}}
+        <HeaderSearch />
       {{/if}}
 
       <div class="before-header-panel-outlet">

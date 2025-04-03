@@ -13,12 +13,16 @@ hu:
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
+      table_title: Automatizálások
+      create: Automatizálás hozzáadása
+      update: Automatizálás frissítése
       back: Vissza
       edit: Szerkesztés
       select_script: Válasszon egy parancsfájlt
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
+      no_automation_yet: Jelenleg nincs beállított automatizálás.
       filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
@@ -161,18 +165,11 @@ hu:
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
-            restricted_category:
-              label: Kategória
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
-            restricted_group:
-              label: Csoport
-              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
-            restricted_groups:
-              label: Csoportok
+            restricted_categories:
+              label: Kategóriák
+            restricted_inbox_groups:
+              label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
-            ignore_group_members:
-              label: Csoporttagok figyelmen kívül hagyása
-              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
             ignore_automated:
               label: Automatizált figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
@@ -187,6 +184,10 @@ hu:
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
           edited: Szerkesztve
+          with_images: Képek
+          with_links: Hivatkozások
+          with_code: Kód
+          with_uploads: Feltöltések
         user_updated:
           fields:
             user_profile:
@@ -387,6 +388,7 @@ hu:
               label: PÜ-ek
             sender:
               label: PÜ feladó
+              description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
             topic:

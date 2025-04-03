@@ -16,6 +16,7 @@ RSpec.describe "Middleware order" do
       Middleware::EnforceHostname,
       ActionDispatch::RequestId,
       SilenceLogger,
+      Middleware::DefaultHeaders,
       ActionDispatch::ShowExceptions,
       ActionDispatch::DebugExceptions,
       ActionDispatch::Callbacks,
@@ -44,5 +45,11 @@ RSpec.describe "Middleware order" do
 
   it "ensures that ActionDispatch::RemoteIp comes before Middleware::RequestTracker" do
     expect(remote_ip_index).to be < request_tracker_index
+  end
+
+  it "ensures that Middleware::DefaultHeaders comes before ActionDispatch::ShowExceptions" do
+    default_headers_index = actual_middlewares.index(Middleware::DefaultHeaders)
+    show_exceptions_index = actual_middlewares.index(ActionDispatch::ShowExceptions)
+    expect(default_headers_index).to be < show_exceptions_index
   end
 end

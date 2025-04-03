@@ -2,6 +2,12 @@
   display: flex;
   flex-grow: 1;
   max-width: 100%;
+
+  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    font-variant-ligatures: none;
+  }
 }
 
 .d-editor {
@@ -58,7 +64,6 @@
   overflow: auto;
   overflow-anchor: none;
   cursor: default;
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
@@ -323,7 +328,7 @@
     font-size: var(--font-down-1);
   }
 
-  .btn:focus {
+  .btn:focus-visible {
     @include default-focus;
   }
 
@@ -331,6 +336,7 @@
     margin: 0;
     background-color: transparent;
     color: var(--primary-medium);
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       color: currentcolor;

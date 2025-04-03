@@ -159,6 +159,10 @@ id:
     software_update_prompt:
       dismiss: "Bubar"
     bootstrap_mode: "Memulai"
+    welcome_banner:
+      header:
+        anonymous_members: "Selamat datang ke %{site_name}!"
+      search: "Cari"
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -349,10 +353,6 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
-      abandon:
-        confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
-        yes_value: "Batalkan"
-        no_value: "Lanjut menyunting"
     topic_count_all:
       other: "Lihat %{count} topik baru"
     topic_count_categories:
@@ -474,6 +474,9 @@ id:
         name: "Nama"
         fields: "bidang"
         reject_reason: "Alasan"
+        scrubbed_reason: "Alasan"
+        scrub_record:
+          cancel_button: "Batal"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (dari %{count} bendera terakhir)"
@@ -1573,13 +1576,6 @@ id:
       password_label: "Kata Sandi"
     password_reset:
       continue: "Lanjut ke %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internasional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Hanya Kategori"
       categories_with_featured_topics: "Kategori dengan Topik Unggulan"
@@ -1721,8 +1717,8 @@ id:
         membership_request_consolidated: "permintaan keanggotaan baru"
         admin_problems: "saran baru di dasbor situs Anda"
     upload_selector:
+      delete: "Hapus"
       uploading: "Mengunggah"
-      select_file: "Pilih Berkas"
       default_image_alt_text: gambar
     search:
       most_liked: "Paling Disukai"
@@ -2105,6 +2101,8 @@ id:
       actions:
         title: "Aksi"
         defer: "%{shortcut} Tandai topik sebagai belum dibaca"
+      admin:
+        title: "Admin"
     badges:
       others_count:
         other: "Diberi kepada orang lain %{count} kali"
@@ -2299,19 +2297,49 @@ id:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
+      config_sections:
+        account:
+          title: "Akun"
+        email:
+          title: "Surel"
       config:
+        branding:
+          logo:
+            form:
+              email: "Surel"
         navigation:
           title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
         other:
           title: "Lainnya"
-        search:
+        search_everything:
           title: "Cari"
         spam:
           title: "Spam"
         user_api:
           title: "API Pengguna"
+        users:
+          title: "Pengguna"
+        groups:
+          title: "Grup"
+        backups:
+          sub_pages:
+            logs:
+              title: "Log"
+        email:
+          sub_pages:
+            sent:
+              title: "Mengirim"
+            received:
+              title: "Menerima"
+            rejected:
+              title: "Ditolak"
+      search:
+        title: "Cari"
+        result_types:
+          setting:
+            other: "Pengaturan"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
@@ -2457,19 +2485,20 @@ id:
         embeddable_host:
           edit: "Ubah"
           delete: "Hapus"
+        themes_and_components:
+          breadcrumb_title: "Sesuaikan"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
+        color_palettes:
+          palette_name: "Nama"
+          colors:
+            title: "Warna"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
         settings_disabled: "Plugin ini hanya dapat diaktifkan atau dinonaktifkan, tidak memiliki pengaturan tambahan."
-      advanced:
-        sidebar_link:
-          user_api: "API Pengguna"
-          other_options: "Lainnya"
-          search: "Cari"
       backups:
         menu:
           logs: "Log"
@@ -2514,7 +2543,6 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          settings: "Pengaturan"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2527,10 +2555,6 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
-          header:
-            text: "Header"
-          body_tag:
-            text: "Konten"
           all_filter: "Semua"
           active_filter: "Aktif"
           schema:

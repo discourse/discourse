@@ -220,6 +220,10 @@ sr:
       dismiss: "Одбаци"
     bootstrap_mode: "Prvi koraci"
     back_button: "Nazad"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Подразумевано"
       broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
@@ -501,10 +505,6 @@ sr:
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
-      abandon:
-        confirm: "Već imate nacrt. Šta želite da uradite sa njim?"
-        yes_value: "Odbaci"
-        no_value: "Nastavi sa uređivanjem"
       dropdown:
         title: "Otvorite meni najnovijih nacrta"
         untitled: "Neimenovan nacrt"
@@ -661,6 +661,9 @@ sr:
         name: "Ime foruma"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          cancel_button: "Odustani"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (od zadnjeg markiranja)"
@@ -1717,10 +1720,6 @@ sr:
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
       password_label: "Šifra"
-    emoji_set:
-      apple_international: "Apple/International"
-      google: "Google"
-      twitter: "Twitter"
     category_page_style:
       categories_with_featured_topics: "Kategorije sa istaknutim temama"
       categories_and_latest_topics: "Kategorije i najnovije teme"
@@ -1817,9 +1816,8 @@ sr:
       titles:
         watching_first_post: "nova tema"
     upload_selector:
+      delete: "Obriši"
       uploading: "Učitavanje"
-      processing: "Obrada uploada"
-      select_file: "Odaberi datoteku"
       default_image_alt_text: slika
     search:
       sort_by: "Sortiraj po"
@@ -2195,9 +2193,13 @@ sr:
       description: "Opis"
       logo: "Logo Kategorije "
       background_image: "Pozadinska Slika Kategorije"
-      badge_colors: "Boje značke"
-      background_color: "Pozadinska boja"
-      foreground_color: "Istaknuta boja."
+      background_color: "Boja"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Jedna ili dve reči maksimalno"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
@@ -2440,6 +2442,8 @@ sr:
         mark_muted: "%{shortcut} Utišaj poruku"
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Posmatraj temu"
+      admin:
+        title: "Admin"
     badges:
       title: Značke
       more_badges:
@@ -2609,13 +2613,28 @@ sr:
         remove_muted_tags_from_latest:
           always: "uvek"
           never: "nikada"
+      config_sections:
+        community:
+          title: "Zajednica"
+        email:
+          title: "Email"
+        security:
+          title: "Sigurnost"
+        plugins:
+          title: "Dodaci"
       config:
         developer:
           title: "Programer"
+        emojis:
+          title: "Emoji"
         files:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        branding:
+          logo:
+            form:
+              email: "Email"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2624,12 +2643,50 @@ sr:
           title: "Onebox"
         other:
           title: "Ostalo"
-        search:
+        search_everything:
           title: "Pretraži"
         security:
           title: "Sigurnost"
         spam:
           title: "Nepoželjno"
+        dashboard:
+          title: "Komandna Tabla"
+        users:
+          title: "Korisnici"
+        groups:
+          title: "Grupe"
+        backups:
+          title: "Sigurnosne kopije"
+          sub_pages:
+            logs:
+              title: "Logovi"
+        badges:
+          title: "Značke"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            sent:
+              title: "Poslato"
+            skipped:
+              title: "Preskočeno"
+            received:
+              title: "Primljeno"
+            rejected:
+              title: "Odbačen"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Kad neko pokuša otvoriti nalog, sledeće email adrese će biti proverene i registracija će biti blokirana ili će neke druge akcije biti poduzete"
+            screened_ips:
+              title: "Provereni IP-ovi"
+            screened_urls:
+              title: "Provereni URL-ovi"
+              header_description: "URL-ovi s ove liste su korišteni u porukama korisnika koji su identifikovani kao nepoželjni"
+        embedding:
+          title: "Ugrađivanje"
+      search:
+        title: "Pretraži"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
@@ -2785,9 +2842,15 @@ sr:
         embeddable_host:
           edit: "Izmeni"
           delete: "Obriši"
+        themes_and_components:
+          breadcrumb_title: "Prilagođavanje"
         user_fields:
           type: "Tip"
           delete: "Obriši"
+        color_palettes:
+          palette_name: "Ime foruma"
+          colors:
+            title: "Boje"
       plugins:
         title: "Dodaci"
         name: "Ime foruma"
@@ -2796,16 +2859,6 @@ sr:
         change_settings_short: "Podešavanje"
         author: "Od %{author}"
         learn_more: "Saznaj više"
-        sidebar_link:
-          installed: "Instalirano"
-      advanced:
-        sidebar_link:
-          developer: "Programer"
-          embedding: "Ugrađivanje"
-          onebox: "Onebox"
-          files: "Datoteke"
-          other_options: "Ostalo"
-          search: "Pretraži"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -2876,7 +2929,6 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
-          settings: "Podešavanje"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"
@@ -2890,8 +2942,6 @@ sr:
           add: "Dodaj"
           scss:
             text: "CSS"
-          header:
-            text: "Header"
           footer:
             text: "Footer"
           all_filter: "sve"

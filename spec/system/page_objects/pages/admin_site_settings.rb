@@ -22,6 +22,11 @@ module PageObjects
         self
       end
 
+      def navigate_to_category(category)
+        page.find("a.#{category}").click
+        self
+      end
+
       def setting_row_selector(setting_name)
         ".row.setting[data-setting='#{setting_name}']"
       end
@@ -34,6 +39,11 @@ module PageObjects
         find(
           ".admin-detail #{setting_row_selector(setting_name)}#{overridden ? ".overridden" : ""}",
         )
+      end
+
+      def fill_setting(setting_name, value)
+        setting = find_setting(setting_name)
+        setting.fill_in(with: value)
       end
 
       def toggle_setting(setting_name, text = "")

@@ -77,6 +77,10 @@ be:
       category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Сардэчна запрашаем да сайта %{site_name}!"
+      search: "Пошук"
     themes:
       default_description: "Default"
     s3:
@@ -219,6 +223,9 @@ be:
         email: "Электронная пошта"
         name: "Імя"
         reject_reason: "прычына"
+        scrubbed_reason: "прычына"
+        scrub_record:
+          cancel_button: "Адмяніць"
       topics:
         topic: "Тэма"
         reviewable_count: "падлічваць"
@@ -841,9 +848,6 @@ be:
       password_label: "Пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
-    emoji_set:
-      google: "Google"
-      twitter: "Twitter"
     category_page_style:
       categories_only: "Толькі катэгорыі"
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
@@ -931,8 +935,8 @@ be:
         watching_first_post: "новая тэма"
         admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     upload_selector:
+      delete: "выдаляць"
       uploading: "загрузка"
-      select_file: "выбраць файл"
       default_image_alt_text: малюнак
     search:
       sort_by: "сартаваць па"
@@ -1193,9 +1197,13 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      badge_colors: "колеру значка"
-      background_color: "колер фону"
-      foreground_color: "колер тэксту"
+      background_color: "колер"
+      styles:
+        icon: "Абразка"
+        emoji: "Emoji"
+        options:
+          icon: "Абразка"
+          emoji: "Emoji"
       name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
@@ -1364,6 +1372,8 @@ be:
         delete: "<B> d <"
         mark_muted: "%{shortcut}Прыглушыць тэму"
         mark_tracking: "%{shortcut}Сачыць за тэмай"
+      admin:
+        title: "адміністратар"
     badges:
       title: значкі
       select_badge_for_title: Выберыце значок, будзе вашым званнем
@@ -1513,25 +1523,93 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+      config_sections:
+        account:
+          title: "Аккаўнт"
+        reports:
+          title: "Справаздачы"
+        community:
+          title: "супольнасць"
+        email:
+          title: "Электронная пошта"
+        security:
+          title: "Бяспека"
+        plugins:
+          title: "Плагіны"
       config:
         developer:
           title: "для распрацоўшчыкаў"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Мадэрацыя"
         files:
           title: "файлы"
         legal:
           title: "Legal"
+        branding:
+          logo:
+            form:
+              mobile: "Мабільны"
+              email: "Электронная пошта"
+              opengraph_image:
+                description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
         navigation:
           title: "рух"
         notifications:
           title: "Натыфікацыі"
         other:
           title: "іншае"
-        search:
+        search_everything:
           title: "Пошук"
         security:
           title: "Бяспека"
         spam:
           title: "Спам"
+        dashboard:
+          title: "Галоўная панэль"
+        users:
+          title: "карыстальнікаў"
+        groups:
+          title: "групы"
+        backups:
+          title: "Бэкапы"
+          sub_pages:
+            logs:
+              title: "Логі"
+        reports:
+          title: "Справаздачы"
+        badges:
+          title: "значкі"
+        permalinks:
+          title: "Сталыя спасылкі"
+        emoji:
+          title: "Emoji"
+        email:
+          sub_pages:
+            templates:
+              title: "шаблоны"
+            sent:
+              title: "Sent"
+            skipped:
+              title: "Skipped"
+            received:
+              title: "Атрымана"
+            rejected:
+              title: "адхілена"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў"
+            screened_ips:
+              title: "Screened IPs"
+            screened_urls:
+              title: "Screened URLs"
+              header_description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў"
+        embedding:
+          title: "узаемадзеянне"
+      search:
+        title: "Пошук"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1676,6 +1754,8 @@ be:
         sidebar_link:
           emoji: "Emoji"
           navigation: "рух"
+          themes_and_components:
+            keywords: "пашырэнне"
       security:
         title: "Бяспека"
       section_landing_pages:
@@ -1688,7 +1768,6 @@ be:
           company_name: "імя"
           saved: "захавана!"
         flags:
-          header: "Мадэрацыя"
           description: "Апісанне"
           edit: "рэдагаваць"
           delete: "Выдаліць"
@@ -1706,23 +1785,20 @@ be:
         embeddable_host:
           edit: "рэдагаваць"
           delete: "выдаляць"
+        themes_and_components:
+          breadcrumb_title: "Кастамізаваць"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
+        color_palettes:
+          palette_name: "імя"
+          colors:
+            title: "<......"
       plugins:
         title: "Плагіны"
         name: "Назва"
         version: "версія"
         change_settings_short: "Налады"
-        sidebar_link:
-          installed: "устаноўленая"
-      advanced:
-        sidebar_link:
-          developer: "для распрацоўшчыкаў"
-          embedding: "узаемадзеянне"
-          files: "файлы"
-          other_options: "іншае"
-          search: "Пошук"
       backups:
         title: "Бэкапы"
         menu:
@@ -1793,7 +1869,6 @@ be:
           save: "захаваць"
           edit: "рэдагаваць"
           mobile: "Мабільны"
-          settings: "Налады"
           preview: "папярэдні прагляд"
           cancel: "адмяніць"
           uploads: "Загрузкі"
@@ -1805,10 +1880,6 @@ be:
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
-          header:
-            text: "Header"
-          body_tag:
-            text: "цела"
           all_filter: "Усё"
           active_filter: "актыўныя"
           schema:
@@ -1839,6 +1910,9 @@ be:
           love:
             name: "каханне"
             description: "Колер кнопкі \"Падабаецца\"."
+          editor:
+            light: "святло"
+            dark: "цёмна"
       email:
         title: "Емейлы"
         settings: "Налады"

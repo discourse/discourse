@@ -187,6 +187,10 @@ pt:
       dismiss: "Marcar como visto"
     bootstrap_mode: "Primeiros passos"
     back_button: "Retroceder"
+    welcome_banner:
+      header:
+        anonymous_members: "Bem-vindo a %{site_name}!"
+      search: "Pesquisar"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -362,9 +366,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      abandon:
-        yes_value: "Descartar"
-        no_value: "Retomar a edição"
     topic_count_all:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
@@ -494,6 +495,10 @@ pt:
         name: "Nome"
         fields: "campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (da última sinalização)"
@@ -1861,13 +1866,6 @@ pt:
       password_label: "Palavra-passe"
     password_reset:
       continue: "Continuar para %{site_name}"
-    emoji_set:
-      apple_international: "Apple/Internacional"
-      google: "Google"
-      twitter: "Twitter"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Apenas Categorias"
       categories_with_featured_topics: "Categorias com Tópicos Destacados"
@@ -2167,9 +2165,8 @@ pt:
         reaction: "nova reação"
         votes_released: "O voto foi liberado"
     upload_selector:
+      delete: "Eliminar"
       uploading: "A enviar"
-      processing: "Processando Upload"
-      select_file: "Selecionar Ficheiro"
       default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"
@@ -2792,6 +2789,9 @@ pt:
       has_likes_title_you:
         one: "você e %{count} outra pessoa gostaram desta publicação"
         other: "você e %{count} outras pessoas gostaram desta publicação"
+      sr_post_like_count_button:
+        one: "%{count} pessoa gostou desta mensagem."
+        other: "%{count} pessoas gostaram desta mensagem."
       filtered_replies_hint:
         one: "Ver este post e a sua resposta"
         other: "Ver este post e as suas %{count} respostas"
@@ -2985,9 +2985,13 @@ pt:
       description: "Descrição"
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
-      badge_colors: "Cores do crachá"
-      background_color: "Cor de fundo"
-      foreground_color: "Cor frontal"
+      background_color: "Cor"
+      styles:
+        icon: "Ícone"
+        emoji: "Emoji"
+        options:
+          icon: "Ícone"
+          emoji: "Emoji"
       name_placeholder: "Máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
@@ -3342,6 +3346,9 @@ pt:
         title: "Menu de Busca"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
         insert_url: "%{shortcut} Inserir seleção no compositor aberto"
+      admin:
+        title: "Administração"
+        search_prev_next: "%{shortcut} Mover seleção para cima e para baixo"
     badges:
       earned_n_times:
         one: "Ganhou este distintivo %{count} vez"
@@ -3609,15 +3616,39 @@ pt:
       reports:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
-        sidebar_link:
-          all: "Todos os relatórios"
+      config_sections:
+        account:
+          title: "Conta"
+        reports:
+          title: "Relatórios"
+        community:
+          title: "Comunidade"
+        appearance:
+          title: "Aparência"
+        email:
+          title: "Email"
+        security:
+          title: "Segurança"
+        plugins:
+          title: "Plugins"
       config:
         developer:
           title: "Desenvolvedor"
+        emojis:
+          title: "Emoji"
+        flags:
+          title: "Moderação"
         files:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        branding:
+          logo:
+            form:
+              mobile: "Móvel"
+              email: "Email"
+              manifest_screenshots:
+                description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
         navigation:
           title: "Navegação"
         notifications:
@@ -3626,7 +3657,7 @@ pt:
           title: "Caixa Única"
         other:
           title: "Outro"
-        search:
+        search_everything:
           title: "Pesquisar"
         security:
           title: "Segurança"
@@ -3634,6 +3665,69 @@ pt:
           title: "Spam"
         user_api:
           title: "API de Utlizador"
+        dashboard:
+          title: "Painel de Administração"
+        users:
+          title: "Utilizadores"
+        groups:
+          title: "Grupos"
+        backups:
+          title: "Fazer Cópias de Segurança"
+          sub_pages:
+            logs:
+              title: "Logs"
+        reports:
+          title: "Relatórios"
+        badges:
+          title: "Crachás"
+        permalinks:
+          title: "Hiperligações Permanentes"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "Temas"
+        components:
+          title: "Componentes"
+        email:
+          sub_pages:
+            preview_summary:
+              header_description: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos"
+            templates:
+              title: "Templates"
+            sent:
+              title: "Enviado"
+            skipped:
+              title: "Ignorado"
+            bounced:
+              title: "Redirecionado"
+            received:
+              title: "Recebido"
+            rejected:
+              title: "Rejeitado"
+        email_appearance:
+          title: "Aparência"
+          header_description: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS"
+        staff_action_logs:
+          sub_pages:
+            screened_emails:
+              header_description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de e-mail serão verificados e o registo será bloqueado, ou outra ação executada"
+            screened_ips:
+              title: "IPs Filtrados"
+            screened_urls:
+              title: "URLs Filtrados"
+        webhooks:
+          title: "Webhooks"
+        embedding:
+          title: "Incorporação"
+      search:
+        title: "Pesquisar"
+        result_types:
+          theme:
+            one: "Tema"
+            other: "Temas"
+          component:
+            one: "Componente"
+            other: "Componentes"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3913,9 +4007,6 @@ pt:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navegação"
-          themes: "Temas"
-          components:
-            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aparência"
@@ -3934,7 +4025,6 @@ pt:
           update: "Atualização"
           saved: "guardado!"
         flags:
-          header: "Moderação"
           description: "Descrição"
           enabled: "Ativado?"
           edit: "Editar"
@@ -3954,12 +4044,20 @@ pt:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Componentes"
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -3972,18 +4070,6 @@ pt:
         howto: "Como instalo plugins?"
         author: "Por %{author}"
         learn_more: "Saiba mais"
-        sidebar_link:
-          installed: "Instalado"
-      advanced:
-        sidebar_link:
-          webhooks: "Webhooks"
-          developer: "Desenvolvedor"
-          embedding: "Incorporação"
-          user_api: "API de Utlizador"
-          onebox: "Caixa Única"
-          files: "Ficheiros"
-          other_options: "Outro"
-          search: "Pesquisar"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:
@@ -4101,16 +4187,10 @@ pt:
           common: "Comum"
           desktop: "Desktop"
           mobile: "Móvel"
-          settings: "Configurações"
-          translations: "Traduções"
-          extra_scss: "SCSS extra"
           extra_files: "Arquivos extras"
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
-          show_advanced: "Mostrar campos avançados"
-          hide_advanced: "Ocultar campos avançados"
-          hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
@@ -4157,19 +4237,12 @@ pt:
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
           scss:
             text: "CSS"
-            title: "Insira CSS personalizado, aceitamos todos os estilos CSS e SCSS válidos"
-          header:
-            text: "Cabeçalho"
-            title: "Insira o HTML para exibir acima do cabeçalho do site"
           after_header:
             text: "Depois do Cabeçalho"
-            title: "Insira o HTML para exibir em todas as páginas após o cabeçalho"
           footer:
             text: "Rodapé"
-            title: "Insira o HTML para exibir no rodapé da página"
           embedded_scss:
             text: "CSS incorporado"
-            title: "Insira CSS personalizado para embutir na versão incorporada de comentários"
           color_definitions:
             text: "Definições de Cor"
             title: "Insira as definições de cores personalizadas (somente usuários avançados)"
@@ -4182,11 +4255,6 @@ pt:
               %{example}
 
               Prefixar os nomes das propriedades é altamente recomendado para evitar conflitos com plugins e/ou o core.
-          body_tag:
-            text: "Corpo"
-          yaml:
-            text: "YAML"
-            title: "Defina as configurações do tema no formato YAML"
           all_filter: "Tudo"
           active_filter: "Ativo"
           inactive_filter: "Inativo"

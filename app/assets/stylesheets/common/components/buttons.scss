@@ -57,6 +57,7 @@
       margin-right: 0;
     }
   }
+
   @include hover {
     background-color: $hover-bg-color;
     color: $hover-text-color;
@@ -78,6 +79,7 @@
 
     .d-icon {
       color: $hover-icon-color;
+
       @media (forced-colors: active) {
         color: Highlight;
       }
@@ -142,7 +144,9 @@
     }
 
     .loading-icon {
-      animation: rotate-forever 1s infinite linear, fadein 1s;
+      animation:
+        rotate-forever 1s infinite linear,
+        fadein 1s;
     }
   }
 }
@@ -414,6 +418,7 @@
   &:focus-visible {
     color: var(--tertiary);
     background: transparent;
+
     @include default-focus;
   }
 }
@@ -491,6 +496,7 @@
   .d-icon {
     color: var(--primary-medium);
   }
+
   @include hover {
     .d-icon {
       color: var(--primary);

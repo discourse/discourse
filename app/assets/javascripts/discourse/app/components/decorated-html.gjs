@@ -17,6 +17,8 @@ export default class DecoratedHtml extends Component {
 
     const helper = new DecorateHtmlHelper({
       renderGlimmerInfos: this.renderGlimmerInfos,
+      model: this.args.model,
+      context: this.args.context,
     });
     on.cleanup(() => helper.teardown());
 
@@ -24,6 +26,10 @@ export default class DecoratedHtml extends Component {
     untrack(() => decorateFn?.(cookedDiv, helper));
 
     document.adoptNode(cookedDiv);
+
+    const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
+    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper));
+
     return cookedDiv;
   });
 
@@ -57,20 +63,34 @@ export default class DecoratedHtml extends Component {
 }
 
 class DecorateHtmlHelper {
-  constructor({ renderGlimmerInfos }) {
-    this.renderGlimmerInfos = renderGlimmerInfos;
+  #renderGlimmerInfos;
+  #model;
+  #context;
+
+  constructor({ renderGlimmerInfos, model, context }) {
+    this.#renderGlimmerInfos = renderGlimmerInfos;
+    this.#model = model;
+    this.#context = context;
   }
 
   renderGlimmer(element, component, data) {
     const info = { element, component, data };
-    this.renderGlimmerInfos.push(info);
+    this.#renderGlimmerInfos.push(info);
+  }
+
+  get model() {
+    return this.#model;
+  }
+
+  get context() {
+    return this.#context;
   }
 
   getModel() {
-    return null;
+    return this.model;
   }
 
   teardown() {
-    this.renderGlimmerInfos.length = 0;
+    this.#renderGlimmerInfos.length = 0;
   }
 }

@@ -276,8 +276,9 @@ export default function () {
             path: "/",
           });
         });
-        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+        this.route("customize", function () {
           this.route("themes");
+          this.route("components");
         });
         this.route(
           "adminPermalinks",
@@ -316,6 +317,7 @@ export default function () {
         this.route("logo", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("branding");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -333,6 +335,10 @@ export default function () {
         });
         this.route("user-api", function () {
           this.route("settings", { path: "/" });
+        });
+
+        this.route("color-palettes-show", {
+          path: "/colors/:palette_id",
         });
       }
     );
@@ -358,6 +364,14 @@ export default function () {
       { path: "/section", resetNamespace: true },
       function () {
         this.route("account");
+      }
+    );
+
+    this.route(
+      "adminSearch",
+      { path: "/search", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
       }
     );
   });

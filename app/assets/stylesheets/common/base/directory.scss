@@ -16,6 +16,12 @@
     .directory-group-selector {
       vertical-align: top;
     }
+
+    @include breakpoint("mobile-large") {
+      .filter-name {
+        width: 100%;
+      }
+    }
   }
 
   .user-info {
@@ -30,16 +36,34 @@
     display: flex;
     justify-content: space-between;
 
+    @include breakpoint("mobile-large") {
+      display: block;
+    }
+
     .total-rows {
       color: var(--primary-medium);
       font-weight: normal;
+
+      @include breakpoint("mobile-large") {
+        display: block;
+      }
     }
   }
 
   .directory-last-updated {
-    margin-bottom: 0.5em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    margin-bottom: 0.5em;
+
+    @include breakpoint("mobile-large") {
+      margin-bottom: 1em;
+    }
+  }
+
+  @include breakpoint("tablet") {
+    .period-chooser .period-chooser-header h2.selected-name {
+      font-size: var(--font-up-1);
+    }
   }
 }
 
@@ -205,10 +229,12 @@
     .user-detail {
       padding: 0;
       width: 100%;
+
       @include breakpoint(tablet) {
         // overrides existing media query
         font-size: var(--font-0);
       }
+
       @include breakpoint("mobile-medium") {
         font-size: var(--font-down-1);
       }
@@ -252,6 +278,7 @@
         // caution: display flex here can interfere with overflow hiding
         flex: 0 1 auto; // can shrink if needed
         margin-right: 0.25em;
+
         @include ellipsis;
       }
 

@@ -13,7 +13,14 @@ module Chat
 
     def can_chat?
       return false if anonymous?
-      @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
+      return true if @user.bot?
+
+      if @user.anonymous?
+        SiteSetting.allow_chat_in_anonymous_mode &&
+          AnonymousShadowCreator.get_master(@user)&.guardian&.can_chat?
+      else
+        @user.in_any_groups?(Chat.allowed_group_ids)
+      end
     end
 
     def can_direct_message?
@@ -253,6 +260,10 @@ module Chat
 
     def can_delete_category?(category)
       super && category.deletable_for_chat?
+    end
+
+    def can_remove_members?(channel)
+      is_admin? && (channel.category_channel? || channel.direct_message_group?)
     end
   end
 end

@@ -44,11 +44,11 @@ id:
           fields:
             restricted_tags:
               label: Label
-            restricted_category:
+            restricted_categories:
               label: Kategori
-            restricted_groups:
-              label: Grup
           created: Dibuat
+          with_links: Tautan
+          with_code: Kode
         pm_created:
           fields:
             restricted_user:
