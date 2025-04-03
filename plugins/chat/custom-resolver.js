@@ -1,6 +1,6 @@
-import fs from "node:fs";
+import { globSync, readFileSync } from "node:fs";
 
-const pluginName = "chat";
+const pluginName = JSON.parse(readFileSync("./package.json")).name;
 
 const roots = [
   "discourse/app",
@@ -12,8 +12,8 @@ const roots = [
 
 function itemExists(path) {
   return (
-    fs.globSync(`${path}.{js,gjs,hbs}`).length ||
-    fs.globSync(`${path}/index.{js,gjs,hbs}`).length
+    globSync(`${path}.{js,gjs,hbs}`).length ||
+    globSync(`${path}/index.{js,gjs,hbs}`).length
   );
 }
 
