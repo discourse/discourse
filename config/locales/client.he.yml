@@ -728,6 +728,10 @@ he:
         name: "שם"
         fields: "שדות"
         reject_reason: "סיבה"
+        scrubbed_reason: "סיבה"
+        scrub_record:
+          reason_placeholder: "סיבה..."
+          cancel_button: "ביטול"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (של הסימון האחרון)"
@@ -4264,9 +4268,13 @@ he:
       logo_description: "מומלץ יחס תצוגה של 1:1 בגודל של 200 פיקסלים לכל הפחות. אם האפשרות נשארת ריקה לא תופיע תמונה."
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
-      badge_colors: "צבעי העיטורים"
-      background_color: "צבע רקע"
-      foreground_color: "צבע קדמי"
+      background_color: "צבע"
+      styles:
+        icon: "סמל"
+        emoji: "אמוג׳י"
+        options:
+          icon: "סמל"
+          emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
       predefined_colors: "אפשרויות צבע מוגדרות מראש"
       name_placeholder: "מילה או שתיים לכל היותר"
@@ -7650,6 +7658,13 @@ he:
       site_settings:
         title: "הגדרות האתר"
         description: "אפשר לכוון את הגדרות אתר ה־Discourse שלך כדי להתאים את המראה, היכולות וחוויית המשתמש שלך."
+        discard: "התעלמות מהשינויים"
+        save: "שמירת כל השינויים"
+        dirty_banner:
+          one: "יש לך שינוי שלא נשמר"
+          two: "יש לך <em>שני</em> שינויים שלא נשמרו"
+          many: "יש לך <em>%{count}</em> שינויים שלא נשמרו"
+          other: "יש לך <em>%{count}</em> שינויים שלא נשמרו"
         emoji_list:
           invalid_input: "רשימות האמוג׳י אמורה להכיל רק שמות סימני אמוג׳י תקניים, למשל: hugs (חיבוקים)"
           add_emoji_button:

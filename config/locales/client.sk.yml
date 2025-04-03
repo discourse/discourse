@@ -728,6 +728,18 @@ sk:
         name: "Meno"
         fields: "Polia"
         reject_reason: "Dôvod"
+        scrubbed_by: "Záznam vymazaný"
+        scrubbed_reason: "Dôvod"
+        scrubbed_at: "Vydrhnuté na"
+        scrubbed_reject_reason: "Dôvod odmietnutia používateľa"
+        scrub_record:
+          button: Záznam o čistení
+          confirm_title: Odstránenie osobných údajov
+          confirm_body: "Ste si istí, že chcete vymazať tento záznam z fronty recenzií? Všetky osobné údaje (napr. používateľské meno, e-mail, IP adresa) budú z tohto záznamu natrvalo odstránené."
+          reason_title: "Vyžaduje sa dôvod na vymazanie tohto záznamu."
+          reason_placeholder: "Dôvod..."
+          confirm_button: "Potvrďte odstránenie"
+          cancel_button: "Zrušiť"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (z poslednej vlajky)"
@@ -4271,15 +4283,23 @@ sk:
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
       name: "Názov kategórie"
+      untitled: "Kategória bez názvu"
       description: "Popis"
       logo: "Logo kategórie"
       logo_dark: "Logo kategórie v tmavom režime"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
       background_image: "Pozadie kategórie"
       background_image_dark: "Obrázok na pozadí tmavej kategórie"
-      badge_colors: "Farby odznakov"
-      background_color: "Farba pozadia"
-      foreground_color: "Farba popredia"
+      style: "Štýly"
+      background_color: "Farba"
+      styles:
+        type: "Štýl"
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          square: "Štvorec"
+          icon: "Ikona"
+          emoji: "Emoji"
       color_used: "Používaná farba"
       predefined_colors: "Preddefinované možnosti farieb"
       name_placeholder: "Maximálne jedno dve slová"
@@ -7678,6 +7698,13 @@ sk:
       site_settings:
         title: "Nastavenia stránky"
         description: "Konfigurujte nastavenia svojej stránky Discourse a prispôsobte jej vzhľad, funkcie a používateľské prostredie."
+        discard: "Zahodenie zmien"
+        save: "Uložiť všetky zmeny"
+        dirty_banner:
+          one: "Máte <em>%{count}</em> neuloženú zmenu"
+          few: "Máte <em>%{count}</em> neuložených zmien"
+          many: "Máte <em>%{count}</em> neuložených zmien"
+          other: "Máte <em>%{count}</em> neuložené zmeny"
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
           add_emoji_button:

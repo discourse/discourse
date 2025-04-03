@@ -2,11 +2,11 @@ import { Input } from "@ember/component";
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
+import { eq } from "truth-helpers";
 import SaveControls from "discourse/components/save-controls";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-import eq from "truth-helpers/helpers/eq";
 
 export default RouteTemplate(
   <template>

@@ -10,10 +10,10 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { API_KEY_SCOPE_MODES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
+import { API_KEY_SCOPE_MODES } from "admin/lib/constants";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default class AdminConfigAreasApiKeysNew extends Component {

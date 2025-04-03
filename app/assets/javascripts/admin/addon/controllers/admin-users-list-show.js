@@ -66,7 +66,7 @@ export default class AdminUsersListShowController extends Controller {
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
-      this.model,
+      this.model?.id,
       this.canModeratorsViewEmails,
       this.currentUser
     ).canCheckEmails;
@@ -75,7 +75,7 @@ export default class AdminUsersListShowController extends Controller {
   @computed("model.id", "currentUser.id")
   get canAdminCheckEmails() {
     return new CanCheckEmailsHelper(
-      this.model,
+      this.model?.id,
       this.canModeratorsViewEmails,
       this.currentUser
     ).canAdminCheckEmails;

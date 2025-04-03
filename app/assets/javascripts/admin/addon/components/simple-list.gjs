@@ -6,11 +6,11 @@ import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
+import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-import gt from "truth-helpers/helpers/gt";
 
 @classNameBindings(":simple-list", ":value-list")
 export default class SimpleList extends Component {

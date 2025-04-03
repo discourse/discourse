@@ -569,6 +569,10 @@ nb_NO:
         name: "Navn"
         fields: "Felter"
         reject_reason: "Begrunnelse"
+        scrubbed_reason: "Begrunnelse"
+        scrub_record:
+          reason_placeholder: "Begrunnelse..."
+          cancel_button: "Avbryt"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (av siste flagg)"
@@ -3680,9 +3684,13 @@ nb_NO:
       logo_dark: "Kategori logobilde i mørkmodus"
       background_image: "Kategori bakgrunnsbilde"
       background_image_dark: "Mørk kategori bakgrunnsbilde"
-      badge_colors: "Merkefarger"
-      background_color: "Bakgrunnsfarge"
-      foreground_color: "Forgrunnsfarge"
+      background_color: "Farge"
+      styles:
+        icon: "Ikon"
+        emoji: "Emoji"
+        options:
+          icon: "Ikon"
+          emoji: "Emoji"
       name_placeholder: "Maksimalt ett eller to ord"
       color_placeholder: "Vilkårlig nettfarge"
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"

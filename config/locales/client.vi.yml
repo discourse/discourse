@@ -462,6 +462,10 @@ vi:
         name: "Tên"
         fields: "Trường tùy biến"
         reject_reason: "Lý do"
+        scrubbed_reason: "Lý do"
+        scrub_record:
+          reason_placeholder: "Lý do..."
+          cancel_button: "Huỷ"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (trong số %{count} cờ)"
@@ -2967,9 +2971,13 @@ vi:
       description: "Mô tả"
       logo: "Logo của chuyên mục"
       background_image: "Ảnh nền của chuyên mục"
-      badge_colors: "Màu huy hiệu"
-      background_color: "Màu nền"
-      foreground_color: "Màu mặt trước"
+      background_color: "Màu sắc"
+      styles:
+        icon: "Biểu tượng"
+        emoji: "Emoji"
+        options:
+          icon: "Biểu tượng"
+          emoji: "Emoji"
       name_placeholder: "Tối đa một hoặc hai từ"
       color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"

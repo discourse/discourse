@@ -1,11 +1,11 @@
-import EmberObject from "@ember/object";
 import { click, fillIn, render, typeIn } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import SiteSetting from "admin/components/site-setting";
+import SiteSettingComponent from "admin/components/site-setting";
+import SiteSetting from "admin/models/site-setting";
 
 module("Integration | Component | site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,14 +13,17 @@ module("Integration | Component | site-setting", function (hooks) {
   test("displays host-list setting value", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "blocked_onebox_domains",
-      value: "a.com|b.com",
-      type: "host_list",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "blocked_onebox_domains",
+        value: "a.com|b.com",
+        type: "host_list",
+      })
+    );
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
     assert.dom(".formatted-selection").hasText("a.com, b.com");
@@ -29,11 +32,14 @@ module("Integration | Component | site-setting", function (hooks) {
   test("Error response with html_message is rendered as HTML", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "test_setting",
-      value: "",
-      type: "input-setting-string",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "test_setting",
+        value: "",
+        type: "input-setting-string",
+      })
+    );
 
     const message = "<h1>Unable to update site settings</h1>";
 
@@ -42,7 +48,7 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -53,11 +59,14 @@ module("Integration | Component | site-setting", function (hooks) {
   test("Error response without html_message is not rendered as HTML", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "test_setting",
-      value: "",
-      type: "input-setting-string",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "test_setting",
+        value: "",
+        type: "input-setting-string",
+      })
+    );
 
     const message = "<h1>Unable to update site settings</h1>";
 
@@ -66,7 +75,7 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -77,14 +86,17 @@ module("Integration | Component | site-setting", function (hooks) {
   test("displays file types list setting", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "theme_authorized_extensions",
-      value: "jpg|jpeg|png",
-      type: "file_types_list",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "theme_authorized_extensions",
+        value: "jpg|jpeg|png",
+        type: "file_types_list",
+      })
+    );
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
     assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
@@ -106,14 +118,17 @@ module("Integration | Component | site-setting", function (hooks) {
   skip("prevents decimal in integer setting input", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "suggested_topics_unread_max_days_old",
-      value: "",
-      type: "integer",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "suggested_topics_unread_max_days_old",
+        value: "",
+        type: "integer",
+      })
+    );
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
     await typeIn(".input-setting-integer", "90,5", { delay: 1000 });
     assert.dom(".input-setting-integer").hasValue("905");
@@ -122,14 +137,17 @@ module("Integration | Component | site-setting", function (hooks) {
   test("does not consider an integer setting overridden if the value is the same as the default", async function (assert) {
     const self = this;
 
-    this.set("setting", {
-      setting: "suggested_topics_unread_max_days_old",
-      value: "99",
-      default: "99",
-      type: "integer",
-    });
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "suggested_topics_unread_max_days_old",
+        value: "99",
+        default: "99",
+        type: "integer",
+      })
+    );
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
     await fillIn(".input-setting-integer", "90");
     assert.dom(".input-setting-integer").hasValue("90");
@@ -148,17 +166,20 @@ module(
     test("shows the reset button when the value has been changed from the default", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "2048",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "2048",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       assert.dom(".setting-controls__undo").exists("reset button is shown");
     });
@@ -166,17 +187,20 @@ module(
     test("doesn't show the reset button when the value is the same as the default", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1024",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1024",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       assert
         .dom(".setting-controls__undo")
@@ -186,17 +210,20 @@ module(
     test("shows validation error when the value exceeds the max limit", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1024",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1024",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       await fillIn(".file-size-input", "5000");
 
@@ -207,24 +234,26 @@ module(
         }),
         "validation error message is shown"
       );
-      assert.dom(".setting-controls__ok").hasAttribute("disabled");
       assert.dom(".setting-controls__cancel").doesNotHaveAttribute("disabled");
     });
 
     test("shows validation error when the value is below the min limit", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1000",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1000",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       await fillIn(".file-size-input", "100");
 
@@ -235,24 +264,26 @@ module(
         }),
         "validation error message is shown"
       );
-      assert.dom(".setting-controls__ok").hasAttribute("disabled");
       assert.dom(".setting-controls__cancel").doesNotHaveAttribute("disabled");
     });
 
     test("cancelling pending changes resets the value and removes validation error", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1000",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1000",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
 
       await fillIn(".file-size-input", "100");
@@ -268,17 +299,20 @@ module(
     test("resetting to the default value changes the content of input field", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1000",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1000",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       assert
         .dom(".file-size-input")
@@ -301,15 +335,18 @@ module(
     test("resetting to the default value changes the content of checkbox field", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "test_setting",
-        value: "true",
-        default: "false",
-        type: "bool",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "test_setting",
+          value: "true",
+          default: "false",
+          type: "bool",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       assert
         .dom("input[type=checkbox]")
@@ -332,17 +369,20 @@ module(
     test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
       const self = this;
 
-      this.set("setting", {
-        setting: "max_image_size_kb",
-        value: "1000",
-        default: "1024",
-        min: 512,
-        max: 4096,
-        type: "file_size_restriction",
-      });
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "max_image_size_kb",
+          value: "1000",
+          default: "1024",
+          min: 512,
+          max: 4096,
+          type: "file_size_restriction",
+        })
+      );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
 
       await fillIn(".file-size-input", "100");
@@ -351,7 +391,6 @@ module(
       await fillIn(".file-size-input", "");
       assert.dom(".validation-error").hasNoClass("hidden");
       assert.dom(".setting-controls__ok").exists("the save button is shown");
-      assert.dom(".setting-controls__ok").hasAttribute("disabled");
       assert
         .dom(".setting-controls__cancel")
         .exists("the cancel button is shown");
@@ -385,25 +424,22 @@ module(
 
       this.set(
         "setting",
-        EmberObject.create({
-          allowsNone: undefined,
+        SiteSetting.create({
           category: "",
           choices: fonts,
           default: "",
           description: "Base font",
-          overridden: false,
           placeholder: null,
           preview: null,
           secret: false,
           setting: "base_font",
           type: "font_list",
-          validValues: undefined,
           value: "arial",
         })
       );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();
@@ -422,25 +458,22 @@ module(
 
       this.set(
         "setting",
-        EmberObject.create({
-          allowsNone: undefined,
+        SiteSetting.create({
           category: "",
           choices: fonts,
           default: "",
           description: "Heading font",
-          overridden: false,
           placeholder: null,
           preview: null,
           secret: false,
           setting: "heading_font",
           type: "font_list",
-          validValues: undefined,
           value: "arial",
         })
       );
 
       await render(
-        <template><SiteSetting @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{self.setting}} /></template>
       );
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();

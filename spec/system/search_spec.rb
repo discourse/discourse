@@ -165,6 +165,16 @@ describe "Search", type: :system do
         find(".timeline-date-wrapper:first-child a").click
         expect(search_page).to have_no_search_icon
       end
+
+      it "does not display on login and signup pages" do
+        visit("/login")
+        expect(search_page).to have_no_search_icon
+        expect(search_page).to have_no_search_field
+
+        visit("/signup")
+        expect(search_page).to have_no_search_icon
+        expect(search_page).to have_no_search_field
+      end
     end
   end
 

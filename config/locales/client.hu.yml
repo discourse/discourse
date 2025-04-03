@@ -610,6 +610,10 @@ hu:
         name: "Név"
         fields: "Mezők"
         reject_reason: "Ok"
+        scrubbed_reason: "Ok"
+        scrub_record:
+          reason_placeholder: "Ok..."
+          cancel_button: "Mégse"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (a legutóbbi megjelölés)"
@@ -3824,9 +3828,13 @@ hu:
       logo_dark: "Sötét üzemmód kategória logó képe"
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
-      badge_colors: "Jelvény színek"
-      background_color: "Háttér színe"
-      foreground_color: "Előtér színe"
+      background_color: "Szín"
+      styles:
+        icon: "Ikon"
+        emoji: "Hangulatjel"
+        options:
+          icon: "Ikon"
+          emoji: "Hangulatjel"
       color_used: "Használt szín"
       predefined_colors: "Előre definiált színválaszték"
       name_placeholder: "Maximum egy vagy két szó"
