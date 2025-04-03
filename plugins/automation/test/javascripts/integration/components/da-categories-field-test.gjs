@@ -13,14 +13,20 @@ module("Integration | Component | da-categories-field", function (hooks) {
     this.automation = new AutomationFabricators(getOwner(this)).automation();
   });
 
-  test("sets values", async function (assert) {const self = this;
+  test("sets values", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "categories",
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();

@@ -12,21 +12,28 @@ module("Integration | Component | da-message-field", function (hooks) {
     this.automation = new AutomationFabricators(getOwner(this)).automation();
   });
 
-  test("set value", async function (assert) {const self = this;
+  test("set value", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "message",
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
     await fillIn("textarea", "Hello World");
 
     assert.strictEqual(this.field.metadata.value, "Hello World");
   });
 
-  test("render placeholders", async function (assert) {const self = this;
+  test("render placeholders", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "message",
@@ -34,7 +41,12 @@ module("Integration | Component | da-message-field", function (hooks) {
     this.automation.placeholders = ["foo", "bar"];
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     assert.dom(".placeholders-list").hasText("foo bar");
