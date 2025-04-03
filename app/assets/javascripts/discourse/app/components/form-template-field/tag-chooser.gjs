@@ -53,7 +53,7 @@ export default class TagChooserField extends Component {
         this.dialog.alert(
           `You can't select more tags from the ${this.args.tagGroup}. To avoid issues, use Form Template`
         );
-
+        debugger;
         this.previousTags = this.currentTags;
 
         let oldTags = composerTags.filter((tag) =>
@@ -123,7 +123,11 @@ export default class TagChooserField extends Component {
 
   @action
   updateComposerTags(selectedValues) {
-    let previousTags = this.previousTags || [];
+    let validChoices = this.formattedChoices.map((choice) => choice.name);
+    let previousTags = (this.previousTags || []).filter((tag) =>
+      validChoices.includes(tag)
+    );
+
     this.previousTags = [...selectedValues];
 
     let composerTags = this.composer.model.tags;
