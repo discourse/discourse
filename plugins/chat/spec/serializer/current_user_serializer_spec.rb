@@ -31,9 +31,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     context "with custom quick reactions" do
-      before {
-        current_user.user_option.update!(chat_quick_reactions_custom: "tada|smiley")
-      }
+      before { current_user.user_option.update!(chat_quick_reactions_custom: "tada|smiley") }
 
       it "is present" do
         expect(serializer.as_json[:user_option][:chat_quick_reactions_custom]).to eq("tada|smiley")
