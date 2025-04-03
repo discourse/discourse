@@ -451,6 +451,7 @@ export default class SearchMenu extends Component {
             @closeSearchMenu={{this.close}}
             @openSearchMenu={{this.open}}
             @autofocus={{@autofocusInput}}
+            @inputId={{@searchInputId}}
             data-test-input="search-term"
           />
 
@@ -475,47 +476,6 @@ export default class SearchMenu extends Component {
             class="btn-flat"
             data-test-button="cancel-search-mobile"
           />
-        {{else if this.inPMInboxContext}}
-          <DButton
-            @icon="xmark"
-            @label="search.in_messages"
-            @title="search.in_messages_tooltip"
-            @action={{this.clearPMInboxContext}}
-            class="btn-small search-context"
-          />
-        {{/if}}
-
-        <PluginOutlet
-          @name="search-menu-before-term-input"
-          @outletArgs={{hash openSearchMenu=this.open}}
-        />
-
-        <SearchTerm
-          @searchTermChanged={{this.searchTermChanged}}
-          @typeFilter={{this.typeFilter}}
-          @updateTypeFilter={{this.updateTypeFilter}}
-          @triggerSearch={{this.triggerSearch}}
-          @fullSearch={{this.fullSearch}}
-          @clearPMInboxContext={{this.clearPMInboxContext}}
-          @clearTopicContext={{this.clearTopicContext}}
-          @closeSearchMenu={{this.close}}
-          @openSearchMenu={{this.open}}
-          @autofocus={{@autofocusInput}}
-          @inputId={{@searchInputId}}
-        />
-
-        {{#if this.loading}}
-          <div class="searching">
-            {{loadingSpinner}}
-          </div>
-        {{else}}
-          <div class="searching">
-            <PluginOutlet @name="search-menu-before-advanced-search" />
-            {{#if this.search.activeGlobalSearchTerm}}
-              <ClearButton @clearSearch={{this.clearSearch}} />
-            {{/if}}
-            <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
-          </div>
         {{/if}}
       </div>
 
