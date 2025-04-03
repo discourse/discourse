@@ -226,7 +226,6 @@ module.exports = function (defaults) {
           new RetryChunkLoadPlugin({
             retryDelay: 200,
             maxRetries: 2,
-            chunks: ["assets/discourse.js"],
           }),
         ],
       },
