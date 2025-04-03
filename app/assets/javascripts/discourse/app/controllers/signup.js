@@ -366,7 +366,7 @@ export default class SignupPageController extends Controller {
       // then look for a registered username that matches the email.
       discourseDebounce(
         this,
-        this.usernameValidationHelper.fetchExistingUsername,
+        () => this.usernameValidationHelper.fetchExistingUsername(),
         500
       );
     }

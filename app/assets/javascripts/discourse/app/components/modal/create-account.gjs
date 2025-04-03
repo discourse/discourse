@@ -390,7 +390,7 @@ export default class CreateAccount extends Component {
       // then look for a registered username that matches the email.
       discourseDebounce(
         this,
-        this.usernameValidationHelper.fetchExistingUsername,
+        () => this.usernameValidationHelper.fetchExistingUsername(),
         500
       );
     }
