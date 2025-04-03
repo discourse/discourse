@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
-import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
 import lightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
@@ -60,6 +60,12 @@ export default class ChatMessageCollapser extends Component {
     }
 
     return [];
+  }
+
+  get lazyVideoComponent() {
+    try {
+      return require("discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video");
+    } catch {}
   }
 
   lazyVideoCooked(elements) {
@@ -176,9 +182,11 @@ export default class ChatMessageCollapser extends Component {
               @header={{cooked.header}}
               @onToggle={{@onToggleCollapse}}
             >
-              {{#if cooked.videoAttributes}}
+              {{#if (and cooked.videoAttributes this.lazyVideoComponent)}}
                 <div class="chat-message-collapser-lazy-video">
-                  <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+                  <this.lazyVideoComponent
+                    @videoAttributes={{cooked.videoAttributes}}
+                  />
                 </div>
               {{else}}
                 <DecoratedHtml
