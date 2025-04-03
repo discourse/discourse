@@ -6,10 +6,7 @@ describe "glimmer topic list", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    SiteSetting.glimmer_topic_list_mode = "enabled"
-    sign_in(user)
-  end
+  before { sign_in(user) }
 
   describe "/latest" do
     it "shows the list" do
