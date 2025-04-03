@@ -63,7 +63,20 @@ export default class CreateAccount extends Component {
   maskPassword = true;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
-  usernameValidationHelper = new UsernameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper({
+    getAccountEmail: () => this.accountEmail,
+    getAccountUsername: () => this.accountUsername,
+    getPrefilledUsername: () => this.prefilledUsername,
+    getAuthOptionsUsername: () => this.authOptions?.username,
+    forceValidationReason: this.forceValidationReason,
+    siteSettings: this.siteSettings,
+    isInvalid: () => this.isDestroying || this.isDestroyed,
+    updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
+    updateUsernames: (username) => {
+      this.accountUsername = username;
+      this.prefilledUsername = username;
+    },
+  });
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
     getUserFields: () => this.site.get("user_fields"),
