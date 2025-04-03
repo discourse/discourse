@@ -35,7 +35,7 @@ export default class SecurityController extends Controller {
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
-      this.model,
+      this.model.id,
       this.canModeratorsViewEmails,
       this.currentUser
     ).canCheckEmails;
