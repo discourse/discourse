@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
-import AutomationField from "discourse/plugins/chat/admin/components/automation-field";
+import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 
 module("Integration | Component | da-custom-field", function (hooks) {
   setupRenderingTest(hooks);
