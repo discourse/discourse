@@ -235,18 +235,15 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25em;
+  display: inline;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0.2em 0.34em;
+  padding: 0.14em 0.34em 0.19em;
   background: var(--primary-low);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
-  line-height: 1;
 
   &.--bot {
     background: var(--success-low);
