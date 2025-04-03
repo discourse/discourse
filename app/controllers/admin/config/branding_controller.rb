@@ -50,7 +50,7 @@ class Admin::Config::BrandingController < Admin::AdminController
           {
             setting_name: "default_text_size",
             value: params[:default_text_size],
-            backfill: params[:update_existing_users].present?,
+            backfill: params[:update_existing_users] == "true",
           },
         ],
       },

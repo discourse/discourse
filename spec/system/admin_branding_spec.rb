@@ -215,7 +215,7 @@ describe "Admin Branding Page", type: :system do
   end
 
   describe "fonts" do
-    it "allows to change base and heading font" do
+    it "allows an admin to change the site's base font and heading font" do
       branding_page.visit
       branding_page.fonts_form.select_font("base", "helvetica")
 
@@ -226,13 +226,12 @@ describe "Admin Branding Page", type: :system do
       branding_page.fonts_form.submit
       expect(branding_page.fonts_form).to have_saved_successfully
 
-      visit "/"
       branding_page.visit
       expect(branding_page.fonts_form.active_font("base")).to eq("Helvetica")
       expect(branding_page.fonts_form.active_font("heading")).to eq("Oswald")
     end
 
-    it "allows to change default text size and does not update existing users preferences" do
+    it "allows an admin to change default text size and does not update existing users preferences" do
       Jobs.run_immediately!
       branding_page.visit
       expect(page).to have_css("html.text-size-normal")
@@ -245,12 +244,13 @@ describe "Admin Branding Page", type: :system do
       )
       modal.close
       expect(modal).to be_closed
+      expect(branding_page.fonts_form).to have_saved_successfully
 
       visit "/"
       expect(page).to have_css("html.text-size-normal")
     end
 
-    it "allows to change default text size and updates existing users preferences" do
+    it "allows an admin to change default text size and updates existing users preferences" do
       Jobs.run_immediately!
       branding_page.visit
       expect(page).to have_css("html.text-size-normal")
@@ -263,6 +263,7 @@ describe "Admin Branding Page", type: :system do
       )
       modal.click_primary_button
       expect(modal).to be_closed
+      expect(branding_page.fonts_form).to have_saved_successfully
 
       visit "/"
       expect(page).to have_css("html.text-size-larger")

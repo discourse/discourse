@@ -183,6 +183,14 @@ task "javascript:update_constants" => :environment do
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
 
     export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
+
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
+
+    export const FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] }}
+
+    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

@@ -3286,11 +3286,7 @@ user_preferences:
     type: enum
     default: normal
     client: true
-    choices:
-      - smaller
-      - normal
-      - larger
-      - largest
+    choices: "DefaultTextSizeSetting.values"
     area: "fonts"
 
   default_title_count_mode:

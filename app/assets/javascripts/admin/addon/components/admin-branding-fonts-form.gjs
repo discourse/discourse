@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,11 +9,12 @@ import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import { DEFAULT_TEXT_SIZES, FONTS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 
-const FONTS = [
+const MAIN_FONTS = [
   "Helvetica",
   "Inter",
   "Lato",
@@ -24,26 +25,7 @@ const FONTS = [
   "Merriweather",
   "Mukta",
 ];
-const MORE_FONTS = [
-  "Arial",
-  "Lora",
-  "NotoSans",
-  "NotoSansJP",
-  "Nunito",
-  "Oswald",
-  "Oxanium",
-  "PT Sans",
-  "PlayfairDisplay",
-  "Raleway",
-  "RobotoCondensed",
-  "RobotoMono",
-  "RobotoSlab",
-  "SourceSansPro",
-  "System",
-  "Ubuntu",
-];
-
-const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
+const MORE_FONTS = FONTS.filter((font) => !MAIN_FONTS.includes(font));
 
 export default class AdminBrandingFontsForm extends Component {
   @service siteSettings;
@@ -140,7 +122,6 @@ export default class AdminBrandingFontsForm extends Component {
     }
   }
 
-  @cached
   get formData() {
     return {
       base_font: this.siteSettings.base_font,
@@ -164,7 +145,7 @@ export default class AdminBrandingFontsForm extends Component {
         as |field|
       >
         <field.Custom>
-          {{#each FONTS as |font|}}
+          {{#each MAIN_FONTS as |font|}}
             <DButton
               @action={{fn this.setButtonValue field.set font}}
               class={{concatClass
@@ -212,7 +193,7 @@ export default class AdminBrandingFontsForm extends Component {
         as |field|
       >
         <field.Custom>
-          {{#each FONTS as |font|}}
+          {{#each MAIN_FONTS as |font|}}
             <DButton
               @action={{fn this.setButtonValue field.set font}}
               class={{concatClass
@@ -268,7 +249,7 @@ export default class AdminBrandingFontsForm extends Component {
         as |field|
       >
         <field.Custom>
-          {{#each TEXT_SIZES as |textSize|}}
+          {{#each DEFAULT_TEXT_SIZES as |textSize|}}
             <DButton
               @action={{fn this.setButtonValue field.set textSize}}
               class={{concatClass

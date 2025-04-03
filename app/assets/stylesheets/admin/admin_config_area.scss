@@ -341,12 +341,16 @@
         }
 
         &.text-size {
-          flex: 0 0 24%;
-          max-width: 24%;
+          flex: 0 0 19%;
+          max-width: 19%;
 
           @media (max-width: $mobile-breakpoint) {
             flex: 0 0 100%;
             max-width: 100%;
+          }
+
+          &.smallest {
+            font-size: var(--base-font-size-smallest);
           }
 
           &.smaller {

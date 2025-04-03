@@ -3,6 +3,7 @@ import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { DEFAULT_TEXT_SIZES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
@@ -193,10 +194,9 @@ export default class SiteSettingChangeTracker extends Service {
       "--heading-font-family",
       this.siteSettings.heading_font
     );
-    document.documentElement.classList.remove("text-size-smaller");
-    document.documentElement.classList.remove("text-size-normal");
-    document.documentElement.classList.remove("text-size-larger");
-    document.documentElement.classList.remove("text-size-largest");
+    DEFAULT_TEXT_SIZES.forEach((size) => {
+      document.documentElement.classList.remove(`text-size-${size}`);
+    });
     document.documentElement.classList.add(
       `text-size-${this.siteSettings.default_text_size}`
     );
@@ -224,7 +224,12 @@ export default class SiteSettingChangeTracker extends Service {
       logo = this.siteSettings.logo;
     }
 
-    document.getElementById("site-logo").setAttribute("src", logo);
+    // Force reload when switch from text logo to image logo and vice versa
+    if (!logo || !document.getElementById("site-logo")) {
+      window.location.reload();
+    } else {
+      document.getElementById("site-logo").setAttribute("src", logo);
+    }
   }
 
   get count() {
