@@ -64,7 +64,9 @@ export default class ChatemojiReactions {
       (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
         this.currentUser.user_option.chat_quick_reactions_custom) ||
       ""
-    ).split("|");
+    )
+      .split("|")
+      .filter(Boolean);
 
     const frequentReactions = this.emojiStore.favoritesForContext("chat");
 
