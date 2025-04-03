@@ -1235,7 +1235,7 @@ class UsersController < ApplicationController
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
-    user_id = params[:user_id].to_i if params[:user_id].present?
+    prioritized_user_id = params[:prioritized_user_id].to_i if params[:prioritized_user_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1260,7 +1260,7 @@ class UsersController < ApplicationController
 
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
-    options[:user_id] = user_id if user_id
+    options[:prioritized_user_id] = prioritized_user_id if prioritized_user_id
 
     results =
       if usernames.blank?

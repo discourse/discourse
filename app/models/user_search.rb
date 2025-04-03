@@ -8,8 +8,8 @@ class UserSearch
     @term_like = @term.gsub("_", "\\_") + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
-    # user_id is only used for ordering within the topic, it will prioritize this user
-    @user_id = opts[:user_id]
+    # prioritized_user_id is only used for ordering within the topic, it will prioritize this user
+    @prioritized_user_id = opts[:prioritized_user_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
@@ -90,9 +90,11 @@ class UserSearch
 
       in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
-      if @user_id
+      if @prioritized_user_id
         in_topic =
-          in_topic.order(DB.sql_fragment("CASE WHEN users.id = ? THEN 0 ELSE 1 END", @user_id))
+          in_topic.order(
+            DB.sql_fragment("CASE WHEN users.id = ? THEN 0 ELSE 1 END", @prioritized_user_id),
+          )
       end
 
       in_topic
