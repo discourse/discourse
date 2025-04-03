@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import Yaml from "js-yaml";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
@@ -10,6 +11,8 @@ import InputField from "./input";
 import MultiSelectField from "./multi-select";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
+import { next } from "@ember/runloop";
+
 
 const FormTemplateField = <template>
   <@component
@@ -23,6 +26,9 @@ const FormTemplateField = <template>
 </template>;
 
 export default class FormTemplateFieldWrapper extends Component {
+  @service composer;
+  @service siteSettings;
+
   @tracked error = null;
   @tracked parsedTemplate = null;
 
@@ -47,6 +53,14 @@ export default class FormTemplateFieldWrapper extends Component {
     } else if (this.args.id) {
       this._fetchTemplate(this.args.id);
     }
+
+  next(this, () => {
+       this.composer.set(
+      "allowPreview",
+      this.siteSettings.experimental_preview_in_form_templates
+    );
+    });
+   
   }
 
   _loadTemplate(templateContent) {
