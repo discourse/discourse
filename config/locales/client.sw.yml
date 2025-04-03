@@ -298,6 +298,9 @@ sw:
         email: "Barua Pepe"
         name: "Jina"
         reject_reason: "Sababu"
+        scrubbed_reason: "Sababu"
+        scrub_record:
+          cancel_button: "Ghairi"
       topics:
         topic: "Mada"
         deleted: "[Mada Imefutwa]"
@@ -1913,9 +1916,13 @@ sw:
       description: "Maelezo"
       logo: "Nembo ya Kategoria"
       background_image: "Mandharinyuma ya Kategoria"
-      badge_colors: "Rangi za Beji"
-      background_color: "rangi ya Mandharinyuma"
-      foreground_color: "Rangi ya mandhari ya mbele"
+      background_color: "Rangi"
+      styles:
+        icon: "ikoni"
+        emoji: "Emoji"
+        options:
+          icon: "ikoni"
+          emoji: "Emoji"
       name_placeholder: "Neno moja au mawili"
       color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"

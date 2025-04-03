@@ -368,6 +368,7 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
+      site_settings_are_deprecated: "Nasledujúce nastavenia sú zastarané: %{old_names}. Namiesto toho použite %{new_names}"
       site_settings_are_hidden: "Nie je povolené meniť skryté nastavenia: %{setting_names}"
       site_settings_are_shadowed_globally: "Tieto nastavenia nemôžete zmeniť, pretože sú nakonfigurované globálne: %{setting_names}"
       site_settings_are_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia: %{setting_names}"
@@ -1785,6 +1786,7 @@ sk:
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
+      full_page_login_check: "Vaša stránka má vypnuté nastavenie prihlásenia na celú stránku. Toto nastavenie je zastarané a bude odstránené <strong>29. apríla 2025.</strong> Vaša lokalita bude k tomuto dátumu aktualizovaná tak, aby používala prihlasovacie obrazovky a obrazovky na prihlásenie na celú stránku. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Ďalšie informácie.</a>"
     back_from_logster_text: "Späť na stránku"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
@@ -2633,6 +2635,8 @@ sk:
     glimmer_topic_list_mode: "Kontrola, či sa používa nová implementácia zoznamu tém \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Viac informácií nájdete v <a href='https://meta.discourse.org/t/343404'>téme Meta</a>."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
@@ -2998,6 +3002,7 @@ sk:
       inactive_user: "Neaktívny používateľ"
       reviewable_reject_auto: "Automatické spracovanie hodnotených položiek vo fronte"
       reviewable_reject: "Preskúmateľný používateľ zamietnutý"
+      reviewable_details_scrubbed: "Podrobnosti o používateľovi vymazané z adresy %{staff}\n\nDôvod: %{reason}\n\nČasová značka: %{timestamp}"
     email_in_spam_header: "Prvý e-mail používateľa bol označený ako spam"
     already_silenced: "Používateľa už umlčal %{staff} %{time_ago}."
     already_suspended: "Používateľa už pozastavil %{staff} %{time_ago}."

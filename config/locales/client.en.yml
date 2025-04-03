@@ -2516,9 +2516,9 @@ en:
         title: "Sign in with Google"
         sr_title: "Sign in with Google"
       twitter:
-        name: "Twitter"
-        title: "Sign in with Twitter"
-        sr_title: "Sign in with Twitter"
+        name: "X"
+        title: "Sign in with X"
+        sr_title: "Sign in with X"
       instagram:
         name: "Instagram"
         title: "Log in with Instagram"
@@ -5346,7 +5346,7 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         search_everything:
           title: "Search"
-          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered. To open this search anywhere in the admin interface, press %{shortcutHTML}."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -7514,7 +7514,7 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
-        title: "Site settings" 
+        title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         discard: "Discard changes"
         save: "Save all changes"

@@ -2,6 +2,7 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import { eq, not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -21,9 +22,6 @@ import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
-import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

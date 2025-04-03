@@ -6,6 +6,7 @@ import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { gt, lte } from "truth-helpers";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -13,8 +14,6 @@ import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
-import gt from "truth-helpers/helpers/gt";
-import lte from "truth-helpers/helpers/lte";
 
 const JS_DEFAULT_VALUE = `import { apiInitializer } from "discourse/lib/api";
 
