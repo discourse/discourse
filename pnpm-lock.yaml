@@ -1217,6 +1217,33 @@ importers:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.98.0(@swc/core@1.11.16)(esbuild@0.25.2))
 
+  plugins/automation:
+    dependencies:
+      '@ember/optional-features':
+        specifier: ^2.2.0
+        version: 2.2.0
+      '@ember/render-modifiers':
+        specifier: ^3.0.0
+        version: 3.0.0(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.16)(esbuild@0.25.2)))
+      codemod-resolver:
+        specifier: workspace:*
+        version: link:../../app/assets/javascripts/codemod-resolver
+      ember-auto-import:
+        specifier: ^2.10.0
+        version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.98.0(@swc/core@1.11.16)(esbuild@0.25.2))
+      ember-cli:
+        specifier: ~6.3.0
+        version: 6.3.0(handlebars@4.7.8)(underscore@1.13.6)
+      ember-source:
+        specifier: ~5.12.0
+        version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.16)(esbuild@0.25.2))
+      float-kit:
+        specifier: workspace:*
+        version: link:../../app/assets/javascripts/float-kit
+      truth-helpers:
+        specifier: workspace:*
+        version: link:../../app/assets/javascripts/truth-helpers
+
   plugins/chat:
     dependencies:
       '@ember/optional-features':

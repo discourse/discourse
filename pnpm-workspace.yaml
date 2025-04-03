@@ -17,3 +17,4 @@ packages:
 - "app/assets/javascripts/truth-helpers"
 - "app/assets/javascripts/codemod-resolver"
 - "plugins/chat"
+- "plugins/automation"
