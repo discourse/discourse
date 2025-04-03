@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-post-field", function (hooks) {
   setupRenderingTest(hooks);
