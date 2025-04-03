@@ -98,14 +98,14 @@ export default class SiteSettingComponent extends Component.extend(
         <DButton
           @action={{this.update}}
           @icon="check"
-          @disabled={{this.disableControls}}
+          @isLoading={{this.disableControls}}
           @ariaLabel="admin.settings.save"
           class="ok setting-controls__ok"
         />
         <DButton
           @action={{this.cancel}}
           @icon="xmark"
-          @disabled={{this.disableControls}}
+          @isLoading={{this.disableControls}}
           @ariaLabel="admin.settings.cancel"
           class="cancel setting-controls__cancel"
         />

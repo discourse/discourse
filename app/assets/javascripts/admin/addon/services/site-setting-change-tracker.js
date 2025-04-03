@@ -61,7 +61,7 @@ export default class SiteSettingChangeTracker extends Service {
       await SiteSetting.bulkUpdate(params);
 
       this.dirtySiteSettings.forEach((setting) => {
-        setting.set("validationMessage", null);
+        setting.validationMessage = null;
         setting.buffered.applyChanges();
         if (setting.requiresReload) {
           reload = setting.afterSave;
@@ -75,6 +75,7 @@ export default class SiteSettingChangeTracker extends Service {
         reload();
       }
     } catch (error) {
+      this.#stopSaving();
       popupAjaxError(error);
     }
   }
@@ -170,13 +171,13 @@ export default class SiteSettingChangeTracker extends Service {
 
   #startSaving() {
     this.dirtySiteSettings.forEach((setting) => {
-      setting.set("isSaving", true);
+      setting.isSaving = true;
     });
   }
 
   #stopSaving() {
     this.dirtySiteSettings.forEach((setting) => {
-      setting.set("isSaving", false);
+      setting.isSaving = false;
     });
   }
 

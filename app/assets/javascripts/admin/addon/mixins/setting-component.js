@@ -67,7 +67,7 @@ export default Mixin.create({
   }),
 
   dirty: computed("buffered.value", "setting.value", function () {
-    let bufferVal = this.get("buffered.value");
+    let bufferVal = this.buffered.get("value");
     let settingVal = this.setting?.value;
 
     if (isNone(bufferVal)) {
@@ -91,7 +91,7 @@ export default Mixin.create({
 
   preview: computed("setting", "buffered.value", function () {
     const setting = this.setting;
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
@@ -128,7 +128,7 @@ export default Mixin.create({
   }),
 
   bufferedValues: computed("buffered.value", function () {
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     return splitString(value, "|");
   }),
 
@@ -203,11 +203,11 @@ export default Mixin.create({
 
   save: action(async function () {
     try {
-      this.setting.set("isSaving", true);
+      this.setting.isSaving = true;
 
       await this._save();
 
-      this.setting.set("validationMessage", null);
+      this.setting.validationMessage = null;
       this.buffered.applyChanges();
       if (this.setting.requiresReload) {
         this.afterSave();
@@ -221,31 +221,31 @@ export default Mixin.create({
           errorString = htmlSafe(errorString);
         }
 
-        this.setting.set("validationMessage", errorString);
+        this.setting.validationMessage = errorString;
       } else {
-        this.setting.set("validationMessage", i18n("generic_error"));
+        this.setting.validationMessage = i18n("generic_error");
       }
     } finally {
-      this.setting.set("isSaving", false);
+      this.setting.isSaving = false;
     }
   }),
 
   changeValueCallback: action(function (value) {
-    this.set("buffered.value", value);
+    this.buffered.set("value", value);
   }),
 
   setValidationMessage: action(function (message) {
-    this.setting.set("validationMessage", message);
+    this.setting.validationMessage = message;
   }),
 
   cancel: action(function () {
     this.buffered.discardChanges();
-    this.setting.set("validationMessage", null);
+    this.setting.validationMessage = null;
   }),
 
   resetDefault: action(function () {
-    this.setting.set("buffered.value", this.setting.default);
-    this.setting.set("validationMessage", null);
+    this.buggered.set("value", this.setting.default);
+    this.setting.validationMessage = null;
   }),
 
   toggleSecret: action(function () {
@@ -253,11 +253,11 @@ export default Mixin.create({
   }),
 
   setDefaultValues: action(function () {
-    this.set(
-      "buffered.value",
+    this.buffered.set(
+      "value",
       this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
-    this.setting.set("validationMessage", null);
+    this.setting.validationMessage = null;
     return false;
   }),
 
