@@ -1,0 +1,27 @@
+{
+  "name": "styleguide",
+  "scripts": {
+    "codemod": "pnpm dlx @embroider/template-tag-codemod --relativeLocalPaths=false --nativeRouteTemplates=false --nativeLexicalThis=false --templateInsertion='end' --addNameToTemplateOnly --renderTests='test/**/*.js' --routeTemplates='**/templates/**/*.hbs' --components='**/components/**/*.hbs' --customResolver './custom-resolver.js' --renamingRules '../../app/assets/javascripts/discourse/rules.js'"
+  },
+  "dependencies": {
+    "codemod-resolver": "workspace:*",
+    "float-kit": "workspace:*",
+    "@ember/optional-features": "^2.2.0",
+    "@ember/render-modifiers": "^3.0.0",
+    "ember-cli": "~6.3.0",
+    "ember-source": "~5.12.0",
+    "ember-auto-import": "^2.10.0",
+    "truth-helpers": "workspace:*"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "exports": {
+    "./tests/*": "./tests/*",
+    "./*": "./app/*"
+  }
+}

@@ -18,3 +18,4 @@ packages:
 - "app/assets/javascripts/codemod-resolver"
 - "plugins/chat"
 - "plugins/automation"
+- "plugins/styleguide"
