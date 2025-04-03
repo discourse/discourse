@@ -82,11 +82,12 @@ export default class Types extends Component {
           class="list"
           aria-label={{concat (i18n "search.results") " " resultType.type}}
         >
-          {{#each resultType.results as |result|}}
+          {{#each resultType.results as |result index|}}
             {{! template-lint-disable no-pointer-down-event-binding }}
             {{! template-lint-disable no-invalid-interactive }}
             <li
               class="item"
+              data-test-type-item="search-result-{{resultType.type}}-{{index}}"
               {{on
                 "keydown"
                 (fn this.onKeydown (hash resultType=resultType result=result))

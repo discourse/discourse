@@ -153,7 +153,10 @@ export default class InitialOptions extends Component {
   }
 
   <template>
-    <ul class="search-menu-initial-options">
+    <ul
+      class="search-menu-initial-options"
+      data-test-selector="search-menu-initial-options"
+    >
       <PluginOutlet
         @name="search-menu-initial-options"
         @outletArgs={{hash
@@ -176,6 +179,7 @@ export default class InitialOptions extends Component {
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{this.contextTypeKeyword}}
+            data-test-assistant-item="search-with-modifier"
           />
         {{else}}
           {{#if
@@ -189,6 +193,7 @@ export default class InitialOptions extends Component {
                 @extraHint={{true}}
                 @searchTermChanged={{@searchTermChanged}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
+                data-test-assistant-item="search-in-topics-posts"
               />
             {{/if}}
 
