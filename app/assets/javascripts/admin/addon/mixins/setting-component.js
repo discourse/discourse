@@ -9,14 +9,14 @@ import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
-import {
-  DEFAULT_USER_PREFERENCES,
-  SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
-} from "discourse/lib/constants";
 import { deepEqual } from "discourse/lib/object";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import {
+  DEFAULT_USER_PREFERENCES,
+  SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
+} from "admin/lib/constants";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [

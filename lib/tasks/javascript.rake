@@ -137,6 +137,22 @@ task "javascript:update_constants" => :environment do
       )
     end
 
+  write_template("admin/addon/lib/constants.js", task_name, <<~JS)
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
+
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
+
+    export const REPORT_MODES = #{Report::MODES.to_json};
+
+    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
+
+    export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
+  JS
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -164,23 +180,9 @@ task "javascript:update_constants" => :environment do
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
-
-    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
-
-    export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
-
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
 
-    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
-
-    export const REPORT_MODES = #{Report::MODES.to_json};
-
     export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
-
-    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
-
-    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
