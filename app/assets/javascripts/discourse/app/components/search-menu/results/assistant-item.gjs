@@ -128,7 +128,7 @@ export default class AssistantItem extends Component {
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });
-    focusSearchInput();
+    focusSearchInput(this.args.inputId);
   }
 
   <template>

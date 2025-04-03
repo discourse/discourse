@@ -86,6 +86,7 @@ export default class Results extends Component {
               @results={{@suggestionResults}}
               @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
+              @inputId={{@inputId}}
             />
           {{else if this.termTooShort}}
             <div class="no-results">{{i18n "search.too_short"}}</div>
@@ -95,6 +96,7 @@ export default class Results extends Component {
             <InitialOptions
               @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
+              @inputId={{@inputId}}
             />
           {{else}}
             {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
@@ -102,6 +104,7 @@ export default class Results extends Component {
               <InitialOptions
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
+                @inputId={{@inputId}}
               />
             {{/if}}
 

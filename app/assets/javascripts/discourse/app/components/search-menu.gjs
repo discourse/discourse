@@ -37,7 +37,8 @@ export const SEARCH_INPUT_ID = "search-term";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
-export function focusSearchInput(inputId = SEARCH_INPUT_ID) {
+export function focusSearchInput(inputId) {
+  inputId = inputId || SEARCH_INPUT_ID;
   document.getElementById(inputId).focus();
 }
 
@@ -189,7 +190,7 @@ export default class SearchMenu extends Component {
     e.stopPropagation();
     e.preventDefault();
     this.search.activeGlobalSearchTerm = "";
-    focusSearchInput();
+    focusSearchInput(this.args.searchInputId);
     this.triggerSearch();
   }
 
@@ -463,6 +464,7 @@ export default class SearchMenu extends Component {
           @closeSearchMenu={{this.close}}
           @searchTermChanged={{this.searchTermChanged}}
           @clearSearch={{this.clearSearch}}
+          @inputId={{@searchInputId}}
         />
       {{else if this.displayMenuPanelResults}}
         <MenuPanel @panelClass="search-menu-panel">
@@ -478,6 +480,7 @@ export default class SearchMenu extends Component {
             @closeSearchMenu={{this.close}}
             @searchTermChanged={{this.searchTermChanged}}
             @clearSearch={{this.clearSearch}}
+            @inputId={{@searchInputId}}
           />
         </MenuPanel>
       {{/if}}

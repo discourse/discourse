@@ -70,6 +70,7 @@ export default class RecentSearches extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @usage="recent-search"
             @concatSlug={{true}}
+            @inputId={{@inputId}}
           />
         {{/each}}
       </div>

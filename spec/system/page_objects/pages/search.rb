@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def type_in_banner_search(input)
+        find("input.search-term__input").send_keys(input)
+        self
+      end
+
       def type_in_search_menu(input)
         find(".search-input--header input").send_keys(input)
         self

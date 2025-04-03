@@ -171,6 +171,7 @@ export default class InitialOptions extends Component {
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{this.contextTypeKeyword}}
+            @inputId={{@inputId}}
           />
         {{else}}
           {{#if
@@ -184,6 +185,7 @@ export default class InitialOptions extends Component {
                 @extraHint={{true}}
                 @searchTermChanged={{@searchTermChanged}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
+                @inputId={{@inputId}}
               />
             {{/if}}
 
@@ -197,6 +199,7 @@ export default class InitialOptions extends Component {
                 @label={{this.label}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
+                @inputId={{@inputId}}
               />
 
               {{#if
@@ -209,6 +212,7 @@ export default class InitialOptions extends Component {
                 <RecentSearches
                   @closeSearchMenu={{@closeSearchMenu}}
                   @searchTermChanged={{@searchTermChanged}}
+                  @inputId={{@inputId}}
                 />
               {{/if}}
             {{/if}}
@@ -218,6 +222,7 @@ export default class InitialOptions extends Component {
               <RecentSearches
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
+                @inputId={{@inputId}}
               />
             {{/if}}
           {{/if}}
