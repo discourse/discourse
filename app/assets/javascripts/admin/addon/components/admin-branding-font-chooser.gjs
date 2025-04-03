@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { classify, decamelize, underscore } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { MAIN_FONTS, MORE_FONTS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
+import { MAIN_FONTS, MORE_FONTS } from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
 export default class AdminBrandingFontChooser extends Component {

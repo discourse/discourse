@@ -82,3 +82,44 @@ export const DEFAULT_USER_PREFERENCES = [
   "default_sidebar_link_to_filtered_list",
   "default_sidebar_show_count_of_new_items",
 ];
+
+export const MAIN_FONTS = [
+  "Helvetica",
+  "Inter",
+  "Lato",
+  "Montserrat",
+  "OpenSans",
+  "Poppins",
+  "Roboto",
+  "Merriweather",
+  "Mukta",
+];
+
+export const MORE_FONTS = [
+  "Arial",
+  "System",
+  "Open Sans",
+  "Oxanium",
+  "NotoSansJP",
+  "RobotoCondensed",
+  "SourceSansPro",
+  "Oswald",
+  "Raleway",
+  "RobotoMono",
+  "NotoSans",
+  "RobotoSlab",
+  "Ubuntu",
+  "PTSans",
+  "PlayfairDisplay",
+  "Nunito",
+  "Lora",
+  "JetBrains Mono",
+];
+
+export const DEFAULT_TEXT_SIZES = [
+  "smallest",
+  "smaller",
+  "normal",
+  "larger",
+  "largest",
+];

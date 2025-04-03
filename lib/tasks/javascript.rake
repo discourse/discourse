@@ -137,6 +137,8 @@ task "javascript:update_constants" => :environment do
       )
     end
 
+  MAIN_FONTS = %w[Helvetica Inter Lato Montserrat OpenSans Poppins Roboto Merriweather Mukta]
+
   write_template("admin/addon/lib/constants.js", task_name, <<~JS)
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
 
@@ -151,9 +153,13 @@ task "javascript:update_constants" => :environment do
     export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
 
     export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
-  JS
 
-  MAIN_FONTS = %w[Helvetica Inter Lato Montserrat OpenSans Poppins Roboto Merriweather Mukta]
+    export const MAIN_FONTS = #{MAIN_FONTS}
+
+    export const MORE_FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] } - MAIN_FONTS}
+
+    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
+  JS
 
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
@@ -189,12 +195,6 @@ task "javascript:update_constants" => :environment do
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
 
     export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
-
-    export const MAIN_FONTS = #{MAIN_FONTS}
-
-    export const MORE_FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] } - MAIN_FONTS}
-
-    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
