@@ -41,23 +41,37 @@ export default class AdminSiteSettingsChangesBanner extends Component {
     });
   }
 
+  get saveLabel() {
+    return i18n("admin.site_settings.save", {
+      count: this.dirtyCount,
+    });
+  }
+
+  get discardLabel() {
+    return i18n("admin.site_settings.discard", {
+      count: this.dirtyCount,
+    });
+  }
+
   <template>
     {{#if this.showBanner}}
       <div class="admin-site-settings__changes-banner">
         <span>{{htmlSafe this.bannerLabel}}</span>
         <div class="controls">
           <DButton
-            @label="admin.site_settings.discard"
             @action={{this.discard}}
             @disabled={{this.isSaving}}
             class="btn-secondary btn-small"
-          />
+          >
+            {{this.discardLabel}}
+          </DButton>
           <DButton
-            @label="admin.site_settings.save"
             @action={{this.save}}
             @isLoading={{this.isSaving}}
             class="btn-primary btn-small"
-          />
+          >
+            {{this.saveLabel}}
+          </DButton>
         </div>
       </div>
     {{/if}}

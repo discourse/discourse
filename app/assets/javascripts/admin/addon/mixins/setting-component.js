@@ -244,7 +244,7 @@ export default Mixin.create({
   }),
 
   resetDefault: action(function () {
-    this.buggered.set("value", this.setting.default);
+    this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
   }),
 

@@ -131,8 +131,8 @@ export default class SiteSettingChangeTracker extends Service {
         message: i18n("admin.site_settings.dirty_banner", {
           count: this.count,
         }),
-        confirmButtonLabel: "admin.site_settings.save",
-        cancelButtonLabel: "admin.site_settings.discard",
+        confirmButtonLabel: this.saveLabel,
+        cancelButtonLabel: this.discardLabel,
         didConfirm: async () => {
           await this.save();
           resolve(true);
@@ -187,6 +187,18 @@ export default class SiteSettingChangeTracker extends Service {
 
   get hasUnsavedChanges() {
     return this.count > 0;
+  }
+
+  get saveLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.save.${count}`;
+  }
+
+  get discardLabel() {
+    const count = this.hasUnsavedChanges ? "other" : "one";
+
+    return `admin.site_settings.discard.${count}`;
   }
 
   get #requiresConfirmation() {

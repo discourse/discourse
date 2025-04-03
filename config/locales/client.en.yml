@@ -7516,8 +7516,12 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
-        discard: "Discard changes"
-        save: "Save all changes"
+        discard:
+          one: "Discard change"
+          other: "Discard changes"
+        save:
+          one: "Save change"
+          other: "Save all changes"
         dirty_banner:
           one: "You have <b>%{count}</b> unsaved change"
           other: "You have <b>%{count}</b> unsaved changes"
