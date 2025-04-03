@@ -221,7 +221,7 @@ export default class SiteSettingChangeTracker extends Service {
       logo = this.siteSettings.logo;
     }
 
-    // Force reload when switch from text logo to image logo and vice versa
+    // Force reload when switching from text logo to image logo and vice versa
     if (
       (!this.siteSettings.logo && document.getElementById("site-logo")) ||
       (this.siteSettings.logo && !document.getElementById("site-logo"))
