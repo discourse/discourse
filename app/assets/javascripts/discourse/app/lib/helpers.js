@@ -57,7 +57,7 @@ export function helperContext() {
  */
 export function registerUnbound(name, fn) {
   deprecated(
-    `[registerUnbound ${name}] registerUnbound is deprecated. Instead, you should export a default function from 'discourse/helpers/${name}.js'. If the helper is also used in raw-hbs, you can register it using 'registerRawHelper'.`,
+    `[registerUnbound ${name}] registerUnbound is deprecated. Instead, you should export a default function from 'discourse/helpers/${name}.js'.`,
     { id: "discourse.register-unbound" }
   );
 
@@ -66,13 +66,14 @@ export function registerUnbound(name, fn) {
       return fn(...params, args);
     }
   };
-
-  registerRawHelper(name, fn);
 }
 
 /**
  * Register a helper for raw-hbs only
  */
-export function registerRawHelper() {
-  // TODO: Deprecate
+export function registerRawHelper(name) {
+  deprecated(
+    `[registerRawHelper ${name}] the raw handlebars system has been removed, so calls to registerRawHelper should be removed.`,
+    { id: "discourse.register-raw-helper" }
+  );
 }
