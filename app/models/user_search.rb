@@ -79,19 +79,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 2. if replying to a post, add the user who created the post but respect the usernames matching
-    if @replying_to_user
-      user_id = @replying_to_user.id
-
-      if user_id.present? && !users.include?(user_id) &&
-           (@term.blank? || @replying_to_user.username.include?(@term))
-        users << user_id
-      end
-    end
-
-    return users.to_a if users.size >= @limit
-
-    # 3. in topic
+    # 2. in topic
     if @topic_id
       in_topic =
         filtered_by_term_users.where(
@@ -102,6 +90,13 @@ class UserSearch
 
       in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
+      if @replying_to_user
+        in_topic =
+          in_topic.order(
+            DB.sql_fragment("CASE WHEN users.id = ? THEN 0 ELSE 1 END", @replying_to_user.id),
+          )
+      end
+
       in_topic
         .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
@@ -111,7 +106,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 4. in category
+    # 3. in category
     secure_category_id =
       if @category_id
         DB.query_single(<<~SQL, @category_id).first
@@ -166,7 +161,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 5. global matches
+    # 4. global matches
     if @term.present?
       filtered_by_term_users
         .order("last_seen_at DESC NULLS LAST")
@@ -177,7 +172,7 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    # 6. last seen users (for search auto-suggestions)
+    # 5. last seen users (for search auto-suggestions)
     if @last_seen_users
       scoped_users
         .order("last_seen_at DESC NULLS LAST")
