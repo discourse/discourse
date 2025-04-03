@@ -10,8 +10,8 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
-import AutomationField from "discourse/plugins/chat/admin/components/automation-field";
-import FormError from "discourse/plugins/chat/admin/components/form-error";
+import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
+import FormError from "discourse/plugins/automation/admin/components/form-error";
 
 export default RouteTemplate(
   <template>
