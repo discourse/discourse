@@ -38,16 +38,4 @@ export default async function (path) {
   } else if (itemExists(`./admin/assets/javascripts/admin/${name}`)) {
     return `discourse/plugins/${pluginName}/admin/${name}`;
   }
-
-  // styleguide
-  if (itemExists(`../styleguide/assets/javascripts/discourse/${name}`)) {
-    return `discourse/plugins/styleguide/discourse/${name}`;
-  }
-
-  // d-lazy-videos
-  if (
-    itemExists(`../discourse-lazy-videos/assets/javascripts/discourse/${name}`)
-  ) {
-    return `discourse/plugins/discourse-lazy-videos/discourse/${name}`;
-  }
 }
