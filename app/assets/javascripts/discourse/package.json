@@ -32,7 +32,6 @@
     "ember-resolver": "^13.1.0",
     "ember-route-template": "^1.0.3",
     "ember-tracked-storage-polyfill": "^1.0.0",
-    "handlebars": "^4.7.8",
     "highlight.js": "11.11.1",
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
