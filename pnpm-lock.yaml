@@ -378,9 +378,6 @@ importers:
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
-      '@discourse/backburner.js':
-        specifier: ^2.7.1-0
-        version: 2.7.1-0
       '@discourse/itsatrap':
         specifier: ^2.0.10
         version: 2.0.10
@@ -1741,9 +1738,6 @@ packages:
 
   '@dabh/diagnostics@2.0.3':
     resolution: {integrity: sha512-hrlQOIi7hAfzsMqlGSFyVucrx38O+j6wiGOf//H2ecvIEqYN4ADBSS2iLMh5UFyDunCNniUIPk/q3riFv45xRA==}
-
-  '@discourse/backburner.js@2.7.1-0':
-    resolution: {integrity: sha512-r0cjllX/niPSxot/lpz0Tj9CXmyYoFE6kvEN9oL0D0sOGpknmK9FielZqcPGxuD/Z8vOb67penUElHRjH+F4cQ==}
 
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
@@ -9578,8 +9572,6 @@ snapshots:
       colorspace: 1.1.4
       enabled: 2.0.0
       kuler: 2.0.0
-
-  '@discourse/backburner.js@2.7.1-0': {}
 
   '@discourse/itsatrap@2.0.10': {}
 
