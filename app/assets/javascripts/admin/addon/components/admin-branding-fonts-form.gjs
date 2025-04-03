@@ -9,10 +9,10 @@ import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
-import { DEFAULT_TEXT_SIZES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminBrandingFontChooser from "admin/components/admin-branding-font-chooser";
+import { DEFAULT_TEXT_SIZES } from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
 export default class AdminBrandingFontsForm extends Component {

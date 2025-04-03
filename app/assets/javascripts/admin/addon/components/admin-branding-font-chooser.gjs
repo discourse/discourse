@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { classify, decamelize, underscore } from "@ember/string";
+import { classify, dasherize, decamelize, underscore } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
@@ -32,7 +32,7 @@ export default class AdminBrandingFontChooser extends Component {
           @action={{fn this.setButtonValue @field.set font}}
           class={{concatClass
             "admin-fonts-form__button-option font btn-flat"
-            (decamelize (underscore font))
+            (concat "body-font-" (dasherize (decamelize font)))
             (if (eq @selectedFont (decamelize (underscore font))) "active")
           }}
         >{{font}}</DButton>
@@ -43,7 +43,7 @@ export default class AdminBrandingFontChooser extends Component {
             @action={{fn this.setButtonValue @field.set font}}
             class={{concatClass
               "admin-fonts-form__button-option font btn-flat"
-              (decamelize (underscore font))
+              (concat "body-font-" (dasherize (decamelize font)))
               (if (eq @selectedFont (decamelize (underscore font))) "active")
             }}
           >{{font}}</DButton>

@@ -3,8 +3,8 @@ import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { DEFAULT_TEXT_SIZES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
+import { DEFAULT_TEXT_SIZES } from "admin/lib/constants";
 import SiteSetting from "admin/models/site-setting";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
