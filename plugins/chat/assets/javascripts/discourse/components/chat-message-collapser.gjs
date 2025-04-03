@@ -64,7 +64,8 @@ export default class ChatMessageCollapser extends Component {
 
   get lazyVideoComponent() {
     try {
-      return require("discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video");
+      return require("discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video")
+        .default;
     } catch {}
   }
 
