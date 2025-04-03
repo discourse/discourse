@@ -135,6 +135,7 @@ export default class AssistantItem extends Component {
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
     <li
+      ...attributes
       class={{concatClass @typeClass "search-menu-assistant-item"}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}

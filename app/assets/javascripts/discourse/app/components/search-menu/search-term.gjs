@@ -114,6 +114,7 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
+      ...attributes
       id={{@inputId}}
       class="search-term__input"
       type="search"

@@ -74,7 +74,7 @@ export default class RandomQuickTip extends Component {
   }
 
   <template>
-    <li class="search-random-quick-tip">
+    <li class="search-random-quick-tip" data-test-item="random-quick-tip">
       <button
         class={{concatClass
           "tip-label"
