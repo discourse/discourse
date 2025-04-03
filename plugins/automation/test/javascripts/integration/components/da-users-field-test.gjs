@@ -31,14 +31,20 @@ module("Integration | Component | da-users-field", function (hooks) {
     );
   });
 
-  test("sets values", async function (assert) {const self = this;
+  test("sets values", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();
@@ -50,14 +56,20 @@ module("Integration | Component | da-users-field", function (hooks) {
     assert.deepEqual(this.field.metadata.value, ["sam", "joffrey"]);
   });
 
-  test("allows emails", async function (assert) {const self = this;
+  test("allows emails", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();

@@ -7,7 +7,9 @@ module("Integration | Component | email-group-user-field", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Email group user field uses email-group-user-chooser component", async function (assert) {
-    const template = <template> <DaEmailGroupUserField @label="a label" /></template>;
+    const template = <template>
+      <DaEmailGroupUserField @label="a label" />
+    </template>;
 
     await render(template);
 
