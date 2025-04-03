@@ -103,8 +103,8 @@ module PageObjects
         page.has_css?(".search-menu-container .results .no-results")
       end
 
-      def search_term
-        page.find("#search-term").value
+      def search_term(id = "icon-search-input")
+        page.find("##{id}").value
       end
 
       SEARCH_PAGE_SELECTOR = "body.search-page"
