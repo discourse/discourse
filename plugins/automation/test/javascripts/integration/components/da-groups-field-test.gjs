@@ -33,14 +33,20 @@ module("Integration | Component | da-groups-field", function (hooks) {
     });
   });
 
-  test("set value", async function (assert) {const self = this;
+  test("set value", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "groups",
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();
@@ -49,7 +55,8 @@ module("Integration | Component | da-groups-field", function (hooks) {
     assert.deepEqual(this.field.metadata.value, [1]);
   });
 
-  test("supports a maxmimum value", async function (assert) {const self = this;
+  test("supports a maxmimum value", async function (assert) {
+    const self = this;
 
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "groups",
@@ -57,7 +64,12 @@ module("Integration | Component | da-groups-field", function (hooks) {
     });
 
     await render(
-      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();
