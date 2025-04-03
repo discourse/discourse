@@ -3,12 +3,12 @@ import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import {
   DEFAULT_USER_PREFERENCES,
   SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
-} from "discourse/lib/constants";
-import discourseComputed, { bind } from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
+} from "admin/lib/constants";
 import SettingObjectHelper from "admin/lib/setting-object-helper";
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
