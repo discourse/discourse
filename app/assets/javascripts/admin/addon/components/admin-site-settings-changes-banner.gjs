@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -10,6 +12,7 @@ export default class AdminSiteSettingsChangesBanner extends Component {
   @service siteSettingChangeTracker;
 
   @tracked isSaving = false;
+  _resizer = null;
 
   @action
   async save() {
@@ -25,6 +28,29 @@ export default class AdminSiteSettingsChangesBanner extends Component {
   @action
   discard() {
     this.siteSettingChangeTracker.discard();
+  }
+
+  @action
+  setupResizeObserver(element) {
+    const container = document.getElementById("main-container");
+    this._resizer = () => this.positionBanner(container, element);
+
+    this._resizer();
+
+    this._resizeObserver = window.addEventListener("resize", this._resizer);
+  }
+
+  @action
+  teardownResizeObserver() {
+    window.removeEventListener("resize", this._resizer);
+  }
+
+  positionBanner(container, element) {
+    if (container) {
+      const { width } = container.getBoundingClientRect();
+
+      element.style.width = `${width}px`;
+    }
   }
 
   get dirtyCount() {
@@ -55,7 +81,11 @@ export default class AdminSiteSettingsChangesBanner extends Component {
 
   <template>
     {{#if this.showBanner}}
-      <div class="admin-site-settings__changes-banner">
+      <div
+        class="admin-site-settings__changes-banner"
+        {{didInsert this.setupResizeObserver}}
+        {{willDestroy this.teardownResizeObserver}}
+      >
         <span>{{htmlSafe this.bannerLabel}}</span>
         <div class="controls">
           <DButton
