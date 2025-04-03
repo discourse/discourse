@@ -53,7 +53,6 @@ export default class TagChooserField extends Component {
         this.dialog.alert(
           `You can't select more tags from the ${this.args.tagGroup}. To avoid issues, use Form Template`
         );
-        debugger;
         this.previousTags = this.currentTags;
 
         let oldTags = composerTags.filter((tag) =>
