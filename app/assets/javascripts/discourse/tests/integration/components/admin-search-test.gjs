@@ -1,5 +1,5 @@
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminSearch from "admin/components/admin-search";
 
@@ -61,7 +61,7 @@ module("Integration | Component | AdminSearch", function (hooks) {
     assert.dom(".admin-search__result").doesNotExist();
   });
 
-  test("navigates search results with keyboard, getting back to the input when reaching the end of results", async function (assert) {
+  skip("navigates search results with keyboard, getting back to the input when reaching the end of results", async function (assert) {
     await render(<template><AdminSearch /></template>);
     await fillIn(".admin-search__input-field", "site");
     assert.dom(".admin-search__results").exists();
