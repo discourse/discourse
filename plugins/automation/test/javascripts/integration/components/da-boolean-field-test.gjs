@@ -3,7 +3,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
-import AutomationField from "discourse/plugins/chat/admin/components/automation-field";
+import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 
 module("Integration | Component | da-boolean-field", function (hooks) {
   setupRenderingTest(hooks);

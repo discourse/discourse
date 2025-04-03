@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DaEmailGroupUserField from "discourse/plugins/chat/admin/components/fields/da-email-group-user-field";
+import DaEmailGroupUserField from "discourse/plugins/automation/admin/components/fields/da-email-group-user-field";
 
 module("Integration | Component | email-group-user-field", function (hooks) {
   setupRenderingTest(hooks);
