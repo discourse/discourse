@@ -179,7 +179,7 @@ RSpec.describe UserSearch do
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)
     end
 
-    it "prioritises the replying to user" do
+    it "prioritises the replying to user within a topic" do
       results = search_for("mr", topic_id: topic.id, user_id: mr_b.id)
       expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
 
