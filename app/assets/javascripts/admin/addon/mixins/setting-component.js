@@ -5,19 +5,12 @@ import Mixin from "@ember/object/mixin";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
-import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { deepEqual } from "discourse/lib/object";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import {
-  DEFAULT_USER_PREFERENCES,
-  SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
-} from "admin/lib/constants";
-import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -45,8 +38,6 @@ const CUSTOM_TYPES = [
   "font_list",
 ];
 
-const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
-
 export default Mixin.create({
   modal: service(),
   router: service(),
@@ -55,8 +46,6 @@ export default Mixin.create({
   siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
-  validationMessage: null,
-  isSaving: false,
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),
@@ -70,7 +59,6 @@ export default Mixin.create({
 
   willDestroyElement() {
     this._super(...arguments);
-    this.siteSettingChangeTracker.remove(this);
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
@@ -79,7 +67,7 @@ export default Mixin.create({
   }),
 
   dirty: computed("buffered.value", "setting.value", function () {
-    let bufferVal = this.get("buffered.value");
+    let bufferVal = this.buffered.get("value");
     let settingVal = this.setting?.value;
 
     if (isNone(bufferVal)) {
@@ -93,9 +81,9 @@ export default Mixin.create({
     const dirty = !deepEqual(bufferVal, settingVal);
 
     if (dirty) {
-      this.siteSettingChangeTracker.add(this);
+      this.siteSettingChangeTracker.add(this.setting);
     } else {
-      this.siteSettingChangeTracker.remove(this);
+      this.siteSettingChangeTracker.remove(this.setting);
     }
 
     return dirty;
@@ -103,7 +91,7 @@ export default Mixin.create({
 
   preview: computed("setting", "buffered.value", function () {
     const setting = this.setting;
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
@@ -140,7 +128,7 @@ export default Mixin.create({
   }),
 
   bufferedValues: computed("buffered.value", function () {
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     return splitString(value, "|");
   }),
 
@@ -191,120 +179,37 @@ export default Mixin.create({
     }
   }),
 
-  disableSaveButton: computed("isSaving", "validationMessage", function () {
-    return !!this.validationMessage || this.isSaving;
+  disableControls: computed("setting.isSaving", function () {
+    return !!this.setting.isSaving;
   }),
-
-  disableUndoButton: computed("isSaving", function () {
-    return !!this.isSaving;
-  }),
-
-  requiresReload() {
-    return AUTO_REFRESH_ON_SAVE.includes(this.setting.setting);
-  },
-
-  requiresConfirmation() {
-    return (
-      this.buffered.get("requires_confirmation") ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    );
-  },
-
-  affectsExistingUsers() {
-    return DEFAULT_USER_PREFERENCES.includes(this.buffered.get("setting"));
-  },
-
-  confirmChanges() {
-    const settingKey = this.buffered.get("setting");
-
-    return new Promise((resolve) => {
-      // Fallback is needed in case the setting does not have a custom confirmation
-      // prompt/confirm defined.
-      this.dialog.alert({
-        message: i18n(
-          `admin.site_settings.requires_confirmation_messages.${settingKey}.prompt`,
-          {
-            translatedFallback: i18n(
-              "admin.site_settings.requires_confirmation_messages.default.prompt"
-            ),
-          }
-        ),
-        buttons: [
-          {
-            label: i18n(
-              `admin.site_settings.requires_confirmation_messages.${settingKey}.confirm`,
-              {
-                translatedFallback: i18n(
-                  "admin.site_settings.requires_confirmation_messages.default.confirm"
-                ),
-              }
-            ),
-            class: "btn-primary",
-            action: () => resolve(true),
-          },
-          {
-            label: i18n("no_value"),
-            class: "btn-default",
-            action: () => resolve(false),
-          },
-        ],
-      });
-    });
-  },
-
-  async configureBackfill() {
-    const key = this.buffered.get("setting");
-
-    const data = {
-      [key]: this.buffered.get("value"),
-    };
-
-    const result = await ajax(`/admin/site_settings/${key}/user_count.json`, {
-      type: "PUT",
-      data,
-    });
-
-    const count = result.user_count;
-
-    if (count > 0) {
-      await this.modal.show(SiteSettingDefaultCategoriesModal, {
-        model: {
-          siteSetting: { count, key: key.replaceAll("_", " ") },
-          setUpdateExistingUsers: this.setUpdateExistingUsers,
-        },
-      });
-    }
-  },
 
   update: action(async function () {
-    if (this.requiresConfirmation()) {
-      const confirm = await this.confirmChanges();
+    if (this.setting.requiresConfirmation) {
+      const confirm = await this.siteSettingChangeTracker.confirmChanges(
+        this.setting
+      );
 
       if (!confirm) {
         return;
       }
     }
 
-    if (this.affectsExistingUsers()) {
-      await this.configureBackfill();
+    if (this.setting.affectsExistingUsers) {
+      await this.siteSettingChangeTracker.configureBackfill(this.setting);
     }
 
     await this.save();
   }),
 
-  setUpdateExistingUsers: action(function (value) {
-    this.updateExistingUsers = value;
-  }),
-
   save: action(async function () {
     try {
-      this.set("isSaving", true);
+      this.setting.isSaving = true;
 
       await this._save();
 
-      this.set("validationMessage", null);
+      this.setting.validationMessage = null;
       this.buffered.applyChanges();
-      if (this.requiresReload()) {
+      if (this.setting.requiresReload) {
         this.afterSave();
       }
     } catch (e) {
@@ -316,31 +221,31 @@ export default Mixin.create({
           errorString = htmlSafe(errorString);
         }
 
-        this.set("validationMessage", errorString);
+        this.setting.validationMessage = errorString;
       } else {
-        this.set("validationMessage", i18n("generic_error"));
+        this.setting.validationMessage = i18n("generic_error");
       }
     } finally {
-      this.set("isSaving", false);
+      this.setting.isSaving = false;
     }
   }),
 
   changeValueCallback: action(function (value) {
-    this.set("buffered.value", value);
+    this.buffered.set("value", value);
   }),
 
   setValidationMessage: action(function (message) {
-    this.set("validationMessage", message);
+    this.setting.validationMessage = message;
   }),
 
   cancel: action(function () {
     this.buffered.discardChanges();
-    this.set("validationMessage", null);
+    this.setting.validationMessage = null;
   }),
 
   resetDefault: action(function () {
-    this.set("buffered.value", this.setting.default);
-    this.set("validationMessage", null);
+    this.buffered.set("value", this.setting.default);
+    this.setting.validationMessage = null;
   }),
 
   toggleSecret: action(function () {
@@ -348,11 +253,11 @@ export default Mixin.create({
   }),
 
   setDefaultValues: action(function () {
-    this.set(
-      "buffered.value",
+    this.buffered.set(
+      "value",
       this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
-    this.set("validationMessage", null);
+    this.setting.validationMessage = null;
     return false;
   }),
 

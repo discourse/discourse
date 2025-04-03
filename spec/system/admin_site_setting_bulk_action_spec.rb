@@ -85,4 +85,48 @@ describe "Admin Site Setting Bulk Action", type: :system do
     expect(banner).to be_visible
     expect(banner.element).to have_text("You have 2 unsaved changes")
   end
+
+  it "persists unsaved settings when browsing categories" do
+    settings_page.visit
+
+    settings_page.fill_setting("title", "The Shell")
+    settings_page.fill_setting("site_description", "A cool place")
+
+    expect(banner).to be_visible
+    expect(banner.element).to have_text("You have 2 unsaved changes")
+
+    settings_page.navigate_to_category(:branding)
+
+    expect(banner).to be_visible
+    expect(banner.element).to have_text("You have 2 unsaved changes")
+
+    settings_page.navigate_to_category(:required)
+
+    expect(banner).to be_visible
+    expect(banner.element).to have_text("You have 2 unsaved changes")
+
+    expect(settings_page).to have_overridden_setting("title", value: "The Shell")
+    expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
+  end
+
+  it "prompts about unsaved settings when navigating away" do
+    settings_page.visit
+
+    settings_page.fill_setting("title", "The Shell")
+    settings_page.fill_setting("site_description", "A cool place")
+
+    expect(banner).to be_visible
+    expect(banner.element).to have_text("You have 2 unsaved changes")
+
+    settings_page.find(".admin-sidebar-nav-link", text: "Dashboard").click
+
+    expect(settings_page).to have_current_path("/admin/site_settings/category/required")
+
+    expect(dialog).to be_open
+    expect(dialog).to have_content("You have 2 unsaved changes")
+
+    dialog.click_no
+
+    expect(settings_page).to have_current_path("/admin")
+  end
 end
