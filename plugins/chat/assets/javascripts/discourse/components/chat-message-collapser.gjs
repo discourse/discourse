@@ -65,7 +65,7 @@ export default class ChatMessageCollapser extends Component {
   get lazyVideoComponent() {
     const path =
       "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
-    return require.has(path) && require(path);
+    return require.has(path) && require(path).default;
   }
 
   lazyVideoCooked(elements) {
