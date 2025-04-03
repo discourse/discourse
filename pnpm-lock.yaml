@@ -305,9 +305,6 @@ importers:
       ember-tracked-storage-polyfill:
         specifier: ^1.0.0
         version: 1.0.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
@@ -706,9 +703,6 @@ importers:
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.2.0
@@ -1033,9 +1027,6 @@ importers:
       ember-this-fallback:
         specifier: ^0.4.0
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.98.0(@swc/core@1.11.16)(esbuild@0.25.2)))
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
