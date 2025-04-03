@@ -1,43 +1,50 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
+import AutomationField from "discourse/plugins/chat/admin/components/automation-field";
 
-module("Integration | Component | da-group-field", function (hooks) {
+module("Integration | Component | da-custom-field", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.automation = new AutomationFabricators(getOwner(this)).automation();
 
-    pretender.get("/groups/search.json", () => {
-      return response([
-        {
-          id: 1,
-          name: "cats",
-          flair_url: "fa-bars",
-          flair_bg_color: "CC000A",
-          flair_color: "FFFFFA",
-        },
-      ]);
+    pretender.get("/admin/config/user_fields", () => {
+      return response({
+        user_fields: [
+          {
+            id: 1,
+            name: "Title",
+            description: "your title",
+            field_type: "text",
+            editable: true,
+            required: true,
+            show_on_profile: true,
+            show_on_user_card: true,
+            searchable: true,
+            position: 1,
+          },
+        ],
+      });
     });
   });
 
-  test("set value", async function (assert) {
+  test("set value", async function (assert) {const self = this;
+
     this.field = new AutomationFabricators(getOwner(this)).field({
-      component: "group",
+      component: "custom_field",
     });
 
     await render(
-      hbs`<AutomationField @automation={{this.automation}} @field={{this.field}} />`
+      <template><AutomationField @automation={{self.automation}} @field={{self.field}} /></template>
     );
 
     await selectKit().expand();
     await selectKit().selectRowByValue(1);
-
     assert.strictEqual(this.field.metadata.value, 1);
   });
 });
