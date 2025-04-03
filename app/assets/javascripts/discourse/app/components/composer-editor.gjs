@@ -1010,14 +1010,14 @@ export default class ComposerEditor extends Component {
             />
           </form>
         </div>
-
-        <DEditorPreview
-          @preview={{this.preview}}
-          @forcePreview={{this.forcePreview}}
-          @onPreviewUpdated={{this.previewUpdated}}
-          @outletArgs={{this.outletArgs}}
-        />
-
+        {{#if this.siteSettings.experimental_preview_in_form_templates}}
+          <DEditorPreview
+            @preview={{this.preview}}
+            @forcePreview={{this.forcePreview}}
+            @onPreviewUpdated={{this.previewUpdated}}
+            @outletArgs={{this.outletArgs}}
+          />
+        {{/if}}
       </div>
     {{else}}
       <DEditor
