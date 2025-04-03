@@ -3,8 +3,8 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import notificationsTracking from "discourse/tests/helpers/notifications-tracking-helper";
-import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
+import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module(
   "Integration | Component | da-category-notification-level-field",
