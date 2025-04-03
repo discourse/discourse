@@ -7,7 +7,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
-import noop from "discourse/helpers/noop";
 
 export default class FormTemplateFieldMultiSelect extends Component {
   @service composer;
@@ -21,20 +20,33 @@ export default class FormTemplateFieldMultiSelect extends Component {
   }
 
   get formattedChoices() {
-    return this.args.choices.map((choice) =>
-      this.args.tagGroup ? choice.replace(/-/g, " ").toUpperCase() : choice
-    );
+    if (this.args.tagChoices) {
+      return this.args.choices.map((choice) => ({
+        name: choice,
+        display: this.args.tagChoices[choice]
+          ? this.args.tagChoices[choice]
+          : choice.replace(/-/g, " ").toUpperCase(),
+      }));
+    } else {
+      return this.args.choices.map((choice) => ({
+        name: choice,
+        display: this.args.tagGroup
+          ? choice.replace(/-/g, " ").toUpperCase()
+          : choice,
+      }));
+    }
   }
 
   get filteredSelectedValues() {
-    return this.currentTags.filter((tag) => this.args.choices.includes(tag));
+    return this.currentTags.filter((tag) =>
+      this.formattedChoices.some((choice) => choice.name === tag)
+    );
   }
 
   @action
   syncWithComposerTags() {
     if (this.args.onChange) {
       this.currentTags = [...(this.composer.model.tags || [])];
-
       next(this, () => {
         this.args.onChange(this.currentTags);
       });
@@ -42,12 +54,31 @@ export default class FormTemplateFieldMultiSelect extends Component {
   }
 
   @action
-  handleInput(event) {
-    let selectedValues = Array.from(event.target.selectedOptions).map(
-      (option) => option.value.toLowerCase().replace(/\s+/g, "-")
-    );
+  handleSelectedValues(event) {
+    let selectedValues = [];
+    if (this.args.tagChoices) {
+      let choiceMap = new Map(
+        Object.entries(this.args.tagChoices).map(([key, value]) => [value, key])
+      );
 
-    //Cook template
+      selectedValues = Array.from(event.target.selectedOptions).map(
+        (option) =>
+          choiceMap.get(option.textContent.trim()) ||
+          option.value.toLowerCase().replace(/\s+/g, "-")
+      );
+    } else {
+      selectedValues = Array.from(event.target.selectedOptions).map((option) =>
+        option.value.toLowerCase().replace(/\s+/g, "-")
+      );
+    }
+
+    return selectedValues;
+  }
+
+  @action
+  handleInput(event) {
+    let selectedValues = this.handleSelectedValues(event);
+
     this.args.onChange?.([...selectedValues]);
 
     if (this.args.tagGroup) {
@@ -61,8 +92,6 @@ export default class FormTemplateFieldMultiSelect extends Component {
     this.previousTags = [...selectedValues];
 
     let composerTags = this.composer.model.tags;
-
-    // Remove deselected tags and add new selections
     let updatedTags = [
       ...composerTags.filter((tag) => !previousTags.includes(tag)),
       ...selectedValues,
@@ -120,9 +149,9 @@ export default class FormTemplateFieldMultiSelect extends Component {
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
           <option
-            value={{choice}}
-            selected={{this.isSelected choice}}
-          >{{choice}}</option>
+            value={{choice.display}}
+            selected={{this.isSelected choice.name}}
+          >{{choice.display}}</option>
         {{/each}}
       </select>
     </div>

@@ -9,6 +9,7 @@ import CheckboxField from "./checkbox";
 import DropdownField from "./dropdown";
 import InputField from "./input";
 import MultiSelectField from "./multi-select";
+import TagChooserField from "./tag-chooser"
 import TextareaField from "./textarea";
 import UploadField from "./upload";
 import { next } from "@ember/runloop";
@@ -23,6 +24,7 @@ const FormTemplateField = <template>
     @validations={{@content.validations}}
     @value={{@initialValue}}
     @tagGroup={{@content.tag_group}}
+    @tagChoices={{@content.tag_translations}}
     @onChange={{@onChange}}
   />
 </template>;
@@ -42,6 +44,7 @@ export default class FormTemplateFieldWrapper extends Component {
     dropdown: DropdownField,
     "multi-select": MultiSelectField,
     textarea: TextareaField,
+    "tag-chooser": TagChooserField,
     upload: UploadField,
   };
 

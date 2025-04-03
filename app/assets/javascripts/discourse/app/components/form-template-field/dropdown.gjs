@@ -8,8 +8,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
-import noop from "discourse/helpers/noop";
-import { on } from "@ember/modifier";
 
 export default class FormTemplateFieldMultiSelect extends Component {
   @service composer;
