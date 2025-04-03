@@ -148,15 +148,10 @@ export default class PreferencesChatController extends Controller {
   }
 
   @action
-  didSelectEmoji(selected, index) {
+  didSelectEmoji(index, selected) {
     let emoji = this.chatQuickReactionsCustom;
     emoji[index] = selected;
     this.model.set("user_option.chat_quick_reactions_custom", emoji.join("|"));
-  }
-
-  @action
-  createSelectEmojiCallback(index) {
-    return (emoji) => this.didSelectEmoji(emoji, index);
   }
 
   @action

@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { concat, fn, get, hash } from "@ember/helper";
+import { array, concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { eq } from "truth-helpers";
@@ -35,7 +35,7 @@ export default RouteTemplate(
           "chat.quick_reaction_type.title"
         }}</legend>
       <div class="radio-group">
-        {{#each this.chatQuickReactionTypes as |option|}}
+        {{#each @controller.chatQuickReactionTypes as |option|}}
           <div class="radio-group-option">
             <label class="controls">
               <input
@@ -44,33 +44,31 @@ export default RouteTemplate(
                 id={{concat "user_chat_quick_reaction_type_" option.value}}
                 value={{option.value}}
                 checked={{eq
-                  this.model.user_option.chat_quick_reaction_type
+                  @controller.model.user_option.chat_quick_reaction_type
                   option.value
                 }}
-                {{on "change" (withEventValue this.onChangeQuickReactionType)}}
+                {{on
+                  "change"
+                  (withEventValue @controller.onChangeQuickReactionType)
+                }}
               />
               {{option.label}}
             </label>
           </div>
         {{/each}}
       </div>
-      {{#if (eq this.model.user_option.chat_quick_reaction_type "custom")}}
+
+      {{#if
+        (eq @controller.model.user_option.chat_quick_reaction_type "custom")
+      }}
         <div class="controls tracking-controls emoji-pickers">
-          <EmojiPicker
-            @emoji={{get this.chatQuickReactionsCustom "0"}}
-            @didSelectEmoji={{this.createSelectEmojiCallback 0}}
-            @context="chat"
-          />
-          <EmojiPicker
-            @emoji={{get this.chatQuickReactionsCustom "1"}}
-            @didSelectEmoji={{this.createSelectEmojiCallback 1}}
-            @context="chat"
-          />
-          <EmojiPicker
-            @emoji={{get this.chatQuickReactionsCustom "2"}}
-            @didSelectEmoji={{this.createSelectEmojiCallback 2}}
-            @context="chat"
-          />
+          {{#each (array 0 1 2) as |index|}}
+            <EmojiPicker
+              @emoji={{get @controller.chatQuickReactionsCustom index}}
+              @didSelectEmoji={{fn @controller.didSelectEmoji index}}
+              @context="chat_preferences"
+            />
+          {{/each}}
         </div>
       {{/if}}
     </fieldset>
