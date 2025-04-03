@@ -2,6 +2,7 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
+import { and } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
@@ -9,7 +10,6 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
-import and from "truth-helpers/helpers/and";
 import AutomationField from "discourse/plugins/chat/admin/components/automation-field";
 import FormError from "discourse/plugins/chat/admin/components/form-error";
 
