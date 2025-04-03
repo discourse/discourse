@@ -3,29 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { classify, decamelize, underscore } from "@ember/string";
+import { decamelize, underscore } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
-import { DEFAULT_TEXT_SIZES, FONTS } from "discourse/lib/constants";
+import { DEFAULT_TEXT_SIZES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import AdminBrandingFontChooser from "admin/components/admin-branding-font-chooser";
 import eq from "truth-helpers/helpers/eq";
-
-const MAIN_FONTS = [
-  "Helvetica",
-  "Inter",
-  "Lato",
-  "Montserrat",
-  "OpenSans",
-  "Poppins",
-  "Roboto",
-  "Merriweather",
-  "Mukta",
-];
-const MORE_FONTS = FONTS.filter((font) => !MAIN_FONTS.includes(font));
 
 export default class AdminBrandingFontsForm extends Component {
   @service siteSettings;
@@ -34,12 +22,6 @@ export default class AdminBrandingFontsForm extends Component {
   @service modal;
   @service router;
 
-  @tracked moreBaseFonts = MORE_FONTS.includes(
-    classify(this.siteSettings.base_font)
-  );
-  @tracked moreHeadingFonts = MORE_FONTS.includes(
-    classify(this.siteSettings.heading_font)
-  );
   updateExistingUsers = null;
 
   @bind
@@ -50,16 +32,6 @@ export default class AdminBrandingFontsForm extends Component {
   @action
   setButtonValue(fieldSet, value) {
     fieldSet(decamelize(underscore(value)));
-  }
-
-  @action
-  toggleMoreBaseFonts() {
-    this.moreBaseFonts = !this.moreBaseFonts;
-  }
-
-  @action
-  toggleMoreHeadingFonts() {
-    this.moreHeadingFonts = !this.moreHeadingFonts;
   }
 
   @action
@@ -144,46 +116,10 @@ export default class AdminBrandingFontsForm extends Component {
         @format="full"
         as |field|
       >
-        <field.Custom>
-          {{#each MAIN_FONTS as |font|}}
-            <DButton
-              @action={{fn this.setButtonValue field.set font}}
-              class={{concatClass
-                "admin-fonts-form__button-option font btn-flat"
-                (decamelize (underscore font))
-                (if
-                  (eq transientData.base_font (decamelize (underscore font)))
-                  "active"
-                )
-              }}
-            >{{font}}</DButton>
-          {{/each}}
-          {{#if this.moreBaseFonts}}
-            {{#each MORE_FONTS as |font|}}
-              <DButton
-                @action={{fn this.setButtonValue field.set font}}
-                class={{concatClass
-                  "admin-fonts-form__button-option font btn-flat"
-                  (decamelize (underscore font))
-                  (if
-                    (eq transientData.base_font (decamelize (underscore font)))
-                    "active"
-                  )
-                }}
-              >{{font}}</DButton>
-            {{/each}}
-          {{/if}}
-          <DButton
-            @action={{this.toggleMoreBaseFonts}}
-            class="admin-fonts-form__more font"
-          >
-            {{#if this.moreBaseFonts}}
-              {{i18n "admin.config.branding.fonts.form.less_fonts"}}
-            {{else}}
-              {{i18n "admin.config.branding.fonts.form.more_fonts"}}
-            {{/if}}
-          </DButton>
-        </field.Custom>
+        <AdminBrandingFontChooser
+          @field={{field}}
+          @selectedFont={{transientData.base_font}}
+        />
       </form.Field>
       <form.Field
         @name="heading_font"
@@ -192,49 +128,10 @@ export default class AdminBrandingFontsForm extends Component {
         @format="full"
         as |field|
       >
-        <field.Custom>
-          {{#each MAIN_FONTS as |font|}}
-            <DButton
-              @action={{fn this.setButtonValue field.set font}}
-              class={{concatClass
-                "admin-fonts-form__button-option font btn-flat"
-                (decamelize (underscore font))
-                (if
-                  (eq transientData.heading_font (decamelize (underscore font)))
-                  "active"
-                )
-              }}
-            >{{font}}</DButton>
-          {{/each}}
-          {{#if this.moreHeadingFonts}}
-            {{#each MORE_FONTS as |font|}}
-              <DButton
-                @action={{fn this.setButtonValue field.set font}}
-                class={{concatClass
-                  "admin-fonts-form__button-option font btn-flat"
-                  (decamelize (underscore font))
-                  (if
-                    (eq
-                      transientData.heading_font (decamelize (underscore font))
-                    )
-                    "active"
-                  )
-                }}
-              >{{font}}</DButton>
-
-            {{/each}}
-          {{/if}}
-          <DButton
-            @action={{this.toggleMoreHeadingFonts}}
-            class="admin-fonts-form__more font"
-          >
-            {{#if this.moreHeadingFonts}}
-              {{i18n "admin.config.branding.fonts.form.less_fonts"}}
-            {{else}}
-              {{i18n "admin.config.branding.fonts.form.more_fonts"}}
-            {{/if}}
-          </DButton>
-        </field.Custom>
+        <AdminBrandingFontChooser
+          @field={{field}}
+          @selectedFont={{transientData.heading_font}}
+        />
       </form.Field>
       <form.Field
         @name="default_text_size"

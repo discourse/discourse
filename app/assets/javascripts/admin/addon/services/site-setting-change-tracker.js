@@ -213,10 +213,7 @@ export default class SiteSettingChangeTracker extends Service {
       }
     }
 
-    if (
-      !logo &&
-      (this.session.defaultColorSchemeIsDark || this.session.darkModeAvailable)
-    ) {
+    if (!logo && this.session.defaultColorSchemeIsDark) {
       logo = this.siteSettings.logo_dark;
     }
 
@@ -225,7 +222,10 @@ export default class SiteSettingChangeTracker extends Service {
     }
 
     // Force reload when switch from text logo to image logo and vice versa
-    if (!logo || !document.getElementById("site-logo")) {
+    if (
+      (!this.siteSettings.logo && document.getElementById("site-logo")) ||
+      (this.siteSettings.logo && !document.getElementById("site-logo"))
+    ) {
       window.location.reload();
     } else {
       document.getElementById("site-logo").setAttribute("src", logo);
