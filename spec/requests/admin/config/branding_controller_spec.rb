@@ -30,8 +30,8 @@ RSpec.describe Admin::Config::BrandingController do
               default_text_size: "invalid_size",
             }
         expect(response.status).to eq(400)
-        expect(SiteSetting.base_font).to eq("arial")
-        expect(SiteSetting.heading_font).to eq("arial")
+        expect(SiteSetting.base_font).to eq("inter")
+        expect(SiteSetting.heading_font).to eq("inter")
         expect(SiteSetting.default_text_size).to eq("normal")
       end
     end
@@ -46,8 +46,8 @@ RSpec.describe Admin::Config::BrandingController do
               default_text_size: "largest",
             }
         expect(response.status).to eq(403)
-        expect(SiteSetting.base_font).to eq("arial")
-        expect(SiteSetting.heading_font).to eq("arial")
+        expect(SiteSetting.base_font).to eq("inter")
+        expect(SiteSetting.heading_font).to eq("inter")
         expect(SiteSetting.default_text_size).to eq("normal")
       end
     end
@@ -64,8 +64,8 @@ RSpec.describe Admin::Config::BrandingController do
             }
 
         expect(response.status).to eq(404)
-        expect(SiteSetting.base_font).to eq("arial")
-        expect(SiteSetting.heading_font).to eq("arial")
+        expect(SiteSetting.base_font).to eq("inter")
+        expect(SiteSetting.heading_font).to eq("inter")
         expect(SiteSetting.default_text_size).to eq("normal")
       end
     end
