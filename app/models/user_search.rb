@@ -18,7 +18,6 @@ class UserSearch
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
-    @replying_to_user = User.find_by_id(@user_id) if @user_id
 
     @guardian = Guardian.new(@searching_user)
     @guardian.ensure_can_see_groups_members!(@groups) if @groups
@@ -90,11 +89,9 @@ class UserSearch
 
       in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
-      if @replying_to_user
+      if @user_id
         in_topic =
-          in_topic.order(
-            DB.sql_fragment("CASE WHEN users.id = ? THEN 0 ELSE 1 END", @replying_to_user.id),
-          )
+          in_topic.order(DB.sql_fragment("CASE WHEN users.id = ? THEN 0 ELSE 1 END", @user_id))
       end
 
       in_topic
