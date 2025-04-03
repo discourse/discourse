@@ -8,6 +8,7 @@ class UserSearch
     @term_like = @term.gsub("_", "\\_") + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
+    # user_id is only used for ordering within the topic, it will prioritize this user
     @user_id = opts[:user_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
