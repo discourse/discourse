@@ -68,7 +68,7 @@ export default class CreateAccount extends Component {
     getAccountUsername: () => this.accountUsername,
     getPrefilledUsername: () => this.prefilledUsername,
     getAuthOptionsUsername: () => this.authOptions?.username,
-    forceValidationReason: this.forceValidationReason,
+    getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
     isInvalid: () => this.isDestroying || this.isDestroyed,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),

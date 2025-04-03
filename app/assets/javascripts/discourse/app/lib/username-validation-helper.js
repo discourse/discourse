@@ -27,7 +27,7 @@ export default class UsernameValidationHelper {
     getAccountUsername,
     getPrefilledUsername,
     getAuthOptionsUsername,
-    forceValidationReason,
+    getForceValidationReason,
     siteSettings,
     isInvalid,
     updateIsDeveloper,
@@ -37,7 +37,7 @@ export default class UsernameValidationHelper {
     this.getAccountUsername = getAccountUsername;
     this.getPrefilledUsername = getPrefilledUsername;
     this.getAuthOptionsUsername = getAuthOptionsUsername;
-    this.forceValidationReason = forceValidationReason;
+    this.getForceValidationReason = getForceValidationReason;
     this.siteSettings = siteSettings;
     this.isInvalid = isInvalid;
     this.updateIsDeveloper = updateIsDeveloper;
@@ -83,7 +83,7 @@ export default class UsernameValidationHelper {
     if (isEmpty(username)) {
       return failedResult({
         message: i18n("user.username.required"),
-        reason: this.forceValidationReason
+        reason: this.getForceValidationReason()
           ? i18n("user.username.required")
           : null,
       });
