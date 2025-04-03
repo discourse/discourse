@@ -743,6 +743,34 @@ RSpec.describe ApplicationHelper do
         )
       end
     end
+
+    describe "when a plugin registers the :meta_data_content modifier" do
+      let!(:plugin) { Plugin::Instance.new }
+      let!(:block) do
+        ->(content, property, opts) do
+          content << " - modified by plugin" if property == :description
+          content = "BIG TITLE" if property == :title
+          content
+        end
+      end
+
+      after { DiscoursePluginRegistry.unregister_modifier(plugin, :meta_data_content, &block) }
+
+      it "allows the plugin to modify the meta tags" do
+        plugin.register_modifier(:meta_data_content, &block)
+
+        result =
+          helper.crawlable_meta_data(
+            description: "This is a test description",
+            title: "to be overridden",
+          )
+
+        expect(result).to include(
+          "<meta property=\"og:description\" content=\"This is a test description - modified by plugin\" />",
+        )
+        expect(result).to include("<meta property=\"og:title\" content=\"BIG TITLE\" />")
+      end
+    end
   end
 
   describe "discourse_color_scheme_stylesheets" do
