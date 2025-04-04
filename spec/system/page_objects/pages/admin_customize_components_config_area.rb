@@ -139,8 +139,42 @@ module PageObjects
         find(".admin-config-components__name-filter input")
       end
 
+      def has_no_components?
+        has_no_css?(".admin-config-components__component-row")
+      end
+
       def components_shown
         all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
+      end
+
+      def has_name_filter_input?
+        has_css?(".admin-config-components__name-filter")
+      end
+
+      def has_status_selector?
+        has_css?(".admin-config-components__status-filter")
+      end
+
+      def has_no_name_filter_input?
+        has_no_css?(".admin-config-components__name-filter")
+      end
+
+      def has_no_status_selector?
+        has_no_css?(".admin-config-components__status-filter")
+      end
+
+      def has_no_components_installed_text?
+        page.has_text?(
+          I18n.t("admin_js.admin.config_areas.themes_and_components.components.no_components"),
+        )
+      end
+
+      def has_no_components_found_text?
+        page.has_text?(
+          I18n.t(
+            "admin_js.admin.config_areas.themes_and_components.components.no_components_found",
+          ),
+        )
       end
     end
   end

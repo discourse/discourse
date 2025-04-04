@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -54,6 +53,7 @@ export default class AdminConfigAreasComponents extends Component {
   @tracked components = [];
   @tracked nameFilter;
   @tracked statusFilter;
+  @tracked hasComponents = false;
 
   constructor() {
     super(...arguments);
@@ -119,6 +119,10 @@ export default class AdminConfigAreasComponents extends Component {
       });
 
       this.components = data.components;
+
+      if (!this.hasComponents && !this.nameFilter && !this.statusFilter) {
+        this.hasComponents = !!data.components.length;
+      }
     } finally {
       this.loading = false;
     }
@@ -142,34 +146,36 @@ export default class AdminConfigAreasComponents extends Component {
       </:actions>
     </DPageSubheader>
     <div class="container">
-      <div class="admin-config-components__filters">
-        <label class="admin-config-components__status-filter">
-          {{i18n
-            "admin.config_areas.themes_and_components.components.filter_by"
-          }}
-          <DSelect
-            @value="all"
-            @includeNone={{false}}
-            @onChange={{this.onStatusFilterChange}}
-            as |select|
-          >
-            {{#each STATUS_FILTER_OPTIONS as |option|}}
-              <select.Option @value={{option.value}}>
-                {{i18n option.label}}
-              </select.Option>
-            {{/each}}
-          </DSelect>
-        </label>
-        <div class="admin-config-components__name-filter">
-          <FilterInput
-            placeholder={{i18n
-              "admin.config_areas.themes_and_components.components.search_components"
+      {{#if this.hasComponents}}
+        <div class="admin-config-components__filters">
+          <label class="admin-config-components__status-filter">
+            {{i18n
+              "admin.config_areas.themes_and_components.components.filter_by"
             }}
-            @icons={{hash left="magnifying-glass"}}
-            @filterAction={{this.onNameFilterChange}}
-          />
+            <DSelect
+              @value="all"
+              @includeNone={{false}}
+              @onChange={{this.onStatusFilterChange}}
+              as |select|
+            >
+              {{#each STATUS_FILTER_OPTIONS as |option|}}
+                <select.Option @value={{option.value}}>
+                  {{i18n option.label}}
+                </select.Option>
+              {{/each}}
+            </DSelect>
+          </label>
+          <div class="admin-config-components__name-filter">
+            <FilterInput
+              placeholder={{i18n
+                "admin.config_areas.themes_and_components.components.search_components"
+              }}
+              @icons={{hash left="magnifying-glass"}}
+              @filterAction={{this.onNameFilterChange}}
+            />
+          </div>
         </div>
-      </div>
+      {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
           <table class="d-admin-table">
@@ -191,7 +197,7 @@ export default class AdminConfigAreasComponents extends Component {
             </tbody>
           </table>
         {{else}}
-          {{#if (or this.statusFilter this.nameFilter)}}
+          {{#if this.hasComponents}}
             {{i18n
               "admin.config_areas.themes_and_components.components.no_components_found"
             }}

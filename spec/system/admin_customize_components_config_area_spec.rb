@@ -60,6 +60,17 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   before { sign_in(admin) }
 
+  it "doesn't display filters when there are no components installed" do
+    Theme.where(component: true).destroy_all
+
+    config_area.visit
+
+    expect(config_area).to have_no_components_installed_text
+    expect(config_area).to have_no_components
+    expect(config_area).to have_no_status_selector
+    expect(config_area).to have_no_name_filter_input
+  end
+
   it "can enable/disable components" do
     config_area.visit
 
@@ -108,6 +119,16 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       enabled_component.id,
       disabled_component.id,
     )
+  end
+
+  it "keeps the filters shown when there are no components matching the filters" do
+    config_area.visit
+
+    config_area.name_filter_input.fill_in(with: "stringthatshouldnotmatchanything")
+    expect(config_area).to have_no_components_found_text
+    expect(config_area).to have_no_components
+    expect(config_area).to have_name_filter_input
+    expect(config_area).to have_status_selector
   end
 
   it "navigates to the component page when clicking the Edit button" do
