@@ -796,5 +796,5 @@ export function isPrimaryTab() {
 }
 
 export function optionalRequire(path) {
-  return optionalRequire.has(path) && require(path).default;
+  return require.has(path) && require(path).default;
 }
