@@ -1,25 +1,24 @@
 import Component, { Input, Textarea } from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import discourseComputed from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
-import DModal from "discourse/components/d-modal";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
-import InputTip from "discourse/components/input-tip";
-import autoFocus from "discourse/modifiers/auto-focus";
-import {and} from "truth-helpers";
-import {not} from "truth-helpers";
+import DModal from "discourse/components/d-modal";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import GroupChooser from "select-kit/components/group-chooser";
 import DateTimeInput from "discourse/components/date-time-input";
-import ComboBox from "select-kit/components/combo-box";
+import InputTip from "discourse/components/input-tip";
 import RadioButton from "discourse/components/radio-button";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import discourseComputed from "discourse/lib/decorators";
+import autoFocus from "discourse/modifiers/auto-focus";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
+import GroupChooser from "select-kit/components/group-chooser";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -411,142 +410,277 @@ export default class PollUiBuilderModal extends Component {
   togglePublic() {
     this.set("publicPoll", !this.publicPoll);
   }
-<template><DModal @title={{i18n "poll.ui_builder.title"}} @closeModal={{@closeModal}} @inline={{@inline}} class="poll-ui-builder">
-  <:body>
-    <ul class="nav nav-pills poll-type">
-      <li>
-        <DButton @action={{fn this.updatePollType "regular"}} class={{concatClass "poll-type-value poll-type-value-regular" (if this.isRegular "active")}}>
-          {{i18n "poll.ui_builder.poll_type.regular"}}
-        </DButton>
-      </li>
-      <li>
-        <DButton @action={{fn this.updatePollType "multiple"}} class={{concatClass "poll-type-value poll-type-value-multiple" (if this.isMultiple "active")}}>
-          {{i18n "poll.ui_builder.poll_type.multiple"}}
-        </DButton>
-      </li>
-      {{#if this.showNumber}}
-        <li>
-          <DButton @action={{fn this.updatePollType "number"}} class={{concatClass "poll-type-value poll-type-value-number" (if this.isNumber "active")}}>
-            {{i18n "poll.ui_builder.poll_type.number"}}
-          </DButton>
-        </li>
-      {{/if}}
-      {{#if this.showRankedChoice}}
-        <li>
-          <DButton @action={{fn this.updatePollType "ranked_choice"}} class={{concatClass "poll-type-value poll-type-value-ranked-choice" (if this.isRankedChoice "active")}}>
-            {{i18n "poll.ui_builder.poll_type.ranked_choice"}}
-          </DButton>
-        </li>
-      {{/if}}
-    </ul>
 
-    {{#if this.showAdvanced}}
-      <div class="input-group poll-title">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_title.label"}}</label>
-        <Input @value={{this.pollTitle}} />
-      </div>
-    {{/if}}
-
-    {{#unless this.isNumber}}
-      <div class="poll-options">
-        {{#if this.showAdvanced}}
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_options.label"}}</label>
-          <Textarea @value={{this.pollOptionsText}} {{on "input" this.onOptionsTextChange}} />
-          {{#if this.showMinNumOfOptionsValidation}}
-            {{#unless this.minNumOfOptionsValidation.ok}}
-              <InputTip @validation={{this.minNumOfOptionsValidation}} />
-            {{/unless}}
+  <template>
+    <DModal
+      @title={{i18n "poll.ui_builder.title"}}
+      @closeModal={{@closeModal}}
+      @inline={{@inline}}
+      class="poll-ui-builder"
+    >
+      <:body>
+        <ul class="nav nav-pills poll-type">
+          <li>
+            <DButton
+              @action={{fn this.updatePollType "regular"}}
+              class={{concatClass
+                "poll-type-value poll-type-value-regular"
+                (if this.isRegular "active")
+              }}
+            >
+              {{i18n "poll.ui_builder.poll_type.regular"}}
+            </DButton>
+          </li>
+          <li>
+            <DButton
+              @action={{fn this.updatePollType "multiple"}}
+              class={{concatClass
+                "poll-type-value poll-type-value-multiple"
+                (if this.isMultiple "active")
+              }}
+            >
+              {{i18n "poll.ui_builder.poll_type.multiple"}}
+            </DButton>
+          </li>
+          {{#if this.showNumber}}
+            <li>
+              <DButton
+                @action={{fn this.updatePollType "number"}}
+                class={{concatClass
+                  "poll-type-value poll-type-value-number"
+                  (if this.isNumber "active")
+                }}
+              >
+                {{i18n "poll.ui_builder.poll_type.number"}}
+              </DButton>
+            </li>
           {{/if}}
-        {{else}}
-          {{#each this.pollOptions as |option index|}}
-            <div class="input-group poll-option-value">
-              <input type="text" value={{option.value}} {{autoFocus}} {{on "input" (fn this.updateValue option)}} {{on "keydown" (fn this.onInputKeydown index)}} />
-              {{#if this.canRemoveOption}}
-                <DButton @icon="trash-can" @action={{fn this.removeOption option}} />
-              {{/if}}
-            </div>
-          {{/each}}
+          {{#if this.showRankedChoice}}
+            <li>
+              <DButton
+                @action={{fn this.updatePollType "ranked_choice"}}
+                class={{concatClass
+                  "poll-type-value poll-type-value-ranked-choice"
+                  (if this.isRankedChoice "active")
+                }}
+              >
+                {{i18n "poll.ui_builder.poll_type.ranked_choice"}}
+              </DButton>
+            </li>
+          {{/if}}
+        </ul>
 
-          <div class="poll-option-controls">
-            <DButton @icon="plus" @label="poll.ui_builder.poll_options.add" @action={{fn this.addOption -1}} class="btn-default poll-option-add" />
-            {{#if (and this.showMinNumOfOptionsValidation (not this.minNumOfOptionsValidation.ok))}}
-              <InputTip @validation={{this.minNumOfOptionsValidation}} />
+        {{#if this.showAdvanced}}
+          <div class="input-group poll-title">
+            <label class="input-group-label">{{i18n
+                "poll.ui_builder.poll_title.label"
+              }}</label>
+            <Input @value={{this.pollTitle}} />
+          </div>
+        {{/if}}
+
+        {{#unless this.isNumber}}
+          <div class="poll-options">
+            {{#if this.showAdvanced}}
+              <label class="input-group-label">{{i18n
+                  "poll.ui_builder.poll_options.label"
+                }}</label>
+              <Textarea
+                @value={{this.pollOptionsText}}
+                {{on "input" this.onOptionsTextChange}}
+              />
+              {{#if this.showMinNumOfOptionsValidation}}
+                {{#unless this.minNumOfOptionsValidation.ok}}
+                  <InputTip @validation={{this.minNumOfOptionsValidation}} />
+                {{/unless}}
+              {{/if}}
+            {{else}}
+              {{#each this.pollOptions as |option index|}}
+                <div class="input-group poll-option-value">
+                  <input
+                    type="text"
+                    value={{option.value}}
+                    {{autoFocus}}
+                    {{on "input" (fn this.updateValue option)}}
+                    {{on "keydown" (fn this.onInputKeydown index)}}
+                  />
+                  {{#if this.canRemoveOption}}
+                    <DButton
+                      @icon="trash-can"
+                      @action={{fn this.removeOption option}}
+                    />
+                  {{/if}}
+                </div>
+              {{/each}}
+
+              <div class="poll-option-controls">
+                <DButton
+                  @icon="plus"
+                  @label="poll.ui_builder.poll_options.add"
+                  @action={{fn this.addOption -1}}
+                  class="btn-default poll-option-add"
+                />
+                {{#if
+                  (and
+                    this.showMinNumOfOptionsValidation
+                    (not this.minNumOfOptionsValidation.ok)
+                  )
+                }}
+                  <InputTip @validation={{this.minNumOfOptionsValidation}} />
+                {{/if}}
+              </div>
             {{/if}}
           </div>
+        {{/unless}}
+
+        {{#unless this.rankedChoiceOrRegular}}
+          <div class="options">
+            <div class="input-group poll-number">
+              <label class="input-group-label">{{i18n
+                  "poll.ui_builder.poll_config.min"
+                }}</label>
+              <Input
+                @type="number"
+                @value={{this.pollMin}}
+                class="poll-options-min"
+                min="1"
+              />
+            </div>
+
+            <div class="input-group poll-number">
+              <label class="input-group-label">{{i18n
+                  "poll.ui_builder.poll_config.max"
+                }}</label>
+              <Input
+                @type="number"
+                @value={{this.pollMax}}
+                class="poll-options-max"
+                min="1"
+              />
+            </div>
+
+            {{#if this.isNumber}}
+              <div class="input-group poll-number">
+                <label class="input-group-label">{{i18n
+                    "poll.ui_builder.poll_config.step"
+                  }}</label>
+                <Input
+                  @type="number"
+                  @value={{this.pollStep}}
+                  min="1"
+                  class="poll-options-step"
+                />
+              </div>
+            {{/if}}
+          </div>
+
+          {{#unless this.minMaxValueValidation.ok}}
+            <InputTip @validation={{this.minMaxValueValidation}} />
+          {{/unless}}
+        {{/unless}}
+
+        <div class="input-group poll-public">
+          <DToggleSwitch
+            @state={{this.publicPoll}}
+            @label="poll.ui_builder.poll_public.label"
+            class="poll-toggle-public"
+            {{on "click" this.togglePublic}}
+          />
+        </div>
+
+        {{#if this.showAdvanced}}
+          <div class="input-group poll-allowed-groups">
+            <label class="input-group-label">{{i18n
+                "poll.ui_builder.poll_groups.label"
+              }}</label>
+            <GroupChooser
+              @content={{this.siteGroups}}
+              @value={{this.pollGroups}}
+              @onChange={{fn (mut this.pollGroups)}}
+              @labelProperty="name"
+              @valueProperty="name"
+            />
+          </div>
+
+          <div class="input-group poll-date">
+            <label class="input-group-label">{{i18n
+                "poll.ui_builder.automatic_close.label"
+              }}</label>
+            <DateTimeInput
+              @date={{this.pollAutoClose}}
+              @onChange={{fn (mut this.pollAutoClose)}}
+              @clearable={{true}}
+              @useGlobalPickerContainer={{true}}
+            />
+          </div>
+
+          <div class="input-group poll-select">
+            <label class="input-group-label">{{i18n
+                "poll.ui_builder.poll_result.label"
+              }}</label>
+            <ComboBox
+              @content={{this.pollResults}}
+              @value={{this.pollResult}}
+              @valueProperty="value"
+              @onChange={{fn (mut this.pollResult)}}
+              class="poll-result"
+            />
+          </div>
+
+          {{#unless this.rankedChoiceOrNumber}}
+            <div class="input-group poll-select column">
+              <label class="input-group-label">{{i18n
+                  "poll.ui_builder.poll_chart_type.label"
+                }}</label>
+
+              <div class="radio-group">
+                <RadioButton
+                  @id="poll-chart-type-bar"
+                  @name="poll-chart-type"
+                  @value="bar"
+                  @selection={{this.chartType}}
+                />
+                <label for="poll-chart-type-bar">{{icon "chart-bar"}}
+                  {{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
+              </div>
+
+              <div class="radio-group">
+                <RadioButton
+                  @id="poll-chart-type-pie"
+                  @name="poll-chart-type"
+                  @value="pie"
+                  @selection={{this.chartType}}
+                />
+                <label for="poll-chart-type-pie">{{icon "chart-pie"}}
+                  {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
+              </div>
+            </div>
+          {{/unless}}
         {{/if}}
-      </div>
-    {{/unless}}
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.insertPoll}}
+          @icon="chart-bar"
+          @label="poll.ui_builder.insert"
+          @disabled={{this.disableInsert}}
+          class="btn-primary insert-poll"
+        />
 
-    {{#unless this.rankedChoiceOrRegular}}
-      <div class="options">
-        <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.min"}}</label>
-          <Input @type="number" @value={{this.pollMin}} class="poll-options-min" min="1" />
-        </div>
+        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
 
-        <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.max"}}</label>
-          <Input @type="number" @value={{this.pollMax}} class="poll-options-max" min="1" />
-        </div>
+        <DButton
+          @action={{this.toggleAdvanced}}
+          @icon="gear"
+          @title={{if
+            this.showAdvanced
+            "poll.ui_builder.hide_advanced"
+            "poll.ui_builder.show_advanced"
+          }}
+          class="btn-default show-advanced"
+        />
 
-        {{#if this.isNumber}}
-          <div class="input-group poll-number">
-            <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.step"}}</label>
-            <Input @type="number" @value={{this.pollStep}} min="1" class="poll-options-step" />
-          </div>
-        {{/if}}
-      </div>
-
-      {{#unless this.minMaxValueValidation.ok}}
-        <InputTip @validation={{this.minMaxValueValidation}} />
-      {{/unless}}
-    {{/unless}}
-
-    <div class="input-group poll-public">
-      <DToggleSwitch @state={{this.publicPoll}} @label="poll.ui_builder.poll_public.label" class="poll-toggle-public" {{on "click" this.togglePublic}} />
-    </div>
-
-    {{#if this.showAdvanced}}
-      <div class="input-group poll-allowed-groups">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_groups.label"}}</label>
-        <GroupChooser @content={{this.siteGroups}} @value={{this.pollGroups}} @onChange={{fn (mut this.pollGroups)}} @labelProperty="name" @valueProperty="name" />
-      </div>
-
-      <div class="input-group poll-date">
-        <label class="input-group-label">{{i18n "poll.ui_builder.automatic_close.label"}}</label>
-        <DateTimeInput @date={{this.pollAutoClose}} @onChange={{fn (mut this.pollAutoClose)}} @clearable={{true}} @useGlobalPickerContainer={{true}} />
-      </div>
-
-      <div class="input-group poll-select">
-        <label class="input-group-label">{{i18n "poll.ui_builder.poll_result.label"}}</label>
-        <ComboBox @content={{this.pollResults}} @value={{this.pollResult}} @valueProperty="value" @onChange={{fn (mut this.pollResult)}} class="poll-result" />
-      </div>
-
-      {{#unless this.rankedChoiceOrNumber}}
-        <div class="input-group poll-select column">
-          <label class="input-group-label">{{i18n "poll.ui_builder.poll_chart_type.label"}}</label>
-
-          <div class="radio-group">
-            <RadioButton @id="poll-chart-type-bar" @name="poll-chart-type" @value="bar" @selection={{this.chartType}} />
-            <label for="poll-chart-type-bar">{{icon "chart-bar"}}
-              {{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
-          </div>
-
-          <div class="radio-group">
-            <RadioButton @id="poll-chart-type-pie" @name="poll-chart-type" @value="pie" @selection={{this.chartType}} />
-            <label for="poll-chart-type-pie">{{icon "chart-pie"}}
-              {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
-          </div>
-        </div>
-      {{/unless}}
-    {{/if}}
-  </:body>
-  <:footer>
-    <DButton @action={{this.insertPoll}} @icon="chart-bar" @label="poll.ui_builder.insert" @disabled={{this.disableInsert}} class="btn-primary insert-poll" />
-
-    <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
-
-    <DButton @action={{this.toggleAdvanced}} @icon="gear" @title={{if this.showAdvanced "poll.ui_builder.hide_advanced" "poll.ui_builder.show_advanced"}} class="btn-default show-advanced" />
-
-  </:footer>
-</DModal></template>}
+      </:footer>
+    </DModal>
+  </template>
+}

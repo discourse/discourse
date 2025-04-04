@@ -7,7 +7,8 @@ import PollButtonsDropdown from "discourse/plugins/poll/discourse/components/pol
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders a clickable dropdown menu with a close option", async function (assert) {const self = this;
+  test("Renders a clickable dropdown menu with a close option", async function (assert) {
+    const self = this;
 
     this.siteSettings.data_explorer_enabled = true;
     this.siteSettings.poll_export_data_explorer_query_id = 18;
@@ -24,7 +25,20 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       dropDownClick: () => {},
     });
 
-    await render(<template><PollButtonsDropdown @closed={{self.closed}} @voters={{self.voters}} @isStaff={{self.isStaff}} @isMe={{self.isMe}} @topicArchived={{self.topicArchived}} @groupableUserFields={{self.groupableUserFields}} @isAutomaticallyClosed={{self.isAutomaticallyClosed}} @dropDownClick={{self.dropDownClick}} /></template>);
+    await render(
+      <template>
+        <PollButtonsDropdown
+          @closed={{self.closed}}
+          @voters={{self.voters}}
+          @isStaff={{self.isStaff}}
+          @isMe={{self.isMe}}
+          @topicArchived={{self.topicArchived}}
+          @groupableUserFields={{self.groupableUserFields}}
+          @isAutomaticallyClosed={{self.isAutomaticallyClosed}}
+          @dropDownClick={{self.dropDownClick}}
+        />
+      </template>
+    );
 
     await click(".widget-dropdown-header");
 
@@ -37,7 +51,8 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       );
   });
 
-  test("Renders a show-tally button when poll is a bar chart", async function (assert) {const self = this;
+  test("Renders a show-tally button when poll is a bar chart", async function (assert) {
+    const self = this;
 
     this.setProperties({
       closed: false,
@@ -51,7 +66,21 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       availableDisplayMode: "showTally",
     });
 
-    await render(<template><PollButtonsDropdown @closed={{self.closed}} @voters={{self.voters}} @isStaff={{self.isStaff}} @isMe={{self.isMe}} @topicArchived={{self.topicArchived}} @groupableUserFields={{self.groupableUserFields}} @isAutomaticallyClosed={{self.isAutomaticallyClosed}} @dropDownClick={{self.dropDownClick}} @availableDisplayMode={{self.availableDisplayMode}} /></template>);
+    await render(
+      <template>
+        <PollButtonsDropdown
+          @closed={{self.closed}}
+          @voters={{self.voters}}
+          @isStaff={{self.isStaff}}
+          @isMe={{self.isMe}}
+          @topicArchived={{self.topicArchived}}
+          @groupableUserFields={{self.groupableUserFields}}
+          @isAutomaticallyClosed={{self.isAutomaticallyClosed}}
+          @dropDownClick={{self.dropDownClick}}
+          @availableDisplayMode={{self.availableDisplayMode}}
+        />
+      </template>
+    );
 
     await click(".widget-dropdown-header");
 
@@ -64,7 +93,8 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       );
   });
 
-  test("Renders a single button when there is only one authorised action", async function (assert) {const self = this;
+  test("Renders a single button when there is only one authorised action", async function (assert) {
+    const self = this;
 
     this.setProperties({
       closed: false,
@@ -77,7 +107,20 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       dropDownClick: () => {},
     });
 
-    await render(<template><PollButtonsDropdown @closed={{self.closed}} @voters={{self.voters}} @isStaff={{self.isStaff}} @isMe={{self.isMe}} @topicArchived={{self.topicArchived}} @groupableUserFields={{self.groupableUserFields}} @isAutomaticallyClosed={{self.isAutomaticallyClosed}} @dropDownClick={{self.dropDownClick}} /></template>);
+    await render(
+      <template>
+        <PollButtonsDropdown
+          @closed={{self.closed}}
+          @voters={{self.voters}}
+          @isStaff={{self.isStaff}}
+          @isMe={{self.isMe}}
+          @topicArchived={{self.topicArchived}}
+          @groupableUserFields={{self.groupableUserFields}}
+          @isAutomaticallyClosed={{self.isAutomaticallyClosed}}
+          @dropDownClick={{self.dropDownClick}}
+        />
+      </template>
+    );
 
     assert.dom(".widget-dropdown-header").doesNotExist();
     assert.dom("button.widget-button").exists({ count: 1 });
@@ -89,7 +132,8 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       );
   });
 
-  test("Doesn't render a button when user has no authorised actions", async function (assert) {const self = this;
+  test("Doesn't render a button when user has no authorised actions", async function (assert) {
+    const self = this;
 
     this.setProperties({
       closed: false,
@@ -102,7 +146,20 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       dropDownClick: () => {},
     });
 
-    await render(<template><PollButtonsDropdown @closed={{self.closed}} @voters={{self.voters}} @isStaff={{self.isStaff}} @isMe={{self.isMe}} @topicArchived={{self.topicArchived}} @groupableUserFields={{self.groupableUserFields}} @isAutomaticallyClosed={{self.isAutomaticallyClosed}} @dropDownClick={{self.dropDownClick}} /></template>);
+    await render(
+      <template>
+        <PollButtonsDropdown
+          @closed={{self.closed}}
+          @voters={{self.voters}}
+          @isStaff={{self.isStaff}}
+          @isMe={{self.isMe}}
+          @topicArchived={{self.topicArchived}}
+          @groupableUserFields={{self.groupableUserFields}}
+          @isAutomaticallyClosed={{self.isAutomaticallyClosed}}
+          @dropDownClick={{self.dropDownClick}}
+        />
+      </template>
+    );
 
     assert.dom(".widget-dropdown-header").doesNotExist();
     assert.dom("button.widget-button").doesNotExist();

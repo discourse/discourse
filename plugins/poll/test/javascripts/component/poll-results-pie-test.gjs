@@ -14,7 +14,8 @@ const ID = "23";
 module("Poll | Component | poll-results-pie", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders the pie chart Component correctly", async function (assert) {const self = this;
+  test("Renders the pie chart Component correctly", async function (assert) {
+    const self = this;
 
     this.setProperties({
       id: ID,
@@ -22,7 +23,9 @@ module("Poll | Component | poll-results-pie", function (hooks) {
     });
 
     await render(
-      <template><PollResultsPie @id={{self.id}} @options={{self.options}} /></template>
+      <template>
+        <PollResultsPie @id={{self.id}} @options={{self.options}} />
+      </template>
     );
 
     assert.dom("li.legend").exists({ count: 3 });
