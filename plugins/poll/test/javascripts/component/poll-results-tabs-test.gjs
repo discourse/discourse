@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import PollResultsTabs from "discourse/plugins/poll/discourse/components/poll-results-tabs";
 
 const TWO_OPTIONS = [
   {
@@ -58,7 +58,8 @@ const PRELOADEDVOTERS = {
 module("Poll | Component | poll-results-tabs", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders one tab for non-ranked-choice poll", async function (assert) {
+  test("Renders one tab for non-ranked-choice poll", async function (assert) {const self = this;
+
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
@@ -72,23 +73,13 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       fetchVoters: () => {},
     });
 
-    await render(hbs`<PollResultsTabs
-      @options={{this.options}}
-      @pollName={{this.pollName}}
-      @pollType={{this.pollType}}
-      @isPublic={{this.isPublic}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @postId={{this.postId}}
-      @vote={{this.vote}}
-      @voters={{this.voters}}
-      @votersCount={{this.votersCount}}
-      @fetchVoters={{this.fetchVoters}}
-    />`);
+    await render(<template><PollResultsTabs @options={{self.options}} @pollName={{self.pollName}} @pollType={{self.pollType}} @isPublic={{self.isPublic}} @isRankedChoice={{self.isRankedChoice}} @postId={{self.postId}} @vote={{self.vote}} @voters={{self.voters}} @votersCount={{self.votersCount}} @fetchVoters={{self.fetchVoters}} /></template>);
 
     assert.dom("li.tab").exists({ count: 1 });
   });
 
-  test("Renders two tabs for public ranked choice poll", async function (assert) {
+  test("Renders two tabs for public ranked choice poll", async function (assert) {const self = this;
+
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
@@ -103,24 +94,13 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       fetchVoters: () => {},
     });
 
-    await render(hbs`<PollResultsTabs
-      @options={{this.options}}
-      @pollName={{this.pollName}}
-      @pollType={{this.pollType}}
-      @isPublic={{this.isPublic}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
-      @postId={{this.postId}}
-      @vote={{this.vote}}
-      @voters={{this.voters}}
-      @votersCount={{this.votersCount}}
-      @fetchVoters={{this.fetchVoters}}
-    />`);
+    await render(<template><PollResultsTabs @options={{self.options}} @pollName={{self.pollName}} @pollType={{self.pollType}} @isPublic={{self.isPublic}} @isRankedChoice={{self.isRankedChoice}} @rankedChoiceOutcome={{self.rankedChoiceOutcome}} @postId={{self.postId}} @vote={{self.vote}} @voters={{self.voters}} @votersCount={{self.votersCount}} @fetchVoters={{self.fetchVoters}} /></template>);
 
     assert.dom("li.tab").exists({ count: 2 });
   });
 
-  test("Renders one tab for private ranked choice poll", async function (assert) {
+  test("Renders one tab for private ranked choice poll", async function (assert) {const self = this;
+
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
@@ -135,19 +115,7 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       fetchVoters: () => {},
     });
 
-    await render(hbs`<PollResultsTabs
-      @options={{this.options}}
-      @pollName={{this.pollName}}
-      @pollType={{this.pollType}}
-      @isPublic={{this.isPublic}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
-      @postId={{this.postId}}
-      @vote={{this.vote}}
-      @voters={{this.voters}}
-      @votersCount={{this.votersCount}}
-      @fetchVoters={{this.fetchVoters}}
-    />`);
+    await render(<template><PollResultsTabs @options={{self.options}} @pollName={{self.pollName}} @pollType={{self.pollType}} @isPublic={{self.isPublic}} @isRankedChoice={{self.isRankedChoice}} @rankedChoiceOutcome={{self.rankedChoiceOutcome}} @postId={{self.postId}} @vote={{self.vote}} @voters={{self.voters}} @votersCount={{self.votersCount}} @fetchVoters={{self.fetchVoters}} /></template>);
 
     assert.dom("li.tab").exists({ count: 1 });
   });

@@ -1,17 +1,19 @@
 import { click, fillIn, render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
+import { fn } from "@ember/helper";
 
-async function setupBuilder(context) {
+async function setupBuilder(context) {const self = this;
+
   const results = [];
   const model = {
     toolbarEvent: { getText: () => "", addText: (t) => results.push(t) },
   };
   context.model = model;
   await render(
-    hbs`<Modal::PollUiBuilder @inline={{true}} @model={{this.model}} @closeModal={{fn (mut this.closeCalled) true}} />`
+    <template><PollUiBuilder @inline={{true}} @model={{self.model}} @closeModal={{fn (mut self.closeCalled) true}} /></template>
   );
   return results;
 }

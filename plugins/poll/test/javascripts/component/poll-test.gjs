@@ -1,11 +1,11 @@
 import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
+import Poll from "discourse/plugins/poll/discourse/components/poll";
 
 let requests = 0;
 
@@ -41,7 +41,8 @@ module("Poll | Component | poll", function (hooks) {
     });
   });
 
-  test("valid ranks with which you can vote", async function (assert) {
+  test("valid ranks with which you can vote", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -96,13 +97,14 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     assert.dom(".poll-buttons .cast-votes:disabled").doesNotExist();
     assert.dom(".poll-buttons .cast-votes").exists();
   });
 
-  test("invalid ranks with which you cannot vote", async function (assert) {
+  test("invalid ranks with which you cannot vote", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -141,7 +143,7 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     await click(
       ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button",
@@ -170,7 +172,8 @@ module("Poll | Component | poll", function (hooks) {
     assert.dom(".poll-buttons .cast-votes:disabled").exists();
   });
 
-  test("shows vote", async function (assert) {
+  test("shows vote", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -193,13 +196,14 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     assert.dom(".results li:nth-of-type(1) .option p").hasText("100% yes");
     assert.dom(".results li:nth-of-type(2) .option p").hasText("0% no");
   });
 
-  test("does not show results after voting when results are to be shown only on closed", async function (assert) {
+  test("does not show results after voting when results are to be shown only on closed", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -222,13 +226,14 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     assert.dom("ul.options").exists("options are shown");
     assert.dom("ul.results").doesNotExist("results are not shown");
   });
 
-  test("can vote", async function (assert) {
+  test("can vote", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -251,7 +256,7 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     requests = 0;
 
@@ -267,7 +272,8 @@ module("Poll | Component | poll", function (hooks) {
       .exists({ count: 1 });
   });
 
-  test("cannot vote if not member of the right group", async function (assert) {
+  test("cannot vote if not member of the right group", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -291,7 +297,7 @@ module("Poll | Component | poll", function (hooks) {
       }),
     });
 
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     requests = 0;
 
@@ -305,7 +311,8 @@ module("Poll | Component | poll", function (hooks) {
     assert.dom(".chosen").doesNotExist();
   });
 
-  test("voting on a multiple poll with no min attribute", async function (assert) {
+  test("voting on a multiple poll with no min attribute", async function (assert) {const self = this;
+
     this.setProperties({
       post: EmberObject.create({
         id: 42,
@@ -328,7 +335,7 @@ module("Poll | Component | poll", function (hooks) {
         chart_type: "bar",
       }),
     });
-    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+    await render(<template><Poll @post={{self.post}} @poll={{self.poll}} /></template>);
 
     assert.dom(".poll-buttons .cast-votes").isDisabled();
 
