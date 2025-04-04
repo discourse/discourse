@@ -3,10 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { optionalRequire } from "discourse/lib/utilities";
 import Item from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+
+const StyleguideComponent = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide/component"
+);
+const StyleguideExample = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide-example"
+);
 
 export default class ChatStyleguideChatThreadListItem extends Component {
   @service currentUser;

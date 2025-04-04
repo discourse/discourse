@@ -794,3 +794,7 @@ export function isPrimaryTab() {
     }
   });
 }
+
+export function optionalRequire(path) {
+  return optionalRequire.has(path) && require(path).default;
+}
