@@ -10,9 +10,12 @@ function hexColorRule(state, silent) {
     return false;
   }
 
-  // the character before can't be a word character
-  if (start > 0 && /\w/.test(src.charAt(start - 1))) {
-    return false;
+  if (start > 0) {
+    const prevChar = src.charAt(start - 1);
+    const isAllowed = /\s/.test(prevChar) || /[([{<]/.test(prevChar);
+    if (!isAllowed) {
+      return false;
+    }
   }
 
   const match = src
