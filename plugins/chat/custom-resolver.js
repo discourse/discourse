@@ -39,7 +39,7 @@ export default async function (path) {
     return;
   }
 
-  const [, type, name] = path.match(/@embroider\/virtual\/(.+?)\/(.+)/);
+  const [, type, name] = path.match(/@embroider\/virtual\/(.+?)\/([^.]+)/);
 
   if (type === "ambiguous") {
     return findItem(`components/${name}`) || findItem(`helpers/${name}`);
