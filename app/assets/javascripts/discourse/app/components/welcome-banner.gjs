@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SearchMenu, { focusSearchInput } from "discourse/components/search-menu";
+import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -39,7 +39,7 @@ export default class WelcomeBanner extends Component {
         (appEvent.type === "search" || appEvent.type === "page-search") &&
         this.search.welcomeBannerSearchInViewport
       ) {
-        focusSearchInput("welcome-banner-search-term");
+        this.search.focusSearchInput();
         appEvent.event.preventDefault();
       }
     };
@@ -107,7 +107,7 @@ export default class WelcomeBanner extends Component {
               />
               <SearchMenu
                 @location="welcome-banner"
-                @searchInputId="welcome-banner-search-term"
+                @searchInputId="welcome-banner-search-input"
               />
             </div>
             <PluginOutlet @name="welcome-banner-below-input" />

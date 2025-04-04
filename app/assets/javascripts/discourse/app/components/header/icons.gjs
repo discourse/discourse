@@ -5,7 +5,6 @@ import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 
@@ -60,14 +59,9 @@ export default class Icons extends Component {
       return false;
     }
 
-    const searchExperience = applyValueTransformer(
-      "site-setting-search-experience",
-      this.siteSettings.search_experience
-    );
-
     return (
       this.site.mobileView ||
-      searchExperience === "search_icon" ||
+      this.search.searchExperience === "search_icon" ||
       this.args.topicInfoVisible
     );
   }

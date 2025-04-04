@@ -295,6 +295,7 @@ export default class GlimmerHeader extends Component {
             <SearchMenuWrapper
               @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
+              @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper

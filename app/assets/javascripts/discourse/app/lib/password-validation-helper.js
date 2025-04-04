@@ -21,8 +21,24 @@ export default class PasswordValidationHelper {
   @tracked rejectedPasswords = new TrackedArray();
   @tracked rejectedPasswordsMessages = new TrackedMap();
 
-  constructor(owner) {
-    this.owner = owner;
+  constructor({
+    getAccountEmail,
+    getAccountUsername,
+    getAccountName,
+    getAccountPassword,
+    getPasswordRequired,
+    getForceValidationReason,
+    siteSettings,
+    isAdminOrDeveloper,
+  }) {
+    this.getAccountEmail = getAccountEmail;
+    this.getAccountUsername = getAccountUsername;
+    this.getAccountName = getAccountName;
+    this.getAccountPassword = getAccountPassword;
+    this.getPasswordRequired = getPasswordRequired;
+    this.getForceValidationReason = getForceValidationReason;
+    this.siteSettings = siteSettings;
+    this.isAdminOrDeveloper = isAdminOrDeveloper;
   }
 
   get passwordInstructions() {
@@ -32,37 +48,39 @@ export default class PasswordValidationHelper {
   }
 
   get passwordMinLength() {
-    return this.owner.admin || this.owner.isDeveloper
-      ? this.owner.siteSettings.min_admin_password_length
-      : this.owner.siteSettings.min_password_length;
+    return this.isAdminOrDeveloper()
+      ? this.siteSettings.min_admin_password_length
+      : this.siteSettings.min_password_length;
   }
 
   @dependentKeyCompat
   get passwordValidation() {
-    if (!this.owner.passwordRequired) {
+    if (!this.getPasswordRequired()) {
       return validResult();
     }
 
-    if (this.rejectedPasswords.includes(this.owner.accountPassword)) {
+    const password = this.getAccountPassword();
+
+    if (this.rejectedPasswords.includes(password)) {
       return failedResult({
         reason:
-          this.rejectedPasswordsMessages.get(this.owner.accountPassword) ||
+          this.rejectedPasswordsMessages.get(password) ||
           i18n("user.password.common"),
       });
     }
 
     // If blank, fail without a reason
-    if (isEmpty(this.owner.accountPassword)) {
+    if (isEmpty(password)) {
       return failedResult({
         message: i18n("user.password.required"),
-        reason: this.owner.forceValidationReason
+        reason: this.getForceValidationReason()
           ? i18n("user.password.required")
           : null,
       });
     }
 
     // If too short
-    if (this.owner.accountPassword.length < this.passwordMinLength) {
+    if (password.length < this.passwordMinLength) {
       return failedResult({
         reason: i18n("user.password.too_short", {
           count: this.passwordMinLength,
@@ -70,31 +88,21 @@ export default class PasswordValidationHelper {
       });
     }
 
-    if (
-      !isEmpty(this.owner.accountUsername) &&
-      this.owner.accountPassword === this.owner.accountUsername
-    ) {
-      return failedResult({
-        reason: i18n("user.password.same_as_username"),
-      });
-    }
+    const passwordEqualValueChecks = [
+      {
+        value: this.getAccountUsername(),
+        reason: "user.password.same_as_username",
+      },
+      { value: this.getAccountName(), reason: "user.password.same_as_name" },
+      { value: this.getAccountEmail(), reason: "user.password.same_as_email" },
+    ];
 
-    if (
-      !isEmpty(this.owner.accountName) &&
-      this.owner.accountPassword === this.owner.accountName
-    ) {
-      return failedResult({
-        reason: i18n("user.password.same_as_name"),
-      });
-    }
-
-    if (
-      !isEmpty(this.owner.accountEmail) &&
-      this.owner.accountPassword === this.owner.accountEmail
-    ) {
-      return failedResult({
-        reason: i18n("user.password.same_as_email"),
-      });
+    for (const check of passwordEqualValueChecks) {
+      if (!isEmpty(check.value) && password === check.value) {
+        return failedResult({
+          reason: i18n(check.reason),
+        });
+      }
     }
 
     return validResult({
