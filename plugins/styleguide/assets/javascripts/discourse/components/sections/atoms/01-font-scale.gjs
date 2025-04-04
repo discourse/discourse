@@ -1,6 +1,6 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import i18n from "discourse/helpers/i18n";
-const 01FontScale = <template><div class="section-description">
+const FontScale = <template><div class="section-description">
   <p>
     Discourse users can select from 4 different text sizes in their user
     settings, by default these are:
@@ -102,4 +102,4 @@ const 01FontScale = <template><div class="section-description">
 <StyleguideExample @title="var(--font-down-6), 0.4355em">
   <p class="font-down-6">{{i18n "styleguide.sections.typography.example"}}</p>
 </StyleguideExample></template>;
-export default 01FontScale;
+export default FontScale;

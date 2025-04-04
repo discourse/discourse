@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
@@ -29,9 +29,9 @@ export default class StyleguideCalendarDateTimeInput extends Component {
     this.time = time;
   }
 <template><StyleguideExample @title="<CalendarDateTimeInput>">
-  <Component0>
+  <StyleguideComponent>
     <CalendarDateTimeInput @datePickerId="styleguide" @date={{this.date}} @time={{this.time}} @minDate={{this.minDate}} @timeFormat={{this.timeFormat}} @dateFormat={{this.dateFormat}} @onChangeDate={{this.changeDate}} @onChangeTime={{this.changeTime}} />
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="Min date">

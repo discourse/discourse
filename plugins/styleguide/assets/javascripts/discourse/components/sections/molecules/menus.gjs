@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { MENU } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import DMenu from "float-kit/components/d-menu";
 import DButton from "discourse/components/d-button";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -119,15 +119,15 @@ export default class Menus extends Component {
     };
   }
 <template><StyleguideExample @title="<Dmenu />">
-  <Component0 @tag="dmenu component">
+  <StyleguideComponent @tag="dmenu component">
     <:sample>
       <DMenu @label={{this.label}} @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}}>
         {{this.content}}
       </DMenu>
     </:sample>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="dmenu component">
+  <StyleguideComponent @tag="dmenu component">
     <:sample>
       <DMenu @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}}>
         <:trigger>
@@ -138,25 +138,25 @@ export default class Menus extends Component {
         </:content>
       </DMenu>
     </:sample>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="menu service">
+  <StyleguideComponent @tag="menu service">
     <:sample>
       <button type="button" class="btn btn-default" id="menu-instance">{{this.label}}</button>
     </:sample>
     <:actions>
       <DButton @action={{this.registerMenu}}>Register</DButton>
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="menu service">
+  <StyleguideComponent @tag="menu service">
     <:sample>
       <button type="button" class="btn btn-default" id="menu-instance-with-component">{{this.label}}</button>
     </:sample>
     <:actions>
       <DButton @action={{this.registerMenuWithComponent}}>Register</DButton>
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="Example label">
