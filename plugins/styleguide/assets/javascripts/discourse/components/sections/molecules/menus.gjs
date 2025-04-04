@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DMenu from "float-kit/components/d-menu";
 import { MENU } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import DMenu from "float-kit/components/d-menu";
-import DButton from "discourse/components/d-button";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
-import { Input } from "@ember/component";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import { on } from "@ember/modifier";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Menus extends Component {
   @service menu;
@@ -118,76 +118,116 @@ export default class Menus extends Component {
       content: this.content,
     };
   }
-<template><StyleguideExample @title="<Dmenu />">
-  <StyleguideComponent @tag="dmenu component">
-    <:sample>
-      <DMenu @label={{this.label}} @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}}>
-        {{this.content}}
-      </DMenu>
-    </:sample>
-  </StyleguideComponent>
 
-  <StyleguideComponent @tag="dmenu component">
-    <:sample>
-      <DMenu @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}}>
-        <:trigger>
-          {{this.label}}
-        </:trigger>
-        <:content>
-          {{this.content}}
-        </:content>
-      </DMenu>
-    </:sample>
-  </StyleguideComponent>
+  <template>
+    <StyleguideExample @title="<Dmenu />">
+      <StyleguideComponent @tag="dmenu component">
+        <:sample>
+          <DMenu
+            @label={{this.label}}
+            @offset={{this.offset}}
+            @arrow={{this.arrow}}
+            @maxWidth={{this.maxWidth}}
+            @identifier={{this.identifier}}
+            @interactive={{this.interactive}}
+            @triggers={{this.triggers}}
+            @untriggers={{this.untriggers}}
+            @content={{this.content}}
+          >
+            {{this.content}}
+          </DMenu>
+        </:sample>
+      </StyleguideComponent>
 
-  <StyleguideComponent @tag="menu service">
-    <:sample>
-      <button type="button" class="btn btn-default" id="menu-instance">{{this.label}}</button>
-    </:sample>
-    <:actions>
-      <DButton @action={{this.registerMenu}}>Register</DButton>
-    </:actions>
-  </StyleguideComponent>
+      <StyleguideComponent @tag="dmenu component">
+        <:sample>
+          <DMenu
+            @offset={{this.offset}}
+            @arrow={{this.arrow}}
+            @maxWidth={{this.maxWidth}}
+            @identifier={{this.identifier}}
+            @interactive={{this.interactive}}
+            @triggers={{this.triggers}}
+            @untriggers={{this.untriggers}}
+            @content={{this.content}}
+          >
+            <:trigger>
+              {{this.label}}
+            </:trigger>
+            <:content>
+              {{this.content}}
+            </:content>
+          </DMenu>
+        </:sample>
+      </StyleguideComponent>
 
-  <StyleguideComponent @tag="menu service">
-    <:sample>
-      <button type="button" class="btn btn-default" id="menu-instance-with-component">{{this.label}}</button>
-    </:sample>
-    <:actions>
-      <DButton @action={{this.registerMenuWithComponent}}>Register</DButton>
-    </:actions>
-  </StyleguideComponent>
+      <StyleguideComponent @tag="menu service">
+        <:sample>
+          <button
+            type="button"
+            class="btn btn-default"
+            id="menu-instance"
+          >{{this.label}}</button>
+        </:sample>
+        <:actions>
+          <DButton @action={{this.registerMenu}}>Register</DButton>
+        </:actions>
+      </StyleguideComponent>
 
-  <Controls>
-    <Row @name="Example label">
-      <Input @value={{this.label}} />
-    </Row>
-    <Row @name="[@content]">
-      <Input @value={{this.content}} />
-    </Row>
-    <Row @name="[@identifier]">
-      <Input @value={{this.identifier}} />
-    </Row>
-    <Row @name="[@offset]">
-      <Input @value={{this.offset}} @type="number" />
-    </Row>
-    <Row @name="[@triggers]">
-      <Input @value={{this.triggers}} />
-    </Row>
-    <Row @name="[@untriggers]">
-      <Input @value={{this.untriggers}} />
-    </Row>
-    <Row @name="[@maxWidth]">
-      <Input @value={{this.maxWidth}} @type="number" />
-    </Row>
-    <Row @name="[@interactive]">
-      <DToggleSwitch @state={{this.interactive}} {{on "click" this.toggleInteractive}} />
-    </Row>
-    <Row @name="[@arrow]">
-      <DToggleSwitch @state={{this.arrow}} {{on "click" this.toggleArrow}} />
-    </Row>
-    <Row @name="[@inline]">
-      <DToggleSwitch @state={{this.inline}} {{on "click" this.toggleInline}} />
-    </Row>
-  </Controls>
-</StyleguideExample></template>}
+      <StyleguideComponent @tag="menu service">
+        <:sample>
+          <button
+            type="button"
+            class="btn btn-default"
+            id="menu-instance-with-component"
+          >{{this.label}}</button>
+        </:sample>
+        <:actions>
+          <DButton @action={{this.registerMenuWithComponent}}>Register</DButton>
+        </:actions>
+      </StyleguideComponent>
+
+      <Controls>
+        <Row @name="Example label">
+          <Input @value={{this.label}} />
+        </Row>
+        <Row @name="[@content]">
+          <Input @value={{this.content}} />
+        </Row>
+        <Row @name="[@identifier]">
+          <Input @value={{this.identifier}} />
+        </Row>
+        <Row @name="[@offset]">
+          <Input @value={{this.offset}} @type="number" />
+        </Row>
+        <Row @name="[@triggers]">
+          <Input @value={{this.triggers}} />
+        </Row>
+        <Row @name="[@untriggers]">
+          <Input @value={{this.untriggers}} />
+        </Row>
+        <Row @name="[@maxWidth]">
+          <Input @value={{this.maxWidth}} @type="number" />
+        </Row>
+        <Row @name="[@interactive]">
+          <DToggleSwitch
+            @state={{this.interactive}}
+            {{on "click" this.toggleInteractive}}
+          />
+        </Row>
+        <Row @name="[@arrow]">
+          <DToggleSwitch
+            @state={{this.arrow}}
+            {{on "click" this.toggleArrow}}
+          />
+        </Row>
+        <Row @name="[@inline]">
+          <DToggleSwitch
+            @state={{this.inline}}
+            {{on "click" this.toggleInline}}
+          />
+        </Row>
+      </Controls>
+    </StyleguideExample>
+  </template>
+}
