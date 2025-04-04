@@ -1,11 +1,12 @@
+import { fn } from "@ember/helper";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
-import { fn } from "@ember/helper";
 
-async function setupBuilder(context) {const self = this;
+async function setupBuilder(context) {
+  const self = this;
 
   const results = [];
   const model = {
@@ -13,7 +14,13 @@ async function setupBuilder(context) {const self = this;
   };
   context.model = model;
   await render(
-    <template><PollUiBuilder @inline={{true}} @model={{self.model}} @closeModal={{fn (mut self.closeCalled) true}} /></template>
+    <template>
+      <PollUiBuilder
+        @inline={{true}}
+        @model={{self.model}}
+        @closeModal={{fn (mut self.closeCalled) true}}
+      />
+    </template>
   );
   return results;
 }

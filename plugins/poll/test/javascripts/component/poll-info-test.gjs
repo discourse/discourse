@@ -13,7 +13,8 @@ const OPTIONS = [
 module("Poll | Component | poll-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("public multiple poll with results anytime", async function (assert) {const self = this;
+  test("public multiple poll with results anytime", async function (assert) {
+    const self = this;
 
     this.setProperties({
       isMultiple: true,
@@ -30,7 +31,24 @@ module("Poll | Component | poll-info", function (hooks) {
       voters: [],
     });
 
-    await render(<template><PollInfo @options={{self.options}} @min={{self.min}} @max={{self.max}} @isMultiple={{self.isMultiple}} @close={{self.close}} @closed={{self.closed}} @results={{self.results}} @showResults={{self.showResults}} @postUserId={{self.postUserId}} @isPublic={{self.isPublic}} @hasVoted={{self.hasVoted}} @voters={{self.voters}} /></template>);
+    await render(
+      <template>
+        <PollInfo
+          @options={{self.options}}
+          @min={{self.min}}
+          @max={{self.max}}
+          @isMultiple={{self.isMultiple}}
+          @close={{self.close}}
+          @closed={{self.closed}}
+          @results={{self.results}}
+          @showResults={{self.showResults}}
+          @postUserId={{self.postUserId}}
+          @isPublic={{self.isPublic}}
+          @hasVoted={{self.hasVoted}}
+          @voters={{self.voters}}
+        />
+      </template>
+    );
 
     assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
       i18n("poll.multiple.help.up_to_max_options", {
@@ -47,7 +65,8 @@ module("Poll | Component | poll-info", function (hooks) {
       );
   });
 
-  test("public multiple poll with results only shown on vote", async function (assert) {const self = this;
+  test("public multiple poll with results only shown on vote", async function (assert) {
+    const self = this;
 
     this.setProperties({
       isMultiple: true,
@@ -64,7 +83,24 @@ module("Poll | Component | poll-info", function (hooks) {
       voters: [],
     });
 
-    await render(<template><PollInfo @options={{self.options}} @min={{self.min}} @max={{self.max}} @isMultiple={{self.isMultiple}} @close={{self.close}} @closed={{self.closed}} @results={{self.results}} @showResults={{self.showResults}} @postUserId={{self.postUserId}} @isPublic={{self.isPublic}} @hasVoted={{self.hasVoted}} @voters={{self.voters}} /></template>);
+    await render(
+      <template>
+        <PollInfo
+          @options={{self.options}}
+          @min={{self.min}}
+          @max={{self.max}}
+          @isMultiple={{self.isMultiple}}
+          @close={{self.close}}
+          @closed={{self.closed}}
+          @results={{self.results}}
+          @showResults={{self.showResults}}
+          @postUserId={{self.postUserId}}
+          @isPublic={{self.isPublic}}
+          @hasVoted={{self.hasVoted}}
+          @voters={{self.voters}}
+        />
+      </template>
+    );
 
     assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
       i18n("poll.multiple.help.up_to_max_options", {
