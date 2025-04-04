@@ -7,6 +7,7 @@ module PageObjects
         path = "/admin/badges"
         path += "/#{badge_id}" if badge_id
         page.visit path
+        expect(page).to have_current_path(path)
         self
       end
 
