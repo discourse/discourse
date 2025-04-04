@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import { USER_FIELD_FLAGS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
+import { USER_FIELD_FLAGS } from "admin/lib/constants";
 import UserField from "admin/models/user-field";
 import DMenu from "float-kit/components/d-menu";
 

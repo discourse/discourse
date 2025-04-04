@@ -64,13 +64,6 @@ module.exports = function (defaults) {
 
     ...commonBabelConfig(),
 
-    vendorFiles: {
-      // Freedom patch - includes bug fix and async stack support
-      // https://github.com/discourse/backburner.js/commits/discourse-patches
-      backburner:
-        "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
-    },
-
     trees: {
       app: RawHandlebarsCompiler(
         withSideWatch("app", {
@@ -226,7 +219,6 @@ module.exports = function (defaults) {
           new RetryChunkLoadPlugin({
             retryDelay: 200,
             maxRetries: 2,
-            chunks: ["assets/discourse.js"],
           }),
         ],
       },
