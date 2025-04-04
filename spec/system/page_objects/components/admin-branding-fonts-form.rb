@@ -4,7 +4,9 @@ module PageObjects
   module Components
     class AdminBrandingFontsForm < PageObjects::Components::Base
       def select_font(section, font)
-        find("[data-name='#{section}_font'] .admin-fonts-form__button-option.#{font}").click
+        find(
+          "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}",
+        ).click
       end
 
       def select_default_text_size(size)
@@ -16,7 +18,9 @@ module PageObjects
       end
 
       def has_no_font?(section, font)
-        page.has_no_css?("[data-name='#{section}_font'] .admin-fonts-form__button-option.#{font}")
+        page.has_no_css?(
+          "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}",
+        )
       end
 
       def show_more_fonts(section)
