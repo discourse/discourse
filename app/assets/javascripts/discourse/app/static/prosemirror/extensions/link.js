@@ -2,6 +2,7 @@ import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
 import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
 
 const AUTO_LINKS = ["autolink", "linkify"];
+const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -172,7 +173,7 @@ const extension = {
           .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
           .flatMap((tr) => tr.steps)
           .forEach((step) => {
-            if ([ReplaceStep, ReplaceAroundStep].includes(step.constructor)) {
+            if (REPLACE_STEPS.includes(step.constructor)) {
               transaction.step(step);
             }
           });
