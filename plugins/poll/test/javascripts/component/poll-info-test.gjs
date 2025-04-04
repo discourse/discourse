@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import PollInfo from "discourse/plugins/poll/discourse/components/poll-info";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 2, rank: 0 },
@@ -13,7 +13,8 @@ const OPTIONS = [
 module("Poll | Component | poll-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("public multiple poll with results anytime", async function (assert) {
+  test("public multiple poll with results anytime", async function (assert) {const self = this;
+
     this.setProperties({
       isMultiple: true,
       min: 1,
@@ -29,20 +30,7 @@ module("Poll | Component | poll-info", function (hooks) {
       voters: [],
     });
 
-    await render(hbs`<PollInfo
-      @options={{this.options}}
-      @min={{this.min}}
-      @max={{this.max}}
-      @isMultiple={{this.isMultiple}}
-      @close={{this.close}}
-      @closed={{this.closed}}
-      @results={{this.results}}
-      @showResults={{this.showResults}}
-      @postUserId={{this.postUserId}}
-      @isPublic={{this.isPublic}}
-      @hasVoted={{this.hasVoted}}
-      @voters={{this.voters}}
-    />`);
+    await render(<template><PollInfo @options={{self.options}} @min={{self.min}} @max={{self.max}} @isMultiple={{self.isMultiple}} @close={{self.close}} @closed={{self.closed}} @results={{self.results}} @showResults={{self.showResults}} @postUserId={{self.postUserId}} @isPublic={{self.isPublic}} @hasVoted={{self.hasVoted}} @voters={{self.voters}} /></template>);
 
     assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
       i18n("poll.multiple.help.up_to_max_options", {
@@ -59,7 +47,8 @@ module("Poll | Component | poll-info", function (hooks) {
       );
   });
 
-  test("public multiple poll with results only shown on vote", async function (assert) {
+  test("public multiple poll with results only shown on vote", async function (assert) {const self = this;
+
     this.setProperties({
       isMultiple: true,
       min: 1,
@@ -75,20 +64,7 @@ module("Poll | Component | poll-info", function (hooks) {
       voters: [],
     });
 
-    await render(hbs`<PollInfo
-      @options={{this.options}}
-      @min={{this.min}}
-      @max={{this.max}}
-      @isMultiple={{this.isMultiple}}
-      @close={{this.close}}
-      @closed={{this.closed}}
-      @results={{this.results}}
-      @showResults={{this.showResults}}
-      @postUserId={{this.postUserId}}
-      @isPublic={{this.isPublic}}
-      @hasVoted={{this.hasVoted}}
-      @voters={{this.voters}}
-    />`);
+    await render(<template><PollInfo @options={{self.options}} @min={{self.min}} @max={{self.max}} @isMultiple={{self.isMultiple}} @close={{self.close}} @closed={{self.closed}} @results={{self.results}} @showResults={{self.showResults}} @postUserId={{self.postUserId}} @isPublic={{self.isPublic}} @hasVoted={{self.hasVoted}} @voters={{self.voters}} /></template>);
 
     assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
       i18n("poll.multiple.help.up_to_max_options", {
