@@ -10,7 +10,7 @@ import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import eq from "truth-helpers/helpers/eq";
+import {eq} from "truth-helpers";
 import { on } from "@ember/modifier";
 import { fn, get } from "@ember/helper";
 import PollBreakdownOption from "discourse/plugins/poll/discourse/components/poll-breakdown-option";
