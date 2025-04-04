@@ -91,3 +91,5 @@ openapi/*
 
 # direnv.net
 .direnv
+
+app/assets/javascripts/codemod-resolver/app/**/*
