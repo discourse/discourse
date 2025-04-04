@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { classify, dasherize, decamelize, underscore } from "@ember/string";
+import { dasherize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
@@ -10,13 +10,13 @@ import { MAIN_FONTS, MORE_FONTS } from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
 export default class AdminBrandingFontChooser extends Component {
-  @tracked showMoreFonts = MORE_FONTS.includes(
-    classify(this.args.selectedFont)
+  @tracked showMoreFonts = MORE_FONTS.map((font) => font.key).includes(
+    this.args.selectedFont
   );
 
   @action
   setButtonValue(fieldSet, value) {
-    fieldSet(decamelize(underscore(value)));
+    fieldSet(value);
   }
 
   @action
@@ -28,24 +28,24 @@ export default class AdminBrandingFontChooser extends Component {
     <@field.Custom>
       {{#each MAIN_FONTS as |font|}}
         <DButton
-          @action={{fn this.setButtonValue @field.set font}}
+          @action={{fn this.setButtonValue @field.set font.key}}
           class={{concatClass
             "admin-fonts-form__button-option font btn-flat"
-            (concat "body-font-" (dasherize (decamelize font)))
-            (if (eq @selectedFont (decamelize (underscore font))) "active")
+            (concat "body-font-" (dasherize font.key))
+            (if (eq @selectedFont font.key) "active")
           }}
-        >{{font}}</DButton>
+        >{{font.name}}</DButton>
       {{/each}}
       {{#if this.showMoreFonts}}
         {{#each MORE_FONTS as |font|}}
           <DButton
-            @action={{fn this.setButtonValue @field.set font}}
+            @action={{fn this.setButtonValue @field.set font.key}}
             class={{concatClass
               "admin-fonts-form__button-option font btn-flat"
-              (concat "body-font-" (dasherize (decamelize font)))
-              (if (eq @selectedFont (decamelize (underscore font))) "active")
+              (concat "body-font-" (dasherize font.key))
+              (if (eq @selectedFont font.key) "active")
             }}
-          >{{font}}</DButton>
+          >{{font.name}}</DButton>
         {{/each}}
       {{/if}}
       <DButton

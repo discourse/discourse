@@ -137,7 +137,7 @@ task "javascript:update_constants" => :environment do
       )
     end
 
-  MAIN_FONTS = %w[Helvetica Inter Lato Montserrat OpenSans Poppins Roboto Merriweather Mukta]
+  MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
 
   write_template("admin/addon/lib/constants.js", task_name, <<~JS)
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
@@ -154,9 +154,9 @@ task "javascript:update_constants" => :environment do
 
     export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
 
-    export const MAIN_FONTS = #{MAIN_FONTS}
+    export const MAIN_FONTS = #{DiscourseFonts.fonts.filter { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
 
-    export const MORE_FONTS = #{DiscourseFonts.fonts.map { |font| font[:name] } - MAIN_FONTS}
+    export const MORE_FONTS = #{DiscourseFonts.fonts.reject { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
 
     export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
