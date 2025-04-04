@@ -48,15 +48,7 @@
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
   },
-  "ember-addon": {
-    "version": 2,
-    "type": "addon"
-  },
   "ember": {
-    "edition": "octane"
-  },
-  "exports": {
-    "./tests/*": "./tests/*",
-    "./*": "./app/*"
+    "edition": "default"
   }
 }
