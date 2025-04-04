@@ -67,12 +67,8 @@ class ReviewableScoreSerializer < ApplicationSerializer
   end
 
   def reason_data
-    watched_words_found
+    watched_words_found if object.reason == "watched_word"
   end
-  
-  def include_reason_data?
-    object.reason == "watched_word"
-  end  
 
   def include_reason?
     reason.present?
