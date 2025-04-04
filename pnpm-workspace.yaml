@@ -21,3 +21,4 @@ packages:
 - "plugins/styleguide"
 - "plugins/poll"
 - "plugins/discourse-local-dates"
+- "plugins/discourse-presence"
