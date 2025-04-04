@@ -28,6 +28,7 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
 
   test("emojiReactions empty when no frequent or site defaults", function (assert) {
     this.siteSettings.default_emoji_reactions = "";
+
     assert.deepEqual(this.messageInteractor.emojiReactions, []);
   });
 
@@ -37,6 +38,7 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
         chat_quick_reaction_type: "frequent",
       },
     });
+
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "heart", "tada"]
@@ -72,6 +74,7 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
         chat_quick_reactions_custom: "grin|fearful|angry",
       },
     });
+
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["grin", "fearful", "angry"]
@@ -85,6 +88,7 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
         chat_quick_reactions_custom: "grin|fearful|angry",
       },
     });
+
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "heart", "tada"]
@@ -93,11 +97,13 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
 
   test("emojiReactions avoids duplicates from frequent and site", function (assert) {
     this.emojiStore.trackEmojiForContext("+1", "chat");
+
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "heart", "tada"]
     );
   });
+
   test("emojiReactions avoids duplicates from custom + frequent + site", function (assert) {
     updateCurrentUser({
       user_option: {
@@ -107,6 +113,7 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
     });
     this.emojiStore.trackEmojiForContext("+1", "chat");
     this.emojiStore.trackEmojiForContext("butterfly", "chat");
+
     assert.deepEqual(
       this.messageInteractor.emojiReactions.map((r) => r.emoji),
       ["+1", "butterfly", "heart"]
