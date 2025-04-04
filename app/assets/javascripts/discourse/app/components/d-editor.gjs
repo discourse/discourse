@@ -449,6 +449,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
+          prioritizedUserId: this.replyingToUser?.id,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;

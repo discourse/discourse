@@ -1005,6 +1005,7 @@ export default class ComposerEditor extends Component {
         @outletArgs={{hash composer=this.composer.model editorType="composer"}}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
+        @replyingToUser={{this.composer.replyingToUser}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
       >
