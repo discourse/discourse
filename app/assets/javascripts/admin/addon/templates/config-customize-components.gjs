@@ -12,6 +12,6 @@ export default RouteTemplate(
       }}
     />
 
-    <Components @components={{@controller.model}} />
+    <Components />
   </template>
 );

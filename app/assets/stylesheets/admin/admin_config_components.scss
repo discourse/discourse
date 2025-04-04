@@ -1,0 +1,28 @@
+.admin-config.components {
+  .admin-config-components {
+    &__filters {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__status-filter {
+      display: flex;
+      white-space: nowrap;
+      align-items: center;
+      gap: 1em;
+    }
+
+    &__author-name {
+      font-size: var(--font-down-1);
+      color: var(--primary-high);
+    }
+
+    &__description {
+      margin-top: 0.5em;
+    }
+
+    &__update-available {
+      margin-top: 0.5em;
+    }
+  }
+}
