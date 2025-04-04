@@ -82,6 +82,7 @@ export default class TagChooserField extends Component {
   syncWithComposerTags() {
     if (this.args.attributes.multiple) {
       this.currentTags = [...(this.composer.model.tags || [])];
+
       next(this, () => {
         this.args.onChange(this.currentTags);
       });
@@ -178,6 +179,7 @@ export default class TagChooserField extends Component {
             class="form-template-field__multi-select-placeholder"
             value=""
             disabled={{if this.currentTags.length "false" "true"}}
+            selected={{if (not this.currentTags.length) "selected" ""}}
             hidden
           >{{@attributes.none_label}}</option>
         {{/if}}
