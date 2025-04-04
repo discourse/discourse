@@ -4,9 +4,6 @@ function hexColorRule(state, silent) {
   const src = state.src;
   const firstChar = src.charCodeAt(start);
 
-  console.log("First char:", String.fromCharCode(firstChar));
-  console.log("Last char:", src.charAt(max - 1));
-
   // early exit if first char isn't `#`
   // or there's less than 7 characters left
   if (firstChar !== 0x23 || start + 4 > max) {
@@ -36,7 +33,7 @@ function hexColorRule(state, silent) {
   return true;
 }
 
-function hexColorRender(tokens, idx, options, env, self) {
+function hexColorRender(tokens, idx) {
   const color = tokens[idx].content;
   return `<span class="hex-color"><span class="hex-color__swatch" style="--swatch-color: ${color};"></span>${color.toUpperCase()}</span>`;
 }
