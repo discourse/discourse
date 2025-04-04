@@ -795,6 +795,6 @@ export function isPrimaryTab() {
   });
 }
 
-export function optionalRequire(path) {
-  return require.has(path) && require(path).default;
+export function optionalRequire(path, name = "default") {
+  return require.has(path) && require(path)[name];
 }
