@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { classify, dasherize, decamelize, underscore } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
