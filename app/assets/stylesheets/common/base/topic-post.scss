@@ -1292,6 +1292,7 @@ span.mention {
   font-size: 0.9375em;
   padding-left: 0.125em;
   padding-right: 0.05em;
+
   &__swatch::before {
     display: inline-block;
     content: "";
@@ -1696,7 +1697,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   &.--has-overflow,
   &.--editable {
-    box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
+    box-shadow:
+      0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
       0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
   }
 }
@@ -1713,6 +1715,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   &.read {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 1s, opacity ease-out 1s;
+    transition:
+      visibility 1s,
+      opacity ease-out 1s;
   }
 }
