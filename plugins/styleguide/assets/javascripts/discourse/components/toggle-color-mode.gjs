@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
 import { currentThemeId } from "discourse/lib/theme-selector";
-import DButton from "discourse/components/d-button";
 
 const DARK = "dark";
 const LIGHT = "light";
@@ -82,6 +82,10 @@ export default class ToggleColorMode extends Component {
     this.colorSchemeOverride = this.colorSchemeOverride === DARK ? LIGHT : DARK;
     colorSchemeOverride(this.colorSchemeOverride);
   }
-<template>{{#if this.shouldRender}}
-  <DButton @action={{this.toggle}} class="toggle-color-mode">Toggle color</DButton>
-{{/if}}</template>}
+
+  <template>
+    {{#if this.shouldRender}}
+      <DButton @action={{this.toggle}} class="toggle-color-mode">Toggle color</DButton>
+    {{/if}}
+  </template>
+}
