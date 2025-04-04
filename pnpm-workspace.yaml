@@ -19,3 +19,4 @@ packages:
 - "plugins/chat"
 - "plugins/automation"
 - "plugins/styleguide"
+- "plugins/poll"
