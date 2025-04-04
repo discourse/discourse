@@ -951,6 +951,9 @@ importers:
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
+      truth-helpers:
+        specifier: workspace:*
+        version: link:../truth-helpers
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.2.0
