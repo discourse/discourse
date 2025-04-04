@@ -1,6 +1,7 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
@@ -541,21 +542,22 @@ export default RouteTemplate(
                   class="translation-selector"
                 />
               </div>
-              <section
-                class={{concatClass
-                  "form-horizontal theme settings translations control-unit"
-                  @controller.model.loadedTranslationsLocale
-                }}
+              <ConditionalLoadingSpinner
+                @condition={{@controller.model.loadingTranslations}}
               >
+                <section
+                  class="form-horizontal theme settings translations control-unit"
+                >
 
-                {{#each @controller.translations as |translation|}}
-                  <ThemeTranslation
-                    @translation={{translation}}
-                    @model={{@controller.model}}
-                    class="theme-translation"
-                  />
-                {{/each}}
-              </section>
+                  {{#each @controller.translations as |translation|}}
+                    <ThemeTranslation
+                      @translation={{translation}}
+                      @model={{@controller.model}}
+                      class="theme-translation"
+                    />
+                  {{/each}}
+                </section>
+              </ConditionalLoadingSpinner>
             </div>
           {{/if}}
 

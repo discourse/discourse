@@ -109,7 +109,7 @@ describe "Admin Customize Themes", type: :system do
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
       theme_translations_picker.select_row_by_value("fr")
 
-      expect(page).to have_css(".translations.fr")
+      expect(page).to have_css(".translations")
 
       expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
 
