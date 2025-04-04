@@ -198,6 +198,7 @@
     transition: opacity 0.2s ease-in;
     touch-action: none;
     min-width: 6em;
+    margin-right: 0.5em;
 
     .topic-admin-menu .btn {
       height: 100%;
@@ -205,11 +206,15 @@
 
     .timeline-controls {
       margin-bottom: 1em;
+      display: flex;
+      flex-direction: row-reverse;
     }
 
     .timeline-date-wrapper {
+      text-align: right;
       max-width: 9em;
       overflow-wrap: anywhere;
+      margin-left: auto;
     }
 
     .timeline-footer-controls {
@@ -220,6 +225,7 @@
       margin-top: 1em;
       display: flex;
       gap: 0.5em;
+      right: 0;
       flex-wrap: wrap;
 
       @media (prefers-reduced-motion: no-preference) {
@@ -238,7 +244,8 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid var(--tertiary-low-or-tertiary-high);
+      margin-right: 1px;
+      border-right: 1px solid var(--tertiary-low-or-tertiary-high);
       position: relative;
       transform: translateZ(0);
     }
@@ -264,20 +271,20 @@
 
     .timeline-handle {
       border-radius: 0.8em;
-      width: 0.35em;
+      width: 0.45em;
       background-color: var(--tertiary-low-or-tertiary-high);
       height: 100%;
-      float: left;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
-      margin-left: 0.5px;
+      margin-right: -0.225em;
     }
 
     .timeline-scroller-content {
       box-sizing: border-box;
       max-width: 100%;
       overflow: hidden;
-      padding-left: 1em;
+      padding-right: 1em;
+      text-align: right;
       position: absolute; // prevents text length from impacting width
       max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
     }
@@ -295,6 +302,7 @@
       cursor: ns-resize;
       display: flex;
       align-items: center;
+      flex-direction: row-reverse;
 
       .back-button {
         margin-top: 1em;
