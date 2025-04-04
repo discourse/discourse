@@ -29,16 +29,7 @@ export default class PasswordResetController extends Controller {
   requiresApproval = false;
   redirected = false;
   maskPassword = true;
-  passwordValidationHelper = new PasswordValidationHelper({
-    getAccountEmail: () => this.accountEmail,
-    getAccountUsername: () => this.accountUsername,
-    getAccountName: () => this.accountName,
-    getAccountPassword: () => this.accountPassword,
-    getPasswordRequired: () => this.passwordRequired,
-    getForceValidationReason: () => this.forceValidationReason,
-    siteSettings: this.siteSettings,
-    isAdminOrDeveloper: () => this.admin || this.isDeveloper,
-  });
+  passwordValidationHelper = new PasswordValidationHelper(this);
   isLoading = false;
 
   lockImageUrl = getURL("/images/lock.svg");
