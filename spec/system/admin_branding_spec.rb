@@ -60,7 +60,7 @@ describe "Admin Branding Page", type: :system do
         primary_section_logos.each { |image_type| branding_page.logo_form.remove_image(image_type) }
 
         branding_page.logo_form.submit
-        expect(branding_page.logo_form).to have_saved_successfully
+        expect(page).to have_css("#site-text-logo")
 
         primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
       end
