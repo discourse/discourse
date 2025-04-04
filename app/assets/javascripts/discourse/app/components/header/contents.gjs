@@ -56,7 +56,7 @@ export default class Contents extends Component {
     const shouldMinimize =
       this.args.topicInfoVisible &&
       !this.args.showSidebar &&
-      this.viewportWidth <= 1200;
+      this.viewportWidth <= 1600;
 
     return applyValueTransformer("home-logo-minimized", shouldMinimize, {
       topicInfo: this.args.topicInfo,

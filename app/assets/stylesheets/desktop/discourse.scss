@@ -188,38 +188,45 @@ body.has-sidebar-page:not(.grid-layout) {
 }
 
 body.grid-layout {
-  --column-count: 24;
-  --max-column-width: calc(var(--d-max-width) / var(--column-count));
-  --sidebar-column-span: 4;
-  --sidebar-column-gap: 1;
-  --content-column-start: calc(
-    var(--sidebar-column-span) + var(--sidebar-column-gap) + 2
-  );
-  --content-column-span: calc(
-    var(--column-count) - var(--sidebar-column-span) - var(--sidebar-column-gap)
-  );
-  --adjust-secondary-start: 0;
+  --grid-columns: 24;
+  --grid-max-width: calc(var(--d-max-width) / var(--grid-columns));
+  --column-gap: 1;
+  --sidebar-span: 5;
   --content-shift: 0;
+  --secondary-start-adjust: 0;
+  --main-col-start-no-sidebar: 1;
+  --main-col-end-no-sidebar: -1;
+  --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 2);
+  --main-col-end-sidebar: -1;
 
-  @media screen and (width < 1200px) {
-    --sidebar-column-span: 6;
+  @media screen and (width > 1300px) {
+    --sidebar-span: 4;
+    --main-col-start-no-sidebar: 4;
+    --main-col-end-no-sidebar: -4;
+    --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 2);
   }
 
-  @media screen and (width > 1500px) {
-    --adjust-secondary-start: 1;
+  @media screen and (width > 1600px) {
+    --sidebar-span: 3;
     --content-shift: 1;
+    --main-col-end-sidebar: -6;
+    --main-col-start-no-sidebar: 6;
+    --main-col-end-no-sidebar: -6;
+    --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 2);
   }
 
   @media screen and (width > 2000px) {
-    --adjust-secondary-start: 2;
     --content-shift: 2;
-    --sidebar-column-span: 4;
+    --main-col-end-sidebar: -8;
+    --main-col-start-no-sidebar: 8;
+    --main-col-end-no-sidebar: -8;
+    --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 4);
   }
 
   .discourse-root {
     display: grid;
     grid-template-columns:
-      1fr repeat(var(--column-count), minmax(0, var(--max-column-width)))
+      1fr repeat(var(--grid-columns), minmax(0, var(--grid-max-width)))
       1fr;
     gap: 0;
 
@@ -236,44 +243,23 @@ body.grid-layout {
     grid-column: 1 / -1;
   }
 
-  .d-header {
-    .wrap {
-      height: auto;
-      min-height: 0;
+  .d-header .wrap {
+    height: auto;
+    min-height: 0;
 
-      .contents {
-        grid-column: 2 / 26;
-      }
-    }
-  }
-
-  #main-outlet-wrapper {
-    > * {
-      grid-column: 1 / -1;
-    }
-  }
-
-  @media screen and (width > 1200px) {
-    #main-outlet,
-    .regular {
-      display: grid;
-      grid-template-columns: subgrid;
-
-      > * {
-        grid-column: 1 / -1;
-      }
+    .contents {
+      grid-column: 2 / 26;
     }
   }
 
   #main-outlet-wrapper #main-outlet {
     grid-row: 1;
-    grid-column: 2 / 26;
   }
 
   &.has-sidebar-page {
     #main-outlet-wrapper {
       .sidebar-wrapper {
-        grid-column: 2 / span var(--sidebar-column-span);
+        grid-column: 2 / span var(--sidebar-span);
 
         .sidebar-sections {
           padding-inline: 0;
@@ -281,148 +267,82 @@ body.grid-layout {
       }
 
       #main-outlet {
-        grid-column: var(--content-column-start) / calc(var(--column-count) + 2);
+        grid-column: var(--main-col-start-sidebar) / var(--main-col-end-sidebar);
       }
     }
 
-    .d-header {
-      .wrap .contents {
-        display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1 / -1;
-      }
-
-      &__contents-primary {
-        grid-column: 2 / span var(--sidebar-column-span);
-        display: flex;
-        margin-right: 0.5em;
-      }
-
-      &__contents-secondary {
-        display: flex;
-        grid-column-start: calc(
-          var(--content-column-start) + var(--adjust-secondary-start)
-        );
-        grid-column-end: 26;
-      }
+    .d-header .wrap .contents {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
     }
 
-    #topic-title,
-    .container.posts,
-    #topic-footer-buttons,
-    .more-topics__container {
-      grid-column: calc(1 + var(--content-shift)) /
-        calc(-2 - var(--content-shift));
+    .d-header__contents-primary {
+      grid-column: 2 / span var(--sidebar-span);
+      display: flex;
+      margin-right: 0.5em;
     }
 
-    @media screen and (width > 1200px) {
-      .more-topics__container {
-        grid-column: calc(1 + var(--content-shift)) /
-          calc(-4 - var(--content-shift));
-      }
-    }
-
-    @media screen and (width > 2000px) {
-      .more-topics__container {
-        grid-column: calc(1 + var(--content-shift)) /
-          calc(-5 - var(--content-shift));
-      }
+    .d-header__contents-secondary {
+      display: flex;
+      grid-column-start: calc(
+        var(--main-col-start-sidebar) + var(--secondary-start-adjust)
+      );
+      grid-column-end: 26;
     }
   }
 
   &:not(.has-sidebar-page) {
-    .d-header {
-      &:has(.extra-info-wrapper) {
-        .wrap .contents {
+    .d-header:has(.extra-info-wrapper) .wrap .contents {
+      display: flex;
+
+      @media screen and (width > 1300px) {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+
+        .d-header__contents-primary {
+          grid-column: 1 / 4;
           display: flex;
+          margin-right: 0.5em;
+        }
 
-          @media screen and (width > 1200px) {
-            display: grid;
-            grid-template-columns: subgrid;
-            grid-column: 1 / -1;
+        .d-header__contents-secondary {
+          display: flex;
+          grid-column-start: calc(4 + var(--secondary-start-adjust));
+          grid-column-end: 26;
+        }
+      }
 
-            .d-header__contents-primary {
-              grid-column: 1 / 5;
-              display: flex;
-              margin-right: 0.5em;
-            }
+      @media screen and (width > 1600px) {
+        .d-header__contents-primary {
+          grid-column: 1 / 5;
+        }
 
-            .d-header__contents-secondary {
-              display: flex;
-              grid-column-start: calc(7 + var(--adjust-secondary-start));
-              grid-column-end: 26;
-            }
-          }
+        .d-header__contents-secondary {
+          grid-column-start: 6;
+        }
+      }
 
-          @media screen and (width > 1500px) {
-            .d-header__contents-primary {
-              grid-column: 1 / 7;
-            }
-          }
+      @media screen and (width > 2000px) {
+        .d-header__contents-primary {
+          grid-column: 1 / 7;
+        }
 
-          @media screen and (width > 2000px) {
-            .d-header__contents-primary {
-              grid-column: 1 / 7;
-            }
-
-            .d-header__contents-secondary {
-              grid-column-start: 9;
-            }
-          }
+        .d-header__contents-secondary {
+          grid-column-start: 8;
         }
       }
     }
 
+    #main-outlet-wrapper #main-outlet {
+      grid-column: var(--main-col-start-no-sidebar) /
+        var(--main-col-end-no-sidebar);
+    }
+
     .sidebar-wrapper {
+      // get out of the way
       height: 0;
-    }
-
-    #topic-title,
-    .container.posts,
-    #topic-footer-buttons,
-    .more-topics__container {
-      grid-column: calc(2 + var(--content-shift)) /
-        calc(-2 - var(--content-shift));
-    }
-
-    @media screen and (width > 1200px) {
-      #topic-title,
-      .container.posts,
-      #topic-footer-buttons {
-        grid-column: calc(6 + var(--content-shift)) / -2;
-      }
-
-      .more-topics__container {
-        grid-column: calc(6 + var(--content-shift)) / -4;
-      }
-    }
-
-    @media screen and (width > 1500px) {
-      #topic-title,
-      .container.posts,
-      #topic-footer-buttons,
-      .more-topics__container {
-        grid-column: calc(6 + var(--content-shift)) /
-          calc(-2 - var(--content-shift));
-      }
-
-      .more-topics__container {
-        grid-column-end: calc(-4 - var(--content-shift));
-      }
-    }
-
-    @media screen and (width > 2000px) {
-      #topic-title,
-      .container.posts,
-      #topic-footer-buttons,
-      .more-topics__container {
-        grid-column: calc(6 + var(--content-shift)) /
-          calc(-2 - var(--content-shift));
-      }
-
-      .more-topics__container {
-        grid-column-end: calc(-5 - var(--content-shift));
-      }
     }
   }
 }
