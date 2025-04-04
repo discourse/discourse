@@ -248,7 +248,8 @@ body.grid-layout {
     min-height: 0;
 
     .contents {
-      grid-column: 2 / 26;
+      display: flex;
+      grid-column: 1 / -1;
     }
   }
 
@@ -293,44 +294,60 @@ body.grid-layout {
   }
 
   &:not(.has-sidebar-page) {
-    .d-header:has(.extra-info-wrapper) .wrap .contents {
-      display: flex;
-
-      @media screen and (width > 1300px) {
-        display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1 / -1;
-
+    .d-header {
+      @media screen and (width > 1600px) {
         .d-header__contents-primary {
-          grid-column: 1 / 4;
+          grid-column: 1 / 5;
           display: flex;
           margin-right: 0.5em;
         }
 
         .d-header__contents-secondary {
           display: flex;
-          grid-column-start: calc(4 + var(--secondary-start-adjust));
-          grid-column-end: 26;
-        }
-      }
-
-      @media screen and (width > 1600px) {
-        .d-header__contents-primary {
-          grid-column: 1 / 5;
-        }
-
-        .d-header__contents-secondary {
           grid-column-start: 6;
+          grid-column-end: -1;
         }
       }
 
-      @media screen and (width > 2000px) {
-        .d-header__contents-primary {
-          grid-column: 1 / 7;
+      &:has(.extra-info-wrapper) .wrap .contents {
+        display: flex;
+
+        @media screen and (width > 1300px) {
+          display: grid;
+          grid-template-columns: subgrid;
+          grid-column: 1 / -1;
+
+          .d-header__contents-primary {
+            grid-column: 1 / 4;
+            display: flex;
+            margin-right: 0.5em;
+          }
+
+          .d-header__contents-secondary {
+            display: flex;
+            grid-column-start: calc(4 + var(--secondary-start-adjust));
+            grid-column-end: 26;
+          }
         }
 
-        .d-header__contents-secondary {
-          grid-column-start: 8;
+        @media screen and (width > 1600px) {
+          .d-header__contents-primary {
+            grid-column: 1 / 5;
+          }
+
+          .d-header__contents-secondary {
+            grid-column-start: 6;
+          }
+        }
+
+        @media screen and (width > 2000px) {
+          .d-header__contents-primary {
+            grid-column: 1 / 7;
+          }
+
+          .d-header__contents-secondary {
+            grid-column-start: 8;
+          }
         }
       }
     }
