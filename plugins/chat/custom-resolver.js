@@ -17,13 +17,7 @@ function itemExists(path) {
   );
 }
 
-export default async function (path) {
-  if (!path.startsWith("@embroider/virtual/")) {
-    return;
-  }
-
-  const name = path.replace("@embroider/virtual/", "").replace(".js", "");
-
+function findItem(name) {
   // core and bundled addons
   for (let location of roots) {
     const pkg = location.match(/(.+)\//)[1];
@@ -38,4 +32,18 @@ export default async function (path) {
   } else if (itemExists(`./admin/assets/javascripts/admin/${name}`)) {
     return `discourse/plugins/${pluginName}/admin/${name}`;
   }
+}
+
+export default async function (path) {
+  if (!path.startsWith("@embroider/virtual/")) {
+    return;
+  }
+
+  const [, type, name] = path.match(/@embroider\/virtual\/(.+?)\/(.+)/);
+
+  if (type === "ambiguous") {
+    return findItem(`components/${name}`) || findItem(`helpers/${name}`);
+  }
+
+  return findItem(`${type}/${name}`);
 }
