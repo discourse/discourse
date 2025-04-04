@@ -1,5 +1,7 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
 import { action, set } from "@ember/object";
+import { on } from "@ember/modifier";
+import icon from "discourse/helpers/d-icon";
 
 export default class Checkboxes extends Component {
   init(...args) {
@@ -30,4 +32,14 @@ export default class Checkboxes extends Component {
     }
     this.set("field.value", newFieldValue);
   }
-}
+<template>{{#each this.field.choices as |c|}}
+  <div class="checkbox-field-choice {{this.fieldClass}}">
+    <label id={{c.id}} value={{c.label}}>
+      <Input @type="checkbox" class="wizard-container__checkbox" @checked={{c.checked}} {{on "click" (action "changed")}} />
+      {{#if c.icon}}
+        {{icon c.icon}}
+      {{/if}}
+      {{c.label}}
+    </label>
+  </div>
+{{/each}}</template>}
