@@ -164,6 +164,14 @@ class Tag < ActiveRecord::Base
        LIMIT #{limit}
     SQL
 
+    tag_names_with_counts =
+      DiscoursePluginRegistry.apply_modifier(
+        :top_tags_query,
+        scope_category_ids,
+        filter_sql,
+        limit,
+      ) || tag_names_with_counts
+
     tag_names_with_counts.map { |row| row.tag_name }
   end
 

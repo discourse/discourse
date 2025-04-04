@@ -14,6 +14,8 @@ module TopicTagsMixin
 
   def tags
     all_tags.map(&:name)
+    modified = DiscoursePluginRegistry.apply_modifier(:topic_tags_serializer_name, all_tags, self)
+    modified || all_tags.map(&:name)
   end
 
   def tags_descriptions
@@ -33,6 +35,7 @@ module TopicTagsMixin
     return @tags if defined?(@tags)
 
     tags = topic.visible_tags(scope)
+    tags = DiscoursePluginRegistry.apply_modifier(:topic_tags_all_tags, tags, self) || tags
 
     # Calling method `pluck` or `order` along with `includes` causing N+1 queries
     tags =

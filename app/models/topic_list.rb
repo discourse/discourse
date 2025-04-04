@@ -63,7 +63,9 @@ class TopicList
   def top_tags
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
-    Tag.top_tags(**opts)
+    top_tags = Tag.top_tags(**opts)
+    modified_tags = DiscoursePluginRegistry.apply_modifier(:topic_list_tags, top_tags, self)
+    modified_tags.presence || top_tags
   end
 
   def preload_key

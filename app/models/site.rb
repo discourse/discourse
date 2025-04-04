@@ -54,7 +54,7 @@ class Site
   end
 
   def self.categories_cache_key
-    "site_categories_#{Discourse.git_version}"
+    "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end
 
   def self.clear_cache
