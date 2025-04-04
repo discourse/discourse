@@ -4,19 +4,29 @@ class TopicHotScore < ActiveRecord::Base
   belongs_to :topic
 
   DEFAULT_BATCH_SIZE = 1000
-
-  def self.hot_topic_ids_cache
-    @hot_topic_ids_cache ||= DistributedCache.new("hot_topic_ids_cache")
-  end
+  CACHE_KEY = "hot_topics_ids"
 
   def self.hottest_topic_ids
-    hot_topic_ids_cache["ids"].presence || Set.new
+    Discourse.cache.read(CACHE_KEY).presence || Set.new
   end
 
   def self.recreate_hottest_topic_ids_cache
-    hot_topic_ids_cache.defer_set(
-      "ids",
-      DB.query_single("SELECT topic_id FROM topic_hot_scores ORDER BY score DESC LIMIT 100").to_set,
+    hot_topics_limit =
+      (
+        Topic
+          .where(archetype: Archetype.default)
+          .where("last_posted_at > ?", SiteSetting.hot_topics_recent_days.days.ago)
+          .count * 0.1
+      ).to_i # 10% of the topics with activity since the hot topics cutoff.
+
+    hot_topics_limit = [hot_topics_limit, 100].min # Capped at 100 IDs.
+
+    Discourse.cache.write(
+      CACHE_KEY,
+      DB.query_single(
+        "SELECT topic_id FROM topic_hot_scores ORDER BY score DESC LIMIT :limit",
+        limit: hot_topics_limit,
+      ).to_set,
     )
   end
 
