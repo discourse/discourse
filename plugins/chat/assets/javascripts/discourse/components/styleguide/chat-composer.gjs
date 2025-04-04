@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import Channel from "discourse/plugins/chat/discourse/components/chat/composer/channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
-import Channel from "discourse/plugins/chat/discourse/components/chat/composer/channel";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import { on } from "@ember/modifier";
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class ChatStyleguideChatComposer extends Component {
   @service chatChannelComposer;
@@ -36,17 +36,30 @@ export default class ChatStyleguideChatComposer extends Component {
   onSendMessage() {
     this.chatChannelComposer.reset();
   }
-<template><StyleguideExample @title="<ChatComposer>">
-  <StyleguideComponent>
-    <Channel @channel={{this.channel}} @onSendMessage={{this.onSendMessage}} />
-  </StyleguideComponent>
 
-  <Controls>
-    <Row @name="Disabled">
-      <DToggleSwitch @state={{this.channel.isReadOnly}} {{on "click" this.toggleDisabled}} />
-    </Row>
-    <Row @name="Sending">
-      <DToggleSwitch @state={{this.chatChannelPane.sending}} {{on "click" this.toggleSending}} />
-    </Row>
-  </Controls>
-</StyleguideExample></template>}
+  <template>
+    <StyleguideExample @title="<ChatComposer>">
+      <StyleguideComponent>
+        <Channel
+          @channel={{this.channel}}
+          @onSendMessage={{this.onSendMessage}}
+        />
+      </StyleguideComponent>
+
+      <Controls>
+        <Row @name="Disabled">
+          <DToggleSwitch
+            @state={{this.channel.isReadOnly}}
+            {{on "click" this.toggleDisabled}}
+          />
+        </Row>
+        <Row @name="Sending">
+          <DToggleSwitch
+            @state={{this.chatChannelPane.sending}}
+            {{on "click" this.toggleSending}}
+          />
+        </Row>
+      </Controls>
+    </StyleguideExample>
+  </template>
+}
