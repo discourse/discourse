@@ -1,4 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -12,6 +16,34 @@ export default class Contents extends Component {
   @service header;
   @service sidebarState;
 
+  @tracked viewportWidth;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.destroyListener();
+  }
+
+  @action
+  updateWidth() {
+    this.viewportWidth = window.innerWidth;
+  }
+
+  @action
+  setupListener() {
+    this.viewportWidth = window.innerWidth;
+
+    this.resizeHandler = () => {
+      throttle(this, this.updateWidth, 100);
+    };
+
+    window.addEventListener("resize", this.resizeHandler);
+  }
+
+  @action
+  destroyListener() {
+    window.removeEventListener("resize", this.resizeHandler);
+  }
+
   get sidebarIcon() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
       return "discourse-sidebar";
@@ -21,15 +53,16 @@ export default class Contents extends Component {
   }
 
   get minimized() {
-    return applyValueTransformer(
-      "home-logo-minimized",
-      this.args.topicInfoVisible && !this.args.showSidebar,
-      {
-        topicInfo: this.args.topicInfo,
-        sidebarEnabled: this.args.sidebarEnabled,
-        showSidebar: this.args.showSidebar,
-      }
-    );
+    const shouldMinimize =
+      this.args.topicInfoVisible &&
+      !this.args.showSidebar &&
+      this.viewportWidth <= 1200;
+
+    return applyValueTransformer("home-logo-minimized", shouldMinimize, {
+      topicInfo: this.args.topicInfo,
+      sidebarEnabled: this.args.sidebarEnabled,
+      showSidebar: this.args.showSidebar,
+    });
   }
 
   get showHeaderSearch() {
@@ -50,7 +83,10 @@ export default class Contents extends Component {
 
       {{#if this.siteSettings.grid_layout}}
         {{bodyClass "grid-layout"}}
-        <div class="d-header__contents-primary">
+        <div
+          class="d-header__contents-primary"
+          {{didInsert this.setupListener}}
+        >
           <ContentsPrimary
             @topicInfo={{@topicInfo}}
             @topicInfoVisible={{@topicInfoVisible}}

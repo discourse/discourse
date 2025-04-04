@@ -188,7 +188,6 @@ body.has-sidebar-page:not(.grid-layout) {
 }
 
 body.grid-layout {
-  --d-max-width: 100vw;
   --column-count: 24;
   --max-column-width: calc(var(--d-max-width) / var(--column-count));
   --sidebar-column-span: 4;
@@ -202,7 +201,7 @@ body.grid-layout {
   --adjust-secondary-start: 0;
   --content-shift: 0;
 
-  @media screen and (width < 1110px) {
+  @media screen and (width < 1200px) {
     --sidebar-column-span: 6;
   }
 
@@ -214,6 +213,7 @@ body.grid-layout {
   @media screen and (width > 2000px) {
     --adjust-secondary-start: 2;
     --content-shift: 2;
+    --sidebar-column-span: 4;
   }
 
   .discourse-root {
@@ -321,6 +321,13 @@ body.grid-layout {
           calc(-4 - var(--content-shift));
       }
     }
+
+    @media screen and (width > 2000px) {
+      .more-topics__container {
+        grid-column: calc(1 + var(--content-shift)) /
+          calc(-5 - var(--content-shift));
+      }
+    }
   }
 
   &:not(.has-sidebar-page) {
@@ -398,6 +405,10 @@ body.grid-layout {
         grid-column: calc(6 + var(--content-shift)) /
           calc(-2 - var(--content-shift));
       }
+
+      .more-topics__container {
+        grid-column-end: calc(-4 - var(--content-shift));
+      }
     }
 
     @media screen and (width > 2000px) {
@@ -407,6 +418,10 @@ body.grid-layout {
       .more-topics__container {
         grid-column: calc(6 + var(--content-shift)) /
           calc(-2 - var(--content-shift));
+      }
+
+      .more-topics__container {
+        grid-column-end: calc(-5 - var(--content-shift));
       }
     }
   }
