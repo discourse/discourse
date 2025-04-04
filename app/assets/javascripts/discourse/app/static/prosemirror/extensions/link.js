@@ -1,4 +1,7 @@
+import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
 import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+
+const AUTO_LINKS = ["autolink", "linkify"];
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -168,7 +171,11 @@ const extension = {
         transactions
           .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
           .flatMap((tr) => tr.steps)
-          .forEach((step) => transaction.step(step));
+          .forEach((step) => {
+            if ([ReplaceStep, ReplaceAroundStep].includes(step.constructor)) {
+              transaction.step(step);
+            }
+          });
 
         const changedRanges = getChangedRanges(transaction);
 
@@ -182,7 +189,14 @@ const extension = {
             to = Math.min(to + 1, state.doc.nodeSize - 2);
           }
           state.doc.nodesBetween(from, to, (node, pos) => {
-            if (!node.isText) {
+            if (
+              !node.isText ||
+              node.marks.some(
+                (mark) =>
+                  mark.type.name === "link" &&
+                  !AUTO_LINKS.includes(mark.attrs.markup)
+              )
+            ) {
               return true;
             }
 
@@ -215,7 +229,11 @@ const extension = {
               ) &&
               !utils.isWhiteSpace(text[0]) &&
               nodeBefore.marks.length === 1 &&
-              nodeBefore.marks.some((mark) => mark.type.name === "link")
+              nodeBefore.marks.some(
+                (mark) =>
+                  mark.type.name === "link" &&
+                  AUTO_LINKS.includes(mark.attrs.markup)
+              )
             ) {
               textBefore = nodeBefore.text;
             }
@@ -228,7 +246,11 @@ const extension = {
               !utils.isWhiteSpace(text[text.length - 1]) &&
               !utils.isWhiteSpace(nodeAfter.text[0]) &&
               nodeAfter.marks.length === 1 &&
-              nodeAfter.marks.some((mark) => mark.type.name === "link")
+              nodeAfter.marks.some(
+                (mark) =>
+                  mark.type.name === "link" &&
+                  AUTO_LINKS.includes(mark.attrs.markup)
+              )
             ) {
               textAfter = nodeAfter.text;
             }
