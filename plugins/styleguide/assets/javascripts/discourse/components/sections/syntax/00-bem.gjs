@@ -1,5 +1,5 @@
 
-const 00Bem = <template><div class="section-description">
+const Bem = <template><div class="section-description">
   <p>
     The guidelines outlines below strive to bring structure and consistency to
     our classnames. Additionally, with this approach the nesting of css is
@@ -79,4 +79,4 @@ const 00Bem = <template><div class="section-description">
     because it will keep all relevant elements and modifiers grouped together
     and avoids unnecessary repetition of the block class.</p>
 </div></template>;
-export default 00Bem;
+export default Bem;

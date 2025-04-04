@@ -1,6 +1,6 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import ColorExample from "discourse/plugins/styleguide/discourse/components/color-example";
-const 03Colors = <template><StyleguideExample @title="primary">
+const Colors = <template><StyleguideExample @title="primary">
   <section class="color-row">
     <ColorExample @color="primary-very-low" />
     <ColorExample @color="primary-low" />
@@ -120,4 +120,4 @@ const 03Colors = <template><StyleguideExample @title="primary">
     <ColorExample @color="header_primary-low" />
   </section>
 </StyleguideExample></template>;
-export default 03Colors;
+export default Colors;

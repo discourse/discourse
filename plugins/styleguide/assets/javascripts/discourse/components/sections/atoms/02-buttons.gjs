@@ -6,7 +6,7 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
 import not from "truth-helpers/helpers/not";
-const 02Buttons = <template><StyleguideExample @title=".btn-icon - sizes (large, default, small)">
+const Buttons = <template><StyleguideExample @title=".btn-icon - sizes (large, default, small)">
   {{#each @dummy.buttonSizes as |bs|}}
     <DButton @icon="xmark" @translatedTitle={{bs.text}} @disabled={{bs.disabled}} class={{bs.class}} />
   {{/each}}
@@ -95,4 +95,4 @@ const 02Buttons = <template><StyleguideExample @title=".btn-icon - sizes (large,
   <DToggleSwitch disabled="true" @state={{true}} title="Disabled with state=true" />
   <DToggleSwitch disabled="true" @state={{false}} title="Disabled with state=false" />
 </StyleguideExample></template>;
-export default 02Buttons;
+export default Buttons;

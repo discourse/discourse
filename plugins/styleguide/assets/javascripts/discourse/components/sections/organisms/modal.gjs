@@ -4,10 +4,9 @@ import { action } from "@ember/object";
 import { getLoadedFaker } from "discourse/lib/load-faker";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import DModal from "discourse/components/d-modal";
 import { fn } from "@ember/helper";
-import i18n0 from "discourse/helpers/i18n";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -59,17 +58,17 @@ export default class extends Component {
 <template>{{!-- template-lint-disable no-potential-path-strings--}}
 
 <StyleguideExample @title="<DModal>">
-  <Component0>
+  <StyleguideComponent>
     <DModal @closeModal={{fn (mut this.inline) true}} @hideHeader={{this.hideHeader}} @inline={{this.inline}} @title={{this.title}} @subtitle={{this.subtitle}} @flash={{this.flash}} @flashType={{this.flashType}} @errors={{this.errors}} @dismissable={{this.dismissable}}>
       <:body>
         {{this.body}}
       </:body>
 
       <:footer>
-        {{i18n0 "styleguide.sections.modal.footer"}}
+        {{i18n "styleguide.sections.modal.footer"}}
       </:footer>
     </DModal>
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="@hideHeader">

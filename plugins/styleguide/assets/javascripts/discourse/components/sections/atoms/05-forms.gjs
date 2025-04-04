@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import Form from "discourse/components/form";
 import { hash, array, fn } from "@ember/helper";
-const 05Forms = <template><h2>Controls</h2>
+const Forms = <template><h2>Controls</h2>
 <StyleguideExample @title="Input">
   <Form as |form|>
     <form.Field @title="Username" @name="username" as |field|>
@@ -244,4 +244,4 @@ const 05Forms = <template><h2>Controls</h2>
     </form.Field>
   </Form>
 </StyleguideExample></template>;
-export default 05Forms;
+export default Forms;

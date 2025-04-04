@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { TOOLTIP } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import DTooltip from "float-kit/components/d-tooltip";
 import DButton from "discourse/components/d-button";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -124,13 +124,13 @@ export default class Tooltips extends Component {
     };
   }
 <template><StyleguideExample @title="<DTooltip />">
-  <Component0 @tag="tooltip component">
+  <StyleguideComponent @tag="tooltip component">
     <:sample>
       <DTooltip @label={{this.label}} @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}} @inline={{this.inline}} />
     </:sample>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="tooltip component">
+  <StyleguideComponent @tag="tooltip component">
     <:sample>
       <DTooltip @offset={{this.offset}} @arrow={{this.arrow}} @maxWidth={{this.maxWidth}} @identifier={{this.identifier}} @interactive={{this.interactive}} @triggers={{this.triggers}} @untriggers={{this.untriggers}} @content={{this.content}} @inline={{this.inline}}>
         <:trigger>
@@ -141,25 +141,25 @@ export default class Tooltips extends Component {
         </:content>
       </DTooltip>
     </:sample>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="tooltip service">
+  <StyleguideComponent @tag="tooltip service">
     <:sample>
       <span id="tooltip-instance">{{this.label}}</span>
     </:sample>
     <:actions>
       <DButton @action={{this.registerTooltip}}>Register</DButton>
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="tooltip service">
+  <StyleguideComponent @tag="tooltip service">
     <:sample>
       <span id="tooltip-instance-with-component">{{this.label}}</span>
     </:sample>
     <:actions>
       <DButton @action={{this.registerTooltipWithComponent}}>Register</DButton>
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="Example label">

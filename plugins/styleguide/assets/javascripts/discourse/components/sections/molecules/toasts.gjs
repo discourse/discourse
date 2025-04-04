@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { TOAST } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import DButton from "discourse/components/d-button";
 import { fn, hash } from "@ember/helper";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
@@ -86,41 +86,41 @@ export default class Toasts extends Component {
   }
 <template>{{!-- template-lint-disable no-potential-path-strings --}}
 <StyleguideExample @title="Toasts service">
-  <Component0 @tag="default">
+  <StyleguideComponent @tag="default">
     <:actions>
       <DButton @translatedLabel="Show default toast" @action={{fn this.showToast "default"}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="success">
+  <StyleguideComponent @tag="success">
     <:actions>
       <DButton @translatedLabel="Show success toast" @action={{fn this.showToast "success"}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="warning">
+  <StyleguideComponent @tag="warning">
     <:actions>
       <DButton @translatedLabel="Show warning toast" @action={{fn this.showToast "warning"}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="info">
+  <StyleguideComponent @tag="info">
     <:actions>
       <DButton @translatedLabel="Show info toast" @action={{fn this.showToast "info"}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="error">
+  <StyleguideComponent @tag="error">
     <:actions>
       <DButton @translatedLabel="Show error toast" @action={{fn this.showToast "error"}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
-  <Component0 @tag="custom component">
+  <StyleguideComponent @tag="custom component">
     <:actions>
       <DButton @translatedLabel="Show toast" @action={{this.showCustomComponentToast}} />
     </:actions>
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="[@options.autoClose]">

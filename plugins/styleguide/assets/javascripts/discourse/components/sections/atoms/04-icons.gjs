@@ -1,7 +1,7 @@
 import i18n from "discourse/helpers/i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import StyleguideIcons from "discourse/plugins/styleguide/discourse/components/styleguide-icons";
-const 04Icons = <template><div class="section-description">
+const Icons = <template><div class="section-description">
   <p>Discourse uses a free set of SVG icons from Font Awesome (<a href="https://fontawesome.com/icons?d=gallery&m=free">{{i18n "styleguide.sections.icons.full_list"}}</a>).</p>
   <p>Plugins and themes can add SVG icons to the SVG spritesheet, or replace
     existing icons entirely.</p>
@@ -20,4 +20,4 @@ const 04Icons = <template><div class="section-description">
 <StyleguideExample @title="d-icon - all available icons">
   <StyleguideIcons />
 </StyleguideExample></template>;
-export default 04Icons;
+export default Icons;
