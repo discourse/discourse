@@ -13,7 +13,7 @@
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
-  > .wrap {
+  .wrap {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -265,7 +265,7 @@
 
 .header-sidebar-toggle {
   button {
-    margin-right: 1em;
+    margin-right: 0.5em;
     box-sizing: content-box; // matches other header icons
     display: flex;
     justify-content: center;
