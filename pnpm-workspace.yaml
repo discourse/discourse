@@ -20,3 +20,4 @@ packages:
 - "plugins/automation"
 - "plugins/styleguide"
 - "plugins/poll"
+- "plugins/discourse-local-dates"
