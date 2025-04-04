@@ -9,7 +9,6 @@ import discourseComputed from "discourse/lib/decorators";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 import DModal from "discourse/components/d-modal";
-import i18n0 from "discourse/helpers/i18n";
 import concatClass from "discourse/helpers/concat-class";
 import eq from "truth-helpers/helpers/eq";
 import { on } from "@ember/modifier";
@@ -98,11 +97,11 @@ export default class PollBreakdownModal extends Component {
     this.set("displayMode", panel.id);
   }
 <template>{{!-- template-lint-disable no-invalid-interactive --}}
-<DModal @title={{i18n0 "poll.breakdown.title"}} @closeModal={{@closeModal}} class="poll-breakdown has-tabs">
+<DModal @title={{i18n "poll.breakdown.title"}} @closeModal={{@closeModal}} class="poll-breakdown has-tabs">
   <:headerBelowTitle>
     <ul class="modal-tabs">
-      <li class={{concatClass "modal-tab percentage" (if (eq this.displayMode "percentage") "is-active")}} {{on "click" (fn (mut this.displayMode) "percentage")}}>{{i18n0 "poll.breakdown.percentage"}}</li>
-      <li class={{concatClass "modal-tab count" (if (eq this.displayMode "count") "is-active")}} {{on "click" (fn (mut this.displayMode) "count")}}>{{i18n0 "poll.breakdown.count"}}</li>
+      <li class={{concatClass "modal-tab percentage" (if (eq this.displayMode "percentage") "is-active")}} {{on "click" (fn (mut this.displayMode) "percentage")}}>{{i18n "poll.breakdown.percentage"}}</li>
+      <li class={{concatClass "modal-tab count" (if (eq this.displayMode "count") "is-active")}} {{on "click" (fn (mut this.displayMode) "count")}}>{{i18n "poll.breakdown.count"}}</li>
     </ul>
   </:headerBelowTitle>
   <:body>
@@ -111,7 +110,7 @@ export default class PollBreakdownModal extends Component {
         {{this.title}}
       </p>
 
-      <div class="poll-breakdown-total-votes">{{i18n0 "poll.breakdown.votes" count=this.model.poll.voters}}</div>
+      <div class="poll-breakdown-total-votes">{{i18n "poll.breakdown.votes" count=this.model.poll.voters}}</div>
 
       <ul class="poll-breakdown-options">
         {{#each this.model.poll.options as |option index|}}
@@ -122,7 +121,7 @@ export default class PollBreakdownModal extends Component {
 
     <div class="poll-breakdown-body">
       <div class="poll-breakdown-body-header">
-        <label class="poll-breakdown-body-header-label">{{i18n0 "poll.breakdown.breakdown"}}</label>
+        <label class="poll-breakdown-body-header-label">{{i18n "poll.breakdown.breakdown"}}</label>
 
         <ComboBox @content={{this.groupableUserFields}} @value={{this.groupedBy}} @nameProperty="label" @onChange={{this.setGrouping}} class="poll-breakdown-dropdown" />
       </div>
