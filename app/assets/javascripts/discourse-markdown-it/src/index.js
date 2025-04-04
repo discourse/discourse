@@ -51,6 +51,7 @@ export default class DiscourseMarkdownIt {
   }
 
   cook(raw) {
+    raw = raw.toString();
     if (!raw || raw.length === 0) {
       return "";
     }
