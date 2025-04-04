@@ -7,6 +7,68 @@ import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
 
+const isOutsideSelection = (pos, nodeSize, tr) => {
+  const { selection } = tr;
+  const doc = tr.doc;
+
+  // Direct overlap check
+  if (selection.from <= pos + nodeSize && selection.to >= pos) {
+    return false;
+  }
+
+  // Get the text of the current node
+  const nodeText = doc.textBetween(pos, pos + nodeSize);
+
+  // Check if selection is at the end boundary and might continue the link
+  if (selection.from === pos + nodeSize) {
+    // Check if there's text after that continues the word
+    if (pos + nodeSize < doc.content.size) {
+      const textAfter = doc.textBetween(pos + nodeSize, pos + nodeSize + 1);
+      if (textAfter && !isWhiteSpace(textAfter)) {
+        // Selection might be continuing the link (www.google.co|m case)
+        return false;
+      }
+    }
+  }
+
+  // Check if selection is at the start boundary and continuing from previous text
+  if (selection.to === pos) {
+    // Check if there's text before that's part of the same word
+    if (pos > 0) {
+      const textBefore = doc.textBetween(pos - 1, pos);
+      if (textBefore && !isWhiteSpace(textBefore)) {
+        // Selection might be extending from text before
+        return false;
+      }
+    }
+  }
+
+  // Special case: Check if selection is near but not exactly at boundaries
+  // This handles cases where user is expanding a selection within a word
+  if (
+    Math.abs(selection.from - pos) < 3 ||
+    Math.abs(selection.to - (pos + nodeSize)) < 3
+  ) {
+    // Look at nearby characters to see if they're part of the same word
+    const nearbyText = doc.textBetween(
+      Math.max(0, pos - 3),
+      Math.min(doc.content.size, pos + nodeSize + 3)
+    );
+
+    // If nearby text forms a continuous word with our node text
+    if (
+      nearbyText &&
+      !isWhiteSpace(nearbyText) &&
+      nearbyText.length > nodeText.length &&
+      nearbyText.includes(nodeText)
+    ) {
+      return false;
+    }
+  }
+
+  return true; // Selection is truly outside this node
+};
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -60,7 +122,7 @@ const extension = {
           {
             class: "inline-onebox",
             href: node.attrs.url,
-            contentEditable: false,
+            contentEditable: true,
           },
           node.attrs.title,
         ];
@@ -167,10 +229,11 @@ const extension = {
           const decorations = [];
           tr.doc.descendants((node, pos) => {
             const link = node.marks.find((mark) => mark.type.name === "link");
+
             if (
               link?.attrs.markup === "linkify" &&
-              link?.attrs.href === node.textContent &&
-              set.find(pos, pos + node.nodeSize).length === 0
+              set.find(pos, pos + node.nodeSize).length === 0 &&
+              isOutsideSelection(pos, node.nodeSize, tr)
             ) {
               const resolvedPos = tr.doc.resolve(pos);
               const isAtRoot = resolvedPos.depth === 1;
@@ -293,7 +356,7 @@ const extension = {
               const hasMatchingLink = nodeAtPos?.marks.find(
                 (mark) =>
                   mark.type.name === "link" &&
-                  mark.attrs.href === decoration.spec.oneboxUrl
+                  mark.attrs.href.endsWith(decoration.spec.oneboxUrl)
               );
 
               if (!isTextNode || !hasMatchingLink) {

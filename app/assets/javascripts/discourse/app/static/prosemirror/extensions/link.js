@@ -1,3 +1,5 @@
+import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+
 /** @type {RichEditorExtension} */
 const extension = {
   markSpec: {
@@ -112,7 +114,7 @@ const extension = {
         return { href: match[2], title: match[3] };
       }
     ),
-  plugins: ({ pmState: { Plugin }, utils }) =>
+  plugins: ({ pmState: { Plugin }, utils }) => [
     new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs
@@ -159,6 +161,108 @@ const extension = {
         },
       },
     }),
+    // plugin for auto-linking during typing
+    new Plugin({
+      appendTransaction(transactions, prevState, state) {
+        const transaction = prevState.tr;
+        transactions
+          .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
+          .flatMap((tr) => tr.steps)
+          .forEach((step) => transaction.step(step));
+
+        const changedRanges = getChangedRanges(transaction);
+
+        const tr = state.tr;
+
+        changedRanges.forEach((change) => {
+          let from = change.new.from;
+          let to = change.new.to;
+          if (from === to) {
+            from = Math.max(from - 1, 0);
+            to = Math.min(to + 1, state.doc.nodeSize - 2);
+          }
+          state.doc.nodesBetween(from, to, (node, pos) => {
+            if (!node.isText) {
+              return true;
+            }
+
+            const text = node.text;
+
+            const changeStart = Math.max(0, change.new.from - pos);
+            const changeEnd = Math.min(text.length, change.new.to - pos);
+
+            let wordStart = changeStart;
+            while (wordStart > 0 && !utils.isWhiteSpace(text[wordStart - 1])) {
+              wordStart--;
+            }
+            let wordEnd = changeEnd;
+            while (
+              wordEnd < text.length &&
+              !utils.isWhiteSpace(text[wordEnd])
+            ) {
+              wordEnd++;
+            }
+
+            const textSlice = text.slice(wordStart, wordEnd);
+
+            const nodeBefore = state.doc.nodeAt(pos - 1);
+            let textBefore = "";
+            if (
+              wordStart === 0 &&
+              nodeBefore?.isText &&
+              !utils.isWhiteSpace(
+                nodeBefore.text[nodeBefore.text.length - 1]
+              ) &&
+              !utils.isWhiteSpace(text[0]) &&
+              nodeBefore.marks.length === 1 &&
+              nodeBefore.marks.some((mark) => mark.type.name === "link")
+            ) {
+              textBefore = nodeBefore.text;
+            }
+
+            const nodeAfter = state.doc.nodeAt(pos + node.nodeSize);
+            let textAfter = "";
+            if (
+              wordEnd === text.length &&
+              nodeAfter?.isText &&
+              !utils.isWhiteSpace(text[text.length - 1]) &&
+              !utils.isWhiteSpace(nodeAfter.text[0]) &&
+              nodeAfter.marks.length === 1 &&
+              nodeAfter.marks.some((mark) => mark.type.name === "link")
+            ) {
+              textAfter = nodeAfter.text;
+            }
+
+            const fullText = textBefore + textSlice + textAfter;
+
+            const startPos = pos + wordStart - textBefore.length;
+
+            tr.removeMark(
+              startPos,
+              startPos + fullText.length,
+              state.schema.marks.link
+            );
+
+            utils
+              .getLinkify()
+              .match(fullText)
+              ?.forEach((match) => {
+                tr.addMark(
+                  startPos + match.index,
+                  startPos + match.index + match.raw.length,
+                  state.schema.marks.link.create({
+                    href: match.url,
+                    markup: "linkify",
+                  })
+                );
+              });
+          });
+        });
+
+        return tr;
+      },
+    }),
+  ],
 };
 
 function addLinkMark(view, href) {
