@@ -151,14 +151,22 @@ export default class BulkTopicActions extends Component {
         break;
       case "archive_messages":
       case "move_messages_to_inbox":
+        let params = { type: this.model.action };
+
         let userPrivateMessages = getOwner(this).lookup(
           "controller:user-private-messages"
         );
 
-        let params = { type: this.model.action };
-
         if (userPrivateMessages.isGroup) {
           params.group = userPrivateMessages.groupFilter;
+        }
+
+        let groupPrivateMessages = getOwner(this).lookup(
+          "controller:group-messages"
+        );
+
+        if (groupPrivateMessages.isGroup) {
+          params.group = groupPrivateMessages.model.name;
         }
 
         this.performAndRefresh(params);
