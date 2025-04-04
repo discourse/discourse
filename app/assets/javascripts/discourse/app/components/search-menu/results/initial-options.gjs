@@ -213,7 +213,10 @@ export default class InitialOptions extends Component {
               {{/if}}
             {{/if}}
           {{else}}
-            <RandomQuickTip @searchTermChanged={{@searchTermChanged}} />
+            <RandomQuickTip
+              @searchInputId={{@searchInputId}}
+              @searchTermChanged={{@searchTermChanged}}
+            />
             {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
               <RecentSearches
                 @closeSearchMenu={{@closeSearchMenu}}
