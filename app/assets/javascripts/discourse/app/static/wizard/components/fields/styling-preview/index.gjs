@@ -2,13 +2,11 @@ import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import {
-  chooseDarker,
-  darkLightDiff,
-  resizeTextLinesToFitRect,
-} from "../../../lib/preview";
+import { chooseDarker, darkLightDiff, resizeTextLinesToFitRect } from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
 import PreviewBaseComponent from "./-preview-base";
+import { on } from "@ember/modifier";
+import i18n0 from "discourse/helpers/i18n";
 
 export default class Index extends PreviewBaseComponent {
   width = 630;
@@ -247,4 +245,21 @@ export default class Index extends PreviewBaseComponent {
     event?.preventDefault();
     this.set("previewTopic", true);
   }
-}
+<template><div class="previews {{if this.draggingActive "dragging"}}">
+  <div class="wizard-container__preview topic-preview">
+    <canvas width={{this.elementWidth}} height={{this.elementHeight}} style={{this.canvasStyle}}>
+    </canvas>
+  </div>
+  <div class="wizard-container__preview homepage-preview">
+    <this.HomepagePreview @wizard={{this.wizard}} @step={{this.step}} />
+  </div>
+</div>
+
+<div class="preview-nav">
+  <a href class="preview-nav-button {{if this.previewTopic "active"}}" {{on "click" this.setPreviewTopic}}>
+    {{i18n0 "wizard.previews.topic_preview"}}
+  </a>
+  <a href class="preview-nav-button {{unless this.previewTopic "active"}}" {{on "click" this.setPreviewHomepage}}>
+    {{i18n0 "wizard.previews.homepage_preview"}}
+  </a>
+</div></template>}
