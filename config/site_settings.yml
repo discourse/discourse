@@ -3536,7 +3536,6 @@ experimental:
     refresh: true
     area: "group_permissions|navigation"
   experimental_admin_search_enabled_groups:
-    hidden: true
     client: true
     type: group_list
     list_type: compact

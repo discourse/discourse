@@ -278,7 +278,10 @@
     width: 100%;
     display: flex;
     border: 1px solid var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-top-left-radius: var(--d-border-radius);
 
+    // gap: 0.25em;
     .tab {
       border: none;
       padding: 1em;
@@ -303,11 +306,12 @@
         &:focus,
         &:hover {
           color: var(--d-nav-color--hover);
-          background: var(--d-nav-bg-color--hover);
+          position: relative;
+
+          @include nav-active;
 
           &.active {
             color: var(--d-nav-color--active);
-            background: var(--d-nav-bg-color--active);
           }
 
           .d-icon {

@@ -22,6 +22,11 @@ module PageObjects
         self
       end
 
+      def navigate_to_category(category)
+        page.find("a.#{category}").click
+        self
+      end
+
       def setting_row_selector(setting_name)
         ".row.setting[data-setting='#{setting_name}']"
       end

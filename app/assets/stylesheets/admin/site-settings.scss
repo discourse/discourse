@@ -21,23 +21,17 @@
 }
 
 .admin-site-settings__changes-banner {
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   bottom: 0;
   padding: var(--space-6) var(--space-3);
-  max-width: var(--d-max-width);
-  width: calc(100% - (var(--d-sidebar-width) + 70px));
   background-color: var(--secondary);
   border-top: 2px solid var(--tertiary);
 
-  .has-sidebar-page & {
-    left: calc(var(--d-sidebar-width) + 70px);
-  }
-
   @include breakpoint("mobile-extra-large") {
-    width: 100%;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -50,7 +44,6 @@
 
     @include breakpoint("mobile-extra-large") {
       flex-direction: column;
-      width: 90%;
     }
   }
 

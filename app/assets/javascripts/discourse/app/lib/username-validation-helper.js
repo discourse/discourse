@@ -22,32 +22,51 @@ export default class UsernameValidationHelper {
   @tracked usernameValidationResult;
   checkedUsername = null;
 
-  constructor(owner) {
-    this.owner = owner;
+  constructor({
+    getAccountEmail,
+    getAccountUsername,
+    getPrefilledUsername,
+    getAuthOptionsUsername,
+    getForceValidationReason,
+    siteSettings,
+    isInvalid,
+    updateIsDeveloper,
+    updateUsernames,
+  }) {
+    this.getAccountEmail = getAccountEmail;
+    this.getAccountUsername = getAccountUsername;
+    this.getPrefilledUsername = getPrefilledUsername;
+    this.getAuthOptionsUsername = getAuthOptionsUsername;
+    this.getForceValidationReason = getForceValidationReason;
+    this.siteSettings = siteSettings;
+    this.isInvalid = isInvalid;
+    this.updateIsDeveloper = updateIsDeveloper;
+    this.updateUsernames = updateUsernames;
   }
 
   async fetchExistingUsername() {
-    const result = await User.checkUsername(null, this.owner?.accountEmail);
+    const accountUsername = this.getAccountUsername();
+    const result = await User.checkUsername(null, this.getAccountEmail());
 
     if (
       result.suggestion &&
-      (isEmpty(this.owner.accountUsername) ||
-        this.owner.accountUsername === this.owner.get("authOptions.username"))
+      (isEmpty(accountUsername) ||
+        accountUsername === this.getAuthOptionsUsername())
     ) {
-      this.owner.accountUsername = result.suggestion;
-      this.owner.prefilledUsername = result.suggestion;
+      this.updateUsernames(result.suggestion);
     }
   }
 
   get usernameValidation() {
+    const accountUsername = this.getAccountUsername();
     if (
       this.usernameValidationResult &&
-      this.checkedUsername === this.owner.accountUsername
+      this.checkedUsername === accountUsername
     ) {
       return this.usernameValidationResult;
     }
 
-    const result = this.basicUsernameValidation(this.owner.accountUsername);
+    const result = this.basicUsernameValidation(accountUsername);
 
     if (result.shouldCheck) {
       discourseDebounce(this, this.checkUsernameAvailability, 500);
@@ -57,24 +76,24 @@ export default class UsernameValidationHelper {
   }
 
   basicUsernameValidation(username) {
-    if (username && username === this.owner.prefilledUsername) {
+    if (username && username === this.getPrefilledUsername()) {
       return validResult({ reason: i18n("user.username.prefilled") });
     }
 
     if (isEmpty(username)) {
       return failedResult({
         message: i18n("user.username.required"),
-        reason: this.owner.forceValidationReason
+        reason: this.getForceValidationReason()
           ? i18n("user.username.required")
           : null,
       });
     }
 
-    if (username.length < this.owner.siteSettings.min_username_length) {
+    if (username.length < this.siteSettings.min_username_length) {
       return failedResult({ reason: i18n("user.username.too_short") });
     }
 
-    if (username.length > this.owner.siteSettings.max_username_length) {
+    if (username.length > this.siteSettings.max_username_length) {
       return failedResult({ reason: i18n("user.username.too_long") });
     }
 
@@ -85,17 +104,18 @@ export default class UsernameValidationHelper {
   }
 
   async checkUsernameAvailability() {
+    const accountUsername = this.getAccountUsername();
     const result = await User.checkUsername(
-      this.owner.accountUsername,
-      this.owner.accountEmail
+      accountUsername,
+      this.getAccountEmail()
     );
 
-    if (this.owner.isDestroying || this.owner.isDestroyed) {
+    if (this.isInvalid()) {
       return;
     }
 
-    this.checkedUsername = this.owner.accountUsername;
-    this.owner.isDeveloper = !!result.is_developer;
+    this.checkedUsername = accountUsername;
+    this.updateIsDeveloper(!!result.is_developer);
 
     if (result.available) {
       this.usernameValidationResult = validResult({
