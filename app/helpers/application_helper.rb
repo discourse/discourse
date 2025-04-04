@@ -307,6 +307,8 @@ module ApplicationHelper
     %i[url title description].each do |property|
       if opts[property].present?
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
+        content =
+          DiscoursePluginRegistry.apply_modifier(:meta_data_content, content, property, opts)
         result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
         result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
