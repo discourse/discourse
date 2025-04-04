@@ -176,7 +176,7 @@ module Chat
         @messages = [messages.first] + messages.first.thread.replies
       end
 
-      all_messages_same_user = messages.count(:user_id) == 1
+      all_messages_same_user = messages.map(&:user_id).uniq.count == 1
 
       open_bbcode_tag =
         TranscriptBBCode.new(

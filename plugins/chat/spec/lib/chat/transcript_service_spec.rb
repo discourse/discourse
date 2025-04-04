@@ -434,6 +434,40 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
+  it "does not chain replies if the thread messages are all by the same user" do
+    thread =
+      Fabricate(
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(:chat_message, chat_channel: channel, user: user1, message: "reply to me!"),
+      )
+    thread_reply_1 =
+      Fabricate(:chat_message, chat_channel: channel, user: user1, thread: thread, message: "done")
+    thread_reply_2 =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: user1,
+        thread: thread,
+        message: "thanks",
+      )
+    thread.update!(original_message_id: thread.original_message.id, replies_count: 2)
+    rendered = service([thread.original_message.id]).generate_markdown
+    expect(rendered).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    reply to me!
+
+    [chat quote="martinchat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}"]
+    done
+
+    thanks
+    [/chat]
+
+    [/chat]
+    MARKDOWN
+  end
+
   it "doesn't add thread info for threads with no replies" do
     thread =
       Fabricate(
