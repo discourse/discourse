@@ -75,15 +75,15 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
 
-        page.send_keys(%i[alt arrow_down])
+        page.send_keys(%i[alt down])
 
         expect(chat_page).to have_drawer(channel_id: channel_1.id)
 
-        page.send_keys(%i[alt arrow_up])
+        page.send_keys(%i[alt up])
 
         expect(chat_page).to have_drawer(channel_id: channel_2.id)
       end
