@@ -542,7 +542,10 @@ export default RouteTemplate(
                 />
               </div>
               <section
-                class="form-horizontal theme settings translations control-unit"
+                class={{concatClass
+                  "form-horizontal theme settings translations control-unit"
+                  @controller.model.loadedTranslationsLocale
+                }}
               >
 
                 {{#each @controller.translations as |translation|}}
