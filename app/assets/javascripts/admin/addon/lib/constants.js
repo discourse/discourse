@@ -82,3 +82,43 @@ export const DEFAULT_USER_PREFERENCES = [
   "default_sidebar_link_to_filtered_list",
   "default_sidebar_show_count_of_new_items",
 ];
+
+export const MAIN_FONTS = [
+  { key: "open_sans", name: "Open Sans" },
+  { key: "roboto", name: "Roboto" },
+  { key: "lato", name: "Lato" },
+  { key: "inter", name: "Inter" },
+  { key: "montserrat", name: "Montserrat" },
+  { key: "poppins", name: "Poppins" },
+  { key: "merriweather", name: "Merriweather" },
+  { key: "mukta", name: "Mukta" },
+  { key: "helvetica", name: "Helvetica" },
+];
+
+export const MORE_FONTS = [
+  { key: "arial", name: "Arial" },
+  { key: "system", name: "System" },
+  { key: "oxanium", name: "Oxanium" },
+  { key: "noto_sans_jp", name: "NotoSansJP" },
+  { key: "roboto_condensed", name: "RobotoCondensed" },
+  { key: "source_sans_pro", name: "SourceSansPro" },
+  { key: "oswald", name: "Oswald" },
+  { key: "raleway", name: "Raleway" },
+  { key: "roboto_mono", name: "RobotoMono" },
+  { key: "noto_sans", name: "NotoSans" },
+  { key: "roboto_slab", name: "RobotoSlab" },
+  { key: "ubuntu", name: "Ubuntu" },
+  { key: "pt_sans", name: "PTSans" },
+  { key: "playfair_display", name: "PlayfairDisplay" },
+  { key: "nunito", name: "Nunito" },
+  { key: "lora", name: "Lora" },
+  { key: "jet_brains_mono", name: "JetBrains Mono" },
+];
+
+export const DEFAULT_TEXT_SIZES = [
+  "smallest",
+  "smaller",
+  "normal",
+  "larger",
+  "largest",
+];

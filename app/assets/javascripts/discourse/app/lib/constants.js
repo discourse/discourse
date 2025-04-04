@@ -90,3 +90,13 @@ export const TOPIC_VISIBILITY_REASONS = {
 export const MAX_UNOPTIMIZED_CATEGORIES = 1000;
 
 export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";
+
+export const ADMIN_SEARCH_RESULT_TYPES = [
+  "page",
+  "setting",
+  "theme",
+  "component",
+  "report",
+];
+
+export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];

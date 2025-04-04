@@ -209,8 +209,9 @@ export default Mixin.create({
 
       this.setting.validationMessage = null;
       this.buffered.applyChanges();
+
       if (this.setting.requiresReload) {
-        this.afterSave();
+        this.siteSettingChangeTracker.refreshPage();
       }
     } catch (e) {
       const json = e.jqXHR?.responseJSON;

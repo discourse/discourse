@@ -5241,9 +5241,6 @@ en:
           title: "Moderation"
           header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           keywords: "flag|review|spam|illegal"
-        font_style:
-          title: "Font style"
-          header_description: "Customize the font styles used by your themes"
         files:
           title: "Files"
           header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
@@ -5257,11 +5254,9 @@ en:
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-        logo:
-          title: "Site logo"
-          header_description: "Customize the variations of your site logo"
         branding:
           title: "Branding"
+          header_description: "Customize the variations of your site logo and fonts"
           logo:
             title: "Logo"
             form:
@@ -5326,6 +5321,27 @@ en:
                 title: "X summary large image"
                 description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
                 help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
+          fonts:
+            title: "Fonts"
+            form:
+              more_fonts: "More fonts"
+              less_fonts: "Less fonts"
+              saved: "Font settings are saved."
+              base_font:
+                title: "Base font"
+              heading_font:
+                title: "Heading font"
+              default_text_size:
+                title: "Default text size"
+                description: "This size can be subsequently adjusted by each user according to their preferences."
+            backfill_modal:
+              title: "Apply new default text settings?"
+              description:
+                one: "You’ve updated the default text size. Would you like to apply this change to %{count} existing user?"
+                other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
+              modal_yes: "Yes"
+              modal_no: "No, only apply going forward"
+
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"

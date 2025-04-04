@@ -11,7 +11,13 @@ import {
 } from "admin/lib/constants";
 import SettingObjectHelper from "admin/lib/setting-object-helper";
 
-const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
+const AUTO_REFRESH_ON_SAVE = [
+  "logo",
+  "mobile_logo",
+  "base_font",
+  "heading_font",
+  "default_text_size",
+];
 
 export default class SiteSetting extends EmberObject {
   static findAll(params = {}) {

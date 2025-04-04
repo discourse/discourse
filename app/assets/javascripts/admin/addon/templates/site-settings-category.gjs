@@ -1,5 +1,4 @@
 import RouteTemplate from "ember-route-template";
-import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/components/site-setting";
 
@@ -8,10 +7,7 @@ export default RouteTemplate(
     {{#if @controller.filteredContent}}
       <section class="form-horizontal settings">
         {{#each @controller.filteredContent as |setting|}}
-          <SiteSetting
-            @setting={{setting}}
-            @afterSave={{routeAction "refreshAll"}}
-          />
+          <SiteSetting @setting={{setting}} />
         {{/each}}
         {{#if @controller.category.hasMore}}
           <p class="warning">{{i18n

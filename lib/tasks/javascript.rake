@@ -137,6 +137,8 @@ task "javascript:update_constants" => :environment do
       )
     end
 
+  MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
+
   write_template("admin/addon/lib/constants.js", task_name, <<~JS)
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
 
@@ -151,6 +153,12 @@ task "javascript:update_constants" => :environment do
     export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
 
     export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
+
+    export const MAIN_FONTS = #{DiscourseFonts.fonts.filter { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const MORE_FONTS = #{DiscourseFonts.fonts.reject { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
   JS
 
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
@@ -183,6 +191,10 @@ task "javascript:update_constants" => :environment do
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
 
     export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
+
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

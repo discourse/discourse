@@ -439,6 +439,7 @@ basic:
     list_type: font
     area: "fonts"
     allow_any: false
+    client: true
   heading_font:
     default: "inter"
     choices: "BaseFontSetting.values"
@@ -447,6 +448,7 @@ basic:
     list_type: font
     area: "fonts"
     allow_any: false
+    client: true
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -3283,11 +3285,8 @@ user_preferences:
   default_text_size:
     type: enum
     default: normal
-    choices:
-      - smaller
-      - normal
-      - larger
-      - largest
+    client: true
+    choices: "DefaultTextSizeSetting.values"
     area: "fonts"
 
   default_title_count_mode:
