@@ -5,7 +5,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Item from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 
 export default class ChatStyleguideChatThreadListItem extends Component {
@@ -21,9 +21,9 @@ export default class ChatStyleguideChatThreadListItem extends Component {
     });
   }
 <template><StyleguideExample @title="<Chat::ThreadList::Item>">
-  <Component0>
+  <StyleguideComponent>
     {{#if this.thread}}
       <Item @thread={{this.thread}} />
     {{/if}}
-  </Component0>
+  </StyleguideComponent>
 </StyleguideExample></template>}

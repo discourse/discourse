@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import Component0 from "discourse/plugins/styleguide/discourse/components/styleguide/component";
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Channel from "discourse/plugins/chat/discourse/components/chat/composer/channel";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
@@ -37,9 +37,9 @@ export default class ChatStyleguideChatComposer extends Component {
     this.chatChannelComposer.reset();
   }
 <template><StyleguideExample @title="<ChatComposer>">
-  <Component0>
+  <StyleguideComponent>
     <Channel @channel={{this.channel}} @onSendMessage={{this.onSendMessage}} />
-  </Component0>
+  </StyleguideComponent>
 
   <Controls>
     <Row @name="Disabled">
