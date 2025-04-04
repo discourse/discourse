@@ -3,6 +3,10 @@ import { decode } from "html-entities";
 import highlightHTML from "discourse/lib/highlight-html";
 
 export default function (text, reviewable) {
+  if (!text || !reviewable || !reviewable.reviewable_scores) {
+    return text;
+  }
+
   const words = reviewable.reviewable_scores
     .map((rs) => {
       return rs.reason_type === "watched_word" ? rs.reason_data : [];
