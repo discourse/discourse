@@ -1,27 +1,22 @@
-import { fn } from "@ember/helper";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PollUiBuilder from "discourse/plugins/poll/discourse/components/modal/poll-ui-builder";
 
-async function setupBuilder(context) {
-  const self = this;
-
+async function setupBuilder() {
+  const noop = () => {};
   const results = [];
   const model = {
     toolbarEvent: { getText: () => "", addText: (t) => results.push(t) },
   };
-  context.model = model;
+
   await render(
     <template>
-      <PollUiBuilder
-        @inline={{true}}
-        @model={{self.model}}
-        @closeModal={{fn (mut self.closeCalled) true}}
-      />
+      <PollUiBuilder @inline={{true}} @model={{model}} @closeModal={{noop}} />
     </template>
   );
+
   return results;
 }
 
@@ -29,7 +24,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Can switch poll type", async function (assert) {
-    await setupBuilder(this);
+    await setupBuilder();
 
     assert.dom(".poll-type-value-regular").hasClass("active");
 
@@ -54,7 +49,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   });
 
   test("Automatically updates min/max when number of options change", async function (assert) {
-    await setupBuilder(this);
+    await setupBuilder();
 
     await click(".poll-type-value-multiple");
     assert.dom(".poll-options-min").hasValue("0");
@@ -74,7 +69,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   test("disables save button", async function (assert) {
     this.siteSettings.poll_maximum_options = 3;
 
-    await setupBuilder(this);
+    await setupBuilder();
     assert
       .dom(".insert-poll")
       .isDisabled("Insert button disabled when no options specified");
@@ -97,7 +92,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   });
 
   test("number mode", async function (assert) {
-    const results = await setupBuilder(this);
+    const results = await setupBuilder();
 
     await click(".show-advanced");
     await click(".poll-type-value-number");
@@ -131,7 +126,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   });
 
   test("regular mode", async function (assert) {
-    const results = await setupBuilder(this);
+    const results = await setupBuilder();
 
     await fillIn(".poll-option-value input", "a");
     await click(".poll-option-add");
@@ -169,7 +164,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   });
 
   test("multi-choice mode", async function (assert) {
-    const results = await setupBuilder(this);
+    const results = await setupBuilder();
 
     await click(".poll-type-value-multiple");
 
@@ -197,7 +192,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   });
 
   test("staff_only option is not present for non-staff", async function (assert) {
-    await setupBuilder(this);
+    await setupBuilder();
 
     await click(".show-advanced");
     const resultVisibility = selectKit(".poll-result");
@@ -224,7 +219,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   test("default public value can be controlled with site setting", async function (assert) {
     this.siteSettings.poll_default_public = false;
 
-    const results = await setupBuilder(this);
+    const results = await setupBuilder();
 
     await fillIn(".poll-option-value input", "a");
     await click(".poll-option-add");
