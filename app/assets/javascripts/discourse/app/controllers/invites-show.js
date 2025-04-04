@@ -37,7 +37,16 @@ export default class InvitesShowController extends Controller {
       this.prefilledUsername = username;
     },
   });
-  passwordValidationHelper = new PasswordValidationHelper(this);
+  passwordValidationHelper = new PasswordValidationHelper({
+    getAccountEmail: () => this.accountEmail,
+    getAccountUsername: () => this.accountUsername,
+    getAccountName: () => this.accountName,
+    getAccountPassword: () => this.accountPassword,
+    getPasswordRequired: () => this.passwordRequired,
+    getForceValidationReason: () => this.forceValidationReason,
+    siteSettings: this.siteSettings,
+    isAdminOrDeveloper: () => this.admin || this.isDeveloper,
+  });
   userFieldsValidationHelper = new UserFieldsValidationHelper({
     getUserFields: () => this.site.get("user_fields"),
     getAccountPassword: () => this.accountPassword,
