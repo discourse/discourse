@@ -3,8 +3,12 @@ import { decode } from "html-entities";
 import highlightHTML from "discourse/lib/highlight-html";
 
 export default function (text, reviewable) {
-  if (!text || !reviewable || !reviewable.reviewable_scores) {
+  if (!text) {
     return text;
+  }
+
+  if (!reviewable || !reviewable.reviewable_scores) {
+    return htmlSafe(text);
   }
 
   const words = reviewable.reviewable_scores
@@ -14,7 +18,7 @@ export default function (text, reviewable) {
     .flat();
 
   if (!words.length) {
-    return text;
+    return htmlSafe(text);
   }
 
   const elem = document.createElement("span");
