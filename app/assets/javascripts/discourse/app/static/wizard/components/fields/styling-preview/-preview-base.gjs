@@ -446,10 +446,18 @@ export default class PreviewBase extends Component {
       unreadTextX + ctx.measureText(unreadText).width + headerMargin * 2.0;
     ctx.fillText(topText, topTextX, pillButtonTextY);
   }
-<template><div class="wizard-container__preview">
-  <canvas width={{this.elementWidth}} height={{this.elementHeight}} style={{this.canvasStyle}}>
-  </canvas>
-</div></template>}
+
+  <template>
+    <div class="wizard-container__preview">
+      <canvas
+        width={{this.elementWidth}}
+        height={{this.elementHeight}}
+        style={{this.canvasStyle}}
+      >
+      </canvas>
+    </div>
+  </template>
+}
 
 function loadImage(src) {
   if (!src) {
