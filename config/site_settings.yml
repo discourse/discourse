@@ -3527,6 +3527,9 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+  experimental_preview_in_form_templates:
+    client: true
+    default: true
   experimental_new_new_view_groups:
     client: true
     type: group_list

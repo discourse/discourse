@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import ComposerActionTitle from "discourse/components/composer-action-title";
@@ -31,6 +32,11 @@ import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 export default class ComposerContainer extends Component {
   @service composer;
   @service site;
+
+  @action
+  updateTags(newTags) {
+    this.composer.model.set("tags", [...newTags]);
+  }
 
   <template>
     <ComposerBody
@@ -208,7 +214,7 @@ export default class ComposerContainer extends Component {
                         <div class="tags-input">
                           <MiniTagChooser
                             @value={{this.composer.model.tags}}
-                            @onChange={{fn (mut this.composer.model.tags)}}
+                            @onChange={{fn this.updateTags}}
                             @options={{hash
                               disabled=this.composer.disableTagsChooser
                               categoryId=this.composer.model.categoryId
