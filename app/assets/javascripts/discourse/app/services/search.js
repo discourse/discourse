@@ -39,7 +39,7 @@ export default class Search extends Service {
   }
 
   focusSearchInput() {
-    document.getElementById(this.currentSearchInputId).focus();
+    document.getElementById(this.currentSearchInputId)?.focus();
   }
 
   get contextType() {
