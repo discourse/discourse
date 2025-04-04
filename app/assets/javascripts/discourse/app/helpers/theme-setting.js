@@ -1,7 +1,5 @@
-import { registerRawHelper } from "discourse/lib/helpers";
 import { getSetting as getThemeSetting } from "discourse/lib/theme-settings-store";
 
-registerRawHelper("theme-setting", themeSetting);
 export default function themeSetting(themeId, key) {
   if (typeof themeId !== "number") {
     throw new Error(
