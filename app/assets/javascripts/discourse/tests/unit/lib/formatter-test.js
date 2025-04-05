@@ -319,6 +319,32 @@ module("Unit | Utility | formatter", function (hooks) {
       "13",
       "it returns a string float rounded to an integer as a string"
     );
+
+    assert.strictEqual(
+      number(100, { maxDisplay: 50 }),
+      "50+",
+      "it appends + when value exceeds maxDisplay"
+    );
+    assert.strictEqual(
+      number(50, { maxDisplay: 50 }),
+      "50",
+      "it does not append + when value equals maxDisplay"
+    );
+    assert.strictEqual(
+      number(49, { maxDisplay: 50 }),
+      "49",
+      "it does not append + when value is below maxDisplay"
+    );
+    assert.strictEqual(
+      number(3333, { maxDisplay: 1000 }),
+      "1.0k+",
+      "it abbreviates thousands and appends +"
+    );
+    assert.strictEqual(
+      number(2499999, { maxDisplay: 1000000 }),
+      "1.0M+",
+      "it abbreviates millions and appends +"
+    );
   });
 
   test("durationTiny", function (assert) {

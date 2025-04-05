@@ -22,6 +22,7 @@ import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
+const LINKS_THRESHOLD = 50;
 const MIN_POST_READ_TIME_MINUTES = 4;
 const MIN_READ_TIME_MINUTES = 3;
 const MIN_LIKES_COUNT = 5;
@@ -339,7 +340,7 @@ export default class TopicMapSummary extends Component {
           @inline={{true}}
         >
           <:trigger>
-            {{number this.linksCount noTitle="true"}}
+            {{number this.linksCount maxDisplay=LINKS_THRESHOLD noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "links_lowercase" count=this.linksCount}}
             </span>
