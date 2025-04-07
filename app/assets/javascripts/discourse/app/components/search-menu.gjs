@@ -33,7 +33,6 @@ import userSearch from "discourse/lib/user-search";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-export const SEARCH_INPUT_ID = "icon-search-input";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -52,6 +51,7 @@ export default class SearchMenu extends Component {
   @tracked invalidTerm = false;
   @tracked menuPanelOpen = false;
 
+  searchInputId = this.args.searchInputId ?? "search-term";
   _debouncer = null;
   _activeSearch = null;
 
@@ -130,7 +130,7 @@ export default class SearchMenu extends Component {
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
-    document.getElementById(this.args.searchInputId || SEARCH_INPUT_ID)?.blur();
+    document.getElementById(this.searchInputId)?.blur();
     this.menuPanelOpen = false;
   }
 
@@ -428,7 +428,7 @@ export default class SearchMenu extends Component {
           @closeSearchMenu={{this.close}}
           @openSearchMenu={{this.open}}
           @autofocus={{@autofocusInput}}
-          @inputId={{@searchInputId}}
+          @inputId={{this.searchInputId}}
         />
 
         {{#if this.loading}}
@@ -448,7 +448,7 @@ export default class SearchMenu extends Component {
 
       {{#if @inlineResults}}
         <Results
-          @searchInputId={{@searchInputId}}
+          @searchInputId={{this.searchInputId}}
           @loading={{this.loading}}
           @invalidTerm={{this.invalidTerm}}
           @suggestionKeyword={{this.suggestionKeyword}}
@@ -464,7 +464,7 @@ export default class SearchMenu extends Component {
       {{else if this.displayMenuPanelResults}}
         <MenuPanel @panelClass="search-menu-panel">
           <Results
-            @searchInputId={{@searchInputId}}
+            @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}
             @invalidTerm={{this.invalidTerm}}
             @suggestionKeyword={{this.suggestionKeyword}}
