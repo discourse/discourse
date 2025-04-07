@@ -21,6 +21,7 @@ import { i18n } from "discourse-i18n";
 import InstallComponentModal from "admin/components/modal/install-theme";
 import { COMPONENTS } from "admin/models/theme";
 import DMenu from "float-kit/components/d-menu";
+import icon from "discourse/helpers/d-icon";
 
 const STATUS_FILTER_OPTIONS = [
   {
@@ -390,15 +391,13 @@ class ComponentRow extends Component {
         {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-admin-row__overview">
-        <LinkTo
-          class="d-admin-row__overview-name"
-          @route="adminCustomizeThemes.show"
-          @models={{array "themes" @component.id}}
-        >
+        <div class="d-admin-row__overview-name">
           {{@component.name}}
-        </LinkTo>
+        </div>
         {{#if @component.remote_theme.authors}}
-          <div class="admin-config-components__author-name">{{i18n
+          <div
+            class="d-admin-row__overview-author admin-config-components__author-name"
+          >{{i18n
               "admin.config_areas.themes_and_components.components.by_author"
               (hash name=@component.remote_theme.authors)
             }}</div>
@@ -411,7 +410,9 @@ class ComponentRow extends Component {
             {{#if @component.remote_theme.about_url}}
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"
-                }}</a>
+                }}
+                {{icon "up-right-from-square"}}
+              </a>
             {{/if}}
           </div>
         {{/if}}

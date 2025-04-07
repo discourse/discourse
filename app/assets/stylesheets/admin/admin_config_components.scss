@@ -12,15 +12,6 @@
       gap: 1em;
     }
 
-    &__author-name {
-      font-size: var(--font-down-1);
-      color: var(--primary-high);
-    }
-
-    &__description {
-      margin-top: 0.5em;
-    }
-
     &__parent-themes-list {
       @include breakpoint("tablet") {
         text-align: right;
@@ -40,5 +31,9 @@
   .has-update {
     background-color: var(--tertiary-very-low);
     border-left: solid 3px var(--tertiary);
+  }
+
+  .d-admin-row__overview-about .d-icon {
+    font-size: var(--font-down-3);
   }
 }
