@@ -111,11 +111,16 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      #      - name: Check core database drift
-      #        run: |
-      #          mkdir /tmp/intermediate_db
-      #          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
-      #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
+      - name: Validate IntermediateDB schema
+        run: |
+          migrations/bin/cli schema generate --db=intermediate_db
+
+          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
+            echo "IntermediateDB schema is not up to date."
+            echo "---------------------------------------------"
+            git -c color.ui=always diff migrations/db/intermediate_db_schema/
+            exit 1
+          fi
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec
