@@ -407,6 +407,7 @@ Discourse::Application.routes.draw do
         get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
+        get "site-admin" => "site_settings#index"
         get "spam" => "site_settings#index"
         get "user-api" => "site_settings#index"
         get "user-defaults" => "site_settings#index"

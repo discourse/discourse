@@ -197,6 +197,16 @@ export const ADMIN_NAV_MAP = [
         moderator: true,
       },
       {
+        name: "admin_site_admin",
+        route: "adminConfig.siteAdmin",
+        label: "admin.config.site_admin.title",
+        description: "admin.config.site_admin.header_description",
+        keywords: "admin.config.site_admin.keywords",
+        icon: "screwdriver-wrench",
+        settings_area: "site_admin",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_legal",
         route: "adminConfig.legal.settings",
         label: "admin.config.legal.title",
