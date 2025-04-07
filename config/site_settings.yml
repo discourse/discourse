@@ -3211,45 +3211,72 @@ user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
     default: 10080
-  default_include_tl0_in_digests: false
+    area: "user_defaults"
+  default_include_tl0_in_digests:
+    default: false
+    area: "user_defaults"
   default_email_level:
     enum: "EmailLevelSiteSetting"
     default: 1
+    area: "user_defaults"
   default_email_messages_level:
     enum: "EmailLevelSiteSetting"
     default: 0
-  default_email_mailing_list_mode: false
+    area: "user_defaults"
+  default_email_mailing_list_mode:
+    default: false
+    area: "user_defaults"
   default_email_mailing_list_mode_frequency:
     enum: "MailingListModeSiteSetting"
     default: 1
+    area: "user_defaults"
   disable_mailing_list_mode:
     default: true
     client: true
+    area: "user_defaults"
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
     default: 2
+    area: "user_defaults"
   default_email_in_reply_to:
     default: false
+    area: "user_defaults"
   default_hide_profile:
     default: false
+    area: "user_defaults"
   default_hide_presence:
     default: false
+    area: "user_defaults"
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
     default: 2880
+    area: "user_defaults"
   default_other_auto_track_topics_after_msecs:
     enum: "AutoTrackDurationSiteSetting"
     default: 300000
+    area: "user_defaults"
   default_other_notification_level_when_replying:
     enum: "NotificationLevelWhenReplyingSiteSetting"
     default: 2
     area: "notifications"
-  default_other_external_links_in_new_tab: false
-  default_other_enable_quoting: true
-  default_other_enable_defer: false
-  default_other_enable_smart_lists: true
-  default_other_dynamic_favicon: false
-  default_other_skip_new_user_tips: false
+  default_other_external_links_in_new_tab:
+    default: false
+    area: "user_defaults"
+  default_other_enable_quoting:
+    default: true
+    area: "user_defaults"
+  default_other_enable_defer:
+    default: false
+    area: "user_defaults"
+  default_other_enable_smart_lists:
+    default: true
+    area: "user_defaults"
+  default_other_dynamic_favicon:
+    default: false
+    area: "user_defaults"
+  default_other_skip_new_user_tips:
+    default: false
+    area: "user_defaults"
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -3258,38 +3285,49 @@ user_preferences:
   default_topics_automatic_unpin:
     default: true
     client: true
+    area: "user_defaults"
 
   default_categories_watching:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_tracking:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_muted:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_watching_first_post:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_normal:
     type: category_list
     default: ""
+    area: "user_defaults"
   mute_all_categories_by_default:
     default: false
     client: true
+    area: "user_defaults"
 
   default_tags_watching:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_tracking:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_muted:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_watching_first_post:
     type: tag_list
     default: ""
+    area: "user_defaults"
 
   default_text_size:
     type: enum
@@ -3304,9 +3342,11 @@ user_preferences:
     choices:
       - notifications
       - contextual
+    area: "user_defaults"
   enable_offline_indicator:
     default: false
     client: true
+    area: "user_defaults"
   default_sidebar_link_to_filtered_list:
     default: false
     area: "navigation"

@@ -65,6 +65,7 @@ module SvgSprite
         circle-minus
         circle-plus
         circle-question
+        circle-user
         circle-xmark
         clock
         clock-rotate-left
