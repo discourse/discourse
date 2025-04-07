@@ -60,9 +60,10 @@ module Migrations::Importer::Steps
              JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
       FROM users u
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
+           LEFT JOIN mapped.ids amu ON u.approved_by_id IS NOT NULL AND u.approved_by_id = amu.original_id AND amu.type = ?1
            LEFT JOIN user_suspensions us ON u.original_id = us.user_id AND us.suspended_at < DATETIME() AND
                                             (us.suspended_till IS NULL OR us.suspended_till > DATETIME())
-           LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
+           LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
       WHERE mu.original_id IS NULL
       GROUP BY u.original_id
       ORDER BY u.ROWID
