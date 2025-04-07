@@ -8,6 +8,7 @@ require "oj"
 module Migrations
   module Database
     INTERMEDIATE_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "intermediate_db_schema")
+    MAPPINGS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "mappings_db_schema")
     UPLOADS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "uploads_db_schema")
 
     def self.migrate(db_path, migrations_path:)
