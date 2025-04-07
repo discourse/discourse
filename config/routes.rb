@@ -393,6 +393,7 @@ Discourse::Application.routes.draw do
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
+        get "analytics-and-seo" => "site_settings#index"
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"

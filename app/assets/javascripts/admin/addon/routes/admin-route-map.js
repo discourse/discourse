@@ -281,6 +281,15 @@ export default function () {
           this.route("components");
         });
         this.route(
+          "adminAnalytics",
+          { path: "/analytics-and-seo", resetNamespace: true },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
+        this.route(
           "adminPermalinks",
           { path: "/permalinks", resetNamespace: true },
           function () {
