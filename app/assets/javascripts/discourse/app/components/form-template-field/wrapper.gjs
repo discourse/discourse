@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import Yaml from "js-yaml";
 import FormTemplate from "discourse/models/form-template";
@@ -11,7 +12,6 @@ import InputField from "./input";
 import MultiSelectField from "./multi-select";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
-import { next } from "@ember/runloop";
 
 
 const FormTemplateField = <template>
@@ -60,7 +60,6 @@ export default class FormTemplateFieldWrapper extends Component {
       this.siteSettings.experimental_preview_in_form_templates
     );
     });
-   
   }
 
   _loadTemplate(templateContent) {

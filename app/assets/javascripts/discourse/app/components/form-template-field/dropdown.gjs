@@ -1,8 +1,8 @@
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
-import { on } from "@ember/modifier";
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">
