@@ -11,6 +11,7 @@ import DSelect from "discourse/components/d-select";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -20,7 +21,6 @@ import { i18n } from "discourse-i18n";
 import InstallComponentModal from "admin/components/modal/install-theme";
 import { COMPONENTS } from "admin/models/theme";
 import DMenu from "float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 
 const STATUS_FILTER_OPTIONS = [
   {
