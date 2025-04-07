@@ -248,8 +248,10 @@
             max-width: 100%;
           }
 
-          // px muse be used because there is different font size inside each button
-          height: 45px;
+          & {
+            // px muse be used because there is different font size inside each button
+            height: 45px;
+          }
 
           &.smallest {
             font-size: var(--base-font-size-smallest);
