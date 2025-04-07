@@ -10,6 +10,10 @@ module PageObjects
       def logo_form
         @logo_form ||= PageObjects::Components::AdminBrandingLogoForm.new
       end
+
+      def fonts_form
+        @fonts_form ||= PageObjects::Components::AdminBrandingFontsForm.new
+      end
     end
   end
 end

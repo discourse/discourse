@@ -4,12 +4,16 @@ import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import { DEFAULT_TEXT_SIZES } from "admin/lib/constants";
 import SiteSetting from "admin/models/site-setting";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 export default class SiteSettingChangeTracker extends Service {
   @service dialog;
   @service modal;
+  @service session;
+  @service site;
+  @service siteSettings;
 
   @tracked dirtySiteSettings = new TrackedSet();
 
@@ -179,6 +183,53 @@ export default class SiteSettingChangeTracker extends Service {
     this.dirtySiteSettings.forEach((setting) => {
       setting.isSaving = false;
     });
+  }
+
+  refreshPage() {
+    document.documentElement.style.setProperty(
+      "--font-family",
+      this.siteSettings.base_font
+    );
+    document.documentElement.style.setProperty(
+      "--heading-font-family",
+      this.siteSettings.heading_font
+    );
+    DEFAULT_TEXT_SIZES.forEach((size) => {
+      document.documentElement.classList.remove(`text-size-${size}`);
+    });
+    document.documentElement.classList.add(
+      `text-size-${this.siteSettings.default_text_size}`
+    );
+    let logo;
+
+    if (this.site.mobileView) {
+      if (
+        this.session.defaultColorSchemeIsDark ||
+        this.session.darkModeAvailable
+      ) {
+        logo = this.siteSettings.mobile_logo_dark;
+      } else {
+        logo = this.siteSettings.mobile_logo;
+      }
+    }
+
+    if (!logo && this.session.defaultColorSchemeIsDark) {
+      logo = this.siteSettings.logo_dark;
+    }
+
+    if (!logo) {
+      logo = this.siteSettings.logo;
+    }
+
+    // Force reload when switching from text logo to image logo and vice versa
+    if (
+      (!this.siteSettings.logo && document.getElementById("site-logo")) ||
+      (this.siteSettings.logo && !document.getElementById("site-logo"))
+    ) {
+      window.location.reload();
+    } else {
+      document.getElementById("site-logo").setAttribute("src", logo);
+    }
   }
 
   get count() {
