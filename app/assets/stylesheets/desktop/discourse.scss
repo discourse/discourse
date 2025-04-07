@@ -231,11 +231,14 @@ body.grid-layout {
     );
     gap: 0;
 
+    // give all children their own row
+    // to mimic old block layout
     > * {
       grid-column: 1 / -1;
     }
   }
 
+  // pass grid down to header contents
   .d-header-wrap,
   .d-header,
   .wrap {
@@ -254,12 +257,10 @@ body.grid-layout {
 
     .contents {
       grid-column: 1 / -1;
-      display: flex;
 
       @media screen and (width > 767px) {
         display: grid;
         grid-template-columns: subgrid;
-        grid-column: 1 / -1;
       }
     }
   }
@@ -286,6 +287,11 @@ body.grid-layout {
     }
   }
 
+  #main-outlet-wrapper #main-outlet {
+    grid-column: var(--main-col-start-no-sidebar) /
+      var(--main-col-end-no-sidebar);
+  }
+
   &.has-sidebar-page {
     #main-outlet-wrapper {
       .sidebar-wrapper {
@@ -301,20 +307,11 @@ body.grid-layout {
       }
     }
 
-    .d-header .wrap .contents {
-      display: grid;
-      grid-template-columns: subgrid;
-      grid-column: 1 / -1;
-    }
-
     .d-header__contents-primary {
       grid-column: 1 / span var(--sidebar-span);
-      display: flex;
-      margin-right: 0.5em;
     }
 
     .d-header__contents-secondary {
-      display: flex;
       grid-column-start: var(--main-col-start-sidebar);
       grid-column-end: -1;
     }
@@ -328,36 +325,23 @@ body.grid-layout {
         @media screen and (width > 1300px) {
           display: grid;
           grid-template-columns: subgrid;
-          grid-column: 1 / -1;
 
           .d-header__contents-primary {
             grid-column: 1 / var(--main-col-start-no-sidebar);
-            display: flex;
-            margin-right: 0.5em;
           }
 
           .d-header__contents-secondary {
-            display: flex;
             grid-column-start: var(--main-col-start-no-sidebar);
-            grid-column-end: -1;
           }
         }
 
+        // above 1600px we reserve space for the sidebar
         @media screen and (width > 1600px) {
           .d-header__contents-primary {
-            grid-column: 1 / 4;
-          }
-
-          .d-header__contents-secondary {
-            grid-column-start: var(--main-col-start-no-sidebar);
+            grid-column: 1 / span var(--sidebar-span);
           }
         }
       }
-    }
-
-    #main-outlet-wrapper #main-outlet {
-      grid-column: var(--main-col-start-no-sidebar) /
-        var(--main-col-end-no-sidebar);
     }
 
     .sidebar-wrapper {
