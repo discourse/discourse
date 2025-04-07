@@ -432,7 +432,12 @@ class ComponentRow extends Component {
         {{#if @component.parent_themes.length}}
           {{this.parentThemesCell}}
         {{else}}
-          —
+          <div class="status-label --inactive">
+            <div class="status-label-indicator"></div>
+            <div class="status-label-text">
+              {{i18n "admin.config_areas.themes_and_components.components.badge_inactive"}}
+            </div>
+          </div>
         {{/if}}
         </div>
       </td>

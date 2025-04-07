@@ -6187,6 +6187,7 @@ en:
             deleted_successfully: '"%{name}" has been deleted successfully.'
             no_components: "No components installed."
             no_components_found: "No components match your filters."
+            badge_inactive: "Unused"
         user_fields:
           field: "Field"
           type: "Type"
