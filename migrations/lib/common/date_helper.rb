@@ -9,9 +9,9 @@ module Migrations
     end
 
     def self.track_time
-      start_time = Time.now
+      start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       yield
-      Time.now - start_time
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
     end
   end
 end
