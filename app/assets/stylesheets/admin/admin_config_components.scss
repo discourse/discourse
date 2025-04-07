@@ -21,8 +21,24 @@
       margin-top: 0.5em;
     }
 
-    &__update-available {
-      margin-top: 0.5em;
+    &__parent-themes-list {
+      @include breakpoint("tablet") {
+        text-align: right;
+        max-width: 60%;
+      }
     }
+
+    &__update-available {
+      font-size: var(--font-down-1);
+      font-weight: bold;
+      margin: var(--space-1) 0 var(--space-1) 0;
+    }
+  }
+}
+
+.d-admin-table.component-list {
+  .has-update {
+    background-color: var(--tertiary-very-low);
+    border-left: solid 3px var(--tertiary);
   }
 }

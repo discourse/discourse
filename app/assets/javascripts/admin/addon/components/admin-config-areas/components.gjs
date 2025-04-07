@@ -179,7 +179,7 @@ export default class AdminConfigAreasComponents extends Component {
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
-          <table class="d-admin-table">
+          <table class="d-admin-table component-list">
             <thead>
               <th>{{i18n
                   "admin.config_areas.themes_and_components.components.name"
@@ -190,6 +190,7 @@ export default class AdminConfigAreasComponents extends Component {
               <th>{{i18n
                   "admin.config_areas.themes_and_components.components.enabled"
                 }}</th>
+              <th></th>
             </thead>
             <tbody>
               {{#each this.components as |comp|}}
@@ -383,7 +384,7 @@ class ComponentRow extends Component {
   <template>
     <tr
       data-component-id={{@component.id}}
-      class="d-admin-row__content admin-config-components__component-row"
+      class="d-admin-row__content admin-config-components__component-row {{if this.hasUpdates "has-update"}}"
     >
       <td class="d-admin-row__overview">
         <LinkTo
@@ -415,39 +416,41 @@ class ComponentRow extends Component {
           <div
             class="d-admin-row__overview-about admin-config-components__update-available"
           >
-            <b>{{i18n
-                "admin.config_areas.themes_and_components.components.update_available"
-              }}</b>
+            {{i18n
+              "admin.config_areas.themes_and_components.components.update_available"
+            }}
           </div>
         {{/if}}
       </td>
       <td class="d-admin-row__detail admin-config-components__parent-themes">
+        <div class="d-admin-row__mobile-label">
+          {{i18n
+            "admin.config_areas.themes_and_components.components.used_on"
+          }}
+        </div>
+        <div class="admin-config-components__parent-themes-list">
         {{#if @component.parent_themes.length}}
           {{this.parentThemesCell}}
         {{else}}
-          <LinkTo
-            @route="adminCustomizeThemes.show"
-            @models={{array "themes" @component.id}}
-          >
-            {{i18n
-              "admin.config_areas.themes_and_components.components.add_to_theme"
-            }}
-          </LinkTo>
+          —
         {{/if}}
+        </div>
+      </td>
+      <td class="d-admin-row__detail">
+        <div class="d-admin-row__mobile-label">
+          {{i18n
+            "admin.config_areas.themes_and_components.components.enabled"
+          }}
+        </div>
+        <DToggleSwitch
+          @state={{this.enabled}}
+          class="admin-config-components__toggle"
+          disabled={{this.disableToggle}}
+          {{on "click" this.toggleEnabled}}
+        />
       </td>
       <td class="d-admin-row__controls">
         <div class="d-admin-row__controls-options">
-          <div class="d-admin-row__mobile-label">
-            {{i18n
-              "admin.config_areas.themes_and_components.components.enabled"
-            }}
-          </div>
-          <DToggleSwitch
-            @state={{this.enabled}}
-            class="admin-config-components__toggle"
-            disabled={{this.disableToggle}}
-            {{on "click" this.toggleEnabled}}
-          />
           <DButton
             class="admin-config-components__edit"
             @label="admin.config_areas.themes_and_components.components.edit"
