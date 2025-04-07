@@ -13,7 +13,6 @@ import MultiSelectField from "./multi-select";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
 
-
 const FormTemplateField = <template>
   <@component
     @id={{@content.id}}
@@ -54,11 +53,11 @@ export default class FormTemplateFieldWrapper extends Component {
       this._fetchTemplate(this.args.id);
     }
 
-  next(this, () => {
-       this.composer.set(
-      "allowPreview",
-      this.siteSettings.experimental_preview_in_form_templates
-    );
+    next(this, () => {
+      this.composer.set(
+        "allowPreview",
+        this.siteSettings.experimental_preview_in_form_templates
+      );
     });
   }
 
