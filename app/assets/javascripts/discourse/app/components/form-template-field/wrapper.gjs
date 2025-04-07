@@ -15,7 +15,6 @@ import TextareaField from "./textarea";
 import UploadField from "./upload";
 
 const FormTemplateField = <template>
-  {{log @content}}
   <@component
     @id={{@content.id}}
     @attributes={{@content.attributes}}
