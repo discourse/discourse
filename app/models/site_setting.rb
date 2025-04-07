@@ -4,6 +4,7 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    categories_and_tags
     email
     embedding
     emojis
@@ -17,8 +18,11 @@ class SiteSetting < ActiveRecord::Base
     notifications
     permalinks
     reports
+    posts_and_topics
     user_defaults
+    sharing
     site_admin
+    stats_and_thresholds
     trust_levels
   ]
 

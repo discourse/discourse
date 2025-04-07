@@ -238,6 +238,12 @@ export default function () {
             });
           }
         );
+        this.route("content", function () {
+          this.route("categoriesAndTags", { path: "/" });
+          this.route("sharing");
+          this.route("postsAndTopics", { path: "/posts-and-topics" });
+          this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
+        });
         this.route("localization", function () {
           this.route("settings", {
             path: "/",
