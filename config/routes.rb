@@ -396,6 +396,7 @@ Discourse::Application.routes.draw do
         get "analytics-and-seo" => "site_settings#index"
         get "developer" => "site_settings#index"
         get "files" => "site_settings#index"
+        get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"

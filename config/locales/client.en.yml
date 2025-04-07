@@ -5411,6 +5411,10 @@ en:
           title: "Analytics & SEO"
           header_description: "Improve your site’s visibility to search engines and configure how you track site visitors"
           keywords: "search|google|sitemap"
+        interface:
+          title: "Interface & layout"
+          header_description: "Customize details of your site’s general layout and user interface"
+          keywords: "splash"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"

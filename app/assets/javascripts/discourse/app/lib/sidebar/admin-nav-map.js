@@ -225,6 +225,16 @@ export const ADMIN_NAV_MAP = [
         icon: "palette",
       },
       {
+        name: "admin_interface",
+        route: "adminConfig.interface",
+        label: "admin.config.interface.title",
+        description: "admin.config.interface.header_description",
+        keywords: "admin.config.interface.keywords",
+        icon: "discourse-table",
+        settings_area: "interface",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_emoji",
         route: "adminEmojis",
         label: "admin.config.emoji.title",
