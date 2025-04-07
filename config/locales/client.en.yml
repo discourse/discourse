@@ -6179,7 +6179,7 @@ en:
             filter_by_active: "Active"
             filter_by_inactive: "Inactive"
             filter_by_updates_available: "Updates available"
-            search_components: "Search components"
+            search_components: "Type a component name"
             new_update_for_component: "New update available for %{name}!"
             component_up_to_date: '"%{name}" is up to date.'
             updated_successfully: '"%{name}" has been updated successfully.'

@@ -147,7 +147,17 @@ export default class AdminConfigAreasComponents extends Component {
     </DPageSubheader>
     <div class="container">
       {{#if this.hasComponents}}
-        <div class="admin-config-components__filters">
+        <div class="d-admin-filter">
+          <div class="admin-filter__input-container">
+            <FilterInput
+              placeholder={{i18n
+                "admin.config_areas.themes_and_components.components.search_components"
+              }}
+              @filterAction={{this.onNameFilterChange}}
+              class="admin-filter__input"
+            />
+          </div>
+
           <label class="admin-config-components__status-filter">
             {{i18n
               "admin.config_areas.themes_and_components.components.filter_by"
@@ -165,15 +175,6 @@ export default class AdminConfigAreasComponents extends Component {
               {{/each}}
             </DSelect>
           </label>
-          <div class="admin-config-components__name-filter">
-            <FilterInput
-              placeholder={{i18n
-                "admin.config_areas.themes_and_components.components.search_components"
-              }}
-              @icons={{hash left="magnifying-glass"}}
-              @filterAction={{this.onNameFilterChange}}
-            />
-          </div>
         </div>
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
