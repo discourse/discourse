@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
