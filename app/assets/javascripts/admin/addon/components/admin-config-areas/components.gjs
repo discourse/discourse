@@ -384,7 +384,8 @@ class ComponentRow extends Component {
   <template>
     <tr
       data-component-id={{@component.id}}
-      class="d-admin-row__content admin-config-components__component-row {{if this.hasUpdates "has-update"}}"
+      class="d-admin-row__content admin-config-components__component-row
+        {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-admin-row__overview">
         <LinkTo
@@ -424,28 +425,26 @@ class ComponentRow extends Component {
       </td>
       <td class="d-admin-row__detail admin-config-components__parent-themes">
         <div class="d-admin-row__mobile-label">
-          {{i18n
-            "admin.config_areas.themes_and_components.components.used_on"
-          }}
+          {{i18n "admin.config_areas.themes_and_components.components.used_on"}}
         </div>
         <div class="admin-config-components__parent-themes-list">
-        {{#if @component.parent_themes.length}}
-          {{this.parentThemesCell}}
-        {{else}}
-          <div class="status-label --inactive">
-            <div class="status-label-indicator"></div>
-            <div class="status-label-text">
-              {{i18n "admin.config_areas.themes_and_components.components.badge_inactive"}}
+          {{#if @component.parent_themes.length}}
+            {{this.parentThemesCell}}
+          {{else}}
+            <div class="status-label --inactive">
+              <div class="status-label-indicator"></div>
+              <div class="status-label-text">
+                {{i18n
+                  "admin.config_areas.themes_and_components.components.badge_inactive"
+                }}
+              </div>
             </div>
-          </div>
-        {{/if}}
+          {{/if}}
         </div>
       </td>
       <td class="d-admin-row__detail">
         <div class="d-admin-row__mobile-label">
-          {{i18n
-            "admin.config_areas.themes_and_components.components.enabled"
-          }}
+          {{i18n "admin.config_areas.themes_and_components.components.enabled"}}
         </div>
         <DToggleSwitch
           @state={{this.enabled}}
