@@ -148,7 +148,9 @@ export default class AdminConfigAreasComponents extends Component {
     <div class="container">
       {{#if this.hasComponents}}
         <div class="d-admin-filter">
-          <div class="admin-filter__input-container admin-config-components__name-filter">
+          <div
+            class="admin-filter__input-container admin-config-components__name-filter"
+          >
             <FilterInput
               placeholder={{i18n
                 "admin.config_areas.themes_and_components.components.search_components"
