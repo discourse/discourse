@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "signup scenarios" do |signup_page_object, login_page_object|
-  let(:login_form) { login_page_object }
   let(:signup_form) { signup_page_object }
+  let(:login_form) { login_page_object }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite, email: "johndoe@example.com") }
