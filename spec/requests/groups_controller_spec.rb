@@ -2641,6 +2641,19 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+
+        get "/groups/search.json?include_everyone=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *automatic_ids,
+        )
       end
     end
 
