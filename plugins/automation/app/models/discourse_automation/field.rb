@@ -109,6 +109,12 @@ module DiscourseAutomation
           "items" => [{ type: "integer" }],
         },
       },
+      "chat_channels" => {
+        "value" => {
+          "type" => "array",
+          "items" => [{ type: "integer" }],
+        },
+      },
       "categories" => {
         "value" => {
           "type" => "array",

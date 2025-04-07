@@ -145,6 +145,19 @@ en:
           fields:
             restricted_topic:
               label: Topic ID
+        chat_message_created_edited:
+          created: Created
+          edited: Edited
+          fields:
+            action_type:
+              label: Action type
+              description: "Optional, limit triggering to only created or edited events"
+            restricted_groups:
+              label: Restricted groups
+              description: Optional, will trigger only if the message user is in any of these groups
+            restricted_channels:
+              label: Restricted channels
+              description: Optional, will trigger only if the message is in these channels
         post_created_edited:
           fields:
             original_post_only:

@@ -80,6 +80,7 @@ after_initialize do
     lib/discourse_automation/triggers/user_removed_from_group
     lib/discourse_automation/triggers/user_first_logged_in
     lib/discourse_automation/triggers/user_updated
+    lib/discourse_automation/triggers/chat_message_created_edited
   ].each { |path| require_relative path }
 
   reloadable_patch do
@@ -214,6 +215,14 @@ after_initialize do
   end
 
   on(:post_created) { |post| DiscourseAutomation::EventHandlers.handle_stalled_topic(post) }
+
+  on(:chat_message_created) do |chat_message|
+    DiscourseAutomation::EventHandlers.handle_chat_message_created_edited(chat_message, :create)
+  end
+
+  on(:chat_message_edited) do |chat_message|
+    DiscourseAutomation::EventHandlers.handle_chat_message_created_edited(chat_message, :edit)
+  end
 
   register_topic_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
   register_topic_custom_field_type(DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS, :json)
