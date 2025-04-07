@@ -4,10 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import {
-  DEFAULT_TYPE_FILTER,
-  SEARCH_INPUT_ID,
-} from "discourse/components/search-menu";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { isiPad } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -28,11 +25,6 @@ export default class SearchTerm extends Component {
 
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;
-
-  // make constant available in template
-  get inputId() {
-    return this.args.inputId || SEARCH_INPUT_ID;
-  }
 
   @action
   updateSearchTerm(input) {
@@ -120,7 +112,7 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
-      id={{this.inputId}}
+      id={{@inputId}}
       class="search-term__input"
       type="search"
       autocomplete="off"

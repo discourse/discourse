@@ -98,4 +98,12 @@ module("Integration | Component | search-menu", function (hooks) {
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");
   });
+
+  test("rendering without a searchInputId provided", async function (assert) {
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom("#search-term.search-term__input")
+      .exists("input defaults to id of search-term");
+  });
 });
