@@ -80,6 +80,7 @@ required:
     default: ""
     type: list
     list_type: simple
+    area: "analytics"
   company_name:
     default: ""
     area: "about|legal"
@@ -204,21 +205,26 @@ basic:
     choices:
       - v3_analytics
       - v4_gtag
+    area: "analytics"
   ga_universal_tracking_code:
     client: true
     default: ""
     regex: "^(UA|G)-[\\w-]+"
+    area: "analytics"
   ga_universal_domain_name:
     client: true
     default: "auto"
+    area: "analytics"
   ga_universal_auto_link_domains:
     default: ""
     type: list
     list_type: simple
+    area: "analytics"
   gtm_container_id:
     client: true
     default: ""
     regex: "^GTM-"
+    area: "analytics"
   top_menu:
     client: true
     refresh: true
@@ -451,8 +457,10 @@ basic:
     client: true
   enable_sitemap:
     default: true
+    area: "analytics"
   sitemap_page_size:
     default: 10000
+    area: "analytics"
   enable_user_tips:
     client: true
     default: true
@@ -475,6 +483,7 @@ basic:
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"
+    area: "analytics"
   extended_site_description:
     default: ""
     max: 10_000

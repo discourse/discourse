@@ -137,6 +137,16 @@ export const ADMIN_NAV_MAP = [
         settings_area: "localization",
       },
       {
+        name: "admin_analytics",
+        route: "adminAnalytics",
+        label: "admin.config.analytics.title",
+        description: "admin.config.analytics.header_description",
+        icon: "chart-pie",
+        settings_area: "analytics",
+        keywords: "admin.config.analytics.keywords",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_permalinks",
         route: "adminPermalinks",
         label: "admin.config.permalinks.title",

@@ -5407,6 +5407,10 @@ en:
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
+        analytics:
+          title: "Analytics & SEO"
+          header_description: "Improve your site’s visibility to search engines and configure how you track site visitors"
+          keywords: "search|google|sitemap"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
