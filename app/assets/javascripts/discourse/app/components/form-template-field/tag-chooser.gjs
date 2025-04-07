@@ -6,6 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { not } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 
 export default class TagChooserField extends Component {
