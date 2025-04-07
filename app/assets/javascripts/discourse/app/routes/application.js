@@ -1,8 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CreateAccount from "discourse/components/modal/create-account";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
-import LoginModal from "discourse/components/modal/login";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
@@ -270,23 +268,12 @@ export default class ApplicationRoute extends DiscourseRoute {
     } else {
       if (this.login.isOnlyOneExternalLoginMethod) {
         this.login.singleExternalLogin();
-      } else if (this.siteSettings.full_page_login) {
+      } else {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
           if (this.siteSettings.login_required) {
             login.controller.set("showLogin", true);
           }
-        });
-      } else {
-        this.modal.show(LoginModal, {
-          model: {
-            showNotActivated: (props) => this.send("showNotActivated", props),
-            showCreateAccount: (props) => this.send("showCreateAccount", props),
-            canSignUp: this.controller.canSignUp,
-            referrerTopicUrl: DiscourseURL.isInternalTopic(document.referrer)
-              ? document.referrer
-              : null,
-          },
         });
       }
     }
@@ -300,14 +287,12 @@ export default class ApplicationRoute extends DiscourseRoute {
       if (this.login.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
         this.login.singleExternalLogin({ signup: true });
-      } else if (this.siteSettings.full_page_login) {
+      } else {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {
             signup.controller.set(key, createAccountProps[key]);
           });
         });
-      } else {
-        this.modal.show(CreateAccount, { model: createAccountProps });
       }
     }
   }

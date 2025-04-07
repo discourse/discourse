@@ -41,17 +41,6 @@ acceptance("Static pages", function () {
     assert.dom(".body-page").exists("The content is present");
   });
 
-  test("Login redirect", async function (assert) {
-    this.siteSettings.full_page_login = false;
-    await visit("/login");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "discovery.latest",
-      "it redirects to /latest"
-    );
-  });
-
   test("Login-required page", async function (assert) {
     this.siteSettings.login_required = true;
     await visit("/login");
@@ -60,25 +49,5 @@ acceptance("Static pages", function () {
     assert.dom(".body-page").exists("The content is present");
     assert.dom(".sign-up-button").exists();
     assert.dom(".login-button").exists();
-  });
-
-  test("Signup redirect", async function (assert) {
-    this.siteSettings.full_page_login = false;
-    await visit("/signup");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "discovery.latest",
-      "it redirects to /latest"
-    );
-  });
-
-  test("Signup redirect with login_required", async function (assert) {
-    this.siteSettings.full_page_login = false;
-    this.siteSettings.login_required = true;
-    await visit("/signup");
-
-    assert.strictEqual(currentRouteName(), "login");
-    assert.dom(".body-page").exists("The content is present");
   });
 });
