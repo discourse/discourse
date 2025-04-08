@@ -7,68 +7,6 @@ import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
 
-const isOutsideSelection = (pos, nodeSize, tr) => {
-  const { selection } = tr;
-  const doc = tr.doc;
-
-  // Direct overlap check
-  if (selection.from <= pos + nodeSize && selection.to >= pos) {
-    return false;
-  }
-
-  // Get the text of the current node
-  const nodeText = doc.textBetween(pos, pos + nodeSize);
-
-  // Check if selection is at the end boundary and might continue the link
-  if (selection.from === pos + nodeSize) {
-    // Check if there's text after that continues the word
-    if (pos + nodeSize < doc.content.size) {
-      const textAfter = doc.textBetween(pos + nodeSize, pos + nodeSize + 1);
-      if (textAfter && !isWhiteSpace(textAfter)) {
-        // Selection might be continuing the link (www.google.co|m case)
-        return false;
-      }
-    }
-  }
-
-  // Check if selection is at the start boundary and continuing from previous text
-  if (selection.to === pos) {
-    // Check if there's text before that's part of the same word
-    if (pos > 0) {
-      const textBefore = doc.textBetween(pos - 1, pos);
-      if (textBefore && !isWhiteSpace(textBefore)) {
-        // Selection might be extending from text before
-        return false;
-      }
-    }
-  }
-
-  // Special case: Check if selection is near but not exactly at boundaries
-  // This handles cases where user is expanding a selection within a word
-  if (
-    Math.abs(selection.from - pos) < 3 ||
-    Math.abs(selection.to - (pos + nodeSize)) < 3
-  ) {
-    // Look at nearby characters to see if they're part of the same word
-    const nearbyText = doc.textBetween(
-      Math.max(0, pos - 3),
-      Math.min(doc.content.size, pos + nodeSize + 3)
-    );
-
-    // If nearby text forms a continuous word with our node text
-    if (
-      nearbyText &&
-      !isWhiteSpace(nearbyText) &&
-      nearbyText.length > nodeText.length &&
-      nearbyText.includes(nodeText)
-    ) {
-      return false;
-    }
-  }
-
-  return true; // Selection is truly outside this node
-};
-
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -412,6 +350,31 @@ const extension = {
     return plugin;
   },
 };
+
+function isOutsideSelection(from, to, tr) {
+  const { selection, doc } = tr;
+
+  const nodeEnd = from + to;
+
+  if (selection.from <= nodeEnd && selection.to >= from) {
+    return false;
+  }
+
+  const text = doc.textBetween(
+    selection.to < from ? selection.to : nodeEnd,
+    selection.to < from ? from : selection.from,
+    " ",
+    " "
+  );
+
+  for (let i = 0; i < text.length; i++) {
+    if (isWhiteSpace(text[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 // Dummy element to pass to the oneboxer
 // To avoid this, we need to refactor both oneboxer APIs
