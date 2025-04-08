@@ -40,6 +40,7 @@ describe "Search", type: :system do
       expect(page).to have_current_path("/")
 
       search_page.click_search_icon
+      search_page.click_advanced_search_icon
 
       expect(search_page).to have_no_search_result
       expect(search_page).to have_heading_text("Search")
