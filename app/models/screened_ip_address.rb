@@ -98,6 +98,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.block_admin_login?(user, ip_address)
+    DiscoursePluginRegistry.apply_modifier(:screened_ip_block_admin_login?, user)
+
     return false unless SiteSetting.use_admin_ip_allowlist
     return false if user.nil?
     return false if !user.admin?
