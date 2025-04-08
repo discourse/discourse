@@ -32,26 +32,6 @@ export default RouteTemplate(
           @route="adminEmailTemplates"
           @label="admin.config.email.sub_pages.templates.title"
         />
-        <NavItem
-          @route="adminEmail.sent"
-          @label="admin.config.email.sub_pages.sent.title"
-        />
-        <NavItem
-          @route="adminEmail.skipped"
-          @label="admin.config.email.sub_pages.skipped.title"
-        />
-        <NavItem
-          @route="adminEmail.bounced"
-          @label="admin.config.email.sub_pages.bounced.title"
-        />
-        <NavItem
-          @route="adminEmail.received"
-          @label="admin.config.email.sub_pages.received.title"
-        />
-        <NavItem
-          @route="adminEmail.rejected"
-          @label="admin.config.email.sub_pages.rejected.title"
-        />
       </:tabs>
     </DPageHeader>
 

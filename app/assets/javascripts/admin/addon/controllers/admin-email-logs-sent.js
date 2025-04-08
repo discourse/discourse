@@ -3,7 +3,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import AdminEmailLogsController from "admin/controllers/admin-email-logs";
 
-export default class AdminEmailSentController extends AdminEmailLogsController {
+export default class AdminEmailLogsSentController extends AdminEmailLogsController {
   ccAddressDisplayThreshold = 2;
   sortWithAddressFilter = (addresses) => {
     if (!Array.isArray(addresses) || addresses.length === 0) {
