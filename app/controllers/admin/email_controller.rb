@@ -2,6 +2,9 @@
 
 class Admin::EmailController < Admin::AdminController
   def index
+  end
+
+  def server_settings
     data = { delivery_method: delivery_method, settings: delivery_settings }
     render_json_dump(data)
   end

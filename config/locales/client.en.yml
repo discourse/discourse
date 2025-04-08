@@ -5453,10 +5453,13 @@ en:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
         email:
-          title: "Server setup"
-          header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
-          keywords: "email|smtp|mailgun|sendgrid|preview summary"
+          title: "Email settings"
+          header_description: "Configure settings for emails that are sent to your members"
+          keywords: "digest|unsubscribe|email|smtp|mailgun|sendgrid|preview summary"
           sub_pages:
+            server_settings:
+              title: "Server settings"
+              header_description: "Configure settings for emails that are sent to your members"
             preview_summary:
               title: "Preview summary"
               header_description: "Preview the content of the summary emails sent to inactive users"

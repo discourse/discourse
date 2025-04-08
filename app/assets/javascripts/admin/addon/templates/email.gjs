@@ -19,7 +19,11 @@ export default RouteTemplate(
         />
       </:breadcrumbs>
       <:tabs>
-        <NavItem @route="adminEmail.index" @label="settings" />
+        <NavItem @route="adminEmail.settings" @label="settings" />
+        <NavItem
+          @route="adminEmail.serverSettings"
+          @label="admin.config.email.sub_pages.server_settings.title"
+        />
         <NavItem
           @route="adminEmail.previewDigest"
           @label="admin.config.email.sub_pages.preview_summary.title"

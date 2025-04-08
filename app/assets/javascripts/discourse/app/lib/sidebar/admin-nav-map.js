@@ -300,7 +300,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "gear",
+        icon: "far-envelope",
         links: [
           {
             name: "admin_email_preview_summary",
