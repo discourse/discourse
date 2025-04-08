@@ -870,11 +870,8 @@ class UsersController < ApplicationController
     raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
     raise Discourse::InvalidAccess if !secure_session_confirmed?
 
-    if user.associated_accounts.blank? && user.passkey_credential_ids.blank?
-      raise Discourse::InvalidAccess
-    end
-
     user.remove_password
+
     render json: success_json
   end
 
@@ -1697,8 +1694,7 @@ class UsersController < ApplicationController
 
     security_key = current_user.security_keys.find_by(id: params[:id].to_i)
 
-    if security_key&.factor_type == UserSecurityKey.factor_types[:first_factor] &&
-         current_user.passkey_credential_ids.length == 1
+    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
       if !current_user.has_password? && current_user.associated_accounts.blank?
         return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
       end

@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
+import isNone from "@ember/utils/lib/is_none";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
@@ -138,7 +139,7 @@ export default class SecurityController extends Controller {
 
   @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
-    return typeof associatedAccounts !== "undefined";
+    return !isNone(associatedAccounts);
   }
 
   removePasswordConfirm() {

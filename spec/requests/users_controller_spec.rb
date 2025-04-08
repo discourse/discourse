@@ -214,7 +214,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    context "when logged in with no associated accout, no passkeys" do
+    context "when logged in with no associated account, no passkeys" do
       before { sign_in(user) }
 
       it "fails without a secure session" do
