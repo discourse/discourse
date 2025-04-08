@@ -11,6 +11,7 @@ module PageObjects
 
       def select_default_text_size(size)
         find(".admin-fonts-form__button-option.#{size}").click
+        page.has_css?(".admin-fonts-form__button-option.#{size}.active")
       end
 
       def active_font(section)
