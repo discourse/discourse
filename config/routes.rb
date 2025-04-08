@@ -934,6 +934,11 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
     end
 
     get "user-badges/:username.json" => "user_badges#username",
