@@ -189,7 +189,8 @@ const extension = {
               const oneboxType = isInline ? "inline" : "full";
 
               if (
-                !isTopLevel(link.attrs.href) &&
+                // inline oneboxes should not be created for top-level links
+                (!isTopLevel(link.attrs.href) || !isInline) &&
                 !failedUrls[oneboxType].has(link.attrs.href)
               ) {
                 decorations.push(
