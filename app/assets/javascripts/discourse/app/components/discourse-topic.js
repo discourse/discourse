@@ -48,7 +48,6 @@ export default class DiscourseTopic extends Component {
     // in our view set up is firing this observer with the same value. This check
     // prevents scrolled from being called twice
     if (this.enteredAt && this.lastEnteredAt !== this.enteredAt) {
-      console.log("schedule this.scroll from within DiscourseTopic");
       schedule("afterRender", this.scrolled);
       this.set("lastEnteredAt", this.enteredAt);
     }
@@ -91,8 +90,6 @@ export default class DiscourseTopic extends Component {
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   @bind
   scrolled() {
-    console.log("scrolled");
-
     if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
       return;
     }
