@@ -18,6 +18,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import InstallComponentModal from "admin/components/modal/install-theme";
 import { COMPONENTS } from "admin/models/theme";
 import DMenu from "float-kit/components/d-menu";
@@ -206,9 +207,9 @@ export default class AdminConfigAreasComponents extends Component {
               "admin.config_areas.themes_and_components.components.no_components_found"
             }}
           {{else}}
-            {{i18n
-              "admin.config_areas.themes_and_components.components.no_components"
-            }}
+            <AdminConfigAreaEmptyList
+              @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
+            />
           {{/if}}
         {{/if}}
       </ConditionalLoadingSpinner>
