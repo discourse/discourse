@@ -271,6 +271,11 @@ export default function () {
             });
           }
         );
+        this.route("userDefaults", { path: "user-defaults" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",

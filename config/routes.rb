@@ -408,6 +408,7 @@ Discourse::Application.routes.draw do
         get "security" => "site_settings#index"
         get "spam" => "site_settings#index"
         get "user-api" => "site_settings#index"
+        get "user-defaults" => "site_settings#index"
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"

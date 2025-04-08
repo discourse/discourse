@@ -5414,6 +5414,10 @@ en:
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
+        user_defaults:
+          title: "User defaults"
+          header_description: "Set default values for settings that impact your users, configuring their onboarding experience"
+          keywords: "users|onboarding|new"
         user_fields:
           title: "User fields"
           header_description: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."

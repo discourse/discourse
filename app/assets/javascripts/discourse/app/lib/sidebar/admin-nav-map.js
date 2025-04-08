@@ -156,6 +156,16 @@ export const ADMIN_NAV_MAP = [
         multi_tabbed: true,
       },
       {
+        name: "admin_user_defaults",
+        route: "adminConfig.userDefaults.settings",
+        label: "admin.config.user_defaults.title",
+        description: "admin.config.user_defaults.header_description",
+        keywords: "admin.config.user_defaults.keywords",
+        icon: "circle-user",
+        settings_area: "user_defaults",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_trust_levels",
         route: "adminConfig.trustLevels.settings",
         label: "admin.config.trust_levels.title",
