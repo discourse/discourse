@@ -19,6 +19,10 @@ module PageObjects
         click_button("dismiss-read-confirm")
         self
       end
+
+      def closed?
+        page.has_no_css?(".d-modal")
+      end
     end
   end
 end

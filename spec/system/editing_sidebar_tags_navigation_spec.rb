@@ -40,7 +40,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
       modal = sidebar.click_edit_tags_button
 
       expect(modal).to have_right_title(I18n.t("js.sidebar.tags_form_modal.title"))
-      try_until_success { expect(modal).to have_focus_on_filter_input }
+      expect(modal).to have_focus_on_filter_input
       expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
 
       modal.toggle_tag_checkbox(tag1).toggle_tag_checkbox(tag2).save

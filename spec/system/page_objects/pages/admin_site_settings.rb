@@ -61,7 +61,7 @@ module PageObjects
       def select_from_emoji_list(setting_name, text = "", save_changes = true)
         setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
         setting.find(".setting-value .value-list > .value button").click
-        setting.find(".setting-value .emoji-picker .emoji[title='#{text}']").click
+        find(".emoji-picker .emoji[title='#{text}']").click
         save_setting(setting) if save_changes
       end
 

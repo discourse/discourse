@@ -71,24 +71,18 @@ shared_examples "forgot password scenarios" do
 
     context "when user only has security key configured" do
       it "should allow a user to reset password with a security key" do
-        authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
+        with_virtual_authenticator do
+          create_user_security_key(user)
+          visit_reset_password_link
 
-        create_user_security_key(user)
+          expect(user_reset_password_page).to have_no_toggle_button_to_second_factor_form
 
-        visit_reset_password_link
+          user_reset_password_page.submit_security_key
 
-        expect(user_reset_password_page).to have_no_toggle_button_to_second_factor_form
+          user_reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
 
-        user_reset_password_page.submit_security_key
-
-        user_reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
-
-        expect(user_reset_password_page).to have_logged_in_user
-      ensure
-        authenticator.remove!
+          expect(user_reset_password_page).to have_logged_in_user
+        end
       end
     end
 
@@ -114,28 +108,23 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
       it "should allow a user to reset password with backup code instead of security key" do
-        authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
+        with_virtual_authenticator do
+          create_user_security_key(user)
 
-        create_user_security_key(user)
+          visit_reset_password_link
 
-        visit_reset_password_link
+          user_reset_password_page.try_another_way
 
-        user_reset_password_page.try_another_way
+          expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
 
-        expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
+          user_reset_password_page
+            .fill_in_backup_code("iAmValidBackupCode")
+            .submit_backup_code
+            .fill_in_new_password("newsuperpassword")
+            .submit_new_password
 
-        user_reset_password_page
-          .fill_in_backup_code("iAmValidBackupCode")
-          .submit_backup_code
-          .fill_in_new_password("newsuperpassword")
-          .submit_new_password
-
-        expect(user_reset_password_page).to have_logged_in_user
-      ensure
-        authenticator.remove!
+          expect(user_reset_password_page).to have_logged_in_user
+        end
       end
     end
 
@@ -144,28 +133,23 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
       it "should allow a user to toggle from security key to TOTP and between TOTP and backup codes" do
-        authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
+        with_virtual_authenticator do
+          create_user_security_key(user)
 
-        create_user_security_key(user)
+          visit_reset_password_link
 
-        visit_reset_password_link
+          user_reset_password_page.try_another_way
 
-        user_reset_password_page.try_another_way
+          expect(user_reset_password_page).to have_totp_description
 
-        expect(user_reset_password_page).to have_totp_description
+          user_reset_password_page.use_backup_codes
 
-        user_reset_password_page.use_backup_codes
+          expect(user_reset_password_page).to have_backup_codes_description
 
-        expect(user_reset_password_page).to have_backup_codes_description
+          user_reset_password_page.use_totp
 
-        user_reset_password_page.use_totp
-
-        expect(user_reset_password_page).to have_totp_description
-      ensure
-        authenticator.remove!
+          expect(user_reset_password_page).to have_totp_description
+        end
       end
     end
 
@@ -173,28 +157,23 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
       it "should allow a user to reset password with TOTP instead of security key" do
-        authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
+        with_virtual_authenticator do
+          create_user_security_key(user)
 
-        create_user_security_key(user)
+          visit_reset_password_link
 
-        visit_reset_password_link
+          user_reset_password_page.try_another_way
 
-        user_reset_password_page.try_another_way
+          expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
 
-        expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
+          user_reset_password_page
+            .fill_in_totp(ROTP::TOTP.new(user_second_factor_totp.data).now)
+            .submit_totp
+            .fill_in_new_password("newsuperpassword")
+            .submit_new_password
 
-        user_reset_password_page
-          .fill_in_totp(ROTP::TOTP.new(user_second_factor_totp.data).now)
-          .submit_totp
-          .fill_in_new_password("newsuperpassword")
-          .submit_new_password
-
-        expect(user_reset_password_page).to have_logged_in_user
-      ensure
-        authenticator.remove!
+          expect(user_reset_password_page).to have_logged_in_user
+        end
       end
     end
   end

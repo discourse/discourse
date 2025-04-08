@@ -57,12 +57,31 @@ class RspecErrorTracker
   end
 end
 
+class PlaywrightLogger
+  attr_reader :logs
+
+  def initialize(page)
+    @logs = []
+
+    page.on(
+      "console",
+      ->(msg) do
+        @logs << {
+          level: msg.type,
+          message: msg.text,
+          timestamp: Time.now.to_i * 1000,
+          source: "console-api",
+        }
+      end,
+    )
+  end
+end
+
 ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
-require "selenium-webdriver"
 require "capybara/rails"
 
 # The shoulda-matchers gem no longer detects the test framework
@@ -347,7 +366,6 @@ RSpec.configure do |config|
       allow: [
         *MinioRunner.config.minio_urls,
         URI(MinioRunner::MinioBinary.platform_binary_url).host,
-        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
       ].compact,
     )
 
@@ -438,56 +456,49 @@ RSpec.configure do |config|
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "WARNING"
 
-    chrome_browser_options =
-      Selenium::WebDriver::Chrome::Options
-        .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
-        .tap do |options|
-          apply_base_chrome_options(options)
-          options.add_argument("--disable-search-engine-choice-screen")
-          options.add_argument("--window-size=1400,1400")
-          options.add_preference("download.default_directory", Downloads::FOLDER)
-        end
+    driver_options = {
+      browser_type: :chromium,
+      channel: :chrome,
+      headless: ENV["SELENIUM_HEADLESS"] != "0",
+      args: apply_base_chrome_args,
+      env: [{ name: browser_log_level, value: "pw:browser" }],
+      acceptDownloads: true,
+      downloads_path: Downloads::FOLDER,
+      devtools: ENV["CHROME_DEV_TOOLS"].present?, # playwright recommends https://playwright.dev/docs/debug instead
+      slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
+      logger: Logger.new($stdout),
+      playwright_cli_executable_path: "./node_modules/.bin/playwright",
+    }
 
-    driver_options = { browser: :chrome, timeout: BROWSER_READ_TIMEOUT }
-
-    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
-      driver_options[:browser] = :remote
-      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+    Capybara.register_driver(:playwright_chrome) do |app|
+      Capybara::Playwright::Driver.new(
+        app,
+        **driver_options,
+        viewport_size: {
+          width: 1400,
+          height: 1400,
+        },
+      )
     end
 
-    desktop_driver_options = driver_options.merge(options: chrome_browser_options)
+    Capybara.register_driver(:playwright_mobile_chrome) do |app|
+      driver_options[:deviceScaleFactor] = 3
+      driver_options[:hasTouch] = true
+      driver_options[
+        :userAgent
+      ] = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"
 
-    Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
+      Capybara::Playwright::Driver.new(
+        app,
+        **driver_options,
+        viewport_size: {
+          width: 390,
+          height: 844,
+        },
+      )
     end
 
-    Capybara.register_driver :selenium_chrome_headless do |app|
-      chrome_browser_options.add_argument("--headless=new")
-      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
-    end
-
-    mobile_chrome_browser_options =
-      Selenium::WebDriver::Chrome::Options
-        .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
-        .tap do |options|
-          options.add_argument("--disable-search-engine-choice-screen")
-          options.add_emulation(device_name: "iPhone 12 Pro")
-          options.add_argument(
-            '--user-agent="--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"',
-          )
-          apply_base_chrome_options(options)
-        end
-
-    mobile_driver_options = driver_options.merge(options: mobile_chrome_browser_options)
-
-    Capybara.register_driver :selenium_mobile_chrome do |app|
-      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
-    end
-
-    Capybara.register_driver :selenium_mobile_chrome_headless do |app|
-      mobile_chrome_browser_options.add_argument("--headless=new")
-      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
-    end
+    Capybara.default_driver = :playwright_chrome
 
     [
       [PostAction, :post_action_type_id],
@@ -574,7 +585,7 @@ RSpec.configure do |config|
         end
       end
 
-    config.around do |example|
+    config.around do |example_procsy|
       Timeout.timeout(
         PER_SPEC_TIMEOUT_SECONDS,
         SpecTimeoutError,
@@ -585,8 +596,11 @@ RSpec.configure do |config|
           condition_variable.signal
         end
 
-        example.run
+        example_procsy.run
       rescue SpecTimeoutError
+        puts "--- Potential timeout example ---"
+        puts example_procsy.example.metadata
+        puts "---"
       ensure
         mutex.synchronize { test_running = false }
         backtrace_logger.wakeup
@@ -657,23 +671,32 @@ RSpec.configure do |config|
   system_tests_initialized = false
 
   config.before(:each, type: :system) do |example|
-    if !system_tests_initialized
-      # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
-      # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
-      # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
-      # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
-      # the same location and this can interfere with the running tests in another process.
-      #
-      # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
-      # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-      File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
-        file.flock(File::LOCK_EX)
+    if example.metadata[:video]
+      Capybara.current_session.driver.on_save_screenrecord do |video_path|
+        saved_path =
+          File.join(
+            "tmp/capybara",
+            "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
+          )
 
-        if !File.directory?(File.expand_path("~/.cache/selenium"))
-          `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
-        end
+        File.write(saved_path, File.read(video_path))
+
+        puts "Video saved at #{saved_path}" if !ENV["CI"]
       end
+    end
 
+    if example.metadata[:tracing]
+      Capybara.current_session.driver.on_save_trace do |trace|
+        saved_path =
+          File.join("tmp/capybara", "#{example.metadata[:full_description].parameterize}-trace.zip")
+
+        File.write(saved_path, File.read(trace))
+
+        puts "Traced saved at #{saved_path}" if !ENV["CI"]
+      end
+    end
+
+    if !system_tests_initialized
       # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
       # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
       # To work around this problem, we are going to preload all the model schemas before running any system tests so that
@@ -686,10 +709,9 @@ RSpec.configure do |config|
       system_tests_initialized = true
     end
 
-    driver = [:selenium]
+    driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
-    driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
     driven_by driver.join("_").to_sym
 
     setup_system_test
@@ -740,6 +762,14 @@ RSpec.configure do |config|
     Scheduler::Defer.do_all_work
   end
 
+  $playwright_logger = nil
+
+  config.before(:each, type: :system) do
+    page.driver.with_playwright_page do |pw_page|
+      $playwright_logger = PlaywrightLogger.new(pw_page)
+    end
+  end
+
   config.after(:each, type: :system) do |example|
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
@@ -758,37 +788,26 @@ RSpec.configure do |config|
       lines << "\n"
     end
 
-    # This is disabled by default because it is super verbose,
-    # if you really need to dig into how selenium is communicating
-    # for system tests then enable it.
-    if ENV["SELENIUM_VERBOSE_DRIVER_LOGS"]
-      lines << "~~~~~~~ DRIVER LOGS ~~~~~~~"
-      page.driver.browser.logs.get(:driver).each { |log| lines << log.message }
-      lines << "~~~~~ END DRIVER LOGS ~~~~~"
-    end
-
-    js_logs = page.driver.browser.logs.get(:browser)
-
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
     if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
       if example.exception
         lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
-        if js_logs.empty?
+        if $playwright_logger.logs.empty?
           lines << "(no logs)"
         else
-          js_logs.each do |log|
+          $playwright_logger.logs.each do |log|
             # System specs are full of image load errors that are just noise, no need
             # to log this.
             if (
-                 log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
-                   (log.message.include?("uploads") || log.message.include?("images"))
-               ) || log.message.include?("favicon.ico")
+                 log[:message].include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                   (log[:message].include?("uploads") || log[:message].include?("images"))
+               ) || log[:message].include?("favicon.ico")
               next
             end
 
-            lines << log.message
+            lines << log[:message]
           end
         end
 
@@ -796,9 +815,9 @@ RSpec.configure do |config|
       end
     end
 
-    js_logs.each do |log|
-      next if log.level != "WARNING"
-      deprecation_id = log.message[/\[deprecation id: ([^\]]+)\]/, 1]
+    $playwright_logger.logs.each do |log|
+      next if log[:level] != "WARNING"
+      deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
       next if deprecation_id.nil?
 
       deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
@@ -1073,25 +1092,14 @@ def decrypt_auth_cookie(cookie)
   ].with_indifferent_access
 end
 
-def apply_base_chrome_options(options)
-  # possible values: undocked, bottom, right, left
-  chrome_dev_tools = ENV["CHROME_DEV_TOOLS"]
-
-  if chrome_dev_tools
-    options.add_argument("--auto-open-devtools-for-tabs")
-    options.add_preference(
-      "devtools",
-      "preferences" => {
-        "currentDockState" => "\"#{chrome_dev_tools}\"",
-        "panel-selectedTab" => '"console"',
-      },
-    )
-  end
-
-  options.add_argument("--no-sandbox")
-  options.add_argument("--disable-dev-shm-usage")
-  options.add_argument("--mute-audio")
-  options.add_argument("--remote-allow-origins=*")
+def apply_base_chrome_args(args = [])
+  base_args = %w[
+    --disable-search-engine-choice-screen
+    --no-sandbox
+    --disable-dev-shm-usage
+    --mute-audio
+    --remote-allow-origins=*
+  ]
 
   # A file that contains just a list of paths like so:
   #
@@ -1102,12 +1110,14 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].present?
     File
       .readlines(ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"])
-      .each { |path| options.add_argument("--load-extension=#{path}") }
+      .each { |path| base_args << "--load-extension=#{path}" }
   end
 
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
-    options.add_argument("--force-device-scale-factor=1")
+    base_args << "--force-device-scale-factor=1"
   end
+
+  base_args + args
 end
 
 class SpecSecureRandom
