@@ -50,7 +50,7 @@ $search-pad-horizontal: 0.5em;
     }
 
     @include breakpoint("mobile-extra-large") {
-      .mobile-search-button + input#search-term {
+      .mobile-search-button + input.search-term__input {
         padding-left: 0;
       }
     }

@@ -107,7 +107,7 @@ acceptance("Search - Mobile", function (needs) {
     test("initial options - topic search scope", async function (assert) {
       await visit("/t/internationalization-localization/280");
       await click("#search-button");
-      await fillIn("#search-term", "sm");
+      await fillIn("#icon-search-input", "sm");
 
       assert
         .dom('[data-test-assistant-item="search-in-topics-posts"]')
