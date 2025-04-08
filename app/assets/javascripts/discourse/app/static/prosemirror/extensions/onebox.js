@@ -188,20 +188,23 @@ const extension = {
 
               const oneboxType = isInline ? "inline" : "full";
 
-              if (
-                // inline oneboxes should not be created for top-level links
-                (!isTopLevel(link.attrs.href) || !isInline) &&
-                !failedUrls[oneboxType].has(link.attrs.href)
-              ) {
-                decorations.push(
-                  Decoration.inline(
-                    pos,
-                    pos + node.nodeSize,
-                    { class: "onebox-loading", nodeName: "span" },
-                    { oneboxUrl: link.attrs.href, oneboxType }
-                  )
-                );
+              // inline oneboxes should not be created for top-level links
+              if (isTopLevel(link.attrs.href) && isInline) {
+                return;
               }
+
+              if (failedUrls[oneboxType].has(link.attrs.href)) {
+                return;
+              }
+
+              decorations.push(
+                Decoration.inline(
+                  pos,
+                  pos + node.nodeSize,
+                  { class: "onebox-loading", nodeName: "span" },
+                  { oneboxUrl: link.attrs.href, oneboxType }
+                )
+              );
             }
           });
 
