@@ -262,6 +262,7 @@ export default class GlimmerHeader extends Component {
           @showSidebar={{@showSidebar}}
           @topicInfo={{@topicInfo}}
           @topicInfoVisible={{@topicInfoVisible}}
+          @narrowDesktop={{this.site.narrowDesktopView}}
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
@@ -287,6 +288,7 @@ export default class GlimmerHeader extends Component {
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @topicInfoVisible={{@topicInfoVisible}}
+              @narrowDesktop={{this.site.narrowDesktopView}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/if}}
