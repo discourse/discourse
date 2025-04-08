@@ -185,6 +185,7 @@ basic:
   categories_topics:
     default: 20
     validator: "CategoriesTopicsValidator"
+    area: "interface"
   suggested_topics:
     client: true
     default: 5
@@ -325,6 +326,7 @@ basic:
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
+    area: "interface"
   max_category_nesting:
     client: true
     default: 2
@@ -373,9 +375,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
+    area: "interface"
   fixed_category_positions_on_create:
     client: true
     default: false
+    area: "interface"
   enable_badges:
     client: true
     default: true
@@ -476,6 +480,7 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+    area: "interface"
   about_page_hidden_groups:
     default: ""
     type: group_list
@@ -511,6 +516,7 @@ basic:
     client: true
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
+    area: "interface"
 
 login:
   invite_only:
@@ -3190,6 +3196,7 @@ uncategorized:
 
   splash_screen:
     default: true
+    area: "interface"
 
   suggest_weekends_in_date_pickers:
     client: true
