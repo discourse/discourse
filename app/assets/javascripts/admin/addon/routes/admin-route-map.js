@@ -43,6 +43,8 @@ export default function () {
       "adminEmail",
       { path: "/email", resetNamespace: true },
       function () {
+        this.route("settings", { path: "/" });
+        this.route("serverSettings", { path: "/server-settings" });
         this.route("previewDigest", { path: "/preview-digest" });
         this.route("advancedTest", { path: "/advanced-test" });
         this.route(

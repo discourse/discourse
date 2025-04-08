@@ -5,7 +5,7 @@ RSpec.describe Admin::EmailController do
   fab!(:moderator)
   fab!(:user)
 
-  describe "#index" do
+  describe "#server_settings" do
     context "when logged in as an admin" do
       before do
         sign_in(admin)
@@ -16,7 +16,7 @@ RSpec.describe Admin::EmailController do
       end
 
       it "does not include the password in the response" do
-        get "/admin/email.json"
+        get "/admin/email/server-settings.json"
         mail_settings = response.parsed_body["settings"]
 
         expect(mail_settings.select { |setting| setting["name"] == "password" }).to be_empty
@@ -25,7 +25,7 @@ RSpec.describe Admin::EmailController do
 
     shared_examples "email settings inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/email.json"
+        get "/admin/email/server-settings.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["settings"]).to be_nil

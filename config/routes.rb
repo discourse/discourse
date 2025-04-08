@@ -182,6 +182,7 @@ Discourse::Application.routes.draw do
 
       resources :email, only: [:index], constraints: AdminConstraint.new do
         collection do
+          get "server-settings" => "email#server_settings"
           post "test"
           get "preview-digest" => "email#preview_digest"
           post "send-digest" => "email#send_digest"
