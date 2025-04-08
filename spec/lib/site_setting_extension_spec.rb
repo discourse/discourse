@@ -984,6 +984,18 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "themeable settings" do
+    it "returns true for settings that are themeable" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :enable_welcome_banner }[:themeable],
+      ).to eq(true)
+    end
+
+    it "returns false for settings that are not themeable" do
+      expect(SiteSetting.all_settings.find { |s| s[:setting] == :title }[:themeable]).to eq(false)
+    end
+  end
+
   describe "_map extension for list settings" do
     it "handles splitting group_list settings" do
       SiteSetting.personal_message_enabled_groups = "1|2"

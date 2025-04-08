@@ -89,6 +89,10 @@ module SiteSettingExtension
     @categories ||= {}
   end
 
+  def themeable
+    @themeable ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -287,6 +291,7 @@ module SiteSettingExtension
             placeholder: placeholder(s),
             mandatory_values: mandatory_values[s],
             requires_confirmation: requires_confirmation_settings[s],
+            themeable: themeable[s],
           )
           opts.merge!(type_hash)
         end
@@ -736,6 +741,8 @@ module SiteSettingExtension
       )
 
       categories[name] = opts[:category] || :uncategorized
+
+      themeable[name] = opts[:themeable] ? true : false
 
       if opts[:area]
         split_areas = opts[:area].split("|")

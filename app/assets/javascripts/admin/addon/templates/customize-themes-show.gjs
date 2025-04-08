@@ -507,6 +507,22 @@ export default RouteTemplate(
             </div>
           {{/if}}
 
+          {{#if @controller.hasThemeableSiteSettings}}
+            <div class="control-unit">
+              <div class="mini-title">{{i18n
+                  "admin.customize.theme.theme_site_settings"
+                }}</div>
+              <p><i>{{i18n
+                    "admin.customize.theme.overriden_site_settings_explanation"
+                  }}</i></p>
+              <section class="form-horizontal theme settings control-unit">
+                {{#each @controller.model.themeable_site_settings as |setting|}}
+                  {{setting.setting}}
+                {{/each}}
+              </section>
+            </div>
+          {{/if}}
+
           {{#if @controller.hasSettings}}
             <div class="control-unit">
               <div class="mini-title">{{i18n

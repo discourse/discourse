@@ -1009,7 +1009,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeableSiteSettingHelper.new(theme_id: self.id).resolved_themeable_site_settings
   end
 
   private
