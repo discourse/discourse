@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "ember-cli": "~6.3.1",
-    "webpack": "^5.98.0"
+    "webpack": "^5.99.2"
   },
   "engines": {
     "node": ">= 18",
