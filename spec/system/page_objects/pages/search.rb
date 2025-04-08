@@ -40,6 +40,10 @@ module PageObjects
         self
       end
 
+      def click_advanced_search_icon
+        find(".show-advanced-search").click
+      end
+
       def click_in_posts_by_user
         find(".search-menu-container .search-menu-assistant-item").click
       end
