@@ -5453,9 +5453,9 @@ en:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
         email:
-          title: "Server setup & logs"
+          title: "Server setup"
           header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
-          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          keywords: "email|smtp|mailgun|sendgrid|preview summary"
           sub_pages:
             preview_summary:
               title: "Preview summary"
@@ -5466,6 +5466,11 @@ en:
             templates:
               title: "Templates"
               header_description: "Customize the templates used to create emails"
+        email_logs:
+          title: "Email logs"
+          header_description: "View logs for emails sent from your site"
+          keywords: "sent|skipped|bounced|received|rejected|email logs"
+          sub_pages:
             sent:
               title: "Sent"
               header_description: "View a log of emails that have been sent"

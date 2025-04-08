@@ -5,7 +5,7 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import AdminEmailLogsController from "admin/controllers/admin-email-logs";
 import IncomingEmail from "admin/models/incoming-email";
 
-export default class AdminEmailRejectedController extends AdminEmailLogsController {
+export default class AdminEmailLogsRejectedController extends AdminEmailLogsController {
   @observes("filter.{status,from,to,subject,error}")
   filterIncomingEmails() {
     discourseDebounce(this, this.loadLogs, IncomingEmail, INPUT_DELAY);
