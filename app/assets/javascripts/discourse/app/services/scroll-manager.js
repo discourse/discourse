@@ -27,6 +27,7 @@ export default class ScrollManager extends Service {
    * @public
    *
    * @example
+   * ```javascript
    * // In a component:
    * @service scrollManager;
    *
@@ -43,6 +44,7 @@ export default class ScrollManager extends Service {
    * scrolled() {
    *   // Handle scroll event
    * }
+   * ```
    */
   bindScrolling(target, opts = {}) {
     const throttleMs = opts.throttle || 100;
