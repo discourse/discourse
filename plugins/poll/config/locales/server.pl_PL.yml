@@ -12,6 +12,8 @@ pl_PL:
     poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
     poll_create_allowed_groups: "Grupy, które mogą tworzyć ankiety."
     poll_groupable_user_fields: "Zestaw nazw pól użytkownika, który może zostać użyty do grupowania i filtrowania wyników ankiet."
+    poll_export_data_explorer_query_id: "Identyfikator zapytania eksploratora danych używanego do eksportowania wyników ankiet (0, aby wyłączyć)."
+    poll_export_ranked_choice_data_explorer_query_id: "Identyfikator zapytania eksploratora danych używanego do eksportowania wyników ankiet głosowania w trybie natychmiastowym."
     poll_default_public: "Podczas tworzenia nowej ankiety domyślnie włącz opcję 'show who voted'."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -39,6 +41,7 @@ pl_PL:
     default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
     named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
+    requires_that_at_least_one_option_is_ranked: "W ankietach z wyborem rankingowym musisz ocenić przynajmniej jedną opcję."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Nie możesz edytować ankiety po upłynięciu %{minutes} minut od jej publikacji."
       cannot_edit_named_poll_with_votes: "Nie możesz zmienić nazwy ankiety <strong>${name}</strong> po upłynięciu %{minutes} minut od jej publikacji."
@@ -59,6 +62,7 @@ pl_PL:
       many: Do tej ankiety wymagane jest co najmniej %{count} głosów.
       other: Do tej ankiety wymagane jest co najmniej %{count} głosów.
     ranked_choice:
+      vote_options_mismatch: "W przypadku natychmiastowego losowania liczba wyborów dokonanych w głosowaniu musi odpowiadać liczbie opcji. Liczba opcji to %{count}, a liczba dokonanych wyborów to %{provided}."
       no_group_results_support: "Nieprawidłowy typ ankiety, ranked_choice nie obsługuje wyników grupowych."
     topic_must_be_open_to_toggle_status: "Ankieta musi być otwarta aby zmienić status ankiety."
     only_staff_or_op_can_toggle_status: "Status ankiety może być zmieniony przez autora wpisu lub członka załogi serwisu."

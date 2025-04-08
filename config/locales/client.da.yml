@@ -5371,6 +5371,11 @@ da:
           delete_sso_record: "Slet SSO Registrering"
           confirm_delete: "Er du sikker på at, du vil slette dette DiscourseConect-Indlæg?"
       user_fields:
+        title: "Brugerfelter"
+        add: "Tilføj brugerfelt"
+        back: "Tilbage til brugerfelter"
+        edit_header: "Rediger Brugerfelt"
+        new_header: "Tilføj Brugerfelt"
         untitled: "Ingen titel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5389,6 +5394,8 @@ da:
         requirement:
           optional:
             title: "Valgfri"
+          for_all_users:
+            title: "For alle brugere"
         editable:
           title: "Kan rettes efter registrering"
         show_on_profile:
@@ -5489,7 +5496,9 @@ da:
           modal_title: "Rediger %{name}"
         file_types_list:
           add_image_types: "Billeder"
+          add_video_types: "Videoer"
           add_audio_types: "Audio"
+          add_document_types: "Dokumenter"
         mandatory_group: "Gruppe er obligatorisk"
         requires_confirmation_messages:
           default:
@@ -5503,6 +5512,9 @@ da:
         badge: Emblem
         display_name: Vist navn
         description: Beskrivelse
+        long_description: Lang beskrivelse
+        badge_type: Emblem Type
+        group_settings: Gruppeindstillinger
         badge_grouping: Gruppe
         badge_groupings:
           modal_title: Badge grupperinger
@@ -5577,10 +5589,13 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
+        add: "Tilføj humørikon"
         delete: "Slet"
+        choose_files: "Vælg filer"
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
+        created_by: "Oprettet Af"
         image: "Billede"
         alt: "brugerdefineret humøikons forhåndsvisning"
         delete_confirm: "Er du sikker på du vil slette emojien: %{name} ?"
