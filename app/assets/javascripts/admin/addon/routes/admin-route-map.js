@@ -281,6 +281,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("siteAdmin", { path: "/site-admin" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",

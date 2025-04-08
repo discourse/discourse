@@ -5445,6 +5445,10 @@ en:
           title: "Themes and components"
           header_description: "Personalize your Discourse site with themes and components to match your needs"
           keywords: "theme|component|extension|customize"
+        site_admin:
+          title: "Site admin"
+          header_description: "Configure various settings relating to the management of your site"
+          keywords: "discover|bootstrap|apps"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"

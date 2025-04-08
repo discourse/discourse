@@ -214,6 +214,7 @@ module SvgSprite
         robot
         rocket
         rotate
+        screwdriver-wrench
         scroll
         share
         shield-halved

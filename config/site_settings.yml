@@ -2871,9 +2871,13 @@ uncategorized:
   version_checks:
     client: true
     default: true
+    area: "site_admin"
   include_in_discourse_discover:
     default: false
-  new_version_emails: true
+    area: "site_admin"
+  new_version_emails:
+    default: true
+    area: "site_admin"
   send_welcome_message: true
 
   suppress_uncategorized_badge:
@@ -2980,6 +2984,7 @@ uncategorized:
   global_notice:
     default: ""
     client: true
+    area: "site_admin"
   has_login_hint:
     default: false
     hidden: true
@@ -3016,9 +3021,11 @@ uncategorized:
 
   use_site_small_logo_as_system_avatar:
     default: true
+    area: "site_admin"
 
   enable_listing_suspended_users_on_search:
     default: false
+    area: "site_admin"
 
   disable_system_edit_notifications:
     default: true
@@ -3085,6 +3092,7 @@ uncategorized:
     default: 50
     client: true
     max: 5000
+    area: "site_admin"
 
   bootstrap_mode_enabled:
     default: false
@@ -3107,9 +3115,13 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner_ios: false
+  native_app_install_banner_ios:
+    default: false
+    area: "site_admin"
 
-  native_app_install_banner_android: false
+  native_app_install_banner_android:
+    default: false
+    area: "site_admin"
 
   ios_app_id:
     default: "1173672076"
@@ -3126,16 +3138,21 @@ uncategorized:
   app_association_android:
     default: ""
     textarea: true
+    area: "site_admin"
 
   app_association_ios:
     default: ""
     textarea: true
+    area: "site_admin"
 
-  share_anonymized_statistics: true
+  share_anonymized_statistics:
+    default: true
+    area: "site_admin"
 
   enable_powered_by_discourse:
     default: true
     client: true
+    area: "site_admin"
 
   auto_handle_queued_age:
     default: 60
@@ -3155,6 +3172,7 @@ uncategorized:
     type: "list"
     list_type: "compact"
     client: true
+    area: "site_admin"
 
   always_include_topic_excerpts:
     default: false
