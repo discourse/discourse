@@ -6,6 +6,7 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
+import { isTopLevel } from "discourse-markdown-it/features/onebox";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -187,13 +188,16 @@ const extension = {
 
               const oneboxType = isInline ? "inline" : "full";
 
-              if (!failedUrls[oneboxType].has(node.textContent)) {
+              if (
+                !isTopLevel(link.attrs.href) &&
+                !failedUrls[oneboxType].has(link.attrs.href)
+              ) {
                 decorations.push(
                   Decoration.inline(
                     pos,
                     pos + node.nodeSize,
                     { class: "onebox-loading", nodeName: "span" },
-                    { oneboxUrl: node.textContent, oneboxType }
+                    { oneboxUrl: link.attrs.href, oneboxType }
                   )
                 );
               }
@@ -291,13 +295,14 @@ const extension = {
               const nodeAtPos = view.state.doc.nodeAt(decoration.from);
 
               const isTextNode = nodeAtPos?.isText;
-              const hasMatchingLink = nodeAtPos?.marks.find(
+
+              const matchingLink = nodeAtPos?.marks.find(
                 (mark) =>
                   mark.type.name === "link" &&
-                  mark.attrs.href.endsWith(decoration.spec.oneboxUrl)
+                  mark.attrs.href === decoration.spec.oneboxUrl
               );
 
-              if (!isTextNode || !hasMatchingLink) {
+              if (!isTextNode || !matchingLink) {
                 continue;
               }
 
@@ -305,7 +310,7 @@ const extension = {
                 if (decoration.spec.oneboxTitle) {
                   const oneboxNode =
                     view.state.schema.nodes.onebox_inline.create({
-                      url: decoration.spec.oneboxUrl,
+                      url: nodeAtPos.text,
                       title: decoration.spec.oneboxTitle,
                     });
 
@@ -316,7 +321,7 @@ const extension = {
               } else if (decoration.spec.oneboxType === "full") {
                 if (decoration.spec.oneboxHtml) {
                   const oneboxNode = view.state.schema.nodes.onebox.create({
-                    url: decoration.spec.oneboxUrl,
+                    url: nodeAtPos.text,
                     html: decoration.spec.oneboxHtml,
                   });
 
