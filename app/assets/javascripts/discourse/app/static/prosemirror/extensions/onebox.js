@@ -60,7 +60,7 @@ const extension = {
           {
             class: "inline-onebox",
             href: node.attrs.url,
-            contentEditable: false,
+            contentEditable: true,
           },
           node.attrs.title,
         ];
@@ -167,10 +167,11 @@ const extension = {
           const decorations = [];
           tr.doc.descendants((node, pos) => {
             const link = node.marks.find((mark) => mark.type.name === "link");
+
             if (
               link?.attrs.markup === "linkify" &&
-              link?.attrs.href === node.textContent &&
-              set.find(pos, pos + node.nodeSize).length === 0
+              set.find(pos, pos + node.nodeSize).length === 0 &&
+              isOutsideSelection(pos, node.nodeSize, tr)
             ) {
               const resolvedPos = tr.doc.resolve(pos);
               const isAtRoot = resolvedPos.depth === 1;
@@ -293,7 +294,7 @@ const extension = {
               const hasMatchingLink = nodeAtPos?.marks.find(
                 (mark) =>
                   mark.type.name === "link" &&
-                  mark.attrs.href === decoration.spec.oneboxUrl
+                  mark.attrs.href.endsWith(decoration.spec.oneboxUrl)
               );
 
               if (!isTextNode || !hasMatchingLink) {
@@ -349,6 +350,31 @@ const extension = {
     return plugin;
   },
 };
+
+function isOutsideSelection(from, to, tr) {
+  const { selection, doc } = tr;
+
+  const nodeEnd = from + to;
+
+  if (selection.from <= nodeEnd && selection.to >= from) {
+    return false;
+  }
+
+  const text = doc.textBetween(
+    selection.to < from ? selection.to : nodeEnd,
+    selection.to < from ? from : selection.from,
+    " ",
+    " "
+  );
+
+  for (let i = 0; i < text.length; i++) {
+    if (isWhiteSpace(text[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 // Dummy element to pass to the oneboxer
 // To avoid this, we need to refactor both oneboxer APIs

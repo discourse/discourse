@@ -213,7 +213,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("Check out this link ")
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content(" in the middle of text")
+      composer.type_content(" ").type_content("in the middle of text")
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com']",
@@ -249,7 +249,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("Some text ")
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content(" more text")
+      composer.type_content(" ").type_content("more text")
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
@@ -303,6 +303,7 @@ describe "Composer - ProseMirror editor", type: :system do
         https://example3.com
 
         Ok, that is it https://example3.com
+        After a hard break
       MARKDOWN
       cdp.write_clipboard(markdown)
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
@@ -334,11 +335,12 @@ describe "Composer - ProseMirror editor", type: :system do
     it "creates inline oneboxes for repeated links in different paste events" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      composer.type_content("Hey")
+      composer.type_content("Hey ")
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content("and")
+      composer.type_content(" ").type_content("and").type_content(" ")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content("\n")
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com']",
@@ -524,6 +526,36 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys([PLATFORM_KEY_MODIFIER, :shift, "_"]) # Insert a horizontal rule
       expect(rich).to have_css("hr", count: 1)
       expect(rich).to have_css("p", count: 2) # New paragraph inserted after the ruler
+    end
+  end
+
+  describe "auto-linking/unlinking" do
+    it "auto-links non-protocol URLs and removes the link when no longer a URL" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("www.example.com")
+
+      expect(rich).to have_css("a", text: "www.example.com")
+
+      composer.send_keys(%i[backspace backspace])
+
+      expect(rich).to have_no_css("a")
+
+      composer.type_content("om")
+
+      expect(rich).to have_css("a", text: "www.example.com")
+    end
+
+    it "auto-links protocol URLs" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("https://example.com")
+
+      expect(rich).to have_css("a", text: "https://example.com")
+
+      composer.send_keys(%i[backspace backspace])
+
+      expect(rich).to have_css("a", text: "https://example.c")
     end
   end
 

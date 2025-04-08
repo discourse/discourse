@@ -13,10 +13,6 @@ export function markInputRule(regexp, markType, getAttrs) {
       const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       const tr = state.tr;
 
-      if (state.doc.rangeHasMark(start, end, markType)) {
-        return null;
-      }
-
       if (match[1]) {
         let textStart = start + match[0].indexOf(match[1]);
         let textEnd = textStart + match[1].length;
