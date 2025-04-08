@@ -306,7 +306,9 @@ export default function setupTests(config) {
 
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
-    const scrollManager = getOwner(this).lookup("service:scroll-manager");
+
+    // Access the container that's set up in createApplication
+    const scrollManager = app.__container__.lookup("service:scroll-manager");
     sinon.stub(scrollManager, "bindScrolling");
     sinon.stub(scrollManager, "unbindScrolling");
   });
