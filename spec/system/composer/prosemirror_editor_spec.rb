@@ -575,6 +575,50 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "code marks with fake cursor" do
+    it "allows typing after a code mark with/without the mark" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("This is ~~SPARTA!~~ `code!`.")
+
+      expect(rich).to have_css("code", text: "code!")
+
+      # within the code mark
+      composer.send_keys(%i[backspace backspace])
+      composer.type_content("!")
+
+      expect(rich).to have_css("code", text: "code!")
+
+      # after the code mark
+      composer.send_keys(:right)
+      composer.type_content(".")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
+    end
+
+    it "allows typing before a code mark with/without the mark" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("`code mark`")
+
+      expect(rich).to have_css("code", text: "code mark")
+
+      # before the code mark
+      composer.send_keys(:home)
+      composer.type_content("..")
+
+      # within the code mark
+      composer.send_keys(:right)
+      composer.type_content("!!")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("..`!!code mark`")
+    end
+  end
+
   describe "emojis" do
     it "has the only-emoji class if 1-3 emojis are 'alone'" do
       open_composer_and_toggle_rich_editor
