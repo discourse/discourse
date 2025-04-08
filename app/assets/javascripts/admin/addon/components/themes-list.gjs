@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { equal, gt, gte } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 import concatClass from "discourse/helpers/concat-class";
@@ -14,10 +15,6 @@ import { i18n } from "discourse-i18n";
 import ThemesListItem from "admin/components/themes-list-item";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ComboBox from "select-kit/components/combo-box";
-import and from "truth-helpers/helpers/and";
-import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
-import or from "truth-helpers/helpers/or";
 
 const ALL_FILTER = "all";
 const ACTIVE_FILTER = "active";

@@ -11,13 +11,13 @@ import {
 } from "@ember-decorators/component";
 import HighlightSearch from "discourse/components/highlight-search";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicStatus from "discourse/components/topic-status";
 import TrackSelected from "discourse/components/track-selected";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import raw from "discourse/helpers/raw";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 
@@ -75,11 +75,12 @@ export default class SearchResultEntry extends Component {
           role="heading"
           aria-level="2"
         >
-          {{raw
-            "topic-status"
-            topic=this.post.topic
-            showPrivateMessageIcon=true
-          }}
+          <TopicStatus
+            @topic={{this.post.topic}}
+            @disableActions={{true}}
+            @showPrivateMessageIcon={{true}}
+          />
+
           <span class="topic-title">
             {{#if this.post.useTopicTitleHeadline}}
               {{htmlSafe this.post.topicTitleHeadline}}

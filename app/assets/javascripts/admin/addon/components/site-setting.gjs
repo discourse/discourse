@@ -1,11 +1,10 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -28,18 +27,15 @@ export default class SiteSettingComponent extends Component.extend(
     );
   }
 
-  @cached
   @dependentKeyCompat
   get buffered() {
-    return BufferedProxy.create({
-      content: this.setting,
-    });
+    return this.setting.buffered;
   }
 
   _save() {
     const setting = this.buffered;
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
-      updateExistingUsers: this.updateExistingUsers,
+      updateExistingUsers: this.setting.updateExistingUsers,
     });
   }
 
@@ -90,7 +86,7 @@ export default class SiteSettingComponent extends Component.extend(
           @changeValueCallback={{this.changeValueCallback}}
           @setValidationMessage={{this.setValidationMessage}}
         />
-        <SettingValidationMessage @message={{this.validationMessage}} />
+        <SettingValidationMessage @message={{this.setting.validationMessage}} />
         {{#if this.displayDescription}}
           <Description @description={{this.setting.description}} />
         {{/if}}
@@ -102,14 +98,14 @@ export default class SiteSettingComponent extends Component.extend(
         <DButton
           @action={{this.update}}
           @icon="check"
-          @disabled={{this.disableSaveButton}}
+          @isLoading={{this.disableControls}}
           @ariaLabel="admin.settings.save"
           class="ok setting-controls__ok"
         />
         <DButton
           @action={{this.cancel}}
           @icon="xmark"
-          @disabled={{this.disableUndoButton}}
+          @isLoading={{this.disableControls}}
           @ariaLabel="admin.settings.cancel"
           class="cancel setting-controls__cancel"
         />

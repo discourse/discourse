@@ -13,6 +13,7 @@ import ReviewableTags from "discourse/components/reviewable-tags";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
 import categoryBadge from "discourse/helpers/category-badge";
 import icon from "discourse/helpers/d-icon";
+import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 
 export default class ReviewableQueuedPost extends Component {
   @service modal;
@@ -67,7 +68,7 @@ export default class ReviewableQueuedPost extends Component {
     <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
       <div class="title-text">
         {{icon "square-plus" title="review.new_topic"}}
-        {{@reviewable.payload.title}}
+        {{highlightWatchedWords @reviewable.payload.title @reviewable}}
       </div>
       {{categoryBadge @reviewable.category}}
       <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
@@ -90,7 +91,7 @@ export default class ReviewableQueuedPost extends Component {
 
         <CookText
           class="post-body {{if this.isCollapsed 'is-collapsed'}}"
-          @rawText={{@reviewable.payload.raw}}
+          @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
           @categoryId={{@reviewable.category_id}}
           @topicId={{@reviewable.topic_id}}
           @paintOneboxes={{true}}

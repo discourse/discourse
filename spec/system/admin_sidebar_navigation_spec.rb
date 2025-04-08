@@ -324,11 +324,13 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_add_section_button
   end
 
-  xit "displays limited links for moderator" do
+  it "displays limited links for moderator" do
     sign_in(moderator)
     visit("/admin")
 
     sidebar.toggle_all_sections
+
+    expect(page).to have_no_css(".sidebar-section--collapsed")
 
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(

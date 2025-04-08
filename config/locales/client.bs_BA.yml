@@ -447,6 +447,10 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
         reject_reason: "Reason"
+        scrubbed_reason: "Reason"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Odustani"
       user_percentage:
         agreed:
           one: "%{count}% slaže"
@@ -2517,9 +2521,13 @@ bs_BA:
       description: "Description"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
+      background_color: "Color"
+      styles:
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          icon: "Icon"
+          emoji: "Emoji"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
+import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
 
 @classNames("row")
 export default class AdminFormRow extends Component {

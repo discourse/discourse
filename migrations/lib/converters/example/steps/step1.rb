@@ -6,7 +6,7 @@ module Migrations::Converters::Example
 
     def execute
       super
-      IntermediateDB::LogEntry.create!(type: "info", message: "This is a test")
+      IntermediateDB::LogEntry.create(type: "info", message: "This is a test")
     end
   end
 end

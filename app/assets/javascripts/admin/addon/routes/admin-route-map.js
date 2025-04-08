@@ -262,6 +262,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("interface", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route(
           "groupPermissions",
           { path: "/group-permissions" },
@@ -271,6 +276,16 @@ export default function () {
             });
           }
         );
+        this.route("userDefaults", { path: "user-defaults" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("siteAdmin", { path: "/site-admin" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",
@@ -280,6 +295,15 @@ export default function () {
           this.route("themes");
           this.route("components");
         });
+        this.route(
+          "adminAnalytics",
+          { path: "/analytics-and-seo", resetNamespace: true },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
         this.route(
           "adminPermalinks",
           { path: "/permalinks", resetNamespace: true },
@@ -309,12 +333,6 @@ export default function () {
           }
         );
         this.route("developer", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("fonts", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("logo", function () {
           this.route("settings", { path: "/" });
         });
         this.route("branding");

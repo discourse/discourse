@@ -347,6 +347,7 @@
     flex-wrap: wrap;
     margin-top: 0.25em;
     gap: 0 0.5em;
+    align-items: center;
 
     .badge-category__wrapper {
       max-width: 100%;
@@ -357,6 +358,7 @@
     flex-wrap: wrap;
     display: inline-flex;
     font-weight: normal;
+    align-items: center;
 
     .discourse-tag.simple {
       font-size: var(--font-down-1);

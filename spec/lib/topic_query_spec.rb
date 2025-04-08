@@ -1305,25 +1305,20 @@ RSpec.describe TopicQuery do
 
     context "when preloading associations" do
       it "preloads associations" do
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          :first_post,
-          Plugin::Instance.new,
-        )
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          { association: :user_warning, condition: -> { true } },
-          Plugin::Instance.new,
-        )
-        DiscoursePluginRegistry.register_topic_preloader_association(
-          { association: :linked_topic, condition: -> { false } },
-          Plugin::Instance.new,
-        )
+        plugin = Plugin::Instance.new
+        plugin.register_topic_preloader_associations(:topic_embed)
+        plugin.register_topic_preloader_associations({ first_post: [:uploads] })
+        plugin.register_topic_preloader_associations(:user_warning) { true }
+        plugin.register_topic_preloader_associations(:linked_topic) { false }
 
         topic = Fabricate(:topic)
         Fabricate(:post, topic: topic)
 
         new_topic = topic_query.list_new.topics.first
         expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
-        expect(new_topic.association(:first_post).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:topic_embed).loaded?).to eq(true) # Testing a user-defined preloaded association
+        expect(new_topic.association(:first_post).loaded?).to eq(true) # Nested preloaded association
+        expect(new_topic.first_post.association(:uploads).loaded?).to eq(true) # Nested preloaded association
         expect(new_topic.association(:user_warning).loaded?).to eq(true) # Conditionally loaded
         expect(new_topic.association(:linked_topic).loaded?).to eq(false) # Failed condition
         expect(new_topic.association(:user).loaded?).to eq(false) # Testing the negative

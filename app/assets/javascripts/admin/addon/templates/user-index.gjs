@@ -1,6 +1,7 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import { and, gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -17,8 +18,6 @@ import AdminUserExportsTable from "admin/components/admin-user-exports-table";
 import IpLookup from "admin/components/ip-lookup";
 import ComboBox from "select-kit/components/combo-box";
 import GroupChooser from "select-kit/components/group-chooser";
-import and from "truth-helpers/helpers/and";
-import gt from "truth-helpers/helpers/gt";
 
 export default RouteTemplate(
   <template>

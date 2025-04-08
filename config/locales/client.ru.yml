@@ -711,6 +711,10 @@ ru:
         name: "Имя"
         fields: "Поля"
         reject_reason: "Причина"
+        scrubbed_reason: "Причина"
+        scrub_record:
+          reason_placeholder: "Причина..."
+          cancel_button: "Нет"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалобы)"
@@ -4228,9 +4232,13 @@ ru:
       logo_dark: "Логотип, используемый в тёмном режиме"
       background_image: "Фоновое изображение категории"
       background_image_dark: "Фоновое изображение, используемое в темном режиме"
-      badge_colors: "Цвета наград"
-      background_color: "Цвет фона"
-      foreground_color: "Цвет переднего плана"
+      background_color: "Цвет"
+      styles:
+        icon: "Значок"
+        emoji: "Эмодзи"
+        options:
+          icon: "Значок"
+          emoji: "Эмодзи"
       color_used: "Используемый цвет"
       predefined_colors: "Предустановленные варианты цветов"
       name_placeholder: "Не более одного-двух слов"

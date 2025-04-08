@@ -522,6 +522,9 @@ te:
         name: "పేరు"
         fields: "ఫీల్డ్స్"
         reject_reason: "కారణం"
+        scrubbed_reason: "కారణం"
+        scrub_record:
+          cancel_button: "రద్దుచేయండి"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (చివరి ఫిర్యాదు)"
@@ -3473,9 +3476,13 @@ te:
       logo_dark: "డార్క్ మోడ్ వర్గం లోగో చిత్రం"
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
-      badge_colors: "బ్యాడ్జి రంగులు"
-      background_color: "నేపథ్య రంగు"
-      foreground_color: "ముందుభాగం రంగు"
+      background_color: "రంగు"
+      styles:
+        icon: "చిహ్నం"
+        emoji: "ఇమోజి"
+        options:
+          icon: "చిహ్నం"
+          emoji: "ఇమోజి"
       name_placeholder: "గరిష్టం ఒకటి లేదా రెండు పదాలు"
       color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"

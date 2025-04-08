@@ -1350,19 +1350,19 @@ class Plugin::Instance
   # This method allows plugins to preload topic associations when loading topics
   # that make use of topic_list.
   #
-  # @param fields [Array<Symbol>, Symbol, Hash] The topic associations to preload.
-  #   - :association` [Symbol] The association to preload.
-  #   - :condition` [Proc] A function that returns a boolean value indicating whether the association should be preloaded
+  # @param fields [Symbol, Array<Symbol>, Hash] The topic associations to preload.
   #
   # @example
-  #   register_topic_preloader_associations(%i[custom_association another_association])
-  #   register_topic_preloader_associations({
-  #     association: :linked_topic, condition: ->(topic) { topic.custom_field.present? }
-  #   })
+  #   register_topic_preloader_associations(:first_post)
+  #   register_topic_preloader_associations([:first_post, :topic_embeds])
+  #   register_topic_preloader_associations({ first_post: :uploads })
+  #   register_topic_preloader_associations({ first_post: :uploads }) do
+  #     SiteSetting.some_setting_enabled?
+  #   end
   #
   # @return [void]
-  def register_topic_preloader_associations(fields)
-    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  def register_topic_preloader_associations(fields, &condition)
+    DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
   end
 
   protected

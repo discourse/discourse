@@ -609,6 +609,10 @@ pt_BR:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (do último sinalizador)"
@@ -3822,9 +3826,13 @@ pt_BR:
       logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
-      badge_colors: "Cores do emblema"
-      background_color: "Cor de fundo"
-      foreground_color: "Cor de primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Ícone"
+        emoji: "Emoji"
+        options:
+          icon: "Ícone"
+          emoji: "Emoji"
       color_used: "Cor em uso"
       predefined_colors: "Opções predefinidas de cor"
       name_placeholder: "máximo de uma ou duas palavras"

@@ -727,6 +727,10 @@ cs:
         name: "Jméno"
         fields: "Pole"
         reject_reason: "Důvod"
+        scrubbed_reason: "Reason"
+        scrub_record:
+          reason_placeholder: "Důvod..."
+          cancel_button: "Zrušit"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (posledního nahlášení)"
@@ -4282,9 +4286,13 @@ cs:
       logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
       background_image: "Obrázek na pozadí této kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý)"
-      badge_colors: "Barvy štítku"
-      background_color: "Barva pozadí"
-      foreground_color: "Barva textu"
+      background_color: "Barva"
+      styles:
+        icon: "Ikona"
+        emoji: "Smajlíky :)"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       color_used: "Používaná barva"
       predefined_colors: "Předdefinované možnosti barev"
       name_placeholder: "Měl by být krátký a výstižný."

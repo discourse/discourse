@@ -588,6 +588,9 @@ hy:
         name: "Անուն"
         fields: "Դաշտեր"
         reject_reason: "Պատճառ"
+        scrubbed_reason: "Պատճառ"
+        scrub_record:
+          cancel_button: "Չեղարկել"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (վերջին բողոքի)"
@@ -3170,9 +3173,13 @@ hy:
       description: "Նկարագրույթուն"
       logo: "Կատեգորիայի Լոգոյի Նկարը"
       background_image: "Կատեգորիայի Ֆոնի Նկարը"
-      badge_colors: "Կրծքանշանի գույները"
-      background_color: "Ֆոնի գույնը"
-      foreground_color: "Առաջին պլանի գույնը"
+      background_color: "Գույն"
+      styles:
+        icon: "Պատկերակ"
+        emoji: "Էմոջի"
+        options:
+          icon: "Պատկերակ"
+          emoji: "Էմոջի"
       name_placeholder: "Առավելագույնը մեկ կամ երկու բառ"
       color_placeholder: "Ցանկացած վեբ-գույն"
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"

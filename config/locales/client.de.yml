@@ -612,6 +612,18 @@ de:
         name: "Name"
         fields: "Felder"
         reject_reason: "Grund"
+        scrubbed_by: "Datensatz gesäubert von"
+        scrubbed_reason: "Grund"
+        scrubbed_at: "Gesäubert bei"
+        scrubbed_reject_reason: "Grund für die Ablehnung des Benutzers"
+        scrub_record:
+          button: Datensatz säubern
+          confirm_title: Persönliche Daten entfernen
+          confirm_body: "Bist du SICHER, dass du diesen Eintrag aus der Warteschlange zur Überprüfung löschen möchtest? Alle persönlichen Informationen (z.B. Benutzername, E-Mail, IP-Adresse) werden dauerhaft aus diesem Datensatz entfernt."
+          reason_title: "Ein Grund für das Säubern dieses Datensatzes ist erforderlich."
+          reason_placeholder: "Grund..."
+          confirm_button: "Entfernen bestätigen"
+          cancel_button: "Abbrechen"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (der letzten Meldung)"
@@ -3837,15 +3849,23 @@ de:
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
+      untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
       logo: "Logo für Kategorie"
       logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200px. Wenn du nichts angibst, wird kein Bild angezeigt."
       background_image: "Hintergrundbild für Kategorie"
       background_image_dark: "Dunkles Kategorie-Hintergrundbild"
-      badge_colors: "Farben des Abzeichens"
-      background_color: "Hintergrundfarbe"
-      foreground_color: "Vordergrundfarbe"
+      style: "Stile"
+      background_color: "Farbe"
+      styles:
+        type: "Stil"
+        icon: "Symbol"
+        emoji: "Emoji"
+        options:
+          square: "Quadrat"
+          icon: "Symbol"
+          emoji: "Emoji"
       color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
       name_placeholder: "Ein oder maximal zwei Wörter"
@@ -7082,6 +7102,11 @@ de:
       site_settings:
         title: "Website-Einstellungen"
         description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
+        discard: "Änderungen verwerfen"
+        save: "Alle Änderungen speichern"
+        dirty_banner:
+          one: "Du hast <em>%{count}</em> nicht gespeicherte Änderung"
+          other: "Du hast <em>%{count}</em> nicht gespeicherte Änderungen"
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:

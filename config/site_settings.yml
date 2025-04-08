@@ -80,6 +80,7 @@ required:
     default: ""
     type: list
     list_type: simple
+    area: "analytics"
   company_name:
     default: ""
     area: "about|legal"
@@ -184,6 +185,7 @@ basic:
   categories_topics:
     default: 20
     validator: "CategoriesTopicsValidator"
+    area: "interface"
   suggested_topics:
     client: true
     default: 5
@@ -204,21 +206,26 @@ basic:
     choices:
       - v3_analytics
       - v4_gtag
+    area: "analytics"
   ga_universal_tracking_code:
     client: true
     default: ""
     regex: "^(UA|G)-[\\w-]+"
+    area: "analytics"
   ga_universal_domain_name:
     client: true
     default: "auto"
+    area: "analytics"
   ga_universal_auto_link_domains:
     default: ""
     type: list
     list_type: simple
+    area: "analytics"
   gtm_container_id:
     client: true
     default: ""
     regex: "^GTM-"
+    area: "analytics"
   top_menu:
     client: true
     refresh: true
@@ -319,6 +326,7 @@ basic:
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
+    area: "interface"
   max_category_nesting:
     client: true
     default: 2
@@ -367,9 +375,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
+    area: "interface"
   fixed_category_positions_on_create:
     client: true
     default: false
+    area: "interface"
   enable_badges:
     client: true
     default: true
@@ -439,6 +449,7 @@ basic:
     list_type: font
     area: "fonts"
     allow_any: false
+    client: true
   heading_font:
     default: "inter"
     choices: "BaseFontSetting.values"
@@ -447,10 +458,13 @@ basic:
     list_type: font
     area: "fonts"
     allow_any: false
+    client: true
   enable_sitemap:
     default: true
+    area: "analytics"
   sitemap_page_size:
     default: 10000
+    area: "analytics"
   enable_user_tips:
     client: true
     default: true
@@ -466,6 +480,7 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+    area: "interface"
   about_page_hidden_groups:
     default: ""
     type: group_list
@@ -473,6 +488,7 @@ basic:
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"
+    area: "analytics"
   extended_site_description:
     default: ""
     max: 10_000
@@ -500,6 +516,7 @@ basic:
     client: true
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
+    area: "interface"
 
 login:
   invite_only:
@@ -2518,12 +2535,12 @@ rate_limits:
     min: 0
     default: 10
   invite_link_max_redemptions_limit:
-    min: 2
+    min: 1
     max: 1000000
     default: 5000
     client: true
   invite_link_max_redemptions_limit_users:
-    min: 2
+    min: 1
     max: 1000000
     default: 10
     client: true
@@ -2854,9 +2871,13 @@ uncategorized:
   version_checks:
     client: true
     default: true
+    area: "site_admin"
   include_in_discourse_discover:
     default: false
-  new_version_emails: true
+    area: "site_admin"
+  new_version_emails:
+    default: true
+    area: "site_admin"
   send_welcome_message: true
 
   suppress_uncategorized_badge:
@@ -2963,6 +2984,7 @@ uncategorized:
   global_notice:
     default: ""
     client: true
+    area: "site_admin"
   has_login_hint:
     default: false
     hidden: true
@@ -2999,9 +3021,11 @@ uncategorized:
 
   use_site_small_logo_as_system_avatar:
     default: true
+    area: "site_admin"
 
   enable_listing_suspended_users_on_search:
     default: false
+    area: "site_admin"
 
   disable_system_edit_notifications:
     default: true
@@ -3068,6 +3092,7 @@ uncategorized:
     default: 50
     client: true
     max: 5000
+    area: "site_admin"
 
   bootstrap_mode_enabled:
     default: false
@@ -3090,9 +3115,13 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner_ios: false
+  native_app_install_banner_ios:
+    default: false
+    area: "site_admin"
 
-  native_app_install_banner_android: false
+  native_app_install_banner_android:
+    default: false
+    area: "site_admin"
 
   ios_app_id:
     default: "1173672076"
@@ -3109,16 +3138,21 @@ uncategorized:
   app_association_android:
     default: ""
     textarea: true
+    area: "site_admin"
 
   app_association_ios:
     default: ""
     textarea: true
+    area: "site_admin"
 
-  share_anonymized_statistics: true
+  share_anonymized_statistics:
+    default: true
+    area: "site_admin"
 
   enable_powered_by_discourse:
     default: true
     client: true
+    area: "site_admin"
 
   auto_handle_queued_age:
     default: 60
@@ -3138,6 +3172,7 @@ uncategorized:
     type: "list"
     list_type: "compact"
     client: true
+    area: "site_admin"
 
   always_include_topic_excerpts:
     default: false
@@ -3179,6 +3214,7 @@ uncategorized:
 
   splash_screen:
     default: true
+    area: "interface"
 
   suggest_weekends_in_date_pickers:
     client: true
@@ -3200,45 +3236,72 @@ user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
     default: 10080
-  default_include_tl0_in_digests: false
+    area: "user_defaults"
+  default_include_tl0_in_digests:
+    default: false
+    area: "user_defaults"
   default_email_level:
     enum: "EmailLevelSiteSetting"
     default: 1
+    area: "user_defaults"
   default_email_messages_level:
     enum: "EmailLevelSiteSetting"
     default: 0
-  default_email_mailing_list_mode: false
+    area: "user_defaults"
+  default_email_mailing_list_mode:
+    default: false
+    area: "user_defaults"
   default_email_mailing_list_mode_frequency:
     enum: "MailingListModeSiteSetting"
     default: 1
+    area: "user_defaults"
   disable_mailing_list_mode:
     default: true
     client: true
+    area: "user_defaults"
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
     default: 2
+    area: "user_defaults"
   default_email_in_reply_to:
     default: false
+    area: "user_defaults"
   default_hide_profile:
     default: false
+    area: "user_defaults"
   default_hide_presence:
     default: false
+    area: "user_defaults"
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
     default: 2880
+    area: "user_defaults"
   default_other_auto_track_topics_after_msecs:
     enum: "AutoTrackDurationSiteSetting"
     default: 300000
+    area: "user_defaults"
   default_other_notification_level_when_replying:
     enum: "NotificationLevelWhenReplyingSiteSetting"
     default: 2
     area: "notifications"
-  default_other_external_links_in_new_tab: false
-  default_other_enable_quoting: true
-  default_other_enable_defer: false
-  default_other_enable_smart_lists: true
-  default_other_dynamic_favicon: false
-  default_other_skip_new_user_tips: false
+  default_other_external_links_in_new_tab:
+    default: false
+    area: "user_defaults"
+  default_other_enable_quoting:
+    default: true
+    area: "user_defaults"
+  default_other_enable_defer:
+    default: false
+    area: "user_defaults"
+  default_other_enable_smart_lists:
+    default: true
+    area: "user_defaults"
+  default_other_dynamic_favicon:
+    default: false
+    area: "user_defaults"
+  default_other_skip_new_user_tips:
+    default: false
+    area: "user_defaults"
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -3247,47 +3310,55 @@ user_preferences:
   default_topics_automatic_unpin:
     default: true
     client: true
+    area: "user_defaults"
 
   default_categories_watching:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_tracking:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_muted:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_watching_first_post:
     type: category_list
     default: ""
+    area: "user_defaults"
   default_categories_normal:
     type: category_list
     default: ""
+    area: "user_defaults"
   mute_all_categories_by_default:
     default: false
     client: true
+    area: "user_defaults"
 
   default_tags_watching:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_tracking:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_muted:
     type: tag_list
     default: ""
+    area: "user_defaults"
   default_tags_watching_first_post:
     type: tag_list
     default: ""
+    area: "user_defaults"
 
   default_text_size:
     type: enum
     default: normal
-    choices:
-      - smaller
-      - normal
-      - larger
-      - largest
+    client: true
+    choices: "DefaultTextSizeSetting.values"
     area: "fonts"
 
   default_title_count_mode:
@@ -3296,9 +3367,11 @@ user_preferences:
     choices:
       - notifications
       - contextual
+    area: "user_defaults"
   enable_offline_indicator:
     default: false
     client: true
+    area: "user_defaults"
   default_sidebar_link_to_filtered_list:
     default: false
     area: "navigation"
@@ -3536,7 +3609,6 @@ experimental:
     refresh: true
     area: "group_permissions|navigation"
   experimental_admin_search_enabled_groups:
-    hidden: true
     client: true
     type: group_list
     list_type: compact
@@ -3545,14 +3617,6 @@ experimental:
     refresh: true
     area: "group_permissions"
   glimmer_topic_list_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: enabled
-  glimmer_post_menu_mode:
     client: true
     type: enum
     choices:
