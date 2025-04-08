@@ -300,7 +300,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "gear",
+        icon: "far-envelope",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -343,66 +343,37 @@ export const ADMIN_NAV_MAP = [
           {
             name: "admin_email_sent",
             route: "adminEmailLogs.sent",
-<<<<<<< HEAD
             label: "admin.config.email_logs.sub_pages.sent.title",
             description:
               "admin.config.email_logs.sub_pages.sent.header_description",
-=======
-            label: "admin.config.email.sub_pages.sent.title",
-            description: "admin.config.email.sub_pages.sent.header_description",
->>>>>>> 8c32d2c95e (DEV: Extract e-mail logs into their own admin page)
           },
           {
             name: "admin_email_skipped",
             route: "adminEmailLogs.skipped",
-<<<<<<< HEAD
             label: "admin.config.email_logs.sub_pages.skipped.title",
             description:
               "admin.config.email_logs.sub_pages.skipped.header_description",
-=======
-            label: "admin.config.email.sub_pages.skipped.title",
-            description:
-              "admin.config.email.sub_pages.skipped.header_description",
->>>>>>> 8c32d2c95e (DEV: Extract e-mail logs into their own admin page)
           },
           {
             name: "admin_email_bounced",
             route: "adminEmailLogs.bounced",
-<<<<<<< HEAD
             label: "admin.config.email_logs.sub_pages.bounced.title",
             description:
               "admin.config.email_logs.sub_pages.bounced.header_description",
-=======
-            label: "admin.config.email.sub_pages.bounced.title",
-            description:
-              "admin.config.email.sub_pages.bounced.header_description",
->>>>>>> 8c32d2c95e (DEV: Extract e-mail logs into their own admin page)
           },
           {
             name: "admin_email_received",
             route: "adminEmailLogs.received",
-<<<<<<< HEAD
             label: "admin.config.email_logs.sub_pages.received.title",
             description:
               "admin.config.email_logs.sub_pages.received.header_description",
-=======
-            label: "admin.config.email.sub_pages.received.title",
-            description:
-              "admin.config.email.sub_pages.received.header_description",
->>>>>>> 8c32d2c95e (DEV: Extract e-mail logs into their own admin page)
           },
           {
             name: "admin_email_rejected",
             route: "adminEmailLogs.rejected",
-<<<<<<< HEAD
             label: "admin.config.email_logs.sub_pages.rejected.title",
             description:
               "admin.config.email_logs.sub_pages.rejected.header_description",
-=======
-            label: "admin.config.email.sub_pages.rejected.title",
-            description:
-              "admin.config.email.sub_pages.rejected.header_description",
->>>>>>> 8c32d2c95e (DEV: Extract e-mail logs into their own admin page)
           },
         ],
       },
