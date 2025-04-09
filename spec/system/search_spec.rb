@@ -145,6 +145,8 @@ describe "Search", type: :system do
     end
 
     describe "with search field in header" do
+      fab!(:invite)
+
       before { SiteSetting.search_experience = "search_field" }
 
       it "displays the correct search mode" do
@@ -166,12 +168,16 @@ describe "Search", type: :system do
         expect(search_page).to have_no_search_icon
       end
 
-      it "does not display on login and signup pages" do
+      it "does not display on login, signup or invite pages" do
         visit("/login")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
 
         visit("/signup")
+        expect(search_page).to have_no_search_icon
+        expect(search_page).to have_no_search_field
+
+        visit("/invites/#{invite.invite_key}")
         expect(search_page).to have_no_search_icon
         expect(search_page).to have_no_search_field
       end
