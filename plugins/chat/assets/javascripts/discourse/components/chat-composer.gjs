@@ -30,6 +30,7 @@ import userAutocomplete from "discourse/lib/autocomplete/user";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
+import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -57,7 +58,6 @@ export default class ChatComposer extends Component {
   @service siteSettings;
   @service store;
   @service chat;
-  @service composerPresenceManager;
   @service chatComposerWarningsTracker;
   @service appEvents;
   @service emojiStore;
@@ -66,6 +66,8 @@ export default class ChatComposer extends Component {
   @service chatDraftsManager;
   @service modal;
   @service menu;
+
+  @optionalService composerPresenceManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -312,7 +314,7 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    this.composerPresenceManager.notifyState(
+    this.composerPresenceManager?.notifyState(
       this.presenceChannelName,
       !this.draft.editing && this.hasContent,
       CHAT_PRESENCE_KEEP_ALIVE
