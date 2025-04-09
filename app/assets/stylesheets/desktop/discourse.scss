@@ -344,9 +344,11 @@ body.grid-layout {
       }
     }
 
-    .sidebar-wrapper {
-      // get out of the way
-      height: 0;
+    @media screen and (width < 1300px) {
+      .sidebar-wrapper {
+        // get out of the way
+        height: 0;
+      }
     }
   }
 }

@@ -484,6 +484,10 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode {
+  body.grid-layout & {
+    display: flex;
+  }
+
   .bootstrap-mode {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
