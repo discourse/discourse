@@ -1,6 +1,9 @@
 import { InputRule } from "prosemirror-inputrules";
+import { StepMap } from "prosemirror-transform";
 
 export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
+
+export { buildBBCodeAttrs } from "discourse/lib/text";
 
 // https://discuss.prosemirror.net/t/input-rules-for-wrapping-marks/537
 export function markInputRule(regexp, markType, getAttrs) {
@@ -9,10 +12,6 @@ export function markInputRule(regexp, markType, getAttrs) {
     (state, match, start, end) => {
       const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       const tr = state.tr;
-
-      if (state.doc.rangeHasMark(start, end, markType)) {
-        return null;
-      }
 
       if (match[1]) {
         let textStart = start + match[0].indexOf(match[1]);
@@ -43,4 +42,47 @@ export function markInputRule(regexp, markType, getAttrs) {
     },
     { inCodeMark: false }
   );
+}
+
+export function getChangedRanges(tr) {
+  const { steps, mapping } = tr;
+  const changes = [];
+
+  mapping.maps.forEach((stepMap, index) => {
+    const ranges = [];
+
+    if (stepMap === StepMap.empty) {
+      if (steps[index].from === undefined || steps[index].to === undefined) {
+        return;
+      }
+
+      ranges.push(steps[index]);
+    } else {
+      stepMap.forEach((from, to) => ranges.push({ from, to }));
+    }
+
+    ranges.forEach(({ from, to }) => {
+      const change = { new: {}, old: {} };
+      change.new.from = mapping.slice(index).map(from, -1);
+      change.new.to = mapping.slice(index).map(to);
+      change.old.from = mapping.invert().map(change.new.from, -1);
+      change.old.to = mapping.invert().map(change.new.to);
+
+      changes.push(change);
+    });
+  });
+
+  return changes;
+}
+
+// from https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+export function atBlockStart(state, view) {
+  let { $cursor } = state.selection;
+  if (
+    !$cursor ||
+    (view ? !view.endOfTextblock("backward", state) : $cursor.parentOffset > 0)
+  ) {
+    return null;
+  }
+  return $cursor;
 }

@@ -1,12 +1,11 @@
 import RouteTemplate from "ember-route-template";
+import { eq, or } from "truth-helpers";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import ThemesList from "admin/components/themes-list";
-import eq from "truth-helpers/helpers/eq";
-import or from "truth-helpers/helpers/or";
 
 export default RouteTemplate(
   <template>

@@ -670,6 +670,18 @@ en:
         name: "Name"
         fields: "Fields"
         reject_reason: "Reason"
+        scrubbed_by: "Record scrubbed by"
+        scrubbed_reason: "Reason"
+        scrubbed_at: "Scrubbed at"
+        scrubbed_reject_reason: "User rejected reason"
+        scrub_record:
+          button: Scrub record
+          confirm_title: Remove personal data
+          confirm_body: "Are you SURE you want to scrub this review queue record? All personal information (e.g. username, email, IP address) will be permanently removed from this record."
+          reason_title: "A reason for scrubbing this record is required."
+          reason_placeholder: "Reason..."
+          confirm_button: "Confirm removal"
+          cancel_button: "Cancel"
 
       user_percentage:
         summary:
@@ -1604,6 +1616,8 @@ en:
         choose: "Choose a password"
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
+        remove: "Remove Password"
+        remove_detail: "This completely erases your password. Your account will no longer be accessible by using your password to log in unless you reset it."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -2504,9 +2518,9 @@ en:
         title: "Sign in with Google"
         sr_title: "Sign in with Google"
       twitter:
-        name: "Twitter"
-        title: "Sign in with Twitter"
-        sr_title: "Sign in with Twitter"
+        name: "X"
+        title: "Sign in with X"
+        sr_title: "Sign in with X"
       instagram:
         name: "Instagram"
         title: "Log in with Instagram"
@@ -4135,7 +4149,6 @@ en:
       background_image_dark: "Dark Category Background Image"
       style: "Styles"
       background_color: "Color"
-      foreground_color: "Foreground color"
       styles:
         type: "Style"
         icon: "Icon"
@@ -5230,9 +5243,6 @@ en:
           title: "Moderation"
           header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           keywords: "flag|review|spam|illegal"
-        font_style:
-          title: "Font style"
-          header_description: "Customize the font styles used by your themes"
         files:
           title: "Files"
           header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
@@ -5246,11 +5256,9 @@ en:
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-        logo:
-          title: "Site logo"
-          header_description: "Customize the variations of your site logo"
         branding:
           title: "Branding"
+          header_description: "Customize the variations of your site logo and fonts"
           logo:
             title: "Logo"
             form:
@@ -5315,6 +5323,27 @@ en:
                 title: "X summary large image"
                 description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
                 help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
+          fonts:
+            title: "Fonts"
+            form:
+              more_fonts: "More fonts"
+              less_fonts: "Less fonts"
+              saved: "Font settings are saved."
+              base_font:
+                title: "Base font"
+              heading_font:
+                title: "Heading font"
+              default_text_size:
+                title: "Default text size"
+                description: "This size can be subsequently adjusted by each user according to their preferences."
+            backfill_modal:
+              title: "Apply new default text settings?"
+              description:
+                one: "You’ve updated the default text size. Would you like to apply this change to %{count} existing user?"
+                other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
+              modal_yes: "Yes"
+              modal_no: "No, only apply going forward"
+
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
@@ -5335,7 +5364,7 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         search_everything:
           title: "Search"
-          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered. To open this search anywhere in the admin interface, press %{shortcutHTML}."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -5380,9 +5409,21 @@ en:
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
+        analytics:
+          title: "Analytics & SEO"
+          header_description: "Improve your site’s visibility to search engines and configure how you track site visitors"
+          keywords: "search|google|sitemap"
+        interface:
+          title: "Interface & layout"
+          header_description: "Customize details of your site’s general layout and user interface"
+          keywords: "splash"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
+        user_defaults:
+          title: "User defaults"
+          header_description: "Set default values for settings that impact your users, configuring their onboarding experience"
+          keywords: "users|onboarding|new"
         user_fields:
           title: "User fields"
           header_description: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
@@ -5406,14 +5447,21 @@ en:
           title: "Themes and components"
           header_description: "Personalize your Discourse site with themes and components to match your needs"
           keywords: "theme|component|extension|customize"
+        site_admin:
+          title: "Site admin"
+          header_description: "Configure various settings relating to the management of your site"
+          keywords: "discover|bootstrap|apps"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
         email:
-          title: "Server setup & logs"
-          header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
-          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          title: "Email settings"
+          header_description: "Configure settings for emails that are sent to your members"
+          keywords: "digest|unsubscribe|email|smtp|mailgun|sendgrid|preview summary"
           sub_pages:
+            server_settings:
+              title: "Server settings"
+              header_description: "Configure settings for emails that are sent to your members"
             preview_summary:
               title: "Preview summary"
               header_description: "Preview the content of the summary emails sent to inactive users"
@@ -5423,6 +5471,11 @@ en:
             templates:
               title: "Templates"
               header_description: "Customize the templates used to create emails"
+        email_logs:
+          title: "Email logs"
+          header_description: "View logs for emails sent from your site"
+          keywords: "sent|skipped|bounced|received|rejected|email logs"
+          sub_pages:
             sent:
               title: "Sent"
               header_description: "View a log of emails that have been sent"
@@ -6150,9 +6203,44 @@ en:
             back: "Back to themes"
           components:
             title: "Components"
+            description: "Customizations that change surface elements of your forum design, or add extra front-end features"
             components_intro: "Install a new component to get started, or create your own from scratch using these resources."
             new_component: "New component"
             back: "Back to components"
+            install: "Install"
+            name: "Name"
+            used_on: "Used on"
+            enabled: "Enabled?"
+            by_author: "By %{name}"
+            learn_more: "Learn more"
+            edit: "Edit"
+            parent_themes_two: "%{name1} and %{name2}"
+            parent_themes_three: "%{name1}, %{name2} and %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} and %{count} more"
+              other: "%{name1}, %{name2}, %{name3} and %{count} more"
+            add_to_theme: "Add to theme"
+            preview: "Preview"
+            update: "Update to latest"
+            check_update: "Check for updates"
+            update_available: "Update available!"
+            export: "Export"
+            convert: "Convert"
+            delete: "Delete"
+            filter_by: "Filter by"
+            filter_by_all: "All"
+            filter_by_active: "Active"
+            filter_by_inactive: "Inactive"
+            filter_by_updates_available: "Updates available"
+            search_components: "Type a component name"
+            new_update_for_component: "New update available for %{name}!"
+            component_up_to_date: '"%{name}" is up to date.'
+            updated_successfully: '"%{name}" has been updated successfully.'
+            delete_confirm: 'Are you sure you want to delete "%{name}"?'
+            deleted_successfully: '"%{name}" has been deleted successfully.'
+            no_components: "No components installed."
+            no_components_found: "No components match your filters."
+            badge_inactive: "Unused"
         user_fields:
           field: "Field"
           type: "Type"
@@ -7505,6 +7593,15 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        discard:
+          one: "Discard change"
+          other: "Discard changes"
+        save:
+          one: "Save change"
+          other: "Save all changes"
+        dirty_banner:
+          one: "You have <b>%{count}</b> unsaved change"
+          other: "You have <b>%{count}</b> unsaved changes"
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:

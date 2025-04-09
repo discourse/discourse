@@ -65,9 +65,11 @@ module SvgSprite
         circle-minus
         circle-plus
         circle-question
+        circle-user
         circle-xmark
         clock
         clock-rotate-left
+        cloud-arrow-down
         cloud-arrow-up
         code
         comment
@@ -213,6 +215,7 @@ module SvgSprite
         robot
         rocket
         rotate
+        screwdriver-wrench
         scroll
         share
         shield-halved

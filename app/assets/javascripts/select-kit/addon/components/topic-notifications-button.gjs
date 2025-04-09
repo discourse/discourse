@@ -122,6 +122,7 @@ export default class TopicNotificationsButton extends Component {
           @showFullTitle={{@expanded}}
           @showCaret={{@expanded}}
           @topic={{@topic}}
+          @contentClass={{@contentClass}}
         />
 
         {{#if @expanded}}

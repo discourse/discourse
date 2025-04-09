@@ -14,7 +14,9 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service router;
   @service sidebarState;
+  @service search;
 
   @tracked viewportWidth;
 
@@ -66,16 +68,17 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    if (
+      this.site.mobileView ||
+      this.router.currentURL?.match(/\/(signup|login)/)
+    ) {
       return false;
     }
 
-    const searchExperience = applyValueTransformer(
-      "site-setting-search-experience",
-      this.siteSettings.search_experience
+    return (
+      this.search.searchExperience === "search_field" &&
+      !this.args.topicInfoVisible
     );
-
-    return searchExperience === "search_field" && !this.args.topicInfoVisible;
   }
 
   <template>

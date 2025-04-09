@@ -601,6 +601,10 @@ RSpec.describe SiteSettingExtension do
       expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
 
+    it "does not create an entry in the staff action logs when new value is the same" do
+      expect { settings.set_and_log("title", "Discourse v1") }.not_to change { UserHistory.count }
+    end
+
     context "when a detailed message is provided" do
       let(:message) { "We really need to do this, see https://meta.discourse.org/t/123" }
 

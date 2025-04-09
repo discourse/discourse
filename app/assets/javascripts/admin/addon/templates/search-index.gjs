@@ -10,6 +10,7 @@ export default RouteTemplate(
       @titleLabel={{i18n "admin.config.search_everything.title"}}
       @descriptionLabel={{i18n
         "admin.config.search_everything.header_description"
+        shortcutHTML=@controller.shortcutHTML
       }}
       @shouldDisplay={{true}}
     >

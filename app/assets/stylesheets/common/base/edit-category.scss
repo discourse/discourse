@@ -115,6 +115,10 @@ div.edit-category {
     .edit-category-tab.active {
       display: contents;
     }
+
+    .form-kit__container-content {
+      flex-wrap: wrap;
+    }
   }
 
   #list-area & h2 {

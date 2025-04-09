@@ -11,6 +11,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   autoFilterable: "autoFilterable",
   clearable: false,
   headerComponent: "combo-box/combo-box-header",
+  shouldDisplayIcon: false,
 })
 export default class ComboBox extends SingleSelectComponent {
   @gte("content.length", 10) autoFilterable;

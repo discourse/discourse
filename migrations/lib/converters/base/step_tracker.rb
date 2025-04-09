@@ -36,12 +36,7 @@ module Migrations::Converters::Base
     private
 
     def log(type, message, exception: nil, details: nil)
-      ::Migrations::Database::IntermediateDB::LogEntry.create!(
-        type:,
-        message:,
-        exception:,
-        details:,
-      )
+      ::Migrations::Database::IntermediateDB::LogEntry.create(type:, message:, exception:, details:)
     end
   end
 end

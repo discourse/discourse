@@ -540,6 +540,10 @@ ja:
         name: "名前"
         fields: "フィールド"
         reject_reason: "理由"
+        scrubbed_reason: "理由"
+        scrub_record:
+          reason_placeholder: "理由..."
+          cancel_button: "キャンセル"
       user_percentage:
         summary:
           other: "%{agreed}、%{disagreed}、%{ignored} (最後の %{count} 件の通報の内)"
@@ -3583,9 +3587,13 @@ ja:
       logo_dark: "ダークモードのカテゴリロゴの画像"
       background_image: "カテゴリの背景画像"
       background_image_dark: "ダークのカテゴリ背景画像"
-      badge_colors: "バッジの色"
-      background_color: "背景色"
-      foreground_color: "前景色"
+      background_color: "色"
+      styles:
+        icon: "アイコン"
+        emoji: "絵文字"
+        options:
+          icon: "アイコン"
+          emoji: "絵文字"
       color_used: "使用中の色"
       predefined_colors: "既定の色オプション"
       name_placeholder: "簡単な名前にしてください"

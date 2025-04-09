@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import FutureDateInput from "discourse/components/future-date-input";
@@ -13,7 +14,6 @@ import I18n, { i18n } from "discourse-i18n";
 import AdminPenaltyPostAction from "admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "admin/components/admin-penalty-similar-users";
-import eq from "truth-helpers/helpers/eq";
 
 export default class PenalizeUser extends Component {
   @service dialog;

@@ -27,7 +27,6 @@ export default class EditCategoryGeneral extends Component {
   customizeTextContentLink = getURL(
     "/admin/customize/site_texts?q=uncategorized"
   );
-  foregroundColors = ["FFFFFF", "000000"];
 
   get styleTypes() {
     return Object.keys(CATEGORY_STYLE_TYPES).map((key) => ({
@@ -200,10 +199,10 @@ export default class EditCategoryGeneral extends Component {
         >
           <field.Custom>
             <CategoryChooser
-              @value={{@category.parent_category_id}}
+              @value={{@transientData.parent_category_id}}
               @allowSubCategories={{true}}
               @allowRestrictedCategories={{true}}
-              @onChange={{fn (mut @category.parent_category_id)}}
+              @onChange={{field.set}}
               @options={{hash
                 allowUncategorized=false
                 excludeCategoryId=@category.id
@@ -278,51 +277,24 @@ export default class EditCategoryGeneral extends Component {
           </@form.Field>
         {{/if}}
 
-        {{#unless (eq @transientData.style_type "emoji")}}
-          <@form.Field
-            @name="color"
-            @title={{i18n "category.background_color"}}
-            @format="full"
-            as |field|
-          >
-            <field.Custom>
-              <div class="category-color-editor">
-                <div class="colorpicker-wrapper edit-background-color">
-                  <ColorInput
-                    @hexValue={{readonly field.value}}
-                    @valid={{@category.colorValid}}
-                    @ariaLabelledby="background-color-label"
-                    @onChangeColor={{fn this.updateColor field}}
-                  />
-                  <ColorPicker
-                    @colors={{this.backgroundColors}}
-                    @usedColors={{this.usedBackgroundColors}}
-                    @value={{readonly field.value}}
-                    @ariaLabel={{i18n "category.predefined_colors"}}
-                    @onSelectColor={{fn this.updateColor field}}
-                  />
-                </div>
-              </div>
-            </field.Custom>
-          </@form.Field>
-        {{/unless}}
-
         <@form.Field
-          @name="text_color"
-          @title={{i18n "category.foreground_color"}}
+          @name="color"
+          @title={{i18n "category.background_color"}}
           @format="full"
           as |field|
         >
           <field.Custom>
             <div class="category-color-editor">
-              <div class="colorpicker-wrapper edit-text-color">
+              <div class="colorpicker-wrapper edit-background-color">
                 <ColorInput
                   @hexValue={{readonly field.value}}
-                  @ariaLabelledby="foreground-color-label"
+                  @valid={{@category.colorValid}}
+                  @ariaLabelledby="background-color-label"
                   @onChangeColor={{fn this.updateColor field}}
                 />
                 <ColorPicker
-                  @colors={{this.foregroundColors}}
+                  @colors={{this.backgroundColors}}
+                  @usedColors={{this.usedBackgroundColors}}
                   @value={{readonly field.value}}
                   @ariaLabel={{i18n "category.predefined_colors"}}
                   @onSelectColor={{fn this.updateColor field}}

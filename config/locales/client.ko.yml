@@ -487,6 +487,10 @@ ko:
         name: "이름"
         fields: "필드"
         reject_reason: "이유"
+        scrubbed_reason: "이유"
+        scrub_record:
+          reason_placeholder: "이유..."
+          cancel_button: "취소"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (최근 %{count}개의 신고 중)"
@@ -2989,9 +2993,13 @@ ko:
       description: "설명"
       logo: "카테고리 로고 이미지"
       background_image: "카테고리 백그라운드 이미지"
-      badge_colors: "배지 색상"
-      background_color: "배경 색상"
-      foreground_color: "전경 색상"
+      background_color: "색상"
+      styles:
+        icon: "아이콘"
+        emoji: "이모티콘"
+        options:
+          icon: "아이콘"
+          emoji: "이모티콘"
       name_placeholder: "최대 1~2자"
       color_placeholder: "모든 웹 색상"
       delete_confirm: "이 카테고리를 삭제할까요?"

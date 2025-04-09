@@ -1,7 +1,8 @@
 !/db/**/*.sql
 !/spec/support/fixtures/**/*.sql
 
-tmp/*
-private/
-Gemfile.lock
 /config/upload.yml
+/lib/converters/**/settings.local.yml
+
+# converters within this directory should be ignored
+/private/

@@ -406,17 +406,12 @@ RSpec.configure do |config|
               # Store timeout for later, we'll only raise it if the test otherwise passes
               RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
 
-              RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
-                .list
-                .reduce([]) do |array, thread|
-                  if thread.backtrace.any? { |line| line.include?("puma") }
-                    app_backtraces = thread.backtrace.filter { |line| !line.match?(%r{/gems/}) }
-                    array << app_backtraces if app_backtraces.any?
-                  end
-
-                  array
-                end
-                .uniq
+              if RSpec.current_example.metadata[:dump_threads_on_failure]
+                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                  .list
+                  .reduce([]) { |array, thread| array << thread.backtrace }
+                  .uniq
+              end
 
               raise # re-raise original error
             else

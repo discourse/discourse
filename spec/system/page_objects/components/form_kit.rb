@@ -41,7 +41,7 @@ module PageObjects
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
-          component.find("select").value
+          PageObjects::Components::DSelect.new(component.find("select")).value
         when "composer"
           component.find("textarea").value
         when "image"
@@ -122,12 +122,9 @@ module PageObjects
           picker.search(value)
           picker.select_row_by_value(value)
         when "select"
-          selector = component.find(".form-kit__control-select")
-          selector.find(".form-kit__control-option[value='#{value}']").select_option
-          selector.execute_script(<<~JS, selector)
-            var selector = arguments[0];
-            selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
-          JS
+          PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
+            value,
+          )
         when "menu"
           trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click

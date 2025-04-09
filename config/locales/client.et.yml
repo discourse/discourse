@@ -394,6 +394,9 @@ et:
         name: "Nimi"
         fields: "Väljad"
         reject_reason: "Põhjus"
+        scrubbed_reason: "Põhjus"
+        scrub_record:
+          cancel_button: "Tühista"
       topics:
         topic: "Teema"
         reviewable_count: "Arv"
@@ -2183,9 +2186,13 @@ et:
       description: "Kirjeldus"
       logo: "foorumi logo"
       background_image: "Foorumi taustapilt"
-      badge_colors: "Märgise värvid"
-      background_color: "Tausta värv"
-      foreground_color: "Esiplaani värv"
+      background_color: "Värv"
+      styles:
+        icon: "Ikoon"
+        emoji: "Emotikon"
+        options:
+          icon: "Ikoon"
+          emoji: "Emotikon"
       name_placeholder: "Maksimaalselt üks või kaks sõna"
       color_placeholder: "Mistahes veebi-sobiv värv"
       delete_confirm: "Oled kindel, et soovid seda foorumit kustutada?"

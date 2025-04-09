@@ -2,10 +2,11 @@
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "vendor/pikaday";
-@import "vendor/rotate-center";
 @import "common/whcm";
 @import "common/foundation/helpers";
 @import "common/foundation/base";
+@import "common/form-kit/_index";
+@import "common/float-kit/_index";
 @import "common/select-kit/_index";
 @import "common/components/_index";
 @import "common/modal/_index";
@@ -17,9 +18,7 @@
 @import "common/software-update-prompt";
 @import "common/topic-timeline";
 @import "common/loading-slider";
-@import "common/float-kit/_index";
 @import "common/rich-editor";
 @import "common/login/_index";
 @import "common/table-builder/_index";
 @import "common/post-action-feedback";
-@import "common/form-kit/_index";

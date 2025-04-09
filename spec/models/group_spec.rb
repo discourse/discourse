@@ -820,6 +820,32 @@ RSpec.describe Group do
       Group.visible_groups(user).where(id: group.id).exists?
     end
 
+    it "includes everyone group when option is present" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_everyone: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(true)
+    end
+
+    it "doesn't include everyones group by default" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_everyone: false)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(false)
+
+      expect(
+        Group.visible_groups(admin, [], nil).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+
+      expect(
+        Group.visible_groups(admin, [], {}).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+    end
+
     it "correctly restricts group visibility" do
       group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)

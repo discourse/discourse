@@ -449,6 +449,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
+          prioritizedUserId: this.replyingToUser?.id,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;
@@ -634,6 +635,8 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
+    // The ProsemirrorEditor component is loaded here, adding this comment because
+    // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled
       ? TextareaEditor
       : await loadRichEditor();
@@ -728,7 +731,13 @@ export default class DEditor extends Component {
   }
 
   <template>
-    <div class="d-editor-container">
+    <div
+      class="d-editor-container
+        {{if
+          this.siteSettings.rich_editor
+          'd-editor-container--rich-editor-enabled'
+        }}"
+    >
       <div class="d-editor-textarea-column">
         {{yield}}
 

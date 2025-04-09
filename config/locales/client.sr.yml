@@ -661,6 +661,9 @@ sr:
         name: "Ime foruma"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          cancel_button: "Odustani"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (od zadnjeg markiranja)"
@@ -2190,9 +2193,13 @@ sr:
       description: "Opis"
       logo: "Logo Kategorije "
       background_image: "Pozadinska Slika Kategorije"
-      badge_colors: "Boje značke"
-      background_color: "Pozadinska boja"
-      foreground_color: "Istaknuta boja."
+      background_color: "Boja"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Jedna ili dve reči maksimalno"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"

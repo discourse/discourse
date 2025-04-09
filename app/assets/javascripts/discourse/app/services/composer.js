@@ -195,6 +195,17 @@ export default class ComposerService extends Service {
     );
   }
 
+  get replyingToUser() {
+    if (this.get("model.editingPost")) {
+      const user = this.get("model.post.reply_to_user");
+      if (user) {
+        return user;
+      }
+    }
+
+    return this.get("model.post.user");
+  }
+
   get formTemplateInitialValues() {
     return this._formTemplateInitialValues;
   }

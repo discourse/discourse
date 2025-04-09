@@ -590,6 +590,13 @@ ro:
         name: "Nume"
         fields: "Câmpuri"
         reject_reason: "Motiv"
+        scrubbed_reason: "Motiv"
+        scrubbed_reject_reason: "Motiv respingere utilizator"
+        scrub_record:
+          confirm_title: Elimină datele personale
+          reason_placeholder: "Motiv..."
+          confirm_button: "Confirmă eliminarea"
+          cancel_button: "Anulează"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (a ultimei semnalări)"
@@ -2831,12 +2838,20 @@ ro:
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       name: "Numele categoriei"
+      untitled: "Categorie fără titlu"
       description: "Descriere"
       logo: " Logo pentru categorie"
       background_image: "Imaginea de fundal a categoriei"
-      badge_colors: "Culori de ecuson"
-      background_color: "Culoare de fundal"
-      foreground_color: "Culoare de prim-plan"
+      style: "Stiluri"
+      background_color: "Culoare"
+      styles:
+        type: "Stil"
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          square: "Pătrat"
+          icon: "Icon"
+          emoji: "Emoji"
       name_placeholder: "Unul sau două cuvinte maximum"
       color_placeholder: "Orice culoare web"
       delete_confirm: "Sigur dorești să ștergi această categorie?"
@@ -4845,6 +4860,12 @@ ro:
       site_settings:
         title: "Setări site"
         description: "Configurează setările pentru site-ul tău Discourse pentru a personaliza aspectul, funcționalitatea și experiența utilizatorului."
+        discard: "Renunță la modificări"
+        save: "Salvează toate modificările"
+        dirty_banner:
+          one: "Ai <em>o</em> modificare nesalvată"
+          few: "Ai <em>%{count}</em> modificări nesalvate"
+          other: "Ai <em>%{count}</em> de modificări nesalvate"
         nav_title: "Setări"
         no_results: "Nu s-au găsit rezultate."
         clear_filter: "Șterge"

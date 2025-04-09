@@ -303,6 +303,8 @@
     .participant-group-wrapper {
       display: flex;
       margin-left: 0.5em;
+      flex-wrap: wrap;
+      gap: 0.5em;
 
       .participant-group {
         padding: 0 5px;

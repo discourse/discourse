@@ -137,6 +137,16 @@ export const ADMIN_NAV_MAP = [
         settings_area: "localization",
       },
       {
+        name: "admin_analytics",
+        route: "adminAnalytics",
+        label: "admin.config.analytics.title",
+        description: "admin.config.analytics.header_description",
+        icon: "chart-pie",
+        settings_area: "analytics",
+        keywords: "admin.config.analytics.keywords",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_permalinks",
         route: "adminPermalinks",
         label: "admin.config.permalinks.title",
@@ -144,6 +154,16 @@ export const ADMIN_NAV_MAP = [
         icon: "link",
         settings_area: "permalinks",
         multi_tabbed: true,
+      },
+      {
+        name: "admin_user_defaults",
+        route: "adminConfig.userDefaults.settings",
+        label: "admin.config.user_defaults.title",
+        description: "admin.config.user_defaults.header_description",
+        keywords: "admin.config.user_defaults.keywords",
+        icon: "circle-user",
+        settings_area: "user_defaults",
+        multi_tabbed: false,
       },
       {
         name: "admin_trust_levels",
@@ -177,6 +197,16 @@ export const ADMIN_NAV_MAP = [
         moderator: true,
       },
       {
+        name: "admin_site_admin",
+        route: "adminConfig.siteAdmin",
+        label: "admin.config.site_admin.title",
+        description: "admin.config.site_admin.header_description",
+        keywords: "admin.config.site_admin.keywords",
+        icon: "screwdriver-wrench",
+        settings_area: "site_admin",
+        multi_tabbed: false,
+      },
+      {
         name: "admin_legal",
         route: "adminConfig.legal.settings",
         label: "admin.config.legal.title",
@@ -200,18 +230,10 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.appearance.title",
     links: [
       {
-        name: "admin_font_style",
-        route: "adminConfig.fonts.settings",
-        label: "admin.config.font_style.title",
-        description: "admin.config.font_style.header_description",
-        icon: "italic",
-        settings_area: "fonts",
-      },
-      {
-        name: "admin_site_logo",
-        route: "adminConfig.logo.settings",
-        label: "admin.config.logo.title",
-        description: "admin.config.logo.header_description",
+        name: "admin_branding",
+        route: "adminConfig.branding",
+        label: "admin.config.branding.title",
+        description: "admin.config.branding.header_description",
         icon: "fab-discourse",
         settings_category: "branding",
       },
@@ -221,6 +243,16 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.color_palettes.title",
         description: "admin.config.color_palettes.header_description",
         icon: "palette",
+      },
+      {
+        name: "admin_interface",
+        route: "adminConfig.interface",
+        label: "admin.config.interface.title",
+        description: "admin.config.interface.header_description",
+        keywords: "admin.config.interface.keywords",
+        icon: "discourse-table",
+        settings_area: "interface",
+        multi_tabbed: false,
       },
       {
         name: "admin_emoji",
@@ -268,7 +300,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "gear",
+        icon: "far-envelope",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -291,40 +323,6 @@ export const ADMIN_NAV_MAP = [
             description:
               "admin.config.email.sub_pages.templates.header_description",
           },
-          {
-            name: "admin_email_sent",
-            route: "adminEmail.sent",
-            label: "admin.config.email.sub_pages.sent.title",
-            description: "admin.config.email.sub_pages.sent.header_description",
-          },
-          {
-            name: "admin_email_skipped",
-            route: "adminEmail.skipped",
-            label: "admin.config.email.sub_pages.skipped.title",
-            description:
-              "admin.config.email.sub_pages.skipped.header_description",
-          },
-          {
-            name: "admin_email_bounced",
-            route: "adminEmail.bounced",
-            label: "admin.config.email.sub_pages.bounced.title",
-            description:
-              "admin.config.email.sub_pages.bounced.header_description",
-          },
-          {
-            name: "admin_email_received",
-            route: "adminEmail.received",
-            label: "admin.config.email.sub_pages.received.title",
-            description:
-              "admin.config.email.sub_pages.received.header_description",
-          },
-          {
-            name: "admin_email_rejected",
-            route: "adminEmail.rejected",
-            label: "admin.config.email.sub_pages.rejected.title",
-            description:
-              "admin.config.email.sub_pages.rejected.header_description",
-          },
         ],
       },
       {
@@ -333,6 +331,51 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email_appearance.title",
         description: "admin.config.email_appearance.header_description",
         icon: "envelope",
+      },
+      {
+        name: "admin_email_logs",
+        route: "adminEmailLogs",
+        label: "admin.config.email_logs.title",
+        description: "admin.config.email_logs.header_description",
+        keywords: "admin.config.email_logs.keywords",
+        icon: "square-envelope",
+        links: [
+          {
+            name: "admin_email_sent",
+            route: "adminEmailLogs.sent",
+            label: "admin.config.email_logs.sub_pages.sent.title",
+            description:
+              "admin.config.email_logs.sub_pages.sent.header_description",
+          },
+          {
+            name: "admin_email_skipped",
+            route: "adminEmailLogs.skipped",
+            label: "admin.config.email_logs.sub_pages.skipped.title",
+            description:
+              "admin.config.email_logs.sub_pages.skipped.header_description",
+          },
+          {
+            name: "admin_email_bounced",
+            route: "adminEmailLogs.bounced",
+            label: "admin.config.email_logs.sub_pages.bounced.title",
+            description:
+              "admin.config.email_logs.sub_pages.bounced.header_description",
+          },
+          {
+            name: "admin_email_received",
+            route: "adminEmailLogs.received",
+            label: "admin.config.email_logs.sub_pages.received.title",
+            description:
+              "admin.config.email_logs.sub_pages.received.header_description",
+          },
+          {
+            name: "admin_email_rejected",
+            route: "adminEmailLogs.rejected",
+            label: "admin.config.email_logs.sub_pages.rejected.title",
+            description:
+              "admin.config.email_logs.sub_pages.rejected.header_description",
+          },
+        ],
       },
     ],
   },

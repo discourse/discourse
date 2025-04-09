@@ -87,40 +87,7 @@ export const TOPIC_VISIBILITY_REASONS = {
   unknown: 99,
 };
 
-export const SYSTEM_FLAG_IDS = {
-  like: 2,
-  notify_user: 6,
-  off_topic: 3,
-  inappropriate: 4,
-  spam: 8,
-  illegal: 10,
-  notify_moderators: 7,
-};
-
-export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = {
-  simple: "simple",
-  user_option: "user_option",
-};
-
 export const MAX_UNOPTIMIZED_CATEGORIES = 1000;
-
-export const USER_FIELD_FLAGS = [
-  "editable",
-  "show_on_profile",
-  "show_on_user_card",
-  "searchable",
-];
-
-export const REPORT_MODES = {
-  table: "table",
-  chart: "chart",
-  stacked_chart: "stacked_chart",
-  stacked_line_chart: "stacked_line_chart",
-  radar: "radar",
-  counters: "counters",
-  inline_table: "inline_table",
-  storage_stats: "storage_stats",
-};
 
 export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "unknown";
 

@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | d-icon", function (hooks) {
@@ -9,7 +9,7 @@ module("Integration | Helper | d-icon", function (hooks) {
   test("default", async function (assert) {
     await render(
       <template>
-        <div class="test">{{dIcon "bars"}}</div>
+        <div class="test">{{icon "bars"}}</div>
       </template>
     );
 
@@ -23,7 +23,7 @@ module("Integration | Helper | d-icon", function (hooks) {
   test("with replacement", async function (assert) {
     await render(
       <template>
-        <div class="test">{{dIcon "d-watching"}}</div>
+        <div class="test">{{icon "d-watching"}}</div>
       </template>
     );
 
