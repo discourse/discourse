@@ -636,6 +636,7 @@
     }
 
     .ace-wrapper {
+      position: relative;
       min-height: unset;
       flex: 1 1 0;
     }
@@ -714,10 +715,6 @@
     }
 
     .ace-wrapper {
-      position: relative;
-      height: calc(100vh - 450px);
-      min-height: 200px;
-      width: 100%;
     }
 
     .ace_editor {
