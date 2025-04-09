@@ -16,6 +16,7 @@ class SiteSetting < ActiveRecord::Base
     navigation
     notifications
     permalinks
+    reports
     user_defaults
     site_admin
     trust_levels

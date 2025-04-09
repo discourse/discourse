@@ -3627,6 +3627,7 @@ dashboard:
     list_type: compact
     default: ""
     allow_any: true
+    area: "reports"
   dashboard_visible_tabs:
     client: true
     type: list
@@ -3638,6 +3639,7 @@ dashboard:
       - security
       - reports
       - features
+    area: "reports"
   dashboard_general_tab_activity_metrics:
     client: true
     type: list
@@ -3652,6 +3654,7 @@ dashboard:
       - flags
       - user_to_user_private_messages_with_replies
       - signups
+    area: "reports"
   verbose_user_stat_count_logging:
     hidden: true
     default: false
