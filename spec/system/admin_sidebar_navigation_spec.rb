@@ -117,6 +117,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       [
         I18n.t("admin_js.admin.config.email.title"),
         I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.email_logs.title"),
         I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )

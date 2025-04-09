@@ -182,14 +182,8 @@ Discourse::Application.routes.draw do
 
       resources :email, only: [:index], constraints: AdminConstraint.new do
         collection do
+          get "server-settings" => "email#server_settings"
           post "test"
-          get "sent"
-          get "skipped"
-          get "bounced"
-          get "received"
-          get "rejected"
-          get "/incoming/:id" => "email#incoming"
-          get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
           post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
@@ -203,6 +197,18 @@ Discourse::Application.routes.draw do
                    id: /[0-9a-z_.]+/,
                  }
           put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
+        end
+      end
+
+      resources :email_logs, only: :index, constraints: AdminConstraint.new, path: "/email-logs" do
+        collection do
+          get "sent"
+          get "skipped"
+          get "bounced"
+          get "received"
+          get "rejected"
+          get "incoming/:id" => "email_logs#incoming"
+          get "incoming_from_bounced/:id" => "email_logs#incoming_from_bounced"
         end
       end
 
@@ -396,6 +402,7 @@ Discourse::Application.routes.draw do
         get "analytics-and-seo" => "site_settings#index"
         get "developer" => "site_settings#index"
         get "files" => "site_settings#index"
+        get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
@@ -406,8 +413,10 @@ Discourse::Application.routes.draw do
         get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
+        get "site-admin" => "site_settings#index"
         get "spam" => "site_settings#index"
         get "user-api" => "site_settings#index"
+        get "user-defaults" => "site_settings#index"
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
@@ -930,6 +939,11 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/card.json" => "users#show_card",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
           :format => :json,
           :constraints => {
             username: RouteFormat.username,

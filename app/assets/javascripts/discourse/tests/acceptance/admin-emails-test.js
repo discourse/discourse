@@ -36,7 +36,7 @@ acceptance("Admin - Emails", function (needs) {
   });
 
   test("displays received errors when testing emails", async function (assert) {
-    pretender.get("/admin/email.json", () => {
+    pretender.get("/admin/email/server-settings.json", () => {
       return response({});
     });
 
@@ -44,7 +44,7 @@ acceptance("Admin - Emails", function (needs) {
       return response(422, { errors: ["some error"] });
     });
 
-    await visit("/admin/email");
+    await visit("/admin/email/server-settings");
     await fillIn(".admin-controls input", "test@example.com");
     await click(".btn-primary");
 
