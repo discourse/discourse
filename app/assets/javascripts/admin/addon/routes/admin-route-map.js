@@ -130,6 +130,7 @@ export default function () {
         "adminApiKeys",
         { path: "/keys", resetNamespace: true },
         function () {
+          this.route("settings");
           this.route("show", { path: "/:api_key_id" });
           this.route("new");
         }
@@ -358,9 +359,6 @@ export default function () {
           this.route("settings", { path: "/" });
         });
         this.route("spam", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("user-api", function () {
           this.route("settings", { path: "/" });
         });
 

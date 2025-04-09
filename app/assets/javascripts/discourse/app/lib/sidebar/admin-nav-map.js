@@ -501,14 +501,6 @@ export const ADMIN_NAV_MAP = [
         settings_category: "rate_limits",
       },
       {
-        name: "admin_user_api",
-        route: "adminConfig.user-api.settings",
-        label: "admin.config.user_api.title",
-        description: "admin.config.user_api.header_description",
-        icon: "shuffle",
-        settings_category: "user_api",
-      },
-      {
         name: "admin_onebox",
         route: "adminConfig.onebox.settings",
         label: "admin.config.onebox.title",
