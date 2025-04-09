@@ -86,7 +86,7 @@ RSpec.describe PushNotificationPusher do
 
       expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
       expect(pn_sent_event[:params].first).to eq(user)
-      expect(pn_sent_event[:params].second[:url]).to eq(post_url)
+      expect(pn_sent_event[:params].second[:url]).to eq("/t/1/2")
     end
 
     it "triggers a DiscourseEvent with base_path stripped from the url when present" do
