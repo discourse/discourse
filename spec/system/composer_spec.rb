@@ -17,7 +17,7 @@ describe "Composer", type: :system do
     page.has_css?("#user-card")
   end
 
-  context "in a topic the autocomplete prioritizes" do
+  context "in a topic, the autocomplete prioritizes" do
     fab!(:topic_user) { Fabricate(:user) }
     fab!(:second_reply_user) { Fabricate(:user) }
 
