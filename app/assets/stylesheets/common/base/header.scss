@@ -13,7 +13,7 @@
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
-  .wrap {
+  > .wrap {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -265,13 +265,17 @@
 
 .header-sidebar-toggle {
   button {
-    margin-right: 0.5em;
+    margin-right: 1em;
     box-sizing: content-box; // matches other header icons
     display: flex;
     justify-content: center;
     width: 2.2857em;
     height: 2.2857em;
     padding: 0.2143em;
+
+    .grid-layout & {
+      margin-right: 0.5em;
+    }
 
     &:focus,
     .discourse-no-touch & {

@@ -22,7 +22,9 @@ export default class Contents extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.destroyListener();
+    if (this.siteSettings.grid_layout) {
+      this.destroyListener();
+    }
   }
 
   @action
@@ -32,6 +34,10 @@ export default class Contents extends Component {
 
   @action
   setupListener() {
+    if (!this.siteSettings.grid_layout) {
+      return;
+    }
+
     this.viewportWidth = window.innerWidth;
 
     this.resizeHandler = () => {
@@ -43,7 +49,7 @@ export default class Contents extends Component {
 
   @action
   destroyListener() {
-    window.removeEventListener("resize", this.resizeHandler);
+    window.removeEventListener("rssize", this.resizeHandler);
   }
 
   get sidebarIcon() {
@@ -55,10 +61,11 @@ export default class Contents extends Component {
   }
 
   get minimized() {
+    const minimizeForGrid =
+      this.siteSettings.grid_layout && this.viewportWidth <= 1600;
+
     const shouldMinimize =
-      this.args.topicInfoVisible &&
-      !this.args.showSidebar &&
-      this.viewportWidth <= 1600;
+      this.args.topicInfoVisible && !this.args.showSidebar && minimizeForGrid;
 
     return applyValueTransformer("home-logo-minimized", shouldMinimize, {
       topicInfo: this.args.topicInfo,

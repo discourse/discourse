@@ -3,8 +3,7 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 :root {
-  --d-max-width: 100vw;
-  --column-count: 24;
+  --d-max-width: 1110px;
 }
 
 // Base Elements
@@ -188,6 +187,7 @@ body.has-sidebar-page:not(.grid-layout) {
 }
 
 body.grid-layout {
+  --d-max-width: 100vw;
   --grid-columns: 24;
   --grid-max-width: calc(var(--d-max-width) / var(--grid-columns));
   --column-gap: 1;

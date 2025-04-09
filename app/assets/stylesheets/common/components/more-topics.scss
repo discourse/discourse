@@ -2,7 +2,10 @@
   position: relative;
   padding-bottom: max(env(safe-area-inset-bottom), 1em);
   max-width: calc(var(--d-max-width) * 0.87);
-  margin-top: 2em;
+
+  body.grid-layout & {
+    margin-top: 2em;
+  }
 
   .nav {
     margin-block: 0;
@@ -70,5 +73,12 @@
     margin-right: 0;
     line-height: 0.8;
     max-width: 150px;
+  }
+
+  body:not(.grid-layout) & {
+    .more-topics__list-title,
+    .more-topics__browse-more {
+      padding-left: 0.5em;
+    }
   }
 }
