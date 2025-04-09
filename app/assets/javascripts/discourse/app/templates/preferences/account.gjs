@@ -2,8 +2,10 @@ import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
+import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SaveControls from "discourse/components/save-controls";
 import TextField from "discourse/components/text-field";
@@ -148,7 +150,7 @@ export default RouteTemplate(
             "user.associated_accounts.title"
           }}</label>
         {{#if @controller.associatedAccountsLoaded}}
-          <table>
+          <table class="associated-accounts">
             <tbody>
               {{#each @controller.authProviders as |authProvider|}}
                 {{#if authProvider.account}}
@@ -156,9 +158,16 @@ export default RouteTemplate(
                     class="{{dasherize authProvider.method.name}}
                       account-connected"
                   >
-                    <td>{{authProvider.method.prettyName}}</td>
-                    <td>{{authProvider.account.description}}</td>
-                    <td>
+                    <td class="associated-account__icon">
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
+                      {{else}}
+                        {{icon (or authProvider.method.icon "user")}}
+                      {{/if}}
+                    </td>
+                    <td class="associated-account__name">{{authProvider.method.prettyName}}</td>
+                    <td class="associated-account__description">{{authProvider.account.description}}</td>
+                    <td class="associated-account__actions">
                       {{#if authProvider.method.can_revoke}}
                         <DButton
                           @action={{fn
@@ -178,8 +187,16 @@ export default RouteTemplate(
                   </tr>
                 {{else}}
                   <tr class={{dasherize authProvider.method.name}}>
-                    <td>{{authProvider.method.prettyName}}</td>
-                    <td colspan="2">
+                    <td class="associated-account__icon {{dasherize authProvider.method.name}}">
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
+                      {{else}}
+                        {{icon (or authProvider.method.icon "user")}}
+                      {{/if}}
+                    </td>
+                    <td class="associated-account__name">{{authProvider.method.prettyName}}</td>
+                    <td></td>
+                    <td class="associated-account__actions">
                       {{#if authProvider.method.can_connect}}
                         <DButton
                           @action={{fn
@@ -189,7 +206,7 @@ export default RouteTemplate(
                           @label="user.associated_accounts.connect"
                           @icon="plug"
                           @disabled={{@controller.disableConnectButtons}}
-                          class="btn-default"
+                          class="btn-primary"
                         />
                       {{else}}
                         {{i18n "user.associated_accounts.not_connected"}}

@@ -63,6 +63,17 @@ export default class AccountController extends Controller {
     ).canCheckEmails;
   }
 
+  associatedAccountIcon(icon, name) {
+    if (icon) {
+      return icon;
+    }
+    if (name === "discourse") {
+      return "discourse";
+    }
+
+    return "user";
+  }
+
   @discourseComputed()
   nameInstructions() {
     return i18n(
