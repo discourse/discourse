@@ -208,7 +208,6 @@ export default class ComposerService extends Service {
       return user.id;
     }
 
-    // it is replying to a topic, so return the topic owner
     return this.get("model.topic.user_id");
   }
 
