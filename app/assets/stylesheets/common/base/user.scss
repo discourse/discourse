@@ -692,12 +692,13 @@
 
   .pref-associated-accounts table {
     width: 100%;
+
     td {
       padding: 8px;
 
       &.associated-account__icon {
         font-size: 1.5em;
-        padding-right: 0em;
+        padding-right: 0;
         text-align: center;
 
         &.discord .d-icon {
@@ -713,6 +714,7 @@
     .associated-account__name {
       font-size: var(--font-up-1);
     }
+
     .associated-account__description {
       word-break: break-all;
       color: var(--primary-medium);
