@@ -84,6 +84,25 @@ describe "Changing email", type: :system do
     end
   end
 
+  it "does not require login to confirm email change" do
+    second_factor = Fabricate(:user_second_factor_totp, user: user)
+    sign_in user
+
+    confirm_link = generate_confirm_link
+
+    Capybara.reset_sessions! # log out
+
+    visit confirm_link
+
+    find(".confirm-new-email .btn-primary").click
+    find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
+    find("button[type=submit]:not([disabled])").click
+
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
+  end
+
   it "makes admins verify old email" do
     user.update!(admin: true)
     sign_in user
