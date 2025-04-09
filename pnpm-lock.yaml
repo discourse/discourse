@@ -559,8 +559,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0
       ember-test-selectors:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       float-kit:
         specifier: workspace:1.0.0
         version: link:../float-kit
@@ -4479,8 +4479,8 @@ packages:
     engines: {node: 12.* || 14.* || >= 16.*}
     hasBin: true
 
-  ember-test-selectors@7.0.0:
-    resolution: {integrity: sha512-gGJzzBw6CsBB9gfk9/4qw0+iOSvhlqvUe4jIZKDf4waMkgVLtnPdFUWMocfFvUnJS7IitwKB/iTgIctD4RgH7w==}
+  ember-test-selectors@7.1.0:
+    resolution: {integrity: sha512-mIgjzv5PE+z64p1+o8eYkLHqkJY1g4BD93vgfE+ZTAvarIsJxGO8WmmZ7xCkmCM0xB4Idf0duR7IhLRsTg/81w==}
     engines: {node: 18.* || 20.* || >= 22.*}
 
   ember-this-fallback@0.4.0:
@@ -8011,6 +8011,9 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  strip-test-selectors@0.1.0:
+    resolution: {integrity: sha512-wkVYph30L7wYkMf5EypfTqhY4qZwmQ0hpFOTksaXne49YbUr2jenJl5w5yj9IWx3ojtoH9BGAQ7cShnYEzbs5g==}
 
   style-loader@2.0.0:
     resolution: {integrity: sha512-Z0gYUJmzZ6ZdRUqpg1r8GsaFKypE+3xAzuFeMuoHgjc9KZv3wMyCRjQIWEbhoFSq7+7yoHXySDJyyWQaPajeiQ==}
@@ -13369,11 +13372,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-test-selectors@7.0.0:
+  ember-test-selectors@7.1.0:
     dependencies:
       calculate-cache-key-for-tree: 2.0.0
       ember-cli-babel: 7.26.11
       ember-cli-version-checker: 5.1.2
+      strip-test-selectors: 0.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -17489,6 +17493,8 @@ snapshots:
   strip-final-newline@3.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  strip-test-selectors@0.1.0: {}
 
   style-loader@2.0.0(webpack@5.99.5(@swc/core@1.11.18)(esbuild@0.25.2)):
     dependencies:
