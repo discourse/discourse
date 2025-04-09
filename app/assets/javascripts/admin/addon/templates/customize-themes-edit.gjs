@@ -37,6 +37,7 @@ export default RouteTemplate(
           @fieldAdded={{@controller.fieldAdded}}
           @maximized={{@controller.maximized}}
           @save={{@controller.save}}
+          @class="editor-container"
         />
 
         <div class="admin-footer">
