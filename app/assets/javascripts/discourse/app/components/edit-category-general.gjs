@@ -199,10 +199,10 @@ export default class EditCategoryGeneral extends Component {
         >
           <field.Custom>
             <CategoryChooser
-              @value={{@category.parent_category_id}}
+              @value={{@transientData.parent_category_id}}
               @allowSubCategories={{true}}
               @allowRestrictedCategories={{true}}
-              @onChange={{fn (mut @category.parent_category_id)}}
+              @onChange={{field.set}}
               @options={{hash
                 allowUncategorized=false
                 excludeCategoryId=@category.id

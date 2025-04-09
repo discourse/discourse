@@ -1,0 +1,39 @@
+.admin-config.components {
+  .admin-config-components {
+    &__filters {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__status-filter {
+      display: flex;
+      white-space: nowrap;
+      align-items: center;
+      gap: 1em;
+    }
+
+    &__parent-themes-list {
+      @include breakpoint("tablet") {
+        text-align: right;
+        max-width: 60%;
+      }
+    }
+
+    &__update-available {
+      font-size: var(--font-down-1);
+      font-weight: bold;
+      margin: var(--space-1) 0 var(--space-1) 0;
+    }
+  }
+}
+
+.d-admin-table.component-list {
+  .has-update {
+    background-color: var(--tertiary-very-low);
+    border-left: solid 3px var(--tertiary);
+  }
+
+  .d-admin-row__overview-about .d-icon {
+    font-size: var(--font-down-3);
+  }
+}

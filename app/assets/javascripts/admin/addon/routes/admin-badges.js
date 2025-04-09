@@ -12,6 +12,10 @@ export default class AdminBadgesRoute extends DiscourseRoute {
 
   _json = null;
 
+  titleToken() {
+    return i18n("admin.config.badges.title");
+  }
+
   async model() {
     let json = await ajax("/admin/badges.json");
     this._json = json;
