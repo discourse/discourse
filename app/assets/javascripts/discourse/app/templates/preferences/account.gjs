@@ -155,8 +155,7 @@ export default RouteTemplate(
               {{#each @controller.authProviders as |authProvider|}}
                 {{#if authProvider.account}}
                   <tr
-                    class="{{dasherize authProvider.method.name}}
-                      account-connected"
+                    class="{{dasherize authProvider.method.name}} account-connected"
                   >
                     <td class="associated-account__icon">
                       {{#if authProvider.method.isGoogle}}
@@ -165,8 +164,14 @@ export default RouteTemplate(
                         {{icon (or authProvider.method.icon "user")}}
                       {{/if}}
                     </td>
-                    <td class="associated-account__name">{{authProvider.method.prettyName}}</td>
-                    <td class="associated-account__description">{{authProvider.account.description}}</td>
+                    <td>
+                      <div class="associated-account__name">
+                        {{authProvider.method.prettyName}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
                     <td class="associated-account__actions">
                       {{#if authProvider.method.can_revoke}}
                         <DButton
@@ -194,8 +199,14 @@ export default RouteTemplate(
                         {{icon (or authProvider.method.icon "user")}}
                       {{/if}}
                     </td>
-                    <td class="associated-account__name">{{authProvider.method.prettyName}}</td>
-                    <td></td>
+                    <td>
+                      <div class="associated-account__name">
+                        {{authProvider.method.prettyName}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
                     <td class="associated-account__actions">
                       {{#if authProvider.method.can_connect}}
                         <DButton

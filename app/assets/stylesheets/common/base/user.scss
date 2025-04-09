@@ -696,16 +696,9 @@
       padding: 8px;
 
       &.associated-account__icon {
-        padding-right: 0;
         font-size: 1.5em;
-
-        &.twitter .d-icon {
-          color: var(--twitter);
-        }
-
-        &.github .d-icon {
-          color: var(--github);
-        }
+        padding-right: 0em;
+        text-align: center;
 
         &.discord .d-icon {
           color: var(--discord);
@@ -715,6 +708,14 @@
       &.associated-account__actions {
         text-align: right;
       }
+    }
+
+    .associated-account__name {
+      font-size: var(--font-up-1);
+    }
+    .associated-account__description {
+      word-break: break-all;
+      color: var(--primary-medium);
     }
   }
 
