@@ -441,6 +441,39 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("hr")
     end
+
+    it "supports Backspace to reset a heading" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("# With text")
+
+      expect(rich).to have_css("h1", text: "With text")
+
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("p", text: "With text")
+    end
+
+    it "supports Backspace to reset a code_block" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("```code block")
+      composer.send_keys(:home)
+      composer.send_keys(%i[backspace])
+
+      expect(rich).to have_css("p", text: "code block")
+    end
+
+    it "doesn't add a new list item when backspacing from below a list" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("1. Item 1\nItem 2")
+      composer.send_keys(:down)
+      composer.type_content("Item 3")
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("ol li", text: "Item 1")
+      expect(rich).to have_css("ol li", text: "Item 2Item 3")
+    end
   end
 
   describe "pasting content" do
