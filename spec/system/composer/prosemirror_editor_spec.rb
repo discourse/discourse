@@ -191,17 +191,20 @@ describe "Composer - ProseMirror editor", type: :system do
         HTML
       end
 
-      stub_request(:head, "https://example.com").to_return(status: 200)
-      stub_request(:get, "https://example.com").to_return(status: 200, body: body("Example Site 1"))
+      stub_request(:head, %r{https://example\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example\.com.*}).to_return(
+        status: 200,
+        body: body("Example Site 1"),
+      )
 
-      stub_request(:head, "https://example2.com").to_return(status: 200)
-      stub_request(:get, "https://example2.com").to_return(
+      stub_request(:head, %r{https://example2\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example2\.com.*}).to_return(
         status: 200,
         body: body("Example Site 2"),
       )
 
-      stub_request(:head, "https://example3.com").to_return(status: 200)
-      stub_request(:get, "https://example3.com").to_return(
+      stub_request(:head, %r{https://example3\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example3\.com.*}).to_return(
         status: 200,
         body: body("Example Site 3"),
       )
@@ -211,19 +214,19 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
-      cdp.write_clipboard("https://example.com")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       composer.type_content(" ").type_content("in the middle of text")
 
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
       )
 
       composer.toggle_rich_editor
 
       expect(composer).to have_value(
-        "Check out this link https://example.com in the middle of text",
+        "Check out this link https://example.com/x in the middle of text",
       )
     end
 
@@ -232,7 +235,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      page.send_keys(:enter, :enter)
+      page.send_keys(:enter)
 
       expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
       expect(rich).to have_content("Example Site 1")
@@ -247,7 +250,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
-      cdp.write_clipboard("https://example.com")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       composer.type_content(" ").type_content("more text")
 
@@ -256,7 +259,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Some text https://example.com more text")
+      expect(composer).to have_value("Some text https://example.com/x more text")
     end
 
     it "does not create oneboxes inside code blocks" do
@@ -282,27 +285,27 @@ describe "Composer - ProseMirror editor", type: :system do
       markdown = <<~MARKDOWN
         https://example.com
 
-        Check this https://example.com and see if it fits you
+        Check this https://example.com/x and see if it fits you
 
         https://example2.com
 
-        An inline to https://example2.com with text around it
+        An inline to https://example2.com/x with text around it
 
         https://example3.com
 
-        Another one for https://example3.com then
+        Another one for https://example3.com/x then
 
         https://example.com
 
-        Phew, repeating https://example.com now
+        Phew, repeating https://example.com/x now
 
         https://example2.com
 
-        And some text again https://example2.com
+        And some text again https://example2.com/x
 
-        https://example3.com
+        https://example3.com/x
 
-        Ok, that is it https://example3.com
+        Ok, that is it https://example3.com/x
         After a hard break
       MARKDOWN
       cdp.write_clipboard(markdown)
@@ -310,15 +313,15 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a.inline-onebox", count: 6)
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
       )
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example2.com']",
+        "a.inline-onebox[href='https://example2.com/x']",
         text: "Example Site 2",
       )
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example3.com']",
+        "a.inline-onebox[href='https://example3.com/x']",
         text: "Example Site 3",
       )
 
@@ -336,21 +339,21 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Hey ")
-      cdp.write_clipboard("https://example.com")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       composer.type_content(" ").type_content("and").type_content(" ")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       composer.type_content("\n")
 
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
         count: 2,
       )
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Hey https://example.com and https://example.com")
+      expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
     end
   end
 
@@ -607,6 +610,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       # before the code mark
       composer.send_keys(:home)
+      composer.send_keys(:left)
       composer.type_content("..")
 
       # within the code mark
