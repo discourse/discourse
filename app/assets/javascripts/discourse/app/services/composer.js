@@ -195,15 +195,21 @@ export default class ComposerService extends Service {
     );
   }
 
-  get replyingToUser() {
+  get replyingToUserId() {
     if (this.get("model.editingPost")) {
       const user = this.get("model.post.reply_to_user");
       if (user) {
-        return user;
+        return user.id;
       }
     }
 
-    return this.get("model.post.user");
+    const user = this.get("model.post.user");
+    if (user) {
+      return user.id;
+    }
+
+    // it is replying to a topic, so return the topic owner
+    return this.get("model.topic.user_id");
   }
 
   get formTemplateInitialValues() {
