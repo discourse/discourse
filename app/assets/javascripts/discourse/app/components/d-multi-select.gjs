@@ -5,6 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { htmlSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
@@ -18,16 +19,13 @@ import DMenu from "float-kit/components/d-menu";
 
 class Skeleton extends Component {
   get width() {
-    return Math.floor(Math.random() * 70) + 20;
+    return htmlSafe(`width: ${Math.floor(Math.random() * 70) + 20}%`);
   }
 
   <template>
     <div class="d-multi-select__skeleton">
       <div class="d-multi-select__skeleton-checkbox" />
-      <div
-        class="d-multi-select__skeleton-text"
-        style="width: {{this.width}}%"
-      />
+      <div class="d-multi-select__skeleton-text" style={{this.width}} />
     </div>
   </template>
 }
@@ -183,7 +181,7 @@ export default class DMultiSelect extends Component {
 
         <DButton
           @icon="angle-down"
-          @class="d-multi-select-trigger__expand-btn btn-transparent"
+          class="d-multi-select-trigger__expand-btn btn-transparent"
           @action={{@componentArgs.show}}
         />
       </:trigger>
@@ -223,7 +221,8 @@ export default class DMultiSelect extends Component {
               </div>
             </:loading>
             <:content as |results|>
-              {{(this.resultsChanged results)}}
+              {{this.resultsChanged results}}
+
               <div class="d-multi-select__search-results">
                 {{#each results as |result|}}
                   <menu.item
