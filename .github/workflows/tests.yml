@@ -30,7 +30,9 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
-    container: discourse/discourse_test:release
+    container:
+      image: discourse/discourse_test:release
+      options: -m 2000m
     timeout-minutes: 20
 
     env:
@@ -69,6 +71,8 @@ jobs:
           - build_type: frontend
             target: core
             browser: Firefox ESR
+          - build_type: production-build
+            target: core
 
     steps:
       - name: Set working directory owner
@@ -295,6 +299,12 @@ jobs:
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
         timeout-minutes: 30
+
+      - name: Test production build
+        if: matrix.build_type == 'production-build'
+        env: 
+          CHEAP_SOURCE_MAPS: 0 # We want real sourcemaps here
+        run: ./script/check_reproducible_assets.rb
 
       - name: Check for failed system test screenshots
         id: check-failed-system-test-screenshots
