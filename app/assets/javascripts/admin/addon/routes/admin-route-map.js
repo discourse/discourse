@@ -162,6 +162,7 @@ export default function () {
       function () {
         this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
+        this.route("dashboardSettings", { path: "dashboard-settings" });
       }
     );
 

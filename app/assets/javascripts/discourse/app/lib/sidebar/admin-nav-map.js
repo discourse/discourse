@@ -84,11 +84,21 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_all_reports",
-        route: "adminReports.index",
+        route: "adminReports",
         label: "admin.config.reports.title",
         description: "admin.config.reports.header_description",
         icon: "chart-bar",
         moderator: true,
+        links: [
+          {
+            name: "admin_reports_settings",
+            route: "adminReports.dashboardSettings",
+            label: "settings",
+            description: "admin.config.reports.header_description",
+            icon: "gear",
+            settings_area: "reports",
+          },
+        ],
       },
     ],
   },
