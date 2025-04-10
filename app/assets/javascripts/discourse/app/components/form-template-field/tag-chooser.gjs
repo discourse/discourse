@@ -52,7 +52,9 @@ export default class TagChooserField extends Component {
 
       if (selectedTag.length > 1) {
         this.dialog.alert(
-          i18n("admin.form_templates.errors.multiple_tags_not_allowed", {tag_name: this.args.tagGroup})
+          i18n("admin.form_templates.errors.multiple_tags_not_allowed", {
+            tag_name: this.args.tagGroup,
+          })
         );
         this.previousTags = this.currentTags;
 
