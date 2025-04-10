@@ -1,7 +1,18 @@
+import TrackedMediaQuery from "discourse/lib/tracked-media-query";
+
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 const ua = navigator.userAgent;
+
+// Values match those in viewport.scss
+const breakpointQueries = {
+  sm: new TrackedMediaQuery("(min-width: 40rem)"),
+  md: new TrackedMediaQuery("(min-width: 48rem)"),
+  lg: new TrackedMediaQuery("(min-width: 64rem)"),
+  xl: new TrackedMediaQuery("(min-width: 80rem)"),
+  "2xl": new TrackedMediaQuery("(min-width: 96rem)"),
+};
 
 class Capabilities {
   touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
@@ -36,6 +47,24 @@ class Capabilities {
   wasLaunchedFromDiscourseHub =
     window.location.search.includes("discourse_app=1");
   isAppWebview = window.ReactNativeWebView !== undefined;
+
+  viewport = {
+    get sm() {
+      return breakpointQueries.sm.matches;
+    },
+    get md() {
+      return breakpointQueries.md.matches;
+    },
+    get lg() {
+      return breakpointQueries.lg.matches;
+    },
+    get xl() {
+      return breakpointQueries.xl.matches;
+    },
+    get "2xl"() {
+      return breakpointQueries["2xl"].matches;
+    },
+  };
 
   get userHasBeenActive() {
     return (
