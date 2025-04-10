@@ -93,6 +93,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
+        I18n.t("admin_js.admin.config.content.title"),
         I18n.t("admin_js.admin.config.user_fields.title"),
         I18n.t("admin_js.admin.config.flags.title"),
         I18n.t("admin_js.admin.config.email.title"),
@@ -117,6 +118,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       [
         I18n.t("admin_js.admin.config.email.title"),
         I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.email_logs.title"),
         I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
@@ -191,6 +193,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
+        I18n.t("admin_js.admin.config.content.title"),
         I18n.t("admin_js.admin.config.user_fields.title"),
         I18n.t("admin_js.admin.config.flags.title"),
         I18n.t("admin_js.admin.config.email.title"),

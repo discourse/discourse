@@ -758,7 +758,7 @@ class UsersController < ApplicationController
 
     # just assign a password if we have an authenticator and no password
     # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? &&
+    user.password = SecureRandom.hex if user.password_required? && user.password.blank? &&
       (authentication.has_authenticator? || associations.present?)
 
     if user.save
@@ -856,6 +856,23 @@ class UsersController < ApplicationController
                  security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
+  end
+
+  def remove_password
+    RateLimiter.new(nil, "remove-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "remove-password-min-#{request.remote_ip}", 3, 1.hour).performed!
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    RateLimiter.new(nil, "remove-password-hr-#{user.username}", 6, 1.hour).performed!
+
+    raise Discourse::NotFound if !user || !user.user_password
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
+    raise Discourse::InvalidAccess if !secure_session_confirmed?
+
+    user.remove_password
+
+    render json: success_json
   end
 
   def password_reset_update
@@ -1675,7 +1692,15 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
+    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+
+    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
+      if !current_user.has_password? && current_user.associated_accounts.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
+
+    security_key&.destroy!
 
     render json: success_json
   end
@@ -1797,6 +1822,12 @@ class UsersController < ApplicationController
     # revoke permissions even if the admin has temporarily disabled that type of login
     authenticator = Discourse.authenticators.find { |a| a.name == provider_name }
     raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
+
+    if user.associated_accounts&.length == 1
+      if !user.has_password? && user.passkey_credential_ids.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
 
     skip_remote = params.permit(:skip_remote)
 

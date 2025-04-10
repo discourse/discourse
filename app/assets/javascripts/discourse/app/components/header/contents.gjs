@@ -44,7 +44,7 @@ export default class Contents extends Component {
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      this.router.currentURL?.match(/\/(signup|login)/)
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
     ) {
       return false;
     }

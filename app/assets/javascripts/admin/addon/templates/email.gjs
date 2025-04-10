@@ -19,7 +19,11 @@ export default RouteTemplate(
         />
       </:breadcrumbs>
       <:tabs>
-        <NavItem @route="adminEmail.index" @label="settings" />
+        <NavItem @route="adminEmail.settings" @label="settings" />
+        <NavItem
+          @route="adminEmail.serverSettings"
+          @label="admin.config.email.sub_pages.server_settings.title"
+        />
         <NavItem
           @route="adminEmail.previewDigest"
           @label="admin.config.email.sub_pages.preview_summary.title"
@@ -31,26 +35,6 @@ export default RouteTemplate(
         <NavItem
           @route="adminEmailTemplates"
           @label="admin.config.email.sub_pages.templates.title"
-        />
-        <NavItem
-          @route="adminEmail.sent"
-          @label="admin.config.email.sub_pages.sent.title"
-        />
-        <NavItem
-          @route="adminEmail.skipped"
-          @label="admin.config.email.sub_pages.skipped.title"
-        />
-        <NavItem
-          @route="adminEmail.bounced"
-          @label="admin.config.email.sub_pages.bounced.title"
-        />
-        <NavItem
-          @route="adminEmail.received"
-          @label="admin.config.email.sub_pages.received.title"
-        />
-        <NavItem
-          @route="adminEmail.rejected"
-          @label="admin.config.email.sub_pages.rejected.title"
         />
       </:tabs>
     </DPageHeader>

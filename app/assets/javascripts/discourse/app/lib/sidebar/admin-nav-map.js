@@ -84,11 +84,21 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_all_reports",
-        route: "adminReports.index",
+        route: "adminReports",
         label: "admin.config.reports.title",
         description: "admin.config.reports.header_description",
         icon: "chart-bar",
         moderator: true,
+        links: [
+          {
+            name: "admin_reports_settings",
+            route: "adminReports.dashboardSettings",
+            label: "settings",
+            description: "admin.config.reports.header_description",
+            icon: "gear",
+            settings_area: "reports",
+          },
+        ],
       },
     ],
   },
@@ -103,6 +113,16 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.about.header_description",
         icon: "gear",
         settings_area: "about",
+      },
+      {
+        name: "admin_content",
+        route: "adminConfig.content",
+        label: "admin.config.content.title",
+        description: "admin.config.content.header_description",
+        keywords: "admin.config.content.keywords",
+        icon: "pencil",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
       },
       {
         name: "admin_badges",
@@ -300,7 +320,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "gear",
+        icon: "far-envelope",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -323,40 +343,6 @@ export const ADMIN_NAV_MAP = [
             description:
               "admin.config.email.sub_pages.templates.header_description",
           },
-          {
-            name: "admin_email_sent",
-            route: "adminEmail.sent",
-            label: "admin.config.email.sub_pages.sent.title",
-            description: "admin.config.email.sub_pages.sent.header_description",
-          },
-          {
-            name: "admin_email_skipped",
-            route: "adminEmail.skipped",
-            label: "admin.config.email.sub_pages.skipped.title",
-            description:
-              "admin.config.email.sub_pages.skipped.header_description",
-          },
-          {
-            name: "admin_email_bounced",
-            route: "adminEmail.bounced",
-            label: "admin.config.email.sub_pages.bounced.title",
-            description:
-              "admin.config.email.sub_pages.bounced.header_description",
-          },
-          {
-            name: "admin_email_received",
-            route: "adminEmail.received",
-            label: "admin.config.email.sub_pages.received.title",
-            description:
-              "admin.config.email.sub_pages.received.header_description",
-          },
-          {
-            name: "admin_email_rejected",
-            route: "adminEmail.rejected",
-            label: "admin.config.email.sub_pages.rejected.title",
-            description:
-              "admin.config.email.sub_pages.rejected.header_description",
-          },
         ],
       },
       {
@@ -365,6 +351,51 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email_appearance.title",
         description: "admin.config.email_appearance.header_description",
         icon: "envelope",
+      },
+      {
+        name: "admin_email_logs",
+        route: "adminEmailLogs",
+        label: "admin.config.email_logs.title",
+        description: "admin.config.email_logs.header_description",
+        keywords: "admin.config.email_logs.keywords",
+        icon: "square-envelope",
+        links: [
+          {
+            name: "admin_email_sent",
+            route: "adminEmailLogs.sent",
+            label: "admin.config.email_logs.sub_pages.sent.title",
+            description:
+              "admin.config.email_logs.sub_pages.sent.header_description",
+          },
+          {
+            name: "admin_email_skipped",
+            route: "adminEmailLogs.skipped",
+            label: "admin.config.email_logs.sub_pages.skipped.title",
+            description:
+              "admin.config.email_logs.sub_pages.skipped.header_description",
+          },
+          {
+            name: "admin_email_bounced",
+            route: "adminEmailLogs.bounced",
+            label: "admin.config.email_logs.sub_pages.bounced.title",
+            description:
+              "admin.config.email_logs.sub_pages.bounced.header_description",
+          },
+          {
+            name: "admin_email_received",
+            route: "adminEmailLogs.received",
+            label: "admin.config.email_logs.sub_pages.received.title",
+            description:
+              "admin.config.email_logs.sub_pages.received.header_description",
+          },
+          {
+            name: "admin_email_rejected",
+            route: "adminEmailLogs.rejected",
+            label: "admin.config.email_logs.sub_pages.rejected.title",
+            description:
+              "admin.config.email_logs.sub_pages.rejected.header_description",
+          },
+        ],
       },
     ],
   },
@@ -488,14 +519,6 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.rate_limits.header_description",
         icon: "rocket",
         settings_category: "rate_limits",
-      },
-      {
-        name: "admin_user_api",
-        route: "adminConfig.user-api.settings",
-        label: "admin.config.user_api.title",
-        description: "admin.config.user_api.header_description",
-        icon: "shuffle",
-        settings_category: "user_api",
       },
       {
         name: "admin_onebox",
