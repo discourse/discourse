@@ -3035,8 +3035,7 @@ RSpec.describe Search do
   end
 
   describe "bot search" do
-    fab!(:bot) { Fabricate(:user, id: User.minimum(:id) - 1) }
-
+    fab!(:bot)
     fab!(:bot_topic) { Fabricate(:topic, title: "this is a topic by a bot") }
     fab!(:bot_post) do
       Fabricate(:post, user: bot, topic: bot_topic, raw: "this is a regular post by a bot")
