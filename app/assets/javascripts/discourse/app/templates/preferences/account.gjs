@@ -155,7 +155,8 @@ export default RouteTemplate(
               {{#each @controller.authProviders as |authProvider|}}
                 {{#if authProvider.account}}
                   <tr
-                    class="{{dasherize authProvider.method.name}} account-connected"
+                    class="{{dasherize authProvider.method.name}}
+                      account-connected"
                   >
                     <td class="associated-account__icon">
                       {{#if authProvider.method.isGoogle}}
@@ -192,7 +193,10 @@ export default RouteTemplate(
                   </tr>
                 {{else}}
                   <tr class={{dasherize authProvider.method.name}}>
-                    <td class="associated-account__icon {{dasherize authProvider.method.name}}">
+                    <td
+                      class="associated-account__icon
+                        {{dasherize authProvider.method.name}}"
+                    >
                       {{#if authProvider.method.isGoogle}}
                         <GoogleIcon />
                       {{else}}
