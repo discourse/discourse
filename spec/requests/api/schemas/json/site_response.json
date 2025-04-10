@@ -377,6 +377,9 @@
             },
             "auto_action_type": {
               "type": "boolean"
+            },
+            "system": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -435,6 +438,9 @@
               "type": "integer"
             },
             "auto_action_type": {
+              "type": "boolean"
+            },
+            "system": {
               "type": "boolean"
             }
           },

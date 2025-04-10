@@ -28,14 +28,23 @@ export default function () {
     );
 
     this.route(
-      "adminEmail",
-      { path: "/email", resetNamespace: true },
+      "adminEmailLogs",
+      { path: "/email-logs", resetNamespace: true },
       function () {
-        this.route("sent");
+        this.route("sent", { path: "/" });
         this.route("skipped");
         this.route("bounced");
         this.route("received");
         this.route("rejected");
+      }
+    );
+
+    this.route(
+      "adminEmail",
+      { path: "/email", resetNamespace: true },
+      function () {
+        this.route("settings", { path: "/" });
+        this.route("serverSettings", { path: "/server-settings" });
         this.route("previewDigest", { path: "/preview-digest" });
         this.route("advancedTest", { path: "/advanced-test" });
         this.route(

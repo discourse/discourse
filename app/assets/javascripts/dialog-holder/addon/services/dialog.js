@@ -157,11 +157,12 @@ export default class DialogService extends Service {
 
   @bind
   didConfirmWrapped() {
-    if (this.didConfirm) {
-      this.didConfirm();
-    }
+    let didConfirm = this.didConfirm;
     this._confirming = true;
     this.reset();
+    if (didConfirm) {
+      didConfirm();
+    }
   }
 
   @bind

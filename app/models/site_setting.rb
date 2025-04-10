@@ -4,6 +4,7 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    email
     embedding
     emojis
     flags

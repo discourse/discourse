@@ -182,14 +182,8 @@ Discourse::Application.routes.draw do
 
       resources :email, only: [:index], constraints: AdminConstraint.new do
         collection do
+          get "server-settings" => "email#server_settings"
           post "test"
-          get "sent"
-          get "skipped"
-          get "bounced"
-          get "received"
-          get "rejected"
-          get "/incoming/:id" => "email#incoming"
-          get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
           post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
@@ -203,6 +197,18 @@ Discourse::Application.routes.draw do
                    id: /[0-9a-z_.]+/,
                  }
           put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
+        end
+      end
+
+      resources :email_logs, only: :index, constraints: AdminConstraint.new, path: "/email-logs" do
+        collection do
+          get "sent"
+          get "skipped"
+          get "bounced"
+          get "received"
+          get "rejected"
+          get "incoming/:id" => "email_logs#incoming"
+          get "incoming_from_bounced/:id" => "email_logs#incoming_from_bounced"
         end
       end
 
@@ -933,6 +939,11 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/card.json" => "users#show_card",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
           :format => :json,
           :constraints => {
             username: RouteFormat.username,
