@@ -115,6 +115,16 @@ export const ADMIN_NAV_MAP = [
         settings_area: "about",
       },
       {
+        name: "admin_content",
+        route: "adminConfig.content",
+        label: "admin.config.content.title",
+        description: "admin.config.content.header_description",
+        keywords: "admin.config.content.keywords",
+        icon: "pencil",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
+      },
+      {
         name: "admin_badges",
         route: "adminBadges",
         label: "admin.config.badges.title",

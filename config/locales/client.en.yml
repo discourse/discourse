@@ -5420,6 +5420,19 @@ en:
           title: "Interface & layout"
           header_description: "Customize details of your site’s general layout and user interface"
           keywords: "splash"
+        content:
+          title: "Content"
+          header_description: "Configure how your topics and posts are managed, and customize the content creation experience for your members"
+          keywords: "topics|posts|categories|tags"
+          sub_pages:
+            categories_and_tags:
+              title: "Categories & tags"
+            sharing:
+              title: "Sharing"
+            posts_and_topics:
+              title: "Posts & topics"
+            stats_and_thresholds:
+              title: "Stats & thresholds"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
