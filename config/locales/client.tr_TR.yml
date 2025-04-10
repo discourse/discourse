@@ -2303,10 +2303,6 @@ tr_TR:
         name: "Google"
         title: "Google ile oturum açın"
         sr_title: "Google ile oturum açın"
-      twitter:
-        name: "Twitter"
-        title: "Twitter ile oturum açın"
-        sr_title: "Twitter ile oturum açın"
       instagram:
         name: "Instagram"
         title: "Instagram ile Giriş Yapın"
@@ -4825,9 +4821,6 @@ tr_TR:
         flags:
           title: "Moderasyon"
           header_description: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
-        font_style:
-          title: "Yazı tipi stili"
-          header_description: "Temalarınız tarafından kullanılan yazı tipi stillerini özelleştirin"
         files:
           title: "Dosyalar"
           header_description: "Dosya boyutu ve türü limitlerini, avatar boyutlarını ve kaynaklarını, dosya depolamayı, görüntü kalitesini ve sıkıştırmayı ve daha fazlasını kontrol eden ayarlar"
@@ -4837,9 +4830,6 @@ tr_TR:
         login_and_authentication:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
-        logo:
-          title: "Site logosu"
-          header_description: "Site logonuzun varyasyonlarını özelleştirin"
         branding:
           title: "Markalaşma"
           logo:
@@ -4852,6 +4842,13 @@ tr_TR:
                 description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
               opengraph_image:
                 description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+          fonts:
+            title: "Yazı Tipleri"
+            form:
+              heading_font:
+                title: "Başlık yazı tipi"
+            backfill_modal:
+              modal_yes: "Evet"
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -4931,9 +4928,6 @@ tr_TR:
         site_texts:
           title: "Site metinleri"
         email:
-          title: "Sunucu kurulumu ve günlükleri"
-          header_description: "E-posta oluşturmak için kullanılan şablonları özelleştirin, gönderilecek özet e-postaları ön izleyin ve e-posta günlüklerini görüntüleyin"
-          keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
           sub_pages:
             preview_summary:
               title: "Özeti ön izle"
@@ -4942,6 +4936,8 @@ tr_TR:
               title: "Gelişmiş test"
             templates:
               title: "Şablonlar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Gönderilen"
             skipped:

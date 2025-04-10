@@ -1598,8 +1598,6 @@ lv:
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2875,6 +2873,9 @@ lv:
             form:
               mobile: "Mobilais"
               email: "E-pasts"
+          fonts:
+            backfill_modal:
+              modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -2916,6 +2917,8 @@ lv:
               header_description: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem"
             templates:
               title: "Veidnes"
+        email_logs:
+          sub_pages:
             sent:
               title: "Nosūtne"
             skipped:

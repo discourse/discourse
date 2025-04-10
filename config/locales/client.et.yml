@@ -1363,8 +1363,6 @@ et:
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2725,6 +2723,9 @@ et:
             form:
               mobile: "Mobiil"
               email: "Meiliaadress"
+          fonts:
+            backfill_modal:
+              modal_yes: "Jah"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -2768,6 +2769,8 @@ et:
               header_description: "Passiivsetele kasutajatele meilitud saadetiste sisu eelvaatlus"
             templates:
               title: "Mallid"
+        email_logs:
+          sub_pages:
             sent:
               title: "Saadetud"
             skipped:

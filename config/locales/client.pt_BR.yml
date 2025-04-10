@@ -2315,10 +2315,6 @@ pt_BR:
         name: "Google"
         title: "Conectar com o Google"
         sr_title: "Conectar com o Google"
-      twitter:
-        name: "Twitter"
-        title: "Conectar com o Twitter"
-        sr_title: "Conectar com o Twitter"
       instagram:
         name: "Instagram"
         title: "Entrar com o Instagram"
@@ -4855,9 +4851,6 @@ pt_BR:
           title: "Moderação"
           header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           keywords: "denunciar|revisar|spam|ilegal"
-        font_style:
-          title: "Estilo de fonte"
-          header_description: "Personalize os estilos de fonte usados pelos seus temas"
         files:
           title: "Arquivos"
           header_description: "Configurações para controlar limites de tipo e tamanho de arquivo, origens e tamanhos de avatar, armazenamento de arquivo, compactação e qualidade de imagem etc."
@@ -4871,9 +4864,6 @@ pt_BR:
         login_and_authentication:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
-        logo:
-          title: "Logotipo do site"
-          header_description: "Personalize as variações do logotipo do seu site"
         branding:
           title: "Identidade visual"
           logo:
@@ -4928,6 +4918,13 @@ pt_BR:
                 description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
               x_summary_large_image:
                 help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+          fonts:
+            title: "Fontes"
+            form:
+              heading_font:
+                title: "Fonte do cabeçalho"
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4948,7 +4945,6 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -5018,9 +5014,6 @@ pt_BR:
           title: "Textos do site"
           header_description: "Personalize qualquer texto usado no Discourse para corresponder à voz e ao tom da sua comunidade"
         email:
-          title: "Registros e configurações do servidor"
-          header_description: "Personalize os modelos usados para criar e-mails, pré-visualize e-mails de resumo que serão enviados e visualize logs de e-mail"
-          keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
           sub_pages:
             preview_summary:
               title: "Pré-visualizar resumo"
@@ -5031,6 +5024,8 @@ pt_BR:
             templates:
               title: "Modelos"
               header_description: "Personalizar os modelos usados para criar e-mails"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado(a)"
               header_description: "Ver um log de e-mails que foram enviados"

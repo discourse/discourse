@@ -2303,10 +2303,6 @@ fr:
         name: "Google"
         title: "Se connecter avec Google"
         sr_title: "Se connecter avec Google"
-      twitter:
-        name: "Twitter"
-        title: "Se connecter avec Twitter"
-        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
         title: "Se connecter avec Instagram"
@@ -4825,9 +4821,6 @@ fr:
         flags:
           title: "Modération"
           header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
-        font_style:
-          title: "Style de police"
-          header_description: "Personnalisez les styles de police utilisés par vos thèmes"
         files:
           title: "Fichiers"
           header_description: "Paramètres qui contrôlent les limites de taille et de type de fichier, les tailles et les sources des avatars, le stockage des fichiers, la qualité et la compression des images, etc."
@@ -4837,9 +4830,6 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo:
-          title: "Logo du site"
-          header_description: "Personnalisez les variantes du logo de votre site"
         branding:
           title: "Branding"
           logo:
@@ -4852,6 +4842,13 @@ fr:
                 description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
               opengraph_image:
                 description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+          fonts:
+            title: "Polices"
+            form:
+              heading_font:
+                title: "Police de titre"
+            backfill_modal:
+              modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -4932,9 +4929,6 @@ fr:
         site_texts:
           title: "Textes du site"
         email:
-          title: "Configuration du serveur et journaux"
-          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
-          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
           sub_pages:
             preview_summary:
               title: "Prévisualiser le résumé"
@@ -4943,6 +4937,8 @@ fr:
               title: "Test avancé"
             templates:
               title: "Modèles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Envoyés"
             skipped:

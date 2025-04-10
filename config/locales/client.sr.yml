@@ -1705,8 +1705,6 @@ sr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
       instagram:
         title: "Prijavite se s Instagramom"
         sr_title: "Prijavite se s Instagramom"
@@ -2635,6 +2633,9 @@ sr:
           logo:
             form:
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2664,7 +2665,7 @@ sr:
           title: "Značke"
         emoji:
           title: "Emoji"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Poslato"

@@ -2577,10 +2577,6 @@ cs:
         name: "Google"
         title: "Přihlásit se přes Google"
         sr_title: "Přihlásit se přes Google"
-      twitter:
-        name: "Twitter"
-        title: "Přihlásit se přes Twitter"
-        sr_title: "Přihlásit se přes Twitter"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -3502,7 +3498,7 @@ cs:
         few: "v tomto tématu tématu jsou %{count} 'líbí se'"
         many: "v tomto tématu tématu je %{count} 'líbí se'"
         other: "v tomto tématu tématu je %{count} 'líbí se'"
-      back_to_list: "Zpátky na seznam témat"
+      back_to_list: "Zpět na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
       collapse_details: "skrýt podrobnosti tématu"
@@ -3717,7 +3713,7 @@ cs:
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         invisible: "Skrýt téma"
-        visible: "Seznam témat"
+        visible: "Zrušit skrytí tématu"
         reset_read: "Vynulovat počet čtení"
         make_public: "Zveřejnit jako téma…"
         make_private: "Konvertovat na soukromou zprávu"
@@ -5411,9 +5407,6 @@ cs:
           title: "Moderování"
           header_description: "Systém nahlašování v Discourse pomáhá vám a vašemu moderátorskému týmu spravovat obsah a chování uživatelů, čímž udržuje vaši komunitu respektující a zdravou. Výchozí nastavení jsou vhodná pro většinu komunit a nemusíte je měnit. Pokud však má váš web zvláštní požadavky, můžete zakázat příznaky, které nepotřebujete, a přidat své vlastní příznaky."
           keywords: "flag|review|spam|illegal|nahlášení|revize|nelegální|ilegální"
-        font_style:
-          title: "Styl písma"
-          header_description: "Přizpůsobte si styly písma používané vašimi motivy"
         files:
           title: "Soubory"
           header_description: "Nastavení, která určují limity velikosti a typu souborů, velikosti a zdroje avatarů, ukládání souborů, kvalitu a kompresi obrázků a další."
@@ -5427,9 +5420,6 @@ cs:
         login_and_authentication:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
-        logo:
-          title: "Logo webu"
-          header_description: "Přizpůsobte varianty loga vašeho webu"
         branding:
           title: "Branding"
           logo:
@@ -5442,6 +5432,12 @@ cs:
               email: "Emaily"
               manifest_screenshots:
                 description: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
+          fonts:
+            form:
+              heading_font:
+                title: "Písmo nadpisů"
+            backfill_modal:
+              modal_yes: "Ano"
         navigation:
           title: "Navigace"
           header_description: "Nastavte odkazy na navigaci a položky nabídky pro váš web. To zahrnuje umístění a chování primárního navigačního menu, rychlé odkazy v horní části domovské stránky, stejně jako správcovský postranní panel"
@@ -5530,9 +5526,6 @@ cs:
           title: "Texty"
           header_description: "Přizpůsobte libovolný text použitý v Discourse tak, aby odpovídal obsahu a tónu vaší komunity"
         email:
-          title: "Nastavení a protokoly"
-          header_description: "Přizpůsobte si šablony používané k vytváření e-mailů, zobrazte si náhled odesílaného e-mailového souhrnu a zobrazte protokoly e-mailů"
-          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled souhrnu"
           sub_pages:
             preview_summary:
               title: "Náhled souhrnu"
@@ -5543,6 +5536,8 @@ cs:
             templates:
               title: "Šablony"
               header_description: "Přizpůsobte si šablony používané k vytváření e-mailů"
+        email_logs:
+          sub_pages:
             sent:
               title: "Odeslané"
               header_description: "Zobrazení protokolu odeslaných e-mailů"

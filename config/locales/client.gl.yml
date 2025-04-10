@@ -1677,8 +1677,6 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -3450,6 +3448,13 @@ gl:
                 description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
               opengraph_image:
                 description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+          fonts:
+            title: "Tipos de letra"
+            form:
+              heading_font:
+                title: "Tipo de letra de título"
+            backfill_modal:
+              modal_yes: "Si"
         navigation:
           title: "Navegación"
         notifications:
@@ -3496,6 +3501,8 @@ gl:
               header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
             templates:
               title: "Modelos"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviada"
             skipped:

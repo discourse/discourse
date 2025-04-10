@@ -2178,10 +2178,6 @@ ja:
         name: "Google"
         title: "Google でサインイン"
         sr_title: "Google でサインイン"
-      twitter:
-        name: "Twitter"
-        title: "Twitter でサインイン"
-        sr_title: "Twitter でサインイン"
       instagram:
         name: "Instagram"
         title: "Instagram でログイン"
@@ -4567,9 +4563,6 @@ ja:
         flags:
           title: "モデレーション"
           header_description: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
-        font_style:
-          title: "フォントスタイル"
-          header_description: "テーマで使用するフォントスタイルをカスタマイズする"
         files:
           title: "ファイル"
           header_description: "ファイルのサイズと形式の制限、アバターのサイズとソース、ファイルストレージ、画像の品質と圧縮などを制御する設定"
@@ -4579,9 +4572,6 @@ ja:
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
-        logo:
-          title: "サイトのロゴ"
-          header_description: "サイトのロゴのバリエーションをカスタマイズします"
         branding:
           title: "ブランディング"
           logo:
@@ -4594,6 +4584,13 @@ ja:
                 description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
               opengraph_image:
                 description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+          fonts:
+            title: "フォント"
+            form:
+              heading_font:
+                title: "見出しのフォント"
+            backfill_modal:
+              modal_yes: "はい"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -4670,8 +4667,6 @@ ja:
         site_texts:
           title: "サイトのテキスト"
         email:
-          title: "サーバーのセットアップとログ"
-          keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
           sub_pages:
             preview_summary:
               title: "要約をプレビュー"
@@ -4679,14 +4674,16 @@ ja:
               title: "高度なテスト"
             templates:
               title: "テンプレート"
+        email_logs:
+          sub_pages:
             sent:
-              title: "送信"
+              title: "送信済み"
             skipped:
               title: "スキップ"
             bounced:
               title: "バウンス"
             received:
-              title: "受け取った"
+              title: "受信"
             rejected:
               title: "拒否"
         email_appearance:

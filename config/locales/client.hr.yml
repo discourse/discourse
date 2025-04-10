@@ -2155,10 +2155,6 @@ hr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterom"
-        sr_title: "Prijavite se s Twitterom"
       instagram:
         name: "Instagram"
         title: "Prijavite se s Instagramom"
@@ -4490,6 +4486,9 @@ hr:
             form:
               mobile: "Mobilni"
               email: "E-mail"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4538,6 +4537,8 @@ hr:
               header_description: "Pregledajte sadržaj e-mail poruka sa sažetkom poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:

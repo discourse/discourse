@@ -2123,10 +2123,6 @@ hy:
         name: "Google"
         title: "Մուտք Google-ով"
         sr_title: "Մուտք Google-ով"
-      twitter:
-        name: "Twitter"
-        title: "Մուտք Twitter-ով"
-        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
@@ -3855,6 +3851,9 @@ hy:
             form:
               mobile: "Հեռախոսային"
               email: "Էլ. փոստ"
+          fonts:
+            backfill_modal:
+              modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -3898,6 +3897,8 @@ hy:
           sub_pages:
             templates:
               title: "Ձևանմուշներ"
+        email_logs:
+          sub_pages:
             sent:
               title: "Ուղարկված"
             skipped:

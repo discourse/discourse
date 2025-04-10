@@ -2329,9 +2329,9 @@ de:
         title: "Mit Google anmelden"
         sr_title: "Mit Google anmelden"
       twitter:
-        name: "Twitter"
-        title: "Mit Twitter anmelden"
-        sr_title: "Mit Twitter anmelden"
+        name: "X"
+        title: "Mit X anmelden"
+        sr_title: "Mit X anmelden"
       instagram:
         name: "Instagram"
         title: "Mit Instagram anmelden"
@@ -4891,9 +4891,6 @@ de:
           title: "Moderation"
           header_description: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           keywords: "melden|Meldung|Überprüfen|Spam|illegal"
-        font_style:
-          title: "Schriftart"
-          header_description: "Passe die von deinen Themes verwendeten Schriftstile an"
         files:
           title: "Dateien"
           header_description: "Einstellungen, die Dateigrößen und -typen, Avatargrößen und -quellen, Dateispeicherung, Bildqualität und -kompression und mehr steuern"
@@ -4907,11 +4904,9 @@ de:
         login_and_authentication:
           title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
-        logo:
-          title: "Website-Logo"
-          header_description: "Passe die Variationen deines Website-Logos an"
         branding:
           title: "Branding"
+          header_description: "Passe die Variationen des Logos und der Schriftart deiner Website an"
           logo:
             title: "Logo"
             form:
@@ -4976,6 +4971,26 @@ de:
                 title: "X Zusammenfassung großes Bild"
                 description: "X Karte \"Zusammenfassung großes Bild\". Wenn diese Option leer gelassen wird, werden die regulären Metadaten der Karte aus dem OpenGraph_image generiert, sofern es sich nicht ebenfalls um ein .svg handelt."
                 help_text: "Die empfohlene Größe beträgt mindestens 280 x 150 Pixel. Verwende kein SVG-Bild."
+          fonts:
+            title: "Schriftarten"
+            form:
+              more_fonts: "Weitere Schriftarten"
+              less_fonts: "Weniger Schriftarten"
+              saved: "Schriftarteinstellungen werden gespeichert."
+              base_font:
+                title: "Basisschriftart"
+              heading_font:
+                title: "Überschrift-Schriftart"
+              default_text_size:
+                title: "Standardschriftgröße"
+                description: "Diese Größe kann später von jedem Nutzer nach seinen Vorlieben angepasst werden."
+            backfill_modal:
+              title: "Neue Standardschrifteinstellungen anwenden?"
+              description:
+                one: "Du hast die Standardschriftgröße aktualisiert. Möchtest du diese Änderung auf %{count} bestehenden Benutzer anwenden?"
+                other: "Du hast die Standardschriftgröße aktualisiert. Möchtest du diese Änderung auf %{count} bestehende Benutzer anwenden?"
+              modal_yes: "Ja"
+              modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -4996,7 +5011,7 @@ de:
           header_description: "Konfiguriere Sucheinstellungen einschließlich Protokollierung und Tokenisierung für chinesische und japanische Sprachen"
         search_everything:
           title: "Suche"
-          header_description: "Hier findest du alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern, und deine Einstellungen werden gespeichert."
+          header_description: "Finde hier alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern und deine Einstellungen werden gespeichert. Um diese Suche von überall in der Administratoroberfläche zu öffnen drücke %{shortcutHTML}."
         security:
           title: "Sicherheit"
           header_description: "Konfiguriere die Sicherheitseinstellungen, einschließlich Zwei-Faktor-Authentifizierung, Moderatorenrechte und Sicherheitsrichtlinien für Inhalte"
@@ -5041,9 +5056,20 @@ de:
         badges:
           title: "Abzeichen"
           header_description: "Abzeichen belohnen Benutzer für ihre Aktivitäten, Beiträge und Leistungen, um positives Verhalten sowie Engagement in der Community anzuerkennen, zu bestätigen und zu fördern"
+        analytics:
+          title: "Analyse & SEO"
+          header_description: "Verbessere die Sichtbarkeit deiner Website für Suchmaschinen und konfiguriere, wie du die Besucher deiner Website verfolgst"
+          keywords: "Suche|Google|Sitemap|Analytik|Analytics"
+        interface:
+          title: "Oberfläche & Layout"
+          header_description: "Passe Details des allgemeinen Layouts und der Benutzeroberfläche deiner Website an"
         permalinks:
           title: "Permalinks"
           header_description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind"
+        user_defaults:
+          title: "Standardwerte für Benutzer"
+          header_description: "Lege Standardwerte für Einstellungen fest, die sich auf deine Benutzer auswirken, und konfiguriere ihr Onboarding-Erlebnis"
+          keywords: "Benutzer|Onboarding|Neu|Benutzereinstellungen"
         user_fields:
           title: "Benutzerfelder"
           header_description: "Erstelle benutzerdefinierte Benutzerfelder, um zusätzliche Details über deine Community-Mitglieder zu sammeln. Du kannst festlegen, welche Informationen bei der Registrierung erforderlich sind, was in den Profilen angezeigt wird und was die Benutzer aktualisieren können."
@@ -5067,13 +5093,14 @@ de:
           title: "Themes und Komponenten"
           header_description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen"
           keywords: "Theme|Komponente|Erweiterung|Anpassen"
+        site_admin:
+          title: "Website-Administration"
+          header_description: "Konfiguriere verschiedene Einstellungen für die Verwaltung deiner Website"
+          keywords: "Entdecken|Bootstrap|Starthilfe|Apps"
         site_texts:
           title: "Website-Texte"
           header_description: "Passe jeden in Discourse verwendeten Text an den Stil und Ton deiner Community an"
         email:
-          title: "Server und Protokolle"
-          header_description: "Du kannst die Vorlagen zum Erstellen von E-Mails anpassen, eine Vorschau der versendeten E-Mails anzeigen und die E-Mail-Protokolle einsehen"
-          keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
           sub_pages:
             preview_summary:
               title: "Vorschau der Zusammenfassung anzeigen"
@@ -5084,6 +5111,8 @@ de:
             templates:
               title: "Vorlagen"
               header_description: "Passe die Vorlagen für die Erstellung von E-Mails an"
+        email_logs:
+          sub_pages:
             sent:
               title: "Gesendet"
               header_description: "Sieh dir ein Protokoll der gesendeten E-Mails an"
@@ -7102,11 +7131,15 @@ de:
       site_settings:
         title: "Website-Einstellungen"
         description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
-        discard: "Änderungen verwerfen"
-        save: "Alle Änderungen speichern"
+        discard:
+          one: "Änderung verwerfen"
+          other: "Änderungen verwerfen"
+        save:
+          one: "Änderung speichern"
+          other: "Alle Änderungen speichern"
         dirty_banner:
-          one: "Du hast <em>%{count}</em> nicht gespeicherte Änderung"
-          other: "Du hast <em>%{count}</em> nicht gespeicherte Änderungen"
+          one: "Du hast <b>%{count}</b> nicht gespeicherte Änderung"
+          other: "Du hast <b>%{count}</b> nicht gespeicherte Änderungen"
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:

@@ -1863,10 +1863,6 @@ sl:
         name: "Google"
         title: "Prijavite se z Googlom"
         sr_title: "Prijavite se z Googlom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterjem"
-        sr_title: "Prijavite se s Twitterjem"
       instagram:
         name: "Instagram"
         title: "Prijavite se z Instagramom"
@@ -3748,6 +3744,9 @@ sl:
             form:
               mobile: "Mobilno"
               email: "E-naslov"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3789,6 +3788,8 @@ sl:
           sub_pages:
             templates:
               title: "Predloge"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             received:

@@ -2263,6 +2263,7 @@ ug:
     read_time_word_count: "ئوقۇش ۋاقتىنى مۆلچەرلەشكە ئىشلىتىلىدىغان ھەر مىنۇتتا ئوقۇيالايدىغان سۆز سانى."
     topic_page_title_includes_category: "تېما بەت <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>ماۋزۇ بەلگە</a> سەھىپە ئىسمىنى ئۆز ئىچىگە ئالىدۇ."
     max_prints_per_hour_per_user: "/print بېتىنىڭ ئەڭ كۆپ كۆرگەزمە قىلىش قېتىم سانى (0 گە تەڭشەلسە بېسىشنى چەكلەيدۇ)"
+    full_name_requirement: "تولۇق ئىسىم بۆلىكىنى تىزىملاش جەدۋىلىدە زۆرۈر، تاللاشچان ياكى تاللاشچان ئەمما يوشۇرۇن بۆلەككە ئايلاندۇرىدۇ."
     enable_names: "ئىشلەتكۈچىنىڭ تەرجىمىھالىدا ئىشلەتكۈچىنىڭ تولۇق ئىسمى، ئىشلەتكۈچى كارتىسى ۋە ئېلخەتنى كۆرسىتىدۇ. چەكلەنسە تولۇق ئىسىمنى ھەممە جايدا يوشۇرىدۇ."
     display_name_on_posts: "يازمىدا ئىشلەتكۈچىنىڭ تولۇق ئىسمى ۋە ئۇنىڭ ئىشلەتكۈچى ئاتى يەنى @username نى كۆرسىتىدۇ."
     show_time_gap_days: "ئەگەر ئىككى يازما ئارىسىدىكى ۋاقىت بۇ كۈن سانىغا تەڭ بولسا، تېمىدا ۋاقىت ئارىلىقىنى كۆرسىتىدۇ."
@@ -3270,6 +3271,8 @@ ug:
         بۇ بوسۇغا قىممەتنى «silence_new_user» تور بېكەت تەڭشىكىدىن ئۆزگەرتكىلى بولىدۇ.
     spam_post_blocked:
       title: "ئەخلەت ئۇچۇر يازما توسۇلدى"
+    unsilenced:
+      subject_template: "ھېسابات ئەمدى توختاپ قالمايدۇ"
     pending_users_reminder:
       title: "كېچىكتۈرۈلگەن ئىشلەتكۈچى ئەسكەرتىشى"
       subject_template:
@@ -3279,6 +3282,9 @@ ug:
         بۇ مۇنبەرنى زىيارەت قىلىش ئۈچۈن يېڭى ئىشلەتكۈچى تەستىقلىنىش (ياكى رەت قىلىنىش) نى كۈتۈۋاتىدۇ.
 
         [ئۇلارنى تەكشۈرۈڭ] (%{base_url}/review).
+    download_remote_images_disabled:
+      title: "يىراقتىكى سۈرەتنى چۈشۈرۈش چەكلەندى"
+      subject_template: "يىراقتىكى سۈرەتنى چۈشۈرۈش چەكلەندى"
     new_user_of_the_month:
       title: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
       subject_template: "سىز بۇ ئايدىكى يېڭى ئىشلەتكۈچى!"
@@ -3288,10 +3294,59 @@ ug:
   email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "ئالدىنقى جاۋاب"
+    visit_link_to_respond_pm: "[زىيارەت ئۇچۇرى](%{base_url}%{url}) %{participants} غا جاۋب بېرىدىغان."
+    visit_link_to_respond_button_only: "[زىيارەت تېما](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[زىيارەت ئۇچۇر](%{base_url}%{url})"
+    reply_above_line: "## جاۋابىڭىزنى بۇ قۇرنىڭ ئۈستىگە يېزىڭ. ##"
+    posted_by: "%{username} %{post_date} دە تارقاتقان"
+    pm_participants: "قاتناشقۇچى: %{participants}"
     more_pm_participants:
       one: "%{participants} ۋە باشقا %{count} كىشى"
       other: "%{participants} ۋە باشقا %{count} كىشى"
+    invited_group_to_private_message_body: |
+      %{username} بىر ئۇچۇرغا @%{group_name} نى تەكلىپ قىلدى
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      -
+
+      > %{site_title} -- %{site_description}
+
+      ئۇچۇرغا قاتناشماقچى بولسا، ئاستىدىكى ئۇلانما چېكىلىدۇ:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} سىزنى بىر ئۇچۇرغا تەكلىپ قىلدى
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      -
+
+      > %{site_title} -- %{site_description}
+
+      ئۇچۇرغا قاتناشماقچى بولسا، تۆۋەندىكى ئۇلانما چېكىلىدۇ
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} سىزنى بىر سۆھبەتكە تەكلىپ قىلدى
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      -
+
+      > %{site_title} -- %{site_description}
+
+      سۆھبەتكە قاتناشماقچى بولسا، تۆۋەندىكى ئۇلانما چېكىلىدۇ
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
+      title: "ئىشلەتكۈچى گۇرۇپپىنى شەخسىي ئۇچۇرغا تەكلىپ قىلىندى"
       subject_template: "[%{email_prefix}] %{username} سىزنى @%{group_name} دىكى «%{topic_title}» ئۇچۇرغا تەكلىپ قىلدى"
       text_body_template: |
         %{header_instructions}
@@ -3503,9 +3558,28 @@ ug:
         مۇنبەر ھېساباتىڭىز ئۈنسىزلەندى.
 
         سەۋەبى - %{reason}
+    account_deleted:
+      title: "ھېسابات ئۆچۈرۈلدى"
+      subject_template: "[%{email_prefix}] ھېساباتىڭىز ئۆچۈرۈلدى"
+      text_body_template: |
+        سالام،
+
+        بۇ [%{site_name}](%{base_url}) دىن كەلگەن ئاپتوماتىك ئۇچۇر بولۇپ، بۇ ئېلخەت ئادرېسىغا مۇناسىۋەتلىك ھېساباتنى باشقۇرغۇچى ئەزانىڭ ئۆچۈرۈۋەتكەنلىكىنى سىزگە بىلدۈرىدۇ.
+
+        %{flag_reason}
+
+        تەپسىلاتىنى [جامائەت مىزانى](%{base_url}/guidelines) دىن تەكشۈرۈڭ.
     account_exists:
       title: "ھېسابات مەۋجۇت"
       subject_template: "[%{email_prefix}] ھېسابات مەۋجۇت"
+      text_body_template: |
+        ھازىر سىز %{site_name} دا ھېسابات قۇرۇشنى سىنىدىڭىز ياكى ھېساباتىڭىزنىڭ ئېلخەت ئادرېسىنى %{email} غا ئۆزگەرتىشنى سىنىدىڭىز. ئەمما %{email} نىڭ بىر ھېساباتى مەۋجۇت.
+
+        ئەگەر ئىم ئۇنتۇلغان بولسىڭىز، [ھازىر ئەسلىگە قايتۇرۇڭ]](%{base_url}/password-reset).
+
+        ئەگەر سىز %{email} غا ھېسابات قۇرۇش ياكى ئېلخەت ئادرېسىنى ئۆزگەرتىشنى سىنىمىغان بولسىڭىز، ئەنسىرىمىسىڭىزمۇ بولىدۇ - بۇ ئېلخەتكە پەرۋا قىلمىسىڭىزمۇ بولىدۇ.
+
+        ئەگەر سوئالىڭىز بولسا، [دوستانە باشقۇرغۇچى خادىملىرىمىز بىلەن ئالاقىلىشىڭ](%{base_url}/about).
     account_second_factor_disabled:
       title: "ئىككى ئامىللىق دەلىللەش چەكلەندى"
       subject_template: "[%{email_prefix}] ئىككى ئامىللىق دەلىللەش چەكلەندى"
@@ -3516,6 +3590,7 @@ ug:
 
         ئەگەر ھەر قانداق مەسىلە بولسا دوستانە باشقۇرغۇچى خادىملەر بىلەن ئالاقىلىشىڭ (%{base_url}/about).
     digest:
+      why: "%{site_link} نىڭ %{since} دىن بۇيانقى قىسقىچە خۇلاسىسى"
       since_last_visit: "ئالدىنقى قېتىملىق زىيارىتىڭىزدىن بۇيان"
       new_topics: "يېڭى تېما"
       unread_notifications: "ئوقۇمىغان ئۇقتۇرۇش"
@@ -3527,20 +3602,51 @@ ug:
       popular_posts: "ئالقىشلىق يازما"
       more_new: "يېڭى مەزمۇن"
       subject_template: "[%{email_prefix}] خۇلاسە"
+      unsubscribe: "سىزنى بىر مەزگىل بولدى كۆرمىدۇق، شۇڭا بۇ خۇلاسىنى %{site_link} ئەۋەتكەن. %{email_preferences_link} نى ئۆزگەرتىڭ ياكى %{unsubscribe_link} مۇشتەرىلىكتىن چېكىنىڭ."
       your_email_settings: "ئېلخەت تەڭشىكىڭىز"
       click_here: "بۇ جاينى چېكىڭ"
       from: "%{site_name}"
+      preheader: "%{since} دىن بۇيانقى قىسقىچە خۇلاسە"
     forgot_password:
       title: "ئىم ئۇنتۇغان"
       subject_template: "[%{email_prefix}] ئىم ئەسلىگە قايتۇر"
+      text_body_template: |
+        بىرەيلەن [%{site_name}](%{base_url}) دىكى ئىم ئەسلىگە كەلتۈرۈشنى ئىلتىماس قىلدى.
+
+        ئەگەر ئۇ سىز بولمىسىڭىز، بۇ ئېلخەتكە خاتىرجەم ھالدا پەرۋا قىلمىسىڭىز بولىدۇ.
+
+        تۆۋەندىكى ئۇلانمىنى چېكىپ يېڭى ئىم تاللىغىلى بولىدۇ:
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
       subject_template: "[%{email_prefix}] ئۇلانما ئارقىلىق تىزىمغا كىرىدۇ"
+      text_body_template: |
+        بۇ [%{site_name}](%{base_url}) دىكى تىزىمغا كىرىش ئۇلانمىسى.
+
+        ئەگەر بۇ ئۇلانمىنى ئىلتىماس قىلمىغان بولسىڭىز، سىز خاتىرجەم ھالدا بۇ ئېلخەتكە پەرۋا قىلمىسىڭىزمۇ بولىدۇ.
+
+        تۆۋەندىكى ئۇلانما چېكىلسە تىزىمغا كىرىدۇ:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "ئىم تەڭشەك"
+      subject_template: "[%{email_prefix} ئىم تەڭشەك"
+      text_body_template: |
+        بىرەيلەن [%{site_name}](%{base_url}) دىكى ھېساباتىڭىزغا ئىم قوشۇشنى ئىلتىماس قىلدى. سىز دەلىللەنگەن ئېلخەت ئادرېسى بىلەن باغلانغان توردىكى مۇلازىمەت (Google، Facebook قاتارلىق) نى قوللايدىغان ئېلخەت بىلەن تىزىمغا كىرەلەيسىز.
+
+        ئەگەر بۇ ئىلتىماسنى سىز يوللىمىغان بولسىڭىز، سىز خاتىرجەم ھالدا بۇ ئېلخەتكە پەرۋا قىلمىسىڭىزمۇ بولىدۇ.
+
+        تۆۋەندىكى ئۇلانما چېكىلسە ئىم تاللايدۇ:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "باشقۇرغۇچى تىزىمغا كىرىش"
       subject_template: "[%{email_prefix}] تىزىمغا كىرىش"
+      text_body_template: |
+        بىرەيلەن [%{site_name}](%{base_url}) دىكى ھېساباتىڭىزغا كىرىشنى ئىلتىماس قىلدى.
+
+        ئەگەر بۇ ئىلتىماسنى سىز يوللىمىغان بولسىڭىز، خاتىرجەم ھالدا بۇ ئېلخەتكە پەرۋا قىلمىسىڭىزمۇ بولىدۇ.
+
+        تۆۋەندىكى ئۇلانما چېكىلسە تىزىمغا كىرىدۇ:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "ھېسابات قۇرۇلدى"
       subject_template: "[%{email_prefix}] يېڭى ھېساباتىڭىز"
@@ -3552,9 +3658,24 @@ ug:
     confirm_new_email:
       title: "يېڭى ئېلخەت جەزملەش"
       subject_template: "%{email_prefix} يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەڭ"
+      text_body_template: |
+        %{site_name} دىكى يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەش ئۈچۈن تۆۋەندىكى ئۇلانمىنى چېكىڭ:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        ئەگەر بۇ ئۆزگىرىشنى سىز ئىلتىماس قىلمىغان بولسىڭىز، [بېكەت باشقۇرغۇچى](%{base_url}/about) بىلەن ئالاقىلىشىڭ.
     confirm_new_email_via_admin:
       title: "يېڭى ئېلخەت جەزملەش"
       subject_template: "%{email_prefix} يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەڭ"
+      text_body_template: |
+        %{site_name} دىكى يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەش ئۈچۈن تۆۋەندىكى ئۇلانمىنى چېكىڭ:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        بۇ ئېلخەت ئۆزگەرتىشىنى بېكەت باشقۇرغۇچى ئىلتىماس قىلغان. ئەگەر بۇ ئۆزگىرىشنى سىز ئىلتىماس قىلمىغان بولسىڭىز، [بېكەت باشقۇرغۇچى](%{base_url}/about) بىلەن ئالاقىلىشىڭ.
+    confirm_old_email:
+      title: "كونا ئېلخەت جەزملەش"
+      subject_template: "%{email_prefix} نۆۋەتتىكى ئېلخەت ئادرېسىڭىزنى جەزملەيدۇ"
     confirm_old_email_add:
       title: "كونا ئېلخەتنى خەزملەيدۇ (قوش)"
       subject_template: "%{email_prefix} نۆۋەتتىكى ئېلخەت ئادرېسىڭىزنى جەزملەيدۇ"
@@ -4176,21 +4297,27 @@ ug:
       agree_and_keep_hidden:
         title: "يازمىنى يوشۇرۇن تۇتىدۇ"
         description: "پاش قىلىشقا قوشۇلىدۇ ۋە بۇ يازمىنى يوشۇرۇن تۇتىدۇ."
+        complete: "يازما يوشۇرۇن تۇرىدۇ."
       agree_and_suspend:
         title: "ئىشلەتكۈچىنى توختات"
         description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."
+        complete: "ئىشلەتكۈچى توختىتىلدى."
       agree_and_silence:
         title: "ئىشلەتكۈچىنى ئۈنسىزلە"
         description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
+        complete: "ئىشلەتكۈچى ئۈنسىزلەندى."
       agree_and_restore:
         title: "يازمىنى ئەسلىگە كەلتۈرىدۇ"
         description: "يازمىنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+        complete: "يازما ئەسلىگە كەلتۈرۈلدى."
       agree_and_hide:
         title: "يازمىنى يوشۇر"
         description: "پاش قىلىشقا قوشۇلۇپ بۇ يازمىنى يوشۇرىدۇ + ئىشلەتكۈچىگە ئۆزلۈكىدىن ئۇچۇر يوللاپ ئۇلارنى تەھرىرلەشكە سۈيلەيدۇ."
+        complete: "يازما يوشۇرۇن ، ئىشلەتكۈچىگە ئۇقتۇرۇش قىلىندى."
       agree_and_edit:
         title: "قوشۇل ۋە يازمىنى تەھرىرلە"
         description: "پاش قىلىشقا قوشۇلۇپ، تەھرىرلەش كۆزنىكىنى ئېچىپ يازمىنى تەھرىرلەيدۇ."
+        complete: "پاش قىلىش بىلدۈرۈلدى، ھازىر يازمىنى تەھرىرلىيەلەيسىز."
       delete_single:
         title: "ئۆچۈر"
         complete: "يازما ئۆچۈرۈلدى."
@@ -4204,6 +4331,7 @@ ug:
         title: "پاش قىلىشقا پەر قىلماي، يازما ۋە جاۋابنى ئۆچۈر"
         description: "پاش قىلىشقا پەرۋا قىلماي، ئۇنى ئۆچرەتتىن چىقىرىۋېتىدۇ ھەمدە يازما ۋە ئىنكاسلىرىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا، تېمىنىمۇ ئۆچۈرۈۋېتىدۇ"
         confirm: "راستتىنلا يازمىنىڭ ئىنكاسلىرىنىمۇ قوشۇپ ئۆچۈرەمسىز؟"
+        complete: "يازما ۋە جاۋاب ئۆچۈرۈلدى."
       delete_and_agree:
         title: "يازما ئۆچۈر"
         description: "پاش قىلىشقا قوشۇلۇپ بۇ يازمىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا تېمىنىمۇ ئۆچۈرىدۇ."
@@ -4212,16 +4340,20 @@ ug:
         title: "يازما ۋە جاۋابنى ئۆچۈر"
         description: "پاش قىلىشقا قوشۇلۇپ بۇ يازما ۋە ئۇنىڭ جاۋابلىرىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا تېمىنىمۇ ئۆچۈرىدۇ."
         confirm: "راستتىنلا يازمىنىڭ ئىنكاسلىرىنىمۇ قوشۇپ ئۆچۈرەمسىز؟"
+        complete: "يازما ۋە جاۋاب ئۆچۈرۈلدى."
       disagree_and_restore:
         title: "ياق، يازمىنى ئەسلىگە كەلتۈر"
         description: "يازمىنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+        complete: "يازما ئەسلىگە كەلتۈرۈلدى."
       disagree:
         title: "ياق"
         complete: "پاش قىلىشقا پەرۋا قىلىنمىدى."
       discard_post:
         title: "يازمىنى تاشلىۋەت"
+        complete: "يازما تاشلىۋېتىلدى."
       revise_and_reject_post:
         title: "يازمىنى تۈزەت…"
+        complete: "يازما رەت قىلىندى تۈزىتىلمە كېچىكتۈرۈلدى."
       ignore:
         title: "پەرۋا قىلما"
         complete: "پاش قىلىشقا پەرۋا قىلىنمىدى."
@@ -4251,19 +4383,25 @@ ug:
         block:
           title: "ئىشلەتكۈچىنى ئۆچۈرۈپ توس"
           description: "ئىشلەتكۈچى ئۆچۈرۈلىدۇ، ئۇلارنىڭ IP ۋە ئېلخەت ئادرېسىنى توسىمىز."
+          complete: "ئىشلەتكۈچى ئۆچۈرۈلدى ۋە چەكلەندى."
       reject:
         title: "رەت قىل"
         bundle_title: "رەت قىل…"
       reject_and_suspend:
         title: "ئىشلەتكۈچىنى رەت قىلىپ توختات"
+        complete: "يازما رەت قىلىندى ۋە ئىشلەتكۈچى توختىتىلدى."
       reject_and_silence:
         title: "ئىشلەتكۈچىنى رەت قىلىپ ئۈنسىزلە"
+        complete: "يازما رەت قىلىندى ۋە ئىشلەتكۈچى ئۈنسىزلەندى."
       reject_and_delete:
         title: "يازمىنى رەت قىلىپ ۋە ئۆچۈر"
+        complete: "يازما رەت قىلىندى ۋە ئۆچۈرۈلدى."
       reject_and_keep_deleted:
         title: "يازما ئۆچۈرۈشنى ساقلاپ قال"
+        complete: "يازما رەت قىلىندى ۋە ئۆچۈرۈلگەن پېتى قالدۇرۇلدى."
       approve_and_restore:
         title: "يازمىنى تەستىقلاپ ئەسلىگە كەلتۈر"
+        complete: "يازما تەستىقلاندى ۋە ئەسلىگە كەلتۈرۈلدى."
       delete_user:
         reason: "تەستىقلاش ئۆچرىتى ئارقىلىق ئۆچۈرۈلدى"
         complete: "ئىشلەتكۈچى ئۆچۈرۈلدى."

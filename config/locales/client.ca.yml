@@ -1519,8 +1519,6 @@ ca:
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -3029,6 +3027,9 @@ ca:
             form:
               mobile: "Mòbil"
               email: "Correu electrònic"
+          fonts:
+            backfill_modal:
+              modal_yes: "Sí"
         navigation:
           title: "Navegació"
         notifications:
@@ -3074,6 +3075,8 @@ ca:
               header_description: "Previsualitza el contingut dels correus de resum enviat a usuaris inactius"
             templates:
               title: "Plantilles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviat"
             skipped:

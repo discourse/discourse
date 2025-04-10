@@ -2212,10 +2212,6 @@ nb_NO:
         name: "Google"
         title: "Logg inn med Google"
         sr_title: "Logg inn med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logg inn med Twitter"
-        sr_title: "Logg inn med Twitter"
       instagram:
         name: "Instagram"
         title: "Logg inn med Instagram"
@@ -4411,6 +4407,9 @@ nb_NO:
             form:
               mobile: "Mobil"
               email: "E-post"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
@@ -4456,6 +4455,8 @@ nb_NO:
               header_description: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere"
             templates:
               title: "Maler"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sendt"
             skipped:

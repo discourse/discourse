@@ -643,6 +643,11 @@ de:
       draft_channel_screen:
         header: "Neue Nachricht"
         cancel: "Abbrechen"
+      quick_reaction_type:
+        title: "Chat-Reaktionen mit einem Klick"
+        options:
+          frequent: "Am häufigsten verwendete Chat-Reaktionen"
+          custom: "Benutzerdefinierte Reaktionen"
     notifications:
       chat_invitation: "hat dich eingeladen, einem Chat-Kanal beizutreten"
       chat_invitation_html: "<span>%{username}</span> <span>hat dich eingeladen, einem Chat-Kanal beizutreten</span>"

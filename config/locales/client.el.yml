@@ -1975,10 +1975,6 @@ el:
         name: "Google"
         title: "Συνδεθείτε με Google"
         sr_title: "Συνδεθείτε με Google"
-      twitter:
-        name: "Twitter"
-        title: "Συνδεθείτε με Twitter"
-        sr_title: "Συνδεθείτε με Twitter"
       instagram:
         name: "Instagram"
         title: "Συνδεθείτε με Instagram"
@@ -3992,6 +3988,9 @@ el:
             form:
               mobile: "Mobile"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ναι"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -4038,6 +4037,8 @@ el:
               header_description: "Προεπισκόπηση του περιεχομένου των συνοπτικών email που στάλθηκαν στους χρήστες που δεν ήταν ενεργοί"
             templates:
               title: "Πρότυπα"
+        email_logs:
+          sub_pages:
             sent:
               title: "Απεσταλμένα"
             skipped:
