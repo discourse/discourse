@@ -2245,6 +2245,10 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    multi_select:
+      no_results: "No results"
+      search: "Search…"
+      label: "Select options"
     form_kit:
       reset: Reset
       optional: optional

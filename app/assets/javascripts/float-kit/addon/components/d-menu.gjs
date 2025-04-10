@@ -10,6 +10,7 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import { isTesting } from "discourse/lib/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
@@ -75,6 +76,7 @@ export default class DMenu extends Component {
   get componentArgs() {
     return {
       close: this.menuInstance.close,
+      show: this.menuInstance.show,
       data: this.options.data,
     };
   }
@@ -104,7 +106,11 @@ export default class DMenu extends Component {
 
     return (
       this.args.triggerComponent ||
-      curryComponent(DButton, baseArguments, getOwner(this))
+      curryComponent(
+        this.args.triggerTag ? element(this.args.triggerTag) : DButton,
+        baseArguments,
+        getOwner(this)
+      )
     );
   }
 
@@ -131,6 +137,7 @@ export default class DMenu extends Component {
       data-trigger
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
+      @componentArgs={{this.componentArgs}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
