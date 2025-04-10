@@ -2112,7 +2112,7 @@ class Topic < ActiveRecord::Base
   end
 
   def visible_tags(guardian)
-    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+    tags.where.not(name: guardian.hidden_tag_names)
   end
 
   def self.editable_custom_fields(guardian)
