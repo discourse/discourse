@@ -4,6 +4,7 @@ import DaBooleanField from "./fields/da-boolean-field";
 import DaCategoriesField from "./fields/da-categories-field";
 import DaCategoryField from "./fields/da-category-field";
 import DaCategoryNotificationlevelField from "./fields/da-category-notification-level-field";
+import DaChatChannelsField from "./fields/da-chat-channels-field";
 import DaChoicesField from "./fields/da-choices-field";
 import DaCustomField from "./fields/da-custom-field";
 import DaCustomFields from "./fields/da-custom-fields";
@@ -48,6 +49,7 @@ const FIELD_COMPONENTS = {
   email_group_user: DaEmailGroupUserField,
   custom_field: DaCustomField,
   custom_fields: DaCustomFields,
+  chat_channels: DaChatChannelsField,
 };
 
 export default class AutomationField extends Component {

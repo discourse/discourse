@@ -19,5 +19,6 @@ module DiscourseAutomation
     USER_PROMOTED = "user_promoted"
     USER_REMOVED_FROM_GROUP = "user_removed_from_group"
     USER_UPDATED = "user_updated"
+    CHAT_MESSAGE_CREATED_EDITED = "chat_message_created_edited"
   end
 end
