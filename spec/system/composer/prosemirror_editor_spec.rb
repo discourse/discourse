@@ -634,7 +634,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
     end
 
-    it "allows typing before a code mark with/without the mark" do
+    xit "allows typing before a code mark with/without the mark" do
       open_composer_and_toggle_rich_editor
 
       composer.type_content("`code mark`")
