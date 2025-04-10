@@ -201,20 +201,22 @@ class Plugin::Instance
 
       # we have to work through descendants cause serializers may already be baked and cached
       ([base] + base.descendants).each do |klass|
-        unless attr.to_s.start_with?("include_")
+        if attr.to_s.start_with?("include_")
+          # If it's an include_* method, define it directly
+          klass.public_send(:define_method, attr, &block)
+        else
           klass.attributes(attr)
 
-          if respect_plugin_enabled || include_condition
-            # Don't include serialized methods if the plugin is disabled
-            klass.public_send(:define_method, "include_#{attr}?") do
-              next false if respect_plugin_enabled && !plugin.enabled?
-              next instance_exec(&include_condition) if include_condition
-              true
-            end
+          klass.public_send(:define_method, "include_#{attr}?") do
+            return false if respect_plugin_enabled && !plugin.enabled?
+            return instance_exec(&include_condition) if include_condition
+            true
+          end
+
+          klass.public_send(:define_method, attr) do
+            instance_exec(&block) if send("include_#{attr}?")
           end
         end
-
-        klass.public_send(:define_method, attr, &block)
       end
     end
   end
