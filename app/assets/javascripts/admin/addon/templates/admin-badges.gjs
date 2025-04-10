@@ -3,6 +3,7 @@ import RouteTemplate from "ember-route-template";
 import BadgeButton from "discourse/components/badge-button";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
+import NavItem from "discourse/components/nav-item";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -46,28 +47,21 @@ export default RouteTemplate(
             class="edit-groupings-btn"
           />
         </:actions>
+        <:tabs>
+          <NavItem
+            @route="adminBadges.settings"
+            @label="settings"
+            class="admin-badges-tabs__settings"
+          />
+          <NavItem
+            @route="adminBadges.index"
+            @label="admin.config.badges.title"
+            class="admin-badges-tabs__index"
+          />
+        </:tabs>
       </DPageHeader>
 
       <div class="admin-container">
-        <div class="content-list">
-          <ul class="admin-badge-list">
-            {{#each @controller.model as |badge|}}
-              <li class="admin-badge-list-item">
-                <LinkTo
-                  @route={{@controller.selectedRoute}}
-                  @model={{badge.id}}
-                >
-                  <BadgeButton @badge={{badge}} />
-                  {{#if badge.newBadge}}
-                    <span class="list-badge">{{i18n
-                        "filters.new.lower_title"
-                      }}</span>
-                  {{/if}}
-                </LinkTo>
-              </li>
-            {{/each}}
-          </ul>
-        </div>
         {{outlet}}
       </div>
     </div>
