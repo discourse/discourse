@@ -1,6 +1,5 @@
-import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
-import BadgeButton from "discourse/components/badge-button";
+import AdminBadgesList from "admin/components/admin-badges-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
@@ -62,7 +61,7 @@ export default RouteTemplate(
       </DPageHeader>
 
       <div class="admin-container">
-        {{outlet}}
+        <AdminBadgesList @badges={{@controller.model}} @route={{@controller.selectedRoute}} />
       </div>
     </div>
   </template>
