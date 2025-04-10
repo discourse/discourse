@@ -109,13 +109,13 @@ export function decorateHashtags(element, site) {
         icon: site.hashtag_icons[hashtagType],
         id: hashtagEl.dataset.id,
         slug: hashtagEl.dataset.slug,
-        style_type: hashtagEl.dataset.styleType,
+        style_type: hashtagEl.dataset.styleType || "square",
       };
 
-      if (hashtagEl.dataset.styleType === "icon") {
+      if (opts.style_type === "icon") {
         opts.icon = hashtagEl.dataset.icon;
       }
-      if (hashtagEl.dataset.styleType === "emoji") {
+      if (opts.style_type === "emoji") {
         opts.emoji = hashtagEl.dataset.emoji;
       }
 
