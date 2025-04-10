@@ -948,7 +948,7 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  async updatePreviewFromForm() {
+  async updateFormPreview() {
     const formTemplateData = prepareFormTemplateData(
       document.querySelector("#form-template-form"),
       this.composer.selectedFormTemplate
@@ -1006,7 +1006,7 @@ export default class ComposerEditor extends Component {
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-              @onChange={{this.updatePreviewFromForm}}
+              @onChange={{this.updateFormPreview}}
             />
           </form>
         </div>

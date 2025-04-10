@@ -7,6 +7,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {
   @service composer;
@@ -51,7 +52,7 @@ export default class TagChooserField extends Component {
 
       if (selectedTag.length > 1) {
         this.dialog.alert(
-          `You can't select more tags from the ${this.args.tagGroup}. To avoid issues, use Form Template`
+          i18n("admin.form_templates.errors.multiple_tags_not_allowed", {tag_name: this.args.tagGroup})
         );
         this.previousTags = this.currentTags;
 

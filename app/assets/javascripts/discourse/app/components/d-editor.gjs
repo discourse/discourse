@@ -162,38 +162,6 @@ export default class DEditor extends Component {
     return keymap;
   }
 
-  @action
-  handlePreviewClick(event) {
-    if (!event.target.closest(".d-editor-preview")) {
-      return;
-    }
-
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    if (event.target.tagName === "A") {
-      if (event.target.classList.contains("mention")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-user-card",
-          event.target,
-          event
-        );
-      }
-
-      if (event.target.classList.contains("mention-group")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-group-card",
-          event.target,
-          event
-        );
-      }
-
-      event.preventDefault();
-      return false;
-    }
-  }
-
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
