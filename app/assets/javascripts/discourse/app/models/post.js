@@ -744,18 +744,12 @@ export default class Post extends RestModel {
         return postAction.actionType.name_key !== "like" && postAction.acted;
       })
       ?.map((postAction) => {
-        const action = postAction.actionType.name_key;
-
         return {
           id: postAction.id,
           postId: this.id,
-          action,
+          action: postAction.actionType.name_key,
           canUndo: postAction.can_undo,
-          description: i18n(`post.actions.by_you.${action}`, {
-            defaultValue: i18n(`post.actions.by_you.custom`, {
-              custom: postAction.actionType.name,
-            }),
-          }),
+          description: postAction.translatedDescription,
         };
       });
   }

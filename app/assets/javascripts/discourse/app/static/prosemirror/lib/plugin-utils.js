@@ -74,3 +74,15 @@ export function getChangedRanges(tr) {
 
   return changes;
 }
+
+// from https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+export function atBlockStart(state, view) {
+  let { $cursor } = state.selection;
+  if (
+    !$cursor ||
+    (view ? !view.endOfTextblock("backward", state) : $cursor.parentOffset > 0)
+  ) {
+    return null;
+  }
+  return $cursor;
+}

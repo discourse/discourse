@@ -688,7 +688,7 @@ module DeprecatedIconHandler
 
     if icon_name != new_name
       error_msg =
-        `Missing icon error: The icon name "#{icon_name}" has been removed and should be updated to "#{new_name}" in your code. More info at https://meta.discourse.org/t/325349.`
+        "Missing icon error: The icon name \"#{icon_name}\" has been removed and should be updated to \"#{new_name}\" in your code. More info at https://meta.discourse.org/t/325349."
 
       Rails.logger.error(error_msg)
 

@@ -1,12 +1,16 @@
 import {
   chainCommands,
   exitCode,
+  joinTextblockBackward,
   selectParentNode,
   setBlockType,
 } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
 import { splitListItem } from "prosemirror-schema-list";
+import { atBlockStart } from "../lib/plugin-utils";
+
+const BACKSPACE_UNSET_NODES = ["heading", "code_block"];
 
 const isMac =
   typeof navigator !== "undefined"
@@ -26,10 +30,25 @@ export function buildKeymap(
 
   keys["Mod-z"] = undo;
   keys["Shift-Mod-z"] = redo;
-  keys["Backspace"] = undoInputRule;
+
+  const backspaceUnset = (state, dispatch, view) => {
+    const $pos = atBlockStart(state, view);
+    if (BACKSPACE_UNSET_NODES.includes($pos?.parent.type.name)) {
+      return setBlockType(schema.nodes.paragraph)(state, dispatch, view);
+    }
+    return false;
+  };
+
+  keys["Backspace"] = chainCommands(
+    undoInputRule,
+    backspaceUnset,
+    joinTextblockBackward
+  );
+
   if (!isMac) {
     keys["Mod-y"] = redo;
   }
+
   keys["Escape"] = selectParentNode;
 
   // The above keys are always included
