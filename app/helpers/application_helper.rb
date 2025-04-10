@@ -270,6 +270,30 @@ module ApplicationHelper
     (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
+  def crawlable_title_content
+    content = content_for?(:title) ? content_for(:title) : SiteSetting.title
+    content =
+      DiscoursePluginRegistry.apply_modifier(
+        :meta_data_content,
+        content,
+        :title,
+        { url: request.fullpath },
+      )
+    content
+  end
+
+  def crawlable_description_content
+    content = @description_meta || SiteSetting.site_description
+    content =
+      DiscoursePluginRegistry.apply_modifier(
+        :meta_data_content,
+        content,
+        :description,
+        { url: request.fullpath },
+      )
+    content
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
