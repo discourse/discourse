@@ -10,7 +10,6 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import element from "discourse/helpers/element";
 import { isTesting } from "discourse/lib/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
