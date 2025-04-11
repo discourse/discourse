@@ -210,23 +210,23 @@ const extension = {
         state.renderContent(node.content.firstChild);
         state.write(`]`);
       } else {
-        state.footnoteCount ??= 0;
-        state.footnoteCount++;
-        state.write(`[^${state.footnoteCount}]`);
-        state.footnoteMap ??= new Map();
-        state.footnoteMap.set(state.footnoteCount, node.content);
+        state.footnoteContents ??= [];
+        state.footnoteContents.push(node.content);
+        state.write(`[^${state.footnotes.length}]`);
       }
     },
     afterSerialize(state) {
-      if (!state.footnoteMap) {
+      const contents = state.footnoteContents;
+
+      if (!contents) {
         return;
       }
 
-      for (const [id, content] of state.footnoteMap) {
+      for (let i = 0; i < contents.length; i++) {
         const oldDelim = state.delim;
-        state.write(`[^${id}]: `);
+        state.write(`[^${i + 1}]: `);
         state.delim += "    ";
-        state.renderContent(content);
+        state.renderContent(contents[i]);
         state.delim = oldDelim;
       }
     },
