@@ -1,15 +1,17 @@
-function FootnoteNodeView({
+function createFootnoteNodeView({
   pmView: { EditorView },
   pmState: { EditorState },
   pmTransform: { StepMap },
 }) {
-  return class {
+  // from https://prosemirror.net/examples/footnote/
+  return class FootnoteNodeView {
     constructor(node, view, getPos) {
       this.node = node;
       this.outerView = view;
       this.getPos = getPos;
 
-      this.dom = document.createElement("footnote");
+      this.dom = document.createElement("div");
+      this.dom.className = "footnote";
       this.innerView = null;
     }
 
@@ -28,17 +30,14 @@ function FootnoteNodeView({
     }
 
     open() {
-      // Append a tooltip to the outer node
       const tooltip = this.dom.appendChild(document.createElement("div"));
       tooltip.style.setProperty(
         "--footnote-counter",
-        `"${getFootnoteCounterValue(this.dom)}"`
+        `"${this.#getFootnoteCounterValue()}"`
       );
       tooltip.className = "footnote-tooltip";
 
-      // And put a sub-ProseMirror into that
       this.innerView = new EditorView(tooltip, {
-        // You can use any node as an editor document
         state: EditorState.create({
           doc: this.node,
           plugins: this.outerView.state.plugins.filter(
@@ -46,7 +45,6 @@ function FootnoteNodeView({
               !/^(placeholder|trailing-paragraph)\$.*/.test(plugin.key)
           ),
         }),
-        // This is the magic part
         dispatchTransaction: this.dispatchInner.bind(this),
         handleDOMEvents: {
           mousedown: () => {
@@ -61,6 +59,14 @@ function FootnoteNodeView({
       });
     }
 
+    #getFootnoteCounterValue() {
+      const footnotes = this.dom
+        .closest(".ProseMirror")
+        ?.querySelectorAll(".footnote");
+
+      return Array.from(footnotes).indexOf(this.dom) + 1;
+    }
+
     close() {
       this.innerView.destroy();
       this.innerView = null;
@@ -68,14 +74,14 @@ function FootnoteNodeView({
     }
 
     dispatchInner(tr) {
-      let { state, transactions } = this.innerView.state.applyTransaction(tr);
+      const { state, transactions } = this.innerView.state.applyTransaction(tr);
       this.innerView.updateState(state);
 
       if (!tr.getMeta("fromOutside")) {
-        let outerTr = this.outerView.state.tr,
+        const outerTr = this.outerView.state.tr,
           offsetMap = StepMap.offset(this.getPos() + 1);
         for (let i = 0; i < transactions.length; i++) {
-          let steps = transactions[i].steps;
+          const steps = transactions[i].steps;
           for (let j = 0; j < steps.length; j++) {
             outerTr.step(steps[j].map(offsetMap));
           }
@@ -92,8 +98,8 @@ function FootnoteNodeView({
       }
       this.node = node;
       if (this.innerView) {
-        let state = this.innerView.state;
-        let start = node.content.findDiffStart(state.doc.content);
+        const state = this.innerView.state;
+        const start = node.content.findDiffStart(state.doc.content);
         if (start != null) {
           let { a: endA, b: endB } = node.content.findDiffEnd(
             state.doc.content
@@ -131,9 +137,7 @@ function FootnoteNodeView({
 
 /** @type {RichEditorExtension} */
 const extension = {
-  nodeViews: {
-    footnote: FootnoteNodeView,
-  },
+  nodeViews: { footnote: createFootnoteNodeView },
   nodeSpec: {
     footnote: {
       attrs: { id: {} },
@@ -142,8 +146,8 @@ const extension = {
       inline: true,
       atom: true,
       draggable: false,
-      parseDOM: [{ tag: "footnote" }],
-      toDOM: () => ["footnote", 0],
+      parseDOM: [{ tag: "div.footnote" }],
+      toDOM: () => ["div", { class: "footnote" }, 0],
     },
   },
   parse({ pmModel: { Slice, Fragment } }) {
@@ -159,27 +163,23 @@ const extension = {
         // footnote_open should be at the root level
         const doc = state.top();
 
+        const id = token.meta.id;
+        let innerTokens = tokens.slice(i + 1, tokens.length - 1);
+        const footnoteCloseIndex = innerTokens.findIndex(
+          (t) => t.type === "footnote_close"
+        );
+        innerTokens = innerTokens.slice(0, footnoteCloseIndex);
+
         doc.content.forEach((node, pos) => {
           const replacements = [];
           node.descendants((child, childPos) => {
-            const id = child.attrs.id;
-
-            if (child.type.name !== "footnote" || id !== token.meta.id) {
+            if (child.type.name !== "footnote" || child.attrs.id !== id) {
               return;
             }
 
-            let innerTokens = tokens.slice(i + 1, tokens.length - 1);
-            const footnoteCloseIndex = innerTokens.findIndex(
-              (t) => t.type === "footnote_close"
-            );
-            innerTokens = innerTokens.slice(0, footnoteCloseIndex);
-
-            // remove the inner tokens + footnote_close from the tokens stream
-            tokens.splice(i + 1, innerTokens.length + 1);
-
             // this is a trick to parse this subset of tokens having the footnote as parent
             state.stack = [];
-            state.openNode(state.schema.nodes.footnote, { id });
+            state.openNode(state.schema.nodes.footnote);
             state.parseTokens(innerTokens);
             const footnote = state.closeNode();
             state.stack = [doc];
@@ -193,6 +193,9 @@ const extension = {
             doc.content[pos] = doc.content[pos].replace(from, to, slice);
           }
         });
+
+        // remove the inner tokens + footnote_close from the tokens stream
+        tokens.splice(i + 1, innerTokens.length + 1);
       },
       footnote_anchor: { ignore: true, noCloseToken: true },
     };
@@ -241,19 +244,5 @@ const extension = {
     },
   ],
 };
-
-function getFootnoteCounterValue(footnoteElement) {
-  // Find the parent .ProseMirror
-  const proseMirror = footnoteElement.closest(".ProseMirror");
-  if (!proseMirror) {
-    return null;
-  }
-
-  // Get all <footnote> elements within the same .ProseMirror
-  const footnotes = proseMirror.querySelectorAll("footnote");
-
-  // Find the index of the target footnote (adding 1 since counter starts at 1)
-  return Array.from(footnotes).indexOf(footnoteElement) + 1;
-}
 
 export default extension;

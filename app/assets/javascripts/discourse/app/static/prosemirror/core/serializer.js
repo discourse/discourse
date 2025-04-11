@@ -34,7 +34,7 @@ export default class Serializer {
       return;
     }
 
-    this.#afterSerializers = this.#afterSerializers || [];
+    this.#afterSerializers ??= [];
     this.#afterSerializers.push(callback);
   }
 

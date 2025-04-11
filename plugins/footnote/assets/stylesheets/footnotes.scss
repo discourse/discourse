@@ -115,7 +115,9 @@
 .ProseMirror {
   counter-reset: prosemirror-footnote;
 
-  footnote {
+  .footnote {
+    display: inline-block;
+
     &::after {
       padding: 0 0.125em;
       display: inline-block;
