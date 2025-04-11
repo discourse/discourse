@@ -7,8 +7,10 @@ import { i18n } from "discourse-i18n";
 export default class BackToForum extends Component {
   @service routeHistory;
 
+  lastForumUrl = this.routeHistory.lastKnownURL;
+
   get href() {
-    return getURL(this.routeHistory.lastKnownURL);
+    return getURL(this.lastForumUrl);
   }
 
   <template>

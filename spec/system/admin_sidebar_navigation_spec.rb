@@ -25,8 +25,18 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("categories")
     expect(page).to have_no_css(".admin-main-nav")
     filter.click_back_to_forum
-    expect(page).to have_current_path("/")
+    expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-root")
+  end
+
+  it "goes back to exactly the same page when clicking back to forum" do
+    visit("/hot")
+
+    sidebar.click_link_in_section("community", "admin")
+    visit("/admin/users/list/active?username=foo")
+
+    filter.click_back_to_forum
+    expect(page).to have_current_path("/hot")
   end
 
   context "with subfolder" do
@@ -36,7 +46,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       visit("/discuss/admin")
 
       filter.click_back_to_forum
-      expect(page).to have_current_path("/discuss/")
+      expect(page).to have_current_path("/discuss/latest")
     end
   end
 
@@ -72,7 +82,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
       filter.click_back_to_forum
-      expect(page).to have_current_path("/")
+      expect(page).to have_current_path("/latest")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
     end
