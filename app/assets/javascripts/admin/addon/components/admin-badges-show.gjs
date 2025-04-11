@@ -12,6 +12,27 @@ import number from "discourse/helpers/number";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
+const FORM_FIELDS = [
+  "allow_title",
+  "multiple_grant",
+  "listable",
+  "auto_revoke",
+  "enabled",
+  "show_posts",
+  "target_posts",
+  "name",
+  "description",
+  "long_description",
+  "icon",
+  "image_upload_id",
+  "image_url",
+  "query",
+  "badge_grouping_id",
+  "trigger",
+  "badge_type_id",
+  "show_in_post_header",
+];
+
 export default class AdminBadgesShow extends Component {
   @service adminBadges;
 
@@ -31,6 +52,18 @@ export default class AdminBadgesShow extends Component {
 
   get badgeTriggers() {
     return this.adminBadges.badgeTriggers;
+  }
+
+  get readOnly() {
+    return this.args.badge.system;
+  }
+
+  get textCustomizationPrefix() {
+    return `badges.${this.args.badge.i18n_name}.`;
+  }
+
+  hasQuery(query) {
+    return query?.trim?.()?.length > 0;
   }
 
   <template>
@@ -60,15 +93,15 @@ export default class AdminBadgesShow extends Component {
         />
       </form.Field>
 
-      {{#if @controller.readOnly}}
+      {{#if this.readOnly}}
         <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
           <span class="readonly-field">
-            {{@controller.model.name}}
+            {{this.args.badge.name}}
           </span>
           <LinkTo
             @route="adminSiteText"
             @query={{hash
-              q=(concat @controller.textCustomizationPrefix "name")
+              q=(concat this.textCustomizationPrefix "name")
             }}
           >
             {{icon "pencil"}}
@@ -78,7 +111,7 @@ export default class AdminBadgesShow extends Component {
         <form.Field
           @title={{i18n "admin.badges.name"}}
           @name="name"
-          @disabled={{@controller.readOnly}}
+          @disabled={{this.readOnly}}
           @validation="required"
           as |field|
         >
@@ -90,7 +123,7 @@ export default class AdminBadgesShow extends Component {
         <form.Field
           @name="badge_type_id"
           @title={{i18n "admin.badges.badge_type"}}
-          @disabled={{@controller.readOnly}}
+          @disabled={{this.readOnly}}
           as |field|
         >
           <field.Select as |select|>
@@ -142,18 +175,18 @@ export default class AdminBadgesShow extends Component {
           </cc.Contents>
         </form.ConditionalContent>
 
-        {{#if @controller.readOnly}}
+        {{#if this.readOnly}}
           <form.Container
             data-name="description"
             @title={{i18n "admin.badges.description"}}
           >
             <span class="readonly-field">
-              {{@controller.model.description}}
+              {{this.args.badge.description}}
             </span>
             <LinkTo
               @route="adminSiteText"
               @query={{hash
-                q=(concat @controller.textCustomizationPrefix "description")
+                q=(concat this.textCustomizationPrefix "description")
               }}
             >
               {{icon "pencil"}}
@@ -163,27 +196,27 @@ export default class AdminBadgesShow extends Component {
           <form.Field
             @title={{i18n "admin.badges.description"}}
             @name="description"
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             as |field|
           >
             <field.Textarea />
           </form.Field>
         {{/if}}
 
-        {{#if @controller.readOnly}}
+        {{#if this.readOnly}}
           <form.Container
             data-name="long_description"
             @title={{i18n "admin.badges.long_description"}}
           >
             <span class="readonly-field">
-              {{@controller.model.long_description}}
+              {{this.args.badge.long_description}}
             </span>
 
             <LinkTo
               @route="adminSiteText"
               @query={{hash
                 q=(concat
-                  @controller.textCustomizationPrefix "long_description"
+                  this.textCustomizationPrefix "long_description"
                 )
               }}
             >
@@ -194,7 +227,7 @@ export default class AdminBadgesShow extends Component {
           <form.Field
             @name="long_description"
             @title={{i18n "admin.badges.long_description"}}
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             as |field|
           >
             <field.Textarea />
@@ -207,13 +240,13 @@ export default class AdminBadgesShow extends Component {
           <form.Field
             @name="query"
             @title={{i18n "admin.badges.query"}}
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             as |field|
           >
             <field.Code @lang="sql" />
           </form.Field>
 
-          {{#if (@controller.hasQuery data.query)}}
+          {{#if (this.hasQuery data.query)}}
             <form.Container>
               <form.Button
                 @isLoading={{@controller.preview_loading}}
@@ -232,7 +265,7 @@ export default class AdminBadgesShow extends Component {
             <form.CheckboxGroup as |group|>
               <group.Field
                 @name="auto_revoke"
-                @disabled={{@controller.readOnly}}
+                @disabled={{this.readOnly}}
                 @showTitle={{false}}
                 @title={{i18n "admin.badges.auto_revoke"}}
                 as |field|
@@ -242,7 +275,7 @@ export default class AdminBadgesShow extends Component {
 
               <group.Field
                 @name="target_posts"
-                @disabled={{@controller.readOnly}}
+                @disabled={{this.readOnly}}
                 @title={{i18n "admin.badges.target_posts"}}
                 @showTitle={{false}}
                 as |field|
@@ -253,7 +286,7 @@ export default class AdminBadgesShow extends Component {
 
             <form.Field
               @name="trigger"
-              @disabled={{@controller.readOnly}}
+              @disabled={{this.readOnly}}
               @validation="required"
               @title={{i18n "admin.badges.trigger"}}
               as |field|
@@ -273,7 +306,7 @@ export default class AdminBadgesShow extends Component {
       <form.Section @title="Settings">
         <form.Field
           @name="badge_grouping_id"
-          @disabled={{@controller.readOnly}}
+          @disabled={{this.readOnly}}
           @validation="required"
           @title={{i18n "admin.badges.badge_grouping"}}
           as |field|
@@ -308,7 +341,7 @@ export default class AdminBadgesShow extends Component {
             @title={{i18n "admin.badges.multiple_grant"}}
             @showTitle={{false}}
             @name="multiple_grant"
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             @format="full"
             as |field|
           >
@@ -324,7 +357,7 @@ export default class AdminBadgesShow extends Component {
             @title={{i18n "admin.badges.listable"}}
             @showTitle={{false}}
             @name="listable"
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             @format="full"
             as |field|
           >
@@ -335,7 +368,7 @@ export default class AdminBadgesShow extends Component {
             @title={{i18n "admin.badges.show_posts"}}
             @showTitle={{false}}
             @name="show_posts"
-            @disabled={{@controller.readOnly}}
+            @disabled={{this.readOnly}}
             @format="full"
             as |field|
           >
@@ -367,7 +400,7 @@ export default class AdminBadgesShow extends Component {
       <form.Actions>
         <form.Submit />
 
-        {{#unless @controller.readOnly}}
+        {{#unless this.readOnly}}
           <form.Button
             @action={{@controller.handleDelete}}
             class="badge-form__delete-badge-btn btn-danger"

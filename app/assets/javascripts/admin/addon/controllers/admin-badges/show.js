@@ -37,7 +37,6 @@ export default class AdminBadgesShowController extends Controller {
 
   @tracked model;
   @tracked previewLoading = false;
-  @tracked selectedGraphicType = null;
 
   @cached
   get formData() {
@@ -50,10 +49,6 @@ export default class AdminBadgesShowController extends Controller {
     return data;
   }
 
-  get readOnly() {
-    return this.model.system;
-  }
-
   @action
   postHeaderDescription(data) {
     return this.disableBadgeOnPosts(data) && !data.system;
@@ -63,14 +58,6 @@ export default class AdminBadgesShowController extends Controller {
   disableBadgeOnPosts(data) {
     const { listable, show_posts } = data;
     return !listable || !show_posts;
-  }
-
-  hasQuery(query) {
-    return query?.trim?.()?.length > 0;
-  }
-
-  get textCustomizationPrefix() {
-    return `badges.${this.model.i18n_name}.`;
   }
 
   @action
