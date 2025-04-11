@@ -6,7 +6,7 @@ import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
 
-  @alias("sidebarState.isForcingAdminSidebar") isForcingAdminSidebar;
+  @alias("sidebarState.isForcingSidebar") isForcingSidebar;
 
   keywords = {};
 
@@ -52,21 +52,21 @@ export default class AdminSidebarStateManager extends Service {
     if (isAdminSidebarActive) {
       return this.#forceAdminSidebar();
     } else {
-      this.isForcingAdminSidebar = false;
+      this.isForcingSidebar = false;
       return false;
     }
   }
 
   stopForcingAdminSidebar() {
     this.sidebarState.setPanel(MAIN_PANEL);
-    this.isForcingAdminSidebar = false;
+    this.isForcingSidebar = false;
   }
 
   #forceAdminSidebar() {
     this.sidebarState.setPanel(ADMIN_PANEL);
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
-    this.isForcingAdminSidebar = true;
+    this.isForcingSidebar = true;
     return true;
   }
 }
