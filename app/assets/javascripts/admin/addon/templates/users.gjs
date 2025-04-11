@@ -41,6 +41,11 @@ export default RouteTemplate(
         </:actions>
         <:tabs>
           <NavItem
+            @route="adminUsers.settings"
+            @label="settings"
+            class="admin-users-tabs__settings"
+          />
+          <NavItem
             @route="adminUsersList.show"
             @routeParam="active"
             @label="admin.users.nav.active"

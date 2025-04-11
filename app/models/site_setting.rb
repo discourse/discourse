@@ -24,6 +24,7 @@ class SiteSetting < ActiveRecord::Base
     site_admin
     stats_and_thresholds
     trust_levels
+    users
   ]
 
   DEFAULT_USER_PREFERENCES = %w[
