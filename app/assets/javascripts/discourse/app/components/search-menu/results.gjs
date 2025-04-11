@@ -10,6 +10,7 @@ import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
+import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -76,7 +77,13 @@ export default class Results extends Component {
       {{/unless}}
     {{else}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
-        <div class="results" data-test-selector="search-menu-results">
+        <div
+          class={{concatClass
+            "results"
+            (if this.search.activeGlobalSearchTerm "with-search-term")
+          }}
+          data-test-selector="search-menu-results"
+        >
           <PluginOutlet
             @name="search-menu-results-top"
             @outletArgs={{hash
