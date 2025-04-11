@@ -20,8 +20,10 @@ export default class Serializer {
     const state = new MarkdownSerializerState(this.nodes, this.marks, {});
     state.renderContent(doc.content);
 
-    for (const afterSerializer of this.#afterSerializers) {
-      afterSerializer(state);
+    if (this.#afterSerializers) {
+      for (const afterSerializer of this.#afterSerializers) {
+        afterSerializer(state);
+      }
     }
 
     return state.out;
