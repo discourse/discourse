@@ -7,8 +7,8 @@ import { i18n } from "discourse-i18n";
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
 
-  serialize(m) {
-    return { badge_id: get(m, "id") || "new" };
+  serialize(model) {
+    return { badge_id: get(model, "id") || "new" };
   }
 
   model(params) {
@@ -21,11 +21,5 @@ export default class AdminBadgesShowRoute extends Route {
       "id",
       parseInt(params.badge_id, 10)
     );
-  }
-
-  setupController(controller) {
-    super.setupController(...arguments);
-
-    controller.setup();
   }
 }

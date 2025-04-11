@@ -1,7 +1,4 @@
 import Component from "@glimmer/component";
-import { LinkTo } from "@ember/routing";
-import BadgeButton from "discourse/components/badge-button";
-import RouteTemplate from "ember-route-template";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesIndex extends Component {

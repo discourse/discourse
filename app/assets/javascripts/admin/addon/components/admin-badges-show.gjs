@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { concat, fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import RouteTemplate from "ember-route-template";
+import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
@@ -12,6 +13,26 @@ import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesShow extends Component {
+  @service adminBadges;
+
+  get badgeTypes() {
+    return this.adminBadges.badgeTypes;
+  }
+
+  get badgeGroupings() {
+    return this.adminBadges.badgeGroupings;
+  }
+
+  @action
+  currentBadgeGrouping(data) {
+    return this.adminBadges.badgeGroupings.find((bg) => bg.id === data.badge_grouping_id)
+      ?.name;
+  }
+
+  get badgeTriggers() {
+    return this.adminBadges.badgeTriggers;
+  }
+
   <template>
     <Form
       @data={{@controller.formData}}
@@ -73,7 +94,7 @@ export default class AdminBadgesShow extends Component {
           as |field|
         >
           <field.Select as |select|>
-            {{#each @controller.badgeTypes as |badgeType|}}
+            {{#each this.badgeTypes as |badgeType|}}
               <select.Option @value={{badgeType.id}}>
                 {{badgeType.name}}
               </select.Option>
@@ -238,7 +259,7 @@ export default class AdminBadgesShow extends Component {
               as |field|
             >
               <field.Select as |select|>
-                {{#each @controller.badgeTriggers as |badgeType|}}
+                {{#each this.badgeTriggers as |badgeType|}}
                   <select.Option @value={{badgeType.id}}>
                     {{badgeType.name}}
                   </select.Option>
@@ -258,10 +279,10 @@ export default class AdminBadgesShow extends Component {
           as |field|
         >
           <field.Menu
-            @selection={{@controller.currentBadgeGrouping data}}
+            @selection={{this.currentBadgeGrouping data}}
             as |menu|
           >
-            {{#each @controller.badgeGroupings as |grouping|}}
+            {{#each this.badgeGroupings as |grouping|}}
               <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
             {{/each}}
             <menu.Divider />

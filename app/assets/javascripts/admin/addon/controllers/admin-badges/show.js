@@ -1,8 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { service } from "@ember/service";
-import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
@@ -36,8 +35,6 @@ export default class AdminBadgesShowController extends Controller {
   @service dialog;
   @service modal;
 
-  @controller adminBadges;
-
   @tracked model;
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
@@ -53,28 +50,6 @@ export default class AdminBadgesShowController extends Controller {
     return data;
   }
 
-  @action
-  currentBadgeGrouping(data) {
-    return this.badgeGroupings.find((bg) => bg.id === data.badge_grouping_id)
-      ?.name;
-  }
-
-  get badgeTypes() {
-    return this.adminBadges.badgeTypes;
-  }
-
-  get badgeGroupings() {
-    return this.adminBadges.badgeGroupings;
-  }
-
-  get badgeTriggers() {
-    return this.adminBadges.badgeTriggers;
-  }
-
-  get protectedSystemFields() {
-    return this.adminBadges.protectedSystemFields;
-  }
-
   get readOnly() {
     return this.model.system;
   }
@@ -88,24 +63,6 @@ export default class AdminBadgesShowController extends Controller {
   disableBadgeOnPosts(data) {
     const { listable, show_posts } = data;
     return !listable || !show_posts;
-  }
-
-  setup() {
-    // this is needed because the model doesnt have default values
-    // Using `set` here isn't ideal, but we don't know that tracking is set up on the model yet.
-    if (this.model) {
-      if (isNone(this.model.badge_type_id)) {
-        this.model.set("badge_type_id", this.badgeTypes?.[0]?.id);
-      }
-
-      if (isNone(this.model.badge_grouping_id)) {
-        this.model.set("badge_grouping_id", this.badgeGroupings?.[0]?.id);
-      }
-
-      if (isNone(this.model.trigger)) {
-        this.model.set("trigger", this.badgeTriggers?.[0]?.id);
-      }
-    }
   }
 
   hasQuery(query) {
@@ -186,10 +143,10 @@ export default class AdminBadgesShowController extends Controller {
   async handleSubmit(formData) {
     let fields = FORM_FIELDS;
 
-    if (formData.system) {
-      const protectedFields = this.protectedSystemFields || [];
-      fields = fields.filter((f) => !protectedFields.includes(f));
-    }
+    // if (formData.system) {
+    //   const protectedFields = this.protectedSystemFields || [];
+    //   fields = fields.filter((f) => !protectedFields.includes(f));
+    // }
 
     const data = {};
     fields.forEach(function (field) {

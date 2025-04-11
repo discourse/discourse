@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
@@ -25,7 +23,6 @@ export default class AdminBadgesAward extends Component {
   }
 
   <template>
-    foo: {{this.args.badgeId}}
     <section class="current-badge content-body">
       <h2>{{i18n "admin.badges.mass_award.title"}}</h2>
       <p>{{i18n "admin.badges.mass_award.description"}}</p>

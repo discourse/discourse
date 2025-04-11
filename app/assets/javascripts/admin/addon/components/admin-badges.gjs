@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import RouteTemplate from "ember-route-template";
 import AdminBadgesList from "admin/components/admin-badges-list";
+import EditBadgeGroupingsModal from "admin/components/modal/edit-badge-groupings";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
@@ -10,9 +11,20 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminBadges extends Component {
   @service adminBadges;
+  @service modal;
 
   get badges() {
     return this.adminBadges.badges;
+  }
+
+  @action
+  editGroupings() {
+    this.modal.show(EditBadgeGroupingsModal, {
+      model: {
+        badgeGroupings: this.adminBadges.badgeGroupings,
+        updateGroupings: (groupings) => this.adminBadges.badgeGroupings = groupings,
+      },
+    });
   }
 
   <template>
@@ -47,7 +59,7 @@ export default class AdminBadges extends Component {
           />
 
           <actions.Default
-            @action={{routeAction "editGroupings"}}
+            @action={{this.editGroupings}}
             @title="admin.badges.group_settings"
             @label="admin.badges.group_settings"
             @icon="gear"
