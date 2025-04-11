@@ -8,6 +8,7 @@ require "oj"
 module Migrations
   module Database
     INTERMEDIATE_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "intermediate_db_schema")
+    MAPPINGS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "mappings_db_schema")
     UPLOADS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "uploads_db_schema")
 
     def self.migrate(db_path, migrations_path:)
@@ -58,6 +59,18 @@ module Migrations
     def self.to_json(value)
       return nil if value.nil?
       ::Oj.dump(value, mode: :compat)
+    end
+
+    def self.to_date(text)
+      text.present? ? Date.parse(text) : nil
+    end
+
+    def self.to_datetime(text)
+      text.present? ? DateTime.parse(text) : nil
+    end
+
+    def self.to_boolean(value)
+      value == 1
     end
   end
 end

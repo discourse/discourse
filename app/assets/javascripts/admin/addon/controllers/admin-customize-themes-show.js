@@ -312,10 +312,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   updateLocale(value) {
+    this.set("model.loadingTranslations", true);
     this.set("model.locale", value);
-    ajax(this.getTranslationsUrl).then(({ translations }) =>
-      this.set("model.translations", translations)
-    );
+    ajax(this.getTranslationsUrl).then(({ translations }) => {
+      this.set("model.translations", translations);
+      this.set("model.loadingTranslations", false);
+    });
   }
 
   @action

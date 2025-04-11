@@ -34,6 +34,14 @@ module PageObjects
       def option(selector)
         within("#d-menu-portals") { find(selector) }
       end
+
+      def has_option?(selector)
+        within("#d-menu-portals") { has_css?(selector) }
+      end
+
+      def has_no_option?(selector)
+        within("#d-menu-portals") { has_no_css?(selector) }
+      end
     end
   end
 end

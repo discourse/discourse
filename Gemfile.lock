@@ -88,7 +88,7 @@ GEM
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     builder (3.3.0)
-    bullet (8.0.2)
+    bullet (8.0.3)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (12.0.0)
@@ -126,7 +126,7 @@ GEM
     diffy (3.4.3)
     digest (3.2.0)
     digest-xxhash (0.2.9)
-    discourse-emojis (1.0.38)
+    discourse-emojis (1.0.39)
     discourse-fonts (0.0.19)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -148,7 +148,7 @@ GEM
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.12.2)
+    faraday (2.13.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -435,7 +435,7 @@ GEM
     redis-namespace (1.11.0)
       redis (>= 4)
     regexp_parser (2.10.0)
-    reline (0.6.0)
+    reline (0.6.1)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -555,9 +555,9 @@ GEM
     sassc-embedded (1.80.2)
       sass-embedded (~> 1.80)
     securerandom (0.4.1)
-    selenium-devtools (0.133.0)
+    selenium-devtools (0.135.0)
       selenium-webdriver (~> 4.2)
-    selenium-webdriver (4.29.1)
+    selenium-webdriver (4.31.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -827,7 +827,7 @@ CHECKSUMS
   binding_of_caller (1.0.1) sha256=2b2902abff4246ddcfbc4da9b69bc4a019e22aeb300c2ff6289a173d4b90b29a
   bootsnap (1.18.4) sha256=ac4c42af397f7ee15521820198daeff545e4c360d2772c601fbdc2c07d92af55
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  bullet (8.0.2) sha256=4df2e360f4da39a513d56d91ad721e0201d52c793ce5cd16ec456ba4fc929a9d
+  bullet (8.0.3) sha256=60e41446500a7e59272b3c2398cded214deec3662e883009de5bf30028a0642c
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
@@ -850,7 +850,7 @@ CHECKSUMS
   diffy (3.4.3) sha256=4264b9e7db00d1cd426fcd32e36565779163cedc2340a95b0e6f025e71f9aaa7
   digest (3.2.0) sha256=fa2e7092ec683f65d82fadde5ff4ca3b32e23ee0b19f1fc1a5e09993ad2d3991
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
-  discourse-emojis (1.0.38) sha256=4f9cfcbc7ea8aef69e1210e8796233ad9923ae908ee7696424f3ad92e51d6c51
+  discourse-emojis (1.0.39) sha256=7c7ce56b7a97f7ca2b9b26ffb2c2bb6454d2bfbb45dd3b68d91dd1e90b8e9c04
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_dev_assets (0.0.5) sha256=a09a801a210aa3f7247dd382dfd73b389d4bd02be86be675eca2d451f9898285
@@ -866,7 +866,7 @@ CHECKSUMS
   fabrication (2.31.0) sha256=2c79f10d1b88034a2ebd47ce77acba66847fc4636581c8282b3408adc68e85aa
   faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
   fakeweb (1.3.0) sha256=1ec996be13020a00b3464560c09180b424477c698f59f82edf2b99b16cfa09a8
-  faraday (2.12.2) sha256=157339c25c7b8bcb739f5cf1207cb0cefe8fa1c65027266bcbc34c90c84b9ad6
+  faraday (2.13.0) sha256=f2697cd61a434dc446ee035f0370de654c2ad64707c4fc2541eb2338702e9614
   faraday-net_http (3.4.0) sha256=a1f1e4cd6a2cf21599c8221595e27582d9936819977bbd4089a601f24c64e54a
   faraday-retry (2.3.1) sha256=4004faa21f41fc5360d359bc79889fc58fb7fae0ce93bfb737a784ac76805c03
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
@@ -1012,7 +1012,7 @@ CHECKSUMS
   redis-client (0.24.0) sha256=ee65ee39cb2c38608b734566167fd912384f3c1241f59075e22858f23a085dbb
   redis-namespace (1.11.0) sha256=e91a1aa2b2d888b6dea1d4ab8d39e1ae6fac3426161feb9d91dd5cca598a2239
   regexp_parser (2.10.0) sha256=cb6f0ddde88772cd64bff1dbbf68df66d376043fe2e66a9ef77fcb1b0c548c61
-  reline (0.6.0) sha256=57620375dcbe56ec09bac7192bfb7460c716bbf0054dc94345ecaa5438e539d2
+  reline (0.6.1) sha256=1afcc9d7cb1029cdbe780d72f2f09251ce46d3780050f3ec39c3ccc6b60675fb
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   rexml (3.4.1) sha256=c74527a9a0a04b4ec31dbe0dc4ed6004b960af943d8db42e539edde3a871abca
   rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
@@ -1056,8 +1056,8 @@ CHECKSUMS
   sass-embedded (1.85.0-x86_64-linux-musl) sha256=ca01931c54b59db1130a779386bcfc798f8dcfee1f98f60fbcf8c5dbdc0f9c23
   sassc-embedded (1.80.2) sha256=625ac3923fe9af1a8072210cf22b01b66f3dc23748a4997a9b28bfdff7c7967d
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-devtools (0.133.0) sha256=aba5a5225ac38d235bbc6ebb4e0b8209e973ac7af4226e4304a1417573f73f64
-  selenium-webdriver (4.29.1) sha256=0a7fe53cc4d2c515adbb89e115c6e786c64e9b98f85939d21071c6e32883a146
+  selenium-devtools (0.135.0) sha256=3862ec1f3e940a030f492b3691d11af35544789f961fcd0633cb89e4ea4251ec
+  selenium-webdriver (4.31.0) sha256=ddb2d88eee23cddb5d6a9dadd909427a9e5163718338e11a91eef2fbead100e9
   shoulda-matchers (6.4.0) sha256=9055bb7f4bb342125fb860809798855c630e05ef5e75837b3168b8e6ee1608b0
   sidekiq (7.3.9) sha256=1108712e1def89002b28e3545d5ae15d4a57ffd4d2c25d97bb1360988826b5a7
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5

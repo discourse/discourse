@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
+import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
 
 export default class AdminSiteSettingsRoute extends DiscourseRoute {
@@ -9,6 +10,10 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   queryParams = {
     filter: { replace: true },
   };
+
+  titleToken() {
+    return i18n("admin.config.site_settings.title");
+  }
 
   model() {
     return SiteSetting.findAll();

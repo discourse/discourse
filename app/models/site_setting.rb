@@ -3,16 +3,21 @@
 class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
+    analytics
+    email
     embedding
     emojis
     flags
     fonts
     group_permissions
+    interface
     legal
     localization
     navigation
     notifications
     permalinks
+    user_defaults
+    site_admin
     trust_levels
   ]
 
