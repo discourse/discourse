@@ -3,6 +3,6 @@ import AdminBadgesAward from "admin/components/admin-badges-award";
 
 export default RouteTemplate(
   <template>
-    <AdminBadgesAward @controller={{@controller}} @badgeId={{@model}} />
+    <AdminBadgesAward @controller={{@controller}} @badge={{@model}} />
   </template>
 );

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BadgeButton from "discourse/components/badge-button";
-import { LinkTo } from "@ember/routing";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesList extends Component {
@@ -22,10 +22,7 @@ export default class AdminBadgesList extends Component {
       <ul class="admin-badge-list">
         {{#each @badges as |badge|}}
           <li class="admin-badge-list-item">
-            <LinkTo
-              @route={{this.selectedRoute}}
-              @model={{badge.id}}
-            >
+            <LinkTo @route={{this.selectedRoute}} @model={{badge.id}}>
               <BadgeButton @badge={{badge}} />
               {{#if badge.newBadge}}
                 <span class="list-badge">{{i18n
