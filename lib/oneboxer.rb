@@ -63,11 +63,6 @@ module Oneboxer
   def self.force_get_hosts
     hosts = []
     hosts += SiteSetting.force_get_hosts.split("|").collect { |domain| "https://#{domain}" }
-    hosts +=
-      SiteSetting
-        .cache_onebox_response_body_domains
-        .split("|")
-        .collect { |domain| "https://www.#{domain}" }
     hosts += amazon_domains
 
     hosts.uniq
@@ -124,36 +119,6 @@ module Oneboxer
   def self.invalidate(url)
     Discourse.cache.delete(onebox_cache_key(url))
     Discourse.cache.delete(onebox_failed_cache_key(url))
-  end
-
-  def self.cache_response_body?(uri)
-    uri = URI.parse(uri) if uri.is_a?(String)
-
-    if SiteSetting.cache_onebox_response_body?
-      SiteSetting
-        .cache_onebox_response_body_domains
-        .split("|")
-        .any? { |domain| uri.hostname.ends_with?(domain) }
-    end
-  end
-
-  def self.cache_response_body(uri, response)
-    key = redis_cached_response_body_key(uri)
-    Discourse.redis.without_namespace.setex(key, 1.minutes.to_i, response)
-  end
-
-  def self.cached_response_body_exists?(uri)
-    key = redis_cached_response_body_key(uri)
-    Discourse.redis.without_namespace.exists(key).to_i > 0
-  end
-
-  def self.fetch_cached_response_body(uri)
-    key = redis_cached_response_body_key(uri)
-    Discourse.redis.without_namespace.get(key)
-  end
-
-  def self.redis_cached_response_body_key(uri)
-    "CACHED_RESPONSE_#{onebox_locale}_#{uri}"
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -557,16 +522,10 @@ module Oneboxer
           hostname: GlobalSetting.hostname,
           facebook_app_access_token: SiteSetting.facebook_app_access_token,
           disable_media_download_controls: SiteSetting.disable_onebox_media_download_controls,
-          body_cacher: self,
           content_type: fd.content_type,
         }
 
         onebox_options[:cookie] = fd.cookie if fd.cookie
-
-        user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(
-          url,
-        ) && SiteSetting.cache_onebox_user_agent.present?
-        onebox_options[:user_agent] = user_agent_override if user_agent_override
 
         preview_result = Onebox.preview(uri.to_s, onebox_options)
         result = {
@@ -701,11 +660,6 @@ module Oneboxer
     if strategy && Oneboxer.strategies[strategy][:force_custom_user_agent_host]
       fd_options[:force_custom_user_agent_hosts] = ["https://#{uri.hostname}"]
     end
-
-    user_agent_override = SiteSetting.cache_onebox_user_agent if Oneboxer.cache_response_body?(
-      url,
-    ) && SiteSetting.cache_onebox_user_agent.present?
-    fd_options[:default_user_agent] = user_agent_override if user_agent_override
 
     fd_options
   end

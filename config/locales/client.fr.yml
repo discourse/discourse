@@ -597,6 +597,10 @@ fr:
         name: "Nom"
         fields: "Champs"
         reject_reason: "Raison"
+        scrubbed_reason: "Motif d'attribution"
+        scrub_record:
+          reason_placeholder: "Raison ..."
+          cancel_button: "Annuler"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
@@ -3798,9 +3802,13 @@ fr:
       logo_dark: "Image du logo de la catégorie en mode sombre"
       background_image: "Image de fond de la catégorie"
       background_image_dark: "Image d'arrière-plan de la catégorie sombre"
-      badge_colors: "Couleurs du badge"
-      background_color: "Couleur du fond"
-      foreground_color: "Couleur du texte"
+      background_color: "Couleur"
+      styles:
+        icon: "Icône"
+        emoji: "Émoji"
+        options:
+          icon: "Icône"
+          emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
       name_placeholder: "Un ou deux mots maximum"
@@ -5976,7 +5984,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          description: "Les palettes de couleurs définissent les couleurs de base utilisées dans l'interface de votre site, tandis que les thèmes peuvent fournir un style, des mises en page et des composants supplémentaires. Les deux peuvent fonctionner ensemble pour créer l'apparence unique de votre site et les deux peuvent être mis à la disposition des utilisateurs selon leurs préférences."
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
@@ -451,6 +452,10 @@ export default class Category extends RestModel {
 
   @service currentUser;
 
+  @tracked color;
+  @tracked styleType = this.style_type;
+  @tracked emoji;
+  @tracked icon;
   permissions = null;
 
   init() {
@@ -490,6 +495,16 @@ export default class Category extends RestModel {
     return applyValueTransformer("category-display-name", this.get("name"), {
       category: this,
     });
+  }
+
+  get textColor() {
+    return applyValueTransformer(
+      "category-text-color",
+      this.get("text_color"),
+      {
+        category: this,
+      }
+    );
   }
 
   @computed("parent_category_id", "site.categories.[]")
@@ -710,6 +725,8 @@ export default class Category extends RestModel {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
+    this.styleType = this.style_type;
+
     return ajax(url, {
       contentType: "application/json",
       data: JSON.stringify({
@@ -761,6 +778,9 @@ export default class Category extends RestModel {
         moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
+        style_type: this.style_type,
+        emoji: this.emoji,
+        icon: this.icon,
       }),
       type: id ? "PUT" : "POST",
     });

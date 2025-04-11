@@ -2,6 +2,12 @@
   display: flex;
   flex-grow: 1;
   max-width: 100%;
+
+  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    font-variant-ligatures: none;
+  }
 }
 
 .d-editor {
@@ -322,7 +328,7 @@
     font-size: var(--font-down-1);
   }
 
-  .btn:focus {
+  .btn:focus-visible {
     @include default-focus;
   }
 

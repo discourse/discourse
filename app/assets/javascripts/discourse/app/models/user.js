@@ -591,6 +591,12 @@ export default class User extends RestModel.extend(Evented) {
     });
   }
 
+  async removePassword() {
+    return ajax(userPath(`${this.username}/remove-password`), {
+      type: "PUT",
+    });
+  }
+
   loadSecondFactorCodes() {
     return ajax("/u/second_factors.json", {
       type: "POST",
@@ -1446,7 +1452,7 @@ class UserStatusManager {
   }
 
   _statusChanged() {
-    this.user.trigger("status-changed");
+    this.user.trigger("status-changed", this.user);
 
     const status = this.user.status;
     if (status && status.ends_at) {
@@ -1480,12 +1486,12 @@ class UserStatusManager {
   }
 
   _autoClearStatus() {
-    this.user.set("status", null);
+    this.user.status = null;
   }
 
   _updateStatus(statuses) {
     if (statuses.hasOwnProperty(this.user.id)) {
-      this.user.set("status", statuses[this.user.id]);
+      this.user.status = statuses[this.user.id];
     }
   }
 }

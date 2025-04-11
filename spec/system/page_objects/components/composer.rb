@@ -136,6 +136,10 @@ module PageObjects
         has_css?(MENTION_MENU)
       end
 
+      def mention_menu_autocomplete_username_list
+        find(MENTION_MENU).all("a").map { |a| a.text }
+      end
+
       def has_emoji_autocomplete?
         has_css?(AUTOCOMPLETE_MENU)
       end

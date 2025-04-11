@@ -73,7 +73,10 @@ ko:
             restricted_categories:
               label: 카테고리
           created: 생성됨
-          topics: 글
+          with_images: 이미지
+          with_links: 링크
+          with_code: 코드
+          with_uploads: 업로드된 파일
         category_created_edited:
           fields:
             restricted_category:

@@ -49,7 +49,7 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser");
     await click("#email-login-link");
 
-    assert.dom("#modal-alert").hasHtml(
+    assert.dom(".alert-error").hasHtml(
       i18n("email_login.complete_username_not_found", {
         username: "someuser",
       }),
@@ -59,7 +59,7 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser@gmail.com");
     await click("#email-login-link");
 
-    assert.dom("#modal-alert").hasHtml(
+    assert.dom(".alert-error").hasHtml(
       i18n("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),

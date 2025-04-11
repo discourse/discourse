@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -9,7 +10,6 @@ import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
 import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
-import Scrolling from "discourse/mixins/scrolling";
 
 @classNameBindings(
   "multiSelect",
@@ -18,7 +18,9 @@ import Scrolling from "discourse/mixins/scrolling";
   "topic.category.read_restricted:read_restricted",
   "topic.deleted:deleted-topic"
 )
-export default class DiscourseTopic extends Component.extend(Scrolling) {
+export default class DiscourseTopic extends Component {
+  @service scrollManager;
+
   @alias("topic.userFilters") userFilters;
   @alias("topic.postStream") postStream;
 
@@ -60,7 +62,7 @@ export default class DiscourseTopic extends Component.extend(Scrolling) {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.bindScrolling();
+    this.scrollManager.bindScrolling(this);
     window.addEventListener("resize", this.scrolled);
     $(this.element).on(
       "click.discourse-redirect",
@@ -72,7 +74,7 @@ export default class DiscourseTopic extends Component.extend(Scrolling) {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    this.unbindScrolling();
+    this.scrollManager.unbindScrolling(this);
     window.removeEventListener("resize", this.scrolled);
 
     // Unbind link tracking

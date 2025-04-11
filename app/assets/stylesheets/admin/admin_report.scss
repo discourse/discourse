@@ -205,7 +205,7 @@
 
 .admin-report.storage-stats {
   .main {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
   }
 }
 
@@ -216,7 +216,7 @@
   border-bottom: 1px solid var(--primary-low);
   padding-bottom: 0.5em;
 
-  @media screen and (max-width: 400px) {
+  @media screen and (width <= 400px) {
     flex-wrap: wrap;
   }
 

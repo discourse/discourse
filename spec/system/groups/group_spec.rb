@@ -63,6 +63,21 @@ describe "Group", type: :system do
     end
   end
 
+  describe "update a group" do
+    it "creates a new group" do
+      group_page.visit(group)
+
+      group_page.click_manage
+      group_page.click_membership
+
+      group_page.fill_in("title", with: "The Illuminati")
+
+      group_page.click_save
+
+      expect(group_page).to have_css(".group-manage-save-button span", text: "Saved!")
+    end
+  end
+
   describe "delete a group" do
     it "redirects to groups index page" do
       group_page.visit(group)

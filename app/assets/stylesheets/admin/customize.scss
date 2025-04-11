@@ -112,6 +112,8 @@
     background-color: var(--tertiary-low);
     padding: 10px;
     margin: 10px 0;
+    white-space: nowrap;
+    overflow-x: auto;
   }
 
   .admin-container {
@@ -206,11 +208,11 @@
         justify-content: space-between;
         width: 79.7%;
 
-        @media screen and (max-width: 700px) {
+        @media screen and (width <= 700px) {
           width: 100%;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 768px) {
+        @media screen and (width >= 700px) and (width <= 768px) {
           width: 73%;
         }
 
@@ -276,7 +278,10 @@
     width: 100%;
     display: flex;
     border: 1px solid var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-top-left-radius: var(--d-border-radius);
 
+    // gap: 0.25em;
     .tab {
       border: none;
       padding: 1em;
@@ -301,11 +306,12 @@
         &:focus,
         &:hover {
           color: var(--d-nav-color--hover);
-          background: var(--d-nav-bg-color--hover);
+          position: relative;
+
+          @include nav-active;
 
           &.active {
             color: var(--d-nav-color--active);
-            background: var(--d-nav-bg-color--active);
           }
 
           .d-icon {
@@ -398,11 +404,11 @@
     border-left: 1px solid var(--primary-low);
     width: 100%;
 
-    @media screen and (max-height: 1000px) {
+    @media screen and (height <= 1000px) {
       max-height: 50vh;
     }
 
-    @media screen and (max-height: 800px) {
+    @media screen and (height <= 800px) {
       max-height: 40vh;
     }
 
@@ -608,53 +614,60 @@
     }
   }
 
-  .current-style.maximized {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: z("fullscreen");
-    background: var(--secondary);
-    width: 100%;
-    padding: 0;
-    margin: 0;
-
-    .admin-container {
-      position: absolute;
-      bottom: 50px;
-      top: 80px;
-      width: 100%;
-    }
-
-    .admin-footer {
-      margin-top: 10px;
-    }
-
-    .ace-wrapper {
-      height: calc(100vh - 200px);
-    }
-
-    .wrapper {
-      position: absolute;
-      top: 20px;
-      bottom: 10px;
-      left: 20px;
-      right: 20px;
-    }
-  }
-
-  .content-list,
-  .current-style {
-    float: left;
-  }
-
   .content-list ul {
     margin-bottom: 10px;
   }
 
   .current-style {
     width: 100%;
+
+    .wrapper {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      height: calc(100dvh - var(--header-offset) - 3em);
+      padding: 0;
+    }
+
+    .editor-container {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ace-wrapper {
+      position: relative;
+      min-height: unset;
+      flex: 1 1 0;
+    }
+
+    &.maximized {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: z("fullscreen");
+      background: var(--secondary);
+      padding: 0;
+      margin: 0;
+
+      .wrapper {
+        padding: 1em;
+        height: 100dvh;
+      }
+
+      .admin-container {
+        position: absolute;
+        bottom: 50px;
+        top: 80px;
+        width: 100%;
+      }
+
+      .admin-footer {
+        margin-top: 10px;
+      }
+    }
 
     .admin-container {
       margin: 0;
@@ -699,13 +712,6 @@
           margin-right: 0;
         }
       }
-    }
-
-    .ace-wrapper {
-      position: relative;
-      height: calc(100vh - 450px);
-      min-height: 200px;
-      width: 100%;
     }
 
     .ace_editor {
@@ -960,7 +966,7 @@
     }
   }
 
-  @media screen and (max-width: 880px) {
+  @media screen and (width <= 880px) {
     table.grid {
       thead {
         display: none;
@@ -984,7 +990,7 @@
     }
   }
 
-  @media screen and (max-width: 580px) {
+  @media screen and (width <= 580px) {
     table.grid {
       tr td.editing-input {
         grid-column-start: 1;
@@ -1203,8 +1209,11 @@
 
 .desktop-view .admin-customize {
   .show-current-style {
-    padding-left: 0;
     width: 68%;
+
+    &.legacy {
+      padding-left: 2%;
+    }
 
     .title {
       input {

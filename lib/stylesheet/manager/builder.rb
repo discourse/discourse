@@ -53,7 +53,7 @@ class Stylesheet::Manager::Builder
       rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
           # no special errors for theme, handled in theme editor
-          ["", nil]
+          ["/* SCSS compilation error: #{e.message} */", nil]
         elsif @target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET && Rails.env.production?
           # log error but do not crash for errors in color definitions SCSS
           Rails.logger.error "SCSS compilation error: #{e.message}"

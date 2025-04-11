@@ -93,6 +93,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
+        I18n.t("admin_js.admin.config.content.title"),
         I18n.t("admin_js.admin.config.user_fields.title"),
         I18n.t("admin_js.admin.config.flags.title"),
         I18n.t("admin_js.admin.config.email.title"),
@@ -117,6 +118,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       [
         I18n.t("admin_js.admin.config.email.title"),
         I18n.t("admin_js.admin.config.email_appearance.title"),
+        I18n.t("admin_js.admin.config.email_logs.title"),
         I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
@@ -191,6 +193,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(
       [
+        I18n.t("admin_js.admin.config.content.title"),
         I18n.t("admin_js.admin.config.user_fields.title"),
         I18n.t("admin_js.admin.config.flags.title"),
         I18n.t("admin_js.admin.config.email.title"),
@@ -302,13 +305,15 @@ describe "Admin | Sidebar Navigation", type: :system do
   end
 
   it "highlights the 'Themes and components' link when the themes page is visited" do
-    visit("/admin/config/customize/themes")
+    visit("/admin/customize/themes")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
   end
 
-  it "highlights the 'Themes and components' link when the components page is visited" do
+  # TODO(osama) unskip this test when the "Themes and components" link is
+  # changed to the new config customize page
+  xit "highlights the 'Themes and components' link when the components page is visited" do
     visit("/admin/config/customize/components")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
@@ -322,11 +327,13 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_add_section_button
   end
 
-  xit "displays limited links for moderator" do
+  it "displays limited links for moderator" do
     sign_in(moderator)
     visit("/admin")
 
     sidebar.toggle_all_sections
+
+    expect(page).to have_no_css(".sidebar-section--collapsed")
 
     links = page.all(".sidebar-section-link-content-text")
     expect(links.map(&:text)).to eq(

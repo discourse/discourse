@@ -47,7 +47,7 @@
     height: 100%;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (width <= 767px) {
     // important to maintain narrow desktop widths
     // for auth modals in Discourse Hub on iPad
     .has-alt-auth {

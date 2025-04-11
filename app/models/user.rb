@@ -930,6 +930,12 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def remove_password
+    raise Discourse::InvalidAccess if associated_accounts.blank? && passkey_credential_ids.blank?
+
+    user_password.destroy if user_password
+  end
+
   def password
     "" # so that validator doesn't complain that a password attribute doesn't exist
   end
@@ -1636,7 +1642,7 @@ class User < ActiveRecord::Base
   end
 
   def anonymous?
-    SiteSetting.allow_anonymous_posting && trust_level >= 1 && !!anonymous_user_master
+    SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
   def is_singular_admin?

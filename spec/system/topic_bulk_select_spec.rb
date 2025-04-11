@@ -189,6 +189,7 @@ describe "Topic bulk select", type: :system do
       # Closes the selected topics
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(topic_list).to have_closed_status(topics.first)
+      expect(topic_list).to have_closed_status(topics.second)
     end
 
     it "closes single topic" do
@@ -201,16 +202,18 @@ describe "Topic bulk select", type: :system do
       expect(topic_page).to have_read_post(1)
 
       # Bulk close the topic as an admin
-      sign_in(admin)
-      visit("/latest")
-      topic_list_header.click_bulk_select_button
-      topic_list.click_topic_checkbox(topics.third)
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("close-topics")
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      using_session(:admin) do
+        sign_in(admin)
+        visit("/latest")
+        topic_list_header.click_bulk_select_button
+        topic_list.click_topic_checkbox(topics.third)
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("close-topics")
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+        expect(topic_list).to have_closed_status(topics.third)
+      end
 
       # Check that the user did receive a new post notification badge
-      sign_in(user)
       visit("/latest")
       expect(topic_list).to have_unread_badge(topics.third)
     end
@@ -224,14 +227,17 @@ describe "Topic bulk select", type: :system do
       topic_page.watch_topic
 
       # Bulk close the topic as an admin
-      sign_in(admin)
-      visit("/latest")
-      topic_list_header.click_bulk_select_button
-      topic_list.click_topic_checkbox(topics.first)
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("close-topics")
-      topic_bulk_actions_modal.click_silent # Check Silent
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      using_session(:admin) do
+        sign_in(admin)
+        visit("/latest")
+        topic_list_header.click_bulk_select_button
+        topic_list.click_topic_checkbox(topics.first)
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("close-topics")
+        topic_bulk_actions_modal.click_silent # Check Silent
+        topic_bulk_actions_modal.click_bulk_topics_confirm
+        expect(topic_list).to have_closed_status(topics.first)
+      end
 
       # Check that the user didn't receive a new post notification badge
       sign_in(user)
@@ -252,6 +258,7 @@ describe "Topic bulk select", type: :system do
       # Fill in message
       topic_bulk_actions_modal.fill_in_close_note("None of these are useful")
       topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(topic_list).to have_closed_status(topics.first)
 
       # Check that the topic now has the message
       visit("/t/#{topic.slug}/#{topic.id}")
@@ -346,6 +353,17 @@ describe "Topic bulk select", type: :system do
       topic_bulk_actions_modal.click_bulk_topics_confirm
       expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
       visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
+      expect(page).to have_content(group_private_message.title)
+    end
+
+    it "allows archiving group private messages from the group inbox page" do
+      sign_in(admin)
+      visit("/g/#{group.name}/messages/inbox")
+      expect(page).to have_content(group_private_message.title)
+      open_bulk_actions_modal([group_private_message], "archive-messages")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/g/#{group.name}/messages/archive")
       expect(page).to have_content(group_private_message.title)
     end
 

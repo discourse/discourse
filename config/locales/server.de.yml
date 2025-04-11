@@ -316,6 +316,7 @@ de:
     site_settings:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
+      site_settings_are_deprecated: "Die folgenden Einstellungen sind veraltet: %{old_names}. Verwende stattdessen %{new_names}"
       site_settings_are_hidden: "Du darfst keine versteckten Einstellungen ändern: %{setting_names}"
       site_settings_are_shadowed_globally: "Du kannst diese Einstellungen nicht ändern, da sie global konfiguriert sind: %{setting_names}"
       site_settings_are_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern: %{setting_names}"
@@ -342,6 +343,7 @@ de:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst das Entfernen der Bild-Metadaten nicht deaktivieren, wenn „composer media optimization image enabled“ aktiviert ist. Deaktiviere „composer media optimization image enabled“, bevor du das Entfernen der Bild-Metadaten deaktivierst."
       x_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
       tl0_and_anonymous_flag: "Für anonyme Benutzer muss entweder „site contact email“ oder „email address to report illegal content“ angegeben werden."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Für diese Einstellung muss zuerst die Einstellung „allow anonymous mode“ aktiviert werden."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server „%{hostname}“ nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in deinem Beitrag. :cry:"
@@ -576,6 +578,7 @@ de:
         one: "„%{username}“ ist bereits Mitglied dieser Gruppe."
         other: "Die folgenden Benutzer sind bereits Mitglieder dieser Gruppe: %{username}"
       invalid_domain: "„%{domain}“ ist keine gültige Domain."
+      too_many_domains: "Zu viele Domänen. Maximal %{max}."
       invalid_incoming_email: "„%{email}“ ist keine gültige E-Mail-Adresse."
       email_already_used_in_group: "„%{email}“ wird bereits von der Gruppe „%{group_name}“ verwendet."
       email_already_used_in_category: "„%{email}“ wird bereits von der Kategorie „%{category_name}“ verwendet."
@@ -585,6 +588,9 @@ de:
         one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
         other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
       usernames_or_emails_required: "Benutzernamen oder E-Mails müssen vorhanden sein"
+      counting_too_many_email_domains:
+        one: "Maximal %{count} E-Mail-Domain kann auf einmal gezählt werden"
+        other: "Maximal %{count} E-Mail-Domains können auf einmal gezählt werden"
       no_invites_with_discourse_connect: "Du kannst nur registrierte Benutzer einladen, wenn DiscourseConnect aktiviert ist"
       no_invites_without_local_logins: "Du kannst nur registrierte Benutzer einladen, wenn lokale Anmeldungen deaktiviert sind"
     default_names:
@@ -1627,6 +1633,7 @@ de:
       category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a>."
       maxmind_db_configuration: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
       admin_sidebar_deprecation: "Das alte Admin-Layout wird vom neuen <a href='https://meta.discourse.org/t/-/289281'>Seitenleisten-Layout</a> abgelöst und in der nächsten Version entfernt. Du kannst das neue Seitenleisten-Layout jetzt <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurieren</a>, um es vorher zu aktivieren."
+      full_page_login_check: "Deine Website hat die Einstellung „full page login“ deaktiviert. Diese Einstellung ist veraltet und wird am <strong>29. April 2025</strong> entfernt. Ab diesem Datum wird deine Website auf die ganzseitigen Registrierungs- und Anmeldeseiten umgestellt. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Mehr erfahren</a>."
     back_from_logster_text: "Zurück zur Website"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
@@ -2241,8 +2248,8 @@ de:
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
-    allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
-    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
+    allow_anonymous_mode: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
+    allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow anonymous mode`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -2475,6 +2482,8 @@ de:
     glimmer_topic_list_mode: "Lege fest, ob die neue Themenlisten-Implementierung „glimmer“ verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Weitere Informationen findest du <a href='https://meta.discourse.org/t/343404'>im Meta-Thema</a>."
     glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_menu_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
+    glimmer_post_stream_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragsstroms verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
+    glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
@@ -2790,6 +2799,7 @@ de:
       inactive_user: "Deaktivierter Benutzer"
       reviewable_reject_auto: "Überprüfbare Elemente in der Warteschlange automatisch verarbeiten"
       reviewable_reject: "Überprüfbarer Benutzer abgelehnt"
+      reviewable_details_scrubbed: "Benutzerdetails gesäubert von %{staff}\n\nGrund: %{reason}\n\nZeitstempel: %{timestamp}"
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
     already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stummgeschaltet."
     already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago} gesperrt."
@@ -3640,15 +3650,15 @@ de:
     in_reply_to: "Als Antwort auf"
     reply_by_email: "[Rufe das Thema auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um zu antworten."
     reply_by_email_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um %{participants} zu antworten."
-    reply_by_email_button_only: "[Thema besuchen](%{base_url}%{url})"
-    reply_by_email_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
+    reply_by_email_button_only: "[Thema im Forum ansehen](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Nachricht im Forum ansehen](%{base_url}%{url})"
     only_reply_by_email: "Antworte auf diese E-Mail, um zu antworten."
     only_reply_by_email_pm: "Antworte auf diese E-Mail, um %{participants} zu antworten."
-    only_reply_by_email_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
+    only_reply_by_email_pm_button_only: "[Nachricht im Forum ansehen](%{base_url}%{url})"
     visit_link_to_respond: "[Rufe das Thema auf](%{base_url}%{url}), um zu antworten."
     visit_link_to_respond_pm: "[Rufe die Nachricht auf](%{base_url}%{url}), um %{participants} zu antworten."
     visit_link_to_respond_button_only: "[Thema besuchen](%{base_url}%{url})"
-    visit_link_to_respond_pm_button_only: "[Nachricht besuchen] (%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Nachricht im Forum ansehen](%{base_url}%{url})"
     reply_above_line: "## Bitte gib deine Antwort oberhalb dieser Zeile ein. ##"
     posted_by: "Erstellt von %{username} am %{post_date}"
     pm_participants: "Teilnehmer: %{participants}"
@@ -3910,6 +3920,17 @@ de:
         Du wurdest im Forum stummgeschaltet.
 
         Grund – %{reason}
+    account_deleted:
+      title: "Konto gelöscht"
+      subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von [%{site_name}](%{base_url}), um dich darüber zu informieren, dass das mit dieser E-Mail-Adresse verknüpfte Benutzerkonto, von einem Team-Mitglied gelöscht wurde.
+
+        %{flag_reason}
+
+        Bitte lies unsere [Community-Richtlinien](%{base_url}/guidelines) für weitere Informationen.
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"

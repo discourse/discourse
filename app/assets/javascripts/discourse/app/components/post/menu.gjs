@@ -75,13 +75,11 @@ const defaultDagOptions = {
 };
 
 export default class PostMenu extends Component {
-  @service appEvents;
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
   @service modal;
   @service menu;
-  @service site;
   @service siteSettings;
   @service store;
 
@@ -617,7 +615,6 @@ export default class PostMenu extends Component {
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
         class={{concatClass
           "post-controls"
-          "glimmer-post-menu"
           (if
             (and
               (this.showMoreButton.shouldRender

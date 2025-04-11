@@ -144,7 +144,7 @@ body > noscript {
       width: 20%;
     }
 
-    @media (max-width: 850px) {
+    @media (width <= 850px) {
       table-layout: auto;
       margin: 0;
 

@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
-import { focusSearchInput } from "discourse/components/search-menu";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
@@ -128,7 +127,7 @@ export default class AssistantItem extends Component {
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });
-    focusSearchInput();
+    this.search.focusSearchInput();
   }
 
   <template>

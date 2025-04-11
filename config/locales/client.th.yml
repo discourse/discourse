@@ -363,6 +363,9 @@ th:
         email: "อีเมล"
         name: "ชื่อ"
         reject_reason: "เหตุผล"
+        scrubbed_reason: "เหตุผล"
+        scrub_record:
+          cancel_button: "ยกเลิก"
       user_percentage:
         agreed:
           other: "%{count}% เห็นด้วย"
@@ -2067,7 +2070,13 @@ th:
       description: "รายละเอียด"
       logo: "รูปโลโก้หมวดหมู่"
       background_image: "รูปพื้นหลังหมวดหมู่"
-      background_color: "สีพื้นหลัง"
+      background_color: "สี"
+      styles:
+        icon: "ไอคอน"
+        emoji: "Emoji"
+        options:
+          icon: "ไอคอน"
+          emoji: "Emoji"
       name_placeholder: "สูงสุดหนึ่งหรือสองคำ"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"

@@ -175,6 +175,7 @@ Discourse::Application.routes.draw do
           :as => :user_show
       get "users/:id/:username/badges" => "users#show"
       get "users/:id/:username/tl3_requirements" => "users#show"
+      get "users/settings" => "site_settings#index"
 
       post "users/sync_sso" => "users#sync_sso", :constraints => AdminConstraint.new
 
@@ -182,14 +183,8 @@ Discourse::Application.routes.draw do
 
       resources :email, only: [:index], constraints: AdminConstraint.new do
         collection do
+          get "server-settings" => "email#server_settings"
           post "test"
-          get "sent"
-          get "skipped"
-          get "bounced"
-          get "received"
-          get "rejected"
-          get "/incoming/:id" => "email#incoming"
-          get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
           post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
@@ -203,6 +198,18 @@ Discourse::Application.routes.draw do
                    id: /[0-9a-z_.]+/,
                  }
           put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
+        end
+      end
+
+      resources :email_logs, only: :index, constraints: AdminConstraint.new, path: "/email-logs" do
+        collection do
+          get "sent"
+          get "skipped"
+          get "bounced"
+          get "received"
+          get "rejected"
+          get "incoming/:id" => "email_logs#incoming"
+          get "incoming_from_bounced/:id" => "email_logs#incoming_from_bounced"
         end
       end
 
@@ -393,13 +400,17 @@ Discourse::Application.routes.draw do
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
+        get "analytics-and-seo" => "site_settings#index"
+        get "content" => "site_settings#index"
+        get "content/sharing" => "site_settings#index"
+        get "content/posts-and-topics" => "site_settings#index"
+        get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
-        get "fonts" => "site_settings#index"
         get "files" => "site_settings#index"
+        get "interface" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
-        get "logo" => "site_settings#index"
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -407,13 +418,16 @@ Discourse::Application.routes.draw do
         get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
+        get "site-admin" => "site_settings#index"
         get "spam" => "site_settings#index"
         get "user-api" => "site_settings#index"
+        get "user-defaults" => "site_settings#index"
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
         get "branding" => "branding#index"
         put "branding/logo" => "branding#logo"
+        put "branding/fonts" => "branding#fonts"
         get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do
@@ -495,6 +509,10 @@ Discourse::Application.routes.draw do
           action_id: /[a-z\_]+/,
         }
     put "review/:reviewable_id" => "reviewables#update", :constraints => { reviewable_id: /\d+/ }
+    put "review/:reviewable_id/scrub" => "reviewables#scrub",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
     delete "review/:reviewable_id" => "reviewables#destroy",
            :constraints => {
              reviewable_id: /\d+/,
@@ -926,6 +944,11 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/card.json" => "users#show_card",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
           :format => :json,
           :constraints => {
             username: RouteFormat.username,

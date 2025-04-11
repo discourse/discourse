@@ -18,7 +18,7 @@ import Icons from "./header/icons";
 import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
 
-const SEARCH_BUTTON_ID = "search-button";
+export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
 const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
 const PANEL_SELECTOR = ".panel-body";
@@ -129,7 +129,12 @@ export default class GlimmerHeader extends Component {
   headerKeyboardTrigger(msg) {
     switch (msg.type) {
       case "search":
-        this.toggleSearchMenu();
+        // This must be done here because toggleSearchMenu is
+        // also called from the search button, we only want to
+        // stop it using the shortcut.
+        if (!this.search.welcomeBannerSearchInViewport) {
+          this.toggleSearchMenu();
+        }
         break;
       case "user":
         this.toggleUserMenu();
@@ -290,6 +295,7 @@ export default class GlimmerHeader extends Component {
             <SearchMenuWrapper
               @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
+              @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper

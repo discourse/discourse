@@ -450,6 +450,10 @@ ur:
         name: "نام"
         fields: "فیلڈز"
         reject_reason: "وجہ"
+        scrubbed_reason: "وجہ"
+        scrub_record:
+          reason_placeholder: "وجہ..."
+          cancel_button: "منسوخ"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (آخری فلیگ)"
@@ -2949,9 +2953,13 @@ ur:
       description: "تفصیل"
       logo: "زمرہ کے لوگو تصویر"
       background_image: "زمرہ کے پسِ منظر کی تصویر"
-      badge_colors: "بَیج رنگ"
-      background_color: "پس منظر رنگ"
-      foreground_color: "پیش منظر رنگ"
+      background_color: "رنگ"
+      styles:
+        icon: "آئیکن"
+        emoji: "اِیمَوجی"
+        options:
+          icon: "آئیکن"
+          emoji: "اِیمَوجی"
       name_placeholder: "زیادہ سے زیادہ ایک یا دو الفاظ"
       color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"

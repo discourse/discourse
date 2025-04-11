@@ -16,7 +16,9 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service router;
   @service sidebarState;
+  @service search;
 
   get sidebarIcon() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
@@ -39,12 +41,15 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    if (
+      this.site.mobileView ||
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+    ) {
       return false;
     }
 
     return (
-      this.siteSettings.search_experience === "search_field" &&
+      this.search.searchExperience === "search_field" &&
       !this.args.topicInfoVisible
     );
   }

@@ -22,20 +22,18 @@ acceptance("Category Edit", function (needs) {
     );
 
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
-    assert.dom(".category-color-editor .badge-category").hasText("bug");
+    assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.dom(".category-color-editor .badge-category").hasText("testing");
+    assert.dom(".category-style .badge-category__name").hasText("testing");
 
-    await fillIn(".edit-text-color input", "ff0000");
-
-    await click(".edit-category-topic-template");
+    await click(".edit-category-topic-template a");
     await fillIn(".d-editor-input", "this is the new topic template");
 
     await click("#save-category");
     assert.strictEqual(
       currentURL(),
-      "/c/bug/edit/general",
-      "stays on the edit screen"
+      "/c/bug/edit/topic-template",
+      "stays on the topic template screen"
     );
 
     await visit("/c/bug/edit/settings");
@@ -47,7 +45,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
-      "stays on the edit screen"
+      "stays on the settings screen"
     );
 
     sinon.stub(DiscourseURL, "routeTo");

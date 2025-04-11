@@ -16,6 +16,7 @@ export function disableNameSuppression() {
   sanitizeName = (name) => name;
 }
 
+// glimmer-post-stream: has glimmer version
 createWidget("poster-name-title", {
   tagName: "span.user-title",
 
@@ -53,6 +54,7 @@ createWidget("poster-name-title", {
   },
 });
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("poster-name", {
   tagName: "div.names.trigger-user-card",
 

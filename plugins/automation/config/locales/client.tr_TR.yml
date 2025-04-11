@@ -163,11 +163,8 @@ tr_TR:
               description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
             restricted_categories:
               label: Kategoriler
-            restricted_groups:
+            restricted_inbox_groups:
               description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birindeki kişisel bir mesajsa tetiklenir
-            ignore_group_members:
-              label: Grup üyelerini yok say
-              description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
             ignore_automated:
               label: Otomatikleştirmeyi yok say
               description: Gönderenin noreply e-postası varsa veya otomatik bir kaynaktan geliyorsa tetikleyiciyi atla. Yalnızca e-posta yoluyla oluşturulan gönderiler için geçerlidir
@@ -182,7 +179,10 @@ tr_TR:
               description: "Gönderi e-posta yoluyla oluşturulmuşsa tetikleyiciyi atla"
           created: Oluşturulma
           edited: Düzenlendi
-          topics: Konular
+          with_images: Resimler
+          with_links: Bağlantı
+          with_code: Kod
+          with_uploads: Yüklemeler
         user_updated:
           fields:
             user_profile:

@@ -325,7 +325,6 @@ task "plugin:create", [:name] do |t, args|
 
   abort("Plugin directory, " + plugin_path + ", already exists.") if File.directory?(plugin_path)
 
-  failures = []
   repo = "https://github.com/discourse/discourse-plugin-skeleton"
   begin
     attempts ||= 1
@@ -333,7 +332,7 @@ task "plugin:create", [:name] do |t, args|
     system("git clone --quiet #{repo} #{plugin_path}", exception: true)
   rescue StandardError
     if attempts == 3
-      failures << repo
+      STDOUT.puts "Failed to clone #{repo}"
       abort
     end
 
@@ -341,7 +340,6 @@ task "plugin:create", [:name] do |t, args|
     attempts += 1
     retry
   end
-  failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
 
   Dir.chdir(plugin_path) do # rubocop:disable Discourse/NoChdir
     puts "Initializing git repository..."

@@ -107,6 +107,18 @@ div.edit-category {
     @include breakpoint("mobile-extra-large") {
       padding-top: 1em;
     }
+
+    .edit-category-tab {
+      display: none;
+    }
+
+    .edit-category-tab.active {
+      display: contents;
+    }
+
+    .form-kit__container-content {
+      flex-wrap: wrap;
+    }
   }
 
   #list-area & h2 {

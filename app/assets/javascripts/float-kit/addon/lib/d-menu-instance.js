@@ -110,13 +110,17 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async onTrigger() {
+  async onTrigger(event) {
+    event.stopPropagation();
+
     await this.options.beforeTrigger?.(this);
     await this.show();
   }
 
   @action
-  async onUntrigger() {
+  async onUntrigger(event) {
+    event.stopPropagation();
+
     await this.close();
   }
 

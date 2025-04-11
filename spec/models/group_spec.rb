@@ -8,10 +8,6 @@ RSpec.describe Group do
   it_behaves_like "it has custom fields"
 
   describe "Validations" do
-    it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
-    it do
-      is_expected.not_to allow_value("#{"a" * 997}.com").for(:automatic_membership_email_domains)
-    end
     it { is_expected.to validate_length_of(:bio_raw).is_at_most(3000) }
     it { is_expected.to validate_length_of(:membership_request_template).is_at_most(5000) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(100) }
@@ -174,6 +170,17 @@ RSpec.describe Group do
     it "is valid for proper domains" do
       group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
       expect(group.valid?).to eq true
+    end
+
+    it "is invalid for too many domains" do
+      SiteSetting.max_automatic_membership_email_domains = 1
+      group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
+      expect(group).not_to be_valid
+    end
+
+    it "is invalid for too abnormally long domains" do
+      group.automatic_membership_email_domains = "#{"d" * 253}.org"
+      expect(group).not_to be_valid
     end
 
     it "is valid for newer TLDs" do
@@ -811,6 +818,32 @@ RSpec.describe Group do
   describe ".visible_groups" do
     def can_view?(user, group)
       Group.visible_groups(user).where(id: group.id).exists?
+    end
+
+    it "includes everyone group when option is present" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_everyone: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(true)
+    end
+
+    it "doesn't include everyones group by default" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_everyone: false)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(false)
+
+      expect(
+        Group.visible_groups(admin, [], nil).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+
+      expect(
+        Group.visible_groups(admin, [], {}).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
     end
 
     it "correctly restricts group visibility" do

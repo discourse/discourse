@@ -1,8 +1,21 @@
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityDrafts extends DiscourseRoute {
+  @service router;
+  @service currentUser;
+
   templateName = "user/stream";
+
+  beforeModel() {
+    if (!this.currentUser) {
+      return this.router.transitionTo("discovery.latest");
+    }
+    if (!this.isCurrentUser(this.modelFor("user"))) {
+      return this.router.transitionTo("userActivity.drafts", this.currentUser);
+    }
+  }
 
   async model() {
     const user = this.modelFor("user");

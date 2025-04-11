@@ -166,7 +166,7 @@
   }
 
   .desktop-view & {
-    @media screen and (max-width: 767px) {
+    @media screen and (width <= 767px) {
       // important to maintain narrow desktop widths
       // for auth modals in Discourse Hub on iPad
       .d-modal__header {
@@ -207,7 +207,7 @@
 }
 
 .invites-show {
-  #account-email-validation:not(:has(*)) {
+  #account-email-validation:not(:has(svg)) {
     display: none;
   }
 }

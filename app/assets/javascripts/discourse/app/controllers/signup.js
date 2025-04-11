@@ -43,7 +43,20 @@ export default class SignupPageController extends Controller {
   maskPassword = true;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
-  usernameValidationHelper = new UsernameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper({
+    getAccountEmail: () => this.accountEmail,
+    getAccountUsername: () => this.accountUsername,
+    getPrefilledUsername: () => this.prefilledUsername,
+    getAuthOptionsUsername: () => this.authOptions?.username,
+    getForceValidationReason: () => this.forceValidationReason,
+    siteSettings: this.siteSettings,
+    isInvalid: () => this.isDestroying || this.isDestroyed,
+    updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
+    updateUsernames: (username) => {
+      this.accountUsername = username;
+      this.prefilledUsername = username;
+    },
+  });
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
     getUserFields: () => this.site.get("user_fields"),
@@ -186,11 +199,10 @@ export default class SignupPageController extends Controller {
     return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
-  @discourseComputed("usernameValidation.reason")
-  showUsernameInstructions(usernameValidationReason) {
+  get showUsernameInstructions() {
     return (
       this.siteSettings.show_signup_form_username_instructions &&
-      !usernameValidationReason
+      !this.usernameValidation.reason
     );
   }
 
@@ -354,7 +366,7 @@ export default class SignupPageController extends Controller {
       // then look for a registered username that matches the email.
       discourseDebounce(
         this,
-        this.usernameValidationHelper.fetchExistingUsername,
+        () => this.usernameValidationHelper.fetchExistingUsername(),
         500
       );
     }

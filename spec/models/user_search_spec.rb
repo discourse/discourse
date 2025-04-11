@@ -179,6 +179,35 @@ RSpec.describe UserSearch do
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)
     end
 
+    it "prioritises the replying to user within a topic" do
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_b.id)
+      expect(results).to eq [mr_b, mr_pink, mr_orange, mr_brown, mr_blue].map(&:username)
+
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_orange.id)
+      expect(results).to eq [mr_orange, mr_pink, mr_b, mr_brown, mr_blue].map(&:username)
+
+      results = search_for("mr", topic_id: topic.id, prioritized_user_id: mr_pink.id)
+      expect(results).to eq [mr_pink, mr_orange, mr_b, mr_brown, mr_blue].map(&:username)
+    end
+
+    it "returns the replying to user if the term includes the username" do
+      results = search_for(mr_blue.username, topic_id: topic.id, prioritized_user_id: post1.user_id)
+      expect(results).to eq [mr_blue].map(&:username)
+      results = search_for(mr_blue.username, topic_id: topic.id, prioritized_user_id: post3.user_id)
+      expect(results).to eq [mr_blue].map(&:username)
+    end
+
+    it "returns firstly the replying to user if the term is blank" do
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post1.user_id)
+      expect(results).to eq [mr_b, mr_pink, mr_orange].map(&:username)
+
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post3.user_id)
+      expect(results).to eq [mr_orange, mr_pink, mr_b].map(&:username)
+
+      results = search_for("", topic_id: topic.id, prioritized_user_id: post4.user_id)
+      expect(results).to eq [mr_pink, mr_orange, mr_b].map(&:username)
+    end
+
     it "does not reveal whisper users" do
       results = search_for("", topic_id: topic2.id)
       expect(results).to eq [mr_blue.username]

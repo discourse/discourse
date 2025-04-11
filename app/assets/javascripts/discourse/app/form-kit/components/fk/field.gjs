@@ -8,6 +8,7 @@ import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
 import FKControlCustom from "discourse/form-kit/components/fk/control/custom";
+import FKControlEmoji from "discourse/form-kit/components/fk/control/emoji";
 import FKControlIcon from "discourse/form-kit/components/fk/control/icon";
 import FKControlImage from "discourse/form-kit/components/fk/control/image";
 import FKControlInput from "discourse/form-kit/components/fk/control/input";
@@ -103,6 +104,7 @@ export default class FKField extends Component {
             Password=(this.componentFor FKControlPassword field)
             Composer=(this.componentFor FKControlComposer field)
             Icon=(this.componentFor FKControlIcon field)
+            Emoji=(this.componentFor FKControlEmoji field)
             Toggle=(this.componentFor FKControlToggle field)
             Menu=(this.componentFor FKControlMenu field)
             Select=(this.componentFor FKControlSelect field)

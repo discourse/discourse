@@ -11,6 +11,10 @@ class Demon::Sidekiq < ::Demon::Base
     blk ? (@blk = blk) : @blk
   end
 
+  # Number of seconds Sidekiq waits for jobs to finish before forcefully
+  # terminating them. See the "-t" CLI option.
+  SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS = 5
+
   # By default Sidekiq does a heartbeat check every 5 seconds. If the processes misses 20 heartbeat checks, we consider it
   # dead and kill the process.
   SIDEKIQ_HEARTBEAT_CHECK_MISS_THRESHOLD_SECONDS = 5.seconds * 20
@@ -70,6 +74,19 @@ class Demon::Sidekiq < ::Demon::Base
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
   end
 
+  def stop_signal
+    "TERM"
+  end
+
+  def stop_timeout
+    # Official documentation says that Sidekiq should be given shutdown timeout
+    # plus 5 seconds to shutdown cleanly.
+    #
+    # See https://github.com/sidekiq/sidekiq/wiki/Deployment.
+
+    SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS + 5
+  end
+
   private
 
   def suppress_stdout
@@ -100,7 +117,12 @@ class Demon::Sidekiq < ::Demon::Base
       reopen_logs
     end
 
-    options = ["-c", GlobalSetting.sidekiq_workers.to_s]
+    options = [
+      "-c",
+      GlobalSetting.sidekiq_workers.to_s,
+      "-t",
+      SIDEKIQ_SHUTDOWN_TIMEOUT_SECONDS.to_s,
+    ]
 
     [["critical", 8], ["default", 4], ["low", 2], ["ultra_low", 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]

@@ -78,59 +78,21 @@ class CodeBlockWithLangSelectorNodeView {
 /** @type {RichEditorExtension} */
 const extension = {
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
-  plugins({ pmState: { Plugin }, getContext }) {
-    return [
-      async () =>
-        highlightPlugin(
-          (hljs = await ensureHighlightJs(
-            getContext().session.highlightJsPath
-          )),
-          ["code_block", "html_block"],
+  async plugins({ getContext }) {
+    return highlightPlugin(
+      (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
+      ["code_block", "html_block"],
 
-          // NOTE: If the language has not been set with the code block, we default to plain
-          // text rather than autodetecting. This is to work around an infinite loop issue
-          // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
-          // for > 10 seconds, for example:
-          //
-          // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
-          //
-          // We can remove this if we find some other workaround.
-          (node) => node.attrs.params || "text"
-        ),
-      new Plugin({
-        props: {
-          // Handles removal of the code_block when it's at the start of the document
-          handleKeyDown(view, event) {
-            if (
-              event.key === "Backspace" &&
-              view.state.selection.$from.parent.type ===
-                view.state.schema.nodes.code_block &&
-              view.state.selection.$from.start() === 1 &&
-              view.state.selection.$from.parentOffset === 0
-            ) {
-              const { tr } = view.state;
-
-              const codeBlock = view.state.selection.$from.parent;
-              const paragraph = view.state.schema.nodes.paragraph.create(
-                null,
-                codeBlock.content
-              );
-              tr.replaceWith(
-                view.state.selection.$from.before(),
-                view.state.selection.$from.after(),
-                paragraph
-              );
-              tr.setSelection(
-                new view.state.selection.constructor(tr.doc.resolve(1))
-              );
-
-              view.dispatch(tr);
-              return true;
-            }
-          },
-        },
-      }),
-    ];
+      // NOTE: If the language has not been set with the code block, we default to plain
+      // text rather than autodetecting. This is to work around an infinite loop issue
+      // in prosemirror-highlightjs when autodetecting which hangs the browser sometimes
+      // for > 10 seconds, for example:
+      //
+      // https://github.com/b-kelly/prosemirror-highlightjs/issues/21
+      //
+      // We can remove this if we find some other workaround.
+      (node) => node.attrs.params || "text"
+    );
   },
 };
 

@@ -94,6 +94,14 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("ul ul li", count: 3)
     end
 
+    it "uses 'tight' lists for both ordered and unordered lists by default" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("1. Item 1\n5. Item 2\n\n")
+      composer.type_content("* Item 1\n* Item 2")
+      expect(rich).to have_css("ol[data-tight='true']")
+      expect(rich).to have_css("ul[data-tight='true']")
+    end
+
     it "supports ``` or 4 spaces to create a code block" do
       open_composer_and_toggle_rich_editor
       composer.type_content("```\nThis is a code block")
@@ -155,11 +163,11 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "supports ---, *** or ___ to create a horizontal rule" do
+    it "supports ---, ***, ___, en-dash+hyphen, em-dash+hyphen to create a horizontal rule" do
       open_composer_and_toggle_rich_editor
-      composer.type_content("Hey\n---\nThere\n*** Friend\n___ ")
+      composer.type_content("Hey\n---There\n*** Friend\n___ How\n\u2013-are\n\u2014-you")
 
-      expect(rich).to have_css("hr", count: 3)
+      expect(rich).to have_css("hr", count: 5)
     end
   end
 
@@ -183,17 +191,20 @@ describe "Composer - ProseMirror editor", type: :system do
         HTML
       end
 
-      stub_request(:head, "https://example.com").to_return(status: 200)
-      stub_request(:get, "https://example.com").to_return(status: 200, body: body("Example Site 1"))
+      stub_request(:head, %r{https://example\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example\.com.*}).to_return(
+        status: 200,
+        body: body("Example Site 1"),
+      )
 
-      stub_request(:head, "https://example2.com").to_return(status: 200)
-      stub_request(:get, "https://example2.com").to_return(
+      stub_request(:head, %r{https://example2\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example2\.com.*}).to_return(
         status: 200,
         body: body("Example Site 2"),
       )
 
-      stub_request(:head, "https://example3.com").to_return(status: 200)
-      stub_request(:get, "https://example3.com").to_return(
+      stub_request(:head, %r{https://example3\.com.*}).to_return(status: 200)
+      stub_request(:get, %r{https://example3\.com.*}).to_return(
         status: 200,
         body: body("Example Site 3"),
       )
@@ -203,19 +214,19 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
-      cdp.write_clipboard("https://example.com")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content(" in the middle of text")
+      composer.type_content(" ").type_content("in the middle of text")
 
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
       )
 
       composer.toggle_rich_editor
 
       expect(composer).to have_value(
-        "Check out this link https://example.com in the middle of text",
+        "Check out this link https://example.com/x in the middle of text",
       )
     end
 
@@ -224,7 +235,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       cdp.write_clipboard("https://example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      page.send_keys(:enter, :enter)
+      page.send_keys(:enter)
 
       expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
       expect(rich).to have_content("Example Site 1")
@@ -239,16 +250,16 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
-      cdp.write_clipboard("https://example.com")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content(" more text")
+      composer.type_content(" ").type_content("more text")
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Some text https://example.com more text")
+      expect(composer).to have_value("Some text https://example.com/x more text")
     end
 
     it "does not create oneboxes inside code blocks" do
@@ -274,42 +285,43 @@ describe "Composer - ProseMirror editor", type: :system do
       markdown = <<~MARKDOWN
         https://example.com
 
-        Check this https://example.com and see if it fits you
+        Check this https://example.com/x and see if it fits you
 
         https://example2.com
 
-        An inline to https://example2.com with text around it
+        An inline to https://example2.com/x with text around it
 
         https://example3.com
 
-        Another one for https://example3.com then
+        Another one for https://example3.com/x then
 
         https://example.com
 
-        Phew, repeating https://example.com now
+        Phew, repeating https://example.com/x now
 
         https://example2.com
 
-        And some text again https://example2.com
+        And some text again https://example2.com/x
 
-        https://example3.com
+        https://example3.com/x
 
-        Ok, that is it https://example3.com
+        Ok, that is it https://example3.com/x
+        After a hard break
       MARKDOWN
       cdp.write_clipboard(markdown)
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("a.inline-onebox", count: 6)
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
       )
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example2.com']",
+        "a.inline-onebox[href='https://example2.com/x']",
         text: "Example Site 2",
       )
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example3.com']",
+        "a.inline-onebox[href='https://example3.com/x']",
         text: "Example Site 3",
       )
 
@@ -326,21 +338,22 @@ describe "Composer - ProseMirror editor", type: :system do
     it "creates inline oneboxes for repeated links in different paste events" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      composer.type_content("Hey")
-      cdp.write_clipboard("https://example.com")
+      composer.type_content("Hey ")
+      cdp.write_clipboard("https://example.com/x")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      composer.type_content("and")
+      composer.type_content(" ").type_content("and").type_content(" ")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      composer.type_content("\n")
 
       expect(rich).to have_css(
-        "a.inline-onebox[href='https://example.com']",
+        "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
         count: 2,
       )
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Hey https://example.com and https://example.com")
+      expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
     end
   end
 
@@ -428,6 +441,39 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("hr")
     end
+
+    it "supports Backspace to reset a heading" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("# With text")
+
+      expect(rich).to have_css("h1", text: "With text")
+
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("p", text: "With text")
+    end
+
+    it "supports Backspace to reset a code_block" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("```code block")
+      composer.send_keys(:home)
+      composer.send_keys(%i[backspace])
+
+      expect(rich).to have_css("p", text: "code block")
+    end
+
+    it "doesn't add a new list item when backspacing from below a list" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("1. Item 1\nItem 2")
+      composer.send_keys(:down)
+      composer.type_content("Item 3")
+      composer.send_keys(:home)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("ol li", text: "Item 1")
+      expect(rich).to have_css("ol li", text: "Item 2Item 3")
+    end
   end
 
   describe "pasting content" do
@@ -468,10 +514,11 @@ describe "Composer - ProseMirror editor", type: :system do
     it "respects existing marks when pasting a url to make a link" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.write_clipboard("`code` **bold** *italic*")
+      cdp.write_clipboard("not selected `code`**bold**not*italic* not selected")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
-      page.execute_script("document.execCommand('selectAll',false,null)")
-      cdp.write_clipboard("www.google.com")
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("www.example.com")
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("code", text: "code")
@@ -480,7 +527,25 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("[`code` **bold** *italic*](www.google.com)")
+      expect(composer).to have_value(
+        "not selected [`code`**bold**not*italic*](www.example.com) not selected",
+      )
+    end
+
+    it "auto-links pasted URLs from text/html" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.write_clipboard("not selected **bold** not selected")
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      rich.find("strong").double_click
+
+      cdp.write_clipboard("<p>www.example.com</p>", html: true)
+      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
     end
   end
 
@@ -500,6 +565,36 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "auto-linking/unlinking" do
+    it "auto-links non-protocol URLs and removes the link when no longer a URL" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("www.example.com")
+
+      expect(rich).to have_css("a", text: "www.example.com")
+
+      composer.send_keys(%i[backspace backspace])
+
+      expect(rich).to have_no_css("a")
+
+      composer.type_content("om")
+
+      expect(rich).to have_css("a", text: "www.example.com")
+    end
+
+    it "auto-links protocol URLs" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("https://example.com")
+
+      expect(rich).to have_css("a", text: "https://example.com")
+
+      composer.send_keys(%i[backspace backspace])
+
+      expect(rich).to have_css("a", text: "https://example.c")
+    end
+  end
+
   describe "uploads" do
     it "handles uploads and disables the editor toggle while uploading" do
       open_composer_and_toggle_rich_editor
@@ -513,6 +608,73 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_no_in_progress_uploads
       expect(rich).to have_css("img", count: 1)
+    end
+  end
+
+  describe "code marks with fake cursor" do
+    it "allows typing after a code mark with/without the mark" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("This is ~~SPARTA!~~ `code!`.")
+
+      expect(rich).to have_css("code", text: "code!")
+
+      # within the code mark
+      composer.send_keys(%i[backspace backspace])
+      composer.type_content("!")
+
+      expect(rich).to have_css("code", text: "code!")
+
+      # after the code mark
+      composer.send_keys(:right)
+      composer.type_content(".")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
+    end
+
+    xit "allows typing before a code mark with/without the mark" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("`code mark`")
+
+      expect(rich).to have_css("code", text: "code mark")
+
+      # before the code mark
+      composer.send_keys(:home)
+      composer.send_keys(:left)
+      composer.type_content("..")
+
+      # within the code mark
+      composer.send_keys(:right)
+      composer.type_content("!!")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("..`!!code mark`")
+    end
+  end
+
+  describe "emojis" do
+    it "has the only-emoji class if 1-3 emojis are 'alone'" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("> :smile: ")
+
+      expect(rich).to have_css(".only-emoji", count: 1)
+
+      composer.type_content(":P ")
+
+      expect(rich).to have_css(".only-emoji", count: 2)
+
+      composer.type_content(":D ")
+
+      expect(rich).to have_css(".only-emoji", count: 3)
+
+      composer.type_content("Hey!")
+
+      expect(rich).to have_no_css(".only-emoji")
     end
   end
 end

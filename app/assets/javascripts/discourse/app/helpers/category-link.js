@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
 import { helperContext, registerRawHelper } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -48,12 +49,24 @@ export function categoryBadgeHTML(category, opts) {
     return "";
   }
 
+  if (!opts.styleType) {
+    opts.styleType = category.styleType;
+
+    if (opts.styleType === "icon") {
+      opts.icon = category.icon;
+    } else if (opts.styleType === "emoji") {
+      opts.emoji = category.emoji;
+    }
+  }
+
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
     const { ancestors, ...otherOpts } = opts;
     return [category, ...ancestors]
       .reverse()
-      .map((c) => categoryBadgeHTML(c, otherOpts))
+      .map((c) => {
+        return categoryBadgeHTML(c, { ...otherOpts, styleType: null });
+      })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
@@ -151,6 +164,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
+  if (opts.styleType) {
+    classNames += ` --style-${opts.styleType}`;
+  }
+
   html += `<span
     ${dataAttributes}
     data-drop-close="true"
@@ -162,6 +179,14 @@ export function defaultCategoryLinkRenderer(category, opts) {
     }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
+
+  if (opts.styleType === "icon" && opts.icon) {
+    html += iconHTML(opts.icon);
+  }
+
+  if (opts.styleType === "emoji" && opts.emoji) {
+    html += replaceEmoji(`:${opts.emoji}:`);
+  }
 
   // not ideal as we have to call it manually and we pass a fake category object
   // but there's not way around it for now

@@ -3,14 +3,17 @@ import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+// TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | actions-summary", function (hooks) {
   setupRenderingTest(hooks);
 
   test("post deleted", async function (assert) {
     const args = {
-      deleted_at: "2016-01-01",
-      deletedByUsername: "eviltrout",
-      deletedByAvatarTemplate: "/images/avatar.png",
+      deletedAt: "2016-01-01",
+      deletedBy: {
+        username: "eviltrout",
+        avatar_template: "/images/avatar.png",
+      },
     };
 
     await render(

@@ -589,6 +589,9 @@ sq:
         name: "Emri"
         fields: "Fushat"
         reject_reason: "Arsye"
+        scrubbed_reason: "Arsye"
+        scrub_record:
+          cancel_button: "Anulo"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (i flamurit të fundit)"
@@ -3526,9 +3529,13 @@ sq:
       description: "Përshkrimi"
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
-      badge_colors: "Ngjyrat e stemës"
-      background_color: " Ngjyra e sfondit"
-      foreground_color: "Foreground color"
+      background_color: "Ngjyra"
+      styles:
+        icon: "Ikonë"
+        emoji: "Emoji"
+        options:
+          icon: "Ikonë"
+          emoji: "Emoji"
       name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"

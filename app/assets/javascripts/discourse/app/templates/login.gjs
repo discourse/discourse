@@ -47,6 +47,10 @@ export default RouteTemplate(
             <PluginOutlet
               @name="login-before-modal-body"
               @connectorTagName="div"
+              @outletArgs={{hash
+                flashChanged=this.flashChanged
+                flashTypeChanged=this.flashTypeChanged
+              }}
             />
 
             {{#if @controller.hasNoLoginOptions}}
