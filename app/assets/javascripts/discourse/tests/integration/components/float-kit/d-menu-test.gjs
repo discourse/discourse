@@ -580,16 +580,4 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom("span.fk-d-menu__trigger").exists();
   });
-
-  test("@triggerTag", async function (assert) {
-    await render(
-      <template>
-        <DMenu @inline={{true}} @triggerTag="span">1</DMenu>
-      </template>
-    );
-
-    await open();
-
-    assert.dom("span.fk-d-menu__trigger").exists();
-  });
 });

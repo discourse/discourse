@@ -106,11 +106,7 @@ export default class DMenu extends Component {
 
     return (
       this.args.triggerComponent ||
-      curryComponent(
-        this.args.triggerTag ? element(this.args.triggerTag) : DButton,
-        baseArguments,
-        getOwner(this)
-      )
+      curryComponent(DButton, baseArguments, getOwner(this))
     );
   }
 

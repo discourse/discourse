@@ -14,6 +14,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import element from "discourse/helpers/element";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -151,8 +152,7 @@ export default class DMultiSelect extends Component {
   <template>
     <DMenu
       @identifier="d-multi-select"
-      @triggerTag="div"
-      @beforeTrigger={{this.beforeTrigger}}
+      @triggerComponent={{element "div"}}
       @triggerClass={{concatClass (if this.hasSelection "--has-selection")}}
       ...attributes
     >
