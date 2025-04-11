@@ -116,6 +116,10 @@ export default class SearchMenu extends Component {
     return false;
   }
 
+  get inHeaderMobileView() {
+    return this.args.location === "header" && this.site.mobileView;
+  }
+
   @action
   onKeydown(event) {
     if (event.key === "Escape") {
@@ -423,7 +427,7 @@ export default class SearchMenu extends Component {
             (concat "search-input--" @location)
           }}
         >
-          {{#if this.site.mobileView}}
+          {{#if this.inHeaderMobileView}}
             <MobileSearchButton @onTap={{this.mobileSearch}} />
           {{else}}
             <ActiveFilters
@@ -465,7 +469,7 @@ export default class SearchMenu extends Component {
             </div>
           {{/if}}
         </div>
-        {{#if this.site.mobileView}}
+        {{#if this.inHeaderMobileView}}
           <DButton
             @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}
@@ -484,6 +488,7 @@ export default class SearchMenu extends Component {
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
           @inPMInboxContext={{this.inPMInboxContext}}
+          @inHeaderMobileView={{this.inHeaderMobileView}}
           @clearPMInboxContext={{this.clearPMInboxContext}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
@@ -501,6 +506,7 @@ export default class SearchMenu extends Component {
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
             @inPMInboxContext={{this.inPMInboxContext}}
+            @inHeaderMobileView={{this.inHeaderMobileView}}
             @clearPMInboxContext={{this.clearPMInboxContext}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}

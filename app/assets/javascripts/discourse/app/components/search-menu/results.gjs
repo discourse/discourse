@@ -30,7 +30,6 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
-  @service site;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
@@ -62,7 +61,7 @@ export default class Results extends Component {
   <template>
     {{#if
       (and
-        this.site.mobileView (or this.search.inTopicContext @inPMInboxContext)
+        @inHeaderMobileView (or this.search.inTopicContext @inPMInboxContext)
       )
     }}
       <ActiveFilters
@@ -72,7 +71,7 @@ export default class Results extends Component {
     {{/if}}
 
     {{#if (and this.search.inTopicContext (not @searchTopics))}}
-      {{#unless this.site.mobileView}}
+      {{#unless @inHeaderMobileView}}
         <BrowserSearchTip />
       {{/unless}}
     {{else}}
@@ -80,7 +79,10 @@ export default class Results extends Component {
         <div
           class={{concatClass
             "results"
-            (if this.search.activeGlobalSearchTerm "with-search-term")
+            (if
+              (and @inHeaderMobileView this.search.activeGlobalSearchTerm)
+              "with-search-term"
+            )
           }}
           data-test-selector="search-menu-results"
         >
@@ -107,6 +109,7 @@ export default class Results extends Component {
           {{else if this.renderInitialOptions}}
             <InitialOptions
               @searchInputId={{@searchInputId}}
+              @inHeaderMobileView={{@inHeaderMobileView}}
               @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
             />
@@ -115,6 +118,7 @@ export default class Results extends Component {
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
                 @searchInputId={{@searchInputId}}
+                @inHeaderMobileView={{@inHeaderMobileView}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
