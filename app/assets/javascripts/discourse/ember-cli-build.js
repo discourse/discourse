@@ -13,7 +13,6 @@ const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
 const withSideWatch = require("./lib/with-side-watch");
-const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -65,11 +64,9 @@ module.exports = function (defaults) {
     ...commonBabelConfig(),
 
     trees: {
-      app: RawHandlebarsCompiler(
-        withSideWatch("app", {
-          watching: ["../discourse-markdown-it", "../truth-helpers"],
-        })
-      ),
+      app: withSideWatch("app", {
+        watching: ["../discourse-markdown-it", "../truth-helpers"],
+      }),
     },
   });
 

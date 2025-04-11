@@ -20,7 +20,6 @@
     "ember-cli-htmlbars": "^6.3.0",
     "ember-source": "~5.12.0",
     "ember-this-fallback": "^0.4.0",
-    "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.3",
