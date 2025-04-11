@@ -271,27 +271,21 @@ module ApplicationHelper
   end
 
   def crawlable_title_content
-    content = content_for?(:title) ? content_for(:title) : SiteSetting.title
-    content =
-      DiscoursePluginRegistry.apply_modifier(
-        :meta_data_content,
-        content,
-        :title,
-        { url: request.fullpath },
-      )
-    content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      content_for(:title) || SiteSetting.title,
+      :title,
+      { url: request.fullpath },
+    )
   end
 
   def crawlable_description_content
-    content = @description_meta || SiteSetting.site_description
-    content =
-      DiscoursePluginRegistry.apply_modifier(
-        :meta_data_content,
-        content,
-        :description,
-        { url: request.fullpath },
-      )
-    content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      @description_meta || SiteSetting.site_description,
+      :description,
+      { url: request.fullpath },
+    )
   end
 
   # Creates open graph and twitter card meta data
