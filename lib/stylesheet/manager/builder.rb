@@ -48,6 +48,7 @@ class Stylesheet::Manager::Builder
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
           dark: @dark,
+          strict_deprecations: %i[desktop mobile admin wizard].include?(@target),
         )
       rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
