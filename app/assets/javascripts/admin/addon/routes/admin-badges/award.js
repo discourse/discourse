@@ -3,15 +3,9 @@ import Route from "discourse/routes/discourse";
 export default class AdminBadgesAwardRoute extends Route {
   model(params) {
     if (params.badge_id !== "new") {
-      return this.modelFor("adminBadges").findBy(
-        "id",
-        parseInt(params.badge_id, 10)
-      );
+      return parseInt(params.badge_id, 10);
+    } else {
+      return "new";
     }
-  }
-
-  setupController(controller) {
-    super.setupController(...arguments);
-    controller.resetState();
   }
 }

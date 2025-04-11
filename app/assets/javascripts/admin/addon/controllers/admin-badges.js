@@ -10,14 +10,4 @@ export default class AdminBadgesController extends Controller {
   @tracked badgeTypes;
   @tracked protectedSystemFields;
   @tracked badgeTriggers;
-
-  get selectedRoute() {
-    const currentRoute = this.router.currentRouteName;
-    const indexRoute = "adminBadges.index";
-    if (currentRoute === indexRoute) {
-      return "adminBadges.show";
-    } else {
-      return currentRoute;
-    }
-  }
 }
