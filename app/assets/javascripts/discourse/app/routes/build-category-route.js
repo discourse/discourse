@@ -27,7 +27,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
   queryParams = queryParams;
 
   templateName = "discovery/list";
-  controllerName = "discovery/list";
 
   async model(params, transition) {
     const category = this.site.lazy_load_categories
