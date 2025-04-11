@@ -33,7 +33,6 @@ describe "Admin | Sidebar Navigation", type: :system do
     visit("/hot")
 
     sidebar.click_link_in_section("community", "admin")
-    visit("/admin/users/list/active?username=foo")
 
     filter.click_back_to_forum
     expect(page).to have_current_path("/hot")
