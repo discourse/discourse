@@ -29,7 +29,6 @@ const DISPLAY_INITIAL_OPTIONS_FOR_CONTEXT_TYPES = [
 
 export default class InitialOptions extends Component {
   @service search;
-  @service site;
   @service siteSettings;
   @service currentUser;
 
@@ -48,7 +47,7 @@ export default class InitialOptions extends Component {
   }
 
   get hideForEmptyMobileSearch() {
-    return this.site.mobileView && !this.search.activeGlobalSearchTerm;
+    return this.args.inHeaderMobileView && !this.search.activeGlobalSearchTerm;
   }
 
   get termMatchesContextTypeKeyword() {
@@ -217,7 +216,7 @@ export default class InitialOptions extends Component {
                   this.currentUser
                   this.siteSettings.log_search_queries
                   this.displayInitialOptions
-                  (not this.site.mobileView)
+                  (not @inHeaderMobileView)
                 )
               }}
                 <RecentSearches
@@ -226,7 +225,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else if (not this.site.mobileView)}}
+          {{else if (not @inHeaderMobileView)}}
             <RandomQuickTip
               @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}
