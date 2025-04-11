@@ -1,11 +1,14 @@
 import { Plugin } from "prosemirror-state";
 
-export function extractNodeViews(extensions) {
+export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
   const allNodeViews = {};
   for (const { nodeViews } of extensions) {
     if (nodeViews) {
-      for (const [name, NodeViewClass] of Object.entries(nodeViews)) {
+      for (let [name, NodeViewClass] of Object.entries(nodeViews)) {
+        if (!NodeViewClass.toString().startsWith("class")) {
+          NodeViewClass = NodeViewClass(pluginParams);
+        }
         allNodeViews[name] = (...args) => new NodeViewClass(...args);
       }
     }
