@@ -1,0 +1,10 @@
+<StyleguideExample @title="<DMultiSelect />">
+  <Styleguide::Component @tag="d-multi-select component">
+    <:sample>
+      <DMultiSelect @loadFn={{this.loadDummyData}}>
+        <:result as |result|>{{result.name}}</:result>
+        <:selection as |result|>{{result.name}}</:selection>
+      </DMultiSelect>
+    </:sample>
+  </Styleguide::Component>
+</StyleguideExample>
