@@ -210,9 +210,9 @@ const extension = {
         state.renderContent(node.content.firstChild);
         state.write(`]`);
       } else {
-        state.footnoteContents ??= [];
-        state.footnoteContents.push(node.content);
-        state.write(`[^${state.footnotes.length}]`);
+        const contents = (state.footnoteContents ??= []);
+        contents.push(node.content);
+        state.write(`[^${contents.length}]`);
       }
     },
     afterSerialize(state) {
