@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AdminBadgesList from "admin/components/admin-badges-list";
-import EditBadgeGroupingsModal from "admin/components/modal/edit-badge-groupings";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
-import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
+import EditBadgeGroupingsModal from "admin/components/modal/edit-badge-groupings";
 
 export default class AdminBadges extends Component {
   @service adminBadges;
@@ -22,7 +20,9 @@ export default class AdminBadges extends Component {
     this.modal.show(EditBadgeGroupingsModal, {
       model: {
         badgeGroupings: this.adminBadges.badgeGroupings,
-        updateGroupings: (groupings) => this.adminBadges.badgeGroupings = groupings,
+        updateGroupings: (groupings) => {
+          this.adminBadges.badgeGroupings = groupings;
+        },
       },
     });
   }
@@ -80,8 +80,8 @@ export default class AdminBadges extends Component {
         </:tabs>
       </DPageHeader>
 
-      <div class="admin-container">
-        <AdminBadgesList @badges={{this.badges}} />
+      <div class="admin-container admin-config-page__main-area">
+        {{outlet}}
       </div>
     </div>
   </template>

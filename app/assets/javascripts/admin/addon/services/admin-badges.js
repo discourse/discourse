@@ -8,13 +8,8 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminBadges extends Service {
   @tracked data;
-  @tracked badges = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.#fetchBadges();
-  }
+  @tracked badges;
+  @tracked badgeGroupings = [];
 
   get badgeTypes() {
     if (!this.data) {
@@ -22,16 +17,6 @@ export default class AdminBadges extends Service {
     }
 
     return this.data.badge_types;
-  }
-
-  get badgeGroupings() {
-    if (!this.data) {
-      return [];
-    }
-
-    return this.data.badge_groupings.map((badgeGroupingJson) => {
-      return BadgeGrouping.create(badgeGroupingJson);
-    });
   }
 
   get badgeTriggers() {
@@ -55,12 +40,21 @@ export default class AdminBadges extends Service {
     return this.data.admin_badges.protected_system_fields;
   }
 
-  async #fetchBadges() {
-    try {
-      this.data = await ajax("/admin/badges.json");
-      this.badges = Badge.createFromJson(this.data);
-    } catch (err) {
-      popupAjaxError(err);
+  async fetchBadges() {
+    if (!this.badges) {
+      try {
+        this.data = await ajax("/admin/badges.json");
+        this.badges = Badge.createFromJson(this.data);
+        this.badgeGroupings = this.#groupBadges(this.data);
+      } catch (err) {
+        popupAjaxError(err);
+      }
     }
+  }
+
+  #groupBadges(data) {
+    return data.badge_groupings.map((badgeGroupingJson) => {
+      return BadgeGrouping.create(badgeGroupingJson);
+    });
   }
 }
