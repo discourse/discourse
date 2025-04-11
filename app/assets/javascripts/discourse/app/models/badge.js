@@ -7,7 +7,15 @@ import getURL from "discourse/lib/get-url";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
 
+const DEFAULTS = {
+  enabled: true,
+};
+
 export default class Badge extends RestModel {
+  static create(args) {
+    return super.create({ ...args, ...DEFAULTS });
+  }
+
   static createFromJson(json) {
     // Create BadgeType objects.
     const badgeTypes = {};
