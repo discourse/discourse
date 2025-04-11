@@ -132,7 +132,7 @@ export default class Assistant extends Component {
         <PluginOutlet
           @name="search-menu-results-assistant-tag-intersection-top"
         />
-        {{#each @results as |result|}}
+        {{#each @results as |result index|}}
           <AssistantItem
             @tag={{result.tagName}}
             @additionalTags={{result.additionalTags}}
@@ -144,13 +144,14 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="tag-intersection"
+            data-test-assistant-item="result-category-{{index}}"
           />
         {{/each}}
       {{else if (eq this.suggestionType "categoryOrTag")}}
         <PluginOutlet
           @name="search-menu-results-assistant-category-or-tag-top"
         />
-        {{#each @results as |result|}}
+        {{#each @results as |result index|}}
           {{#if result.model}}
             {{! render category }}
             <AssistantItem
@@ -161,6 +162,7 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="category"
+              data-test-assistant-item="result-model-{{index}}"
             />
           {{else}}
             {{! render tag }}
@@ -172,6 +174,7 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="tag"
+              data-test-assistant-item="result-name-{{index}}"
             />
           {{/if}}
         {{/each}}
@@ -187,6 +190,7 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
+            data-test-assistant-item="result-user-in-topics-posts"
           />
 
           <AssistantItem
@@ -196,9 +200,10 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
+            data-test-assistant-item="result-user-in-this-topic"
           />
         {{else}}
-          {{#each @results as |result|}}
+          {{#each @results as |result index|}}
             <AssistantItem
               @user={{result}}
               @slug={{concat this.prefix "@" result.username}}
@@ -206,6 +211,7 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="user"
+              data-test-assistant-item="result-user-{{index}}"
             />
           {{/each}}
         {{/if}}
@@ -214,7 +220,7 @@ export default class Assistant extends Component {
           @name="search-menu-results-assistant-shortcut-top"
           @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}}
         />
-        {{#each this.suggestionShortcuts as |item|}}
+        {{#each this.suggestionShortcuts as |item index|}}
           <AssistantItem
             @slug={{concat this.prefix item}}
             @label={{item}}
@@ -222,6 +228,7 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="shortcut"
+            data-test-assistant-item="result-shortcut-{{index}}"
           />
         {{/each}}
       {{/if}}

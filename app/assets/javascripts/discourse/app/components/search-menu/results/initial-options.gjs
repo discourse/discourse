@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
@@ -44,6 +44,10 @@ export default class InitialOptions extends Component {
         this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
+  }
+
+  get hideForEmptyMobileSearch() {
+    return this.args.inHeaderMobileView && !this.search.activeGlobalSearchTerm;
   }
 
   get termMatchesContextTypeKeyword() {
@@ -148,7 +152,10 @@ export default class InitialOptions extends Component {
   }
 
   <template>
-    <ul class="search-menu-initial-options">
+    <ul
+      class="search-menu-initial-options"
+      data-test-selector="search-menu-initial-options"
+    >
       <PluginOutlet
         @name="search-menu-initial-options"
         @outletArgs={{hash
@@ -171,6 +178,7 @@ export default class InitialOptions extends Component {
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{this.contextTypeKeyword}}
+            data-test-assistant-item="search-with-modifier"
           />
         {{else}}
           {{#if
@@ -184,26 +192,31 @@ export default class InitialOptions extends Component {
                 @extraHint={{true}}
                 @searchTermChanged={{@searchTermChanged}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
+                data-test-assistant-item="search-in-topics-posts"
               />
             {{/if}}
 
             {{#if this.search.searchContext}}
-              <this.contextTypeComponent
-                @slug={{this.slug}}
-                @suggestionKeyword={{this.contextTypeKeyword}}
-                @results={{this.initialResults}}
-                @withInLabel={{this.withInLabel}}
-                @suffix={{this.suffix}}
-                @label={{this.label}}
-                @closeSearchMenu={{@closeSearchMenu}}
-                @searchTermChanged={{@searchTermChanged}}
-              />
+              {{#unless this.hideForEmptyMobileSearch}}
+                <this.contextTypeComponent
+                  @slug={{this.slug}}
+                  @suggestionKeyword={{this.contextTypeKeyword}}
+                  @results={{this.initialResults}}
+                  @withInLabel={{this.withInLabel}}
+                  @suffix={{this.suffix}}
+                  @label={{this.label}}
+                  @closeSearchMenu={{@closeSearchMenu}}
+                  @searchTermChanged={{@searchTermChanged}}
+                  data-test-context-item="context-type"
+                />
+              {{/unless}}
 
               {{#if
                 (and
                   this.currentUser
                   this.siteSettings.log_search_queries
                   this.displayInitialOptions
+                  (not @inHeaderMobileView)
                 )
               }}
                 <RecentSearches
@@ -212,7 +225,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else}}
+          {{else if (not @inHeaderMobileView)}}
             <RandomQuickTip
               @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}
