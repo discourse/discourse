@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Config::BrandingController do
+RSpec.describe Admin::Config::FontsController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
@@ -9,7 +9,7 @@ RSpec.describe Admin::Config::BrandingController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
       it "updates the fonts and text size" do
-        put "/admin/config/branding/fonts.json",
+        put "/admin/config/fonts.json",
             params: {
               base_font: "helvetica",
               heading_font: "roboto",
@@ -23,7 +23,7 @@ RSpec.describe Admin::Config::BrandingController do
       end
 
       it "validates values" do
-        put "/admin/config/branding/fonts.json",
+        put "/admin/config/fonts.json",
             params: {
               base_font: "invalid_font",
               heading_font: "invalid_font",
@@ -39,7 +39,7 @@ RSpec.describe Admin::Config::BrandingController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
       it "denies access with a 403 response" do
-        put "/admin/config/branding/fonts.json",
+        put "/admin/config/fonts.json",
             params: {
               base_font: "helvetica",
               heading_font: "roboto",
@@ -56,7 +56,7 @@ RSpec.describe Admin::Config::BrandingController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        put "/admin/config/branding/fonts.json",
+        put "/admin/config/fonts.json",
             params: {
               base_font: "helvetica",
               heading_font: "roboto",

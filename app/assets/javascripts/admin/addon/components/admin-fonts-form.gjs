@@ -10,11 +10,11 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import AdminBrandingFontChooser from "admin/components/admin-branding-font-chooser";
+import AdminFontChooser from "admin/components/admin-font-chooser";
 import { DEFAULT_TEXT_SIZES } from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
-export default class AdminBrandingFontsForm extends Component {
+export default class AdminFontsForm extends Component {
   @service siteSettings;
   @service siteSettingChangeTracker;
   @service toasts;
@@ -67,7 +67,7 @@ export default class AdminBrandingFontsForm extends Component {
   @action
   async #save(data) {
     try {
-      await ajax("/admin/config/branding/fonts.json", {
+      await ajax("/admin/config/fonts.json", {
         type: "PUT",
         data: {
           base_font: data.base_font,
@@ -79,7 +79,7 @@ export default class AdminBrandingFontsForm extends Component {
       this.toasts.success({
         duration: 3000,
         data: {
-          message: i18n("admin.config.branding.fonts.form.saved"),
+          message: i18n("admin.config.logo_and_fonts.fonts.form.saved"),
         },
       });
       this.siteSettingChangeTracker.refreshPage();
@@ -110,24 +110,26 @@ export default class AdminBrandingFontsForm extends Component {
     >
       <form.Field
         @name="base_font"
-        @title={{i18n "admin.config.branding.fonts.form.base_font.title"}}
+        @title={{i18n "admin.config.logo_and_fonts.fonts.form.base_font.title"}}
         @validation="required"
         @format="full"
         as |field|
       >
-        <AdminBrandingFontChooser
+        <AdminFontChooser
           @field={{field}}
           @selectedFont={{transientData.base_font}}
         />
       </form.Field>
       <form.Field
         @name="heading_font"
-        @title={{i18n "admin.config.branding.fonts.form.heading_font.title"}}
+        @title={{i18n
+          "admin.config.logo_and_fonts.fonts.form.heading_font.title"
+        }}
         @validation="required"
         @format="full"
         as |field|
       >
-        <AdminBrandingFontChooser
+        <AdminFontChooser
           @field={{field}}
           @selectedFont={{transientData.heading_font}}
         />
@@ -135,10 +137,10 @@ export default class AdminBrandingFontsForm extends Component {
       <form.Field
         @name="default_text_size"
         @title={{i18n
-          "admin.config.branding.fonts.form.default_text_size.title"
+          "admin.config.logo_and_fonts.fonts.form.default_text_size.title"
         }}
         @description={{i18n
-          "admin.config.branding.fonts.form.default_text_size.description"
+          "admin.config.logo_and_fonts.fonts.form.default_text_size.description"
         }}
         @validation="required"
         @format="full"

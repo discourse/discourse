@@ -353,7 +353,7 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("branding");
+        this.route("logo-and-fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

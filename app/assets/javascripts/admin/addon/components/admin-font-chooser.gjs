@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 import { MAIN_FONTS, MORE_FONTS } from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
-export default class AdminBrandingFontChooser extends Component {
+export default class AdminFontChooser extends Component {
   @tracked showMoreFonts = MORE_FONTS.map((font) => font.key).includes(
     this.args.selectedFont
   );
@@ -53,9 +53,9 @@ export default class AdminBrandingFontChooser extends Component {
         class="admin-fonts-form__more font"
       >
         {{#if this.showMoreFonts}}
-          {{i18n "admin.config.branding.fonts.form.less_fonts"}}
+          {{i18n "admin.config.logo_and_fonts.fonts.form.less_fonts"}}
         {{else}}
-          {{i18n "admin.config.branding.fonts.form.more_fonts"}}
+          {{i18n "admin.config.logo_and_fonts.fonts.form.more_fonts"}}
         {{/if}}
       </DButton>
     </@field.Custom>

@@ -2,7 +2,7 @@
 
 module PageObjects
   module Components
-    class AdminBrandingFontsForm < PageObjects::Components::Base
+    class AdminFontsForm < PageObjects::Components::Base
       def select_font(section, font)
         find(
           "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}",
@@ -38,7 +38,7 @@ module PageObjects
 
       def has_saved_successfully?
         PageObjects::Components::Toasts.new.has_success?(
-          I18n.t("admin_js.admin.config.branding.fonts.form.saved"),
+          I18n.t("admin_js.admin.config.logo_and_fonts.fonts.form.saved"),
         )
       end
 
