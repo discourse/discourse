@@ -359,23 +359,11 @@ shared_examples "login scenarios" do |login_page_object|
 end
 
 describe "Login", type: :system do
-  context "when desktop" do
-    before { SiteSetting.full_page_login = false }
-    include_examples "login scenarios", PageObjects::Modals::Login.new
-  end
-
-  context "when mobile", mobile: true do
-    before { SiteSetting.full_page_login = false }
-    include_examples "login scenarios", PageObjects::Modals::Login.new
-  end
-
   context "when fullpage desktop" do
-    before { SiteSetting.full_page_login = true }
     include_examples "login scenarios", PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.full_page_login = true }
     include_examples "login scenarios", PageObjects::Pages::Login.new
   end
 end
