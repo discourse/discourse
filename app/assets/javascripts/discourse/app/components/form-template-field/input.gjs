@@ -1,6 +1,8 @@
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import noop from "discourse/helpers/noop";
 
 const Input0 = <template>
   <div class="control-group form-template-field" data-field-type="input">
@@ -30,6 +32,7 @@ const Input0 = <template>
       minlength={{@validations.minimum}}
       maxlength={{@validations.maximum}}
       disabled={{@attributes.disabled}}
+      {{on "input" (if @onChange @onChange (noop))}}
     />
   </div>
 </template>;
