@@ -156,6 +156,9 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    if (this.siteSettings.rich_editor) {
+      keymap["ctrl+m"] = () => this.toggleRichEditor();
+    }
 
     return keymap;
   }
