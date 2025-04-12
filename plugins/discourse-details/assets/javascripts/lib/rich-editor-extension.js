@@ -69,7 +69,7 @@ const extension = {
   plugins: {
     props: {
       handleClickOn(view, pos, node, nodePos) {
-        if (pos > 2 || node.type.name !== "summary") {
+        if (pos - nodePos > 1 || node.type.name !== "summary") {
           return false;
         }
 
