@@ -455,19 +455,17 @@ export default class SearchMenu extends Component {
             data-test-input="search-term"
           />
 
-          {{#if this.loading}}
-            <div class="searching">
+          <div class="searching">
+            {{#if this.loading}}
               {{loadingSpinner}}
-            </div>
-          {{else}}
-            <div class="searching">
+            {{else}}
               <PluginOutlet @name="search-menu-before-advanced-search" />
               {{#if this.search.activeGlobalSearchTerm}}
                 <ClearButton @clearSearch={{this.clearSearch}} />
               {{/if}}
               <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
-            </div>
-          {{/if}}
+            {{/if}}
+          </div>
         </div>
         {{#if this.inHeaderMobileView}}
           <DButton
