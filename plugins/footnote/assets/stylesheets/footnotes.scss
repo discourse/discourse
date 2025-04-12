@@ -132,6 +132,8 @@
   .footnote-tooltip {
     cursor: auto;
     position: absolute;
+    max-height: 40%;
+    overflow: auto;
     left: 0;
     right: 0;
     bottom: 0;

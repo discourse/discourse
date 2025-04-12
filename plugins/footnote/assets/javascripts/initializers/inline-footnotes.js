@@ -1,8 +1,6 @@
 import { createPopper } from "@popperjs/core";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { i18n } from "discourse-i18n";
-import richEditorExtension from "../lib/rich-editor-extension";
 
 let inlineFootnotePopper;
 
@@ -129,17 +127,6 @@ export default {
         const tooltip = document.getElementById("footnote-tooltip");
         tooltip?.removeAttribute("data-show");
         tooltip?.removeAttribute("data-footnote-id");
-      });
-
-      api.registerRichEditorExtension(richEditorExtension);
-
-      api.addComposerToolbarPopupMenuOption({
-        action(event) {
-          event.addText(`^[${i18n("footnote.title")}]`);
-        },
-        group: "insertions",
-        icon: "asterisk",
-        label: "footnote.add",
       });
     });
   },
