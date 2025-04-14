@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 class Admin::Config::FontsController < Admin::AdminController
   def update
-    previous_default_text_size = SiteSetting.default_text_size
     SiteSetting::Update.call(
       guardian:,
       params: {
