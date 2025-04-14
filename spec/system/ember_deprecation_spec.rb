@@ -11,12 +11,16 @@ describe "JS Deprecation Handling", type: :system do
       console.warn = (msg) => window.intercepted_warnings.push([msg, (new Error()).stack])
     JS
 
-    # Trigger a deprecation, then return the console.warn calls
-    warn_calls = page.execute_script <<~JS
-      const { deprecate } = require('@ember/debug');
-      deprecate("Some message", false, { id: "some.id", for: "discourse", since: "3.4.0", until: "3.5.0" });
-      return window.intercepted_warnings
-    JS
+    warn_calls = nil
+    page.driver.with_playwright_page do |playwright_page|
+      warn_calls = playwright_page.evaluate <<~JS
+        () => {
+          const { deprecate } = require('@ember/debug');
+          deprecate("Some message", false, { id: "some.id", for: "discourse", since: "3.4.0", until: "3.5.0" });
+          return window.intercepted_warnings;
+        }
+      JS
+    end
 
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]

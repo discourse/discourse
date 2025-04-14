@@ -132,6 +132,7 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
       it "should allow a user to reset password with TOTP instead of security key" do
+
         with_security_key(user) do
           visit_reset_password_link
 

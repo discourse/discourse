@@ -313,6 +313,10 @@ module PageObjects
         select_kit.collapse
       end
 
+      def has_rich_editor_active?
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+      end
+
       def toggle_rich_editor
         editor_toggle_switch.click
         self

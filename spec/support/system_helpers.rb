@@ -8,49 +8,49 @@ module SystemHelpers
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
 
-    base_url = page.driver.browser.send(:devtools_address)
-    uri = URI(base_url)
-    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+    # base_url = page.driver.browser.send(:devtools_address)
+    # uri = URI(base_url)
+    # response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
 
-    socat_pid = nil
+    # socat_pid = nil
 
-    if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
-      socat_pid =
-        fork do
-          chrome_port = uri.port
-          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
-        end
-    end
+    # if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
+    #   socat_pid =
+    #     fork do
+    #       chrome_port = uri.port
+    #       exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+    #     end
+    # end
 
-    # Fetch devtools urls
-    base_url = page.driver.browser.send(:devtools_address)
-    uri = URI(base_url)
-    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
-    JSON
-      .parse(response)
-      .each do |result|
-        devtools_url = "#{base_url}#{result["devtoolsFrontendUrl"]}"
+    # # Fetch devtools urls
+    # base_url = page.driver.browser.send(:devtools_address)
+    # uri = URI(base_url)
+    # response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+    # JSON
+    #   .parse(response)
+    #   .each do |result|
+    #     devtools_url = "#{base_url}#{result["devtoolsFrontendUrl"]}"
 
-        devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+    #     devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
 
-        if ENV["CODESPACE_NAME"]
-          devtools_url =
-            devtools_url
-              .gsub(
-                "localhost:#{exposed_port}",
-                "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-              )
-              .gsub("http://", "https://")
-              .gsub("ws=", "wss=")
-        end
+    #     if ENV["CODESPACE_NAME"]
+    #       devtools_url =
+    #         devtools_url
+    #           .gsub(
+    #             "localhost:#{exposed_port}",
+    #             "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+    #           )
+    #           .gsub("http://", "https://")
+    #           .gsub("ws=", "wss=")
+    #     end
 
-        msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
-      end
+    #     msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+    #   end
 
     result = ask("\n\e[33m#{msg}\e[0m")
     binding.pry if result == "d" # rubocop:disable Lint/Debugger
-    puts "\e[33mResuming...\e[0m"
-    Process.kill("TERM", socat_pid) if socat_pid
+    # puts "\e[33mResuming...\e[0m"
+    # Process.kill("TERM", socat_pid) if socat_pid
     self
   end
 
@@ -123,8 +123,8 @@ module SystemHelpers
     old_element_y = nil
 
     try_until_success(timeout: timeout) do
-      current_element_x = element.rect.x
-      current_element_y = element.rect.y
+      current_element_x = element.rect[:x]
+      current_element_y = element.rect[:y]
 
       stopped_moving = current_element_x == old_element_x && current_element_y == old_element_y
 
@@ -136,14 +136,14 @@ module SystemHelpers
   end
 
   def resize_window(width: nil, height: nil)
-    original_size = page.driver.browser.manage.window.size
-    page.driver.browser.manage.window.resize_to(
-      width || original_size.width,
-      height || original_size.height,
+    original_size = Capybara.current_session.current_window.size
+    Capybara.current_session.current_window.resize_to(
+      width || original_size[0],
+      height || original_size[1],
     )
     yield
   ensure
-    page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
+    Capybara.current_session.current_window.resize_to(original_size[0], original_size[1])
   end
 
   def using_browser_timezone(timezone, &example)
@@ -180,6 +180,9 @@ module SystemHelpers
     page.execute_script(
       "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
     )
+
+    sleep 0.1 # Give time to the browser to render the new height
+
     page.scroll_to(0, 1000)
   end
 
@@ -268,5 +271,61 @@ module SystemHelpers
     yield
   ensure
     authenticator.remove! if authenticator
+  end
+
+  def with_logs
+    playwright_logger = nil
+    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+
+    yield(playwright_logger)
+  end
+
+  def with_virtual_authenticator(options = {})
+    cdp_client = nil
+
+    page.driver.with_playwright_page do |pw_page|
+      cdp_client = pw_page.context.new_cdp_session(pw_page)
+    end
+
+    cdp_client.send_message("WebAuthn.enable")
+
+    authenticator_options = {
+      protocol: "ctap2",
+      transport: "usb",
+      hasResidentKey: false,
+      hasUserVerification: false,
+      automaticPresenceSimulation: true,
+    }.merge(options)
+
+    response =
+      cdp_client.send_message(
+        "WebAuthn.addVirtualAuthenticator",
+        params: {
+          options: authenticator_options,
+        },
+      )
+
+    authenticator_id = response["authenticatorId"]
+
+    begin
+      yield if block_given?
+    ensure
+      cdp_client.send_message(
+        "WebAuthn.removeVirtualAuthenticator",
+        params: {
+          authenticatorId: authenticator_id,
+        },
+      )
+
+      cdp_client.send_message("WebAuthn.disable")
+    end
+  end
+
+  def add_cookie(options = {})
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.context.add_cookies(
+        [{ domain: Discourse.current_hostname, path: "/" }.merge(options)],
+      )
+    end
   end
 end
