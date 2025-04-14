@@ -9,7 +9,6 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMultiSelect from "discourse/components/d-multi-select";
-import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 class TestComponent extends Component {
@@ -31,7 +30,7 @@ class TestComponent extends Component {
   <template>
     <DMultiSelect
       @loadFn={{if @loadFn @loadFn this.loadFn}}
-      @compareFn={{if @compareFn @compareFn (noop)}}
+      @compareFn={{@compareFn}}
       @onChange={{this.onChange}}
       @selection={{this.selection}}
       @label={{@label}}

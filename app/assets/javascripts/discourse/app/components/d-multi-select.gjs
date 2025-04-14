@@ -38,6 +38,8 @@ export default class DMultiSelect extends Component {
 
   @tracked results = null;
 
+  compareKey = "id";
+
   get hasSelection() {
     return this.args.selection?.length > 0;
   }
@@ -141,7 +143,11 @@ export default class DMultiSelect extends Component {
 
   @action
   compare(a, b) {
-    return this.args.compareFn?.(a, b) ?? a.id === b.id;
+    if (this.args.compareFn) {
+      return this.args.compareFn(a, b);
+    } else {
+      return a[this.compareKey] === b[this.compareKey];
+    }
   }
 
   <template>
