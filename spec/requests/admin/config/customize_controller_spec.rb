@@ -102,5 +102,35 @@ RSpec.describe Admin::Config::CustomizeController do
         inactive_component.id,
       )
     end
+
+    it "paginates the components list" do
+      stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 2) do
+        components = []
+
+        get "/admin/config/customize/components.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(2)
+        components.concat(response.parsed_body["components"])
+        expect(response.parsed_body["has_more"]).to eq(true)
+
+        get "/admin/config/customize/components.json", params: { page: 1 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(2)
+        components.concat(response.parsed_body["components"])
+        expect(response.parsed_body["has_more"]).to eq(false)
+
+        get "/admin/config/customize/components.json", params: { page: 2 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(0)
+        expect(response.parsed_body["has_more"]).to eq(false)
+
+        expect(components.map { |c| c["id"] }).to contain_exactly(
+          active_component.id,
+          inactive_component.id,
+          remote_component.id,
+          remote_component_with_update.id,
+        )
+      end
+    end
   end
 end

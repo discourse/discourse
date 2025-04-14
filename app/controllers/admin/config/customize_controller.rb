@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 class Admin::Config::CustomizeController < Admin::AdminController
+  PAGE_SIZE = 20
+
   def themes
   end
 
   def components
-    components = Theme.include_basic_relations.where(component: true).order(:name)
+    page = params[:page]&.to_i
+
+    components =
+      Theme.include_basic_relations.where(component: true).order(:name).limit(PAGE_SIZE + 1)
+
+    components = components.offset(page * PAGE_SIZE) if page && page > 0
 
     name_search_term = params[:name].presence&.strip
     if name_search_term
@@ -26,6 +33,10 @@ class Admin::Config::CustomizeController < Admin::AdminController
       end
     end
 
-    render json: { components: serialize_data(components, ComponentIndexSerializer) }
+    components = components.to_a
+    has_more = components.size > PAGE_SIZE
+    components = components[...PAGE_SIZE]
+
+    render json: { has_more:, components: serialize_data(components, ComponentIndexSerializer) }
   end
 end
