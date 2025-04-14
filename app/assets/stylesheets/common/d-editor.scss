@@ -99,9 +99,12 @@
   overflow: auto;
 }
 
-.composing-whisper .d-editor-preview {
-  font-style: italic;
-  color: var(--primary-medium) !important;
+.composing-whisper {
+  .d-editor-preview,
+  .d-editor-input {
+    font-style: italic;
+    color: var(--primary-medium) !important;
+  }
 }
 
 .hide-preview .d-editor-preview-wrapper {
