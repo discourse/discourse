@@ -57,7 +57,7 @@ describe "User preferences | Security", type: :system do
   shared_examples "passkeys" do
     before { SiteSetting.enable_passkeys = true }
 
-    it "adds a passkey and logs in with it" do
+    it "adds a passkey, removes user password, logs in with passkey" do
       with_virtual_authenticator(
         hasUserVerification: true,
         hasResidentKey: true,
