@@ -570,6 +570,27 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
     end
+
+    it "removes newlines from alt/title in pasted image" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.copy_paste(<<~HTML, html: true)
+          <img src="https://example.com/image.png" alt="alt
+          with new
+          lines" title="title
+          with new
+          lines">
+        HTML
+
+      expect(page).to have_css("img[alt='alt with new lines'][title='title with new lines']")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(
+        '![alt with new lines](https://example.com/image.png "title with new lines")',
+      )
+    end
   end
 
   describe "trailing paragraph" do
