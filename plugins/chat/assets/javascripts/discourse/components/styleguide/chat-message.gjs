@@ -1,9 +1,27 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { not } from "truth-helpers";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import { optionalRequire } from "discourse/lib/utilities";
+import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+
+const StyleguideComponent = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide/component"
+);
+const Controls = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide/controls"
+);
+const Row = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
+);
+const StyleguideExample = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide-example"
+);
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;
@@ -92,48 +110,50 @@ export default class ChatStyleguideChatMessage extends Component {
       ];
     }
   }
+
+  <template>
+    <StyleguideExample @title="<ChatMessage>">
+      <StyleguideComponent>
+        <ChatMessage @message={{this.message}} @context="channel" />
+      </StyleguideComponent>
+
+      <Controls>
+        <Row @name="Deleted">
+          <DToggleSwitch
+            @state={{not (not this.message.deletedAt)}}
+            {{on "click" this.toggleDeleted}}
+          />
+        </Row>
+        <Row @name="Bookmark">
+          <DToggleSwitch
+            @state={{not (not this.message.bookmark)}}
+            {{on "click" this.toggleBookmarked}}
+          />
+        </Row>
+        <Row @name="Thread">
+          <DToggleSwitch
+            @state={{not (not this.message.thread)}}
+            {{on "click" this.toggleThread}}
+          />
+        </Row>
+        <Row @name="Reactions">
+          <DToggleSwitch
+            @state={{not (not this.message.reactions)}}
+            {{on "click" this.toggleReaction}}
+          />
+        </Row>
+        <Row @name="Upload">
+          <DToggleSwitch
+            @state={{not (not this.message.uploads)}}
+            {{on "click" this.toggleUpload}}
+          />
+        </Row>
+        <Row @name="Message">
+          <textarea
+            {{on "input" this.updateMessage}}
+          >{{this.message.message}}</textarea>
+        </Row>
+      </Controls>
+    </StyleguideExample>
+  </template>
 }
-
-<StyleguideExample @title="<ChatMessage>">
-  <Styleguide::Component>
-    <ChatMessage @message={{this.message}} @context="channel" />
-  </Styleguide::Component>
-
-  <Styleguide::Controls>
-    <Styleguide::Controls::Row @name="Deleted">
-      <DToggleSwitch
-        @state={{not (not this.message.deletedAt)}}
-        {{on "click" this.toggleDeleted}}
-      />
-    </Styleguide::Controls::Row>
-    <Styleguide::Controls::Row @name="Bookmark">
-      <DToggleSwitch
-        @state={{not (not this.message.bookmark)}}
-        {{on "click" this.toggleBookmarked}}
-      />
-    </Styleguide::Controls::Row>
-    <Styleguide::Controls::Row @name="Thread">
-      <DToggleSwitch
-        @state={{not (not this.message.thread)}}
-        {{on "click" this.toggleThread}}
-      />
-    </Styleguide::Controls::Row>
-    <Styleguide::Controls::Row @name="Reactions">
-      <DToggleSwitch
-        @state={{not (not this.message.reactions)}}
-        {{on "click" this.toggleReaction}}
-      />
-    </Styleguide::Controls::Row>
-    <Styleguide::Controls::Row @name="Upload">
-      <DToggleSwitch
-        @state={{not (not this.message.uploads)}}
-        {{on "click" this.toggleUpload}}
-      />
-    </Styleguide::Controls::Row>
-    <Styleguide::Controls::Row @name="Message">
-      <textarea
-        {{on "input" this.updateMessage}}
-      >{{this.message.message}}</textarea>
-    </Styleguide::Controls::Row>
-  </Styleguide::Controls>
-</StyleguideExample>

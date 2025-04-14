@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-pms-field", function (hooks) {
@@ -13,12 +13,19 @@ module("Integration | Component | da-pms-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
+    const self = this;
+
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "pms",
     });
 
     await render(
-      hbs`<AutomationField @automation={{this.automation}} @field={{this.field}} />`
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await click(".insert-pm");

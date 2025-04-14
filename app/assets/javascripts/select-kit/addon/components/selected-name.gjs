@@ -1,8 +1,12 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { computed, get } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
+import { and } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
@@ -77,9 +81,9 @@ export default class SelectedName extends Component.extend(UtilsMixin) {
 
   @computed("item.{icon,icons}")
   get icons() {
-    const icon = makeArray(this._safeProperty("icon", this.item));
+    const _icon = makeArray(this._safeProperty("icon", this.item));
     const icons = makeArray(this._safeProperty("icons", this.item));
-    return icon.concat(icons).filter(Boolean);
+    return _icon.concat(icons).filter(Boolean);
   }
 
   _safeProperty(name, content) {
@@ -89,48 +93,50 @@ export default class SelectedName extends Component.extend(UtilsMixin) {
 
     return get(content, name);
   }
+
+  <template>
+    {{#if this.selectKit.options.showFullTitle}}
+      <div
+        lang={{this.lang}}
+        title={{this.title}}
+        data-value={{this.value}}
+        data-name={{this.name}}
+        class="select-kit-selected-name selected-name choice"
+      >
+        {{#if this.selectKit.options.formName}}
+          <input
+            type="hidden"
+            name={{this.selectKit.options.formName}}
+            value={{this.value}}
+          />
+        {{/if}}
+
+        {{#if (and this.renderIcon this.item.icon)}}
+          {{icon this.item.icon}}
+        {{/if}}
+
+        <span class="name">
+          {{this.label}}
+        </span>
+
+        {{#if this.shouldDisplayClearableButton}}
+          <DButton
+            @icon="xmark"
+            @action={{fn this.selectKit.deselect this.item}}
+            @ariaLabel="clear_input"
+            class="btn-clear"
+          />
+        {{/if}}
+      </div>
+    {{else}}
+      {{#if this.item.icon}}
+        <div
+          lang={{this.lang}}
+          class="select-kit-selected-name selected-name choice"
+        >
+          {{icon this.item.icon}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </template>
 }
-
-{{#if this.selectKit.options.showFullTitle}}
-  <div
-    lang={{this.lang}}
-    title={{this.title}}
-    data-value={{this.value}}
-    data-name={{this.name}}
-    class="select-kit-selected-name selected-name choice"
-  >
-    {{#if this.selectKit.options.formName}}
-      <input
-        type="hidden"
-        name={{this.selectKit.options.formName}}
-        value={{this.value}}
-      />
-    {{/if}}
-
-    {{#if (and this.renderIcon this.item.icon)}}
-      {{d-icon this.item.icon}}
-    {{/if}}
-
-    <span class="name">
-      {{this.label}}
-    </span>
-
-    {{#if this.shouldDisplayClearableButton}}
-      <DButton
-        @icon="xmark"
-        @action={{fn this.selectKit.deselect this.item}}
-        @ariaLabel="clear_input"
-        class="btn-clear"
-      />
-    {{/if}}
-  </div>
-{{else}}
-  {{#if this.item.icon}}
-    <div
-      lang={{this.lang}}
-      class="select-kit-selected-name selected-name choice"
-    >
-      {{d-icon this.item.icon}}
-    </div>
-  {{/if}}
-{{/if}}

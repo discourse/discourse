@@ -1,3 +1,4 @@
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse/lib/decorators";
@@ -247,35 +248,37 @@ export default class Index extends PreviewBaseComponent {
     event?.preventDefault();
     this.set("previewTopic", true);
   }
+
+  <template>
+    <div class="previews {{if this.draggingActive 'dragging'}}">
+      <div class="wizard-container__preview topic-preview">
+        <canvas
+          width={{this.elementWidth}}
+          height={{this.elementHeight}}
+          style={{this.canvasStyle}}
+        >
+        </canvas>
+      </div>
+      <div class="wizard-container__preview homepage-preview">
+        <this.HomepagePreview @wizard={{this.wizard}} @step={{this.step}} />
+      </div>
+    </div>
+
+    <div class="preview-nav">
+      <a
+        href
+        class="preview-nav-button {{if this.previewTopic 'active'}}"
+        {{on "click" this.setPreviewTopic}}
+      >
+        {{i18n "wizard.previews.topic_preview"}}
+      </a>
+      <a
+        href
+        class="preview-nav-button {{unless this.previewTopic 'active'}}"
+        {{on "click" this.setPreviewHomepage}}
+      >
+        {{i18n "wizard.previews.homepage_preview"}}
+      </a>
+    </div>
+  </template>
 }
-
-<div class="previews {{if this.draggingActive 'dragging'}}">
-  <div class="wizard-container__preview topic-preview">
-    <canvas
-      width={{this.elementWidth}}
-      height={{this.elementHeight}}
-      style={{this.canvasStyle}}
-    >
-    </canvas>
-  </div>
-  <div class="wizard-container__preview homepage-preview">
-    <this.HomepagePreview @wizard={{this.wizard}} @step={{this.step}} />
-  </div>
-</div>
-
-<div class="preview-nav">
-  <a
-    href
-    class="preview-nav-button {{if this.previewTopic 'active'}}"
-    {{on "click" this.setPreviewTopic}}
-  >
-    {{i18n "wizard.previews.topic_preview"}}
-  </a>
-  <a
-    href
-    class="preview-nav-button {{unless this.previewTopic 'active'}}"
-    {{on "click" this.setPreviewHomepage}}
-  >
-    {{i18n "wizard.previews.homepage_preview"}}
-  </a>
-</div>

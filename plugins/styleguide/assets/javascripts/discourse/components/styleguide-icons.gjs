@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import { afterRender } from "discourse/lib/decorators";
 import { REPLACEMENTS } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
@@ -26,11 +27,13 @@ export default class StyleguideIcons extends Component {
       discourseLater(this, this.setIconIds, 1500);
     }
   }
-}
 
-{{#each this.iconIds as |id|}}
-  <div class="styleguide-icon">
-    {{d-icon id}}
-    <span>{{id}}</span>
-  </div>
-{{/each}}
+  <template>
+    {{#each this.iconIds as |id|}}
+      <div class="styleguide-icon">
+        {{icon id}}
+        <span>{{id}}</span>
+      </div>
+    {{/each}}
+  </template>
+}

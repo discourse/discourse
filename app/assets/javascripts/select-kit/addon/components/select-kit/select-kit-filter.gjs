@@ -1,4 +1,5 @@
-import Component from "@ember/component";
+import Component, { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
@@ -7,6 +8,7 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
@@ -137,30 +139,32 @@ export default class SelectKitFilter extends Component.extend(UtilsMixin) {
 
     this.selectKit.set("highlighted", null);
   }
+
+  <template>
+    {{#unless this.isHidden}}
+      {{! filter-input-search prevents 1password from attempting autocomplete }}
+      {{! template-lint-disable no-pointer-down-event-binding }}
+
+      <Input
+        tabindex={{0}}
+        class="filter-input"
+        placeholder={{this.placeholder}}
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        name="filter-input-search"
+        spellcheck={{false}}
+        @value={{readonly this.selectKit.filter}}
+        @type="search"
+        {{on "paste" (action "onPaste")}}
+        {{on "keydown" (action "onKeydown")}}
+        {{on "keyup" (action "onKeyup")}}
+        {{on "input" (action "onInput")}}
+      />
+
+      {{#if this.selectKit.options.filterIcon}}
+        {{icon this.selectKit.options.filterIcon class="filter-icon"}}
+      {{/if}}
+    {{/unless}}
+  </template>
 }
-
-{{#unless this.isHidden}}
-  {{! filter-input-search prevents 1password from attempting autocomplete }}
-  {{! template-lint-disable no-pointer-down-event-binding }}
-
-  <Input
-    tabindex={{0}}
-    class="filter-input"
-    placeholder={{this.placeholder}}
-    autocomplete="off"
-    autocorrect="off"
-    autocapitalize="off"
-    name="filter-input-search"
-    spellcheck={{false}}
-    @value={{readonly this.selectKit.filter}}
-    @type="search"
-    {{on "paste" (action "onPaste")}}
-    {{on "keydown" (action "onKeydown")}}
-    {{on "keyup" (action "onKeyup")}}
-    {{on "input" (action "onInput")}}
-  />
-
-  {{#if this.selectKit.options.filterIcon}}
-    {{d-icon this.selectKit.options.filterIcon class="filter-icon"}}
-  {{/if}}
-{{/unless}}

@@ -1,8 +1,8 @@
 import { click, render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import PollOptions from "discourse/plugins/poll/discourse/components/poll-options";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 0, rank: 0 },
@@ -29,6 +29,8 @@ module("Poll | Component | poll-options", function (hooks) {
   setupRenderingTest(hooks);
 
   test("single, not selected", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: false,
       isRankedChoice: false,
@@ -37,19 +39,25 @@ module("Poll | Component | poll-options", function (hooks) {
       votes: [],
     });
 
-    await render(hbs`<PollOptions
-      @isCheckbox={{this.isCheckbox}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
-      @options={{this.options}}
-      @votes={{this.votes}}
-      @sendRadioClick={{this.toggleOption}}
-    />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @isRankedChoice={{self.isRankedChoice}}
+          @ranked_choice_dropdown_content={{self.ranked_choice_dropdown_content}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     assert.dom("li .d-icon-far-circle:nth-of-type(1)").exists({ count: 3 });
   });
 
   test("single, selected", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: false,
       isRankedChoice: false,
@@ -58,19 +66,25 @@ module("Poll | Component | poll-options", function (hooks) {
       votes: ["6c986ebcde3d5822a6e91a695c388094"],
     });
 
-    await render(hbs`<PollOptions
-        @isCheckbox={{this.isCheckbox}}
-        @isRankedChoice={{this.isRankedChoice}}
-        @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
-        @options={{this.options}}
-        @votes={{this.votes}}
-        @sendRadioClick={{this.toggleOption}}
-      />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @isRankedChoice={{self.isRankedChoice}}
+          @ranked_choice_dropdown_content={{self.ranked_choice_dropdown_content}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     assert.dom("li .d-icon-circle:nth-of-type(1)").exists({ count: 1 });
   });
 
   test("multi, not selected", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: true,
       isRankedChoice: false,
@@ -79,19 +93,25 @@ module("Poll | Component | poll-options", function (hooks) {
       votes: [],
     });
 
-    await render(hbs`<PollOptions
-        @isCheckbox={{this.isCheckbox}}
-        @isRankedChoice={{this.isRankedChoice}}
-        @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
-        @options={{this.options}}
-        @votes={{this.votes}}
-        @sendRadioClick={{this.toggleOption}}
-      />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @isRankedChoice={{self.isRankedChoice}}
+          @ranked_choice_dropdown_content={{self.ranked_choice_dropdown_content}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     assert.dom("li .d-icon-far-square:nth-of-type(1)").exists({ count: 3 });
   });
 
   test("multi, selected", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: true,
       isRankedChoice: false,
@@ -100,14 +120,18 @@ module("Poll | Component | poll-options", function (hooks) {
       votes: ["6c986ebcde3d5822a6e91a695c388094"],
     });
 
-    await render(hbs`<PollOptions
-      @isCheckbox={{this.isCheckbox}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
-      @options={{this.options}}
-      @votes={{this.votes}}
-      @sendRadioClick={{this.toggleOption}}
-    />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @isRankedChoice={{self.isRankedChoice}}
+          @ranked_choice_dropdown_content={{self.ranked_choice_dropdown_content}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     assert
       .dom("li .d-icon-far-square-check:nth-of-type(1)")
@@ -115,23 +139,31 @@ module("Poll | Component | poll-options", function (hooks) {
   });
 
   test("single with images", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: false,
       options: IMAGE_OPTIONS,
       votes: [],
     });
 
-    await render(hbs`<PollOptions
-      @isCheckbox={{this.isCheckbox}}
-      @options={{this.options}}
-      @votes={{this.votes}}
-      @sendRadioClick={{this.toggleOption}}
-    />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     assert.dom("li img").exists({ count: 2 });
   });
 
   test("ranked choice - priorities", async function (assert) {
+    const self = this;
+
     this.setProperties({
       isCheckbox: false,
       isRankedChoice: true,
@@ -140,14 +172,18 @@ module("Poll | Component | poll-options", function (hooks) {
       votes: [],
     });
 
-    await render(hbs`<PollOptions
-      @isCheckbox={{this.isCheckbox}}
-      @isRankedChoice={{this.isRankedChoice}}
-      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
-      @options={{this.options}}
-      @votes={{this.votes}}
-      @sendRadioClick={{this.toggleOption}}
-    />`);
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{self.isCheckbox}}
+          @isRankedChoice={{self.isRankedChoice}}
+          @ranked_choice_dropdown_content={{self.ranked_choice_dropdown_content}}
+          @options={{self.options}}
+          @votes={{self.votes}}
+          @sendRadioClick={{self.toggleOption}}
+        />
+      </template>
+    );
 
     await click(
       `.ranked-choice-poll-option[data-poll-option-id='${OPTIONS[0].id}'] button`

@@ -61,8 +61,10 @@ export default class SelectKitBody extends Component {
       this.selectKit.close(event);
     });
   }
-}
 
-{{#if this.selectKit.isExpanded}}
-  {{yield}}
-{{/if}}
+  <template>
+    {{#if this.selectKit.isExpanded}}
+      {{yield}}
+    {{/if}}
+  </template>
+}

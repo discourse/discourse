@@ -9,6 +9,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
@@ -117,9 +118,9 @@ export default class SelectKitRow extends Component.extend(UtilsMixin) {
 
   @computed("item.{icon,icons}")
   get icons() {
-    const icon = makeArray(this.getProperty(this.item, "icon"));
+    const _icon = makeArray(this.getProperty(this.item, "icon"));
     const icons = makeArray(this.getProperty(this.item, "icons"));
-    return icon.concat(icons).filter(Boolean);
+    return _icon.concat(icons).filter(Boolean);
   }
 
   @computed("selectKit.highlighted")
@@ -203,12 +204,14 @@ export default class SelectKitRow extends Component.extend(UtilsMixin) {
       }
     }
   }
+
+  <template>
+    {{#each this.icons as |i|}}
+      {{icon i translatedTitle=this.dasherizedTitle}}
+    {{/each}}
+
+    <span class="name">
+      {{this.label}}
+    </span>
+  </template>
 }
-
-{{#each this.icons as |icon|}}
-  {{d-icon icon translatedTitle=this.dasherizedTitle}}
-{{/each}}
-
-<span class="name">
-  {{this.label}}
-</span>

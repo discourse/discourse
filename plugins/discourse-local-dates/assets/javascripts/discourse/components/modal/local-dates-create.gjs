@@ -1,14 +1,25 @@
 import Component from "@ember/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
+import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import TextField from "discourse/components/text-field";
+import icon from "discourse/helpers/d-icon";
+import htmlSafe from "discourse/helpers/html-safe";
 import { propertyNotEqual } from "discourse/lib/computed";
 import computed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
+import MultiSelect from "select-kit/components/multi-select";
+import TimezoneInput from "select-kit/components/timezone-input";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default class LocalDatesCreate extends Component {
@@ -371,205 +382,213 @@ export default class LocalDatesCreate extends Component {
   cancel() {
     this.closeModal();
   }
-}
 
-<DModal
-  @title={{i18n "discourse_local_dates.title"}}
-  @closeModal={{@closeModal}}
-  class="discourse-local-dates-create-modal -large"
->
-  <:body>
-    <div class="form">
-      {{#if this.isValid}}
-        {{#if this.timezoneIsDifferentFromUserTimezone}}
-          <div class="preview alert alert-info">
-            {{i18n "discourse_local_dates.create.form.current_timezone"}}
-            <b>{{this.formattedCurrentUserTimezone}}</b>{{this.currentPreview}}
-          </div>
-        {{/if}}
-      {{else}}
-        <div class="validation-error alert alert-error">
-          {{i18n "discourse_local_dates.create.form.invalid_date"}}
-        </div>
-      {{/if}}
+  <template>
+    <DModal
+      @title={{i18n "discourse_local_dates.title"}}
+      @closeModal={{@closeModal}}
+      class="discourse-local-dates-create-modal -large"
+    >
+      <:body>
+        <div class="form">
+          {{#if this.isValid}}
+            {{#if this.timezoneIsDifferentFromUserTimezone}}
+              <div class="preview alert alert-info">
+                {{i18n "discourse_local_dates.create.form.current_timezone"}}
+                <b
+                >{{this.formattedCurrentUserTimezone}}</b>{{this.currentPreview}}
+              </div>
+            {{/if}}
+          {{else}}
+            <div class="validation-error alert alert-error">
+              {{i18n "discourse_local_dates.create.form.invalid_date"}}
+            </div>
+          {{/if}}
 
-      {{this.computeDate}}
+          {{this.computeDate}}
 
-      <div class="date-time-configuration">
-        <div class="inputs-panel">
-          <div
-            class="date-time-control from
-              {{if this.fromSelected 'is-selected'}}
-              {{if this.fromFilled 'is-filled'}}"
-          >
-            {{d-icon "calendar-days"}}
-            <DButton
-              @action={{this.focusFrom}}
-              @translatedLabel={{this.formattedFrom}}
-              id="from-date-time"
-              class="date-time"
-              autofocus
-            />
-          </div>
+          <div class="date-time-configuration">
+            <div class="inputs-panel">
+              <div
+                class="date-time-control from
+                  {{if this.fromSelected 'is-selected'}}
+                  {{if this.fromFilled 'is-filled'}}"
+              >
+                {{icon "calendar-days"}}
+                <DButton
+                  @action={{this.focusFrom}}
+                  @translatedLabel={{this.formattedFrom}}
+                  id="from-date-time"
+                  class="date-time"
+                  autofocus
+                />
+              </div>
 
-          <div
-            class="date-time-control to
-              {{if this.toSelected 'is-selected'}}
-              {{if this.toFilled 'is-filled'}}"
-          >
-            {{d-icon "calendar-days"}}
-            <DButton
-              @action={{this.focusTo}}
-              @translatedLabel={{this.formattedTo}}
-              class="date-time"
-            />
-            {{#if this.toFilled}}
-              <DButton
-                @action={{this.eraseToDateTime}}
-                @icon="xmark"
-                class="delete-to-date"
+              <div
+                class="date-time-control to
+                  {{if this.toSelected 'is-selected'}}
+                  {{if this.toFilled 'is-filled'}}"
+              >
+                {{icon "calendar-days"}}
+                <DButton
+                  @action={{this.focusTo}}
+                  @translatedLabel={{this.formattedTo}}
+                  class="date-time"
+                />
+                {{#if this.toFilled}}
+                  <DButton
+                    @action={{this.eraseToDateTime}}
+                    @icon="xmark"
+                    class="delete-to-date"
+                  />
+                {{/if}}
+              </div>
+
+              {{#if this.site.desktopView}}
+                <TimezoneInput
+                  @options={{hash icon="globe"}}
+                  @value={{this.timezone}}
+                  @onChange={{fn (mut this.timezone)}}
+                />
+              {{/if}}
+            </div>
+
+            <div class="picker-panel">
+              <CalendarDateTimeInput
+                @datePickerId="local-date-create-form"
+                @date={{this.selectedDate}}
+                @time={{this.selectedTime}}
+                @minDate={{this.minDate}}
+                @timeFormat={{this.timeFormat}}
+                @dateFormat={{this.dateFormat}}
+                @onChangeDate={{this.changeSelectedDate}}
+                @onChangeTime={{this.changeSelectedTime}}
+              />
+            </div>
+
+            {{#if this.site.mobileView}}
+              <TimezoneInput
+                @value={{this.timezone}}
+                @options={{hash icon="globe"}}
+                @onChange={{fn (mut this.timezone)}}
               />
             {{/if}}
           </div>
 
-          {{#if this.site.desktopView}}
-            <TimezoneInput
-              @options={{hash icon="globe"}}
-              @value={{this.timezone}}
-              @onChange={{fn (mut this.timezone)}}
-            />
-          {{/if}}
-        </div>
+          {{#if this.advancedMode}}
+            <div class="advanced-options">
+              {{#unless this.isRange}}
+                <div class="control-group recurrence">
+                  <label class="control-label">
+                    {{i18n "discourse_local_dates.create.form.recurring_title"}}
+                  </label>
+                  <p>{{htmlSafe
+                      (i18n
+                        "discourse_local_dates.create.form.recurring_description"
+                      )
+                    }}</p>
+                  <div class="controls">
+                    <ComboBox
+                      @content={{this.recurringOptions}}
+                      @value={{this.recurring}}
+                      @onChange={{fn (mut this.recurring)}}
+                      @options={{hash
+                        none="discourse_local_dates.create.form.recurring_none"
+                      }}
+                      class="recurrence-input"
+                    />
+                  </div>
+                </div>
+              {{/unless}}
 
-        <div class="picker-panel">
-          <CalendarDateTimeInput
-            @datePickerId="local-date-create-form"
-            @date={{this.selectedDate}}
-            @time={{this.selectedTime}}
-            @minDate={{this.minDate}}
-            @timeFormat={{this.timeFormat}}
-            @dateFormat={{this.dateFormat}}
-            @onChangeDate={{this.changeSelectedDate}}
-            @onChangeTime={{this.changeSelectedTime}}
-          />
-        </div>
+              <div class="control-group timezones">
+                <label>{{i18n
+                    "discourse_local_dates.create.form.timezones_title"
+                  }}</label>
+                <p>{{i18n
+                    "discourse_local_dates.create.form.timezones_description"
+                  }}</p>
+                <div class="controls">
+                  <MultiSelect
+                    @valueProperty={{null}}
+                    @nameProperty={{null}}
+                    @content={{this.allTimezones}}
+                    @value={{this.timezones}}
+                    @options={{hash allowAny=false maximum=5}}
+                    class="timezones-input"
+                  />
+                </div>
+              </div>
 
-        {{#if this.site.mobileView}}
-          <TimezoneInput
-            @value={{this.timezone}}
-            @options={{hash icon="globe"}}
-            @onChange={{fn (mut this.timezone)}}
-          />
-        {{/if}}
-      </div>
-
-      {{#if this.advancedMode}}
-        <div class="advanced-options">
-          {{#unless this.isRange}}
-            <div class="control-group recurrence">
-              <label class="control-label">
-                {{i18n "discourse_local_dates.create.form.recurring_title"}}
-              </label>
-              <p>{{html-safe
-                  (i18n
-                    "discourse_local_dates.create.form.recurring_description"
-                  )
-                }}</p>
-              <div class="controls">
-                <ComboBox
-                  @content={{this.recurringOptions}}
-                  @value={{this.recurring}}
-                  @onChange={{fn (mut this.recurring)}}
-                  @options={{hash
-                    none="discourse_local_dates.create.form.recurring_none"
+              <div class="control-group format">
+                <label>{{i18n
+                    "discourse_local_dates.create.form.format_title"
+                  }}</label>
+                <p>
+                  {{i18n
+                    "discourse_local_dates.create.form.format_description"
                   }}
-                  class="recurrence-input"
-                />
+                  <a
+                    target="_blank"
+                    href="https://momentjs.com/docs/#/parsing/string-format/"
+                    rel="noopener noreferrer"
+                  >
+                    {{icon "circle-question"}}
+                  </a>
+                </p>
+                <div class="controls">
+                  <TextField @value={{this.format}} class="format-input" />
+                </div>
+              </div>
+              <div class="control-group">
+                <ul class="formats">
+                  {{#each this.previewedFormats as |previewedFormat|}}
+                    <li class="format">
+                      <a
+                        class="moment-format"
+                        href
+                        {{on
+                          "click"
+                          (fn this.updateFormat previewedFormat.format)
+                        }}
+                      >
+                        {{previewedFormat.format}}
+                      </a>
+                      <span class="previewed-format">
+                        {{previewedFormat.preview}}
+                      </span>
+                    </li>
+                  {{/each}}
+                </ul>
               </div>
             </div>
-          {{/unless}}
-
-          <div class="control-group timezones">
-            <label>{{i18n
-                "discourse_local_dates.create.form.timezones_title"
-              }}</label>
-            <p>{{i18n
-                "discourse_local_dates.create.form.timezones_description"
-              }}</p>
-            <div class="controls">
-              <MultiSelect
-                @valueProperty={{null}}
-                @nameProperty={{null}}
-                @content={{this.allTimezones}}
-                @value={{this.timezones}}
-                @options={{hash allowAny=false maximum=5}}
-                class="timezones-input"
-              />
-            </div>
-          </div>
-
-          <div class="control-group format">
-            <label>{{i18n
-                "discourse_local_dates.create.form.format_title"
-              }}</label>
-            <p>
-              {{i18n "discourse_local_dates.create.form.format_description"}}
-              <a
-                target="_blank"
-                href="https://momentjs.com/docs/#/parsing/string-format/"
-                rel="noopener noreferrer"
-              >
-                {{d-icon "circle-question"}}
-              </a>
-            </p>
-            <div class="controls">
-              <TextField @value={{this.format}} class="format-input" />
-            </div>
-          </div>
-          <div class="control-group">
-            <ul class="formats">
-              {{#each this.previewedFormats as |previewedFormat|}}
-                <li class="format">
-                  <a
-                    class="moment-format"
-                    href
-                    {{on "click" (fn this.updateFormat previewedFormat.format)}}
-                  >
-                    {{previewedFormat.format}}
-                  </a>
-                  <span class="previewed-format">
-                    {{previewedFormat.preview}}
-                  </span>
-                </li>
-              {{/each}}
-            </ul>
-          </div>
+          {{/if}}
         </div>
-      {{/if}}
-    </div>
-  </:body>
+      </:body>
 
-  <:footer>
+      <:footer>
 
-    {{#if this.isValid}}
-      <DButton
-        @action={{this.save}}
-        @label="discourse_local_dates.create.form.insert"
-        class="btn-primary"
-      />
-    {{/if}}
+        {{#if this.isValid}}
+          <DButton
+            @action={{this.save}}
+            @label="discourse_local_dates.create.form.insert"
+            class="btn-primary"
+          />
+        {{/if}}
 
-    <DButton
-      @action={{this.cancel}}
-      @translatedLabel={{i18n "cancel"}}
-      class="btn-flat"
-    />
+        <DButton
+          @action={{this.cancel}}
+          @translatedLabel={{i18n "cancel"}}
+          class="btn-flat"
+        />
 
-    <DButton
-      @action={{this.toggleAdvancedMode}}
-      @icon="gear"
-      @label={{this.toggleModeBtnLabel}}
-      class="btn-default advanced-mode-btn"
-    />
-  </:footer>
-</DModal>
+        <DButton
+          @action={{this.toggleAdvancedMode}}
+          @icon="gear"
+          @label={{this.toggleModeBtnLabel}}
+          class="btn-default advanced-mode-btn"
+        />
+      </:footer>
+    </DModal>
+  </template>
+}

@@ -29,14 +29,16 @@ export default class ColorPalettesRow extends SelectKitRowComponent {
       return "";
     }
   }
+
+  <template>
+    <span class="name">
+      {{this.label}}
+    </span>
+
+    {{#if this.item.colors}}
+      <div class="palettes" style={{this.backgroundColor}}>
+        {{this.palettes}}
+      </div>
+    {{/if}}
+  </template>
 }
-
-<span class="name">
-  {{this.label}}
-</span>
-
-{{#if this.item.colors}}
-  <div class="palettes" style={{this.backgroundColor}}>
-    {{this.palettes}}
-  </div>
-{{/if}}

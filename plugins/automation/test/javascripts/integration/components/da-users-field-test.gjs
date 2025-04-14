@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module("Integration | Component | da-users-field", function (hooks) {
@@ -32,12 +32,19 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("sets values", async function (assert) {
+    const self = this;
+
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 
     await render(
-      hbs`<AutomationField @automation={{this.automation}} @field={{this.field}} />`
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();
@@ -50,12 +57,19 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("allows emails", async function (assert) {
+    const self = this;
+
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
 
     await render(
-      hbs`<AutomationField @automation={{this.automation}} @field={{this.field}} />`
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
     );
 
     await selectKit().expand();

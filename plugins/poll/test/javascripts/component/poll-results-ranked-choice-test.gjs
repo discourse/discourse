@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import PollResultsRankedChoice from "discourse/plugins/poll/discourse/components/poll-results-ranked-choice";
 
 const RANKED_CHOICE_OUTCOME = {
   tied: false,
@@ -34,12 +34,18 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the ranked choice results component correctly", async function (assert) {
+    const self = this;
+
     this.setProperties({
       rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
     });
 
     await render(
-      hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
+      <template>
+        <PollResultsRankedChoice
+          @rankedChoiceOutcome={{self.rankedChoiceOutcome}}
+        />
+      </template>
     );
 
     assert
@@ -56,10 +62,16 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   });
 
   test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
+    const self = this;
+
     this.rankedChoiceOutcome = null;
 
     await render(
-      hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
+      <template>
+        <PollResultsRankedChoice
+          @rankedChoiceOutcome={{self.rankedChoiceOutcome}}
+        />
+      </template>
     );
 
     assert

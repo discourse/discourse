@@ -21,8 +21,10 @@ export default class FormatSelectedContent extends Component.extend(
       return this.getName(this.selectKit.noneItem);
     }
   }
-}
 
-<span class="formatted-selection">
-  {{this.formattedContent}}
-</span>
+  <template>
+    <span class="formatted-selection">
+      {{this.formattedContent}}
+    </span>
+  </template>
+}

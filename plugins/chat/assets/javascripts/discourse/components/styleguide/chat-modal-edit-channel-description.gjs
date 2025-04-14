@@ -2,8 +2,17 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import { optionalRequire } from "discourse/lib/utilities";
 import ChatModalEditChannelDescription from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-description";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+
+const Row = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
+);
+const StyleguideExample = optionalRequire(
+  "discourse/plugins/styleguide/discourse/components/styleguide-example"
+);
 
 export default class ChatStyleguideChatModalEditChannelDescription extends Component {
   @service modal;
@@ -16,10 +25,12 @@ export default class ChatStyleguideChatModalEditChannelDescription extends Compo
       model: this.channel,
     });
   }
-}
 
-<StyleguideExample @title="<Chat::Modal::EditChannelDescription>">
-  <Styleguide::Controls::Row>
-    <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
-  </Styleguide::Controls::Row>
-</StyleguideExample>
+  <template>
+    <StyleguideExample @title="<Chat::Modal::EditChannelDescription>">
+      <Row>
+        <DButton @translatedLabel="Open modal" @action={{this.openModal}} />
+      </Row>
+    </StyleguideExample>
+  </template>
+}

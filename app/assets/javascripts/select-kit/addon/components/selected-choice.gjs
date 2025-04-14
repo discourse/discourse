@@ -1,7 +1,11 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @tagName("")
@@ -39,30 +43,32 @@ export default class SelectedChoice extends Component.extend(UtilsMixin) {
     }
     return this.mandatoryValuesArray.includes(this.item.id);
   }
-}
 
-{{#if this.readOnly}}
-  <button
-    class="btn btn-default disabled"
-    title={{I18n "admin.site_settings.mandatory_group"}}
-  >{{this.itemName}}</button>
-{{else}}
-  <button
-    {{on "click" (fn this.selectKit.deselect this.item)}}
-    aria-label={{i18n "select_kit.delete_item" name=this.itemName}}
-    data-value={{this.itemValue}}
-    data-name={{this.itemName}}
-    type="button"
-    id="{{this.id}}-choice"
-    class="btn btn-default selected-choice {{this.extraClass}}"
-  >
-    {{d-icon "xmark"}}
-    {{#if (has-block)}}
-      {{yield}}
+  <template>
+    {{#if this.readOnly}}
+      <button
+        class="btn btn-default disabled"
+        title={{i18n "admin.site_settings.mandatory_group"}}
+      >{{this.itemName}}</button>
     {{else}}
-      <span class="d-button-label">
-        {{this.itemName}}
-      </span>
+      <button
+        {{on "click" (fn this.selectKit.deselect this.item)}}
+        aria-label={{i18n "select_kit.delete_item" name=this.itemName}}
+        data-value={{this.itemValue}}
+        data-name={{this.itemName}}
+        type="button"
+        id="{{this.id}}-choice"
+        class="btn btn-default selected-choice {{this.extraClass}}"
+      >
+        {{icon "xmark"}}
+        {{#if (has-block)}}
+          {{yield}}
+        {{else}}
+          <span class="d-button-label">
+            {{this.itemName}}
+          </span>
+        {{/if}}
+      </button>
     {{/if}}
-  </button>
-{{/if}}
+  </template>
+}

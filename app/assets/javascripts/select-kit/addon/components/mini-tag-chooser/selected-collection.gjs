@@ -1,7 +1,10 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import discourseTag from "discourse/helpers/discourse-tag";
 
 @tagName("")
 export default class SelectedCollection extends Component {
@@ -27,20 +30,22 @@ export default class SelectedCollection extends Component {
       };
     });
   }
-}
 
-{{#if this.tags}}
-  <div class="mini-tag-chooser-selected-collection selected-tags">
-    {{#each this.tags as |tag|}}
-      <DButton
-        @translatedTitle={{tag.value}}
-        @icon="xmark"
-        @action={{fn (action this.selectKit.deselect) tag.value}}
-        tabindex="0"
-        class={{tag.classNames}}
-      >
-        {{discourse-tag tag.value noHref=true}}
-      </DButton>
-    {{/each}}
-  </div>
-{{/if}}
+  <template>
+    {{#if this.tags}}
+      <div class="mini-tag-chooser-selected-collection selected-tags">
+        {{#each this.tags as |tag|}}
+          <DButton
+            @translatedTitle={{tag.value}}
+            @icon="xmark"
+            @action={{fn (action this.selectKit.deselect) tag.value}}
+            tabindex="0"
+            class={{tag.classNames}}
+          >
+            {{discourseTag tag.value noHref=true}}
+          </DButton>
+        {{/each}}
+      </div>
+    {{/if}}
+  </template>
+}

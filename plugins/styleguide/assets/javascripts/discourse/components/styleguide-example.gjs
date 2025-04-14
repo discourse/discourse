@@ -8,9 +8,11 @@ export default class StyleguideExample extends Component {
     super(...arguments);
     this.value = this.args.initialValue;
   }
-}
 
-<section class="styleguide-example">
-  <div class="example-title">{{@title}}</div>
-  <section class="rendered">{{yield this.value}}</section>
-</section>
+  <template>
+    <section class="styleguide-example">
+      <div class="example-title">{{@title}}</div>
+      <section class="rendered">{{yield this.value}}</section>
+    </section>
+  </template>
+}

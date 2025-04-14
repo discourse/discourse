@@ -15,6 +15,8 @@ export default class CreateColorRow extends SelectKitRowComponent {
         : `#${color}`;
     });
   }
-}
 
-<span>{{this.label}}</span>
+  <template>
+    <span>{{this.label}}</span>
+  </template>
+}
