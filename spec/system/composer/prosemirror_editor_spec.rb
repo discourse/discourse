@@ -469,7 +469,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("```code block")
       composer.send_keys(:home)
-      composer.send_keys(%i[backspace])
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("p", text: "code block")
     end
@@ -619,7 +619,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a", text: "www.example.com")
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_no_css("a")
 
@@ -635,7 +636,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a", text: "https://example.com")
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("a", text: "https://example.c")
     end
@@ -666,7 +668,8 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("code", text: "code!")
 
       # within the code mark
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
       composer.type_content("!")
 
       expect(rich).to have_css("code", text: "code!")

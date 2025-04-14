@@ -54,7 +54,7 @@ module PageObjects
       end
 
       def fill_content(content)
-        composer_input.fill_in(with: content)
+        composer_input.send_keys(content)
         self
       end
 
