@@ -493,17 +493,21 @@ blockquote {
   padding: 12px;
 }
 
-aside.quote:has(.title) .title {
+aside.quote .title {
   border-top-right-radius: var(--d-border-radius);
   border-top-left-radius: var(--d-border-radius);
 }
 
-aside.quote:has(.title) blockquote {
-  border-bottom-right-radius: var(--d-border-radius);
-  border-bottom-left-radius: var(--d-border-radius);
+aside.quote blockquote {
+  border-radius: var(--d-border-radius);
 }
 
-aside.quote:not(:has(.title)) blockquote {
+aside.quote .title + blockquote {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.cooked blockquote {
   border-radius: var(--d-border-radius);
 }
 
