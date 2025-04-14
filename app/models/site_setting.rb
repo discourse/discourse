@@ -3,17 +3,28 @@
 class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
+    analytics
+    categories_and_tags
+    email
     embedding
     emojis
     flags
     fonts
     group_permissions
+    interface
     legal
     localization
     navigation
     notifications
     permalinks
+    reports
+    posts_and_topics
+    user_defaults
+    sharing
+    site_admin
+    stats_and_thresholds
     trust_levels
+    users
   ]
 
   DEFAULT_USER_PREFERENCES = %w[

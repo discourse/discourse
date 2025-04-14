@@ -597,6 +597,10 @@ es:
         name: "Nombre"
         fields: "Campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored}, (de la última denuncia)"
@@ -3798,9 +3802,13 @@ es:
       logo_dark: "Imagen del logotipo de la categoría en modo oscuro"
       background_image: "Imagen de fondo de la categoría"
       background_image_dark: "Imagen de fondo de categoría oscura"
-      badge_colors: "Colores de las medallas"
-      background_color: "Color de fondo"
-      foreground_color: "Colores de primer plano"
+      background_color: "Color"
+      styles:
+        icon: "Icono"
+        emoji: "Emoji"
+        options:
+          icon: "Icono"
+          emoji: "Emoji"
       color_used: "Color en uso"
       predefined_colors: "Opciones de color predefinidas"
       name_placeholder: "Una o dos palabras máximo"

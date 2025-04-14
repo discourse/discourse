@@ -415,6 +415,19 @@ class Search
     posts.where("EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = posts.topic_id)")
   end
 
+  advanced_filter(/\Ain:bots?\z/i) { |posts| posts.where("posts.user_id < 0") }
+  advanced_filter(/\Ain:humans?\z/i) { |posts| posts.where("posts.user_id >= 0") }
+
+  advanced_filter(/\Ain:whispers?\z/i) do |posts|
+    if @guardian.can_see_whispers?
+      posts.where(post_type: Post.types[:whisper])
+    else
+      posts.where("1 = 0")
+    end
+  end
+
+  advanced_filter(/\Ain:regular\z/i) { |posts| posts.where(post_type: Post.types[:regular]) }
+
   advanced_filter(/\Ain:untagged\z/i) do |posts|
     posts.joins(
       "LEFT JOIN topic_tags ON
@@ -1459,7 +1472,6 @@ class Search
 
   def aggregate_search(opts = {})
     post_sql = aggregate_post_sql(opts)
-
     added = 0
 
     aggregate_posts(post_sql[:default]).each do |p|

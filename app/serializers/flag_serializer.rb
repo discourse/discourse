@@ -13,7 +13,8 @@ class FlagSerializer < ApplicationSerializer
              :is_flag,
              :applies_to,
              :is_used,
-             :auto_action_type
+             :auto_action_type,
+             :system
 
   def i18n_prefix
     "#{@options[:target] || "post_action"}_types.#{object.name_key}"
@@ -46,5 +47,9 @@ class FlagSerializer < ApplicationSerializer
 
   def applies_to
     Array.wrap(object.applies_to)
+  end
+
+  def system
+    object.system?
   end
 end

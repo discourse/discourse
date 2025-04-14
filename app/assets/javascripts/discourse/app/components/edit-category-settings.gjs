@@ -34,9 +34,13 @@ export default class EditCategorySettings extends buildCategoryPanel(
   showSubcategoryListStyle;
   @empty("category.sort_order") isDefaultSortOrder;
 
-  @discourseComputed("category.isParent", "category.parent_category_id")
-  isParentCategory(isParent, parentCategoryId) {
-    return isParent || !parentCategoryId;
+  @discourseComputed(
+    "category.isParent",
+    "category.parent_category_id",
+    "transientData.parent_category_id"
+  )
+  isParentCategory(isParent, parentCategoryId, transientParentCategoryId) {
+    return isParent || !(parentCategoryId || transientParentCategoryId);
   }
 
   @discourseComputed

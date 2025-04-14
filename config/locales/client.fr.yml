@@ -597,6 +597,10 @@ fr:
         name: "Nom"
         fields: "Champs"
         reject_reason: "Raison"
+        scrubbed_reason: "Motif d'attribution"
+        scrub_record:
+          reason_placeholder: "Raison ..."
+          cancel_button: "Annuler"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
@@ -3798,9 +3802,13 @@ fr:
       logo_dark: "Image du logo de la catégorie en mode sombre"
       background_image: "Image de fond de la catégorie"
       background_image_dark: "Image d'arrière-plan de la catégorie sombre"
-      badge_colors: "Couleurs du badge"
-      background_color: "Couleur du fond"
-      foreground_color: "Couleur du texte"
+      background_color: "Couleur"
+      styles:
+        icon: "Icône"
+        emoji: "Émoji"
+        options:
+          icon: "Icône"
+          emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
       name_placeholder: "Un ou deux mots maximum"

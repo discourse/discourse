@@ -61,7 +61,6 @@ import {
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetNeedsHbrTopicList } from "discourse/lib/raw-templates";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
@@ -102,7 +101,6 @@ import {
 } from "discourse/tests/helpers/site-settings";
 import { resetPostClassesCallback } from "discourse/widgets/post";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -221,7 +219,6 @@ export function testCleanup(container, app) {
   resetCardClickListenerSelector();
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
-  resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearDisabledDefaultKeyboardBindings();
@@ -270,7 +267,6 @@ export function testCleanup(container, app) {
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
-  resetNeedsHbrTopicList();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();

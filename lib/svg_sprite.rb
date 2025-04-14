@@ -65,9 +65,11 @@ module SvgSprite
         circle-minus
         circle-plus
         circle-question
+        circle-user
         circle-xmark
         clock
         clock-rotate-left
+        cloud-arrow-down
         cloud-arrow-up
         code
         comment
@@ -213,6 +215,7 @@ module SvgSprite
         robot
         rocket
         rotate
+        screwdriver-wrench
         scroll
         share
         shield-halved
@@ -261,8 +264,6 @@ module SvgSprite
       ],
     )
 
-  CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
-
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
   MAX_THEME_SPRITE_SIZE = 1024.kilobytes
@@ -290,9 +291,13 @@ module SvgSprite
       .to_h
   end
 
+  def self.core_svgs_files
+    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+  end
+
   def self.core_svgs
     @core_svgs ||=
-      CORE_SVG_SPRITES.reduce({}) do |symbols, path|
+      core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
   end

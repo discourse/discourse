@@ -4,6 +4,21 @@ RSpec.describe ReviewableScoreSerializer do
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
   fab!(:admin)
 
+  reasons = %w[
+    post_count
+    trust_level
+    new_topics_unless_trust_level
+    fast_typer
+    auto_silence_regex
+    staged
+    must_approve_users
+    invite_only
+    email_spam
+    suspect_user
+    contains_media
+    watched_word
+  ]
+
   describe "#reason" do
     context "with regular links" do
       it "adds a link for watched words" do
@@ -28,31 +43,19 @@ RSpec.describe ReviewableScoreSerializer do
     end
 
     context "with site setting links" do
-      reasons = %w[
-        post_count
-        trust_level
-        new_topics_unless_trust_level
-        fast_typer
-        auto_silence_regex
-        staged
-        must_approve_users
-        invite_only
-        email_spam
-        suspect_user
-        contains_media
-      ]
+      reasons
+        .reject { |r| r == "watched_word" }
+        .each do |r|
+          it "adds a link to a site setting for the #{r} reason" do
+            serialized = serialized_score(r)
+            setting_name = described_class::REASONS_AND_SETTINGS[r.to_sym]
+            link_url =
+              "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
+            link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
 
-      reasons.each do |r|
-        it "addd a link to a site setting for the #{r} reason" do
-          serialized = serialized_score(r)
-          setting_name = described_class::REASONS_AND_SETTINGS[r.to_sym]
-          link_url =
-            "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{setting_name}"
-          link = "<a href=\"#{link_url}\">#{setting_name.gsub("_", " ")}</a>"
-
-          expect(serialized.reason).to include(link)
+            expect(serialized.reason).to include(link)
+          end
         end
-      end
     end
 
     context "with custom reasons" do
@@ -111,6 +114,38 @@ RSpec.describe ReviewableScoreSerializer do
           ),
         )
       end
+    end
+  end
+
+  describe "#reason_type" do
+    reasons.each do |reason|
+      it "returns the correct reason type for #{reason}" do
+        serialized = serialized_score(reason)
+        expect(serialized.reason_type).to eq(reason)
+      end
+    end
+  end
+
+  describe "#reason_data" do
+    reasons
+      .reject { |r| r == "watched_word" }
+      .each do |reason|
+        it "returns nil for #{reason}" do
+          serialized = serialized_score(reason)
+          expect(serialized.reason_data).to be_nil
+        end
+      end
+
+    it "returns the watched words found for the watched_word reason" do
+      raw = "I'm a post with some bad words like 'bad' and 'words'."
+      reviewable.target = Fabricate(:post, raw:)
+
+      score = serialized_score("watched_word")
+
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "bad")
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "words")
+
+      expect(score.reason_data).to include("bad", "words")
     end
   end
 

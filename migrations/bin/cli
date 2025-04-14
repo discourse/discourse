@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "../lib/migrations"
+require_relative "../migrations"
 
 require "colored2"
 require "thor"
@@ -37,11 +37,20 @@ module Migrations
         ::Migrations::CLI::UploadCommand.new(options).execute
       end
 
+      desc "schema [COMMAND]", "Manage database schema"
+      subcommand "schema", ::Migrations::CLI::SchemaSubCommand
+
       def self.exit_on_failure?
         true
       end
     end
   end
+end
+
+if defined?(RubyVM::YJIT)
+  RubyVM::YJIT.enable
+else
+  warn "WARNING: Performance degraded: RubyVM::YJIT is not available".yellow
 end
 
 # rubocop:disable Discourse/NoChdir

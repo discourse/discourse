@@ -195,6 +195,22 @@ export default class ComposerService extends Service {
     );
   }
 
+  get replyingToUserId() {
+    if (this.get("model.editingPost")) {
+      const user = this.get("model.post.reply_to_user");
+      if (user) {
+        return user.id;
+      }
+    }
+
+    const user = this.get("model.post.user");
+    if (user) {
+      return user.id;
+    }
+
+    return this.get("model.topic.user_id");
+  }
+
   get formTemplateInitialValues() {
     return this._formTemplateInitialValues;
   }

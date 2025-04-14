@@ -142,7 +142,7 @@ HTML
 
     expect(baked).to include(field.javascript_cache.url)
     expect(field.javascript_cache.content).to include("@ember/template-factory")
-    expect(field.javascript_cache.content).to include("raw-handlebars")
+    expect(field.javascript_cache.content).to include("Raw templates are no longer supported")
   end
 
   it "can destroy unbaked theme without errors" do

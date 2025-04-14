@@ -554,6 +554,10 @@ zh_TW:
         name: "名稱"
         fields: "欄位"
         reject_reason: "原因"
+        scrubbed_reason: "原因"
+        scrub_record:
+          reason_placeholder: "原因..."
+          cancel_button: "取消"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} （共 %{count} 個檢舉）"
@@ -3606,9 +3610,13 @@ zh_TW:
       logo_description: "建議長寬比為 1:1，最小尺寸為 200px。如果留空，將不會顯示圖片。"
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
-      badge_colors: "識別顏色"
-      background_color: "背景色"
-      foreground_color: "前景色"
+      background_color: "顏色"
+      styles:
+        icon: "圖示"
+        emoji: "Emoji"
+        options:
+          icon: "圖示"
+          emoji: "Emoji"
       color_used: "使用中的顏色"
       predefined_colors: "預先定義的顏色選項"
       name_placeholder: "請簡單明瞭。"

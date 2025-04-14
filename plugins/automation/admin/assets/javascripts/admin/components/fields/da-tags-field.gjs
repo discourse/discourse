@@ -13,6 +13,7 @@ export default class TagsField extends BaseField {
         <div class="controls">
           <TagChooser
             @tags={{@field.metadata.value}}
+            @everyTag={{true}}
             @options={{hash allowAny=false disabled=@field.isDisabled}}
           />
 

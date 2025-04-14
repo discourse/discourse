@@ -443,6 +443,9 @@ ca:
         name: "Nom"
         fields: "Camps"
         reject_reason: "Motiu"
+        scrubbed_reason: "Motiu"
+        scrub_record:
+          cancel_button: "Cancel·la"
       user_percentage:
         agreed:
           one: "El %{count}% hi està d'acord"
@@ -2427,9 +2430,13 @@ ca:
       description: "Descripció"
       logo: "Imatge del logo de la categoria"
       background_image: "Imatge de fons de la categoria"
-      badge_colors: "Colors d'insígnies"
-      background_color: "Color de fons"
-      foreground_color: "Color del primer pla"
+      background_color: "Color"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Una o dues paraules com a màxim"
       color_placeholder: "Qualsevol color web"
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"

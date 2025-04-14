@@ -597,6 +597,10 @@ tr_TR:
         name: "Ad"
         fields: "Alanlar"
         reject_reason: "Sebep"
+        scrubbed_reason: "Sebep"
+        scrub_record:
+          reason_placeholder: "Sebep..."
+          cancel_button: "İptal et"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (son bayraktan)"
@@ -3798,9 +3802,13 @@ tr_TR:
       logo_dark: "Koyu Mod Kategorisi Logo Görüntüsü"
       background_image: "Kategori Arka Plan Görüntüsü"
       background_image_dark: "Koyu Kategori Arka Plan Resmi"
-      badge_colors: "Rozet renkleri"
-      background_color: "Arka plan rengi"
-      foreground_color: "Ön plan rengi"
+      background_color: "Renk"
+      styles:
+        icon: "Simge"
+        emoji: "Emoji"
+        options:
+          icon: "Simge"
+          emoji: "Emoji"
       color_used: "Kullanılan renk"
       predefined_colors: "Önceden tanımlanmış renk seçenekleri"
       name_placeholder: "En fazla bir veya iki kelime"

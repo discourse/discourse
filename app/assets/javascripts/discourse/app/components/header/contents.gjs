@@ -16,7 +16,9 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service router;
   @service sidebarState;
+  @service search;
 
   get sidebarIcon() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
@@ -39,16 +41,18 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    if (
+      this.site.mobileView ||
+      this.args.narrowDesktop ||
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+    ) {
       return false;
     }
 
-    const searchExperience = applyValueTransformer(
-      "site-setting-search-experience",
-      this.siteSettings.search_experience
+    return (
+      this.search.searchExperience === "search_field" &&
+      !this.args.topicInfoVisible
     );
-
-    return searchExperience === "search_field" && !this.args.topicInfoVisible;
   }
 
   <template>

@@ -14,11 +14,11 @@ export default class IncomingEmail extends EmberObject {
   }
 
   static find(id) {
-    return ajax(`/admin/email/incoming/${id}.json`);
+    return ajax(`/admin/email-logs/incoming/${id}.json`);
   }
 
   static findByBounced(id) {
-    return ajax(`/admin/email/incoming_from_bounced/${id}.json`);
+    return ajax(`/admin/email-logs/incoming_from_bounced/${id}.json`);
   }
 
   static findAll(filter, offset) {
@@ -28,7 +28,7 @@ export default class IncomingEmail extends EmberObject {
     const status = filter.status || "received";
     delete filter.status;
 
-    return ajax(`/admin/email/${status}.json?offset=${offset}`, {
+    return ajax(`/admin/email-logs/${status}.json?offset=${offset}`, {
       data: filter,
     }).then((incomings) =>
       incomings.map((incoming) => IncomingEmail.create(incoming))

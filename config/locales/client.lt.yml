@@ -523,6 +523,9 @@ lt:
         name: "Vardas"
         fields: "Laukai"
         reject_reason: "Priežastis"
+        scrubbed_reason: "Priežastis"
+        scrub_record:
+          cancel_button: "Atšaukti"
       topics:
         topic: "Tema"
         reviewable_count: "Skaičiuoti"
@@ -2959,9 +2962,13 @@ lt:
       description: "Aprašymas"
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
-      badge_colors: "Ženkliukų spalvos"
-      background_color: "Fono spalva"
-      foreground_color: "Priekinio plano spalva"
+      background_color: "Spalva"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Daugiausiai vienas arba du žodžiai"
       color_placeholder: "Bet kokia internetinė spalva"
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"

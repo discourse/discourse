@@ -4,7 +4,7 @@ import { lookupCache } from "pretty-text/oneboxer-cache";
 const ONEBOX = 1;
 const INLINE = 2;
 
-function isTopLevel(href) {
+export function isTopLevel(href) {
   let split = href.split(/https?:\/\/[^\/]+[\/?]/i);
   let hasExtra = split && split[1] && split[1].length > 0;
   return !hasExtra;

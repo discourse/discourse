@@ -1,9 +1,8 @@
 import { triggerKeyEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
-import { compile } from "handlebars";
 import $ from "jquery";
 import { module, test } from "qunit";
-import { setCaretPosition } from "discourse/lib/utilities";
+import { escapeExpression, setCaretPosition } from "discourse/lib/utilities";
 import {
   simulateKey,
   simulateKeys,
@@ -14,17 +13,13 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
   let _element;
 
-  const template = compile(
-    `
+  const template = (context) => `
   <div id='ac-testing' class='autocomplete ac-test'>
     <ul>
-      {{#each options as |option|}}
-        <li><a href>{{option}}</a></li>
-      {{/each}}
+      ${context.options.map((option) => `<li><a href>${escapeExpression(option)}</a></li>`).join("")}
     </ul>
   </div>
-  `.trim()
-  );
+  `;
 
   function textArea() {
     _element = document.createElement("TEXTAREA");

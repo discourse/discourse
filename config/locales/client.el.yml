@@ -558,6 +558,9 @@ el:
         name: "Όνομα"
         fields: "Πεδία"
         reject_reason: "Αιτία"
+        scrubbed_reason: "Αιτία"
+        scrub_record:
+          cancel_button: "Ακύρωση"
       user_percentage:
         agreed:
           one: "%{count} συμφωνεί"
@@ -3209,9 +3212,13 @@ el:
       description: "Περιγραφή"
       logo: "Εικονίδιο Κατηγορίας"
       background_image: "Εικόνα Φόντου Κατηγορίας"
-      badge_colors: "Χρώματα παρασήμων"
-      background_color: "Χρώμα φόντου"
-      foreground_color: "Χρώμα στο προσκήνιο"
+      background_color: "Χρώμα"
+      styles:
+        icon: "Σύμβολο"
+        emoji: "Emoji"
+        options:
+          icon: "Σύμβολο"
+          emoji: "Emoji"
       name_placeholder: "Μια ή δύο λέξεις το πολύ"
       color_placeholder: "Οποιοδήποτε χρώμα"
       delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή την κατηγορία;"

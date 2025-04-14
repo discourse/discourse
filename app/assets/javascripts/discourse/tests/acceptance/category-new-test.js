@@ -99,6 +99,21 @@ acceptance("Category New", function (needs) {
       "back routing works"
     );
   });
+
+  test("Specifying a parent category", async function (assert) {
+    await visit("/new-category");
+
+    await fillIn("input.category-name", "testing");
+
+    const categorySelector = selectKit(".category-chooser");
+    await categorySelector.expand();
+    await categorySelector.selectRowByValue(6); // 6 is support category's id
+
+    assert
+      .dom("input.category-name")
+      .hasValue("testing", "it doesn't clear out the rest of the form fields");
+    assert.strictEqual(categorySelector.header().value(), "6");
+  });
 });
 
 acceptance("Category text color", function (needs) {

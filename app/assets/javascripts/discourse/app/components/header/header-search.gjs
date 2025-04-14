@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
-import SearchMenu, { focusSearchInput } from "discourse/components/search-menu";
+import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 
@@ -11,13 +11,14 @@ export default class HeaderSearch extends Component {
   @service siteSettings;
   @service currentUser;
   @service appEvents;
+  @service search;
 
   advancedSearchButtonHref = "/search?expanded=true";
 
   handleKeyboardShortcut = modifier(() => {
     const cb = (appEvent) => {
       if (appEvent.type === "search" || appEvent.type === "page-search") {
-        focusSearchInput();
+        this.search.focusSearchInput();
         appEvent.event.preventDefault();
       }
     };
@@ -51,7 +52,10 @@ export default class HeaderSearch extends Component {
                   @href={{this.advancedSearchButtonHref}}
                 />
 
-                <SearchMenu @location="header" />
+                <SearchMenu
+                  @location="header"
+                  @searchInputId="header-search-input"
+                />
               </div>
             </div>
           </div>

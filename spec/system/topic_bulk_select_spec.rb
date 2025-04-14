@@ -356,6 +356,17 @@ describe "Topic bulk select", type: :system do
       expect(page).to have_content(group_private_message.title)
     end
 
+    it "allows archiving group private messages from the group inbox page" do
+      sign_in(admin)
+      visit("/g/#{group.name}/messages/inbox")
+      expect(page).to have_content(group_private_message.title)
+      open_bulk_actions_modal([group_private_message], "archive-messages")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/g/#{group.name}/messages/archive")
+      expect(page).to have_content(group_private_message.title)
+    end
+
     it "allows moving group private messages to the scoped group Inbox" do
       GroupArchivedMessage.create!(group: group, topic: group_private_message)
       sign_in(admin)

@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
-import { focusSearchInput } from "discourse/components/search-menu";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
@@ -24,6 +23,7 @@ export function resetItemSelectCallbacks() {
 
 export default class AssistantItem extends Component {
   @service search;
+  @service site;
   @service appEvents;
 
   icon = this.args.icon || "magnifying-glass";
@@ -128,13 +128,14 @@ export default class AssistantItem extends Component {
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });
-    focusSearchInput();
+    this.search.focusSearchInput();
   }
 
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
     <li
+      ...attributes
       class={{concatClass @typeClass "search-menu-assistant-item"}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}
@@ -184,7 +185,13 @@ export default class AssistantItem extends Component {
         </span>
         {{#if @extraHint}}
           <span class="extra-hint">
-            {{i18n "search.enter_hint"}}
+            {{i18n
+              (if
+                this.site.mobileView
+                "search.mobile_enter_hint"
+                "search.enter_hint"
+              )
+            }}
           </span>
         {{/if}}
       </a>

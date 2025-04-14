@@ -309,9 +309,9 @@ module Helpers
   end
 
   def enable_current_plugin
-    setting_name =
-      Discourse.plugins_by_name[directory_from_caller.split("/").last].enabled_site_setting
-    SiteSetting.public_send("#{setting_name}=", true)
+    plugin = Discourse.plugins_by_name[directory_from_caller.split("/").last]
+    return if plugin.enabled?
+    SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
   end
 
   private

@@ -20,8 +20,15 @@ $search-pad-horizontal: 0.5em;
     overflow-y: auto;
   }
 
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .search-input {
     position: relative;
+    flex-grow: 1;
     display: flex;
     align-items: center;
     background: var(--d-input-bg-color);
@@ -30,16 +37,21 @@ $search-pad-horizontal: 0.5em;
     margin: 1px;
     padding: 0.25rem;
 
-    input#search-term,
     input.search-term__input {
       background: none;
       border: 0;
       margin-bottom: 0;
-      width: auto;
-      flex-grow: 1;
+      width: 0;
+      flex: 1 1 auto;
 
       &:focus {
         outline: none;
+      }
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      .mobile-search-button + input.search-term__input {
+        padding-left: 0;
       }
     }
 
@@ -56,6 +68,13 @@ $search-pad-horizontal: 0.5em;
 
     &:focus-within {
       @include default-focus;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .btn.search-context {
+      margin: 0.25em 0 0 0;
+      padding: 0.25em 0.5em;
     }
   }
 
@@ -88,8 +107,11 @@ $search-pad-horizontal: 0.5em;
   .results {
     display: flex;
     flex-direction: column;
-    padding-top: $search-pad-vertical;
     border-radius: var(--d-border-radius);
+
+    &.with-search-term {
+      padding-top: $search-pad-vertical;
+    }
 
     .list {
       min-width: 100px;

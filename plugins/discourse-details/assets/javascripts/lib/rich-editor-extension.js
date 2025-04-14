@@ -69,15 +69,17 @@ const extension = {
   plugins: {
     props: {
       handleClickOn(view, pos, node, nodePos) {
-        if (node.type.name === "summary") {
-          const details = view.state.doc.nodeAt(nodePos - 1);
-          view.dispatch(
-            view.state.tr.setNodeMarkup(nodePos - 1, null, {
-              open: !details.attrs.open,
-            })
-          );
-          return true;
+        if (pos > 2 || node.type.name !== "summary") {
+          return false;
         }
+
+        const details = view.state.doc.nodeAt(nodePos - 1);
+        view.dispatch(
+          view.state.tr.setNodeMarkup(nodePos - 1, null, {
+            open: !details.attrs.open,
+          })
+        );
+        return true;
       },
     },
   },

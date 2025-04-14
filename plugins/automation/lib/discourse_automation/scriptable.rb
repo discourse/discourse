@@ -254,7 +254,6 @@ module DiscourseAutomation
 
           if pm[:target_usernames].empty? && pm[:target_group_names].empty? &&
                pm[:target_emails].empty?
-            Rails.logger.warn "[discourse-automation] Did not send PM - no target usernames, groups or emails"
             return
           end
 
@@ -300,6 +299,7 @@ module DiscourseAutomation
 
           post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
 
+          pm[:acting_user] = Discourse.system_user
           PostCreator.new(sender, pm).create! if !post_created
         end
       end

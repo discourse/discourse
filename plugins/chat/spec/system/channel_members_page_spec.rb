@@ -111,7 +111,8 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       chat_page.find(".add-to-channel").click
 
       expect(chat_page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}")
-      expect(chat_page).to have_content(
+      expect(chat_page).to have_text(
+        :all,
         I18n.t(
           "chat.channel.users_invited_to_channel",
           invited_users: "@#{new_user.username}",
@@ -144,7 +145,8 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       chat_page.find(".add-to-channel").click
 
       expect(chat_page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}")
-      expect(chat_page).to have_content(
+      expect(chat_page).to have_text(
+        :all,
         I18n.t(
           "chat.channel.users_invited_to_channel",
           invited_users: "@#{new_user.username}",

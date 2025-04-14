@@ -1,9 +1,9 @@
-import EmberObject from "@ember/object";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import SiteSetting from "admin/components/site-setting";
+import SiteSettingComponent from "admin/components/site-setting";
+import SiteSetting from "admin/models/site-setting";
 
 module("Integration | Component | group-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -24,24 +24,21 @@ module("Integration | Component | group-list site-setting", function (hooks) {
 
     this.set(
       "setting",
-      EmberObject.create({
-        allowsNone: undefined,
+      SiteSetting.create({
         category: "foo",
         default: "",
         description: "Choose groups",
-        overridden: false,
         placeholder: null,
         preview: null,
         secret: false,
         setting: "foo_bar",
         type: "group_list",
-        validValues: undefined,
         value: "1",
       })
     );
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
     const subject = selectKit(".list-setting");
@@ -78,25 +75,22 @@ module("Integration | Component | group-list site-setting", function (hooks) {
 
     this.set(
       "setting",
-      EmberObject.create({
-        allowsNone: undefined,
+      SiteSetting.create({
         category: "foo",
         default: "",
         description: "Choose groups",
-        overridden: false,
         placeholder: null,
         preview: null,
         secret: false,
         setting: "foo_bar",
         type: "group_list",
-        validValues: undefined,
         mandatory_values: "1",
         value: "1",
       })
     );
 
     await render(
-      <template><SiteSetting @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
 
     const subject = selectKit(".list-setting");
