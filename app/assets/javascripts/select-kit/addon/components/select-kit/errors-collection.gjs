@@ -1,3 +1,9 @@
+import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
+
+@tagName("")
+export default class ErrorsCollection extends Component {}
+
 {{#if this.collection.content}}
   <ul class="select-kit-errors-collection">
     {{#each this.collection.content as |item|}}

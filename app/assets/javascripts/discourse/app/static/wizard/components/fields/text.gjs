@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+
+export default class Text extends Component {}
+
 <Input
   id={{this.field.id}}
   @value={{this.field.value}}

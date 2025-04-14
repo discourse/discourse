@@ -1,3 +1,9 @@
+import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
+
+@tagName("")
+export default class Checkbox extends Component {}
+
 <label class="wizard-container__label">
   <PluginOutlet
     @name="wizard-checkbox"
