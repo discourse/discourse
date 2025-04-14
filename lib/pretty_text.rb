@@ -70,7 +70,6 @@ module PrettyText
     md_node_modules = "#{Rails.root}/app/assets/javascripts/discourse-markdown-it/node_modules"
     ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
-    ctx.load("#{root_path}/handlebars-shim.js")
     ctx.load("#{md_node_modules}/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
 
