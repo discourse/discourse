@@ -507,7 +507,8 @@ aside.quote .title + blockquote {
   border-top-right-radius: 0;
 }
 
-.cooked blockquote {
+.cooked blockquote,
+.d-editor-preview blockquote {
   border-radius: var(--d-border-radius);
 }
 
