@@ -13,6 +13,8 @@
 }
 
 .welcome-banner {
+  position: relative;
+  z-index: 1;
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
@@ -57,7 +59,7 @@
     }
 
     .search-input {
-      #search-term {
+      .search-term__input {
         min-width: 0;
         flex: 1 1;
       }

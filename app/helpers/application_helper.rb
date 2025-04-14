@@ -270,6 +270,24 @@ module ApplicationHelper
     (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
+  def crawlable_title_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      content_for(:title) || SiteSetting.title,
+      :title,
+      { url: request.fullpath },
+    )
+  end
+
+  def crawlable_description_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      @description_meta || SiteSetting.site_description,
+      :description,
+      { url: request.fullpath },
+    )
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -307,6 +325,8 @@ module ApplicationHelper
     %i[url title description].each do |property|
       if opts[property].present?
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
+        content =
+          DiscoursePluginRegistry.apply_modifier(:meta_data_content, content, property, opts)
         result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
         result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
@@ -674,14 +694,16 @@ module ApplicationHelper
         light_href,
         light_elements_media_query,
         "light-scheme",
+        scheme_id,
       )
       result << color_scheme_stylesheet_link_tag(
         dark_href,
         dark_elements_media_query,
         "dark-scheme",
+        dark_scheme_id,
       )
     else
-      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme")
+      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme", scheme_id)
     end
     result.html_safe
   end
@@ -857,7 +879,7 @@ module ApplicationHelper
       end
   end
 
-  def color_scheme_stylesheet_link_tag(href, media, css_class)
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>]
+  def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end

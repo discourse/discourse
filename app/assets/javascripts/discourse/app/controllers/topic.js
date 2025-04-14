@@ -1,10 +1,13 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
@@ -31,7 +34,6 @@ import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -57,9 +59,7 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default class TopicController extends Controller.extend(
-  bufferedProperty("model")
-) {
+export default class TopicController extends Controller {
   @service composer;
   @service dialog;
   @service documentTitle;
@@ -70,6 +70,8 @@ export default class TopicController extends Controller.extend(
   @service siteSettings;
   @service site;
   @service appEvents;
+
+  @tracked model;
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
@@ -117,6 +119,14 @@ export default class TopicController extends Controller.extend(
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  @cached
+  @dependentKeyCompat
+  get buffered() {
+    return BufferedProxy.create({
+      content: this.model,
+    });
   }
 
   updateQueryParams() {
@@ -1075,7 +1085,7 @@ export default class TopicController extends Controller.extend(
   @action
   cancelEditingTopic() {
     this.set("editingTopic", false);
-    this.rollbackBuffer();
+    this.buffered.discardChanges();
   }
 
   @action
@@ -1090,7 +1100,7 @@ export default class TopicController extends Controller.extend(
     Topic.update(this.model, props, { fastEdit: true })
       .then(() => {
         // We roll back on success here because `update` saves the properties to the topic
-        this.rollbackBuffer();
+        this.buffered.discardChanges();
         this.set("editingTopic", false);
       })
       .catch(popupAjaxError);
@@ -1282,6 +1292,11 @@ export default class TopicController extends Controller.extend(
     TopicTimer.update(this.get("model.id"), null, null, statusType, null)
       .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
       .catch((error) => popupAjaxError(error));
+  }
+
+  @action
+  updateTopicPageQueryParams() {
+    this.updateQueryParams();
   }
 
   _jumpToIndex(index) {

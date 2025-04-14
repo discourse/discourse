@@ -61,8 +61,9 @@ export default class Icons extends Component {
 
     return (
       this.site.mobileView ||
-      this.siteSettings.search_experience === "search_icon" ||
-      this.args.topicInfoVisible
+      this.search.searchExperience === "search_icon" ||
+      this.args.topicInfoVisible ||
+      this.args.narrowDesktop
     );
   }
 

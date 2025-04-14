@@ -597,6 +597,10 @@ fi:
         name: "Nimi"
         fields: "Kentät"
         reject_reason: "Syy"
+        scrubbed_reason: "Syy"
+        scrub_record:
+          reason_placeholder: "Syy..."
+          cancel_button: "Peruuta"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (edellisestä liputuksesta)"
@@ -3798,9 +3802,13 @@ fi:
       logo_dark: "Tumman tilan alueen logokuva"
       background_image: "Alueen taustakuva"
       background_image_dark: "Kategorioiden tumma taustakuva"
-      badge_colors: "Kunniamerkin värit"
-      background_color: "Taustaväri"
-      foreground_color: "Edustaväri"
+      background_color: "Väri"
+      styles:
+        icon: "Kuvake"
+        emoji: "Emojit"
+        options:
+          icon: "Kuvake"
+          emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
       name_placeholder: "Enintään yksi tai kaksi sanaa"
@@ -5975,7 +5983,6 @@ fi:
           title: "Värit"
           edit: "Muokkaa väripaletteja"
           long_title: "Väripaletit"
-          description: "Väripaletit määrittävät sivustosi käyttöliittymässä käytettävät ydinvärit, kun taas teemat voivat tarjota lisätyyliä, asetteluja ja komponentteja – molemmat voivat työskennellä yhdessä luoden sivustollesi ainutlaatuisen ulkoasun ja tunnelman, ja molemmat voidaan tarjota käyttäjille, jotta he voivat valita mieltymyksensä."
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"

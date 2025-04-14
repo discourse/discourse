@@ -22,8 +22,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
   test("basics", async function (assert) {
     await render(<template><DialogHolder /></template>);
-    assert.dom("#dialog-holder").exists("element is in DOM");
-    assert.dom("#dialog-holder").hasNoText("dialog is empty by default");
+    assert
+      .dom("#dialog-holder")
+      .doesNotExist("element is not in DOM by default");
 
     this.dialog.alert({
       message: "This is an error",
@@ -38,18 +39,14 @@ module("Integration | Component | dialog-holder", function (hooks) {
     // dismiss by clicking on overlay
     await click(".dialog-overlay");
 
-    assert.dom("#dialog-holder").exists("element is still in DOM");
-    assert
-      .dom(".dialog-overlay")
-      .hasProperty("offsetWidth", 0, "overlay is not visible");
-    assert.dom("#dialog-holder").hasNoText("dialog is empty");
+    assert.dom("#dialog-holder").doesNotExist("element removed from DOM");
+    assert.dom(".dialog-overlay").doesNotExist("overlay removed from DOM");
   });
 
   test("basics - dismiss using Esc", async function (assert) {
     let cancelCallbackCalled = false;
     await render(<template><DialogHolder /></template>);
-    assert.dom("#dialog-holder").exists("element is in DOM");
-    assert.dom("#dialog-holder").hasNoText("dialog is empty by default");
+    assert.dom("#dialog-holder").doesNotExist("element is not in DOM");
 
     this.dialog.alert({
       message: "This is an error",
@@ -68,13 +65,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
     assert.true(cancelCallbackCalled, "cancel callback called");
-    assert.dom("#dialog-holder").exists("element is still in DOM");
-
-    assert
-      .dom(".dialog-overlay")
-      .hasProperty("offsetWidth", 0, "overlay is not visible");
-
-    assert.dom("#dialog-holder").hasNoText("dialog is empty");
+    assert.dom("#dialog-holder").doesNotExist("dialog closed");
   });
 
   test("alert with title", async function (assert) {
@@ -101,11 +92,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     await click(".dialog-close");
 
-    assert.dom("#dialog-holder").exists("element is still in DOM");
-    assert
-      .dom(".dialog-overlay")
-      .hasProperty("offsetWidth", 0, "overlay is not visible");
-    assert.dom("#dialog-holder").hasNoText("dialog is empty");
+    assert.dom("#dialog-holder").doesNotExist("element removed from DOM");
   });
 
   test("alert with a string parameter", async function (assert) {
@@ -155,7 +142,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.true(confirmCallbackCalled, "confirm callback called");
     assert.false(cancelCallbackCalled, "cancel callback NOT called");
 
-    assert.dom("#dialog-holder").hasNoText("dialog is empty");
+    assert.dom("#dialog-holder").doesNotExist("dialog hidden");
   });
 
   test("cancel callback", async function (assert) {
@@ -183,7 +170,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.false(confirmCallbackCalled, "confirm callback NOT called");
     assert.true(cancelCallbackCalled, "cancel callback called");
 
-    assert.dom("#dialog-holder").hasNoText("dialog has been dismissed");
+    assert.dom("#dialog-holder").doesNotExist("dialog has been dismissed");
   });
 
   test("yes/no confirm", async function (assert) {
@@ -245,7 +232,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await click(".dialog-footer .btn-danger");
     assert.true(customCallbackTriggered, "custom action was triggered");
 
-    assert.dom("#dialog-holder").hasNoText("dialog has been dismissed");
+    assert.dom("#dialog-holder").doesNotExist();
   });
 
   test("alert with custom classes", async function (assert) {
@@ -267,19 +254,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     await click(".dialog-footer .btn-primary");
 
-    assert
-      .dom("#dialog-holder")
-      .doesNotHaveClass(
-        "dialog-special",
-        "additional class removed on dismissal"
-      );
-
-    assert
-      .dom("#dialog-holder")
-      .doesNotHaveClass(
-        "dialog-super",
-        "additional class removed on dismissal"
-      );
+    assert.dom("#dialog-holder").doesNotExist("dialog is hidden");
   });
 
   test("notice", async function (assert) {

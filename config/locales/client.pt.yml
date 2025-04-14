@@ -495,6 +495,10 @@ pt:
         name: "Nome"
         fields: "campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (da última sinalização)"
@@ -2981,9 +2985,13 @@ pt:
       description: "Descrição"
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
-      badge_colors: "Cores do crachá"
-      background_color: "Cor de fundo"
-      foreground_color: "Cor frontal"
+      background_color: "Cor"
+      styles:
+        icon: "Ícone"
+        emoji: "Emoji"
+        options:
+          icon: "Ícone"
+          emoji: "Emoji"
       name_placeholder: "Máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"

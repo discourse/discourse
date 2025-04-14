@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerToggleSwitch extends Component {
@@ -14,10 +15,11 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   get label() {
+    const keyboardShortcut = `${translateModKey("ctrl")}+M`;
     if (this.args.state) {
-      return i18n("composer.switch_to_markdown");
+      return i18n("composer.switch_to_markdown", { keyboardShortcut });
     } else {
-      return i18n("composer.switch_to_rich_text");
+      return i18n("composer.switch_to_rich_text", { keyboardShortcut });
     }
   }
 

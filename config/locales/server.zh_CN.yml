@@ -532,6 +532,7 @@ zh_CN:
       member_already_exist:
         other: "以下用户已是此群组的成员：%{username}"
       invalid_domain: "'%{domain}' 不是有效网域。"
+      too_many_domains: "域名过多。最多为 %{max}。"
       invalid_incoming_email: "'%{email}' 不是有效的电子邮件地址。"
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
@@ -540,7 +541,8 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
-      counting_too_many_email_domains: "一次最多可统计 %{count} 个电子邮件域名"
+      counting_too_many_email_domains:
+        other: "一次最多可统计 %{count} 个电子邮件域名"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
     default_names:
@@ -1553,6 +1555,7 @@ zh_CN:
       category_style_deprecated: "您的 Discourse 目前使用的是过时的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>迁移至单一类别样式网站设置</a>，了解如何保留所选类别样式。"
       maxmind_db_configuration: '服务器已被配置为使用 MaxMind 数据库进行反向 IP 查找，但尚未配置有效的 MaxMind 帐户 ID，这可能导致 MaxMind 数据库将来无法下载。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">请参阅本指南了解更多详情</a>。'
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
+      full_page_login_check: "你的网站已禁用全页面登录设置。该设置已过时，将于<strong>2025年4月29日</strong>移除。届时，你的网站将更新为使用全页注册和登录屏幕。<a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>了解更多信息</a>。"
     back_from_logster_text: "返回网站"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
@@ -2165,8 +2168,7 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
-    allow_anonymous_posting: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_anonymous_likes: "启用此设置可让匿名浏览网站的用户点赞帖子。激活后，用户在网站上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_posting`。"
+    allow_anonymous_mode: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -2396,6 +2398,7 @@ zh_CN:
     glimmer_topic_list_mode: "控制是否使用新的 'glimmer' 话题列表实现。在所有主题和插件准备就绪后，'auto' 将自动启用。有关详情，请参阅 <a href='https://meta.discourse.org/t/343404'>Meta 话题</a>。"
     glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    glimmer_post_stream_mode_auto_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"

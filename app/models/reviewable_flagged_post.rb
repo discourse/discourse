@@ -181,20 +181,15 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    delete_options = delete_opts
-
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+    delete_user(post.user, delete_opts, performed_by)
     agree(performed_by, args)
   end
 
   def perform_delete_user_block(performed_by, args)
     delete_options = delete_opts
-
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    UserDestroyer.new(performed_by).destroy(post.user, delete_options)
-
+    delete_user(post.user, delete_options, performed_by)
     agree(performed_by, args)
   end
 
@@ -340,7 +335,7 @@ class ReviewableFlaggedPost < Reviewable
   def unassign_topic(performed_by, post)
     topic = post.topic
     return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
+    ReviewableClaimedTopic.where(topic_id: topic.id, automatic: false).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, performed_by) }
 
     user_ids = User.staff.pluck(:id)
@@ -358,12 +353,21 @@ class ReviewableFlaggedPost < Reviewable
       user_ids.uniq!
     end
 
-    data = { topic_id: topic.id }
+    data = { topic_id: topic.id, automatic: false }
 
     MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end
 
   private
+
+  def delete_user(user, delete_options, performed_by)
+    email = user.email
+
+    UserDestroyer.new(performed_by).destroy(user, delete_options)
+
+    message = UserNotifications.account_deleted(email, self)
+    Email::Sender.new(message, :account_deleted).send
+  end
 
   def delete_opts
     {

@@ -575,6 +575,7 @@ de:
         required: "Du musst Elemente reservieren, bevor du sie überprüfen kannst."
         claimed_by_you: "Du hast dieses Element reserviert und kannst es überprüfen."
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
+        automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b>überprüft."
       claim:
         title: "dieses Thema reservieren"
       unclaim:
@@ -611,6 +612,18 @@ de:
         name: "Name"
         fields: "Felder"
         reject_reason: "Grund"
+        scrubbed_by: "Datensatz gesäubert von"
+        scrubbed_reason: "Grund"
+        scrubbed_at: "Gesäubert bei"
+        scrubbed_reject_reason: "Grund für die Ablehnung des Benutzers"
+        scrub_record:
+          button: Datensatz säubern
+          confirm_title: Persönliche Daten entfernen
+          confirm_body: "Bist du SICHER, dass du diesen Eintrag aus der Warteschlange zur Überprüfung löschen möchtest? Alle persönlichen Informationen (z.B. Benutzername, E-Mail, IP-Adresse) werden dauerhaft aus diesem Datensatz entfernt."
+          reason_title: "Ein Grund für das Säubern dieses Datensatzes ist erforderlich."
+          reason_placeholder: "Grund..."
+          confirm_button: "Entfernen bestätigen"
+          cancel_button: "Abbrechen"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (der letzten Meldung)"
@@ -3836,15 +3849,23 @@ de:
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
+      untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
       logo: "Logo für Kategorie"
       logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200px. Wenn du nichts angibst, wird kein Bild angezeigt."
       background_image: "Hintergrundbild für Kategorie"
       background_image_dark: "Dunkles Kategorie-Hintergrundbild"
-      badge_colors: "Farben des Abzeichens"
-      background_color: "Hintergrundfarbe"
-      foreground_color: "Vordergrundfarbe"
+      style: "Stile"
+      background_color: "Farbe"
+      styles:
+        type: "Stil"
+        icon: "Symbol"
+        emoji: "Emoji"
+        options:
+          square: "Quadrat"
+          icon: "Symbol"
+          emoji: "Emoji"
       color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
       name_placeholder: "Ein oder maximal zwei Wörter"
@@ -4818,6 +4839,7 @@ de:
           paste: "Einfügen …"
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
+    safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5041,6 +5063,10 @@ de:
           title: "Komponenten"
           header_description: "Komponenten sind kleinere Anpassungen, die zu Themes hinzugefügt werden können, um bestimmte Stilelemente deines Forumsdesigns zu verändern"
           keywords: "Theme|Komponente|Erweiterung"
+        themes_and_components:
+          title: "Themes und Komponenten"
+          header_description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen"
+          keywords: "Theme|Komponente|Erweiterung|Anpassen"
         site_texts:
           title: "Website-Texte"
           header_description: "Passe jeden in Discourse verwendeten Text an den Stil und Ton deiner Community an"
@@ -5297,6 +5323,7 @@ de:
             automatic_membership_user_count:
               one: "%{count} Benutzer hat die neuen E-Mail-Domains und wird der Gruppe hinzugefügt."
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
+            automatic_membership_user_unknown_count: "Benutzer mit einer der neuen E-Mail-Domains werden der Gruppe hinzugefügt."
             automatic_membership_associated_groups: "Benutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels dieses Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
           alert:
@@ -5797,6 +5824,7 @@ de:
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
+          illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
       plugins:
         title: "Plug-ins"
         name: "Name"
@@ -6160,7 +6188,6 @@ de:
           title: "Farben"
           edit: "Farbpaletten bearbeiten"
           long_title: "Farbpaletten"
-          description: "Farbpaletten legen die Grundfarben fest, die auf deiner Website verwendet werden, während Themes zusätzliche Designs, Layouts und Komponenten bereitstellen – beide können zusammenwirken, um das einzigartige Erscheinungsbild deiner Website zu gestalten, und beide können den Benutzern zur Verfügung gestellt werden, um ihren Präferenzen gerecht zu werden."
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"
@@ -7075,6 +7102,11 @@ de:
       site_settings:
         title: "Website-Einstellungen"
         description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
+        discard: "Änderungen verwerfen"
+        save: "Alle Änderungen speichern"
+        dirty_banner:
+          one: "Du hast <em>%{count}</em> nicht gespeicherte Änderung"
+          other: "Du hast <em>%{count}</em> nicht gespeicherte Änderungen"
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:

@@ -27,6 +27,7 @@ module PageObjects
 
       def remove_image
         @element.find(".btn-danger").click
+        @element.has_no_css?(".btn-danger")
       end
 
       def remove_image_with_keyboard

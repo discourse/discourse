@@ -15,7 +15,7 @@ acceptance("Create Account", function () {
     await visit("/");
     await click("header .sign-up-button");
 
-    assert.dom(".create-account").exists("it shows the create account modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
@@ -30,7 +30,7 @@ acceptance("Create Account", function () {
     assert
       .dom("#username-validation.bad")
       .exists("the username validation is bad");
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
 
     await fillIn("#new-account-username", "good-tuna");
     assert
@@ -47,9 +47,9 @@ acceptance("Create Account", function () {
       return response({ success: true });
     });
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary")
+      .dom(".signup-fullpage .btn-primary")
       .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
@@ -60,7 +60,7 @@ acceptance("Create Account", function () {
     await click("header .sign-up-button");
 
     await fillIn("#new-account-email", "z@z.co");
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
 
     assert
       .dom("#username-validation")
@@ -98,9 +98,10 @@ acceptance("Create Account", function () {
       .hasText(i18n("user.name.instructions_required"));
 
     await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-username", "");
     await fillIn("#new-account-password", "supersecurepassword");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
 
     assert.dom("#username-validation").hasText(i18n("user.username.required"));
 
@@ -129,7 +130,7 @@ acceptance("Create Account", function () {
     await click("header .sign-up-button");
 
     assert
-      .dom(".d-modal.create-account .btn-primary")
+      .dom(".signup-fullpage .btn-primary")
       .exists("create account button exists");
 
     assert.dom(".passkey-login-button").doesNotExist();
@@ -149,7 +150,7 @@ acceptance("Create Account - full name requirement", function () {
     await fillIn("#new-account-username", "good-tuna");
     await fillIn("#new-account-password", "cool password bro");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert.dom("#fullname-validation").hasText(i18n("user.name.required"));
 
     await fillIn("#new-account-name", "Full Name");
@@ -164,9 +165,9 @@ acceptance("Create Account - full name requirement", function () {
       return response({ success: true });
     });
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary")
+      .dom(".signup-fullpage .btn-primary")
       .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
@@ -195,9 +196,9 @@ acceptance("Create Account - full name requirement", function () {
       return response({ success: true });
     });
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary")
+      .dom(".signup-fullpage .btn-primary")
       .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
@@ -226,9 +227,9 @@ acceptance("Create Account - full name requirement", function () {
       return response({ success: true });
     });
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary")
+      .dom(".signup-fullpage .btn-primary")
       .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);

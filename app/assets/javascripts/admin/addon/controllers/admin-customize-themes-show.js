@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import {
   empty,
   filterBy,
@@ -16,6 +16,7 @@ import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
+import SiteSetting from "admin/models/site-setting";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ThemeSettings from "admin/models/theme-settings";
 import ThemeUploadAddModal from "../components/theme-upload-add";
@@ -91,11 +92,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForComponent() {
-    return EmberObject.create({
+    return SiteSetting.create({
       list_type: "compact",
       type: "list",
       preview: null,
-      anyValue: false,
+      allow_any: false,
       setting: "parent_theme_ids",
       label: i18n("admin.customize.theme.component_on_themes"),
       choices: this.availableThemesNames,
@@ -109,11 +110,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForTheme() {
-    return EmberObject.create({
+    return SiteSetting.create({
       list_type: "compact",
       type: "list",
       preview: null,
-      anyValue: false,
+      allow_any: false,
       setting: "child_theme_ids",
       label: i18n("admin.customize.theme.included_components"),
       choices: this.availableComponentsNames,
@@ -311,10 +312,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   updateLocale(value) {
+    this.set("model.loadingTranslations", true);
     this.set("model.locale", value);
-    ajax(this.getTranslationsUrl).then(({ translations }) =>
-      this.set("model.translations", translations)
-    );
+    ajax(this.getTranslationsUrl).then(({ translations }) => {
+      this.set("model.translations", translations);
+      this.set("model.loadingTranslations", false);
+    });
   }
 
   @action

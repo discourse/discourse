@@ -9,10 +9,9 @@ module Migrations::CLI
     end
 
     def execute
-      ::Migrations.load_rails_environment
+      ::Migrations.load_rails_environment(quiet: true)
 
-      puts "Importing into Discourse #{Discourse::VERSION::STRING}"
-      puts "Extralite SQLite version: #{Extralite.sqlite3_version}"
+      ::Migrations::Importer.execute
     end
   end
 end

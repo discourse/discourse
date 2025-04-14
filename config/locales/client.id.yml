@@ -474,6 +474,9 @@ id:
         name: "Nama"
         fields: "bidang"
         reject_reason: "Alasan"
+        scrubbed_reason: "Alasan"
+        scrub_record:
+          cancel_button: "Batal"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (dari %{count} bendera terakhir)"

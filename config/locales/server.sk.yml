@@ -368,6 +368,7 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
+      site_settings_are_deprecated: "Nasledujúce nastavenia sú zastarané: %{old_names}. Namiesto toho použite %{new_names}"
       site_settings_are_hidden: "Nie je povolené meniť skryté nastavenia: %{setting_names}"
       site_settings_are_shadowed_globally: "Tieto nastavenia nemôžete zmeniť, pretože sú nakonfigurované globálne: %{setting_names}"
       site_settings_are_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia: %{setting_names}"
@@ -396,6 +397,7 @@ sk:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Ak je povolená možnosť „optimalizácia obrazu pre kompozitor“, nemôžete zakázať metadáta obrázka pásu. Pred zakázaním metadát obrázkov pásu zakážte možnosť „optimalizácia obrazu kompozitora je povolená“."
       x_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
       tl0_and_anonymous_flag: "V prípade anonymných používateľov sa musí uviesť buď \"kontaktný e-mail stránky\", alebo \"e-mailová adresa na nahlásenie nezákonného obsahu\"."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Toto nastavenie vyžaduje, aby bolo najprv povolené nastavenie \"povoliť anonymný režim\"."
     conflicting_google_user_id: 'ID účtu Google pre toto konto sa zmenilo; z bezpečnostných dôvodov je potrebný zásah personálu. Obráťte sa na personál a odkážte ich na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>.'
     onebox:
       invalid_address: "Je nám ľúto, ale náhľad tejto webovej stránky sa nám nepodarilo vygenerovať, pretože sa nepodarilo nájsť server '%{hostname}'. Namiesto náhľadu sa vo vašom príspevku zobrazí iba odkaz. :cry:"
@@ -664,6 +666,7 @@ sk:
         many: "Členmi tejto skupiny sú už títo používatelia: %{username}"
         other: "Členmi tejto skupiny sú už títo používatelia: %{username}"
       invalid_domain: "'%{domain}' nie je platnou doménou."
+      too_many_domains: "Príliš veľa domén. Maximálne %{max}."
       invalid_incoming_email: "'%{email}' nie je platná emailová adresa."
       email_already_used_in_group: "'%{email}' už je použité skupinou '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použité kategóriou '%{category_name}'."
@@ -675,6 +678,11 @@ sk:
         many: "Naraz je možné pridať maximálne %{count} používateľov"
         other: "Naraz môžu byť pridaní maximálne %{count} používatelia"
       usernames_or_emails_required: "Musia byť prítomné používateľské mená alebo e-maily"
+      counting_too_many_email_domains:
+        one: "Naraz je možné započítať maximálne %{count} e-mailovú doménu"
+        few: "Naraz je možné započítať maximálne %{count} e-mailových domén"
+        many: "Naraz je možné započítať maximálne %{count} e-mailových domén"
+        other: "Naraz je možné započítať maximálne %{count} e-mailové domény"
       no_invites_with_discourse_connect: "Keď je zapnutá funkcia DiscourseConnect, môžete pozývať len registrovaných používateľov"
       no_invites_without_local_logins: "Keď sú miestne prihlásenia zakázané, môžete pozývať len registrovaných používateľov"
     default_names:
@@ -1778,6 +1786,7 @@ sk:
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
+      full_page_login_check: "Vaša stránka má vypnuté nastavenie prihlásenia na celú stránku. Toto nastavenie je zastarané a bude odstránené <strong>29. apríla 2025.</strong> Vaša lokalita bude k tomuto dátumu aktualizovaná tak, aby používala prihlasovacie obrazovky a obrazovky na prihlásenie na celú stránku. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Ďalšie informácie.</a>"
     back_from_logster_text: "Späť na stránku"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
@@ -2392,8 +2401,8 @@ sk:
     enable_group_directory: "Poskytnúť adresár skupín na prehliadanie"
     enable_category_group_moderation: "Umožniť skupinám moderovať obsah v konkrétnych kategóriách"
     group_in_subject: "Nastavenie %%{optional_pm} v predmete e-mailu na názov prvej skupiny v PM, pozri: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prispôsobenie formátu predmetu pre štandardné e-maily</a>"
-    allow_anonymous_posting: "Povoľte používateľom možnosť prepnúť na anonymný režim odosielania príspevkov. Keď je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri vytváraní príspevkov alebo tém na celom webe skrytá. Pozrite si tiež časť `povoliť anonymné lajky`."
-    allow_anonymous_likes: "Povolením tohto nastavenia umožníte používateľom, ktorí si prehliadajú vašu stránku anonymne, aby sa páčili príspevkom. Po aktivácii sa používatelia môžu rozhodnúť, že ich identita bude skrytá, keď sa im páčia príspevky alebo témy na celej stránke. Pozri tiež `allow_anonymous_posting`."
+    allow_anonymous_mode: "Povoľte používateľom možnosť prepnúť na anonymný režim odosielania príspevkov. Keď je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri vytváraní príspevkov alebo tém na celom webe skrytá. Pozrite si tiež časť `povoliť anonymné lajky`."
+    allow_likes_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť lajkovanie príspevkov. Ak je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri lajkovaní príspevkov alebo tém na stránke skrytá. Pozri tiež `povoliť_anonymný_režim`."
     anonymous_posting_min_trust_level: "Minimálna úroveň dôvery na zapnutie anonymného prispievania."
     anonymous_posting_allowed_groups: "Skupiny, ktoré môžu povoliť anonymné uverejňovanie"
     anonymous_account_duration_minutes: "Každých N minút vytvor nový anonymný účet na ochranu používateľskej anonymity. Príklad: Ak je nastavené na 600, akonáhle uplynie 600 minút od posledného príspevku A používateľ prepne do anonymného režimu, vytvorí sa nový anonymný účet."
@@ -2626,6 +2635,8 @@ sk:
     glimmer_topic_list_mode: "Kontrola, či sa používa nová implementácia zoznamu tém \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Viac informácií nájdete v <a href='https://meta.discourse.org/t/343404'>téme Meta</a>."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
@@ -2991,6 +3002,7 @@ sk:
       inactive_user: "Neaktívny používateľ"
       reviewable_reject_auto: "Automatické spracovanie hodnotených položiek vo fronte"
       reviewable_reject: "Preskúmateľný používateľ zamietnutý"
+      reviewable_details_scrubbed: "Podrobnosti o používateľovi vymazané z adresy %{staff}\n\nDôvod: %{reason}\n\nČasová značka: %{timestamp}"
     email_in_spam_header: "Prvý e-mail používateľa bol označený ako spam"
     already_silenced: "Používateľa už umlčal %{staff} %{time_ago}."
     already_suspended: "Používateľa už pozastavil %{staff} %{time_ago}."
@@ -4136,6 +4148,17 @@ sk:
         Boli ste umlčaní na fóre.
 
         Dôvod - %{reason}
+    account_deleted:
+      title: "Účet bol odstránený"
+      subject_template: "[%{email_prefix}] Vaše konto bolo vymazané"
+      text_body_template: |
+        Dobrý deň,
+
+        Toto je automatizovaná správa od [%{site_name}] (%{base_url}), ktorá vás informuje, že používateľský účet priradený k tejto e-mailovej adrese bol odstránený členom personálu.
+
+        %{flag_reason}
+
+        Podrobnosti nájdete v našich [usmerneniach pre komunitu] (%{base_url}/usmernenia).
     account_exists:
       title: "Účet už existuje"
       subject_template: "[%{email_prefix}] Účet už existuje"
@@ -5373,24 +5396,31 @@ sk:
       agree_and_keep:
         title: "Ponechať príspevok"
         description: "Súhlasím s príznakom, ale ponechajte tento príspevok nezmenený."
+        complete: "Príspevok zostal nezmenený."
       agree_and_keep_hidden:
         title: "Udržujte príspevok skrytý"
         description: "Súhlasím s vlajkou a nechajte príspevok skrytý."
+        complete: "Príspevok zostal skrytý."
       agree_and_suspend:
         title: "Pozastavenie používateľa"
         description: "Súhlas s príznakom a pozastavenie používateľa."
+        complete: "Pozastavenie používateľa."
       agree_and_silence:
         title: "Umlčať používateľa"
         description: "Súhlas s príznakom a umlčte používateľa."
+        complete: "Používateľ umlčaný."
       agree_and_restore:
         title: "Obnoviť príspevok"
         description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
+        complete: "Príspevok bol obnovený."
       agree_and_hide:
         title: "Skryť príspevok"
         description: "Súhlasiť s označením a skryť tento príspevok + automaticky odoslať používateľovi správu, ktorá ho vyzve, aby ho upravil."
+        complete: "Príspevok skrytý, používateľ bol upozornený."
       agree_and_edit:
         title: "Súhlasím a upraviť príspevok"
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
+        complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
       delete_single:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
@@ -5404,6 +5434,7 @@ sk:
         title: "Ignorujte príznak, odstráňte príspevok a odpovede"
         description: "Ignorovať príznak odstránením z frontu, vymazať príspevok a všetky jeho odpovede; ak ide o prvý príspevok, vymazať aj tému"
         confirm: "Ste si istí, že chcete vymazať aj odpovede na príspevok?"
+        complete: "Príspevok a odpovede vymazané."
       delete_and_agree:
         title: "Odstrániť príspevok"
         description: "Súhlasiť s označením a zmazať tento príspevok; ak je to prvý príspevok, zmazať aj tému."
@@ -5412,16 +5443,20 @@ sk:
         title: "Odstrániť príspevok a odpovede"
         description: "Súhlasiť s označením a vymazať tento príspevok a všetky jeho odpovede; ak je prvý príspevok, vymazať aj tému."
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
+        complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
         title: "Nie, obnoviť príspevok"
         description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
+        complete: "Príspevok bol obnovený."
       disagree:
         title: "Nie"
         complete: "Vlajka ignorovaná."
       discard_post:
         title: "Zahodiť príspevok"
+        complete: "Príspevok vyradený."
       revise_and_reject_post:
         title: "Revidovať príspevok..."
+        complete: "Príspevok bol zamietnutý a čaká na revíziu."
       ignore:
         title: "Ignorovať"
         complete: "Vlajka ignorovaná."
@@ -5451,19 +5486,25 @@ sk:
         block:
           title: "Odstránenie a blokovanie používateľa"
           description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
+          complete: "Používateľ vymazaný a zablokovaný."
       reject:
         title: "Zamietnuť"
         bundle_title: "Odmietnuť…"
       reject_and_suspend:
         title: "Odmietnutie a pozastavenie používateľa"
+        complete: "Príspevok zamietnutý a používateľ pozastavený."
       reject_and_silence:
         title: "Odmietnuť a umlčať používateľa"
+        complete: "Príspevok zamietnutý a používateľ umlčaný."
       reject_and_delete:
         title: "Odmietnuť a odstrániť príspevok"
+        complete: "Príspevok zamietnutý a vymazaný."
       reject_and_keep_deleted:
         title: "Ponechať príspevok odstránený"
+        complete: "Príspevok zamietnutý a vymazaný."
       approve_and_restore:
         title: "Schváliť a obnoviť príspevok"
+        complete: "Príspevok schválený a obnovený."
       delete_user:
         reason: "Odstránené prostredníctvom poradia na kontrolu"
         complete: "Používateľ odstránený."

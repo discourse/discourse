@@ -15,8 +15,11 @@ RSpec.describe PushNotificationPusher do
   context "with user" do
     fab!(:user)
     let(:topic_title) { "Topic" }
-    let(:post_url) { "https://example.com/t/1/2" }
+    let(:base_url) { Discourse.base_url }
+    let(:post_url) { "/base/t/1/2" }
     let(:username) { "system" }
+
+    before { Discourse.stubs(base_path: "/base") }
 
     def create_subscription
       data = <<~JSON
@@ -39,6 +42,7 @@ RSpec.describe PushNotificationPusher do
           username: username,
           excerpt: "description",
           topic_id: 1,
+          base_url: base_url,
           post_url: post_url,
           notification_type: notification_type,
           post_number: post_number,
@@ -82,7 +86,18 @@ RSpec.describe PushNotificationPusher do
 
       expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
       expect(pn_sent_event[:params].first).to eq(user)
-      expect(pn_sent_event[:params].second[:url]).to eq(post_url)
+      expect(pn_sent_event[:params].second[:url]).to eq("/t/1/2")
+    end
+
+    it "triggers a DiscourseEvent with base_path stripped from the url when present" do
+      WebPush.expects(:payload_send)
+      create_subscription
+      pn_sent_event = DiscourseEvent.track_events { message = execute_push }.first
+
+      expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
+      expect(pn_sent_event[:params].first).to eq(user)
+      expect(pn_sent_event[:params].second[:url]).to eq("/t/1/2")
+      expect(pn_sent_event[:params].second[:base_url]).to eq(base_url)
     end
 
     it "deletes subscriptions which are erroring regularly" do

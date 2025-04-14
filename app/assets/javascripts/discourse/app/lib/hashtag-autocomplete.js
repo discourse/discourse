@@ -6,7 +6,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
 import discourseLater from "discourse/lib/later";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -56,7 +55,7 @@ export function hashtagAutocompleteOptions(
   autocompleteOptions
 ) {
   return {
-    template: findRawTemplate("hashtag-autocomplete"),
+    template: renderHashtagAutocomplete,
     key: "#",
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
@@ -127,13 +126,27 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
 
-        const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML({
+        let opts = {
           preloaded: true,
           colors: result.colors,
           icon: result.icon,
           id: result.id,
-        });
+        };
+
+        if (result.style_type) {
+          opts.style_type = result.style_type;
+        }
+
+        if (result.icon) {
+          opts.icon = result.icon;
+        }
+
+        if (result.emoji) {
+          opts.emoji = result.emoji;
+        }
+
+        const hashtagType = getHashtagTypeClassesNew()[result.type];
+        result.icon = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })
@@ -141,4 +154,34 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
+}
+
+function renderOption(option) {
+  const metaText = option.secondary_text
+    ? `<span class="hashtag-autocomplete__meta-text">(${escapeExpression(option.secondary_text)})</span>`
+    : "";
+
+  return `
+    <li class="hashtag-autocomplete__option">
+      <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href>
+        ${option.icon}
+        <span class="hashtag-autocomplete__text">
+          ${option.text}
+          ${metaText}
+        </span>
+      </a>
+    </li>
+  `;
+}
+
+export default function renderHashtagAutocomplete({ options }) {
+  return `
+    <div class="autocomplete hashtag-autocomplete">
+      <div class="hashtag-autocomplete__fadeout">
+        <ul>
+          ${options.map(renderOption).join("")}
+        </ul>
+      </div>
+    </div>
+  `;
 }

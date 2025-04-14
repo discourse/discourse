@@ -823,6 +823,10 @@ ar:
         name: "الاسم"
         fields: "الحقول"
         reject_reason: "السبب"
+        scrubbed_reason: "السبب"
+        scrub_record:
+          reason_placeholder: "السبب..."
+          cancel_button: "إلغاء"
       user_percentage:
         summary:
           zero: "%{agreed}، %{disagreed}، %{ignored} (من آخر %{count} بلاغ)"
@@ -4632,9 +4636,13 @@ ar:
       logo_dark: "صورة شعار فئة الوضع الداكن"
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
-      badge_colors: "ألوان الشارات"
-      background_color: "لون الخلفية"
-      foreground_color: "لون المقدمة"
+      background_color: "اللون"
+      styles:
+        icon: "الأيقونة"
+        emoji: "الرمز التعبيري"
+        options:
+          icon: "الأيقونة"
+          emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
       name_placeholder: "كلمة أو كلمتان بحد أقصى"
@@ -7051,7 +7059,6 @@ ar:
           title: "الألوان"
           edit: "تعديل لوحات الألوان"
           long_title: "لوحات الألوان"
-          description: "لوحات الألوان تحدِّد الألوان الأساسية المُستخدَمة في واجهة موقعك، بينما يمكن للسمات أن توفِّر أنماطًا وتخطيطات ومكونات إضافية - وكلاهما يمكنه العمل معًا لإنشاء المظهر والشكل الفريد لموقعك، وكلاهما يمكن توفيرة للمستخدمين لاختيار تفضيلاتهم."
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"

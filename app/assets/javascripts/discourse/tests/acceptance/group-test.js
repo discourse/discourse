@@ -269,7 +269,7 @@ acceptance("Group - Authenticated", function (needs) {
       );
 
     await click("#search-button");
-    await fillIn("#search-term", "something");
+    await fillIn("#icon-search-input", "something");
 
     assert
       .dom(".search-menu .btn.search-context")

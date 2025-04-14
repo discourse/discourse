@@ -166,9 +166,17 @@ module Chat
       previous_message = nil
       rendered_markdown = []
       rendered_thread_markdown = []
-      all_messages_same_user = messages.count(:user_id) == 1
       threading_enabled = @channel.threading_enabled?
       thread_id = threading_enabled ? messages.first.thread_id : nil
+      thread = Chat::Thread.find_by(id: thread_id) if thread_id.present? && threading_enabled
+
+      # We are getting only the OP of the thread, let's expand it to
+      # include all the replies for the thread.
+      if messages.count == 1 && thread&.original_message_id == messages.first.id
+        @messages = [messages.first] + messages.first.thread.replies
+      end
+
+      all_messages_same_user = messages.map(&:user_id).uniq.count == 1
 
       open_bbcode_tag =
         TranscriptBBCode.new(

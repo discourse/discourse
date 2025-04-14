@@ -117,6 +117,7 @@ module Discourse
 
     class CommandError < RuntimeError
       attr_reader :status, :stdout, :stderr
+
       def initialize(message, status: nil, stdout: nil, stderr: nil)
         super(message)
         @status = status
@@ -305,6 +306,9 @@ module Discourse
   class Deprecation < StandardError
   end
 
+  class MissingIconError < StandardError
+  end
+
   class ScssError < StandardError
   end
 
@@ -485,7 +489,7 @@ module Discourse
       frame_height: 500,
     ), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
-    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
+    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-x-twitter"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
     Auth::AuthProvider.new(
       authenticator: Auth::LinkedInOidcAuthenticator.new,
@@ -1035,8 +1039,7 @@ module Discourse
       Rails.logger.warn(warning)
       begin
         Discourse.redis.without_namespace.setex(redis_key, 3600, "x")
-      rescue Redis::CommandError => e
-        raise unless e.message =~ /READONLY/
+      rescue Redis::ReadOnlyError
       end
     end
     warning
@@ -1048,7 +1051,7 @@ module Discourse
     GlobalSetting
       .redis_config
       .dup
-      .except(:connector, :replica_host, :replica_port)
+      .except(:client_implementation, :custom)
       .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
   end
 

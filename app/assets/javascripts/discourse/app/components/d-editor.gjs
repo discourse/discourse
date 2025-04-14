@@ -22,6 +22,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
+import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
+import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -33,7 +35,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -41,7 +42,6 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { i18n } from "discourse-i18n";
 import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
@@ -156,6 +156,9 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    if (this.siteSettings.rich_editor) {
+      keymap["ctrl+m"] = () => this.toggleRichEditor();
+    }
 
     return keymap;
   }
@@ -282,7 +285,7 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: findRawTemplate("emoji-selector-autocomplete"),
+      template: renderEmojiAutocomplete,
       key: ":",
       afterComplete: () => {
         schedule(
@@ -322,10 +325,27 @@ export default class DEditor extends Component {
             },
           };
 
-          this.menuInstance = this.menu.show(
-            virtualElementFromTextRange(),
-            menuOptions
-          );
+          const caretCoords =
+            this.textManipulation.autocompleteHandler.getCaretCoords(
+              this.textManipulation.autocompleteHandler.getCaretPosition()
+            );
+
+          const rect = document
+            .querySelector(".d-editor-input")
+            .getBoundingClientRect();
+
+          const marginLeft = 18;
+          const marginTop = 10;
+
+          const virtualElement = {
+            getBoundingClientRect: () => ({
+              left: rect.left + caretCoords.left + marginLeft,
+              top: rect.top + caretCoords.top + marginTop,
+              width: 0,
+              height: 0,
+            }),
+          };
+          this.menuInstance = this.menu.show(virtualElement, menuOptions);
           return "";
         }
       },
@@ -424,7 +444,7 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: findRawTemplate("user-selector-autocomplete"),
+      template: userAutocomplete,
       dataSource: (term) => {
         destroyUserStatuses();
         return userSearch({
@@ -432,6 +452,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
+          prioritizedUserId: this.replyingToUserId,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;
@@ -617,6 +638,8 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
+    // The ProsemirrorEditor component is loaded here, adding this comment because
+    // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled
       ? TextareaEditor
       : await loadRichEditor();
@@ -711,7 +734,13 @@ export default class DEditor extends Component {
   }
 
   <template>
-    <div class="d-editor-container">
+    <div
+      class="d-editor-container
+        {{if
+          this.siteSettings.rich_editor
+          'd-editor-container--rich-editor-enabled'
+        }}"
+    >
       <div class="d-editor-textarea-column">
         {{yield}}
 

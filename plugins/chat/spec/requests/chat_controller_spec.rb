@@ -428,7 +428,7 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(404)
     end
 
-    it "quotes the message ids provided" do
+    it "makes transcripts for the message ids provided" do
       sign_in(user)
       post "/chat/#{channel.id}/quote.json",
            params: {

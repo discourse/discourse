@@ -412,6 +412,9 @@ lv:
         name: "Vārds"
         fields: "Lauki"
         reject_reason: "Iemesls"
+        scrubbed_reason: "Iemesls"
+        scrub_record:
+          cancel_button: "Atcelt"
       topics:
         topic: "Tēmas"
         reviewable_count: "Skaits"
@@ -2340,9 +2343,13 @@ lv:
       description: "Apraksts"
       logo: "Sadaļas logo attēls"
       background_image: "Sadaļas fona attēls"
-      badge_colors: "Žetona krāsas"
-      background_color: "Fona krāsa"
-      foreground_color: "Priekšplāna krāsa"
+      background_color: "Krāsa"
+      styles:
+        icon: "Ikona"
+        emoji: "Smaidiņi"
+        options:
+          icon: "Ikona"
+          emoji: "Smaidiņi"
       name_placeholder: "Ne vairāk par vienu vai diviem vārdiem"
       color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"

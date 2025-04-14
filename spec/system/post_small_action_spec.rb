@@ -21,7 +21,7 @@ describe "Post small actions", type: :system do
     expect(topic_page).to have_post_number(post.post_number)
 
     find(".search-dropdown").click
-    find("#search-term").fill_in(with: "special")
+    find("#icon-search-input").fill_in(with: "special")
 
     find(".search-menu-assistant-item:nth-child(2)").click
 

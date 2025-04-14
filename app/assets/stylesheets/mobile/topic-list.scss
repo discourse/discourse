@@ -108,10 +108,8 @@
       max-width: 160px;
     }
 
-    .num .d-icon,
-    a,
-    a:visited {
-      color: var(--primary-med-or-secondary-med);
+    .num .d-icon {
+      color: var(--primary-medium);
     }
   }
 
@@ -119,10 +117,6 @@
     margin-right: 0.5em;
     max-width: 90%;
     line-height: var(--line-height-medium);
-
-    .discourse-tags {
-      display: inline;
-    }
 
     .badge-category__wrapper {
       vertical-align: bottom;
@@ -136,8 +130,20 @@
       pointer-events: none;
     }
 
-    .discourse-tags .discourse-tag {
-      margin: 0;
+    .discourse-tags {
+      display: inline;
+
+      &__tag-separator {
+        position: absolute;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: -0.5em;
+        margin-top: 0.25em;
+      }
+
+      .discourse-tag {
+        margin: 0 0.5em 0 0;
+      }
     }
 
     .badge-wrapper {

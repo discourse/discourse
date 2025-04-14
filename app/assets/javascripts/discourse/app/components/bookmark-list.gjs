@@ -14,14 +14,15 @@ import FlatButton from "discourse/components/flat-button";
 import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActivityCell from "discourse/components/topic-list/item/activity-cell";
 import TopicStatus from "discourse/components/topic-status";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import htmlSafe from "discourse/helpers/html-safe";
-import raw from "discourse/helpers/raw";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -274,7 +275,13 @@ export default class BookmarkList extends Component {
           </thead>
           <tbody class="topic-list-body">
             {{#each this.content as |bookmark|}}
-              <tr class="topic-list-item bookmark-list-item">
+              <tr
+                class={{concatClass
+                  "topic-list-item bookmark-list-item"
+                  (if bookmark.excerpt "excerpt-expanded" "")
+                  (if bookmark.hasMetadata "has-metadata" "")
+                }}
+              >
                 {{#if this.bulkSelectEnabled}}
                   <td class="bulk-select bookmark-list-data">
                     <label for="bulk-select-{{bookmark.id}}">
@@ -294,24 +301,26 @@ export default class BookmarkList extends Component {
                   />
 
                   <span class="link-top-line">
-                    <div class="bookmark-metadata">
-                      {{#if bookmark.reminder_at}}
-                        <span
-                          class="bookmark-metadata-item bookmark-reminder
-                            {{if
-                              bookmark.reminderAtExpired
-                              'bookmark-expired-reminder'
-                            }}"
-                        >
-                          {{icon "far-clock"}}{{bookmark.formattedReminder}}
-                        </span>
-                      {{/if}}
-                      {{#if bookmark.name}}
-                        <span class="bookmark-metadata-item">
-                          {{icon "circle-info"}}<span>{{bookmark.name}}</span>
-                        </span>
-                      {{/if}}
-                    </div>
+                    {{#if bookmark.hasMetadata}}
+                      <div class="bookmark-metadata">
+                        {{#if bookmark.reminder_at}}
+                          <span
+                            class="bookmark-metadata-item bookmark-reminder
+                              {{if
+                                bookmark.reminderAtExpired
+                                'bookmark-expired-reminder'
+                              }}"
+                          >
+                            {{icon "far-clock"}}{{bookmark.formattedReminder}}
+                          </span>
+                        {{/if}}
+                        {{#if bookmark.name}}
+                          <span class="bookmark-metadata-item">
+                            {{icon "circle-info"}}<span>{{bookmark.name}}</span>
+                          </span>
+                        {{/if}}
+                      </div>
+                    {{/if}}
                     <div class="bookmark-status-with-link">
                       {{#if bookmark.pinned}}
                         {{icon "thumbtack" class="bookmark-pinned"}}
@@ -358,16 +367,18 @@ export default class BookmarkList extends Component {
                         avatarTemplatePath="avatar_template"
                         usernamePath="username"
                         namePath="name"
-                        imageSize="small"
+                        imageSize="large"
                       }}
                     </a>
                   {{/if}}
 
                   {{! template-lint-disable no-invalid-interactive }}
-                  <p
-                    class="post-excerpt"
-                    {{on "click" this.screenExcerptForExternalLink}}
-                  >{{htmlSafe bookmark.excerpt}}</p>
+                  {{#if bookmark.excerpt}}
+                    <p
+                      class="post-excerpt"
+                      {{on "click" this.screenExcerptForExternalLink}}
+                    >{{htmlSafe bookmark.excerpt}}</p>
+                  {{/if}}
                 </td>
                 {{#if this.site.desktopView}}
                   <td class="author-avatar topic-list-data">
@@ -382,7 +393,7 @@ export default class BookmarkList extends Component {
                           avatarTemplatePath="avatar_template"
                           usernamePath="username"
                           namePath="name"
-                          imageSize="small"
+                          imageSize="large"
                         }}
                       </a>
                     {{/if}}
@@ -390,12 +401,7 @@ export default class BookmarkList extends Component {
                   <td
                     class="post-metadata topic-list-data updated-at"
                   >{{formatDate bookmark.updated_at format="tiny"}}</td>
-                  {{raw
-                    "list/activity-column"
-                    topic=bookmark
-                    class="num post-metadata"
-                    tagName="td"
-                  }}
+                  <ActivityCell class="post-metadata" @topic={{bookmark}} />
                 {{/if}}
                 <td class="topic-list-data">
                   <BookmarkActionsDropdown

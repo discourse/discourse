@@ -56,25 +56,30 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
     await click("#search-button");
 
-    assert.dom("#search-term").exists("shows the search input");
+    assert.dom("#icon-search-input").exists("shows the search input");
     assert.dom(".show-advanced-search").exists("shows full page search button");
   });
 
   test("random quick tips", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
 
     assert
-      .dom(".search-menu .results ul li.search-random-quick-tip")
+      .dom('[data-test-item="random-quick-tip"]')
+      .isVisible("quick tip is shown by default");
+
+    await fillIn("#icon-search-input", "dev");
+
+    assert
+      .dom('[data-test-item="random-quick-tip"]')
       .doesNotExist("quick tip is no longer shown");
   });
 
   test("advanced search", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
     await click(document.activeElement);
     await click(".show-advanced-search");
 
@@ -113,7 +118,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("initial options", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
+    await fillIn("#icon-search-input", "dev");
 
     assert
       .dom(
@@ -152,7 +157,7 @@ acceptance("Search - Anonymous", function (needs) {
       .dom(".search-link .search-item-tag")
       .hasText("important", "first option includes tag");
 
-    await fillIn("#search-term", "smth");
+    await fillIn("#icon-search-input", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
     assert
@@ -172,7 +177,7 @@ acceptance("Search - Anonymous", function (needs) {
     const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/c/bug");
     await click("#search-button");
-    await fillIn("#search-term", "smth");
+    await fillIn("#icon-search-input", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
     assert
@@ -196,7 +201,7 @@ acceptance("Search - Anonymous", function (needs) {
     const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
-    await fillIn("#search-term", "smth");
+    await fillIn("#icon-search-input", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
     assert
@@ -211,7 +216,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("initial options - topic search scope - 'in all topics' searches in all topics", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "foo");
+    await fillIn("#icon-search-input", "foo");
     // select 'in all topics and posts'
     await click(
       ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:first-child"
@@ -224,7 +229,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("initial options - topic search scope - 'in this topic' searches posts within topic", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "foo");
+    await fillIn("#icon-search-input", "foo");
     // select 'in this topic'
     await click(
       ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:nth-child(2)"
@@ -237,7 +242,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("initial options - topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "proper");
+    await fillIn("#icon-search-input", "proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
@@ -258,7 +263,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("initial options - topic search scope - special case when matching a single user", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "@admin");
+    await fillIn("#icon-search-input", "@admin");
 
     assert.dom(".search-menu-assistant-item").exists({ count: 2 });
     assert
@@ -284,7 +289,7 @@ acceptance("Search - Anonymous", function (needs) {
     const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/u/eviltrout");
     await click("#search-button");
-    await fillIn("#search-term", "smth");
+    await fillIn("#icon-search-input", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
     assert
@@ -302,8 +307,8 @@ acceptance("Search - Anonymous", function (needs) {
   test("topic results", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert
@@ -318,7 +323,7 @@ acceptance("Search - Anonymous", function (needs) {
   test("topic results - topic search scope", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "a proper");
+    await fillIn("#icon-search-input", "a proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
@@ -336,15 +341,15 @@ acceptance("Search - Anonymous", function (needs) {
       .exists("search context indicator is visible");
 
     await click(".clear-search");
-    assert.dom("#search-term").hasNoText("clear button works");
+    assert.dom("#icon-search-input").hasNoText("clear button works");
 
     await click(".search-context");
     assert
       .dom(".search-menu .search-context")
       .doesNotExist("search context indicator is no longer visible");
 
-    await fillIn("#search-term", "dev");
-    await focus("#search-term");
+    await fillIn("#icon-search-input", "dev");
+    await focus("#icon-search-input");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
@@ -353,9 +358,9 @@ acceptance("Search - Anonymous", function (needs) {
       .dom(".search-menu .search-context")
       .exists("search context indicator is visible");
 
-    await fillIn("#search-term", "");
-    await focus("#search-term");
-    await triggerKeyEvent("#search-term", "keyup", "Backspace");
+    await fillIn("#icon-search-input", "");
+    await focus("#icon-search-input");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Backspace");
 
     assert
       .dom(".search-menu .search-context")
@@ -365,8 +370,8 @@ acceptance("Search - Anonymous", function (needs) {
   test("topic results - search result escapes html in topic title", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(
@@ -378,8 +383,8 @@ acceptance("Search - Anonymous", function (needs) {
   test("topic results - search result escapes emojis in topic title", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(".search-menu .search-result-topic .item .topic-title img[alt='+1']")
@@ -390,7 +395,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
     await click("#search-button");
     await focus(".show-advanced-search");
-    await triggerKeyEvent("#search-term", "keydown", "Escape");
+    await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
     assert.dom(".search-menu-panel").doesNotExist();
   });
@@ -487,14 +492,14 @@ acceptance("Search - Authenticated", function (needs) {
   test("topic results - topic search scope - works with empty result sets", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
-    await fillIn("#search-term", "plans");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await fillIn("#icon-search-input", "plans");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.dom(".search-menu .results .item").exists();
 
-    await fillIn("#search-term", "plans empty");
-    await triggerKeyEvent("#search-term", "keyup", 13);
+    await fillIn("#icon-search-input", "plans empty");
+    await triggerKeyEvent("#icon-search-input", "keyup", 13);
 
     assert.dom(".search-menu .results .item").doesNotExist();
     assert.dom(".search-menu .results .no-results").exists({ count: 1 });
@@ -506,7 +511,7 @@ acceptance("Search - Authenticated", function (needs) {
   test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "Development");
+    await fillIn("#icon-search-input", "Development");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
 
     assert
@@ -525,8 +530,8 @@ acceptance("Search - Authenticated", function (needs) {
     this.siteSettings.use_pg_headlines_for_excerpt = true;
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(
@@ -539,13 +544,13 @@ acceptance("Search - Authenticated", function (needs) {
     const container = ".search-menu .results";
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
+    await fillIn("#icon-search-input", "dev");
     assert.dom(`${container} ul li`).exists("has a list of items");
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     assert.dom(`${container} .search-result-topic`).exists("has topic results");
 
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
     assert
       .dom(`${container} li:first-child a`)
       .isFocused("arrow down selects first element");
@@ -568,7 +573,7 @@ acceptance("Search - Authenticated", function (needs) {
         "arrow down sets focus to more results link"
       );
 
-    await triggerKeyEvent("#search-term", "keydown", "Escape");
+    await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
     assert
       .dom("#search-button")
       .isFocused("Escaping search returns focus to search button");
@@ -585,10 +590,10 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow up sets focus to search term input"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     assert.dom(`${container} .search-result-topic`).exists("has topic results");
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     assert
       .dom(".search-container")
       .exists("second Enter hit goes to full page search");
@@ -600,7 +605,7 @@ acceptance("Search - Authenticated", function (needs) {
     await click("#search-button");
     assert.dom(`${container} ul li`).exists("has a list of items");
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     assert.dom(`.search-menu`).exists("search dropdown is visible");
   });
 
@@ -609,8 +614,8 @@ acceptance("Search - Authenticated", function (needs) {
     await click(".reply");
     await fillIn(".d-editor-input", "a link");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", 65); // maps to lowercase a
 
@@ -631,7 +636,7 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/");
     await triggerKeyEvent(document, "keypress", "J");
     await click("#search-button");
-    await fillIn("#search-term", "Development");
+    await fillIn("#icon-search-input", "Development");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
 
@@ -667,7 +672,7 @@ acceptance("Search - Authenticated", function (needs) {
       ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
     );
 
-    assert.dom("input#search-term").hasValue("yellow");
+    assert.dom("input#icon-search-input").hasValue("yellow");
   });
 
   test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
@@ -689,7 +694,7 @@ acceptance("Search - Authenticated", function (needs) {
       ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
     );
 
-    assert.dom("#search-term").hasValue("hijacked!");
+    assert.dom("#icon-search-input").hasValue("hijacked!");
   });
 
   test("initial options - search history - category context", async function (assert) {
@@ -774,8 +779,8 @@ acceptance("Search - with tagging enabled", function (needs) {
   test("topic results - displays tags", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", 13);
+    await fillIn("#icon-search-input", "dev");
+    await triggerKeyEvent("#icon-search-input", "keyup", 13);
 
     assert
       .dom(".search-menu .results ul li:nth-of-type(1) .discourse-tags")
@@ -785,7 +790,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "#dev");
+    await fillIn("#icon-search-input", "#dev");
     await click(
       ".search-menu .results .search-menu-assistant .search-menu-assistant-item:nth-child(1)"
     );
@@ -797,7 +802,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   test("initial results - displays tag shortcuts", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "dude #monk");
+    await fillIn("#icon-search-input", "dude #monk");
     const firstItem =
       ".search-menu .results ul.search-menu-assistant .search-link";
 
@@ -832,7 +837,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   test("initial options - tag and category search scope - updates tag / category combination search suggestion when typing", async function (assert) {
     await visit("/tags/c/bug/dev");
     await click("#search-button");
-    await fillIn("#search-term", "foo bar");
+    await fillIn("#icon-search-input", "foo bar");
 
     assert
       .dom(".search-menu .results ul.search-menu-assistant .search-item-prefix")
@@ -870,7 +875,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   test("initial options - tag intersection search scope - updates tag intersection search suggestion when typing", async function (assert) {
     await visit("/tags/intersection/dev/foo");
     await click("#search-button");
-    await fillIn("#search-term", "foo bar");
+    await fillIn("#icon-search-input", "foo bar");
 
     assert
       .dom(".search-menu .results ul.search-menu-assistant .search-item-prefix")
@@ -1062,7 +1067,7 @@ acceptance("Search - assistant", function (needs) {
   test("initial options - shows category shortcuts when typing #", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "#");
+    await fillIn("#icon-search-input", "#");
 
     assert
       .dom(
@@ -1077,12 +1082,12 @@ acceptance("Search - assistant", function (needs) {
     const firstTarget =
       ".search-menu .results ul.search-menu-assistant .search-link";
 
-    await fillIn("#search-term", "in:");
+    await fillIn("#icon-search-input", "in:");
     assert
       .dom(`${firstTarget} .search-item-slug`)
       .hasText("in:title", "keyword is present in suggestion");
 
-    await fillIn("#search-term", "sam in:");
+    await fillIn("#icon-search-input", "sam in:");
     assert
       .dom(`${firstTarget} .search-item-prefix`)
       .hasText("sam", "term is present in suggestion");
@@ -1090,14 +1095,14 @@ acceptance("Search - assistant", function (needs) {
       .dom(`${firstTarget} .search-item-slug`)
       .hasText("in:title", "keyword is present in suggestion");
 
-    await fillIn("#search-term", "in:mess");
+    await fillIn("#icon-search-input", "in:mess");
     assert.dom(firstTarget).hasText("in:messages");
   });
 
   test("initial options - user search scope - shows users when typing @", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "@");
+    await fillIn("#icon-search-input", "@");
     assert
       .dom(
         ".search-menu .results ul.search-menu-assistant .search-item-user .username"
@@ -1114,13 +1119,13 @@ acceptance("Search - assistant", function (needs) {
       ".search-menu .results ul.search-menu-assistant .search-item-user"
     );
 
-    assert.dom("#search-term").hasValue(`@${username}`);
+    assert.dom("#icon-search-input").hasValue(`@${username}`);
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-    await fillIn("#search-term", "@");
+    await fillIn("#icon-search-input", "@");
     await click(
       ".search-menu .results .search-menu-assistant .search-menu-assistant-item:nth-child(1)"
     );
@@ -1154,9 +1159,9 @@ acceptance("Search - assistant", function (needs) {
 
     assert.dom(".btn.search-context").exists("shows the button");
 
-    await fillIn("#search-term", "");
-    await focus("input#search-term");
-    await triggerKeyEvent("input#search-term", "keyup", "Backspace");
+    await fillIn("#icon-search-input", "");
+    await focus("input#icon-search-input");
+    await triggerKeyEvent("input#icon-search-input", "keyup", "Backspace");
 
     assert.dom(".btn.search-context").doesNotExist("removes the button");
 
@@ -1166,9 +1171,9 @@ acceptance("Search - assistant", function (needs) {
       .dom(".btn.search-context")
       .exists("shows the button when reinvoking search");
 
-    await fillIn("#search-term", "emoji");
-    await focus("input#search-term");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await fillIn("#icon-search-input", "emoji");
+    await focus("input#icon-search-input");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(".search-menu .search-result-topic")
@@ -1178,7 +1183,7 @@ acceptance("Search - assistant", function (needs) {
   test("topic results - updates search term when selecting an initial category option", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "sam #");
+    await fillIn("#icon-search-input", "sam #");
 
     const firstCategory =
       ".search-menu .results ul.search-menu-assistant .search-link";
@@ -1188,13 +1193,13 @@ acceptance("Search - assistant", function (needs) {
 
     await click(`${firstCategory} .badge-category__name`);
 
-    assert.dom("#search-term").hasValue(`sam #${firstCategoryName}`);
+    assert.dom("#icon-search-input").hasValue(`sam #${firstCategoryName}`);
   });
 
   test("topic results - soft loads the topic results after closing the search menu", async function (assert) {
     await visit("/");
     await click("#search-button");
-    await fillIn("#search-term", "Development mode");
+    await fillIn("#icon-search-input", "Development mode");
 
     // navigate to topic and close search menu
     const firstTopicResult = ".search-menu .results .search-result-topic a";

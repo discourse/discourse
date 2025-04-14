@@ -103,6 +103,11 @@ class Plugin::Instance
     @idx = 0
   end
 
+  # Keys can only be lowercase letters
+  # Example usage:
+  #   plugin.register_anonymous_cache_key :onlylowercase do
+  #     @request.cookies["cookie_name"].present? ? "1" : "0"
+  #   end
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
     add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
@@ -276,8 +281,8 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   add_filter_custom_filter("word_count") do |scope, value|
-  #     scope.where(word_count: value)
+  #   add_filter_custom_filter("word_count") do |scope, value, guardian|
+  #     scope.where(word_count: value) if guardian.admin?
   #   end
   def add_filter_custom_filter(name, &block)
     DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
@@ -785,7 +790,7 @@ class Plugin::Instance
     js = "(function(){#{js}})();" if js.present?
 
     result = []
-    result << [css, "css"] if css.present?
+    result << [css, "scss"] if css.present?
     result << [js, "js"] if js.present?
 
     result.map do |asset, extension|
@@ -891,6 +896,9 @@ class Plugin::Instance
   def register_reviewable_type(reviewable_type_class)
     return unless reviewable_type_class < Reviewable
     extend_list_method(Reviewable, :types, reviewable_type_class)
+    if reviewable_type_class.method_defined?(:scrub)
+      extend_list_method(Reviewable, :scrubbable_types, reviewable_type_class)
+    end
   end
 
   def extend_list_method(klass, method, new_attributes)
@@ -1344,6 +1352,24 @@ class Plugin::Instance
     end
   end
 
+  # This method allows plugins to preload topic associations when loading topics
+  # that make use of topic_list.
+  #
+  # @param fields [Symbol, Array<Symbol>, Hash] The topic associations to preload.
+  #
+  # @example
+  #   register_topic_preloader_associations(:first_post)
+  #   register_topic_preloader_associations([:first_post, :topic_embeds])
+  #   register_topic_preloader_associations({ first_post: :uploads })
+  #   register_topic_preloader_associations({ first_post: :uploads }) do
+  #     SiteSetting.some_setting_enabled?
+  #   end
+  #
+  # @return [void]
+  def register_topic_preloader_associations(fields, &condition)
+    DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
+  end
+
   protected
 
   def self.js_path
@@ -1438,8 +1464,17 @@ class Plugin::Instance
     reloadable_patch { NewPostManager.add_plugin_payload_attribute(attribute_name) }
   end
 
-  def register_topic_preloader_associations(fields)
-    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  ##
+  # Allows plugins to preload topic associations when loading categories with topics.
+  #
+  # @param fields [Array<Symbol>] The topic associations to preload.
+  #
+  # @example Preload custom topic associations
+  #
+  #   register_category_list_topics_preloader_associations(%i[some_topic_association some_other_topic_association])
+  #
+  def register_category_list_topics_preloader_associations(associations)
+    DiscoursePluginRegistry.register_category_list_topics_preloader_association(associations, self)
   end
 
   private

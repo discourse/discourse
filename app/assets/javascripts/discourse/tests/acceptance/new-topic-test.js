@@ -5,9 +5,18 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Topic - Anonymous", function () {
   test("accessing new-topic route when logged out", async function (assert) {
-    await visit("/new-topic?title=topic%20title&body=topic%20body");
+    try {
+      await visit("/new-topic?title=topic%20title&body=topic%20body");
+    } catch (error) {
+      assert.strictEqual(
+        error.message,
+        "TransitionAborted",
+        "it aborts the transition"
+      );
+    }
 
-    assert.dom(".modal.login-modal").exists("shows the login modal");
+    assert.strictEqual(currentURL(), "/login");
+    assert.dom(".login-fullpage").exists("shows the login page");
   });
 });
 

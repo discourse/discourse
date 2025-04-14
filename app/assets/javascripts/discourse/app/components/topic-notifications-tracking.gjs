@@ -19,6 +19,7 @@ export default class TopicNotificationsTracking extends Component {
       class="topic-notifications-tracking"
       @levels={{topicLevels}}
       @suffix={{this.suffix}}
+      @contentClass={{@contentClass}}
     />
   </template>
 }

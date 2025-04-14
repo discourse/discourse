@@ -1,8 +1,92 @@
 import { buildEmojiUrl, emojiExists, isCustomEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
+import { Plugin } from "prosemirror-state";
+import { Decoration, DecorationSet } from "prosemirror-view";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { emojiOptions } from "discourse/lib/text";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+
+/**
+ * Plugin that adds the only-emoji class to emojis
+ * @returns {Plugin} ProseMirror plugin
+ */
+function createOnlyEmojiPlugin() {
+  return new Plugin({
+    state: {
+      init() {
+        return DecorationSet.empty;
+      },
+      apply(tr, oldSet, oldState, newState) {
+        if (!tr.docChanged) {
+          return oldSet.map(tr.mapping, tr.doc);
+        }
+
+        const changedRanges = getChangedRanges(tr);
+        let newSet = oldSet.map(tr.mapping, tr.doc);
+
+        changedRanges.forEach(({ new: { from, to } }) => {
+          // traverse all text blocks in the changed range
+          newState.doc.nodesBetween(from, to, (node, pos) => {
+            if (!node.isTextblock) {
+              return true;
+            }
+
+            const blockFrom = pos;
+            const blockTo = pos + node.nodeSize;
+
+            const existingDecorations = newSet.find(blockFrom, blockTo);
+            newSet = newSet.remove(existingDecorations);
+
+            const emojiNodes = [];
+            let hasOnlyEmojis = true;
+
+            // collect emojis in the current text block
+            node.descendants((child, childPos) => {
+              if (child.type.name === "emoji") {
+                emojiNodes.push({
+                  from: blockFrom + 1 + childPos,
+                  to: blockFrom + 1 + childPos + child.nodeSize,
+                });
+
+                return true;
+              }
+
+              if (child.type.name === "text" && !child.text?.trim()) {
+                return true;
+              }
+
+              hasOnlyEmojis = false;
+              return false;
+            });
+
+            if (
+              emojiNodes.length > 0 &&
+              emojiNodes.length <= 3 &&
+              hasOnlyEmojis
+            ) {
+              const decorations = emojiNodes.map((emoji) =>
+                Decoration.inline(emoji.from, emoji.to, {
+                  class: "only-emoji",
+                })
+              );
+              newSet = newSet.add(newState.doc, decorations);
+            }
+
+            return false;
+          });
+        });
+
+        return newSet;
+      },
+    },
+    props: {
+      decorations(state) {
+        return this.getState(state);
+      },
+    },
+  });
+}
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -86,6 +170,7 @@ const extension = {
 
   serializeNode: {
     emoji(state, node) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }
@@ -93,6 +178,8 @@ const extension = {
       state.write(`:${node.attrs.code}:`);
     },
   },
+
+  plugins: () => [createOnlyEmojiPlugin()],
 };
 
 export default extension;
