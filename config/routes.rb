@@ -425,9 +425,9 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
-        get "branding" => "branding#index"
-        put "branding/logo" => "branding#logo"
-        put "branding/fonts" => "branding#fonts"
+        get "/logo-and-fonts" => "logo#index"
+        put "/logo" => "logo#update"
+        put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do

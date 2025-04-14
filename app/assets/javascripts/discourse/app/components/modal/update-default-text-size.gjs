@@ -19,24 +19,24 @@ export default class UpdateDefaultTextSize extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.config.branding.fonts.backfill_modal.title"}}
+      @title={{i18n "admin.config.logo_and_fonts.fonts.backfill_modal.title"}}
       @closeModal={{@closeModal}}
     >
       <:body>
         {{i18n
-          "admin.config.branding.fonts.backfill_modal.description"
+          "admin.config.logo_and_fonts.fonts.backfill_modal.description"
           count=@model.count
         }}
       </:body>
       <:footer>
         <DButton
           @action={{this.updateExistingUsers}}
-          @label="admin.config.branding.fonts.backfill_modal.modal_yes"
+          @label="admin.config.logo_and_fonts.fonts.backfill_modal.modal_yes"
           class="btn-primary"
         />
         <DButton
           @action={{this.cancel}}
-          @label="admin.config.branding.fonts.backfill_modal.modal_no"
+          @label="admin.config.logo_and_fonts.fonts.backfill_modal.modal_no"
         />
       </:footer>
     </DModal>
