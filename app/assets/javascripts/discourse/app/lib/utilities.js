@@ -504,6 +504,7 @@ export function translateModKey(string) {
       .replace("shift", "\u21E7")
       .replace("meta", "\u2318")
       .replace("alt", "\u2325")
+      .replace("ctrl", "\u2303")
       .replace(/\+/g, "");
   } else {
     string = string
