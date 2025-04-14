@@ -50,24 +50,13 @@ describe "User preferences | Security", type: :system do
   shared_examples "passkeys" do
     before { SiteSetting.enable_passkeys = true }
 
-<<<<<<< Updated upstream
     it "adds a passkey, removes user password, logs in with passkey" do
-      options =
-        ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-          user_verification: true,
-          user_verified: true,
-          resident_key: true,
-        )
-      authenticator = page.driver.browser.add_virtual_authenticator(options)
-=======
-    it "adds a passkey and logs in with it" do
       with_virtual_authenticator(
         hasUserVerification: true,
         hasResidentKey: true,
         isUserVerified: true,
       ) do
         add_cookie(name: "destination_url", value: "/new")
->>>>>>> Stashed changes
 
         user_preferences_security_page.visit(user)
 
