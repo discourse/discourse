@@ -235,10 +235,10 @@ const extension = {
     {
       match: /\^\[(.*?)]$/,
       handler: (state, match, start, end) => {
-        const footnote = state.schema.nodes.footnote.create(
-          null,
-          state.schema.nodes.paragraph.create(null, state.schema.text(match[1]))
-        );
+        const content = state.doc.slice(start + 2, end).content;
+        const paragraph = state.schema.nodes.paragraph.create(null, content);
+        const footnote = state.schema.nodes.footnote.create(null, paragraph);
+
         return state.tr.replaceWith(start, end, footnote);
       },
     },
