@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -7,8 +6,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 // mainly used by the `BackButton` component
 export default class RouteHistory extends Service {
   @service router;
-
-  @tracked lastUrl = null;
 
   init() {
     super.init(...arguments);
@@ -21,13 +18,15 @@ export default class RouteHistory extends Service {
 
   @bind
   routeWillChange() {
-    this.lastUrl = this.router.currentURL;
+    if (this.router.currentURL !== null) {
+      sessionStorage.setItem("lastUrl", this.router.currentURL);
+    }
   }
 
   get lastKnownURL() {
-    const url = this.lastUrl;
+    const url = sessionStorage.getItem("lastUrl");
 
-    if (url && url !== "/") {
+    if (url !== null && url !== "/") {
       return url;
     }
 
