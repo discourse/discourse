@@ -126,7 +126,7 @@ export default class ThemesGridPlaceholder extends Component {
         preserveAspectRatio="xMidYMid slice"
       >
         <rect
-          fill="{{this.safeThemeColors.tertiary}}"
+          fill={{this.safeThemeColors.tertiary}}
           width="800"
           height="200"
         />
@@ -138,10 +138,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="347"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.quaternary}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.quaternary}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.quaternary}}"
+              stop-color={{this.safeThemeColors.quaternary}}
               stop-opacity="0"
             />
           </radialGradient>
@@ -152,10 +152,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="347"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.tertiary}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.tertiary}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.tertiary}}"
+              stop-color={{this.safeThemeColors.tertiary}}
               stop-opacity="0"
             />
           </radialGradient>
@@ -166,10 +166,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="600"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.highlight}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.highlight}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.highlight}}"
+              stop-color={{this.safeThemeColors.highlight}}
               stop-opacity="0"
             />
           </radialGradient>
@@ -180,10 +180,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="600"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.quaternary}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.quaternary}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.quaternary}}"
+              stop-color={{this.safeThemeColors.quaternary}}
               stop-opacity="0"
             />
           </radialGradient>
@@ -194,10 +194,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="347"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.tertiary}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.tertiary}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.tertiary}}"
+              stop-color={{this.safeThemeColors.tertiary}}
               stop-opacity="0"
             />
           </radialGradient>
@@ -208,10 +208,10 @@ export default class ThemesGridPlaceholder extends Component {
             r="347"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stop-color="{{this.safeThemeColors.tertiary}}" />
+            <stop offset="0" stop-color={{this.safeThemeColors.tertiary}} />
             <stop
               offset="1"
-              stop-color="{{this.safeThemeColors.tertiary}}"
+              stop-color={{this.safeThemeColors.tertiary}}
               stop-opacity="0"
             />
           </radialGradient>
