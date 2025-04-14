@@ -80,14 +80,14 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     it "can filter components by status" do
       config_area.visit
 
-      config_area.status_selector.select("active")
+      config_area.status_selector.select("used")
       expect(config_area).to be_loading
       expect(config_area.components_shown).to contain_exactly(
         enabled_component.id,
         remote_component.id,
       )
 
-      config_area.status_selector.select("inactive")
+      config_area.status_selector.select("unused")
       expect(config_area).to be_loading
       expect(config_area.components_shown).to contain_exactly(
         disabled_component.id,
