@@ -23,10 +23,9 @@ describe "Composer - ProseMirror editor - Footnote extension", type: :system do
       open_composer_and_toggle_rich_editor
       rich.click
 
-      cdp.write_clipboard <<~MARKDOWN
+      cdp.copy_paste <<~MARKDOWN
         What is this? ^[multiple inline] ^[footnotes]
       MARKDOWN
-      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("div.footnote", count: 2)
 
@@ -40,14 +39,13 @@ describe "Composer - ProseMirror editor - Footnote extension", type: :system do
       open_composer_and_toggle_rich_editor
       rich.click
 
-      cdp.write_clipboard <<~MARKDOWN
+      cdp.copy_paste <<~MARKDOWN
         Hey [^1] [^2]
         [^1]: This is inline
         [^2]: This
 
             > not so much
       MARKDOWN
-      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("div.footnote", count: 2)
 

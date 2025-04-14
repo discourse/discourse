@@ -59,6 +59,10 @@ module PageObjects
     def copy_paste(text, html: false)
       allow_clipboard
       write_clipboard(text, html: html)
+      paste
+    end
+
+    def paste
       page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
     end
 

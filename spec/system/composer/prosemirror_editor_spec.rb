@@ -214,8 +214,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
-      cdp.write_clipboard("https://example.com/x")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("https://example.com/x")
       composer.type_content(" ").type_content("in the middle of text")
 
       expect(rich).to have_css(
@@ -233,8 +232,7 @@ describe "Composer - ProseMirror editor", type: :system do
     it "creates a full onebox for standalone links" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.write_clipboard("https://example.com")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("https://example.com")
       page.send_keys(:enter)
 
       expect(rich).to have_css("div.onebox-wrapper[data-onebox-src='https://example.com']")
@@ -250,8 +248,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
-      cdp.write_clipboard("https://example.com/x")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("https://example.com/x")
       composer.type_content(" ").type_content("more text")
 
       expect(rich).to have_no_css("div.onebox-wrapper")
@@ -266,8 +263,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("```")
-      cdp.write_clipboard("https://example.com")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("https://example.com")
 
       expect(rich).to have_css("pre code")
       expect(rich).to have_no_css("div.onebox-wrapper")
@@ -308,8 +304,7 @@ describe "Composer - ProseMirror editor", type: :system do
         Ok, that is it https://example3.com/x
         After a hard break
       MARKDOWN
-      cdp.write_clipboard(markdown)
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste(markdown)
 
       expect(rich).to have_css("a.inline-onebox", count: 6)
       expect(rich).to have_css(
@@ -339,10 +334,9 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       composer.type_content("Hey ")
-      cdp.write_clipboard("https://example.com/x")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("https://example.com/x")
       composer.type_content(" ").type_content("and").type_content(" ")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      page.paste
       composer.type_content("\n")
 
       expect(rich).to have_css(
@@ -501,13 +495,12 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
 
       # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
-      cdp.write_clipboard <<~MARKDOWN
+      composer.type_content("This is a test\n\n")
+      cdp.copy_paste <<~MARKDOWN
         ```
         puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
         ```
       MARKDOWN
-      composer.type_content("This is a test\n\n")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
       expect(page.driver.browser.logs.get(:browser)).not_to include(
         "Maximum call stack size exceeded",
       )
@@ -519,11 +512,10 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
 
-      cdp.write_clipboard(
+      cdp.copy_paste(
         '<img src="image.png" alt="alt text" data-base62-sha1="1234567890">',
         html: true,
       )
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
 
       expect(page).to have_css(
         "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
@@ -533,12 +525,10 @@ describe "Composer - ProseMirror editor", type: :system do
     it "respects existing marks when pasting a url to make a link" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.write_clipboard("not selected `code`**bold**not*italic* not selected")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
       rich.find("strong").double_click
 
-      cdp.write_clipboard("www.example.com")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("www.example.com")
 
       expect(rich).to have_css("code", text: "code")
       expect(rich).to have_css("strong", text: "bold")
@@ -555,12 +545,10 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
 
-      cdp.write_clipboard("not selected **bold** not selected")
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("not selected **bold** not selected")
       rich.find("strong").double_click
 
-      cdp.write_clipboard("<p>www.example.com</p>", html: true)
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      cdp.copy_paste("<p>www.example.com</p>", html: true)
 
       composer.toggle_rich_editor
 
