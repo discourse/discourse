@@ -7,9 +7,18 @@ module PageObjects
       AUTOCOMPLETE_MENU = ".autocomplete.ac-emoji"
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
+      RICH_EDITOR = ".d-editor-input.ProseMirror"
 
       def rich_editor
-        find(".d-editor-input.ProseMirror")
+        find(RICH_EDITOR)
+      end
+
+      def has_rich_editor?
+        page.has_css?(RICH_EDITOR)
+      end
+
+      def has_no_rich_editor?
+        page.has_no_css?(RICH_EDITOR)
       end
 
       def opened?
@@ -134,6 +143,10 @@ module PageObjects
 
       def has_mention_autocomplete?
         has_css?(MENTION_MENU)
+      end
+
+      def mention_menu_autocomplete_username_list
+        find(MENTION_MENU).all("a").map { |a| a.text }
       end
 
       def has_emoji_autocomplete?

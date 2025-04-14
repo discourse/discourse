@@ -207,7 +207,7 @@
 }
 
 .invites-show {
-  #account-email-validation:not(:has(*)) {
+  #account-email-validation:not(:has(svg)) {
     display: none;
   }
 }

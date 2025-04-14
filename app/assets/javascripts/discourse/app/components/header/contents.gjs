@@ -43,7 +43,8 @@ export default class Contents extends Component {
   get showHeaderSearch() {
     if (
       this.site.mobileView ||
-      this.router.currentURL?.match(/\/(signup|login)/)
+      this.args.narrowDesktop ||
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
     ) {
       return false;
     }

@@ -175,6 +175,7 @@ Discourse::Application.routes.draw do
           :as => :user_show
       get "users/:id/:username/badges" => "users#show"
       get "users/:id/:username/tl3_requirements" => "users#show"
+      get "users/settings" => "site_settings#index"
 
       post "users/sync_sso" => "users#sync_sso", :constraints => AdminConstraint.new
 
@@ -400,6 +401,10 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
         get "analytics-and-seo" => "site_settings#index"
+        get "content" => "site_settings#index"
+        get "content/sharing" => "site_settings#index"
+        get "content/posts-and-topics" => "site_settings#index"
+        get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
         get "files" => "site_settings#index"
         get "interface" => "site_settings#index"
@@ -420,9 +425,9 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
-        get "branding" => "branding#index"
-        put "branding/logo" => "branding#logo"
-        put "branding/fonts" => "branding#fonts"
+        get "/logo-and-fonts" => "logo#index"
+        put "/logo" => "logo#update"
+        put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do
@@ -939,6 +944,11 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/card.json" => "users#show_card",
+          :format => :json,
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      put "#{root_path}/:username/remove-password" => "users#remove_password",
           :format => :json,
           :constraints => {
             username: RouteFormat.username,

@@ -1378,6 +1378,27 @@ class BulkImport::Generic < BulkImport::Base
                                                         liked = excluded.liked
     SQL
 
+    DB.exec(<<~SQL, notification_level: NotificationLevels.topic_levels[:watching])
+      WITH
+        latest_posts AS (
+                          SELECT p.topic_id, MAX(p.post_number) AS number
+                            FROM posts p
+                          WHERE p.deleted_at IS NULL
+                            AND NOT p.hidden
+                            AND p.user_id > 0
+                          GROUP BY p.topic_id
+                        )
+      UPDATE topic_users tu
+        SET last_read_post_number = latest_posts.number
+      FROM latest_posts
+           JOIN topics t ON t.id = latest_posts.topic_id
+      WHERE tu.topic_id = latest_posts.topic_id
+        AND tu.notification_level = :notification_level
+        AND tu.last_read_post_number IS NULL
+        AND t.deleted_at IS NULL
+        AND t.visible
+    SQL
+
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
   end
 

@@ -119,8 +119,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       puppeteer-core:
-        specifier: ^24.6.0
-        version: 24.6.0
+        specifier: ^24.6.1
+        version: 24.6.1
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -290,9 +290,6 @@ importers:
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.10)
-      discourse-hbr:
-        specifier: workspace:1.0.0
-        version: link:../discourse-hbr
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -308,9 +305,6 @@ importers:
       ember-tracked-storage-polyfill:
         specifier: ^1.0.0
         version: 1.0.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
@@ -559,8 +553,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0
       ember-test-selectors:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       float-kit:
         specifier: workspace:1.0.0
         version: link:../float-kit
@@ -634,15 +628,6 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
 
-  app/assets/javascripts/discourse-hbr:
-    dependencies:
-      broccoli-filter:
-        specifier: ^1.3.0
-        version: 1.3.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
-
   app/assets/javascripts/discourse-i18n:
     dependencies:
       '@embroider/addon-shim':
@@ -684,9 +669,6 @@ importers:
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
-      discourse-hbr:
-        specifier: workspace:1.0.0
-        version: link:../discourse-hbr
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -724,9 +706,6 @@ importers:
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.2.0
@@ -954,6 +933,9 @@ importers:
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
+      truth-helpers:
+        specifier: workspace:*
+        version: link:../truth-helpers
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.2.0
@@ -1051,9 +1033,6 @@ importers:
       ember-this-fallback:
         specifier: ^0.4.0
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.5(@swc/core@1.11.18)(esbuild@0.25.2)))
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2452,8 +2431,8 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@puppeteer/browsers@2.9.0':
-    resolution: {integrity: sha512-8+xM+cFydYET4X/5/3yZMHs7sjS6c9I6H5I3xJdb6cinzxWUT/I2QVw4avxCQ8QDndwdHkG/FiSZIrCjAbaKvQ==}
+  '@puppeteer/browsers@2.10.0':
+    resolution: {integrity: sha512-HdHF4rny4JCvIcm7V1dpvpctIGqM3/Me255CB44vW7hDG1zYMmcBMjpNqZEDxdCfXGLkx5kP0+Jz5DUS+ukqtA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4479,8 +4458,8 @@ packages:
     engines: {node: 12.* || 14.* || >= 16.*}
     hasBin: true
 
-  ember-test-selectors@7.0.0:
-    resolution: {integrity: sha512-gGJzzBw6CsBB9gfk9/4qw0+iOSvhlqvUe4jIZKDf4waMkgVLtnPdFUWMocfFvUnJS7IitwKB/iTgIctD4RgH7w==}
+  ember-test-selectors@7.1.0:
+    resolution: {integrity: sha512-mIgjzv5PE+z64p1+o8eYkLHqkJY1g4BD93vgfE+ZTAvarIsJxGO8WmmZ7xCkmCM0xB4Idf0duR7IhLRsTg/81w==}
     engines: {node: 18.* || 20.* || >= 22.*}
 
   ember-this-fallback@0.4.0:
@@ -7285,8 +7264,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.6.0:
-    resolution: {integrity: sha512-Cukxysy12m0v350bhl/Gzof0XQYmtON9l2VvGp3D4BOQZVgyf+y5wIpcjDZQ/896Okoi95dKRGRV8E6a7SYAQQ==}
+  puppeteer-core@24.6.1:
+    resolution: {integrity: sha512-sMCxsY+OPWO2fecBrhIeCeJbWWXJ6UaN997sTid6whY0YT9XM0RnxEwLeUibluIS5/fRmuxe1efjb5RMBsky7g==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -8011,6 +7990,9 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  strip-test-selectors@0.1.0:
+    resolution: {integrity: sha512-wkVYph30L7wYkMf5EypfTqhY4qZwmQ0hpFOTksaXne49YbUr2jenJl5w5yj9IWx3ojtoH9BGAQ7cShnYEzbs5g==}
 
   style-loader@2.0.0:
     resolution: {integrity: sha512-Z0gYUJmzZ6ZdRUqpg1r8GsaFKypE+3xAzuFeMuoHgjc9KZv3wMyCRjQIWEbhoFSq7+7yoHXySDJyyWQaPajeiQ==}
@@ -10662,7 +10644,7 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@puppeteer/browsers@2.9.0':
+  '@puppeteer/browsers@2.10.0':
     dependencies:
       debug: 4.4.0(supports-color@8.1.1)
       extract-zip: 2.0.1
@@ -13369,11 +13351,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-test-selectors@7.0.0:
+  ember-test-selectors@7.1.0:
     dependencies:
       calculate-cache-key-for-tree: 2.0.0
       ember-cli-babel: 7.26.11
       ember-cli-version-checker: 5.1.2
+      strip-test-selectors: 0.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -16605,9 +16588,9 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.6.0:
+  puppeteer-core@24.6.1:
     dependencies:
-      '@puppeteer/browsers': 2.9.0
+      '@puppeteer/browsers': 2.10.0
       chromium-bidi: 3.0.0(devtools-protocol@0.0.1425554)
       debug: 4.4.0(supports-color@8.1.1)
       devtools-protocol: 0.0.1425554
@@ -17489,6 +17472,8 @@ snapshots:
   strip-final-newline@3.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  strip-test-selectors@0.1.0: {}
 
   style-loader@2.0.0(webpack@5.99.5(@swc/core@1.11.18)(esbuild@0.25.2)):
     dependencies:
