@@ -28,6 +28,8 @@ describe "Composer", type: :system do
     fab!(:second_reply) { Fabricate(:post, topic: topic, user: second_reply_user) }
     let!(:second_reply_post) { PageObjects::Components::Post.new(second_reply.post_number) }
 
+    before { SiteSetting.enable_names = false }
+
     it "the topic owner if replying to topic" do
       page.visit "/t/#{topic.id}"
 
