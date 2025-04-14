@@ -136,6 +136,8 @@ module PageObjects
 
         expect(page).to have_css(".loading-container[data-loading]")
         expect(page).to have_no_css(".loading-container[data-loading]")
+
+        sleep 0.1
       end
 
       def status_selector
