@@ -15,7 +15,7 @@ export default class Search extends Service {
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
-  @tracked noResults = false;
+  @tracked noResults = false; // TODO: shouldn't `noResults` default value be `true`?
   @tracked welcomeBannerSearchInViewport = false;
 
   // only relative for the widget search menu

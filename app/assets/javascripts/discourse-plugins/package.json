@@ -10,7 +10,6 @@
   "dependencies": {
     "@babel/core": "^7.26.10",
     "deprecation-silencer": "workspace:1.0.0",
-    "discourse-hbr": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
