@@ -84,21 +84,21 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       config_area.visit
 
       config_area.status_selector.select("used")
-      expect(config_area).to be_loading
+
       expect(config_area.components_shown).to contain_exactly(
         enabled_component.id,
         remote_component.id,
       )
 
       config_area.status_selector.select("unused")
-      expect(config_area).to be_loading
+
       expect(config_area.components_shown).to contain_exactly(
         disabled_component.id,
         remote_component_with_update.id,
       )
 
-      config_area.status_selector.select("updates_available")
-      expect(config_area).to be_loading
+      config_area.select_filter("updates_available")
+
       expect(config_area.components_shown).to contain_exactly(remote_component_with_update.id)
     end
 
@@ -107,7 +107,6 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
       config_area.name_filter_input.fill_in(with: "glo")
 
-      expect(config_area).to be_loading
       expect(config_area.components_shown).to contain_exactly(
         enabled_component.id,
         disabled_component.id,

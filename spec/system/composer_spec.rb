@@ -35,7 +35,6 @@ describe "Composer", type: :system do
 
       op_post.reply
       expect(composer).to be_opened
-
       composer.fill_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
@@ -48,7 +47,6 @@ describe "Composer", type: :system do
 
       second_reply_post.reply
       expect(composer).to be_opened
-
       composer.fill_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
@@ -64,11 +62,12 @@ describe "Composer", type: :system do
 
       sign_in(admin)
       page.visit "/t/#{topic.id}"
-
       reply_post.edit
+
       expect(composer).to be_opened
 
       composer.fill_content("@")
+
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, user.username, topic_user.username],
       )

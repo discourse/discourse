@@ -135,6 +135,13 @@ module PageObjects
         has_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
       end
 
+      def select_filter(filter)
+        status_selector.select(filter)
+
+        expect(page).to have_css(".loading-container[data-loading]")
+        expect(page).to have_no_css(".loading-container[data-loading]")
+      end
+
       def status_selector
         PageObjects::Components::DSelect.new(find(".admin-config-components__status-filter select"))
       end
@@ -148,6 +155,8 @@ module PageObjects
       end
 
       def components_shown
+        expect(page).to have_css(".admin-config-components__component-row")
+
         all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
       end
 

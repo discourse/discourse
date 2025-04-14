@@ -54,7 +54,10 @@ module PageObjects
       end
 
       def fill_content(content)
-        composer_input.send_keys(content)
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.locator("#{COMPOSER_ID} .d-editor .d-editor-input").press_sequentially(content)
+        end
+
         self
       end
 
