@@ -1,19 +1,22 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
+import { TrackedAsyncData } from "ember-async-data";
+import { Promise as RsvpPromise } from "rsvp";
 import { eq } from "truth-helpers";
-import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -36,8 +39,6 @@ export default class DMultiSelect extends Component {
 
   @tracked preselectedItem = null;
 
-  @tracked results = null;
-
   compareKey = "id";
 
   get hasSelection() {
@@ -48,14 +49,48 @@ export default class DMultiSelect extends Component {
     return this.args.label ?? i18n("multi_select.label");
   }
 
-  @action
-  resultsChanged(results) {
-    this.preselectedItem = null;
-    this.results = results;
+  @cached
+  get data() {
+    const asyncData = this.args.loadFn;
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (asyncData instanceof TrackedAsyncData) {
+      return asyncData;
+    }
+
+    let value;
+
+    if (this.#isPromise(asyncData)) {
+      value = asyncData;
+    } else if (typeof asyncData === "function") {
+      value = new Promise((resolve, reject) => {
+        discourseDebounce(
+          this,
+          this.#resolveAsyncData,
+          asyncData,
+          this.searchTerm,
+          resolve,
+          reject,
+          INPUT_DELAY
+        );
+      });
+    }
+
+    if (!this.#isPromise(value)) {
+      throw new Error(
+        `\`<DMultiSelect />\` expects @loadFn to be an async function or a promise`
+      );
+    }
+
+    return new TrackedAsyncData(value);
   }
 
   @action
   search(event) {
+    this.preselectedItem = null;
     this.searchTerm = event.target.value;
   }
 
@@ -66,6 +101,10 @@ export default class DMultiSelect extends Component {
 
   @action
   handleKeydown(event) {
+    if (!this.data.isResolved) {
+      return;
+    }
+
     if (event.key === "Enter") {
       event.preventDefault();
 
@@ -77,19 +116,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowDown") {
       event.preventDefault();
 
-      if (!this.results || this.results.length === 0) {
+      if (!this.data.value?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.results[0];
+        this.preselectedItem = this.data.value[0];
       } else {
-        const currentIndex = this.results.findIndex((item) =>
+        const currentIndex = this.data.value.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
-        if (currentIndex < this.results.length - 1) {
-          this.preselectedItem = this.results[currentIndex + 1];
+        if (currentIndex < this.data.value.length - 1) {
+          this.preselectedItem = this.data.value[currentIndex + 1];
         }
       }
     }
@@ -97,19 +136,19 @@ export default class DMultiSelect extends Component {
     if (event.key === "ArrowUp") {
       event.preventDefault();
 
-      if (!this.results || this.results.length === 0) {
+      if (!this.data.value?.length) {
         return;
       }
 
       if (this.preselectedItem === null) {
-        this.preselectedItem = this.results[0];
+        this.preselectedItem = this.data.value[0];
       } else {
-        const currentIndex = this.results.findIndex((item) =>
+        const currentIndex = this.data.value.findIndex((item) =>
           this.compare(item, this.preselectedItem)
         );
 
         if (currentIndex > 0) {
-          this.preselectedItem = this.results[currentIndex - 1];
+          this.preselectedItem = this.data.value[currentIndex - 1];
         }
       }
     }
@@ -148,6 +187,18 @@ export default class DMultiSelect extends Component {
     } else {
       return a[this.compareKey] === b[this.compareKey];
     }
+  }
+
+  #isPromise(value) {
+    return value instanceof Promise || value instanceof RsvpPromise;
+  }
+
+  #resolveAsyncData(asyncData, context, resolve, reject) {
+    // when a resolve function is provided, we need to resolve the promise once asyncData is done
+    // otherwise, we just call asyncData
+    return resolve
+      ? asyncData(context).then(resolve).catch(reject)
+      : asyncData(context);
   }
 
   <template>
@@ -204,28 +255,22 @@ export default class DMultiSelect extends Component {
 
           <menu.divider />
 
-          <AsyncContent
-            @asyncData={{fn @loadFn this.searchTerm}}
-            @debounce={{true}}
-            @context={{this.searchTerm}}
-          >
-            <:empty><div class="d-multi-select__search-no-results">{{i18n
-                  "multi_select.no_results"
-                }}</div></:empty>
-            <:loading>
-              <div class="d-multi-select__skeletons">
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-                <Skeleton />
-              </div>
-            </:loading>
-            <:content as |results|>
-              {{this.resultsChanged results}}
-
+          {{#if this.data.isPending}}
+            <div class="d-multi-select__skeletons">
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+            </div>
+          {{else if this.data.isRejected}}
+            <div class="d-multi-select__error">
+              {{yield this.data.error to="error"}}
+            </div>
+          {{else if this.data.isResolved}}
+            {{#if this.data.value}}
               <div class="d-multi-select__search-results">
-                {{#each results as |result|}}
+                {{#each this.data.value as |result|}}
                   <menu.item
                     class={{concatClass
                       "d-multi-select__result"
@@ -241,15 +286,18 @@ export default class DMultiSelect extends Component {
                       class="d-multi-select__result-checkbox"
                     />
 
-                    <span class="d-multi-select__result-label">{{yield
-                        result
-                        to="result"
-                      }}</span>
+                    <span class="d-multi-select__result-label">
+                      {{yield result to="result"}}
+                    </span>
                   </menu.item>
                 {{/each}}
               </div>
-            </:content>
-          </AsyncContent>
+            {{else}}
+              <div class="d-multi-select__search-no-results">
+                {{i18n "multi_select.no_results"}}
+              </div>
+            {{/if}}
+          {{/if}}
         </DropdownMenu>
       </:content>
     </DMenu>

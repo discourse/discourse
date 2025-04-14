@@ -37,6 +37,7 @@ class TestComponent extends Component {
     >
       <:selection as |result|>{{result.name}}</:selection>
       <:result as |result|>{{result.name}}</:result>
+      <:error as |error|>{{error}}</:error>
     </DMultiSelect>
   </template>
 }
@@ -75,7 +76,6 @@ module("Integration | Component | d-multi-select", function (hooks) {
 
   test("keyboard", async function (assert) {
     await render(<template><TestComponent /></template>);
-
     await click(".d-multi-select-trigger");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
 
@@ -194,5 +194,16 @@ module("Integration | Component | d-multi-select", function (hooks) {
     assert
       .dom(".d-multi-select__result:nth-child(1)")
       .hasClass("--preselected");
+  });
+
+  test(":error", async function (assert) {
+    const loadFn = async () => {
+      throw new Error("error");
+    };
+
+    await render(<template><TestComponent @loadFn={{loadFn}} /></template>);
+    await click(".d-multi-select-trigger");
+
+    assert.dom(".d-multi-select__error").hasText("Error: error");
   });
 });
