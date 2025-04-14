@@ -2770,8 +2770,8 @@ en:
       show_preview: "show preview"
       hide_preview: "hide preview"
 
-      switch_to_markdown: "Switch to standard Markdown editor"
-      switch_to_rich_text: "Switch to new rich text editor"
+      switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
+      switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
