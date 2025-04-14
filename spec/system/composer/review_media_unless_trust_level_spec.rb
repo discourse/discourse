@@ -25,8 +25,13 @@ describe "Composer using review_media", type: :system do
   it "flags a post with an image" do
     topic_page.visit_topic_and_open_composer(topic)
     topic_page.fill_in_composer(" this one has an upload: ")
-
-    attach_file "file-uploader", "#{Rails.root}/spec/fixtures/images/logo.jpg", make_visible: true
+    attach_file "file-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.jpg",
+                make_visible: {
+                  display: "block",
+                  visibility: "visible",
+                  opacity: 1,
+                }
     within(".d-editor-preview") { expect(page).to have_css("img") }
     topic_page.send_reply
 

@@ -32,6 +32,8 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     modal.save
     modal.confirm_update
 
+    page.refresh
+
     expect(sidebar.primary_section_links("community")).to eq(
       ["My Posts", "Topics", "Review", "Admin", "Invite", "More"],
     )

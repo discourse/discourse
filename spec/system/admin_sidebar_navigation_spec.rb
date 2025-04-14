@@ -221,9 +221,11 @@ describe "Admin | Sidebar Navigation", type: :system do
     visit("/admin")
     sidebar.toggle_all_sections
     filter.filter("csp_extension")
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq([I18n.t("admin_js.admin.config.plugins.title")])
+
+    expect(page).to have_css(".sidebar-section-link-content-text", count: 1)
+
+    link_texts = page.all(".sidebar-section-link-content-text").map(&:text)
+    expect(link_texts).to eq([I18n.t("admin_js.admin.config.plugins.title")])
   end
 
   it "accepts components and themes keywords for filter" do
