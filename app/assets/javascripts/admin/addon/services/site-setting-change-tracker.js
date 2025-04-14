@@ -185,21 +185,28 @@ export default class SiteSettingChangeTracker extends Service {
     });
   }
 
-  refreshPage() {
-    document.documentElement.style.setProperty(
-      "--font-family",
-      this.siteSettings.base_font
-    );
-    document.documentElement.style.setProperty(
-      "--heading-font-family",
-      this.siteSettings.heading_font
-    );
-    DEFAULT_TEXT_SIZES.forEach((size) => {
-      document.documentElement.classList.remove(`text-size-${size}`);
-    });
-    document.documentElement.classList.add(
-      `text-size-${this.siteSettings.default_text_size}`
-    );
+  refreshPage(params) {
+    if (params.base_font) {
+      document.documentElement.style.setProperty(
+        "--font-family",
+        params.base_font
+      );
+    }
+    if (params.heading_font) {
+      document.documentElement.style.setProperty(
+        "--heading-font-family",
+        params.heading_font
+      );
+    }
+    if (params.default_text_size) {
+      DEFAULT_TEXT_SIZES.forEach((size) => {
+        document.documentElement.classList.remove(`text-size-${size}`);
+      });
+      document.documentElement.classList.add(
+        `text-size-${params.default_text_size}`
+      );
+    }
+
     let logo;
 
     if (this.site.mobileView) {
@@ -207,18 +214,18 @@ export default class SiteSettingChangeTracker extends Service {
         this.session.defaultColorSchemeIsDark ||
         this.session.darkModeAvailable
       ) {
-        logo = this.siteSettings.mobile_logo_dark;
+        logo = params.mobile_logo_dark;
       } else {
-        logo = this.siteSettings.mobile_logo;
+        logo = params.mobile_logo;
       }
     }
 
     if (!logo && this.session.defaultColorSchemeIsDark) {
-      logo = this.siteSettings.logo_dark;
+      logo = params.logo_dark;
     }
 
     if (!logo) {
-      logo = this.siteSettings.logo;
+      logo = params.logo;
     }
 
     // Force reload when switching from text logo to image logo and vice versa
@@ -227,7 +234,7 @@ export default class SiteSettingChangeTracker extends Service {
       (this.siteSettings.logo && !document.getElementById("site-logo"))
     ) {
       window.location.reload();
-    } else {
+    } else if (logo) {
       document.getElementById("site-logo").setAttribute("src", logo);
     }
   }

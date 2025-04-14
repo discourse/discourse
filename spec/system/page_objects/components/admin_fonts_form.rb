@@ -7,6 +7,9 @@ module PageObjects
         find(
           "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}",
         ).click
+        page.has_css?(
+          "[data-name='#{section}_font'] .admin-fonts-form__button-option.body-font-#{font}.active",
+        )
       end
 
       def select_default_text_size(size)
