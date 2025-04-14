@@ -1,3 +1,6 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import {
   click,
   render,
@@ -6,29 +9,62 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DMultiSelect from "discourse/components/d-multi-select";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+
+class TestComponent extends Component {
+  @tracked selection = this.args.selection ?? [];
+
+  @action
+  onChange(newSelection) {
+    this.selection = newSelection;
+  }
+
+  @action
+  async loadFn() {
+    return [
+      { id: 1, name: "foo" },
+      { id: 2, name: "bar" },
+    ];
+  }
+
+  <template>
+    <DMultiSelect
+      @loadFn={{if @loadFn @loadFn this.loadFn}}
+      @compareFn={{if @compareFn @compareFn (noop)}}
+      @onChange={{this.onChange}}
+      @selection={{this.selection}}
+      @label={{@label}}
+    >
+      <:selection as |result|>{{result.name}}</:selection>
+      <:result as |result|>{{result.name}}</:result>
+    </DMultiSelect>
+  </template>
+}
 
 module("Integration | Component | d-multi-select", function (hooks) {
   setupRenderingTest(hooks);
 
   test("@selection", async function (assert) {
-    const selection = [
-      { id: 1, name: "foo" },
-      { id: 2, name: "bar" },
-    ];
-
-    const loadFn = async () => {
-      return selection;
-    };
+    const selection = [{ id: 1, name: "foo" }];
 
     await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}} @selection={{selection}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
+      <template><TestComponent @selection={{selection}} /></template>
     );
+
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
+      .hasText("foo");
+    assert
+      .dom(".d-multi-select-trigger__selected-item:nth-child(2)")
+      .doesNotExist();
+  });
+
+  test("@onChange", async function (assert) {
+    await render(<template><TestComponent /></template>);
+    await click(".d-multi-select-trigger");
+    await click(".d-multi-select__result:nth-child(1)");
+    await click(".d-multi-select__result:nth-child(2)");
 
     assert
       .dom(".d-multi-select-trigger__selected-item:nth-child(1)")
@@ -38,22 +74,8 @@ module("Integration | Component | d-multi-select", function (hooks) {
       .hasText("bar");
   });
 
-  test("@selection", async function (assert) {
-    const loadFn = async () => {
-      return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
-      ];
-    };
-
-    await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
+  test("keyboard", async function (assert) {
+    await render(<template><TestComponent /></template>);
 
     await click(".d-multi-select-trigger");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
@@ -98,10 +120,7 @@ module("Integration | Component | d-multi-select", function (hooks) {
 
     await render(
       <template>
-        <DMultiSelect @loadFn={{loadFn}} @compareFn={{compareFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
+        <TestComponent @compareFn={{compareFn}} @loadFn={{loadFn}} />
       </template>
     );
 
@@ -118,14 +137,7 @@ module("Integration | Component | d-multi-select", function (hooks) {
   });
 
   test("@label", async function (assert) {
-    await render(
-      <template>
-        <DMultiSelect @label="label">
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
+    await render(<template><TestComponent @label="label" /></template>);
 
     assert.dom(".d-multi-select-trigger__label").hasText("label");
   });
@@ -133,43 +145,21 @@ module("Integration | Component | d-multi-select", function (hooks) {
   test("@loadFn", async function (assert) {
     const loadFn = async () => {
       return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
+        { id: 1, name: "cat" },
+        { id: 2, name: "dog" },
       ];
     };
 
-    await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
+    await render(<template><TestComponent @loadFn={{loadFn}} /></template>);
 
     await click(".d-multi-select-trigger");
 
-    assert.dom(".d-multi-select__result:nth-child(1)").hasText("foo");
-    assert.dom(".d-multi-select__result:nth-child(2)").hasText("bar");
+    assert.dom(".d-multi-select__result:nth-child(1)").hasText("cat");
+    assert.dom(".d-multi-select__result:nth-child(2)").hasText("dog");
   });
 
   test("select item", async function (assert) {
-    const loadFn = async () => {
-      return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
-      ];
-    };
-
-    await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
-
+    await render(<template><TestComponent /></template>);
     await click(".d-multi-select-trigger");
     await click(".d-multi-select__result:nth-child(1)");
     await click(".d-multi-select__result:nth-child(2)");
@@ -183,22 +173,7 @@ module("Integration | Component | d-multi-select", function (hooks) {
   });
 
   test("unselect item", async function (assert) {
-    const loadFn = async () => {
-      return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
-      ];
-    };
-
-    await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
-
+    await render(<template><TestComponent /></template>);
     await click(".d-multi-select-trigger");
     await click(".d-multi-select__result:nth-child(1)");
     await click(".d-multi-select__result:nth-child(2)");
@@ -213,24 +188,8 @@ module("Integration | Component | d-multi-select", function (hooks) {
   });
 
   test("preselect item", async function (assert) {
-    const loadFn = async () => {
-      return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
-      ];
-    };
-
-    await render(
-      <template>
-        <DMultiSelect @loadFn={{loadFn}}>
-          <:selection as |result|>{{result.name}}</:selection>
-          <:result as |result|>{{result.name}}</:result>
-        </DMultiSelect>
-      </template>
-    );
-
+    await render(<template><TestComponent /></template>);
     await click(".d-multi-select-trigger");
-
     await triggerEvent(".d-multi-select__result:nth-child(1)", "mouseenter");
 
     assert

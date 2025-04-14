@@ -6,7 +6,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
@@ -15,6 +14,7 @@ import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
+import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -36,12 +36,10 @@ export default class DMultiSelect extends Component {
 
   @tracked preselectedItem = null;
 
-  @tracked selection = new TrackedArray(this.args.selection);
-
   @tracked results = null;
 
   get hasSelection() {
-    return this.selection.length > 0;
+    return this.args.selection?.length > 0;
   }
 
   get label() {
@@ -70,7 +68,7 @@ export default class DMultiSelect extends Component {
       event.preventDefault();
 
       if (this.preselectedItem) {
-        this.toggle(this.preselectedItem);
+        this.toggle(this.preselectedItem, event);
       }
     }
 
@@ -117,16 +115,17 @@ export default class DMultiSelect extends Component {
 
   @action
   remove(selectedItem, event) {
-    event.stopPropagation();
+    event?.stopPropagation();
 
-    this.selection = new TrackedArray(
-      this.selection.filter((item) => !this.compare(item, selectedItem))
+    this.args.onChange?.(
+      this.args.selection?.filter((item) => !this.compare(item, selectedItem))
     );
   }
 
   @action
   isSelected(result) {
-    return this.selection.filter((item) => this.compare(item, result)).length;
+    return this.args.selection?.filter((item) => this.compare(item, result))
+      .length;
   }
 
   @action
@@ -134,14 +133,10 @@ export default class DMultiSelect extends Component {
     event?.stopPropagation();
 
     if (this.isSelected(result)) {
-      this.selection = new TrackedArray(
-        this.selection.filter((item) => !this.compare(item, result))
-      );
+      this.remove(result, event);
     } else {
-      this.selection.push(result);
+      this.args.onChange?.(makeArray(this.args.selection).concat(result));
     }
-
-    this.args.onChange?.(this.selection);
   }
 
   @action
@@ -157,9 +152,9 @@ export default class DMultiSelect extends Component {
       ...attributes
     >
       <:trigger>
-        {{#if this.selection}}
+        {{#if @selection}}
           <div class="d-multi-select-trigger__selection">
-            {{#each this.selection as |item|}}
+            {{#each @selection as |item|}}
               <button
                 class="d-multi-select-trigger__selected-item"
                 {{on "click" (fn this.remove item)}}
@@ -230,6 +225,7 @@ export default class DMultiSelect extends Component {
                       "d-multi-select__result"
                       (if (eq result this.preselectedItem) "--preselected" "")
                     }}
+                    role="button"
                     {{on "mouseenter" (fn (mut this.preselectedItem) result)}}
                     {{on "click" (fn this.toggle result)}}
                   >
@@ -237,7 +233,6 @@ export default class DMultiSelect extends Component {
                       @type="checkbox"
                       @checked={{this.isSelected result}}
                       class="d-multi-select__result-checkbox"
-                      {{on "click" (fn this.toggle result)}}
                     />
 
                     <span class="d-multi-select__result-label">{{yield

@@ -1,7 +1,11 @@
 <StyleguideExample @title="<DMultiSelect />">
   <Styleguide::Component @tag="d-multi-select component">
     <:sample>
-      <DMultiSelect @loadFn={{this.loadDummyData}}>
+      <DMultiSelect
+        @loadFn={{this.loadDummyData}}
+        @onChange={{this.onChange}}
+        @selection={{this.selection}}
+      >
         <:result as |result|>{{result.name}}</:result>
         <:selection as |result|>{{result.name}}</:selection>
       </DMultiSelect>
