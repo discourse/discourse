@@ -336,7 +336,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("Hey ")
       cdp.copy_paste("https://example.com/x")
       composer.type_content(" ").type_content("and").type_content(" ")
-      page.paste
+      cdp.paste
       composer.type_content("\n")
 
       expect(rich).to have_css(
