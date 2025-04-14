@@ -56,7 +56,7 @@ export default class FormTemplateFieldWrapper extends Component {
     next(this, () => {
       this.composer.set(
         "allowPreview",
-        this.siteSettings.experimental_preview_in_form_templates
+        this.siteSettings.show_preview_for_form_templates
       );
     });
   }

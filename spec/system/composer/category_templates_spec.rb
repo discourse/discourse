@@ -260,7 +260,7 @@ describe "Composer Form Templates", type: :system do
   end
 
   it "hides the preview when a category with a form template is selected" do
-    SiteSetting.experimental_preview_in_form_templates = false
+    SiteSetting.show_preview_for_form_templates = false
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_preview
