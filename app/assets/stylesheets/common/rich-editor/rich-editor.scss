@@ -227,6 +227,7 @@
 
 .ProseMirror-selectednode {
   outline: 2px solid #8cf;
+  border-radius: var(--d-border-radius);
 }
 
 /* Make sure li selections wrap around markers */
