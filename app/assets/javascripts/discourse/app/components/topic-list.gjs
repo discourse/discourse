@@ -14,7 +14,7 @@ export default class TopicListShim extends Component {
 
   <template>
     {{#let (curryComponent List this.args) as |CurriedComponent|}}
-      <CurriedComponent />
+      <CurriedComponent ...attributes />
     {{/let}}
   </template>
 }

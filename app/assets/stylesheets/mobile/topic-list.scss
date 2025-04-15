@@ -44,7 +44,6 @@
   .main-link {
     line-height: var(--line-height-medium);
     position: relative;
-    z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
 
     a.title {

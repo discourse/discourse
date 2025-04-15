@@ -89,6 +89,12 @@ module.exports = function (defaults) {
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
+  const pluginTrees = applyTerser(discoursePluginsTree);
+
+  if (process.env.SKIP_CORE_BUILD) {
+    return pluginTrees;
+  }
+
   let extraPublicTrees = [
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -99,7 +105,7 @@ module.exports = function (defaults) {
       })
     ),
     applyTerser(generateScriptsTree(app)),
-    applyTerser(discoursePluginsTree),
+    pluginTrees,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";

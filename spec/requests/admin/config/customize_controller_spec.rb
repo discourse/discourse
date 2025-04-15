@@ -5,7 +5,7 @@ RSpec.describe Admin::Config::CustomizeController do
   fab!(:parent_theme_1) { Fabricate(:theme) }
   fab!(:parent_theme_2) { Fabricate(:theme) }
 
-  fab!(:active_component) do
+  fab!(:used_component) do
     Fabricate(
       :theme,
       name: "AweSome comp",
@@ -13,7 +13,7 @@ RSpec.describe Admin::Config::CustomizeController do
       parent_themes: [parent_theme_1, parent_theme_2],
     )
   end
-  fab!(:inactive_component) { Fabricate(:theme, name: "some comp", component: true) }
+  fab!(:unused_component) { Fabricate(:theme, name: "some comp", component: true) }
   fab!(:remote_component) do
     Fabricate(
       :theme,
@@ -36,22 +36,22 @@ RSpec.describe Admin::Config::CustomizeController do
   before { sign_in(admin) }
 
   describe "#components" do
-    context "when filtering by `active`" do
+    context "when filtering by `used`" do
       it "returns components that have a parent theme" do
-        get "/admin/config/customize/components.json", params: { status: "active" }
+        get "/admin/config/customize/components.json", params: { status: "used" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["components"].map { |c| c["id"] }).to contain_exactly(
-          active_component.id,
+          used_component.id,
         )
       end
     end
 
-    context "when filtering by `inactive`" do
+    context "when filtering by `unused`" do
       it "returns components that have no parent theme" do
-        get "/admin/config/customize/components.json", params: { status: "inactive" }
+        get "/admin/config/customize/components.json", params: { status: "unused" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["components"].map { |c| c["id"] }).to contain_exactly(
-          inactive_component.id,
+          unused_component.id,
           remote_component.id,
           remote_component_with_update.id,
         )
@@ -73,8 +73,8 @@ RSpec.describe Admin::Config::CustomizeController do
         get "/admin/config/customize/components.json", params: { status: "all" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["components"].map { |c| c["id"] }).to contain_exactly(
-          active_component.id,
-          inactive_component.id,
+          used_component.id,
+          unused_component.id,
           remote_component.id,
           remote_component_with_update.id,
         )
@@ -86,8 +86,8 @@ RSpec.describe Admin::Config::CustomizeController do
         get "/admin/config/customize/components.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["components"].map { |c| c["id"] }).to contain_exactly(
-          active_component.id,
-          inactive_component.id,
+          used_component.id,
+          unused_component.id,
           remote_component.id,
           remote_component_with_update.id,
         )
@@ -98,9 +98,39 @@ RSpec.describe Admin::Config::CustomizeController do
       get "/admin/config/customize/components.json", params: { name: "SomE" }
       expect(response.status).to eq(200)
       expect(response.parsed_body["components"].map { |c| c["id"] }).to contain_exactly(
-        active_component.id,
-        inactive_component.id,
+        used_component.id,
+        unused_component.id,
       )
+    end
+
+    it "paginates the components list" do
+      stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 2) do
+        components = []
+
+        get "/admin/config/customize/components.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(2)
+        components.concat(response.parsed_body["components"])
+        expect(response.parsed_body["has_more"]).to eq(true)
+
+        get "/admin/config/customize/components.json", params: { page: 1 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(2)
+        components.concat(response.parsed_body["components"])
+        expect(response.parsed_body["has_more"]).to eq(false)
+
+        get "/admin/config/customize/components.json", params: { page: 2 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["components"].size).to eq(0)
+        expect(response.parsed_body["has_more"]).to eq(false)
+
+        expect(components.map { |c| c["id"] }).to contain_exactly(
+          used_component.id,
+          unused_component.id,
+          remote_component.id,
+          remote_component_with_update.id,
+        )
+      end
     end
   end
 end

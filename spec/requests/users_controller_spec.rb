@@ -942,10 +942,16 @@ RSpec.describe UsersController do
           provider
         end
 
-        before { DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider) }
+        before do
+          DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+          # Tell UserAuthenticator our user authenticated previously.
+          allow(UserAuthenticator).to receive(:new).and_wrap_original do |original_method, user|
+            authenticated_session = { authentication: { email: "foo" } }
+            original_method.call(user, authenticated_session)
+          end
+        end
 
         after { DiscoursePluginRegistry.reset! }
-
         it "creates User record" do
           params = {
             username: "foobar",

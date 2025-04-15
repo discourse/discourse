@@ -12,26 +12,7 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    # If `JOBS` env is not set, `thread-loader` defaults to the number of CPUs - 1 on the machine but we want to cap it
-    # at 2 because benchmarking has shown that anything beyond 2 does not improve build times or the increase is marginal.
-    # Therefore, we cap it so that we don't spawn more processes than necessary.
-    jobs_env_count = (2 if !ENV["JOBS"].present? && Etc.nprocessors > 2)
-
-    compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse ember build"
-
-    heap_size_limit = check_node_heap_size_limit
-
-    if heap_size_limit < 2048
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
-      jobs_env_count = 1
-
-      compile_command =
-        "NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
-    end
-
-    ember_env = ENV["EMBER_ENV"] || "production"
-    compile_command = "#{compile_command} -prod" if ember_env == "production"
-    compile_command = "JOBS=#{jobs_env_count} #{compile_command}" if jobs_env_count
+    compile_command = "#{Rails.root}/script/assemble_ember_build.rb"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -128,13 +109,6 @@ task "assets:flush_sw" => "environment" do
   rescue StandardError
     STDERR.puts "Warning: unable to flush service worker script"
   end
-end
-
-def check_node_heap_size_limit
-  output, status =
-    Open3.capture2("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)")
-  raise "Failed to fetch node memory limit" if status != 0
-  output.to_f
 end
 
 def assets_path
