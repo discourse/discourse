@@ -31,7 +31,7 @@ const Input0 = <template>
       minlength={{@validations.minimum}}
       maxlength={{@validations.maximum}}
       disabled={{@attributes.disabled}}
-      {{on "input" @onChange }}
+      {{on "input" @onChange}}
     />
   </div>
 </template>;

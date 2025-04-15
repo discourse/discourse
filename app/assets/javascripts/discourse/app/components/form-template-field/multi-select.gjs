@@ -35,7 +35,7 @@ export default class FormTemplateFieldMultiSelect extends Component {
         required={{if @validations.required "required" ""}}
         multiple="multiple"
         class="form-template-field__multi-select"
-        {{on "input" @onChange }}
+        {{on "input" @onChange}}
       >
         {{#if @attributes.none_label}}
           <option

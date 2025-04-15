@@ -29,7 +29,7 @@ const Textarea0 = <template>
       minlength={{@validations.minimum}}
       maxlength={{@validations.maximum}}
       required={{if @validations.required "required" ""}}
-      {{on "input" @onChange }}
+      {{on "input" @onChange}}
     />
   </div>
 </template>;
