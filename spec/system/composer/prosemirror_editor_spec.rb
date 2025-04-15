@@ -503,13 +503,12 @@ describe "Composer - ProseMirror editor", type: :system do
         open_composer_and_toggle_rich_editor
 
         # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
+        composer.type_content("This is a test\n\n")
         cdp.write_clipboard <<~MARKDOWN
         ```
         puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
         ```
-      MARKDOWN
-        composer.type_content("This is a test\n\n")
-        page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+        MARKDOWN
 
         expect(logger.logs.map { |log| log[:message] }).not_to include(
           "Maximum call stack size exceeded",
