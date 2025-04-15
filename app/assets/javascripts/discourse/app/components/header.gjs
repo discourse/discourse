@@ -116,6 +116,7 @@ export default class GlimmerHeader extends Component {
   handleAnimationComplete() {
     this.hasClosingAnimation = false;
     this.search.visible = false;
+    this.toggleBodyScrolling(false);
   }
 
   @action
@@ -172,6 +173,7 @@ export default class GlimmerHeader extends Component {
       this.hasClosingAnimation = true;
     } else {
       this.search.visible = !this.search.visible;
+      this.toggleBodyScrolling(true);
     }
 
     if (!this.search.visible) {
