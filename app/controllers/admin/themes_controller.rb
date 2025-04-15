@@ -354,6 +354,48 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def update_theme_site_setting
+    params.require("name")
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    setting_name = params[:name].to_sym
+    new_value = params[:value] || nil
+    existing_setting = @theme.theme_site_settings.find_by(name: setting_name)
+    setting = nil
+
+    if !new_value.nil?
+      setting_db_value, data_type = SiteSetting.type_supervisor.to_db_value(setting_name, new_value)
+      setting_ruby_value =
+        SiteSetting.type_supervisor.to_rb_value(setting_name, new_value, data_type)
+    end
+
+    if existing_setting
+      if new_value.nil? || setting_ruby_value == SiteSetting.get(setting_name)
+        existing_setting.destroy!
+      else
+        existing_setting.update!(value: setting_db_value)
+        setting = existing_setting
+      end
+    else
+      if new_value.present?
+        setting =
+          @theme.theme_site_settings.create!(
+            name: setting_name,
+            value: setting_db_value,
+            data_type: data_type,
+          )
+      end
+    end
+
+    # TODO (martin)
+    #
+    # Logging the change
+    # Updating site setting cache?
+    # Messagebus to client to update client site settings
+    render json: setting.as_json(only: %i[name value theme_id]), status: :ok
+  end
+
   def schema
   end
 

@@ -1,6 +1,6 @@
 import SiteSettingComponent from "./site-setting";
 
-export default class extends SiteSettingComponent {
+export default class ThemeSettingEditor extends SiteSettingComponent {
   _save() {
     return this.setting.updateSetting(
       this.model.id,

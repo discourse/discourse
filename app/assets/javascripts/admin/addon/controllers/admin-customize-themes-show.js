@@ -51,6 +51,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @notEmpty("translations") hasTranslations;
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
   @readOnly("model.settings") settings;
+  @readOnly("model.themeable_site_settings") themeSiteSettings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
