@@ -5,11 +5,6 @@ module PageObjects
     class BulkUserDeleteConfirmation < Base
       MODAL_SELECTOR = ".bulk-user-delete-confirmation"
 
-      def open?
-        super
-        has_css?(".bulk-user-delete-confirmation[data-mb-progress-connected]")
-      end
-
       def confirm
         confirm_button.click
       end

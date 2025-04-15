@@ -25,15 +25,15 @@ export default class BulkUserDeleteConfirmation extends Component {
   callAfterBulkDelete = false;
   blockIpAndEmail = false;
 
-  logsListener = modifierFn((element) => {
-    console.log("connected");
-    this.messageBus.subscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
-
-    element.dataset.mbProgressConnected = true;
+  logsListener = modifierFn(() => {
+    this.messageBus.subscribe(
+      BULK_DELETE_CHANNEL,
+      this.onDeleteProgress,
+      this.args.model.lastBulkDeleteMessageBusId
+    );
 
     return () => {
       this.messageBus.unsubscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
-      delete element.dataset.mbProgressConnected;
     };
   });
 
@@ -65,7 +65,6 @@ export default class BulkUserDeleteConfirmation extends Component {
 
   @bind
   onDeleteProgress(data) {
-    console.log(data);
     if (data.success) {
       this.#logSuccess(
         i18n(
@@ -120,7 +119,6 @@ export default class BulkUserDeleteConfirmation extends Component {
     );
 
     try {
-      console.log("will start request");
       await ajax("/admin/users/destroy-bulk.json", {
         type: "DELETE",
         data: {
@@ -128,7 +126,6 @@ export default class BulkUserDeleteConfirmation extends Component {
           block_ip_and_email: this.blockIpAndEmail,
         },
       });
-      console.log("delete started");
       this.callAfterBulkDelete = true;
     } catch (err) {
       this.#logError(extractError(err));
