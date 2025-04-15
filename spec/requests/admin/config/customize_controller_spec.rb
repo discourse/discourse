@@ -125,8 +125,8 @@ RSpec.describe Admin::Config::CustomizeController do
         expect(response.parsed_body["has_more"]).to eq(false)
 
         expect(components.map { |c| c["id"] }).to contain_exactly(
-          active_component.id,
-          inactive_component.id,
+          used_component.id,
+          unused_component.id,
           remote_component.id,
           remote_component_with_update.id,
         )
