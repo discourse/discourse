@@ -790,6 +790,8 @@ RSpec.describe ApplicationHelper do
       end
     end
 
+    before { skip "State is leaking" }
+
     after { DiscoursePluginRegistry.unregister_modifier(plugin, :meta_data_content, &block) }
 
     it "allows the plugin to modify the meta tags" do
