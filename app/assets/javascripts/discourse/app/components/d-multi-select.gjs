@@ -51,39 +51,21 @@ export default class DMultiSelect extends Component {
 
   @cached
   get data() {
-    const asyncData = this.args.loadFn;
-
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    if (asyncData instanceof TrackedAsyncData) {
-      return asyncData;
-    }
-
-    let value;
-
-    if (this.#isPromise(asyncData)) {
-      value = asyncData;
-    } else if (typeof asyncData === "function") {
-      value = new Promise((resolve, reject) => {
-        discourseDebounce(
-          this,
-          this.#resolveAsyncData,
-          asyncData,
-          this.searchTerm,
-          resolve,
-          reject,
-          INPUT_DELAY
-        );
-      });
-    }
-
-    if (!this.#isPromise(value)) {
-      throw new Error(
-        `\`<DMultiSelect />\` expects @loadFn to be an async function or a promise`
+    const value = new Promise((resolve, reject) => {
+      discourseDebounce(
+        this,
+        this.#resolveAsyncData,
+        this.args.loadFn,
+        this.searchTerm,
+        resolve,
+        reject,
+        INPUT_DELAY
       );
-    }
+    });
 
     return new TrackedAsyncData(value);
   }
@@ -189,16 +171,8 @@ export default class DMultiSelect extends Component {
     }
   }
 
-  #isPromise(value) {
-    return value instanceof Promise || value instanceof RsvpPromise;
-  }
-
   #resolveAsyncData(asyncData, context, resolve, reject) {
-    // when a resolve function is provided, we need to resolve the promise once asyncData is done
-    // otherwise, we just call asyncData
-    return resolve
-      ? asyncData(context).then(resolve).catch(reject)
-      : asyncData(context);
+    return asyncData(context).then(resolve).catch(reject);
   }
 
   <template>
