@@ -96,6 +96,7 @@ if existing_core_build_usable?
   ensure
     FileUtils.rm_rf("dist/_plugin_only_build")
   end
+  STDERR.puts "Plugin build successfully integrated into dist"
 else
   STDERR.puts "Running full core build..."
   system(build_env, *build_cmd, exception: true)
