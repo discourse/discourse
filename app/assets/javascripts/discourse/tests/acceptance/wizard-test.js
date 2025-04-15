@@ -45,9 +45,6 @@ acceptance("Wizard", function (needs) {
       .dom(".wizard-container__button.jump-in")
       .doesNotExist("First step: no jump-in button");
     assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("First step: no configure-more button");
-    assert
       .dom(".wizard-container__button.finish")
       .doesNotExist("First step: no finish button");
 
@@ -82,9 +79,6 @@ acceptance("Wizard", function (needs) {
       .dom(".wizard-container__button.jump-in")
       .doesNotExist("Pre-ready step: no jump-in button");
     assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Pre-ready step: no configure-more button");
-    assert
       .dom(".wizard-container__button.finish")
       .doesNotExist("Pre-ready step: no finish button");
 
@@ -104,68 +98,11 @@ acceptance("Wizard", function (needs) {
       .dom(".wizard-container__button.jump-in")
       .exists("Ready step: jump-in button");
     assert
-      .dom(".wizard-container__button.configure-more")
-      .exists("Ready step: configure-more button");
-    assert
       .dom(".wizard-container__button.finish")
       .doesNotExist("Ready step: no finish button");
 
-    // continue on to optional steps
-    await click(".wizard-container__button.configure-more");
-    assert.dom(".wizard-container__step.optional").exists("step: optional");
-
-    // Post-ready: back, next and finish buttons
-    assert.dom(".wizard-canvas").doesNotExist("Post-ready step: no confetti");
-    assert
-      .dom(".wizard-container__button.back")
-      .exists("Post-ready step: back button");
-    assert
-      .dom(".wizard-container__button.next")
-      .exists("Post-ready step: next button");
-    assert
-      .dom(".wizard-container__button.jump-in")
-      .doesNotExist("Post-ready step: no jump-in button");
-    assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Post-ready step: no configure-more button");
-    assert
-      .dom(".wizard-container__button.finish")
-      .exists("Post-ready step: finish button");
-
-    // finish early, does not save/validate
-    await click(".wizard-container__button.finish");
-    assert.strictEqual(
-      currentURL(),
-      "/latest",
-      "it should transition to the homepage"
-    );
-
-    await visit("/wizard/steps/optional");
-    assert.dom(".wizard-container__step.optional").exists("step: optional");
-
-    // Post-ready: back, next and finish buttons
-    assert.dom(".wizard-canvas").doesNotExist("Post-ready step: no confetti");
-    assert
-      .dom(".wizard-container__button.back")
-      .exists("Post-ready step: back button");
-    assert
-      .dom(".wizard-container__button.next")
-      .exists("Post-ready step: next button");
-    assert
-      .dom(".wizard-container__button.jump-in")
-      .doesNotExist("Post-ready step: no jump-in button");
-    assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Post-ready step: no configure-more button");
-    assert
-      .dom(".wizard-container__button.finish")
-      .exists("Post-ready step: finish button");
-
-    await click(".wizard-container__button.primary.next");
-    assert.dom(".wizard-container__step.corporate").exists("step: corporate");
-
     // Final step: back and jump-in buttons
-    assert.dom(".wizard-canvas").doesNotExist("Finish step: no confetti");
+    assert.dom(".wizard-canvas").exists("Finish step: no confetti");
     assert
       .dom(".wizard-container__button.back")
       .exists("Finish step: back button");
@@ -175,49 +112,9 @@ acceptance("Wizard", function (needs) {
     assert
       .dom(".wizard-container__button.jump-in")
       .exists("Finish step: jump-in button");
-    assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Finish step: no configure-more button");
-    assert
-      .dom(".wizard-container__button.finish")
-      .doesNotExist("Finish step: no finish button");
-
-    assert
-      .dom(".wizard-container__text-input#company_name")
-      .exists("went to the next step");
-    assert
-      .dom(".wizard-container__preview")
-      .exists("renders the component field");
-    assert.dom(".wizard-container__step-title").doesNotExist();
-
-    await click(".wizard-container__button.back");
-    assert.dom(".wizard-container__step.optional").exists("step: optional");
-
-    // Post-ready: back, next and finish buttons
-    assert.dom(".wizard-canvas").doesNotExist("Post-ready step: no confetti");
-    assert
-      .dom(".wizard-container__button.back")
-      .exists("Post-ready step: back button");
-    assert
-      .dom(".wizard-container__button.next")
-      .exists("Post-ready step: next button");
-    assert
-      .dom(".wizard-container__button.jump-in")
-      .doesNotExist("Post-ready step: no jump-in button");
-    assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Post-ready step: no configure-more button");
-    assert
-      .dom(".wizard-container__button.finish")
-      .exists("Post-ready step: finish button");
-
-    assert.dom(".wizard-container__step-title").exists("shows the step title");
-
-    await click(".wizard-container__button.next");
-    assert.dom(".wizard-container__step.corporate").exists("step: optional");
 
     // Final step: back and jump-in buttons
-    assert.dom(".wizard-canvas").doesNotExist("Finish step: no confetti");
+    assert.dom(".wizard-canvas").exists("Finish step: no confetti");
     assert
       .dom(".wizard-container__button.back")
       .exists("Finish step: back button");
@@ -227,23 +124,9 @@ acceptance("Wizard", function (needs) {
     assert
       .dom(".wizard-container__button.jump-in")
       .exists("Finish step: jump-in button");
-    assert
-      .dom(".wizard-container__button.configure-more")
-      .doesNotExist("Finish step: no configure-more button");
-    assert
-      .dom(".wizard-container__button.finish")
-      .doesNotExist("Finish step: no finish button");
 
-    // server validation fail
-    await fillIn("input#company_name", "Server Fail");
     await click(".wizard-container__button.jump-in");
-    assert
-      .dom(".invalid #company_name")
-      .exists("highlights the field with error");
-    assert.dom(".wizard-container__field .error").exists("shows the error");
 
-    await fillIn("input#company_name", "Foo Bar");
-    await click(".wizard-container__button.jump-in");
     assert.strictEqual(
       currentURL(),
       "/latest",
