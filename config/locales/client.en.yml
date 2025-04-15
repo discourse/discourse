@@ -6252,8 +6252,8 @@ en:
             delete: "Delete"
             filter_by: "Filter by"
             filter_by_all: "All"
-            filter_by_active: "Active"
-            filter_by_inactive: "Inactive"
+            filter_by_used: "Used"
+            filter_by_unused: "Unused"
             filter_by_updates_available: "Updates available"
             search_components: "Type a component name"
             new_update_for_component: "New update available for %{name}!"
@@ -6263,7 +6263,7 @@ en:
             deleted_successfully: '"%{name}" has been deleted successfully.'
             no_components: "No components installed."
             no_components_found: "No components match your filters."
-            badge_inactive: "Unused"
+            badge_unused: "Unused"
         user_fields:
           field: "Field"
           type: "Type"

@@ -31,14 +31,13 @@ const STATUS_FILTER_OPTIONS = [
     label: "admin.config_areas.themes_and_components.components.filter_by_all",
   },
   {
-    value: "active",
-    label:
-      "admin.config_areas.themes_and_components.components.filter_by_active",
+    value: "used",
+    label: "admin.config_areas.themes_and_components.components.filter_by_used",
   },
   {
-    value: "inactive",
+    value: "unused",
     label:
-      "admin.config_areas.themes_and_components.components.filter_by_inactive",
+      "admin.config_areas.themes_and_components.components.filter_by_unused",
   },
   {
     value: "updates_available",
@@ -482,7 +481,7 @@ class ComponentRow extends Component {
               <div class="status-label-indicator"></div>
               <div class="status-label-text">
                 {{i18n
-                  "admin.config_areas.themes_and_components.components.badge_inactive"
+                  "admin.config_areas.themes_and_components.components.badge_unused"
                 }}
               </div>
             </div>
