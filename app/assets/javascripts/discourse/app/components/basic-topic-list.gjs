@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import TopicList from "discourse/components/topic-list";
 import List from "discourse/components/topic-list/list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -122,35 +121,19 @@ export default class BasicTopicList extends Component {
   <template>
     <ConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.topics}}
-        {{#if this.site.useGlimmerTopicList}}
-          <List
-            @showPosters={{this.showPosters}}
-            @hideCategory={{this.hideCategory}}
-            @topics={{this.topics}}
-            @expandExcerpts={{this.expandExcerpts}}
-            @bulkSelectHelper={{this.bulkSelectHelper}}
-            @canBulkSelect={{this.canBulkSelect}}
-            @tagsForUser={{this.tagsForUser}}
-            @changeSort={{this.changeSort}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-          />
-        {{else}}
-          <TopicList
-            @showPosters={{this.showPosters}}
-            @hideCategory={{this.hideCategory}}
-            @topics={{this.topics}}
-            @expandExcerpts={{this.expandExcerpts}}
-            @bulkSelectHelper={{this.bulkSelectHelper}}
-            @canBulkSelect={{this.canBulkSelect}}
-            @tagsForUser={{this.tagsForUser}}
-            @changeSort={{this.changeSort}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-          />
-        {{/if}}
+        <List
+          @showPosters={{this.showPosters}}
+          @hideCategory={{this.hideCategory}}
+          @topics={{this.topics}}
+          @expandExcerpts={{this.expandExcerpts}}
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @canBulkSelect={{this.canBulkSelect}}
+          @tagsForUser={{this.tagsForUser}}
+          @changeSort={{this.changeSort}}
+          @order={{this.order}}
+          @ascending={{this.ascending}}
+          @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+        />
       {{else}}
         {{#unless this.loadingMore}}
           <div class="alert alert-info">

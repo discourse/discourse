@@ -7,8 +7,21 @@ module PageObjects
         @post_number = post_number
       end
 
+      def post
+        find("#post_#{@post_number}")
+      end
+
+      def reply
+        post.find(".reply.create").click
+      end
+
+      def edit
+        post.find(".show-more-actions").click
+        post.find("button.edit").click
+      end
+
       def show_replies
-        find("#post_#{@post_number} .show-replies").click
+        post.find(".show-replies").click
       end
 
       def load_more_replies
@@ -28,7 +41,7 @@ module PageObjects
       end
 
       def show_parent_posts
-        find("#post_#{@post_number} .reply-to-tab").click
+        post.find(".reply-to-tab").click
       end
 
       def has_parent_posts?(count: nil)

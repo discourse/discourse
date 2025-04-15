@@ -3,6 +3,7 @@ import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
+import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
@@ -129,9 +130,10 @@ export default class ProsemirrorTextManipulation {
 
   insertBlock(block) {
     const doc = this.convertFromMarkdown(block);
-    const node = doc.content.firstChild;
 
-    const tr = this.view.state.tr.replaceSelectionWith(node);
+    const tr = this.view.state.tr.replaceSelection(
+      new Slice(doc.content, 0, 0)
+    );
     if (!tr.selection.$from.nodeAfter) {
       tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
     }

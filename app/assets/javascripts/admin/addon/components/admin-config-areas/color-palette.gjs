@@ -207,12 +207,12 @@ export default class AdminConfigAreasColorPalette extends Component {
             />
           </div>
           <form.Alert class="fonts-and-logos-hint">
-            <div class="admin-config-color-palettes__fonts-and-logos-hint">
+            <div class="admin-config-color-palettes__logo-and-fonts-hint">
               <span>{{i18n
-                  "admin.config_areas.color_palettes.fonts_and_logos_hint"
+                  "admin.config_areas.color_palettes.logo_and_fonts_hint"
                 }}</span>
-              <LinkTo @route="adminConfig.branding">{{i18n
-                  "admin.config_areas.color_palettes.go_to_branding"
+              <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
+                  "admin.config_areas.color_palettes.go_to_logo_and_fonts"
                 }}</LinkTo>
             </div>
           </form.Alert>

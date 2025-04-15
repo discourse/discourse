@@ -153,7 +153,6 @@ body.signup-page {
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
-      z-index: 999;
       top: -8px;
       left: calc(1em - 0.25em);
       background-color: var(--secondary);

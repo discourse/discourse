@@ -156,6 +156,9 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    if (this.siteSettings.rich_editor) {
+      keymap["ctrl+m"] = () => this.toggleRichEditor();
+    }
 
     return keymap;
   }
@@ -449,7 +452,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
-          prioritizedUserId: this.replyingToUser?.id,
+          prioritizedUserId: this.replyingToUserId,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;

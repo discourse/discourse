@@ -121,16 +121,18 @@ acceptance("User Preferences - Account", function (needs) {
 
     assert
       .dom(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
+        ".pref-associated-accounts table tr.facebook .associated-account__name"
       )
       .includesHtml("Facebook", "lists facebook");
 
     await click(
-      ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
+      ".pref-associated-accounts table tr.facebook .associated-account__actions .btn"
     );
 
     assert
-      .dom(".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type")
+      .dom(
+        ".pref-associated-accounts table tr.facebook .associated-account__actions"
+      )
       .includesHtml("Connect");
   });
 

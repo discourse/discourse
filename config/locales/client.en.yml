@@ -2770,8 +2770,8 @@ en:
       show_preview: "show preview"
       hide_preview: "hide preview"
 
-      switch_to_markdown: "Switch to standard Markdown editor"
-      switch_to_rich_text: "Switch to new rich text editor"
+      switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
+      switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -3038,6 +3038,7 @@ en:
       in_messages_tooltip: "switch to searching regular topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
+      mobile_enter_hint: "or tap Search icon"
       in_posts_by: "in posts by %{username}"
       browser_tip: "%{modifier} + f"
       browser_tip_description: "again to use native browser search"
@@ -5256,8 +5257,8 @@ en:
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
+          title: "Logo & fonts"
           header_description: "Customize the variations of your site logo and fonts"
           logo:
             title: "Logo"
@@ -5406,6 +5407,9 @@ en:
         reports:
           title: "Reports"
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
+          sub_pages:
+            settings:
+              title: "Dashboard settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
@@ -5417,6 +5421,19 @@ en:
           title: "Interface & layout"
           header_description: "Customize details of your site’s general layout and user interface"
           keywords: "splash"
+        content:
+          title: "Content"
+          header_description: "Configure how your topics and posts are managed, and customize the content creation experience for your members"
+          keywords: "topics|posts|categories|tags"
+          sub_pages:
+            categories_and_tags:
+              title: "Categories & tags"
+            sharing:
+              title: "Sharing"
+            posts_and_topics:
+              title: "Posts & topics"
+            stats_and_thresholds:
+              title: "Stats & thresholds"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
@@ -6259,8 +6276,8 @@ en:
             toggle_description: "Color palette can be selected by users"
           colors:
             title: "Colors"
-          fonts_and_logos_hint: "Looking to update your fonts and logos?"
-          go_to_branding: "Go to Branding"
+          logo_and_fonts_hint: "Looking to update your logo and fonts?"
+          go_to_logo_and_fonts: "Go to Logo & fonts"
           save_changes: "Save changes"
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
