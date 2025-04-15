@@ -348,7 +348,7 @@ GEM
       openssl (> 2.0)
     optimist (3.2.1)
     ostruct (0.6.1)
-    parallel (1.26.3)
+    parallel (1.27.0)
     parallel_tests (5.1.0)
       parallel
     parser (3.3.8.0)
@@ -971,7 +971,7 @@ CHECKSUMS
   openssl-signature_algorithm (1.3.0) sha256=a3b40b5e8276162d4a6e50c7c97cdaf1446f9b2c3946a6fa2c14628e0c957e80
   optimist (3.2.1) sha256=8cf8a0fd69f3aa24ab48885d3a666717c27bc3d9edd6e976e18b9d771e72e34e
   ostruct (0.6.1) sha256=09a3fb7ecc1fa4039f25418cc05ae9c82bd520472c5c6a6f515f03e4988cb817
-  parallel (1.26.3) sha256=d86babb7a2b814be9f4b81587bf0b6ce2da7d45969fab24d8ae4bf2bb4d4c7ef
+  parallel (1.27.0) sha256=4ac151e1806b755fb4e2dc2332cbf0e54f2e24ba821ff2d3dcf86bf6dc4ae130
   parallel_tests (5.1.0) sha256=c8cc0eef06577543dc3e09220ac5271809d9a1c65fa52ef86dd759bb4cb5aba5
   parser (3.3.8.0) sha256=2476364142b307fa5a1b1ece44f260728be23858a9c71078e956131a75453c45
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
