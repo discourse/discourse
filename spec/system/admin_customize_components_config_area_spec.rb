@@ -323,6 +323,25 @@ describe "Admin Customize Themes Config Area Page", type: :system do
         expect(config_area.component(remote_component_with_update.id)).to be_not_pending_update
       end
     end
+
+    it "loads more components when scrolling to the bottom" do
+      Fabricate.times(4, :theme, component: true)
+
+      stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 4) do
+        resize_window(height: 800) do
+          config_area.visit
+
+          expect(config_area.components_shown.size).to eq(4)
+
+          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+
+          expect(config_area).to be_loading
+          expect(config_area).to have_component(enabled_component.id)
+
+          expect(config_area.components_shown.size).to eq(8)
+        end
+      end
+    end
   end
 
   context "when there are no components installed" do

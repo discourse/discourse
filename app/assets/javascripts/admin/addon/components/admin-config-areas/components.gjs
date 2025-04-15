@@ -11,6 +11,7 @@ import DSelect from "discourse/components/d-select";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
+import LoadMore from "discourse/components/load-more";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
@@ -55,6 +56,10 @@ export default class AdminConfigAreasComponents extends Component {
   @tracked nameFilter;
   @tracked statusFilter;
   @tracked hasComponents = false;
+  @tracked loadingMore = false;
+
+  page = 0;
+  hasMore = false;
 
   constructor() {
     super(...arguments);
@@ -101,31 +106,58 @@ export default class AdminConfigAreasComponents extends Component {
   onNameFilterChange(event) {
     this.loading = true;
     this.nameFilter = event.target.value;
+    this.page = 0;
     discourseDebounce(this, this.load, INPUT_DELAY);
   }
 
   @action
   onStatusFilterChange(value) {
+    this.loading = true;
     this.statusFilter = value;
+    this.page = 0;
     this.load();
   }
 
   @action
-  async load() {
-    this.loading = true;
-
+  async load({ append = false } = {}) {
     try {
       const data = await ajax("/admin/config/customize/components", {
-        data: { name: this.nameFilter, status: this.statusFilter },
+        data: {
+          name: this.nameFilter,
+          status: this.statusFilter,
+          page: this.page,
+        },
       });
 
-      this.components = data.components;
+      if (append) {
+        this.components = [...this.components, ...data.components];
+      } else {
+        this.components = data.components;
+      }
+      this.hasMore = data.has_more;
 
       if (!this.hasComponents && !this.nameFilter && !this.statusFilter) {
         this.hasComponents = !!data.components.length;
       }
     } finally {
       this.loading = false;
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore) {
+      return;
+    }
+
+    if (this.hasMore) {
+      this.page += 1;
+      this.loadingMore = true;
+      try {
+        await this.load({ append: true });
+      } finally {
+        this.loadingMore = false;
+      }
     }
   }
 
@@ -182,25 +214,28 @@ export default class AdminConfigAreasComponents extends Component {
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
-          <table class="d-admin-table component-list">
-            <thead>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.name"
-                }}</th>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.used_on"
-                }}</th>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.enabled"
-                }}</th>
-              <th></th>
-            </thead>
-            <tbody>
-              {{#each this.components as |comp|}}
-                <ComponentRow @component={{comp}} @refresh={{this.load}} />
-              {{/each}}
-            </tbody>
-          </table>
+          <LoadMore @selector=".component-list tr" @action={{this.loadMore}}>
+            <table class="d-admin-table component-list">
+              <thead>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.name"
+                  }}</th>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.used_on"
+                  }}</th>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.enabled"
+                  }}</th>
+                <th></th>
+              </thead>
+              <tbody>
+                {{#each this.components as |comp|}}
+                  <ComponentRow @component={{comp}} @refresh={{this.load}} />
+                {{/each}}
+              </tbody>
+            </table>
+            <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+          </LoadMore>
         {{else}}
           {{#if this.hasComponents}}
             {{i18n
