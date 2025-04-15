@@ -21,9 +21,9 @@ export default function prepareFormTemplateData(form, formTemplate) {
 
   // Validate the form template
   _validateFormTemplateData(form);
-  if (!form.checkValidity()) {
-    return false;
-  }
+  // if (!form.checkValidity()) {
+  //   return false;
+  // }
 
   // Gather form template data
   const formDetails = [];
