@@ -225,16 +225,22 @@ describe "Admin Logo and Fonts Page", type: :system do
       logo_and_fonts_page.visit
       logo_and_fonts_page.fonts_form.select_font("base", "helvetica")
 
-      expect(logo_and_fonts_page.fonts_form).to have_no_font("heading", "Oswald")
+      expect(logo_and_fonts_page.fonts_form).to have_no_font("heading", "JetBrains Mono")
       logo_and_fonts_page.fonts_form.show_more_fonts("heading")
-      logo_and_fonts_page.fonts_form.select_font("heading", "oswald")
+      logo_and_fonts_page.fonts_form.select_font("heading", "jet-brains-mono")
 
       logo_and_fonts_page.fonts_form.submit
       expect(logo_and_fonts_page.fonts_form).to have_saved_successfully
 
+      expect(page.find("html")["style"]).to include(
+        "font-family: Helvetica; --heading-font-family: JetBrains Mono",
+      )
+
       logo_and_fonts_page.visit
       expect(logo_and_fonts_page.fonts_form.active_font("base")).to eq("Helvetica")
-      expect(logo_and_fonts_page.fonts_form.active_font("heading")).to eq("Oswald")
+
+      logo_and_fonts_page.visit
+      expect(logo_and_fonts_page.fonts_form.active_font("heading")).to eq("JetBrains Mono")
     end
 
     it "allows an admin to change default text size and does not update existing users preferences" do
@@ -251,6 +257,8 @@ describe "Admin Logo and Fonts Page", type: :system do
       modal.close
       expect(modal).to be_closed
       expect(logo_and_fonts_page.fonts_form).to have_saved_successfully
+
+      expect(page.find("html")["class"]).to include("text-size-larger")
 
       visit "/"
       expect(page).to have_css("html.text-size-normal")
