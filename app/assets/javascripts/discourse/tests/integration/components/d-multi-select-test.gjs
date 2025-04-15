@@ -21,11 +21,13 @@ class TestComponent extends Component {
   }
 
   @action
-  async loadFn() {
+  async loadFn(filter) {
     return [
       { id: 1, name: "foo" },
       { id: 2, name: "bar" },
-    ];
+    ].filter((item) => {
+      return item.name.toLowerCase().includes(filter.toLowerCase());
+    });
   }
 
   <template>
@@ -47,22 +49,7 @@ module("Integration | Component | d-multi-select", function (hooks) {
   setupRenderingTest(hooks);
 
   test("filter", async function (assert) {
-    const selection = [{ id: 1, name: "foo" }];
-
-    const loadFn = async (filter) => {
-      return [
-        { id: 1, name: "foo" },
-        { id: 2, name: "bar" },
-      ].filter((item) => {
-        return item.name.toLowerCase().includes(filter.toLowerCase());
-      });
-    };
-
-    await render(
-      <template>
-        <TestComponent @selection={{selection}} @loadFn={{loadFn}} />
-      </template>
-    );
+    await render(<template><TestComponent /></template>);
 
     await click(".d-multi-select-trigger");
     await fillIn(".d-multi-select__search-input", "bar");
