@@ -60,8 +60,6 @@ const DEFAULT_BINDINGS = {
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
-  "ctrl+f": { handler: "showPageSearch", anonymous: true },
-  "command+f": { handler: "showPageSearch", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack", anonymous: true },
   "command+[": { handler: "webviewKeyboardBack", anonymous: true },
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },

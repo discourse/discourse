@@ -2203,6 +2203,7 @@ en:
     user_tips:
       button: "Got it!"
       skip: "Skip tips"
+      dont_show_again: "Don't show this again"
 
       first_notification:
         title: "Your first notification!"
@@ -4564,6 +4565,7 @@ en:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
+      search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
