@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
@@ -24,15 +25,17 @@ export default class BulkUserDeleteConfirmation extends Component {
   callAfterBulkDelete = false;
   blockIpAndEmail = false;
 
-  constructor() {
-    super(...arguments);
+  logsListener = modifierFn((element) => {
+    console.log("connected");
     this.messageBus.subscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
-  }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.messageBus.unsubscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
-  }
+    element.dataset.mbProgressConnected = true;
+
+    return () => {
+      this.messageBus.unsubscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
+      delete element.dataset.mbProgressConnected;
+    };
+  });
 
   get confirmDeletePhrase() {
     return i18n(
@@ -62,6 +65,7 @@ export default class BulkUserDeleteConfirmation extends Component {
 
   @bind
   onDeleteProgress(data) {
+    console.log(data);
     if (data.success) {
       this.#logSuccess(
         i18n(
@@ -116,6 +120,7 @@ export default class BulkUserDeleteConfirmation extends Component {
     );
 
     try {
+      console.log("will start request");
       await ajax("/admin/users/destroy-bulk.json", {
         type: "DELETE",
         data: {
@@ -123,6 +128,7 @@ export default class BulkUserDeleteConfirmation extends Component {
           block_ip_and_email: this.blockIpAndEmail,
         },
       });
+      console.log("delete started");
       this.callAfterBulkDelete = true;
     } catch (err) {
       this.#logError(extractError(err));
@@ -151,6 +157,7 @@ export default class BulkUserDeleteConfirmation extends Component {
         "admin.users.bulk_actions.delete.confirmation_modal.title"
         count=@model.userIds.length
       }}
+      {{this.logsListener}}
     >
       <:body>
         {{#if this.deleteStarted}}
