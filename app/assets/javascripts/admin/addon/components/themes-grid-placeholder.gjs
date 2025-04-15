@@ -125,11 +125,7 @@ export default class ThemesGridPlaceholder extends Component {
         viewBox="0 0 800 200"
         preserveAspectRatio="xMidYMid slice"
       >
-        <rect
-          fill={{this.safeThemeColors.tertiary}}
-          width="800"
-          height="200"
-        />
+        <rect fill={{this.safeThemeColors.tertiary}} width="800" height="200" />
         <defs>
           <radialGradient
             id="{{this.gradientId}}-a"
