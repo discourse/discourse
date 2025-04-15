@@ -8,7 +8,7 @@ module PageObjects
       def confirm
         confirm_button.click
 
-        expect(page).to have_no_css?(MODAL_SELECTOR)
+        expect(page).to have_no_css(MODAL_SELECTOR)
       end
 
       def confirm_button
