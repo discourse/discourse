@@ -4,7 +4,14 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 
 export default RouteTemplate(
   <template>
-    <GroupList @controller={{@controller}} />
+    <GroupList
+      @controller={{@controller}}
+      @groups={{@model.groups}}
+      @type={{@controller.type}}
+      @filter={{@controller.filter}}
+      @onTypeChanged={{@controller.onTypeChanged}}
+      @onFilterChanged={{@controller.onFilterChanged}}
+    />
 
     <PluginOutlet
       @name="after-groups-index-container"
