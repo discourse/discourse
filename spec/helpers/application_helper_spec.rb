@@ -785,8 +785,8 @@ RSpec.describe ApplicationHelper do
     let!(:modifier) { :meta_data_content }
     let!(:block) do
       Proc.new do |content, property, opts|
-        content = "modified by plugin" if property == :description
-        content = "BIG TITLE" if property == :title
+        next "modified by plugin" if property == :description
+        next "BIG TITLE" if property == :title
         content
       end
     end
