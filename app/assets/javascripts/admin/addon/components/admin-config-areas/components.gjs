@@ -268,11 +268,9 @@ class ComponentRow extends Component {
 
   get description() {
     const remoteUrl = this.args.component.remote_theme?.remote_url;
-    if (!remoteUrl) {
-      return;
-    }
     return (
-      this.args.component.description ?? descriptionForRemoteUrl(remoteUrl)
+      this.args.component.description ??
+      (remoteUrl && descriptionForRemoteUrl(remoteUrl))
     );
   }
 
