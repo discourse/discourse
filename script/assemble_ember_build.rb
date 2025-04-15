@@ -49,8 +49,24 @@ def build_info
 end
 
 def existing_core_build_usable?
-  return false if !File.exist?(BUILD_INFO_FILE)
-  JSON.parse(File.read(BUILD_INFO_FILE)) == build_info
+  if !File.exist?(BUILD_INFO_FILE)
+    STDERR.puts "No existing build info file found."
+    return false
+  end
+
+  existing = JSON.parse(File.read(BUILD_INFO_FILE))
+  expected = build_info
+
+  if existing == expected
+    true
+  else
+    STDERR.puts <<~MSG
+      Existing build is not reusable.
+      - Existing: #{existing.inspect}
+      - Current: #{expected.inspect}
+    MSG
+    false
+  end
 end
 
 build_cmd = %w[pnpm ember build]
