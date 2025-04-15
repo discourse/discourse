@@ -97,7 +97,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
         remote_component_with_update.id,
       )
 
-      config_area.select_filter("updates_available")
+      config_area.status_selector.select("updates_available")
 
       expect(config_area.components_shown).to contain_exactly(remote_component_with_update.id)
     end
