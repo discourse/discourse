@@ -58,6 +58,8 @@ module PageObjects
           pw_page.locator("#{COMPOSER_ID} .d-editor .d-editor-input").press_sequentially(content)
         end
 
+        sleep 0.1
+
         self
       end
 
