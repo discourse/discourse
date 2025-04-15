@@ -471,7 +471,7 @@ export default class SearchMenu extends Component {
           <DButton
             @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}
-            class="btn-flat"
+            class="btn-flat btn-cancel-mobile-search"
             data-test-button="cancel-search-mobile"
           />
         {{/if}}
