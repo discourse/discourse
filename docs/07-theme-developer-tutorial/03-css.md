@@ -4,7 +4,7 @@ short_title: 3 - CSS
 id: theme-developer-tutorial-css
 ---
 
-Technically, Discourse uses [SCSS](https://sass-lang.com/) to author its stylesheets. However, we're increasingly moving towards native CSS features as they mature, so the vast majority of themes won't need to use SCSS features or syntaxes. We follow a [variant of BEM for our CSS](TBA), you should be familiar with this when writing theme CSS.
+Technically, Discourse uses [SCSS](https://sass-lang.com/) to author its stylesheets. However, we're increasingly moving towards native CSS features as they mature, so the vast majority of themes won't need to use SCSS features or syntaxes. We follow a [variant of BEM for our CSS](https://meta.discourse.org/t/361851), you should be familiar with this when writing theme CSS.
 
 This chapter will focus on Discourse-specific subjects, so if you don't already have a passing familiarity with CSS, take some time to learn about it from
 
