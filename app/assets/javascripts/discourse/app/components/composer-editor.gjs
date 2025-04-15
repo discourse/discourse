@@ -951,7 +951,8 @@ export default class ComposerEditor extends Component {
   async updateFormPreview() {
     const formTemplateData = prepareFormTemplateData(
       document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate
+      this.composer.selectedFormTemplate,
+      false
     );
 
     if (formTemplateData) {

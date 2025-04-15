@@ -7,15 +7,24 @@ describe "Composer Form Template Validations", type: :system do
       :form_template,
       name: "Bug Reports",
       template:
-        "- type: input
-  id: full-name
-  attributes:
-    label: What is your full name?
-    placeholder: John Doe
-  validations:
-    required: true
-    type: email
-    minimum: 10",
+        %Q(
+        - type: input
+          id: full-name
+          attributes:
+            label: "What is your full name?"
+            placeholder: "John Doe"
+          validations:
+            required: true
+            type: email
+            minimum: 10
+
+        - type: textarea
+          id: full-text
+          attributes:
+            label: "Text"
+            placeholder: "Full text"
+          validations:
+            required: false),
     )
   end
 
@@ -58,6 +67,28 @@ describe "Composer Form Template Validations", type: :system do
   before do
     SiteSetting.experimental_form_templates = true
     sign_in user
+  end
+
+  context "when user is using preview" do
+    context "when user is typing" do
+      it "shows the cooked form if the user doesn't fill the required field first" do
+        category_page.visit(category_with_template)
+        category_page.new_topic_button.click
+
+        composer.fill_title(topic_title)
+        textarea = find("textarea")
+        message = "This is a test message!"
+
+        textarea.fill_in(with: message)
+
+        expect(composer).to have_no_form_template_field_error(
+          I18n.t("js.form_templates.errors.value_missing.default"),
+        )
+
+        preview = find(".d-editor-preview")
+        expect(preview).to have_content(message)
+      end
+    end
   end
 
   it "shows an asterisk on the label of the required fields" do
