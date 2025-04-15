@@ -3115,6 +3115,7 @@ search:
     client: true
     type: enum
     enum: "SearchExperienceSiteSetting"
+    themeable: true
 
 uncategorized:
   version_checks:
