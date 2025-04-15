@@ -247,6 +247,7 @@
 
       &.empty-panel {
         height: auto;
+        min-height: 3.66em; // must be equal to `.d-header` height
       }
 
       &.slide-in {
