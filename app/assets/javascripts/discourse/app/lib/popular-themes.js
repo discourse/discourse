@@ -128,3 +128,8 @@ export const POPULAR_THEMES = [
     component: true,
   },
 ];
+
+export function descriptionForRemoteUrl(url) {
+  url = url.replace(/\.git$/, "");
+  return POPULAR_THEMES.find((obj) => obj.value === url)?.description;
+}

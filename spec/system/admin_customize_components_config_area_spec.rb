@@ -57,7 +57,10 @@ describe "Admin Customize Themes Config Area Page", type: :system do
         component: true,
         enabled: false,
         remote_theme:
-          RemoteTheme.create!(remote_url: "https://github.com/discourse/tc-2", commits_behind: 4),
+          RemoteTheme.create!(
+            remote_url: "https://github.com/discourse/discourse-kanban-theme.git",
+            commits_behind: 4,
+          ),
       )
     end
 
@@ -140,6 +143,9 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       expect(config_area.component(remote_component.id)).to have_author("CDCK Inc.")
       expect(config_area.component(remote_component.id)).to have_description(
         "Description of my remote component",
+      )
+      expect(config_area.component(remote_component_with_update.id)).to have_description(
+        "Display and organize topics using a Kanban board interface.",
       )
       expect(config_area.component(remote_component.id)).to be_not_pending_update
 

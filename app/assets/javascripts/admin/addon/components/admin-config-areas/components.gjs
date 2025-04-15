@@ -18,6 +18,7 @@ import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import InstallComponentModal from "admin/components/modal/install-theme";
@@ -300,6 +301,14 @@ class ComponentRow extends Component {
     }
   }
 
+  get description() {
+    const remoteUrl = this.args.component.remote_theme?.remote_url;
+    return (
+      this.args.component.description ??
+      (remoteUrl && descriptionForRemoteUrl(remoteUrl))
+    );
+  }
+
   @action
   async toggleEnabled() {
     this.disableToggle = true;
@@ -437,11 +446,11 @@ class ComponentRow extends Component {
               (hash name=@component.remote_theme.authors)
             }}</div>
         {{/if}}
-        {{#if @component.description}}
+        {{#if this.description}}
           <div
             class="d-admin-row__overview-about admin-config-components__description"
           >
-            {{@component.description}}
+            {{this.description}}
             {{#if @component.remote_theme.about_url}}
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"
