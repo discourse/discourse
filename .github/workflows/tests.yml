@@ -26,44 +26,12 @@ permissions:
   contents: read
 
 jobs:
-  precompile_assets:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: "Precompile Assets"
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
-    container: discourse/discourse_test:release
-    timeout-minutes: 20
-    env: 
-      EMBER_ENV: development
-      CHEAP_SOURCE_MAPS: "1"
-
-    steps:
-      - name: Set working directory owner
-        run: chown root:root .
-
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-
-      - name: Setup ember build cache
-        uses: actions/cache@v4
-        id: ember-build-cache
-        with:
-          path: app/assets/javascripts/discourse/dist
-          key: ember-build-${{ github.run_id }}
-
-      - name: Ember Build
-        run: script/assemble_ember_build.rb
-
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 20
-    needs: precompile_assets
 
     env:
       RAILS_ENV: test
@@ -77,7 +45,6 @@ jobs:
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
-      EMBER_ENV: development
 
     strategy:
       fail-fast: false
@@ -272,31 +239,19 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
-      - name: Fetch ember build cache
-        uses: actions/cache@v4
-        id: ember-build-cache
-        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        with:
-          path: app/assets/javascripts/discourse/dist
-          key: ember-build-${{ github.run_id }}
-
-      - name: Ember Build
-        if: matrix.build_type == 'asset_precompile' || matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: script/assemble_ember_build.rb
-
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_BUILD=0 bin/rake qunit:test
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
         timeout-minutes: 30
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_BUILD=0 bin/rake plugin:qunit['*']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
         timeout-minutes: 30
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test QUNIT_BUILD=0 bin/rake themes:qunit_all_official
+        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
         timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
@@ -304,6 +259,10 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
+
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
