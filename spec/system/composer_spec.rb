@@ -66,7 +66,7 @@ describe "Composer", type: :system do
 
       expect(composer).to be_opened
 
-      composer.fill_content("@")
+      composer.fill_content(" @")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, user.username, topic_user.username],
