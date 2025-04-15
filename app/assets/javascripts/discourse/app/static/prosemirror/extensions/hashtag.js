@@ -68,6 +68,7 @@ const extension = {
 
   serializeNode: {
     hashtag(state, node, parent, index) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }

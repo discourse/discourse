@@ -11,9 +11,14 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminFontChooser from "admin/components/admin-font-chooser";
-import { DEFAULT_TEXT_SIZES } from "admin/lib/constants";
+import {
+  DEFAULT_TEXT_SIZES,
+  MAIN_FONTS,
+  MORE_FONTS,
+} from "admin/lib/constants";
 import eq from "truth-helpers/helpers/eq";
 
+const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
 export default class AdminFontsForm extends Component {
   @service siteSettings;
   @service siteSettingChangeTracker;
@@ -82,7 +87,12 @@ export default class AdminFontsForm extends Component {
           message: i18n("admin.config.logo_and_fonts.fonts.form.saved"),
         },
       });
-      this.siteSettingChangeTracker.refreshPage();
+      this.siteSettingChangeTracker.refreshPage({
+        base_font: ALL_FONTS.find((font) => font.key === data.base_font).name,
+        heading_font: ALL_FONTS.find((font) => font.key === data.heading_font)
+          .name,
+        default_text_size: data.default_text_size,
+      });
     } catch (err) {
       this.toasts.error({
         duration: 3000,

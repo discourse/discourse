@@ -82,7 +82,7 @@ export default class AdminLogoForm extends Component {
           message: i18n("admin.config.logo_and_fonts.logo.form.saved"),
         },
       });
-      this.siteSettingChangeTracker.refreshPage();
+      this.siteSettingChangeTracker.refreshPage(data);
     } catch (err) {
       this.toasts.error({
         duration: 3000,

@@ -270,7 +270,7 @@ module ApplicationHelper
     (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
-  def crawlable_title_content
+  def title_content
     DiscoursePluginRegistry.apply_modifier(
       :meta_data_content,
       content_for(:title) || SiteSetting.title,
@@ -279,7 +279,7 @@ module ApplicationHelper
     )
   end
 
-  def crawlable_description_content
+  def description_content
     DiscoursePluginRegistry.apply_modifier(
       :meta_data_content,
       @description_meta || SiteSetting.site_description,

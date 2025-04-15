@@ -130,11 +130,6 @@
     padding-top: 0.2rem;
   }
 
-  .composing-whisper & {
-    font-style: italic;
-    color: var(--primary-medium);
-  }
-
   .onebox-wrapper {
     white-space: normal;
   }
@@ -198,7 +193,6 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }
@@ -227,6 +221,7 @@
 
 .ProseMirror-selectednode {
   outline: 2px solid #8cf;
+  border-radius: var(--d-border-radius);
 }
 
 /* Make sure li selections wrap around markers */

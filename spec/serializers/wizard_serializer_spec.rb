@@ -55,7 +55,7 @@ RSpec.describe WizardSerializer do
       steps = json["wizard"]["steps"]
 
       expect(steps.first["id"]).to eq("introduction")
-      expect(steps.last["id"]).to eq("corporate")
+      expect(steps.last["id"]).to eq("ready")
 
       privacy_step = steps.find { |s| s["id"] == "privacy" }
       expect(privacy_step).to_not be_nil

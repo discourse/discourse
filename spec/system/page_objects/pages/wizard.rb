@@ -31,10 +31,6 @@ module PageObjects
         find(".wizard-container__button.jump-in").click
       end
 
-      def click_configure_more
-        find(".wizard-container__button.configure-more").click
-      end
-
       def go_to_next_step
         find(".wizard-container__button.next").click
       end

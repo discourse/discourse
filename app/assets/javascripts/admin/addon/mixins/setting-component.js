@@ -211,7 +211,9 @@ export default Mixin.create({
       this.buffered.applyChanges();
 
       if (this.setting.requiresReload) {
-        this.siteSettingChangeTracker.refreshPage();
+        this.siteSettingChangeTracker.refreshPage({
+          [this.setting.setting]: this.setting.value,
+        });
       }
     } catch (e) {
       const json = e.jqXHR?.responseJSON;

@@ -14,9 +14,8 @@ class Wizard
       append_introduction_step
       append_privacy_step
       append_styling_step
-      append_ready_step
       append_branding_step
-      append_corporate_step
+      append_ready_step
 
       DiscourseEvent.trigger(:build_wizard, @wizard)
       @wizard
@@ -300,36 +299,6 @@ class Wizard
 
           if updater.setting_changed?(:default_dark_mode_color_scheme_id) || theme_changed
             updater.refresh_required = true
-          end
-        end
-      end
-    end
-
-    def append_corporate_step
-      @wizard.append_step("corporate") do |step|
-        step.emoji = "briefcase"
-        step.description_vars = { base_path: Discourse.base_path }
-        step.add_field(id: "company_name", type: "text", value: SiteSetting.company_name)
-        step.add_field(id: "governing_law", type: "text", value: SiteSetting.governing_law)
-        step.add_field(id: "contact_url", type: "text", value: SiteSetting.contact_url)
-        step.add_field(id: "city_for_disputes", type: "text", value: SiteSetting.city_for_disputes)
-        step.add_field(id: "contact_email", type: "text", value: SiteSetting.contact_email)
-
-        step.on_update do |updater|
-          update_tos do |raw|
-            replace_setting_value(updater, raw, "company_name")
-            replace_setting_value(updater, raw, "governing_law")
-            replace_setting_value(updater, raw, "city_for_disputes")
-          end
-
-          if updater.errors.blank?
-            updater.apply_settings(
-              :company_name,
-              :governing_law,
-              :city_for_disputes,
-              :contact_url,
-              :contact_email,
-            )
           end
         end
       end

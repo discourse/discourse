@@ -146,6 +146,7 @@ const extension = {
   serializeNode({ utils: { isBoundary } }) {
     return {
       local_date(state, node, parent, index) {
+        state.flushClose();
         if (!isBoundary(state.out, state.out.length - 1)) {
           state.write(" ");
         }
@@ -166,6 +167,7 @@ const extension = {
         }
       },
       local_date_range(state, node, parent, index) {
+        state.flushClose();
         if (!isBoundary(state.out, state.out.length - 1)) {
           state.write(" ");
         }

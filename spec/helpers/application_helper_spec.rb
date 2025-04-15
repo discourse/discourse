@@ -745,10 +745,10 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe "#crawlable_title_content" do
+  describe "#title_content" do
     it "returns the correct title" do
       SiteSetting.title = "Test Title"
-      result = helper.crawlable_title_content
+      result = helper.title_content
 
       expect(result).to include("Test Title")
     end
@@ -757,16 +757,16 @@ RSpec.describe ApplicationHelper do
       helper.stubs(:content_for?).with(:title).returns(true)
       helper.stubs(:content_for).with(:title).returns("Custom Title")
 
-      result = helper.crawlable_title_content
+      result = helper.title_content
 
       expect(result).to include("Custom Title")
     end
   end
 
-  describe "#crawlable_description_content" do
+  describe "#description_content" do
     it "returns the correct description" do
       SiteSetting.site_description = "Test Description"
-      result = helper.crawlable_description_content
+      result = helper.description_content
 
       expect(result).to include("Test Description")
     end
@@ -774,7 +774,7 @@ RSpec.describe ApplicationHelper do
     it "accepts a content argument" do
       @description_meta = "Custom Description"
 
-      result = helper.crawlable_description_content
+      result = helper.description_content
 
       expect(result).to include("Custom Description")
     end
@@ -810,7 +810,7 @@ RSpec.describe ApplicationHelper do
     it "modifies the title tag" do
       plugin.register_modifier(:meta_data_content, &block)
 
-      title = helper.crawlable_title_content
+      title = helper.title_content
 
       expect(title).to include("BIG TITLE")
     end
@@ -818,7 +818,7 @@ RSpec.describe ApplicationHelper do
     it "modifies the description tag" do
       plugin.register_modifier(:meta_data_content, &block)
 
-      description = helper.crawlable_description_content
+      description = helper.description_content
 
       expect(description).to include(" - modified by plugin")
     end

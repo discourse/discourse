@@ -69,7 +69,8 @@ const extension = {
   plugins: {
     props: {
       handleClickOn(view, pos, node, nodePos) {
-        if (pos > 2 || node.type.name !== "summary") {
+        // if the click position in the document is not the first within the summary node
+        if (pos > nodePos + 1 || node.type.name !== "summary") {
           return false;
         }
 

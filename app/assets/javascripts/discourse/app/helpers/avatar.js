@@ -1,7 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { avatarImg } from "discourse/lib/avatar-utils";
-import { registerRawHelper } from "discourse/lib/helpers";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -81,7 +80,6 @@ export function renderAvatar(user, options) {
   }
 }
 
-registerRawHelper("avatar", avatar);
 export default function avatar(user, params) {
   return htmlSafe(renderAvatar.call(this, user, params));
 }

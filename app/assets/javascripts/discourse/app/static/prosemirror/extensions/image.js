@@ -35,8 +35,8 @@ const extension = {
           getAttrs(dom) {
             return {
               src: dom.getAttribute("src"),
-              title: dom.getAttribute("title"),
-              alt: dom.getAttribute("alt"),
+              title: dom.getAttribute("title")?.replace(/\n/g, " "),
+              alt: dom.getAttribute("alt")?.replace(/\n/g, " "),
               width: dom.getAttribute("width"),
               height: dom.getAttribute("height"),
               originalSrc:

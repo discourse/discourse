@@ -222,11 +222,7 @@ export default class ParentCategoryRow extends CategoryListItem {
               {{#if this.showTopics}}
                 <td class="latest">
                   {{#each this.category.featuredTopics as |t|}}
-                    {{#if this.site.useGlimmerTopicList}}
-                      <FeaturedTopic @topic={{t}} />
-                    {{else}}
-                      <FeaturedTopic @topic={{t}} />
-                    {{/if}}
+                    <FeaturedTopic @topic={{t}} />
                   {{/each}}
                 </td>
                 <PluginOutlet

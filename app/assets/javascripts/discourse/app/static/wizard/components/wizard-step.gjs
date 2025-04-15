@@ -69,10 +69,6 @@ export default class WizardStepComponent extends Component {
     return isReady && !this.isFinalStep;
   }
 
-  get showConfigureMore() {
-    return this.id === "ready";
-  }
-
   get showJumpInButton() {
     return this.id === "ready" || this.isFinalStep;
   }
@@ -283,15 +279,6 @@ export default class WizardStepComponent extends Component {
                 class="wizard-container__button finish"
               >
                 {{i18n "wizard.finish"}}
-              </button>
-            {{else if this.showConfigureMore}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button configure-more"
-              >
-                {{i18n "wizard.configure_more"}}
               </button>
             {{/if}}
 

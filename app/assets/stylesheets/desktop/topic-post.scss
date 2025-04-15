@@ -493,6 +493,16 @@ blockquote {
   padding: 12px;
 }
 
+aside.quote .title {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+aside.quote .title + blockquote {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 /* quotes with attribution */
 .quote {
   & > blockquote {
