@@ -55,7 +55,7 @@ export default class DMultiSelect extends Component {
       return;
     }
 
-    const value = new Promise((resolve, reject) => {
+    const value = new RsvpPromise((resolve, reject) => {
       discourseDebounce(
         this,
         this.#resolveAsyncData,
