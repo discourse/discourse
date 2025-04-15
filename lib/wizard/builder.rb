@@ -14,8 +14,8 @@ class Wizard
       append_introduction_step
       append_privacy_step
       append_styling_step
-      append_ready_step
       append_branding_step
+      append_ready_step
       append_corporate_step
 
       DiscourseEvent.trigger(:build_wizard, @wizard)

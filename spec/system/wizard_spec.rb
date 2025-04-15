@@ -16,10 +16,10 @@ describe "Wizard", type: :system do
     wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("styling")
     wizard_page.go_to_next_step
-    expect(wizard_page).to be_on_step("ready")
-    wizard_page.click_configure_more
     expect(wizard_page).to be_on_step("branding")
     wizard_page.go_to_next_step
+    expect(wizard_page).to be_on_step("ready")
+    wizard_page.click_configure_more
     expect(wizard_page).to be_on_step("corporate")
     wizard_page.click_jump_in
     expect(page).to have_current_path("/latest")
@@ -72,7 +72,7 @@ describe "Wizard", type: :system do
       attach_file(file_path_2) { wizard_page.branding_step.click_upload_button("logo-small") }
       expect(wizard_page.branding_step).to have_upload("logo-small")
       wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("corporate")
+      expect(wizard_page).to be_on_step("ready")
 
       expect(SiteSetting.logo).to eq(Upload.find_by(original_filename: File.basename(file_path_1)))
       expect(SiteSetting.logo_small).to eq(
@@ -91,7 +91,7 @@ describe "Wizard", type: :system do
       wizard_page.styling_step.select_homepage_style_option("hot")
 
       wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("ready")
+      expect(wizard_page).to be_on_step("branding")
 
       expect(Theme.find_default.color_scheme_id).to eq(
         ColorScheme.find_by(base_scheme_id: "Dark", via_wizard: true).id,
@@ -117,7 +117,7 @@ describe "Wizard", type: :system do
       wizard_page.styling_step.select_heading_font_option("inter")
 
       wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("ready")
+      expect(wizard_page).to be_on_step("branding")
 
       expect(SiteSetting.base_font).to eq("roboto")
       expect(SiteSetting.heading_font).to eq("inter")
