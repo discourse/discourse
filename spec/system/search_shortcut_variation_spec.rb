@@ -8,15 +8,6 @@ describe "Search | Shortcuts for variations of search input", type: :system do
 
   before { sign_in(current_user) }
 
-  it "displays a one time toast telling the user that / should be used to search, not Ctrl+F, when Ctrl+F is pressed" do
-    visit("/")
-    search_page.browser_search_shortcut
-    expect(page).to have_content(I18n.t("js.keyboard_shortcuts_help.search_ctrl_f_tip"))
-    page.find(".fk-d-default-toast__actions .btn").click
-    search_page.browser_search_shortcut
-    expect(page).to have_no_content(I18n.t("js.keyboard_shortcuts_help.search_ctrl_f_tip"))
-  end
-
   context "when search_experience is search_field" do
     before { SiteSetting.search_experience = "search_field" }
 

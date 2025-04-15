@@ -12,7 +12,6 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
-import { i18n } from "discourse-i18n";
 
 let disabledBindings = [];
 export function disableDefaultKeyboardShortcuts(bindings) {
@@ -61,8 +60,6 @@ const DEFAULT_BINDINGS = {
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
-  "ctrl+f": { handler: "maybeShowSearchTip", anonymous: true },
-  "command+f": { handler: "maybeShowSearchTip", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack", anonymous: true },
   "command+[": { handler: "webviewKeyboardBack", anonymous: true },
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
@@ -457,26 +454,6 @@ export default {
         type: "page-search",
         event,
       });
-    });
-  },
-
-  maybeShowSearchTip() {
-    // TODO (martin) only do this if the user hasn't said never do this again
-    const toasts = getOwner(this).lookup("service:toasts");
-    toasts.info({
-      data: {
-        message: i18n("keyboard_shortcuts_help.search_ctrl_f_tip"),
-        actions: [
-          {
-            label: i18n("user_tips.dont_show_again"),
-            action: () => {
-              // TODO (martin) set the user pref here
-            },
-          },
-        ],
-        isHtmlMessage: true,
-      },
-      duration: 10000,
     });
   },
 
