@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import {
   click,
+  fillIn,
   render,
   triggerEvent,
   triggerKeyEvent,
@@ -44,6 +45,31 @@ class TestComponent extends Component {
 
 module("Integration | Component | d-multi-select", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("filter", async function (assert) {
+    const selection = [{ id: 1, name: "foo" }];
+
+    const loadFn = async (filter) => {
+      return [
+        { id: 1, name: "foo" },
+        { id: 2, name: "bar" },
+      ].filter((item) => {
+        return item.name.toLowerCase().includes(filter.toLowerCase());
+      });
+    };
+
+    await render(
+      <template>
+        <TestComponent @selection={{selection}} @loadFn={{loadFn}} />
+      </template>
+    );
+
+    await click(".d-multi-select-trigger");
+    await fillIn(".d-multi-select__search-input", "bar");
+
+    assert.dom(".d-multi-select__result:nth-child(1)").hasText("bar");
+    assert.dom(".d-multi-select__result:nth-child(2)").doesNotExist();
+  });
 
   test("@selection", async function (assert) {
     const selection = [{ id: 1, name: "foo" }];
