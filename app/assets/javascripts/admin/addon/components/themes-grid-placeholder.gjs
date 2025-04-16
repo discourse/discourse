@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import { eq } from "truth-helpers";
 
 export default class ThemesGridPlaceholder extends Component {
+  randomVariant = Math.floor(Math.random() * 4);
+
   get themeColors() {
     if (this.args.theme.color_scheme) {
       return {
@@ -43,30 +46,13 @@ export default class ThemesGridPlaceholder extends Component {
     };
   }
 
-  randomVariant = Math.floor(Math.random() * 4) + 1);
-
   get gradientId() {
     return `bgGradient-${this.args.theme.id}-${this.randomVariant}`;
   }
 
-  get placeholderStyle1() {
-    return this.randomVariant === 1;
-  }
-
-  get placeholderStyle2() {
-    return this.randomVariant === 2;
-  }
-
-  get placeholderStyle3() {
-    return this.randomVariant === 3;
-  }
-
-  get placeholderStyle4() {
-    return this.randomVariant === 4;
-  }
-
   <template>
-    {{#if this.placeholderStyle1}}
+    {{#if (eq this.randomVariant 0)}}
+      <!-- mesh -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -115,7 +101,8 @@ export default class ThemesGridPlaceholder extends Component {
           </g>
         </g>
       </svg>
-    {{else if this.placeholderStyle2}}
+    {{else if (eq this.randomVariant 1)}}
+      <!-- soft blur -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -217,7 +204,8 @@ export default class ThemesGridPlaceholder extends Component {
         <rect fill="url(#{{this.gradientId}}-e)" width="800" height="200" />
         <rect fill="url(#{{this.gradientId}}-f)" width="800" height="200" />
       </svg>
-    {{else if this.placeholderStyle3}}
+    {{else if (eq this.randomVariant 2)}}
+      <!-- layered waves -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -273,7 +261,8 @@ export default class ThemesGridPlaceholder extends Component {
           />
         </g>
       </svg>
-    {{else if this.placeholderStyle4}}
+    {{else if (eq this.randomVariant 3)}}
+      <!-- envelope -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
