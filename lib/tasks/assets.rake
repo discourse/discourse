@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-task "assets:precompile:prereqs" do
-  if %w[profile production].exclude? Rails.env
-    raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
-  end
-end
-
 task "assets:precompile:build" do
   if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
     ember_version = ENV["EMBER_VERSION"] || "5"
@@ -29,44 +23,9 @@ task "assets:precompile:build" do
   end
 end
 
-task "assets:precompile:before": %w[
-       environment
-       assets:precompile:prereqs
-       assets:precompile:build
-     ] do
-  require "open3"
-
-  # Ensure we ALWAYS do a clean build
-  # We use many .erbs that get out of date quickly, especially with plugins
-  STDERR.puts "Purging temp files"
-  `rm -fr #{Rails.root}/tmp/cache`
-
-  Rails.configuration.assets.js_compressor = nil
-  Rails.configuration.assets.gzip = false
-
-  STDERR.puts "Bundling assets"
-
-  # in the past we applied a patch that removed asset postfixes, but it is terrible practice
-  # leaving very complicated build issues
-  # https://github.com/rails/sprockets-rails/issues/49
-
-  require "sprockets"
-  require "digest/sha1"
-end
+task "assets:precompile:before": %w[environment assets:precompile:build]
 
 task "assets:precompile:css" => "environment" do
-  class Sprockets::Manifest
-    def reload
-      @filename = find_directory_manifest(@directory)
-      @data = json_decode(File.read(@filename))
-    end
-  end
-
-  # cause on boot we loaded a blank manifest,
-  # we need to know where all the assets are to precompile CSS
-  # cause CSS uses asset_path
-  Rails.application.assets_manifest.reload
-
   if ENV["DONT_PRECOMPILE_CSS"] == "1" || ENV["SKIP_DB_AND_REDIS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
@@ -109,22 +68,9 @@ def assets_path
   "#{Rails.root}/public/assets"
 end
 
-def global_path_klass
-  @global_path_klass ||= Class.new { extend GlobalPath }
-end
-
-def cdn_path(p)
-  global_path_klass.cdn_path(p)
-end
-
-def cdn_relative_path(p)
-  global_path_klass.cdn_relative_path(p)
-end
-
 def gzip(path)
-  STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
-  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`.strip
-  raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+  cmd = "gzip -f -c -9 #{path} > #{path}.gz"
+  system cmd, exception: true
 end
 
 def brotli_command(path)
@@ -133,11 +79,7 @@ def brotli_command(path)
 end
 
 def brotli(path)
-  STDERR.puts brotli_command(path)
-  STDERR.puts `#{brotli_command(path)}`
-  raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
-  STDERR.puts `chmod +r #{path}.br`.strip
-  raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+  system brotli_command(path), exception: true
 end
 
 def concurrent?
@@ -169,42 +111,34 @@ def log_task_duration(task_description, &task)
 end
 
 task "assets:precompile:compress_js": "environment" do
-  puts "Compressing Javascript and Generating Source Maps"
-  manifest = Sprockets::Manifest.new(assets_path)
+  puts "Compressing JavaScript files"
 
-  locales = Set.new(["en"])
-
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    locales.add(SiteSetting.default_locale)
-  end
+  load_path = Rails.application.assets.load_path
 
   log_task_duration("Done compressing all JS files") do
     concurrent? do |proc|
-      manifest
-        .files
-        .select { |k, v| k =~ /\.js\z/ }
-        .each do |file, info|
-          path = "#{assets_path}/#{file}"
-          if file.include? "discourse/tests"
-            STDERR.puts "Skipping: #{file}"
-          else
-            proc.call do
-              log_task_duration(file) do
-                STDERR.puts "Compressing: #{file}"
+      load_path
+        .assets
+        .select { |asset| asset.logical_path.extname == ".js" }
+        .each do |asset|
+          digested_path = asset.digested_path.to_s
 
-                info["size"] = File.size(path)
-                info["mtime"] = File.mtime(path).iso8601
-                gzip(path)
-                brotli(path)
-              end
+          if digested_path.include? "discourse/tests"
+            STDERR.puts "Skipping: #{digested_path}"
+            next
+          end
+
+          proc.call do
+            log_task_duration(digested_path) do
+              STDERR.puts "Compressing: #{digested_path}"
+              file_path = "public/assets/#{digested_path}"
+              gzip(file_path)
+              brotli(file_path)
             end
           end
         end
     end
   end
-
-  # protected
-  manifest.send :save
 
   if GlobalSetting.fallback_assets_path.present?
     begin
