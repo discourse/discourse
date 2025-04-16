@@ -141,11 +141,7 @@ describe "Admin | Sidebar Navigation", type: :system do
 
     no_results_description = page.find(".sidebar-no-results__description")
     expect(no_results_description.text).to eq(
-      I18n.t(
-        "js.sidebar.no_results.description_admin_search",
-        filter: "ieeee",
-        admin_search_url: "/admin/search",
-      ),
+      "We couldn’t find anything matching ‘ieeee’.\n\nTry searching the entire admin interface.",
     )
   end
 
