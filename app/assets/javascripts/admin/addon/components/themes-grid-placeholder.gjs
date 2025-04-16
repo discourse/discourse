@@ -43,9 +43,7 @@ export default class ThemesGridPlaceholder extends Component {
     };
   }
 
-  get randomVariant() {
-    return (this._variant ||= Math.floor(Math.random() * 4) + 1);
-  }
+  randomVariant = Math.floor(Math.random() * 4) + 1);
 
   get gradientId() {
     return `bgGradient-${this.args.theme.id}-${this.randomVariant}`;
