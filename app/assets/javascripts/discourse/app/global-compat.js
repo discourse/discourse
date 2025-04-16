@@ -1,6 +1,5 @@
 import "discourse/lib/load-moment";
 import jQuery from "jquery";
-import moment from "moment";
 import virtualDom from "virtual-dom";
 import widgetHelpers from "discourse-widget-hbs/helpers";
 
@@ -12,5 +11,3 @@ window.virtualDom = virtualDom;
 if (!window.$) {
   window.$ = window.jQuery = jQuery;
 }
-
-window.moment = moment;
