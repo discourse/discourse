@@ -52,7 +52,6 @@ export default class ThemesGridPlaceholder extends Component {
 
   <template>
     {{#if (eq this.randomVariant 0)}}
-      <!-- mesh -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -102,7 +101,6 @@ export default class ThemesGridPlaceholder extends Component {
         </g>
       </svg>
     {{else if (eq this.randomVariant 1)}}
-      <!-- soft blur -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -205,7 +203,6 @@ export default class ThemesGridPlaceholder extends Component {
         <rect fill="url(#{{this.gradientId}}-f)" width="800" height="200" />
       </svg>
     {{else if (eq this.randomVariant 2)}}
-      <!-- layered waves -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -262,7 +259,6 @@ export default class ThemesGridPlaceholder extends Component {
         </g>
       </svg>
     {{else if (eq this.randomVariant 3)}}
-      <!-- envelope -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
