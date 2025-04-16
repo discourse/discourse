@@ -13,7 +13,8 @@
         }
       }
 
-      .select-kit-body {
+      .select-kit-collection {
+        @include float-in;
         border: 1px solid var(--primary-low);
         background-clip: padding-box;
         box-shadow: var(--shadow-dropdown);
