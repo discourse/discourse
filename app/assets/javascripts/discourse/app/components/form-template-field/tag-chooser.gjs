@@ -101,11 +101,17 @@ export default class TagChooserField extends Component {
   handleInput(event) {
     const selectedValues = this.handleSelectedValues(event);
     const validChoices = this.formattedChoices.map((choice) => choice.name);
+    const selectedTags = selectedValues.filter((tag) =>
+      validChoices.includes(tag)
+    );
 
     set(
       this.composer.model,
       "tags",
-      selectedValues.filter((tag) => validChoices.includes(tag))
+      [
+        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+        ...selectedTags,
+      ].uniq()
     );
   }
 
