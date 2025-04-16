@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -13,82 +13,62 @@ export default class TagChooserField extends Component {
   @service composer;
   @service dialog;
 
-  @tracked previousTags;
-  @tracked currentTags = [];
-
-  _formattedChoices;
-
-  constructor() {
-    super(...arguments);
-    this.syncWithComposerTags();
-  }
-
   get formattedChoices() {
-    if (!this._formattedChoices) {
-      this._formattedChoices = this.args.choices.map((choice) => ({
-        name: choice,
-        display: this.args.tagChoices[choice]
-          ? this.args.tagChoices[choice]
-          : choice.replace(/-/g, " ").toUpperCase(),
-      }));
-    }
-    return this._formattedChoices;
+    return this.args.choices.map((choice) => ({
+      name: choice,
+      display: this.args.tagChoices[choice]
+        ? this.args.tagChoices[choice]
+        : choice.replace(/-/g, " ").toUpperCase(),
+    }));
   }
 
   get filteredSelectedValues() {
-    return this.currentTags.filter((tag) =>
+    return this.tags.filter((tag) =>
       this.formattedChoices.some((choice) => choice.name === tag)
     );
   }
 
+  get selectedTags() {
+    return this.tags.filter((tag) => this.args.choices.includes(tag));
+  }
+
   @action
   dropdownSyncWithComposerTags() {
-    if (this.args.onChange) {
-      let composerTags = this.composer.model.tags || [];
+    if (!this.args.onChange) {
+      return;
+    }
 
-      let selectedTag = composerTags.filter((tag) =>
-        this.args.choices.includes(tag)
+    if (this.selectedTags.length > 1) {
+      // the composer mini tag chooser can allow multiple tags
+      // so if the user chooses multiple tags directly in this component
+      // we will display an error to prevent it
+      this.dialog.alert(
+        i18n("admin.form_templates.errors.multiple_tags_not_allowed", {
+          tag_name: this.args.tagGroup,
+        })
       );
 
-      if (selectedTag.length > 1) {
-        this.dialog.alert(
-          i18n("admin.form_templates.errors.multiple_tags_not_allowed", {
-            tag_name: this.args.tagGroup,
-          })
-        );
-        this.previousTags = this.currentTags;
-
-        let oldTags = composerTags.filter((tag) =>
-          this.previousTags.includes(tag)
-        );
-
-        next(this, () => {
-          set(this, "currentTags", oldTags);
-          next(this, () => {
-            set(this.composer.model, "tags", oldTags);
-            this.args.onChange(oldTags);
-          });
-        });
-      } else {
-        this.previousTags = this.currentTags;
-        next(this, () => {
-          set(this, "currentTags", selectedTag);
-          next(this, () => {
-            this.args.onChange(this.currentTags);
-          });
-        });
-      }
+      // the next is needed because we already updated the tags in the same runloop
+      // and we need to wait for the next runloop to set the tags to empty
+      // we reset the tags as we have no way to know which one to keep, maybe the user
+      // would want to keep the last added tag
+      next(() => {
+        set(this.composer.model, "tags", []);
+        this.args.onChange([]);
+      });
+    } else {
+      this.args.onChange(this.tags);
     }
+  }
+
+  get tags() {
+    return this.composer.get("model.tags") || [];
   }
 
   @action
   syncWithComposerTags() {
     if (this.args.attributes.multiple) {
-      this.currentTags = [...(this.composer.model.tags || [])];
-
-      next(this, () => {
-        this.args.onChange(this.currentTags);
-      });
+      this.args.onChange?.(this.tags);
     } else {
       this.dropdownSyncWithComposerTags();
     }
@@ -97,6 +77,7 @@ export default class TagChooserField extends Component {
   @action
   handleSelectedValues(event) {
     let selectedValues = [];
+
     if (this.args.tagChoices) {
       let choiceMap = new Map(
         Object.entries(this.args.tagChoices).map(([key, value]) => [value, key])
@@ -118,29 +99,14 @@ export default class TagChooserField extends Component {
 
   @action
   handleInput(event) {
-    let selectedValues = this.handleSelectedValues(event);
+    const selectedValues = this.handleSelectedValues(event);
+    const validChoices = this.formattedChoices.map((choice) => choice.name);
 
-    this.args.onChange?.([...selectedValues]);
-    this.updateComposerTags(selectedValues);
-  }
-
-  @action
-  updateComposerTags(selectedValues) {
-    let validChoices = this.formattedChoices.map((choice) => choice.name);
-    let previousTags = (this.previousTags || []).filter((tag) =>
-      validChoices.includes(tag)
+    set(
+      this.composer.model,
+      "tags",
+      selectedValues.filter((tag) => validChoices.includes(tag))
     );
-
-    this.previousTags = [...selectedValues];
-
-    let composerTags = this.composer.model.tags;
-    let updatedTags = [
-      ...composerTags.filter((tag) => !previousTags.includes(tag)),
-      ...selectedValues,
-    ];
-
-    this.currentTags = updatedTags;
-    set(this.composer.model, "tags", [...updatedTags]);
   }
 
   @action
@@ -153,6 +119,8 @@ export default class TagChooserField extends Component {
     <div
       data-field-type="multi-select"
       class="control-group form-template-field"
+      {{didInsert this.syncWithComposerTags}}
+      {{! not ideal but we would need a lot of re-architecturing to make the form dynamic }}
       {{didUpdate this.syncWithComposerTags this.composer.model.tags}}
     >
       {{#if @attributes.label}}
@@ -181,9 +149,8 @@ export default class TagChooserField extends Component {
           <option
             class="form-template-field__multi-select-placeholder"
             value=""
-            disabled={{if this.currentTags.length "false" "true"}}
-            selected={{if this.currentTags.length "" "selected"}}
-            hidden
+            disabled={{if this.tags.length "false" "true"}}
+            selected={{if this.tags.length "" "selected"}}
           >{{@attributes.none_label}}</option>
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
