@@ -11,12 +11,13 @@ class ExtraLocalesController < ApplicationController
 
   OVERRIDES_BUNDLE = "overrides"
   SHA1_HASH_LENGTH = 40
+  MAIN_BUNDLE = "main"
   MF_BUNDLE = "mf"
   ADMIN_BUNDLE = "admin"
   WIZARD_BUNDLE = "wizard"
 
   SITE_SPECIFIC_BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
-  SHARED_BUNDLES = [ADMIN_BUNDLE, WIZARD_BUNDLE]
+  SHARED_BUNDLES = [MAIN_BUNDLE, ADMIN_BUNDLE, WIZARD_BUNDLE]
 
   class << self
     def js_digests
@@ -63,6 +64,8 @@ class ExtraLocalesController < ApplicationController
           JsLocaleHelper.output_client_overrides(locale_str)
         when MF_BUNDLE
           JsLocaleHelper.output_MF(locale_str)
+        when MAIN_BUNDLE
+          JsLocaleHelper.output_locale(locale_str)
         else
           JsLocaleHelper.output_extra_locales(bundle_str, locale_str)
         end
@@ -102,8 +105,9 @@ class ExtraLocalesController < ApplicationController
     end
 
     content, hash = ExtraLocalesController.bundle_js_with_hash(bundle, locale:)
-    immutable_for(1.year) if hash == digest
+    return redirect_to ExtraLocalesController.url(bundle, locale: locale) if hash != digest
 
+    immutable_for(1.year)
     render plain: content, content_type: "application/javascript"
   end
 

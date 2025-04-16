@@ -36,7 +36,7 @@
       <%= preload_script file %>
     <%- end %>
 
-    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script_url ExtraLocalesController.url("main") %>
     <%= preload_script_url ExtraLocalesController.url("mf") %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url("overrides") %>
