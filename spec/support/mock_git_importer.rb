@@ -53,4 +53,27 @@ class MockGitImporter < ThemeStore::GitImporter
 
     Discourse::Utils.execute_command("git", "clone", path, @temp_folder)
   end
+
+  def version
+    Discourse::Utils.execute_command("git", "-C", @temp_folder, "rev-parse", "HEAD").strip
+  end
+
+  def commits_since(hash)
+    commit_hash, commits_behind = nil
+    commits_behind =
+      begin
+        Discourse::Utils.execute_command(
+          "git",
+          "-C",
+          @temp_folder,
+          "rev-list",
+          "#{hash}..HEAD",
+          "--count",
+        ).strip
+      rescue StandardError
+        -1
+      end
+
+    [version, commits_behind]
+  end
 end
