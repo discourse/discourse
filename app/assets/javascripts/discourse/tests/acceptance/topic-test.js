@@ -297,7 +297,7 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .can-edit");
+        await click(".title-wrapper .edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
@@ -453,7 +453,7 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .can-edit");
+        await click(".title-wrapper .edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
