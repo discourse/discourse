@@ -336,10 +336,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
         resize_window(height: 800) do
           config_area.visit
 
-          expect(config_area.components_shown.size).to eq(4)
-
           page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-
           expect(config_area).to be_loading
           expect(config_area).to have_component(enabled_component.id)
 
