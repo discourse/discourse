@@ -52,7 +52,7 @@ acceptance("Search - Mobile", function (needs) {
         "search results are listed on search value present"
       );
 
-      await click('[data-test-anchor="clear-search-input"]');
+      await click('[data-test-button="clear-search-input"]');
 
       assert
         .dom('[data-test-selector="search-menu-results"]')
