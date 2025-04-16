@@ -2,7 +2,6 @@ import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
-import noop from "discourse/helpers/noop";
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">
@@ -25,7 +24,7 @@ const Dropdown = <template>
       name={{@id}}
       class="form-template-field__dropdown"
       required={{if @validations.required "required" ""}}
-      {{on "input" (if @onChange @onChange (noop))}}
+      {{on "input" @onChange }}
     >
       {{#if @attributes.none_label}}
         <option

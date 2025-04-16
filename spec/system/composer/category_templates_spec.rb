@@ -535,6 +535,8 @@ describe "Composer Form Templates", type: :system do
 
     attach_file "5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true
     expect(preview).to have_css("img")
+  end
+
   context "when using tagchooser" do
     fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
     fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
