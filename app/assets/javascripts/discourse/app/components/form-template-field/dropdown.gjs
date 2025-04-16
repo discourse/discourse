@@ -24,7 +24,7 @@ const Dropdown = <template>
       name={{@id}}
       class="form-template-field__dropdown"
       required={{if @validations.required "required" ""}}
-      {{on "input" @onChange }}
+      {{on "input" @onChange}}
     >
       {{#if @attributes.none_label}}
         <option
