@@ -78,8 +78,6 @@ export const templateFormFields = [
     structure: `- type: tag-chooser
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   tag_group: ""
-  tag_translations:
-   # tag-name: "Translated Tag"
   attributes:
     none_label: "${i18n("admin.form_templates.field_placeholders.none_label")}"
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
