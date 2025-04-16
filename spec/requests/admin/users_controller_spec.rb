@@ -34,7 +34,7 @@ RSpec.describe Admin::UsersController do
         get "/admin/users/list.json"
         expect(response.status).to eq(200)
 
-        silenced_user = response.parsed_body.find { |u| u["id"] == user.id }
+        silenced_user = response.parsed_body["users"].find { |u| u["id"] == user.id }
         expect(silenced_user["silence_reason"]).to eq("because I said so")
       end
 
@@ -42,7 +42,7 @@ RSpec.describe Admin::UsersController do
         it "returns email for all the users" do
           get "/admin/users/list.json", params: { show_emails: "true" }
           expect(response.status).to eq(200)
-          data = response.parsed_body
+          data = response.parsed_body["users"]
           data.each { |user| expect(user["email"]).to be_present }
         end
 
