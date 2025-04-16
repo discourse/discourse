@@ -20,7 +20,7 @@ acceptance("Shared Drafts", function () {
     await visit("/t/some-topic/9");
     assert.dom(".shared-draft-controls").exists();
 
-    await click(".edit-topic");
+    await click(".can-edit");
 
     let categoryChooser = selectKit(".edit-topic-title .category-chooser");
     await categoryChooser.expand();
