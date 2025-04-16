@@ -24,10 +24,6 @@ RSpec.describe JsLocaleHelper do
       define("discourse/lib/load-moment", () => {})
       moment = { defineLocale: () => {}, fn: {}, tz: {} }
     JS
-    # As there are circular references in the return value, this raises an
-    # error if we let MiniRacer try to convert the value to JSON. Forcing
-    # returning `null` from `#eval` will prevent that.
-    ctx.eval("#{File.read("#{Rails.root}/app/assets/javascripts/locales/i18n.js")};null")
     ctx
   end
 
