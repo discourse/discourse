@@ -21,8 +21,6 @@ const FormTemplateField = <template>
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
-    @tagGroup={{@content.tag_group}}
-    @tagChoices={{@content.tag_translations}}
     @onChange={{@onChange}}
   />
 </template>;

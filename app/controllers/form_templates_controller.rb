@@ -46,11 +46,13 @@ class FormTemplatesController < ApplicationController
 
       form_field.each do |key, value|
         ordered_field[key] = value
-        if key == "id"
-          ordered_field["choices"] = tags.first.tags.map(&:name)
+
+        ordered_field["choices"] = tags.first.tags.map(&:name) if key == "id"
+        if key == "attributes"
+          ordered_field["attributes"]["tag_group"] = tag_group_name
           translated_tags =
             tags.first.tags.select { |t| t.description }.to_h { |t| [t.name, t.description] }
-          ordered_field["tag_translations"] = translated_tags
+          ordered_field["attributes"]["tag_choices"] = translated_tags
         end
       end
 

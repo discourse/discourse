@@ -17,8 +17,8 @@ export default class TagChooserField extends Component {
   get formattedChoices() {
     return this.args.choices.map((choice) => ({
       name: choice,
-      display: this.args.tagChoices[choice]
-        ? this.args.tagChoices[choice]
+      display: this.args.attributes.tag_choices[choice]
+        ? this.args.attributes.tag_choices[choice]
         : choice.replace(/-/g, " ").toUpperCase(),
     }));
   }
@@ -45,7 +45,7 @@ export default class TagChooserField extends Component {
       // we will display an error to prevent it
       this.dialog.alert(
         i18n("admin.form_templates.errors.multiple_tags_not_allowed", {
-          tag_name: this.args.tagGroup,
+          tag_name: this.args.attributes.tag_group,
         })
       );
 
@@ -81,9 +81,9 @@ export default class TagChooserField extends Component {
   handleSelectedValues(event) {
     let selectedValues = [];
 
-    if (this.args.tagChoices) {
+    if (this.args.attributes.tag_choices) {
       let choiceMap = new Map(
-        Object.entries(this.args.tagChoices).map(([key, value]) => [value, key])
+        Object.entries(this.args.attributes.tag_choices).map(([key, value]) => [value, key])
       );
 
       selectedValues = Array.from(event.target.selectedOptions).map(
