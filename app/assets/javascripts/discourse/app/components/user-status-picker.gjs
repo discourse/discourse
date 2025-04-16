@@ -55,7 +55,7 @@ export default class UserStatusPicker extends Component {
 
         <input
           {{on "input" this.updateDescription}}
-          {{on "focus" this.focus}}
+          {{!-- {{on "focus" this.focus}} --}}
           {{on "blur" this.blur}}
           {{autoFocus}}
           value={{@status.description}}

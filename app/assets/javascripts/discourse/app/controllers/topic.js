@@ -157,6 +157,13 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
+  @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
+  canEditClass(currentPostId, firstPostId) {
+    if (currentPostId === firstPostId) {
+      return "can-edit";
+    }
+  }
+
   @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -360,24 +367,23 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
-    event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
-      this.set("editingTopic", true);
-    }
-  }
+  titleClick(event) {
+    let isAtTop =
+      this.currentPostId === this.model.postStream.posts.firstObject.id;
 
-  @action
-  jumpTop(event) {
-    if (event && wantsNewWindow(event)) {
+    event?.preventDefault();
+    if (isAtTop) {
+      if (this.get("model.details.can_edit")) {
+        this.set("editingTopic", true);
+      }
+    } else if (event && wantsNewWindow(event)) {
       return;
+    } else {
+      DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
+        skipIfOnScreen: false,
+        keepFilter: true,
+      });
     }
-
-    event?.preventDefault();
-    DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
-      skipIfOnScreen: false,
-      keepFilter: true,
-    });
   }
 
   @action

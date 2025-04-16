@@ -203,6 +203,11 @@
     a {
       color: var(--primary);
     }
+
+    &.can-edit:hover {
+      outline: 2px solid var(--tertiary);
+      border-radius: var(--d-border-radius);
+    }
   }
 
   a.edit-topic .d-icon {
