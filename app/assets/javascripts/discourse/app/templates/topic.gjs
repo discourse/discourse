@@ -199,12 +199,7 @@ export default RouteTemplate(
               </div>
 
             {{else}}
-              {{! template-lint-disable no-invalid-interactive }}
-              <h1
-                data-topic-id={{@controller.model.id}}
-                class={{@controller.canEditClass}}
-                {{on "click" @controller.titleClick}}
-              >
+              <h1 data-topic-id={{@controller.model.id}}>
                 {{#unless @controller.model.is_warning}}
                   {{#if @controller.canSendPms}}
                     <PrivateMessageGlyph
@@ -222,12 +217,11 @@ export default RouteTemplate(
 
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
-                  <a href={{@controller.model.url}} class="fancy-title">
                     {{htmlSafe @controller.model.fancyTitle}}
                   </a>
                 {{/if}}
 
-                {{#if @controller.showEditButton}}
+                {{#if @controller.model.details.can_edit}}
                   <a
                     href
                     {{on "click" @controller.editTopic}}
