@@ -5484,7 +5484,7 @@ en:
                 label: "Category boxes"
                 description: "Displays the categories and their description in a grid, ideal for members to see an overview of the sub-communities of your site"
 
-      logo_and_fonts:
+      branding:
         title: "Site logo"
         fields:
           logo:

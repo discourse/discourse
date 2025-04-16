@@ -2203,6 +2203,7 @@ en:
     user_tips:
       button: "Got it!"
       skip: "Skip tips"
+      dont_show_again: "Don't show this again"
 
       first_notification:
         title: "Your first notification!"
@@ -2247,6 +2248,10 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    multi_select:
+      no_results: "No results"
+      search: "Search…"
+      label: "Select options"
     form_kit:
       reset: Reset
       optional: optional
@@ -4564,6 +4569,7 @@ en:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
+      search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
@@ -6255,8 +6261,8 @@ en:
             delete: "Delete"
             filter_by: "Filter by"
             filter_by_all: "All"
-            filter_by_active: "Active"
-            filter_by_inactive: "Inactive"
+            filter_by_used: "Used"
+            filter_by_unused: "Unused"
             filter_by_updates_available: "Updates available"
             search_components: "Type a component name"
             new_update_for_component: "New update available for %{name}!"
@@ -6266,7 +6272,7 @@ en:
             deleted_successfully: '"%{name}" has been deleted successfully.'
             no_components: "No components installed."
             no_components_found: "No components match your filters."
-            badge_inactive: "Unused"
+            badge_unused: "Unused"
         user_fields:
           field: "Field"
           type: "Type"

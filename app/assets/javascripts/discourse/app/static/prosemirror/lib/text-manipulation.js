@@ -7,6 +7,7 @@ import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -278,7 +279,7 @@ export default class ProsemirrorTextManipulation {
 
     const markdown = this.convertToMarkdown(this.view.state.doc);
 
-    const regex = opts.regex || new RegExp(oldValue, "g");
+    const regex = opts.regex || new RegExp(escapeRegExp(oldValue), "g");
     const index = opts.index || 0;
     let matchCount = 0;
 

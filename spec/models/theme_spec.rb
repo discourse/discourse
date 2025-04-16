@@ -1596,4 +1596,105 @@ HTML
       expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
     end
   end
+
+  describe ".include_basic_relations" do
+    fab!(:parent_theme_1) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme"
+          YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:parent_theme_2) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme 2"
+          YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:component_1) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_1],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:component_2) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_2],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component 2"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    it "doesn't result in N+1 queries for descriptions" do
+      components = Theme.include_basic_relations.where(component: true, id: component_1.id)
+
+      queries_for_one =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      components =
+        Theme.include_basic_relations.where(component: true, id: [component_1.id, component_2.id])
+
+      queries_for_two =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      expect(queries_for_two.size).to eq(queries_for_one.size)
+    end
+  end
 end
