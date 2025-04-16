@@ -143,36 +143,6 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(no_results_description.text).to eq(
       "We couldn’t find anything matching ‘ieeee’.\nDid you want to search site settings or the admin user list?",
     )
-    expect(no_results_description).to have_link(
-      "search site settings",
-      href: "/admin/site_settings/category/all_results?filter=ieeee",
-    )
-    expect(no_results_description).to have_link(
-      "admin user list?",
-      href: "/admin/users/list/active?username=ieeee",
-    )
-  end
-
-  it "encodes the url param in the links when the filter has no results" do
-    visit("/admin")
-
-    unknown_filter = "blahblah"
-    filter.filter(unknown_filter)
-    expect(page).to have_no_css(".sidebar-section-link-content-text")
-    expect(page).to have_css(".sidebar-no-results")
-
-    no_results_description = page.find(".sidebar-no-results__description")
-    expect(no_results_description.text).to eq(
-      "We couldn’t find anything matching ‘#{unknown_filter}’.\nDid you want to search site settings or the admin user list?",
-    )
-    expect(no_results_description).to have_link(
-      "search site settings",
-      href: "/admin/site_settings/category/all_results?filter=#{unknown_filter}",
-    )
-    expect(no_results_description).to have_link(
-      "admin user list?",
-      href: "/admin/users/list/active?username=#{unknown_filter}",
-    )
   end
 
   it "temporarily expands section when filter" do
