@@ -14,10 +14,11 @@
       }
 
       .select-kit-collection {
-        @include float-in;
         border: 1px solid var(--primary-low);
         background-clip: padding-box;
         box-shadow: var(--shadow-dropdown);
+        padding: 0;
+        max-height: 100%;
       }
 
       .select-kit-row {
@@ -65,11 +66,6 @@
         }
       }
 
-      .select-kit-collection {
-        padding: 0;
-        max-height: 100%;
-      }
-
       .select-kit-header {
         display: inline-flex;
         align-items: center;
@@ -97,4 +93,8 @@
       justify-content: center;
     }
   }
+}
+
+.select-kit.single-select.dropdown-select-box .select-kit-collection {
+  @include float-in;
 }

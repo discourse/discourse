@@ -143,18 +143,6 @@ $hpad: 0.65em;
 
 @mixin float-in {
   animation: float-in ease 0.25s 1 forwards;
-
-  @keyframes float-in {
-    0% {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 }
 
 @mixin default-focus() {
