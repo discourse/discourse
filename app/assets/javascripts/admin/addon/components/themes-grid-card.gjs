@@ -40,10 +40,6 @@ export default class ThemeCard extends Component {
     return `/admin/themes/${this.args.theme.id}/preview`;
   }
 
-  get footerActionIcon() {
-    return this.args.theme.isPendingUpdates ? "arrows-rotate" : "ellipsis";
-  }
-
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
   //
   // Will also need some cleanup when refactoring other theme code.
@@ -109,15 +105,25 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard
       class={{this.themeCardClasses}}
-      @translatedHeading={{@theme.name}}
     >
       <:content>
-        {{#if @theme.isPendingUpdates}}
+        {{#if @theme.default}}
           <span
-            title={{i18n "admin.customize.theme.updates_available_tooltip"}}
-            class="theme-card__update-available"
-          >{{icon "circle-info"}}</span>
+            class="theme-card__badge --active"
+            title={{i18n "admin.customize.theme.default_theme"}}
+          >
+            {{i18n "admin.customize.theme.default"}}
+          </span>
+        {{!-- {{else}}
+          <DButton
+            @action={{this.setDefault}}
+            @preventFocus={{true}}
+            @icon="far-square"
+            class="btn-small theme-card__button --set-default"
+            @translatedLabel={{i18n "admin.customize.theme.set_default_theme"}}
+          /> --}}
         {{/if}}
+
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
             <img
@@ -130,16 +136,31 @@ export default class ThemeCard extends Component {
           {{/if}}
         </div>
         <div class="theme-card__content">
+          <div class="theme-card__title">{{ @theme.name }}</div>
           {{#if @theme.description}}
             <p class="theme-card__description">{{@theme.description}}</p>
           {{/if}}
+
+          <div class="badges">
+            {{#if @theme.isPendingUpdates}}
+              <span
+                title={{i18n "admin.customize.theme.updates_available_tooltip"}}
+                class="theme-card__badge"
+              >{{i18n "admin.customize.theme.update_available"}}</span>
+            {{/if}}
+
+            <span
+                title={{i18n "admin.customize.theme.updates_available_tooltip"}}
+                class="theme-card__badge"
+              >{{i18n "admin.customize.theme.user_selectable_label"}}</span>
+          </div>
         </div>
         <div class="theme-card__footer">
           <DButton
             @translatedLabel={{i18n "admin.customize.theme.edit"}}
             @route="adminCustomizeThemes.show"
             @routeModels={{this.themeRouteModels}}
-            class="btn-primary theme-card__button"
+            class="btn-secondary theme-card__button"
             @preventFocus={{true}}
           />
 
@@ -148,12 +169,12 @@ export default class ThemeCard extends Component {
               @identifier="theme-card__footer-menu"
               @triggerClass="theme-card__footer-menu btn-flat"
               @modalForMobile={{true}}
-              @icon={{this.footerActionIcon}}
-              @label={{if
+              @icon="ellipsis"
+              {{!-- @label={{if
                 this.isUpdating
                 (i18n "admin.customize.theme.updating")
                 ""
-              }}
+              }} --}}
               @triggers={{array "click"}}
             >
               <:content>
@@ -179,8 +200,8 @@ export default class ThemeCard extends Component {
                       @preventFocus={{true}}
                       @icon={{if
                         @theme.default
-                        "far-square-check"
-                        "far-square"
+                        "star"
+                        "far-star"
                       }}
                       class="theme-card__button"
                       @translatedLabel={{i18n
@@ -192,6 +213,12 @@ export default class ThemeCard extends Component {
                       }}
                       @disabled={{@theme.default}}
                     />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <a
+                      href=""
+                      class="btn btn-transparent theme-card__button"
+                    >{{icon "user"}} {{i18n "admin.customize.theme.user_selectable_label"}}</a>
                   </dropdown.item>
                   <dropdown.item>
                     <a

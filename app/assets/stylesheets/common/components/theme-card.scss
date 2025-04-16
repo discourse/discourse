@@ -7,6 +7,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1em;
+  align-items: stretch;
 }
 
 .theme-card {
@@ -15,6 +16,7 @@
   position: relative;
   box-shadow: 0 0 0 3px transparent;
   transition: box-shadow 0.3s ease-in-out;
+  height: 100%;
 
   &.--updating {
     animation:
@@ -81,16 +83,6 @@
     @include theme-card-border(tertiary);
   }
 
-  &__update-available {
-    position: absolute;
-    right: -9px;
-    top: -9px;
-    color: var(--success);
-    font-size: var(--font-up-1);
-    background: var(--secondary);
-    display: flex;
-  }
-
   &__icons {
     display: flex;
   }
@@ -99,6 +91,10 @@
     width: 100%;
     height: 160px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--primary-low);
 
     svg {
       width: 100%;
@@ -125,11 +121,27 @@
   }
 
   &__content {
-    padding: 10px 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  &__title {
+    font-size: var(--font-up-0);
+    font-weight: 700;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
   }
 
   &__description {
     margin: 0 0 10px 0;
+    // display: -webkit-box;
+    // -webkit-box-orient: vertical;
+    // -webkit-line-clamp: 2;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
   }
 
   &__components {
@@ -145,13 +157,40 @@
     margin-top: auto;
   }
 
+  &__button.--set-default {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
   &__footer {
     margin-top: auto;
     display: flex;
+    padding: 1rem;
   }
 
   &__footer-actions {
     margin-left: auto;
+  }
+
+  &__badge {
+    font-size: var(--font-down-2);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    // font-weight: 700;
+    color: var(--tertiary-low);
+    background: var(--primary-very-high);
+    letter-spacing: 0.25px;
+
+    &.--active {
+      background-color: var(--tertiary-low);
+      color: var(--tertiary);
+      position: absolute;
+      right: 8px;
+      top: 8px;
+
+      text-transform: uppercase;
+    }
   }
 
   .admin-config-area-card__header-action {
@@ -180,9 +219,24 @@
   }
 }
 
-.theme-card .admin-config-area-card {
-  &__title {
-    display: flex;
-    align-items: center;
+.admin-config-area-card.theme-card {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .admin-config-area-card__content {
+    margin: 0;
+    padding-right: 0;
+  }
+
+  .admin-config-area-card__header-wrapper {
+    flex: none;
   }
 }
+
+// .theme-card__image-wrapper,
+// .theme-card__content,
+// .theme-card__footer {
+//   outline: 1px solid rgba(255, 0, 0, 0.2); // temp debug outline
+// }
