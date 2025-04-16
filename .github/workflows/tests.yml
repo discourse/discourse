@@ -45,6 +45,7 @@ jobs:
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      EMBER_ENV: development
 
     strategy:
       fail-fast: false
@@ -262,7 +263,7 @@ jobs:
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
-        run: bin/ember-cli --build
+        run: script/assemble_ember_build.rb
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'

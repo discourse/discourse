@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import Yaml from "js-yaml";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
@@ -18,10 +20,14 @@ const FormTemplateField = <template>
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @onChange={{@onChange}}
   />
 </template>;
 
 export default class FormTemplateFieldWrapper extends Component {
+  @service composer;
+  @service siteSettings;
+
   @tracked error = null;
   @tracked parsedTemplate = null;
 
@@ -46,6 +52,13 @@ export default class FormTemplateFieldWrapper extends Component {
     } else if (this.args.id) {
       this._fetchTemplate(this.args.id);
     }
+
+    next(this, () => {
+      this.composer.set(
+        "allowPreview",
+        this.siteSettings.show_preview_for_form_templates
+      );
+    });
   }
 
   _loadTemplate(templateContent) {
@@ -84,6 +97,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @component={{get this.fieldTypes content.type}}
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
+            @onChange={{@onChange}}
           />
         {{/each}}
       </div>

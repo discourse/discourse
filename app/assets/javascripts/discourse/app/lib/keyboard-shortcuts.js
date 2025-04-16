@@ -500,10 +500,6 @@ export default {
 
     if (filterInput) {
       this._scrollTo(0);
-
-      if (!this.currentUser.use_experimental_admin_search) {
-        filterInput.focus();
-      }
     }
   },
 

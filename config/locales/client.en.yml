@@ -2248,6 +2248,10 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    multi_select:
+      no_results: "No results"
+      search: "Search…"
+      label: "Select options"
     form_kit:
       reset: Reset
       optional: optional
@@ -5073,7 +5077,6 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
         description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
       footer:
         interface_color_selector:
@@ -6248,8 +6251,8 @@ en:
             delete: "Delete"
             filter_by: "Filter by"
             filter_by_all: "All"
-            filter_by_active: "Active"
-            filter_by_inactive: "Inactive"
+            filter_by_used: "Used"
+            filter_by_unused: "Unused"
             filter_by_updates_available: "Updates available"
             search_components: "Type a component name"
             new_update_for_component: "New update available for %{name}!"
@@ -6259,7 +6262,7 @@ en:
             deleted_successfully: '"%{name}" has been deleted successfully.'
             no_components: "No components installed."
             no_components_found: "No components match your filters."
-            badge_inactive: "Unused"
+            badge_unused: "Unused"
         user_fields:
           field: "Field"
           type: "Type"

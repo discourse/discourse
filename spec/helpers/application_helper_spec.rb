@@ -782,19 +782,19 @@ RSpec.describe ApplicationHelper do
 
   describe "when a plugin registers the :meta_data_content modifier" do
     let!(:plugin) { Plugin::Instance.new }
+    let!(:modifier) { :meta_data_content }
     let!(:block) do
-      ->(content, property, opts) do
-        content << " - modified by plugin" if property == :description
-        content = "BIG TITLE" if property == :title
+      Proc.new do |content, property, opts|
+        next "modified by plugin" if property == :description
+        next "BIG TITLE" if property == :title
         content
       end
     end
 
-    after { DiscoursePluginRegistry.unregister_modifier(plugin, :meta_data_content, &block) }
+    before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
 
     it "allows the plugin to modify the meta tags" do
-      plugin.register_modifier(:meta_data_content, &block)
-
       result =
         helper.crawlable_meta_data(
           description: "This is a test description",
@@ -802,25 +802,37 @@ RSpec.describe ApplicationHelper do
         )
 
       expect(result).to include(
-        "<meta property=\"og:description\" content=\"This is a test description - modified by plugin\" />",
+        "<meta property=\"og:description\" content=\"modified by plugin\" />",
       )
       expect(result).to include("<meta property=\"og:title\" content=\"BIG TITLE\" />")
     end
 
     it "modifies the title tag" do
-      plugin.register_modifier(:meta_data_content, &block)
-
       title = helper.title_content
 
       expect(title).to include("BIG TITLE")
     end
 
     it "modifies the description tag" do
-      plugin.register_modifier(:meta_data_content, &block)
-
       description = helper.description_content
 
-      expect(description).to include(" - modified by plugin")
+      expect(description).to include("modified by plugin")
+    end
+
+    it "does not modify the `title` SiteSetting" do
+      SiteSetting.title = "Test Title"
+      result = helper.title_content
+
+      expect(result).to include("BIG TITLE")
+      expect(SiteSetting.title).to eq("Test Title")
+    end
+
+    it "does not modify the `site_description` SiteSetting" do
+      SiteSetting.site_description = "Test Description"
+      result = helper.description_content
+
+      expect(result).to include("modified by plugin")
+      expect(SiteSetting.site_description).to eq("Test Description")
     end
   end
 
