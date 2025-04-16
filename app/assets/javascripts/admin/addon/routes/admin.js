@@ -22,15 +22,13 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   activate() {
-    if (this.currentUser.use_experimental_admin_search) {
-      KeyboardShortcuts.addShortcut(
-        `${PLATFORM_KEY_MODIFIER}+/`,
-        (event) => this.showAdminSearchModal(event),
-        {
-          global: true,
-        }
-      );
-    }
+    KeyboardShortcuts.addShortcut(
+      `${PLATFORM_KEY_MODIFIER}+/`,
+      (event) => this.showAdminSearchModal(event),
+      {
+        global: true,
+      }
+    );
 
     this.adminSidebarStateManager.maybeForceAdminSidebar({
       onlyIfAlreadyActive: false,
@@ -44,11 +42,9 @@ export default class AdminRoute extends DiscourseRoute {
   deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
 
-    if (this.currentUser.use_experimental_admin_search) {
-      KeyboardShortcuts.unbind({
-        [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
-      });
-    }
+    KeyboardShortcuts.unbind({
+      [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
+    });
 
     if (!transition?.to.name.startsWith("admin")) {
       this.adminSidebarStateManager.stopForcingAdminSidebar();

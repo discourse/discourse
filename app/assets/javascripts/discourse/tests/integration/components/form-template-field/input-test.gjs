@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FormInput from "discourse/components/form-template-field/input";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(
@@ -9,7 +10,7 @@ module(
     setupRenderingTest(hooks);
 
     test("renders a text input", async function (assert) {
-      await render(<template><FormInput /></template>);
+      await render(<template><FormInput @onChange={{noop}} /></template>);
 
       assert
         .dom(".form-template-field[data-field-type='input'] input[type='text']")
@@ -23,7 +24,9 @@ module(
       };
 
       await render(
-        <template><FormInput @attributes={{attributes}} /></template>
+        <template>
+          <FormInput @attributes={{attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert
@@ -42,7 +45,9 @@ module(
       };
 
       await render(
-        <template><FormInput @attributes={{attributes}} /></template>
+        <template>
+          <FormInput @attributes={{attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert.dom(".form-template-field__label").doesNotExist();
@@ -54,7 +59,9 @@ module(
       };
 
       await render(
-        <template><FormInput @attributes={{attributes}} /></template>
+        <template>
+          <FormInput @attributes={{attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert.dom(".form-template-field__description").hasText("Your full name");
@@ -66,7 +73,9 @@ module(
       };
 
       await render(
-        <template><FormInput @attributes={{attributes}} /></template>
+        <template>
+          <FormInput @attributes={{attributes}} @onChange={{noop}} />
+        </template>
       );
 
       assert

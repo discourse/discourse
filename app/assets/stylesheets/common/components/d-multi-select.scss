@@ -128,17 +128,18 @@
   padding: 0.25em;
 }
 
-.d-multi-select__skeleton-checkbox {
-  @keyframes pulse {
-    50% {
-      opacity: 0.5;
-    }
+@keyframes dmultiselect-pulse {
+  50% {
+    opacity: 0.5;
   }
+}
+
+.d-multi-select__skeleton-checkbox {
   border: 1px solid var(--primary-low);
   border-radius: var(--d-border-radius);
   width: 14px;
   height: 14px;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   box-sizing: border-box;
 }
 
@@ -146,6 +147,6 @@
   background: var(--primary-low);
   width: 100%;
   height: 24px;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   border-radius: var(--d-border-radius);
 }
