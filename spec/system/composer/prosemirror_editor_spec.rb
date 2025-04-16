@@ -520,7 +520,6 @@ describe "Composer - ProseMirror editor", type: :system do
   describe "pasting content" do
     it "does not freeze the editor when pasting markdown code blocks without a language" do
       with_logs do |logger|
-        cdp.allow_clipboard
         open_composer_and_toggle_rich_editor
 
         # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
@@ -531,9 +530,11 @@ describe "Composer - ProseMirror editor", type: :system do
           ```
         MARKDOWN
 
-        expect(logger.logs).not_to include("Maximum call stack size exceeded")
-        expect(rich).to have_css("pre code", wait: 1)
-        expect(rich).to have_css("select.code-language-select", wait: 1)
+        expect(logger.logs.map { |log| log[:message] }).not_to include(
+          "Maximum call stack size exceeded",
+        )
+        expect(rich).to have_css("pre code")
+        expect(rich).to have_css("select.code-language-select")
       end
     end
 
