@@ -70,24 +70,22 @@ describe "Admin Users Page", type: :system do
 
       confirmation_modal.confirm
 
-      pause_test
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: user_1,
+        position: 1,
+        total: 2,
+      )
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: user_2,
+        position: 2,
+        total: 2,
+      )
+      expect(confirmation_modal).to have_no_error_log_entries
 
-      # expect(confirmation_modal).to have_successful_log_entry_for_user(
-      #   user: user_1,
-      #   position: 1,
-      #   total: 2,
-      # )
-      # expect(confirmation_modal).to have_successful_log_entry_for_user(
-      #   user: user_2,
-      #   position: 2,
-      #   total: 2,
-      # )
-      # expect(confirmation_modal).to have_no_error_log_entries
+      confirmation_modal.close
 
-      # confirmation_modal.close
-
-      # expect(admin_users_page).to have_no_users([user_1.id, user_2.id])
-      # expect(User.where(id: [user_1.id, user_2.id]).count).to eq(0)
+      expect(admin_users_page).to have_no_users([user_1.id, user_2.id])
+      expect(User.where(id: [user_1.id, user_2.id]).count).to eq(0)
     end
 
     it "remembers selected users when the user list refreshes due to search" do
