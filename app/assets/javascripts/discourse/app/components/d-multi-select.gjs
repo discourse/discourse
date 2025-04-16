@@ -7,7 +7,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
-import { Promise as RsvpPromise } from "rsvp";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -55,7 +54,7 @@ export default class DMultiSelect extends Component {
       return;
     }
 
-    const value = new RsvpPromise((resolve, reject) => {
+    const value = new Promise((resolve, reject) => {
       discourseDebounce(
         this,
         this.#resolveAsyncData,

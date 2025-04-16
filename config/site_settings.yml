@@ -3925,6 +3925,9 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+  show_preview_for_form_templates:
+    client: true
+    default: true
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -3933,14 +3936,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
-  experimental_admin_search_enabled_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    area: "group_permissions"
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list

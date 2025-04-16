@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class Filter extends Component {
@@ -48,27 +47,8 @@ export default class Filter extends Component {
     document.querySelector(".sidebar-filter__input").focus();
   }
 
-  get showShortcutCombo() {
-    // Very specific to admin pages, but we don't hook this shortcut
-    // anywhere else, so it's not right to show it in other places.
-    if (!this.router.currentRouteName.startsWith("admin")) {
-      return false;
-    }
-    return (
-      !this.displayClearFilter &&
-      !this.currentUser?.use_experimental_admin_search
-    );
-  }
-
-  get sidebarShortcutCombo() {
-    return `${translateModKey("Meta")}+/`;
-  }
-
   get filterPlaceholder() {
-    if (
-      this.currentUser?.staff &&
-      this.currentUser?.use_experimental_admin_search
-    ) {
+    if (this.currentUser?.staff) {
       return i18n("sidebar.filter_links");
     }
     return i18n("sidebar.filter");
@@ -87,11 +67,6 @@ export default class Filter extends Component {
             enterkeyhint="done"
             class="sidebar-filter__input"
           />
-          {{#if this.showShortcutCombo}}
-            <span
-              class="sidebar-filter__shortcut-hint"
-            >{{this.sidebarShortcutCombo}}</span>
-          {{/if}}
 
           {{#if this.displayClearFilter}}
             <DButton
