@@ -155,8 +155,8 @@ export default class TagChooserField extends Component {
           <option
             class="form-template-field__multi-select-placeholder"
             value=""
-            disabled={{if this.tags.length "false" "true"}}
-            selected={{if this.tags.length "" "selected"}}
+            disabled={{if this.selectedTags.length "false" "true"}}
+            selected={{if this.selectedTags.length "" "selected"}}
           >{{@attributes.none_label}}</option>
         {{/if}}
         {{#each this.formattedChoices as |choice|}}
