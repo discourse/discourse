@@ -81,6 +81,54 @@ describe "Composer Form Templates", type: :system do
             required: true"),
     )
   end
+
+  fab!(:form_template_7) do
+    Fabricate(
+      :form_template,
+      name: "Preview Test",
+      template:
+        %Q(
+        - type: checkbox
+          id: 1
+          attributes:
+            label: "checkbox"
+        - type: input
+          id: 2
+          attributes:
+            label: "input"
+            placeholder: "Enter placeholder here"
+        - type: textarea
+          id: 3
+          attributes:
+            label: "textarea"
+            placeholder: "Enter placeholder here"
+        - type: dropdown
+          id: 4
+          choices:
+            - "Option 1"
+            - "Option 2"
+            - "Option 3"
+          attributes:
+            none_label: "Select an item"
+            label: "dropdown"
+        - type: upload
+          id: 5
+          attributes:
+            file_types: ".jpg, .png, .gif"
+            allow_multiple: false
+            label: "upload"
+        - type: multi-select
+          id: 6
+          choices:
+            - "Option 4"
+            - "Option 5"
+            - "Option 6"
+          attributes:
+            none_label: "Select an item"
+            label: "multi-select"
+          ),
+    )
+  end
   fab!(:category_with_template_1) do
     Fabricate(
       :category,
@@ -97,6 +145,15 @@ describe "Composer Form Templates", type: :system do
       slug: "features",
       topic_count: 3,
       form_template_ids: [form_template_2.id],
+    )
+  end
+  fab!(:category_with_template_7) do
+    Fabricate(
+      :category,
+      name: "Preview Test",
+      slug: "preview_test",
+      topic_count: 2,
+      form_template_ids: [form_template_7.id],
     )
   end
   fab!(:category_with_multiple_templates_1) do
@@ -439,5 +496,44 @@ describe "Composer Form Templates", type: :system do
     expect(composer).to have_form_template_field("upload")
     expect(composer).to have_form_template_field_label("Prescription")
     expect(composer).to have_form_template_field_description("Upload your prescription")
+  end
+
+  it "shows preview of the form correctly for all input types" do
+    topic_title = "A topic about Batman"
+
+    category_page.visit(category_with_template_7)
+    category_page.new_topic_button.click
+    composer.fill_title(topic_title)
+
+    preview = find(".d-editor-preview")
+
+    composer.fill_form_template_field("input", "Peter Parker")
+    expect(preview).to have_content("Peter Parker")
+    dropdown = find("[name='4']")
+    dropdown.click
+    dropdown.send_keys(:arrow_down)
+    dropdown.send_keys(:enter)
+
+    dropdown.click
+    dropdown.send_keys(:arrow_up)
+    dropdown.send_keys(:enter)
+
+    expect(preview).to have_content("Option 1")
+
+    multi_select = find("[name='6']")
+    multi_select.find("option", text: "Option 4").click(:control)
+
+    expect(preview).to have_content("Option 4")
+
+    textarea = find("textarea")
+    message = "This is a test message!"
+
+    textarea.fill_in(with: message)
+
+    preview = find(".d-editor-preview")
+    expect(preview).to have_content(message)
+
+    attach_file "5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true
+    expect(preview).to have_css("img")
   end
 end
