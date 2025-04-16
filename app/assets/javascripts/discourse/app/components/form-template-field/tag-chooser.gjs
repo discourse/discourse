@@ -6,6 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { not } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -52,8 +53,11 @@ export default class TagChooserField extends Component {
       // and we need to wait for the next runloop to set the tags to empty
       // we reset the tags as we have no way to know which one to keep, maybe the user
       // would want to keep the last added tag
+      const selectedTags = [...this.tags];
+      selectedTags.pop();
+
       next(() => {
-        set(this.composer.model, "tags", []);
+        set(this.composer.model, "tags", selectedTags);
         this.args.onChange([]);
       });
     } else {
@@ -155,7 +159,7 @@ export default class TagChooserField extends Component {
           <option
             class="form-template-field__multi-select-placeholder"
             value=""
-            disabled={{if this.selectedTags.length "false" "true"}}
+            disabled={{not this.selectedTags.length }}
             selected={{if this.selectedTags.length "" "selected"}}
           >{{@attributes.none_label}}</option>
         {{/if}}
