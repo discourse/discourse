@@ -164,6 +164,11 @@ export default class TopicController extends Controller {
     }
   }
 
+  @discourseComputed("site.mobileView", "model.details.can_edit")
+  showEditButton(mobileView, canEdit) {
+    return mobileView && canEdit;
+  }
+
   @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -364,6 +369,12 @@ export default class TopicController extends Controller {
       .finally(() => {
         this.set("loadingPostIds", false);
       });
+  }
+
+  @action
+  editTopic(event) {
+    event?.preventDefault();
+    this.set("editingTopic", true);
   }
 
   @action

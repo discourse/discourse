@@ -2,7 +2,7 @@ import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
-import { and, eq } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import AddTopicStatusClasses from "discourse/components/add-topic-status-classes";
 import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-footer-buttons";
@@ -224,6 +224,15 @@ export default RouteTemplate(
                   <a href={{@controller.model.url}} class="fancy-title">
                     {{htmlSafe @controller.model.fancyTitle}}
                   </a>
+                {{/if}}
+
+                {{#if @controller.showEditButton}}
+                  <a
+                    href
+                    {{on "click" @controller.editTopic}}
+                    class="edit-topic"
+                    title={{i18n "edit_topic"}}
+                  >{{icon "pencil"}}</a>
                 {{/if}}
 
                 <PluginOutlet
