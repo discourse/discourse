@@ -307,6 +307,15 @@ export default function setupTests(config) {
     const scrollManager = app.__container__.lookup("service:scroll-manager");
     sinon.stub(scrollManager, "bindScrolling");
     sinon.stub(scrollManager, "unbindScrolling");
+
+    window._originalIntersectionObserver = window.IntersectionObserver;
+    window.IntersectionObserver = class MockIntersectionObserver {
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    };
   });
 
   QUnit.testDone(function () {
@@ -332,6 +341,7 @@ export default function setupTests(config) {
 
     MessageBus.unsubscribe("*");
     localStorage.clear();
+    window.IntersectionObserver = window._originalIntersectionObserver;
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
