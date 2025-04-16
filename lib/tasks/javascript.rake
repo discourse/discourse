@@ -69,16 +69,6 @@ def dependencies
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
-    { source: "moment/moment.js" },
-    { source: "moment/locale/.", destination: "moment-locale" },
-    {
-      source: "moment-timezone/builds/moment-timezone-with-data-10-year-range.js",
-      destination: "moment-timezone-with-data.js",
-    },
-    {
-      source: "@discourse/moment-timezone-names-translations/locales/.",
-      destination: "moment-timezone-names-locale",
-    },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
       destination: "squoosh",

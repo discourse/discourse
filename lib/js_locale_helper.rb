@@ -200,9 +200,9 @@ module JsLocaleHelper
       result << "I18n.fallbackLocale = '#{fallback_locale_str}';\n"
     end
 
-    # moment
-    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
-    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment-timezone-with-data.js")
+    result << <<~JS
+      require("discourse/lib/load-moment");
+    JS
     result << moment_locale(locale_str)
     result << moment_locale(locale_str, timezone_names: true)
     result << moment_formats
@@ -260,10 +260,10 @@ module JsLocaleHelper
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
-      path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
+      path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-locale"
       type = :moment_js_timezones
     else
-      path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+      path = "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale"
       type = :moment_js
     end
 
