@@ -955,12 +955,10 @@ export default class ComposerEditor extends Component {
       false
     );
 
-    if (formTemplateData) {
-      this.preview = await this.cachedCookAsync(
-        formTemplateData,
-        this.markdownOptions
-      );
-    }
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
   }
 
   async cachedCookAsync(text, options) {
