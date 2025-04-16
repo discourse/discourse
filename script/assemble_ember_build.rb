@@ -81,6 +81,7 @@ if low_memory_environment?
   STDERR.puts "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
   build_env["NODE_OPTIONS"] = "--max_old_space_size=2048"
   build_env["CHEAP_SOURCE_MAPS"] = "1"
+  build_env["JOBS"] = "1"
 end
 
 build_cmd << "-prod" if resolved_ember_env == "production"
