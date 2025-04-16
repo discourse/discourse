@@ -157,21 +157,6 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
-<<<<<<< HEAD
-  @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
-  canEditClass(currentPostId, firstPostId) {
-    if (currentPostId === firstPostId) {
-      return "can-edit";
-    }
-  }
-
-  @discourseComputed("site.mobileView", "model.details.can_edit")
-  showEditButton(mobileView, canEdit) {
-    return mobileView && canEdit;
-  }
-
-=======
->>>>>>> parent of beb98f4761... UX: New UX to edit topic title
   @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -376,18 +361,6 @@ export default class TopicController extends Controller {
 
   @action
   editTopic(event) {
-<<<<<<< HEAD
-    event?.preventDefault();
-    this.set("editingTopic", true);
-  }
-
-  @action
-  titleClick(event) {
-    let isAtTop =
-      this.currentPostId === this.model.postStream.posts.firstObject.id;
-
-=======
->>>>>>> parent of beb98f4761... UX: New UX to edit topic title
     event?.preventDefault();
     if (this.get("model.details.can_edit")) {
       this.set("editingTopic", true);

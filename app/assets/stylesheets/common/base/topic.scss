@@ -200,14 +200,8 @@
       font-size: var(--font-up-3);
     }
 
-    &.can-edit a {
-      cursor: text;
+    a {
       color: var(--primary);
-    }
-
-    &.can-edit:hover {
-      outline: 2px solid var(--tertiary);
-      border-radius: var(--d-border-radius);
     }
   }
 
