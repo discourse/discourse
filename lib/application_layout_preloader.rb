@@ -111,6 +111,11 @@ class ApplicationLayoutPreloader
   def preload_anonymous_data
     @preloaded["site"] = Site.json_for(@guardian)
     @preloaded["siteSettings"] = SiteSetting.client_settings_json
+
+    # TODO (martin) Not sure if this is best, to send these down to the client
+    # and override them there, but if we don't then we would need a per-theme
+    # cache for client settings JSON and that is way too extra...
+    @preloaded["themeSiteSettingOverrides"] = SiteSetting.theme_site_settings[@theme_id].to_json
     @preloaded["customHTML"] = custom_html_json
     @preloaded["banner"] = banner_json
     @preloaded["customEmoji"] = custom_emoji

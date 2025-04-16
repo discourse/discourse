@@ -77,6 +77,11 @@ module SiteSettingExtension
     @containers[provider.current_site] ||= {}
   end
 
+  def theme_site_settings
+    @theme_site_settings ||= {}
+    @theme_site_settings[provider.current_site] ||= {}
+  end
+
   def defaults
     @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
@@ -189,9 +194,13 @@ module SiteSettingExtension
             else
               public_send(name)
             end
+
           type = type_supervisor.get_type(name)
-          value = value.to_s if type == :upload
-          value = value.map(&:to_s).join("|") if type == :uploaded_image_list
+          if type == :upload
+            value = value.to_s
+          elsif type == :uploaded_image_list
+            value = value.map(&:to_s).join("|")
+          end
 
           [name, value]
         end
@@ -368,11 +377,26 @@ module SiteSettingExtension
     mutex.synchronize do
       ensure_listen_for_changes
 
+      # TODO (martin)
+      #
+      # Ah here is where we get the db values (db_all) and we call
+      # SiteSetting.refresh! in 001_refresh
+      #
+      # Probably need to load the theme site settings into a cache here too
+      ThemeSiteSetting.all.each do |tss|
+        theme_site_settings[tss.theme_id] ||= {}
+        theme_site_settings[tss.theme_id][tss.name.to_sym] = type_supervisor.to_rb_value(
+          tss.name,
+          tss.value,
+          tss.data_type,
+        )
+      end
+
       new_hash =
         Hash[
           *(
-            defaults
-              .db_all
+            provider
+              .all
               .map do |s|
                 [s.name.to_sym, type_supervisor.to_rb_value(s.name, s.value, s.data_type)]
               end
@@ -391,7 +415,16 @@ module SiteSettingExtension
 
       changes, deletions = diff_hash(new_hash, current)
 
-      changes.each { |name, val| current[name] = val }
+      changes.each do |name, val|
+        current[name] = val
+
+        # TODO (martin) Hmmm this isn't right, we dont want to override the theme
+        # site setting val with the new site setting value, we only want to update
+        # this cache for changes when saving ThemeSiteSetting records
+        # theme_site_settings.each do |theme_id, settings|
+        #   settings[name] = val if settings.has_key?(name)
+        # end
+      end
       deletions.each { |name, _| current[name] = defaults_view[name] }
       uploads.clear
 
@@ -657,6 +690,9 @@ module SiteSettingExtension
         end
 
         refresh! if current[name].nil?
+
+        # TODO (martin) I guess we get the theme site setting value here? But we
+        # want them to be cached for sure
         value = current[name]
 
         if mandatory_values[name]
@@ -742,6 +778,8 @@ module SiteSettingExtension
 
       categories[name] = opts[:category] || :uncategorized
 
+      # TODO (martin) We should only make a certain subset of types of settings themeable,
+      # maybe booleans, list, enum, string?
       themeable[name] = opts[:themeable] ? true : false
 
       if opts[:area]
