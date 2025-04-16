@@ -200,7 +200,8 @@
       font-size: var(--font-up-3);
     }
 
-    a {
+    &.can-edit a {
+      cursor: text;
       color: var(--primary);
     }
 
