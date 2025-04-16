@@ -53,7 +53,9 @@ export default class TagChooserField extends Component {
       // and we need to wait for the next runloop to remove the tags
       // we reset the tags from this component choices as we have no way to know which one to keep, maybe the user
       // would want to keep the last added tag
-      const selectedTags = [...this.tags.filter((tag) => !this.selectedTags.includes(tag)),];
+      const selectedTags = [
+        ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
+      ];
 
       next(() => {
         set(this.composer.model, "tags", selectedTags);
@@ -83,7 +85,10 @@ export default class TagChooserField extends Component {
 
     if (this.args.attributes.tag_choices) {
       let choiceMap = new Map(
-        Object.entries(this.args.attributes.tag_choices).map(([key, value]) => [value, key])
+        Object.entries(this.args.attributes.tag_choices).map(([key, value]) => [
+          value,
+          key,
+        ])
       );
 
       selectedValues = Array.from(event.target.selectedOptions).map(
@@ -158,7 +163,7 @@ export default class TagChooserField extends Component {
           <option
             class="form-template-field__multi-select-placeholder"
             value=""
-            disabled={{not this.selectedTags.length }}
+            disabled={{not this.selectedTags.length}}
             selected={{if this.selectedTags.length "" "selected"}}
           >{{@attributes.none_label}}</option>
         {{/if}}
