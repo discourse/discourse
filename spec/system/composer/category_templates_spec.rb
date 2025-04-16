@@ -511,11 +511,11 @@ describe "Composer Form Templates", type: :system do
     expect(preview).to have_content("Peter Parker")
     dropdown = find("[name='4']")
     dropdown.click
-    dropdown.send_keys(:arrow_down)
+    dropdown.send_keys(:down)
     dropdown.send_keys(:enter)
 
     dropdown.click
-    dropdown.send_keys(:arrow_up)
+    dropdown.send_keys(:up)
     dropdown.send_keys(:enter)
 
     expect(preview).to have_content("Option 1")
