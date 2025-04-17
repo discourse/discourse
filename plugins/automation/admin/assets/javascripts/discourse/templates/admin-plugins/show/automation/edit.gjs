@@ -199,6 +199,7 @@ export default RouteTemplate(
                       "click"
                       (withEventValue
                         (fn (mut @controller.automationForm.enabled))
+                        "target.checked"
                       )
                     }}
                   />
