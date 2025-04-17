@@ -44,12 +44,12 @@
 
     .select-kit-body[data-popper-placement="bottom-start"]
       .select-kit-collection,
-    .select-kit-filter {
+    .select-kit-body[data-popper-placement="bottom-start"] .select-kit-filter {
       @include float-down;
     }
 
     .select-kit-body[data-popper-placement="top-start"] .select-kit-collection,
-    .select-kit-filter {
+    .select-kit-body[data-popper-placement="top-start"] .select-kit-filter {
       @include float-up;
     }
 
