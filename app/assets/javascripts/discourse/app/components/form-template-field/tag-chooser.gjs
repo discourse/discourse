@@ -49,14 +49,12 @@ export default class TagChooserField extends Component {
         })
       );
 
-      // the next is needed because we already updated the tags in the same runloop
-      // and we need to wait for the next runloop to remove the tags
-      // we reset the tags from this component choices as we have no way to know which one to keep, maybe the user
-      // would want to keep the last added tag
       const selectedTags = [
         ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
       ];
 
+      // the next is needed because we already updated the tags in the same runloop
+      // when the user selected a tag in the composer directly
       next(() => {
         set(this.composer.model, "tags", selectedTags);
         this.args.onChange([]);
