@@ -243,11 +243,11 @@
       width: 100vw;
       max-width: 100vw;
       padding: 0.5rem 0.5rem 0;
-      transform-origin: 68%;
+      transform-origin: 66%;
+      transition: height 0.2s ease-in;
 
       &.empty-panel {
-        height: auto;
-        padding-bottom: 0.5rem;
+        height: 4rem;
       }
 
       &.slide-in {
