@@ -30,28 +30,29 @@ class FormTemplatesController < ApplicationController
   def process_template(template_content)
     parsed_template = YAML.safe_load(template_content)
 
+    tag_group_names = parsed_template.map { |f| f["tag_group"] }.compact.map(&:downcase).uniq
+
+    tag_groups =
+      TagGroup
+        .includes(:tags)
+        .visible(guardian)
+        .where("lower(name) IN (?)", tag_group_names)
+        .index_by { |tg| tg.name }
+
     parsed_template.map! do |form_field|
       next form_field unless form_field["tag_group"]
 
       tag_group_name = form_field["tag_group"]
-
-      tags =
-        TagGroup
-          .includes(:tags)
-          .visible(guardian)
-          .all
-          .where("lower(NAME) in (?)", tag_group_name.downcase)
-
+      tags = tag_groups[tag_group_name].tags
       ordered_field = {}
 
       form_field.each do |key, value|
         ordered_field[key] = value
 
-        ordered_field["choices"] = tags.first.tags.map(&:name) if key == "id"
+        ordered_field["choices"] = tags.map(&:name) if key == "id"
         if key == "attributes"
           ordered_field["attributes"]["tag_group"] = tag_group_name
-          translated_tags =
-            tags.first.tags.select { |t| t.description }.to_h { |t| [t.name, t.description] }
+          translated_tags = tags.select { |t| t.description }.to_h { |t| [t.name, t.description] }
           ordered_field["attributes"]["tag_choices"] = translated_tags
         end
       end
