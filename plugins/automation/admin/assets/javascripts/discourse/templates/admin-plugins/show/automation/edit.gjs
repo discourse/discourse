@@ -197,9 +197,8 @@ export default RouteTemplate(
                     @checked={{@controller.automationForm.enabled}}
                     {{on
                       "click"
-                      (action
-                        (mut @controller.automationForm.enabled)
-                        value="target.checked"
+                      (withEventValue
+                        (fn (mut @controller.automationForm.enabled))
                       )
                     }}
                   />

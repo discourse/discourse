@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import EmberObject, { computed, get } from "@ember/object";
+import EmberObject, { action, computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -624,14 +624,15 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
       }
     }
 
-    const action = get(this, actionName);
-    if (boundaryAction && action) {
-      boundaryAction = action.call(this, ...params);
+    const theAction = get(this, actionName);
+    if (boundaryAction && theAction) {
+      boundaryAction = theAction.call(this, ...params);
     }
 
     return boundaryAction;
   }
 
+  @action
   deselect() {
     this.clearErrors();
     this.selectKit.change(null, null);

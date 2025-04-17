@@ -1,4 +1,4 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
@@ -37,6 +37,7 @@ export default class ListSetting extends MultiSelectComponent {
     }
   }
 
+  @action
   deselect(value) {
     this.onChangeChoices &&
       this.onChangeChoices([...new Set([value, ...makeArray(this.choices)])]);

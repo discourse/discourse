@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { classNameBindings } from "@ember-decorators/component";
 import GoogleIcon from "discourse/components/google-icon";
@@ -47,7 +48,7 @@ export default class LoginButtons extends Component {
       <button
         type="button"
         class="btn btn-social {{b.name}}"
-        {{on "click" (action this.externalLogin b)}}
+        {{on "click" (fn this.externalLogin b)}}
         aria-label={{b.screenReaderTitle}}
       >
         {{#if b.isGoogle}}
