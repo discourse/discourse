@@ -158,9 +158,11 @@ export default class TopicController extends Controller {
   }
 
   @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
-  canEditClass(currentPostId, firstPostId) {
+  topicTitleClass(currentPostId, firstPostId) {
     if (currentPostId === firstPostId) {
-      return "can-edit";
+      // TODO: We need to remove edit-topic here, which is the same class as the pencil,
+      // once we have updated plugins/themes etc to no longer use this.
+      return "edit-topic can-edit-topic";
     }
   }
 

@@ -202,7 +202,7 @@ export default RouteTemplate(
               {{! template-lint-disable no-invalid-interactive }}
               <h1
                 data-topic-id={{@controller.model.id}}
-                class={{@controller.canEditClass}}
+                class={{@controller.topicTitleClass}}
                 {{on "click" @controller.titleClick}}
               >
                 {{#unless @controller.model.is_warning}}
