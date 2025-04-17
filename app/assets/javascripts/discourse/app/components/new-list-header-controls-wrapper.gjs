@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
-import raw from "discourse/helpers/raw";
 
 export default class NewListHeaderControlsWrapper extends Component {
   @service site;
@@ -21,30 +19,14 @@ export default class NewListHeaderControlsWrapper extends Component {
   }
 
   <template>
-    {{#if this.site.useGlimmerTopicList}}
-      <div class="topic-replies-toggle-wrapper">
-        <NewListHeaderControls
-          @current={{@current}}
-          @newRepliesCount={{@newRepliesCount}}
-          @newTopicsCount={{@newTopicsCount}}
-          @noStaticLabel={{true}}
-          @changeNewListSubset={{@changeNewListSubset}}
-        />
-      </div>
-    {{else}}
-      <div
-        {{! template-lint-disable no-invalid-interactive }}
-        {{on "click" this.click}}
-        class="topic-replies-toggle-wrapper"
-      >
-        {{raw
-          "list/new-list-header-controls"
-          current=@current
-          newRepliesCount=@newRepliesCount
-          newTopicsCount=@newTopicsCount
-          noStaticLabel=true
-        }}
-      </div>
-    {{/if}}
+    <div class="topic-replies-toggle-wrapper">
+      <NewListHeaderControls
+        @current={{@current}}
+        @newRepliesCount={{@newRepliesCount}}
+        @newTopicsCount={{@newTopicsCount}}
+        @noStaticLabel={{true}}
+        @changeNewListSubset={{@changeNewListSubset}}
+      />
+    </div>
   </template>
 }

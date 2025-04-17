@@ -159,6 +159,23 @@ RSpec.describe DiscourseAutomation::Stat do
         expect(stat.max_run_time).to eq(0.75)
         expect(stat.total_runs).to eq(1)
       end
+
+      context "when an error occurs" do
+        it "yields the correct error and records it" do
+          allow(Process).to receive(:clock_gettime).and_return(10, 10.75)
+
+          expect { DiscourseAutomation::Stat.log(automation_id) { raise } }.to raise_error(
+            RuntimeError,
+          )
+
+          stat = DiscourseAutomation::Stat.find_by(automation_id: automation_id)
+          expect(stat.total_time).to eq(0.75)
+          expect(stat.average_run_time).to eq(0.75)
+          expect(stat.min_run_time).to eq(0.75)
+          expect(stat.max_run_time).to eq(0.75)
+          expect(stat.total_runs).to eq(1)
+        end
+      end
     end
 
     context "with direct call form" do

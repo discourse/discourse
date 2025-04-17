@@ -214,6 +214,11 @@ export default RouteTemplate(
                   class="btn-primary login-button"
                 />
               </div>
+
+              <PluginOutlet
+                @name="below-login-buttons"
+                @outletArgs={{hash model=@controller.model}}
+              />
             </div>
           </div>
         </section>

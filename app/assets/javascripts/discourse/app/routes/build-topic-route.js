@@ -92,7 +92,6 @@ class AbstractTopicRoute extends DiscourseRoute {
 
   queryParams = queryParams;
   templateName = "discovery/list";
-  controllerName = "discovery/list";
 
   async model(data) {
     // attempt to stop early cause we need this to be called before .sync

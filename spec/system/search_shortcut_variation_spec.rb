@@ -24,29 +24,6 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(search_page).to have_no_search_menu_visible
       end
 
-      it "displays and focuses welcome banner search when Ctrl+F is pressed and hides it when Escape is pressed" do
-        visit("/")
-        expect(welcome_banner).to be_visible
-        search_page.browser_search_shortcut
-        expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-        page.send_keys(:escape)
-        expect(search_page).to have_no_search_menu_visible
-      end
-
-      it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-        visit("/")
-        expect(welcome_banner).to be_visible
-        search_page.browser_search_shortcut
-        expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-        # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
-        # not change the document acive element, leaving it here as a reminder to manually test
-        # this behavior.
-        # search_page.browser_search_shortcut
-        # expect(current_active_element[:id]).to eq(nil)
-      end
-
       context "when welcome banner is not in the viewport" do
         before do
           visit("/")
@@ -61,27 +38,6 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           page.send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
-
-        it "displays and focuses header search when Ctrl+F is pressed and hides it when Escape is pressed" do
-          expect(welcome_banner).to be_invisible
-          search_page.browser_search_shortcut
-          expect(search_page).to have_search_menu
-          expect(current_active_element[:id]).to eq("header-search-input")
-          page.send_keys(:escape)
-          expect(search_page).to have_no_search_menu_visible
-        end
-
-        it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-          expect(welcome_banner).to be_invisible
-          search_page.browser_search_shortcut
-          expect(search_page).to have_search_menu
-          expect(current_active_element[:id]).to eq("header-search-input")
-          # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
-          # not change the document acive element, leaving it here as a reminder to manually test
-          # this behavior.
-          # search_page.browser_search_shortcut
-          # expect(current_active_element[:id]).to eq(nil)
-        end
       end
     end
 
@@ -92,16 +48,6 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         visit("/")
         expect(welcome_banner).to be_hidden
         page.send_keys("/")
-        expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("header-search-input")
-        page.send_keys(:escape)
-        expect(search_page).to have_no_search_menu_visible
-      end
-
-      it "displays and focuses header search when Ctrl+F is pressed and hides it when Escape is pressed" do
-        visit("/")
-        expect(welcome_banner).to be_hidden
-        search_page.browser_search_shortcut
         expect(search_page).to have_search_menu
         expect(current_active_element[:id]).to eq("header-search-input")
         page.send_keys(:escape)
@@ -124,30 +70,6 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         expect(current_active_element[:id]).to eq("welcome-banner-search-input")
         page.send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
-      end
-
-      it "displays and focuses welcome banner search when Ctrl+F is pressed and hides it when Escape is pressed" do
-        visit("/")
-        expect(welcome_banner).to be_visible
-        search_page.browser_search_shortcut
-        expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-        page.send_keys(:escape)
-        expect(search_page).to have_no_search_menu_visible
-      end
-
-      it "displays and focuses welcome banner search when Ctrl+F is pressed and blurs it when Ctrl+F is pressed" do
-        visit("/")
-        expect(welcome_banner).to be_visible
-        search_page.browser_search_shortcut
-        expect(search_page).to have_search_menu
-        expect(current_active_element[:id]).to eq("welcome-banner-search-input")
-
-        # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
-        # not change the document acive element, leaving it here as a reminder to manually test
-        # this behavior.
-        # search_page.browser_search_shortcut
-        # expect(current_active_element[:id]).to eq(nil)
       end
 
       context "when welcome banner is not in the viewport" do
@@ -186,16 +108,13 @@ describe "Search | Shortcuts for variations of search input", type: :system do
         fab!(:topic)
         fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
 
-        it "opens search on first press of Ctrl+F, and closes on the second" do
+        it "opens search on first press of /, and closes when Escape is pressed" do
           visit "/t/#{topic.slug}/#{topic.id}"
-          search_page.browser_search_shortcut
-          expect(search_page).to have_search_menu_visible
+          page.send_keys("/")
+          expect(search_page).to have_search_menu
           expect(current_active_element[:id]).to eq("icon-search-input")
-          # NOTE: This does not work as expected because pressing Ctrl+F in the browser does
-          # not change the document acive element, leaving it here as a reminder to manually test
-          # this behavior.
-          # search_page.browser_search_shortcut
-          # expect(current_active_element[:id]).to eq(nil)
+          page.send_keys(:escape)
+          expect(search_page).to have_no_search_menu_visible
         end
       end
     end

@@ -170,6 +170,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           it "searches using the quick search" do
             visit("/")
             search_page.click_search_icon
+            expect(page).to have_css(".search-menu-container")
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
             expect(search_page).to have_topic_title_for_first_search_result(topics.first.title)
@@ -195,6 +196,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           it "searches using the quick search" do
             visit("/")
             search_page.click_search_icon
+            expect(page).to have_css(".search-menu-container")
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
             expect(search_page).to have_topic_title_for_first_search_result(topics.first.title)

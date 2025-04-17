@@ -14,7 +14,6 @@ import NewListHeaderControlsWrapper from "discourse/components/new-list-header-c
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopPeriodButtons from "discourse/components/top-period-buttons";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
-import TopicList from "discourse/components/topic-list";
 import List from "discourse/components/topic-list/list";
 import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
@@ -209,27 +208,15 @@ export default class DiscoveryTopics extends Component {
     {{/if}}
 
     {{#if @model.sharedDrafts}}
-      {{#if this.site.useGlimmerTopicList}}
-        <List
-          @listTitle="shared_drafts.title"
-          @top={{this.top}}
-          @hideCategory="true"
-          @category={{@category}}
-          @topics={{@model.sharedDrafts}}
-          @discoveryList={{true}}
-          class="shared-drafts"
-        />
-      {{else}}
-        <TopicList
-          @listTitle="shared_drafts.title"
-          @top={{this.top}}
-          @hideCategory="true"
-          @category={{@category}}
-          @topics={{@model.sharedDrafts}}
-          @discoveryList={{true}}
-          class="shared-drafts"
-        />
-      {{/if}}
+      <List
+        @listTitle="shared_drafts.title"
+        @top={{this.top}}
+        @hideCategory="true"
+        @category={{@category}}
+        @topics={{@model.sharedDrafts}}
+        @discoveryList={{true}}
+        class="shared-drafts"
+      />
     {{/if}}
 
     <DiscoveryTopicsList
@@ -290,57 +277,30 @@ export default class DiscoveryTopics extends Component {
       </span>
 
       {{#if this.hasTopics}}
-        {{#if this.site.useGlimmerTopicList}}
-          <List
-            @highlightLastVisited={{true}}
-            @top={{this.top}}
-            @hot={{this.hot}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @showPosters={{true}}
-            @canBulkSelect={{@canBulkSelect}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
-            @changeSort={{@changeSort}}
-            @hideCategory={{@model.hideCategory}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @expandGloballyPinned={{this.expandGloballyPinned}}
-            @expandAllPinned={{this.expandAllPinned}}
-            @category={{@category}}
-            @topics={{@model.topics}}
-            @discoveryList={{true}}
-            @focusLastVisitedTopic={{true}}
-            @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-            @newListSubset={{@model.params.subset}}
-            @changeNewListSubset={{@changeNewListSubset}}
-            @newRepliesCount={{this.newRepliesCount}}
-            @newTopicsCount={{this.newTopicsCount}}
-          />
-        {{else}}
-          <TopicList
-            @highlightLastVisited={{true}}
-            @top={{this.top}}
-            @hot={{this.hot}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @showPosters={{true}}
-            @canBulkSelect={{@canBulkSelect}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
-            @changeSort={{@changeSort}}
-            @hideCategory={{@model.hideCategory}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @expandGloballyPinned={{this.expandGloballyPinned}}
-            @expandAllPinned={{this.expandAllPinned}}
-            @category={{@category}}
-            @topics={{@model.topics}}
-            @discoveryList={{true}}
-            @focusLastVisitedTopic={{true}}
-            @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-            @newListSubset={{@model.params.subset}}
-            @changeNewListSubset={{@changeNewListSubset}}
-            @newRepliesCount={{this.newRepliesCount}}
-            @newTopicsCount={{this.newTopicsCount}}
-          />
-        {{/if}}
+        <List
+          @highlightLastVisited={{true}}
+          @top={{this.top}}
+          @hot={{this.hot}}
+          @showTopicPostBadges={{this.showTopicPostBadges}}
+          @showPosters={{true}}
+          @canBulkSelect={{@canBulkSelect}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
+          @changeSort={{@changeSort}}
+          @hideCategory={{@model.hideCategory}}
+          @order={{this.order}}
+          @ascending={{this.ascending}}
+          @expandGloballyPinned={{this.expandGloballyPinned}}
+          @expandAllPinned={{this.expandAllPinned}}
+          @category={{@category}}
+          @topics={{@model.topics}}
+          @discoveryList={{true}}
+          @focusLastVisitedTopic={{true}}
+          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+          @newListSubset={{@model.params.subset}}
+          @changeNewListSubset={{@changeNewListSubset}}
+          @newRepliesCount={{this.newRepliesCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+        />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">

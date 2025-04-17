@@ -36,4 +36,43 @@ describe "AutoTagTopic" do
       expect(topic.reload.tags.pluck(:name).sort).to match_array(%w[tag1 tag2 tag3])
     end
   end
+
+  context "with restricted tags" do
+    fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
+    before { automation.upsert_field!("tags", "tags", { value: ["restricted"] }) }
+
+    context "when group restricted tags" do
+      fab!(:tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["restricted"])
+      end
+
+      it "works" do
+        post = create_post(topic: topic)
+        automation.trigger!("post" => post)
+        expect(topic.reload.tags.pluck(:name).sort).to match_array(["restricted"])
+      end
+    end
+
+    context "when category restricted tags" do
+      fab!(:category)
+      fab!(:restricted_category) { Fabricate(:category) }
+      fab!(:category_tag) do
+        CategoryTag.create!(category: restricted_category, tag: restricted_tag)
+      end
+
+      it "works" do
+        topic.update!(category: restricted_category)
+        post = create_post(topic: topic)
+        automation.trigger!("post" => post)
+        expect(topic.reload.tags.pluck(:name).sort).to match_array(["restricted"])
+      end
+
+      it "does not work when incorrect category" do
+        topic.update!(category: category)
+        post = create_post(topic: topic)
+        automation.trigger!("post" => post)
+        expect(topic.reload.tags.pluck(:name).sort).to match_array([])
+      end
+    end
+  end
 end

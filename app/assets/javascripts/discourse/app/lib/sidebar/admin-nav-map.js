@@ -84,11 +84,21 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_all_reports",
-        route: "adminReports.index",
+        route: "adminReports",
         label: "admin.config.reports.title",
         description: "admin.config.reports.header_description",
         icon: "chart-bar",
         moderator: true,
+        links: [
+          {
+            name: "admin_reports_settings",
+            route: "adminReports.dashboardSettings",
+            label: "settings",
+            description: "admin.config.reports.header_description",
+            icon: "gear",
+            settings_area: "reports",
+          },
+        ],
       },
     ],
   },
@@ -103,6 +113,16 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.about.header_description",
         icon: "gear",
         settings_area: "about",
+      },
+      {
+        name: "admin_content",
+        route: "adminConfig.content",
+        label: "admin.config.content.title",
+        description: "admin.config.content.header_description",
+        keywords: "admin.config.content.keywords",
+        icon: "pencil",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
       },
       {
         name: "admin_badges",
@@ -230,12 +250,11 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.appearance.title",
     links: [
       {
-        name: "admin_branding",
-        route: "adminConfig.branding",
-        label: "admin.config.branding.title",
-        description: "admin.config.branding.header_description",
+        name: "admin_logo_and_fonts",
+        route: "adminConfig.logo-and-fonts",
+        label: "admin.config.logo_and_fonts.title",
+        description: "admin.config.logo_and_fonts.header_description",
         icon: "fab-discourse",
-        settings_category: "branding",
       },
       {
         name: "admin_color_palettes",
@@ -300,7 +319,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "far-envelope",
+        icon: "gear",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -330,7 +349,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminCustomizeEmailStyle",
         label: "admin.config.email_appearance.title",
         description: "admin.config.email_appearance.header_description",
-        icon: "envelope",
+        icon: "palette",
       },
       {
         name: "admin_email_logs",
@@ -499,14 +518,6 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.rate_limits.header_description",
         icon: "rocket",
         settings_category: "rate_limits",
-      },
-      {
-        name: "admin_user_api",
-        route: "adminConfig.user-api.settings",
-        label: "admin.config.user_api.title",
-        description: "admin.config.user_api.header_description",
-        icon: "shuffle",
-        settings_category: "user_api",
       },
       {
         name: "admin_onebox",

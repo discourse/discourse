@@ -146,6 +146,7 @@ export default class SecurityController extends Controller {
     this.dialog.deleteConfirm({
       title: i18n("user.change_password.remove"),
       message: i18n("user.change_password.remove_detail"),
+      confirmButtonLabel: "user.change_password.remove",
       confirmButtonIcon: "trash-can",
       didConfirm: () => {
         this.set("removePasswordInProgress", true);

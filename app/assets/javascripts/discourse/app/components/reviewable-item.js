@@ -297,18 +297,19 @@ export default class ReviewableItem extends Component {
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
         if (await this.#claimReviewable()) {
-          return actionMethod.call(this, reviewable, performAction);
+          await actionMethod.call(this, reviewable, performAction);
         }
       } else {
         // eslint-disable-next-line no-console
         console.error(
           `No handler for ${performableAction.client_action} found`
         );
-        return;
       }
     } else {
-      return performAction();
+      await performAction();
     }
+
+    return this.#unclaimAutomaticReviewable();
   }
 
   _performResult(result, performableAction, reviewable) {
@@ -338,11 +339,11 @@ export default class ReviewableItem extends Component {
   }
 
   clientSuspend(reviewable, performAction) {
-    this._penalize("showSuspendModal", reviewable, performAction);
+    return this._penalize("showSuspendModal", reviewable, performAction);
   }
 
   clientSilence(reviewable, performAction) {
-    this._penalize("showSilenceModal", reviewable, performAction);
+    return this._penalize("showSilenceModal", reviewable, performAction);
   }
 
   async clientEdit(reviewable, performAction) {
@@ -372,33 +373,18 @@ export default class ReviewableItem extends Component {
     return performAction();
   }
 
-  async _penalize(adminToolMethod, reviewable, performAction) {
+  _penalize(adminToolMethod, reviewable, performAction) {
     let adminTools = this.adminTools;
     if (adminTools) {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
       let postEdit = reviewable.get("raw");
-      let claimed_by = reviewable.get("claimed_by");
 
-      const data = await adminTools[adminToolMethod](createdBy, {
+      return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
         before: performAction,
       });
-
-      if (!data?.success && claimed_by?.automatic) {
-        try {
-          await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
-            type: "DELETE",
-            data: { automatic: true },
-          });
-          this.reviewable.set("claimed_by", null);
-        } catch (e) {
-          popupAjaxError(e);
-        }
-      }
-
-      return data;
     }
   }
 
@@ -427,6 +413,22 @@ export default class ReviewableItem extends Component {
     }
 
     return this.reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
+  async #unclaimAutomaticReviewable() {
+    if (!this.reviewable.topic || !this.reviewable.claimed_by?.automatic) {
+      return;
+    }
+
+    try {
+      await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      this.reviewable.set("claimed_by", null);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action

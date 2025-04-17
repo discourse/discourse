@@ -170,6 +170,7 @@ const extension = {
 
   serializeNode: {
     emoji(state, node) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }

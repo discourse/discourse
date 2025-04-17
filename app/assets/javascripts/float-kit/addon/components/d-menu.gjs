@@ -75,6 +75,7 @@ export default class DMenu extends Component {
   get componentArgs() {
     return {
       close: this.menuInstance.close,
+      show: this.menuInstance.show,
       data: this.options.data,
     };
   }
@@ -131,6 +132,7 @@ export default class DMenu extends Component {
       data-trigger
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
+      @componentArgs={{this.componentArgs}}
       ...attributes
     >
       {{#if (has-block "trigger")}}

@@ -130,6 +130,7 @@ export default function () {
         "adminApiKeys",
         { path: "/keys", resetNamespace: true },
         function () {
+          this.route("settings");
           this.route("show", { path: "/:api_key_id" });
           this.route("new");
         }
@@ -161,6 +162,7 @@ export default function () {
       function () {
         this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
+        this.route("dashboardSettings", { path: "dashboard-settings" });
       }
     );
 
@@ -187,6 +189,7 @@ export default function () {
       "adminUsers",
       { path: "/users", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route(
           "adminUser",
           { path: "/:user_id/:username", resetNamespace: true },
@@ -236,6 +239,12 @@ export default function () {
             });
           }
         );
+        this.route("content", function () {
+          this.route("categoriesAndTags", { path: "/" });
+          this.route("sharing");
+          this.route("postsAndTopics", { path: "/posts-and-topics" });
+          this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
+        });
         this.route("localization", function () {
           this.route("settings", {
             path: "/",
@@ -344,7 +353,7 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("branding");
+        this.route("logo-and-fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -358,9 +367,6 @@ export default function () {
           this.route("settings", { path: "/" });
         });
         this.route("spam", function () {
-          this.route("settings", { path: "/" });
-        });
-        this.route("user-api", function () {
           this.route("settings", { path: "/" });
         });
 

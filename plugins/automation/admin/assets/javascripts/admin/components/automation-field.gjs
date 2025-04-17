@@ -3,7 +3,7 @@ import I18n, { i18n } from "discourse-i18n";
 import DaBooleanField from "./fields/da-boolean-field";
 import DaCategoriesField from "./fields/da-categories-field";
 import DaCategoryField from "./fields/da-category-field";
-import DaCategoryNotificationlevelField from "./fields/da-category-notification-level-field";
+import DaCategoryNotificationLevelField from "./fields/da-category-notification-level-field";
 import DaChoicesField from "./fields/da-choices-field";
 import DaCustomField from "./fields/da-custom-field";
 import DaCustomFields from "./fields/da-custom-fields";
@@ -44,7 +44,7 @@ const FIELD_COMPONENTS = {
   group: DaGroupField,
   groups: DaGroupsField,
   choices: DaChoicesField,
-  category_notification_level: DaCategoryNotificationlevelField,
+  category_notification_level: DaCategoryNotificationLevelField,
   email_group_user: DaEmailGroupUserField,
   custom_field: DaCustomField,
   custom_fields: DaCustomFields,

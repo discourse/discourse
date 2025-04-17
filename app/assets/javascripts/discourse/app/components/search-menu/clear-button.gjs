@@ -1,16 +1,13 @@
-import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
-const ClearButton = <template>
-  <a
-    class="clear-search"
+<template>
+  <DButton
+    class="btn-transparent clear-search"
+    data-test-button="clear-search-input"
     aria-label="clear_input"
     title={{i18n "search.clear_search"}}
-    href
-    {{on "click" @clearSearch}}
-  >
-    {{icon "xmark"}}
-  </a>
-</template>;
-export default ClearButton;
+    @action={{@clearSearch}}
+    @icon="xmark"
+  />
+</template>

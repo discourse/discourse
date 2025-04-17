@@ -13,6 +13,15 @@ export function markInputRule(regexp, markType, getAttrs) {
       const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       const tr = state.tr;
 
+      // attrs may override match or start
+      const {
+        match: attrsMatch,
+        start: attrsStart,
+        ...markAttrs
+      } = attrs ?? {};
+      match = attrsMatch ?? match;
+      start += attrsStart ?? 0;
+
       if (match[1]) {
         let textStart = start + match[0].indexOf(match[1]);
         let textEnd = textStart + match[1].length;
@@ -22,14 +31,13 @@ export function markInputRule(regexp, markType, getAttrs) {
         if (textStart > start) {
           tr.delete(start, textStart);
         }
-        end = start + match[1].length;
 
-        tr.addMark(start, end, markType.create(attrs));
+        tr.addMark(start, start + match[1].length, markType.create(markAttrs));
         tr.removeStoredMark(markType);
       } else {
         tr.delete(start, end);
         tr.insertText(" ");
-        tr.addMark(start, start + 1, markType.create(attrs));
+        tr.addMark(start, start + 1, markType.create(markAttrs));
         tr.removeStoredMark(markType);
         tr.insertText(" ");
 
@@ -85,4 +93,27 @@ export function atBlockStart(state, view) {
     return null;
   }
   return $cursor;
+}
+
+// https://github.com/discourse/discourse/pull/31933#discussion_r2019739410
+export function changedDescendants(old, cur, f, offset = 0) {
+  const oldSize = old.childCount,
+    curSize = cur.childCount;
+  outer: for (let i = 0, j = 0; i < curSize; i++) {
+    const child = cur.child(i);
+    for (let scan = j, e = Math.min(oldSize, i + 5); scan < e; scan++) {
+      if (old.child(scan) === child) {
+        j = scan + 1;
+        offset += child.nodeSize;
+        continue outer;
+      }
+    }
+    f(child, offset);
+    if (j < oldSize && old.child(j).sameMarkup(child)) {
+      changedDescendants(old.child(j), child, f, offset + 1);
+    } else {
+      child.nodesBetween(0, child.content.size, f, offset + 1);
+    }
+    offset += child.nodeSize;
+  }
 }

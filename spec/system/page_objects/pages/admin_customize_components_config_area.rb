@@ -131,6 +131,10 @@ module PageObjects
         has_no_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
       end
 
+      def has_component?(id)
+        has_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
+      end
+
       def status_selector
         PageObjects::Components::DSelect.new(find(".admin-config-components__status-filter select"))
       end

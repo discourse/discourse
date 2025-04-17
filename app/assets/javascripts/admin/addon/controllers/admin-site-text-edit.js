@@ -24,7 +24,7 @@ export default class AdminSiteTextEdit extends Controller {
     });
   }
 
-  @discourseComputed("buffered.value")
+  @discourseComputed("buffered.value", "siteText.value")
   saveDisabled(value) {
     return this.siteText.value === value;
   }
