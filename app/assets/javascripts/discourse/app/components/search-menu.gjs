@@ -188,9 +188,7 @@ export default class SearchMenu extends Component {
   }
 
   @bind
-  clearSearch(e) {
-    e.stopPropagation();
-    e.preventDefault();
+  clearSearch() {
     this.search.activeGlobalSearchTerm = "";
     this.search.focusSearchInput();
     this.triggerSearch();
