@@ -297,6 +297,7 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
         await click(".title-wrapper .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
@@ -453,6 +454,7 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
         await click(".title-wrapper .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
