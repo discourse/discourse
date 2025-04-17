@@ -15,12 +15,11 @@ import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
-import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
@@ -814,25 +813,12 @@ export default class DEditor extends Component {
         </div>
       </div>
 
-      {{! template-lint-disable no-invalid-interactive }}
-      <div
-        class="d-editor-preview-wrapper
-          {{if this.forcePreview 'force-preview'}}"
-        {{on "click" this.handlePreviewClick}}
-      >
-        <DecoratedHtml
-          @className="d-editor-preview"
-          @html={{htmlSafe this.preview}}
-          @decorate={{this.previewUpdated}}
-        />
-        <span class="d-editor-plugin">
-          <PluginOutlet
-            @name="editor-preview"
-            @connectorTagName="div"
-            @outletArgs={{this.outletArgs}}
-          />
-        </span>
-      </div>
+      <DEditorPreview
+        @preview={{this.preview}}
+        @forcePreview={{this.forcePreview}}
+        @onPreviewUpdated={{this.previewUpdated}}
+        @outletArgs={{this.outletArgs}}
+      />
     </div>
   </template>
 }

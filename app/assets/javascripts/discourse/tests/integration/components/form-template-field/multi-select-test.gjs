@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MultiSelect from "discourse/components/form-template-field/multi-select";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -22,7 +23,9 @@ module(
       this.set("choices", choices);
 
       await render(
-        <template><MultiSelect @choices={{self.choices}} /></template>
+        <template>
+          <MultiSelect @choices={{self.choices}} @onChange={{noop}} />
+        </template>
       );
       assert
         .dom(".form-template-field__multi-select")
@@ -60,6 +63,7 @@ module(
           <MultiSelect
             @choices={{self.choices}}
             @attributes={{self.attributes}}
+            @onChange={{noop}}
           />
         </template>
       );
@@ -79,7 +83,9 @@ module(
       this.set("choices", choices);
 
       await render(
-        <template><MultiSelect @choices={{self.choices}} /></template>
+        <template>
+          <MultiSelect @choices={{self.choices}} @onChange={{noop}} />
+        </template>
       );
 
       assert.dom(".form-template-field__label").doesNotExist();
