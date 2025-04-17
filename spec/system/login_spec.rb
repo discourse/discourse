@@ -134,7 +134,6 @@ shared_examples "login scenarios" do |login_page_object|
       Fabricate(:group_private_message_topic, user: user, recipient_group: group)
 
       visit "/t/#{pm.id}"
-      find(".login-welcome .login-button").click
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")

@@ -6,11 +6,11 @@ acceptance("Login Required", function (needs) {
   needs.settings({ login_required: true, full_page_login: false });
 
   test("redirect", async function (assert) {
-    await visit("/latest");
+    await visit("/");
     assert.strictEqual(
       currentRouteName(),
-      "login",
-      "it redirects them to login"
+      "discovery.login-required",
+      "it shows the login required splash"
     );
 
     await click(".login-button");
@@ -28,8 +28,8 @@ acceptance("Login Required - Full page login", function (needs) {
     await visit("/");
     assert.strictEqual(
       currentRouteName(),
-      "login",
-      "it redirects them to login"
+      "discovery.login-required",
+      "it shows the login required splash"
     );
 
     await click(".login-button");

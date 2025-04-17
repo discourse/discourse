@@ -273,9 +273,6 @@ export default class ApplicationRoute extends DiscourseRoute {
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
-          if (this.siteSettings.login_required) {
-            login.controller.set("showLogin", true);
-          }
         });
       } else {
         this.modal.show(LoginModal, {
