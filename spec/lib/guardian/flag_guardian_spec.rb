@@ -31,22 +31,22 @@ RSpec.describe FlagGuardian do
       flag.destroy!
     end
 
-    it "returns false when flag is system" do
-      expect(Guardian.new(admin).can_edit_flag?(Flag.system.first)).to eq(false)
-    end
-
-    it "returns false when flag was already used with post action" do
+    it "returns true when flag was already used with post action" do
       flag = Fabricate(:flag)
       Fabricate(:post_action, post_action_type_id: flag.id)
-      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
+      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(true)
       flag.destroy!
     end
 
-    it "returns false when flag was already used with reviewable" do
+    it "returns true when flag was already used with reviewable" do
       flag = Fabricate(:flag)
       Fabricate(:reviewable_score, reviewable_score_type: flag.id)
-      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
+      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(true)
       flag.destroy!
+    end
+
+    it "returns false when flag is system" do
+      expect(Guardian.new(admin).can_edit_flag?(Flag.system.first)).to eq(false)
     end
   end
 

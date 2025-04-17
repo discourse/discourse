@@ -83,6 +83,10 @@ describe "Admin Flags Page", type: :system do
     admin_flags_page.click_add_flag
     expect(d_page_header).to be_hidden
 
+    expect(admin_flag_form_page).to have_text(
+      I18n.t("admin_js.admin.config_areas.flags.form.create_warning"),
+    )
+
     admin_flag_form_page
       .fill_in_name("Vulgar")
       .fill_in_description("New flag description")
@@ -115,6 +119,9 @@ describe "Admin Flags Page", type: :system do
     # update
     admin_flags_page.visit.click_edit_flag("custom_vulgar")
     expect(d_page_header).to be_hidden
+    expect(admin_flag_form_page).to have_text(
+      I18n.t("admin_js.admin.config_areas.flags.form.edit_warning"),
+    )
     admin_flag_form_page.fill_in_name("Tasteless").click_save
 
     expect(admin_flags_page).to have_flags(
