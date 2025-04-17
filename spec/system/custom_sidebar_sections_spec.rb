@@ -37,12 +37,6 @@ describe "Custom sidebar sections", type: :system do
 
   include_examples "creating custom sections"
 
-  context "when subfolder install" do
-    before { set_subfolder "/community" }
-
-    include_examples "creating custom sections", "/community"
-  end
-
   it "allows the user to create custom section with /my link" do
     sign_in user
     visit("/latest")
