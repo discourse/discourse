@@ -133,6 +133,14 @@ export default class AdminFlagsForm extends Component {
         <AdminConfigAreaCard @heading={{this.header}}>
           <:content>
             <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+              <form.Alert @type="warning" @icon="circle-info">
+                {{#if this.isUpdate}}
+                  {{i18n "admin.config_areas.flags.form.edit_warning"}}
+                {{else}}
+                  {{i18n "admin.config_areas.flags.form.create_warning"}}
+                {{/if}}
+              </form.Alert>
+
               <form.Field
                 @name="name"
                 @title={{i18n "admin.config_areas.flags.form.name"}}
@@ -209,10 +217,6 @@ export default class AdminFlagsForm extends Component {
                   <field.Checkbox />
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
-
-              <form.Alert @icon="circle-info">
-                {{i18n "admin.config_areas.flags.form.alert"}}
-              </form.Alert>
 
               <form.Submit @label="admin.config_areas.flags.form.save" />
             </Form>

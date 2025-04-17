@@ -58,12 +58,6 @@ RSpec.describe(Flags::UpdateFlag) do
       it { is_expected.to fail_a_policy(:not_system) }
     end
 
-    context "when the flag has been used" do
-      let!(:post_action) { Fabricate(:post_action, post_action_type_id: flag.id) }
-
-      it { is_expected.to fail_a_policy(:not_used) }
-    end
-
     context "when user is not allowed to perform the action" do
       fab!(:current_user) { Fabricate(:user) }
 
