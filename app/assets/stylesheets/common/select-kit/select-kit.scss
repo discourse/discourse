@@ -42,6 +42,11 @@
       max-width: 600px;
     }
 
+    .select-kit-body[data-popper-placement="bottom-start"]
+      .select-kit-collection {
+      @include float-down;
+    }
+
     .select-kit-collection {
       box-sizing: border-box;
       width: 100%;
