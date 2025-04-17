@@ -474,7 +474,7 @@ RSpec.configure do |config|
       Capybara::Playwright::Driver.new(
         app,
         **driver_options,
-        viewport_size: {
+        viewport: {
           width: 1400,
           height: 1400,
         },
@@ -482,18 +482,22 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver(:playwright_mobile_chrome) do |app|
-      driver_options[:deviceScaleFactor] = 3
-      driver_options[:hasTouch] = true
-      driver_options[
-        :userAgent
-      ] = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"
-
       Capybara::Playwright::Driver.new(
         app,
         **driver_options,
-        viewport_size: {
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        userAgent:
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1",
+        defaultBrowserType: "webkit",
+        screen: {
           width: 390,
           height: 844,
+        },
+        viewport: {
+          width: 390,
+          height: 664,
         },
       )
     end
@@ -712,6 +716,7 @@ RSpec.configure do |config|
     driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
+
     driven_by driver.join("_").to_sym
 
     setup_system_test
