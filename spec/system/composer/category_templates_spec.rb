@@ -615,7 +615,7 @@ describe "Composer Form Templates", type: :system do
       expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
     end
 
-    it "works well when selecting tags in composer" do
+    it "updates form when selecting tags in the composer" do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
 
