@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -67,13 +66,14 @@ export default class GroupList extends Component {
         {{/if}}
 
         <div class="groups-header-filters">
-          <Input
-            @value={{readonly @filter}}
+          <input
+            type="search"
+            value={{@filter}}
+            aria-description={{i18n "groups.index.search_results"}}
+            aria-label="Search"
             placeholder={{i18n "groups.index.all"}}
             class="groups-header-filters-name no-blur"
             {{on "input" (withEventValue @onFilterChanged)}}
-            @type="search"
-            aria-description={{i18n "groups.index.search_results"}}
           />
 
           <ComboBox
