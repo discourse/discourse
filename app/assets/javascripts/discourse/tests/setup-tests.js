@@ -16,6 +16,10 @@ import QUnit from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/components/load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";
@@ -308,14 +312,7 @@ export default function setupTests(config) {
     sinon.stub(scrollManager, "bindScrolling");
     sinon.stub(scrollManager, "unbindScrolling");
 
-    window._originalIntersectionObserver = window.IntersectionObserver;
-    window.IntersectionObserver = class MockIntersectionObserver {
-      observe() {}
-
-      unobserve() {}
-
-      disconnect() {}
-    };
+    disableLoadMoreObserver();
   });
 
   QUnit.testDone(function () {
@@ -341,7 +338,7 @@ export default function setupTests(config) {
 
     MessageBus.unsubscribe("*");
     localStorage.clear();
-    window.IntersectionObserver = window._originalIntersectionObserver;
+    enableLoadMoreObserver();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {

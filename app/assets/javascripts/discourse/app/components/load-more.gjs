@@ -4,6 +4,17 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
 
+let ENABLE_LOAD_MORE_OBSERVER = true;
+
+// Exported functions to control the behavior in tests
+export function disableLoadMoreObserver() {
+  ENABLE_LOAD_MORE_OBSERVER = false;
+}
+
+export function enableLoadMoreObserver() {
+  ENABLE_LOAD_MORE_OBSERVER = true;
+}
+
 export default class LoadMore extends Component {
   observer;
   loadMoreAction = this.args.action;
@@ -22,6 +33,10 @@ export default class LoadMore extends Component {
 
   @action
   setupObserver(sentinelElement) {
+    if (!ENABLE_LOAD_MORE_OBSERVER) {
+      return;
+    }
+
     const rootElement = this.root ? document.querySelector(this.root) : null;
 
     this.observer = new IntersectionObserver(
@@ -48,7 +63,7 @@ export default class LoadMore extends Component {
 
   <template>
     {{#let (element (if (has-block) "div" "")) as |Wrapper|}}
-      <Wrapper>
+      <Wrapper ...attributes>
         {{yield}}
         <div
           {{didInsert this.setupObserver}}

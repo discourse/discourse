@@ -1,12 +1,16 @@
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import LoadMore from "discourse/components/load-more";
+import LoadMore, {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/components/load-more";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    enableLoadMoreObserver();
     this.originalIntersectionObserver = window.IntersectionObserver;
 
     window.IntersectionObserver = class MockIntersectionObserver {
@@ -37,6 +41,7 @@ module("Integration | Component | load-more", function (hooks) {
 
   hooks.afterEach(function () {
     window.IntersectionObserver = this.originalIntersectionObserver;
+    disableLoadMoreObserver();
   });
 
   test("calls loadMore action when intersection occurs", async function (assert) {
