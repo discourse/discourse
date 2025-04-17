@@ -14,9 +14,10 @@ RSpec.describe ApplicationController do
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
 
-    it "should redirect to login normally" do
+    it "should not redirect to login" do
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should redirect to SSO if enabled" do
@@ -27,10 +28,11 @@ RSpec.describe ApplicationController do
     end
 
     it "should redirect to authenticator if only one, and local logins disabled" do
-      # Local logins and google enabled, direct to login UI
+      # Local logins and google enabled, show login UI
       SiteSetting.enable_google_oauth2_logins = true
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
 
       # Only google enabled, login immediately
       SiteSetting.enable_local_logins = false
@@ -40,7 +42,8 @@ RSpec.describe ApplicationController do
       # Google and GitHub enabled, direct to login UI
       SiteSetting.enable_github_logins = true
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should not redirect to SSO when auth_immediately is disabled" do
@@ -49,7 +52,8 @@ RSpec.describe ApplicationController do
       SiteSetting.enable_discourse_connect = true
 
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     it "should not redirect to authenticator when auth_immediately is disabled" do
@@ -58,7 +62,8 @@ RSpec.describe ApplicationController do
       SiteSetting.enable_local_logins = false
 
       get "/"
-      expect(response).to redirect_to("/login")
+      expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
     end
 
     context "with omniauth in test mode" do
