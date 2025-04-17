@@ -141,8 +141,12 @@ $hpad: 0.65em;
   border-radius: var(--d-border-radius);
 }
 
-@mixin float-in {
-  animation: float-in ease 0.25s 1 forwards;
+@mixin float-down {
+  animation: float-down ease 0.25s 1 forwards;
+}
+
+@mixin float-up {
+  animation: float-up ease 0.25s 1 forwards;
 }
 
 @mixin default-focus() {

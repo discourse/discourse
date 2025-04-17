@@ -112,8 +112,6 @@
           }
 
           .results {
-            @include float-in;
-
             &:empty {
               display: none;
             }

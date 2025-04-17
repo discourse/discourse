@@ -14,13 +14,14 @@
   }
 
   &.-animated {
-    @include float-in;
+    @include float-down;
 
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
 
     &[data-placement^="top"] {
+      @include float-up;
       transform-origin: bottom center;
     }
 

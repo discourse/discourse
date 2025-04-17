@@ -127,11 +127,10 @@
       margin-left: auto;
       margin-right: auto;
       left: 0;
-      animation: float-in ease 0.25s 1 forwards;
       right: 0;
       padding: 0.5em;
 
-      @include float-in;
+      @include float-down;
 
       @include breakpoint(mobile-extra-large) {
         width: 100%;
