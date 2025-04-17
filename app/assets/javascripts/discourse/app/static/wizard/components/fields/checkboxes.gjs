@@ -41,7 +41,7 @@ export default class Checkboxes extends Component {
             @type="checkbox"
             class="wizard-container__checkbox"
             @checked={{c.checked}}
-            {{on "click" (action "changed")}}
+            {{on "click" this.changed}}
           />
           {{#if c.icon}}
             {{icon c.icon}}
