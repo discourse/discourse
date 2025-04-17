@@ -43,11 +43,24 @@
     }
 
     .select-kit-body[data-popper-placement="bottom-start"]
-      .select-kit-collection {
+      .select-kit-collection,
+    .select-kit-filter {
       @include float-down;
     }
 
+    .select-kit-body[data-popper-placement="top-start"] .select-kit-collection,
+    .select-kit-filter {
+      @include float-up;
+    }
+
+    .select-kit-filter {
+      border: 1px solid var(--primary-low);
+      border-bottom: none;
+    }
+
     .select-kit-collection {
+      border: 1px solid var(--primary-low);
+      border-top: none;
       box-sizing: border-box;
       width: 100%;
     }
