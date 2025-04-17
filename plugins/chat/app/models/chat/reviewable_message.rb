@@ -114,6 +114,10 @@ module Chat
       ignore { chat_message.trash!(performed_by) }
     end
 
+    def perform_agree_and_keep_deleted(performed_by, args)
+      agree
+    end
+
     private
 
     def agree
