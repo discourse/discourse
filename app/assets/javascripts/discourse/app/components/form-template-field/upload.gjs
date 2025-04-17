@@ -13,9 +13,9 @@ import UppyUpload from "discourse/lib/uppy/uppy-upload";
 export default class FormTemplateFieldUpload extends Component {
   @tracked uploadValue;
   @tracked uploadedFiles = [];
+  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
   @tracked
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
-  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,

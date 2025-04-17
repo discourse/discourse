@@ -20,7 +20,7 @@ describe "User activity posts", type: :system do
 
     expect(page).to have_css(".stream-topic-title .title", count: 2)
 
-    title_element = find(".stream-topic-title .title a[href*='/#{topic1.id}']")
+    title_element = find(".stream-topic-title .title a[href*='/#{topic1.id}/']")
     expect(title_element).to have_text("Title with &amp; characters and emoji")
     expect(title_element).to have_css("img.emoji[title='wave']")
   end

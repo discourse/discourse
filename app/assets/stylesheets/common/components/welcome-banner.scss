@@ -114,6 +114,8 @@
     .results {
       @include float-down;
       box-sizing: border-box;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius);
       background: var(--secondary);
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
       z-index: 9;
