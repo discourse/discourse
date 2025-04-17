@@ -33,16 +33,15 @@ export default class SignupRoute extends DiscourseRoute {
   @action
   async showCreateAccount() {
     const { canSignUp } = this.controllerFor("application");
-    if (canSignUp && this.siteSettings.full_page_login) {
-      return;
-    }
-    const route = await this.router
-      .replaceWith(
-        this.siteSettings.login_required ? "login" : "discovery.latest"
-      )
-      .followRedirects();
-    if (canSignUp) {
-      next(() => route.send("showCreateAccount"));
+    if (!canSignUp) {
+      const route = await this.router
+        .replaceWith(
+          this.siteSettings.login_required ? "login" : "discovery.latest"
+        )
+        .followRedirects();
+      if (canSignUp) {
+        next(() => route.send("showCreateAccount"));
+      }
     }
   }
 }

@@ -1,8 +1,6 @@
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import CreateAccount from "discourse/components/modal/create-account";
-import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import DiscourseUrl from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -52,11 +50,9 @@ export default {
               .lookup("controller:invites-show")
               .authenticationComplete(options);
           } else {
-            const modal = owner.lookup("service:modal");
             const siteSettings = owner.lookup("service:site-settings");
 
             const loginError = (errorMsg, className, properties, callback) => {
-              const applicationRoute = owner.lookup("route:application");
               const applicationController = owner.lookup(
                 "controller:application"
               );
@@ -69,23 +65,12 @@ export default {
                 ...properties,
               };
 
-              if (siteSettings.full_page_login) {
-                router.transitionTo("login").then((login) => {
-                  Object.keys(loginProps || {}).forEach((key) => {
-                    login.controller.set(key, loginProps[key]);
-                  });
+              router.transitionTo("login").then((login) => {
+                Object.keys(loginProps || {}).forEach((key) => {
+                  login.controller.set(key, loginProps[key]);
                 });
-              } else {
-                modal.show(LoginModal, {
-                  model: {
-                    showNotActivated: (props) =>
-                      applicationRoute.send("showNotActivated", props),
-                    showCreateAccount: (props) =>
-                      applicationRoute.send("showCreateAccount", props),
-                    ...loginProps,
-                  },
-                });
-              }
+              });
+
               next(() => callback?.());
             };
 
@@ -139,16 +124,12 @@ export default {
                 skipConfirmation: siteSettings.auth_skip_create_confirm,
               };
 
-              if (siteSettings.full_page_login) {
-                router.transitionTo("signup").then((signup) => {
-                  const signupController =
-                    signup.controller || owner.lookup("controller:signup");
-                  Object.assign(signupController, createAccountProps);
-                  signupController.handleSkipConfirmation();
-                });
-              } else {
-                modal.show(CreateAccount, { model: createAccountProps });
-              }
+              router.transitionTo("signup").then((signup) => {
+                const signupController =
+                  signup.controller || owner.lookup("controller:signup");
+                Object.assign(signupController, createAccountProps);
+                signupController.handleSkipConfirmation();
+              });
             });
           }
         });
