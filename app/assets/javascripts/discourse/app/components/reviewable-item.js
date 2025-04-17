@@ -421,15 +421,11 @@ export default class ReviewableItem extends Component {
     }
 
     try {
-      try {
-        await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
-          type: "DELETE",
-          data: { automatic: true },
-        });
-        this.reviewable.set("claimed_by", null);
-      } catch (e) {
-        popupAjaxError(e);
-      }
+      await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      this.reviewable.set("claimed_by", null);
     } catch (e) {
       popupAjaxError(e);
     }
