@@ -34,7 +34,6 @@ task "assets:precompile:before": %w[
        assets:precompile:prereqs
        assets:precompile:build
      ] do
-  require "uglifier"
   require "open3"
 
   # Ensure we ALWAYS do a clean build
@@ -42,13 +41,8 @@ task "assets:precompile:before": %w[
   STDERR.puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
-  $node_compress = !ENV["SKIP_NODE_UGLIFY"]
-
-  unless ENV["USE_SPROCKETS_UGLIFY"]
-    $bypass_sprockets_uglify = true
-    Rails.configuration.assets.js_compressor = nil
-    Rails.configuration.assets.gzip = false
-  end
+  Rails.configuration.assets.js_compressor = nil
+  Rails.configuration.assets.gzip = false
 
   STDERR.puts "Bundling assets"
 
@@ -127,54 +121,12 @@ def cdn_relative_path(p)
   global_path_klass.cdn_relative_path(p)
 end
 
-def compress_node(from, to)
-  to_path = "#{assets_path}/#{to}"
-  assets = cdn_relative_path("/assets")
-  assets_additional_path = (d = File.dirname(from)) == "." ? "" : "/#{d}"
-  source_map_root = assets + assets_additional_path
-  source_map_url = "#{File.basename(to)}.map"
-  base_source_map = assets_path + assets_additional_path
-
-  cmd = <<~SH
-    pnpm terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
-  SH
-
-  STDERR.puts cmd
-  result = `#{cmd} 2>&1`
-  unless $?.success?
-    STDERR.puts result
-    exit 1
-  end
-
-  result
-end
-
-def compress_ruby(from, to)
-  data = File.read("#{assets_path}/#{from}")
-
-  uglified, map =
-    Uglifier.new(
-      comments: :none,
-      source_map: {
-        filename: File.basename(from),
-        output_filename: File.basename(to),
-      },
-    ).compile_with_map(data)
-  dest = "#{assets_path}/#{to}"
-
-  File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
-  File.write(dest + ".map", map)
-
-  GC.start
-end
-
 def gzip(path)
   STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
   STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`.strip
   raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
-# different brotli versions use different parameters
 def brotli_command(path)
   compression_quality = ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6"
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
@@ -186,21 +138,6 @@ def brotli(path)
   raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   STDERR.puts `chmod +r #{path}.br`.strip
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
-end
-
-def max_compress?(path, locales)
-  return false if Rails.configuration.assets.skip_minification.include? path
-  return false if EmberCli.is_ember_cli_asset?(path)
-  return true if path.exclude? "locales/"
-
-  path_locale = path.delete_prefix("locales/").delete_suffix(".js")
-  return true if locales.include? path_locale
-
-  false
-end
-
-def compress(from, to)
-  $node_compress ? compress_node(from, to) : compress_ruby(from, to)
 end
 
 def concurrent?
@@ -249,29 +186,12 @@ task "assets:precompile:compress_js": "environment" do
           .select { |k, v| k =~ /\.js\z/ }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
-            _file =
-              (
-                if (d = File.dirname(file)) == "."
-                  "_#{file}"
-                else
-                  "#{d}/_#{File.basename(file)}"
-                end
-              )
-            _path = "#{assets_path}/#{_file}"
-            max_compress = max_compress?(info["logical_path"], locales)
-            if File.exist?(_path)
-              STDERR.puts "Skipping: #{file} already compressed"
-            elsif file.include? "discourse/tests"
+            if file.include? "discourse/tests"
               STDERR.puts "Skipping: #{file}"
             else
               proc.call do
                 log_task_duration(file) do
                   STDERR.puts "Compressing: #{file}"
-
-                  if max_compress
-                    FileUtils.mv(path, _path)
-                    compress(_file, file)
-                  end
 
                   info["size"] = File.size(path)
                   info["mtime"] = File.mtime(path).iso8601

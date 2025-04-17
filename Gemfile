@@ -117,12 +117,6 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
-# Gems used only for assets and not required in production environments by default.
-# Allow everywhere for now cause we are allowing asset debugging in production
-group :assets do
-  gem "uglifier"
-end
-
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
