@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatThread < PageObjects::Pages::Base
+      def open?
+        has_css?(".chat-thread:not(.loading)")
+      end
+
       def composer
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-thread")
       end
