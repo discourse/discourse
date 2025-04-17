@@ -91,6 +91,8 @@
 
           .search-menu-panel {
             padding: 0;
+            border: 1px solid var(--primary-low);
+            border-radius: var(--d-border-radius);
           }
 
           .search-input {
@@ -116,10 +118,8 @@
               display: none;
             }
             background: var(--secondary);
-            border: 1px solid var(--primary-low);
             padding: 0.5em;
             position: relative;
-            box-shadow: var(--shadow-header);
             box-sizing: border-box;
             width: 100%;
 
