@@ -318,6 +318,7 @@ module PageObjects
 
       def toggle_rich_editor
         editor_toggle_switch.click
+        has_css?("html.composer-open:not(.composer-has-preview)")
         self
       end
 

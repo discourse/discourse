@@ -64,6 +64,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.message_thread_indicator(original_message).click
+      expect(thread_page).to be_open
       thread_page.send_message("reply to message")
 
       expect(thread_page.messages).to have_message(text: message_1.message)
