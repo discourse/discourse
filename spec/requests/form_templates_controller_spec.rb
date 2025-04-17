@@ -63,7 +63,7 @@ RSpec.describe FormTemplatesController do
         expect(current_template["template"]).to eq(form_template.template)
       end
 
-      context "when using tag groups in a form tempalte" do
+      context "when using tag groups in a form template" do
         fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
         fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
         fab!(:tag3) { Fabricate(:tag) }
