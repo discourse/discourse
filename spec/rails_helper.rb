@@ -463,7 +463,7 @@ RSpec.configure do |config|
       args: apply_base_chrome_args,
       env: [{ name: browser_log_level, value: "pw:browser" }],
       acceptDownloads: true,
-      downloads_path: Downloads::FOLDER,
+      downloadsPath: Downloads::FOLDER,
       devtools: ENV["CHROME_DEV_TOOLS"].present?, # playwright recommends https://playwright.dev/docs/debug instead
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       logger: Logger.new($stdout),
