@@ -8,13 +8,14 @@ export function createSiteSettingsFromPreloaded(
 ) {
   const settings = new TrackedObject(siteSettings);
 
-  // TODO (martin) Maybe we have some way of logging these overrides? Maybe
-  // adding a key like `settings.themeSiteSettingOverrides` with this object?
   for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {
-    if (settings[key]) {
-      settings[key] = value;
-    }
+    settings[key] = value;
+    // eslint-disable-next-line no-console
+    console.info(
+      `[Discourse] Overriding site setting ${key} with theme site setting value: ${value}`
+    );
   }
+  settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
 
   settings.groupSettingArray = (groupSetting) => {
     const setting = settings[groupSetting];

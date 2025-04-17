@@ -104,6 +104,8 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  scope :not_components, -> { where(component: false) }
+
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
   def notify_color_change(color, scheme: nil)

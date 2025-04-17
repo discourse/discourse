@@ -5,6 +5,7 @@ module SiteSettingExtension
   include HasSanitizableFields
 
   SiteSettingChangeResult = Struct.new(:previous_value, :new_value)
+  InvalidSettingAccess = Class.new(StandardError)
 
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
@@ -160,18 +161,17 @@ module SiteSettingExtension
       &.first
   end
 
-  def settings_hash
-    result = {}
-
-    defaults.all.keys.each do |s|
-      result[s] = if deprecated_settings.include?(s.to_s)
-        public_send(s, warn: false).to_s
-      else
-        public_send(s).to_s
-      end
-    end
-
-    result
+  def theme_site_settings_json(theme_id)
+    key = SiteSettingExtension.theme_site_settings_cache_key(theme_id)
+    json =
+      Discourse
+        .cache
+        .fetch(key, expires_in: 30.minutes) { theme_site_settings_json_uncached(theme_id) }
+    Rails.logger.error("Nil theme_site_settings_json from the cache for '#{key}'") if json.nil?
+    json || ""
+  rescue => e
+    Rails.logger.error("Error while retrieving theme_site_settings_json: #{e.message}")
+    ""
   end
 
   def client_settings_json
@@ -187,28 +187,39 @@ module SiteSettingExtension
   def client_settings_json_uncached
     MultiJson.dump(
       Hash[
-        *@client_settings.flat_map do |name|
-          value =
-            if deprecated_settings.include?(name.to_s)
-              public_send(name, warn: false)
-            else
-              public_send(name)
+        *@client_settings
+          .flat_map do |name|
+            # Themeable site settings require a theme ID, which we do not always
+            # have when loading client site settings. They are excluded here,
+            # to get them use theme_site_settings_json(:theme_id)
+            next if themeable[name]
+
+            value =
+              if deprecated_settings.include?(name.to_s)
+                public_send(name, warn: false)
+              else
+                public_send(name)
+              end
+
+            type = type_supervisor.get_type(name)
+            if type == :upload
+              value = value.to_s
+            elsif type == :uploaded_image_list
+              value = value.map(&:to_s).join("|")
             end
 
-          type = type_supervisor.get_type(name)
-          if type == :upload
-            value = value.to_s
-          elsif type == :uploaded_image_list
-            value = value.map(&:to_s).join("|")
+            [name, value]
           end
-
-          [name, value]
-        end
+          .compact
       ],
     )
   rescue => e
     Rails.logger.error("Error while generating client_settings_json_uncached: #{e.message}")
     nil
+  end
+
+  def theme_site_settings_json_uncached(theme_id)
+    MultiJson.dump(theme_site_settings[theme_id])
   end
 
   # Retrieve all settings
@@ -271,6 +282,13 @@ module SiteSettingExtension
         else
           true
         end
+      end
+      .reject do |setting_name, _|
+        # TODO (martin) Come back to this...for now exclude themeable settings
+        # from being shown in the all_settings list, and in the UI
+        #
+        # Maybe we can include this if a theme_id parameter is provided
+        themeable[setting_name]
       end
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
@@ -372,25 +390,17 @@ module SiteSettingExtension
     "client_settings_json_#{Discourse.git_version}"
   end
 
-  # refresh all the site settings
+  def self.theme_site_settings_cache_key(theme_id)
+    # NOTE: we use the git version in the key to ensure
+    # that we don't end up caching the incorrect version
+    # in cases where we are cycling unicorns
+    "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
+  end
+
+  # Refresh all the site settings and theme site settings
   def refresh!
     mutex.synchronize do
       ensure_listen_for_changes
-
-      # TODO (martin)
-      #
-      # Ah here is where we get the db values (db_all) and we call
-      # SiteSetting.refresh! in 001_refresh
-      #
-      # Probably need to load the theme site settings into a cache here too
-      ThemeSiteSetting.all.each do |tss|
-        theme_site_settings[tss.theme_id] ||= {}
-        theme_site_settings[tss.theme_id][tss.name.to_sym] = type_supervisor.to_rb_value(
-          tss.name,
-          tss.value,
-          tss.data_type,
-        )
-      end
 
       new_hash =
         Hash[
@@ -415,18 +425,27 @@ module SiteSettingExtension
 
       changes, deletions = diff_hash(new_hash, current)
 
-      changes.each do |name, val|
-        current[name] = val
-
-        # TODO (martin) Hmmm this isn't right, we dont want to override the theme
-        # site setting val with the new site setting value, we only want to update
-        # this cache for changes when saving ThemeSiteSetting records
-        # theme_site_settings.each do |theme_id, settings|
-        #   settings[name] = val if settings.has_key?(name)
-        # end
-      end
+      changes.each { |name, val| current[name] = val }
       deletions.each { |name, _| current[name] = defaults_view[name] }
       uploads.clear
+
+      new_theme_site_settings = {}
+      ThemeSiteSetting.all.each do |tss|
+        new_theme_site_settings[tss.theme_id] ||= {}
+        new_theme_site_settings[tss.theme_id][tss.name.to_sym] = type_supervisor.to_rb_value(
+          tss.name,
+          tss.value,
+          tss.data_type,
+        )
+      end
+
+      theme_site_setting_changes, theme_site_setting_deletions =
+        diff_hash(new_theme_site_settings, theme_site_settings)
+      theme_site_setting_changes.each do |theme_id, settings|
+        theme_site_settings[theme_id] ||= {}
+        theme_site_settings[theme_id].merge!(settings)
+      end
+      theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
 
       clear_cache!
     end
@@ -507,6 +526,7 @@ module SiteSettingExtension
     DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
+  # TODO (martin) I need to take into account theme site settings in these notifiers
   def notify_changed!
     MessageBus.publish("/site_settings", process: process_id)
   end
@@ -544,6 +564,7 @@ module SiteSettingExtension
     end
   end
 
+  # TODO (martin) Handle throwing an error for themeable settings
   def set(name, value, options = nil)
     if has_setting?(name)
       value = filter_value(name, value)
@@ -560,6 +581,7 @@ module SiteSettingExtension
     end
   end
 
+  # TODO (martin) Handle throwing an error for themeable settings
   def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
       prev_value = public_send(name)
@@ -575,6 +597,7 @@ module SiteSettingExtension
     end
   end
 
+  # TODO (martin) Handle throwing an error for themeable settings, if theme_id is not provided
   def get(name)
     if has_setting?(name)
       self.public_send(name)
@@ -609,6 +632,12 @@ module SiteSettingExtension
 
   def clear_cache!
     Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
     Site.clear_anon_cache!
   end
 
@@ -683,7 +712,17 @@ module SiteSettingExtension
         end
       end
     else
-      define_singleton_method clean_name do
+      define_singleton_method clean_name do |scoped_to = nil|
+        if themeable[clean_name]
+          if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
+            raise SiteSettingExtension::InvalidSettingAccess.new(
+                    "#{clean_name} requires a theme_id because it is themeable",
+                  )
+          end
+          theme_settings = theme_site_settings[scoped_to[:theme_id]]
+          return theme_settings[clean_name] if theme_settings && theme_settings.key?(clean_name)
+        end
+
         if plugins[name]
           plugin = Discourse.plugins_by_name[plugins[name]]
           return false if !plugin.configurable? && plugin.enabled_site_setting == name
@@ -691,8 +730,6 @@ module SiteSettingExtension
 
         refresh! if current[name].nil?
 
-        # TODO (martin) I guess we get the theme site setting value here? But we
-        # want them to be cached for sure
         value = current[name]
 
         if mandatory_values[name]
@@ -716,6 +753,7 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
+      # TODO (martin) Add scoped_to for this for themeable settings
       if %w[simple compact].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do
           self.public_send(clean_name).to_s.split("|")
@@ -723,11 +761,19 @@ module SiteSettingExtension
       end
     end
 
-    define_singleton_method "#{clean_name}?" do
-      self.public_send clean_name
+    define_singleton_method "#{clean_name}?" do |scoped_to = nil|
+      self.public_send(clean_name, scoped_to)
     end
 
-    define_singleton_method "#{clean_name}=" do |val|
+    define_singleton_method "#{clean_name}=" do |val, scoped_to = nil|
+      if themeable[clean_name]
+        # TODO (martin) Add a better error message here when we have a proper interface for creating
+        # theme site settings.
+        raise SiteSettingExtension::InvalidSettingAccess.new(
+                "#{clean_name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
+              )
+      end
+
       add_override!(name, val)
     end
   end
