@@ -25,6 +25,9 @@ export default RouteTemplate(
       @connectorTagName="div"
       @outletArgs={{hash model=@controller.model}}
     />
+    {{! <PluginOutlet
+      @name="user-profile"
+    > }}
     <div
       class="container
         {{if @controller.viewingSelf 'viewing-self'}}
@@ -82,26 +85,28 @@ export default RouteTemplate(
                     </LinkTo>
                   </div>
                 {{/if}}
-                {{#if @controller.model.number_of_rejected_posts}}
-                  <div>
-                    <LinkTo
-                      @route="review"
-                      @query={{hash
-                        username=@controller.model.username
-                        status="rejected"
-                        type="ReviewableQueuedPost"
-                      }}
-                    >
-                      {{htmlSafe
-                        (i18n
-                          "user.staff_counters.rejected_posts"
-                          className="flagged-posts"
-                          count=@controller.model.number_of_rejected_posts
-                        )
-                      }}
-                    </LinkTo>
-                  </div>
-                {{/if}}
+                <PluginOutlet @name="user-flagged-posts">
+                  {{#if @controller.model.number_of_rejected_posts}}
+                    <div>
+                      <LinkTo
+                        @route="review"
+                        @query={{hash
+                          username=@controller.model.username
+                          status="rejected"
+                          type="ReviewableQueuedPost"
+                        }}
+                      >
+                        {{htmlSafe
+                          (i18n
+                            "user.staff_counters.rejected_posts"
+                            className="flagged-posts"
+                            count=@controller.model.number_of_rejected_posts
+                          )
+                        }}
+                      </LinkTo>
+                    </div>
+                  {{/if}}
+                </PluginOutlet>
 
                 {{#if @controller.model.number_of_deleted_posts}}
                   <div>
@@ -205,7 +210,7 @@ export default RouteTemplate(
                     />
                   </span>
                 </div>
-
+                {{! missing starts }}
                 {{#if @controller.showFeaturedTopic}}
                   <div class="featured-topic user-profile__featured-topic">
                     <span title={{i18n "user.featured_topic"}}>
@@ -258,6 +263,8 @@ export default RouteTemplate(
                     />
                   </span>
                 </div>
+
+                {{! missing ends }}
 
                 <div class="bio">
                   {{#if @controller.model.suspended}}
@@ -317,7 +324,7 @@ export default RouteTemplate(
                         </div>
                       {{/if}}
                     {{/each}}
-
+                    {{! missing starts }}
                     <span>
                       <PluginOutlet
                         @name="user-profile-public-fields"
@@ -411,6 +418,8 @@ export default RouteTemplate(
                 collapsedInfo=@controller.collapsedInfo
               }}
             />
+
+            {{! missing end here }}
             {{#unless @controller.collapsedInfo}}
               <div class="secondary" id="collapsed-info-panel">
                 <dl>
