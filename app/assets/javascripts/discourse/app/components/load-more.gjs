@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
 
 export default class LoadMore extends Component {
@@ -20,13 +21,13 @@ export default class LoadMore extends Component {
   }
 
   @action
-  setupObserver(element) {
+  setupObserver(sentinelElement) {
     const rootElement = this.root ? document.querySelector(this.root) : null;
 
     this.observer = new IntersectionObserver(
       (entries) => {
         // only trigger further action if the expected items matching the selector are present
-        if (!this.observer || !element.querySelector(this.selector)) {
+        if (!this.observer || !document.querySelector(this.selector)) {
           return;
         }
 
@@ -42,17 +43,20 @@ export default class LoadMore extends Component {
         threshold: this.threshold,
       }
     );
-    this.observer.observe(element.querySelector(".load-more-sentinel"));
+    this.observer.observe(sentinelElement);
   }
 
   <template>
-    <div {{didInsert this.setupObserver}} ...attributes>
-      {{yield}}
-      <div
-        class="load-more-sentinel discourse-no-touch"
-        aria-hidden="true"
-        style="height: 1px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; opacity: 0.01; position: relative;"
-      />
-    </div>
+    {{#let (element (if (has-block) "div" "")) as |Wrapper|}}
+      <Wrapper>
+        {{yield}}
+        <div
+          {{didInsert this.setupObserver}}
+          class="load-more-sentinel"
+          aria-hidden="true"
+          style="height: 1px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; visibility: hidden; position: relative;"
+        />
+      </Wrapper>
+    {{/let}}
   </template>
 }
