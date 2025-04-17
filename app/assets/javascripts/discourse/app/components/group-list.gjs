@@ -68,7 +68,7 @@ export default class GroupList extends Component {
 
         <div class="groups-header-filters">
           <Input
-            @value={{readonly @filter}}
+            @value={{@filter}}
             placeholder={{i18n "groups.index.all"}}
             class="groups-header-filters-name no-blur"
             {{on "input" (withEventValue @onFilterChanged)}}

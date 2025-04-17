@@ -5,7 +5,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 export default RouteTemplate(
   <template>
     <GroupList
-      @controller={{@controller}}
       @groups={{@model.groups}}
       @type={{@controller.type}}
       @filter={{@controller.filter}}
