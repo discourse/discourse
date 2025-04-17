@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import EmberObject, { action, computed, get } from "@ember/object";
+import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -632,7 +632,6 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     return boundaryAction;
   }
 
-  @action
   deselect() {
     this.clearErrors();
     this.selectKit.change(null, null);

@@ -1,4 +1,4 @@
-import { action, computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
@@ -66,7 +66,6 @@ export default class MultiSelect extends SelectKitComponent {
     this.selectKit.change(newValues, newContent);
   }
 
-  @action
   deselect(item) {
     this.clearErrors();
 
