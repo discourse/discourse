@@ -533,7 +533,7 @@ describe "Composer - ProseMirror editor", type: :system do
         html: true,
       )
 
-      expect(page).to have_css(
+      expect(rich).to have_css(
         "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
       )
     end
@@ -583,13 +583,27 @@ describe "Composer - ProseMirror editor", type: :system do
           lines">
         HTML
 
-      expect(page).to have_css("img[alt='alt with new lines'][title='title with new lines']")
+      expect(rich).to have_css("img[alt='alt with new lines'][title='title with new lines']")
 
       composer.toggle_rich_editor
 
       expect(composer).to have_value(
         '![alt with new lines](https://example.com/image.png "title with new lines")',
       )
+    end
+
+    it "ignores text/html content if Files are present" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+      cdp.copy_test_image
+      cdp.paste
+
+      expect(rich).to have_css("img", count: 1)
+
+      composer.focus # making sure the toggle click won't be captured as a double click
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("![image|244x66](upload://4uyKKMzLG4oNnAYDWCgpRMjBr9X.png)")
     end
   end
 

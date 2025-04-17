@@ -49,6 +49,20 @@ module PageObjects
       end
     end
 
+    def copy_test_image
+      image_path = "spec/fixtures/images/logo.png"
+      image_data = File.read(image_path)
+      image_base64 = Base64.strict_encode64(image_data)
+
+      page.evaluate_async_script(<<~JAVASCRIPT)
+        const htmlBlob = new Blob(['<img src="data:image/png;base64,placeholder"/>'], { type: 'text/html' });
+        const imageBlob = new Blob([Uint8Array.from(atob("#{image_base64}"), c => c.charCodeAt(0))], { type: 'image/png' });
+        const item = new ClipboardItem({ 'text/html': htmlBlob, 'image/png': imageBlob });
+
+        navigator.clipboard.write([item]).then(arguments[0]).catch(console.error);
+      JAVASCRIPT
+    end
+
     def clipboard_has_text?(text, chomp: false, strict: true)
       try_until_success do
         clipboard_text = chomp ? read_clipboard.chomp : read_clipboard
