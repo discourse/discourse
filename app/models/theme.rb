@@ -73,6 +73,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
+  has_many :theme_site_settings
 
   validate :component_validations
   validate :validate_theme_fields
@@ -102,6 +103,8 @@ class Theme < ActiveRecord::Base
             parent_themes: %i[locale_fields theme_translation_overrides],
           )
         end
+
+  scope :not_components, -> { where(component: false) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -1015,7 +1018,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeableSiteSettingHelper.new(theme_id: self.id).resolved_themeable_site_settings
   end
 
   private
