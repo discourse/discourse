@@ -51,7 +51,7 @@ class TopicLink < ActiveRecord::Base
       /*where*/
       GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
       ORDER BY clicks DESC, count(*) DESC
-      LIMIT 50
+      LIMIT 51
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
