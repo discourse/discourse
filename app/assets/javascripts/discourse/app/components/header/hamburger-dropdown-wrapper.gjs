@@ -17,14 +17,12 @@ const CLOSE_ON_CLICK_SELECTORS =
 export default class HamburgerDropdownWrapper extends Component {
   @service currentUser;
   @service siteSettings;
-  @service sidebarState;
+  @service navigationMenu;
 
   @action
   toggleNavigation() {
     this.args.toggleNavigationMenu(
-      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
-        ? "hamburger"
-        : null
+      this.navigationMenu.isDesktopDropdownMode ? "hamburger" : null
     );
   }
 
@@ -74,13 +72,10 @@ export default class HamburgerDropdownWrapper extends Component {
   }
 
   get forceMainSidebarPanel() {
-    // NOTE: In this scenario, we are forcing the sidebar on admin users,
-    // so we need to still show the hamburger menu and always show the main
-    // panel in that menu.
-    if (
-      this.args.sidebarEnabled &&
-      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
-    ) {
+    // NOTE: In this scenario, we are forcing the sidebar to be shown
+    // when the navigation mode is hamburger. We still need to show the
+    // main panel in the hamburger menu, regardless of what is in the sidebar.
+    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
       return true;
     }
 
