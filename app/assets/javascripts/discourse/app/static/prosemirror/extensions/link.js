@@ -42,7 +42,7 @@ const extension = {
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
             "data-orig-href": node.attrs["data-orig-href"],
-            "data-markup": node.attrs.markup,
+            "data-markup": node.attrs.markup || undefined,
           },
           0,
         ];
