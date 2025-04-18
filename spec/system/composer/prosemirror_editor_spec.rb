@@ -185,6 +185,17 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("hr", count: 5)
     end
+
+    it "supports <http://example.com> to create an 'autolink'" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("<http://example.com>")
+
+      expect(rich).to have_css("a", text: "http://example.com")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("<http://example.com>")
+    end
   end
 
   context "with oneboxing" do
@@ -538,7 +549,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "respects existing marks when pasting a url to make a link" do
+    it "respects existing marks when pasting a url over a selection" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
@@ -557,7 +568,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "auto-links pasted URLs from text/html" do
+    it "auto-links pasted URLs from text/html over a selection" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
 
@@ -623,21 +634,23 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
-  describe "auto-linking/unlinking" do
+  describe "auto-linking/unlinking while typing" do
     it "auto-links non-protocol URLs and removes the link when no longer a URL" do
       open_composer_and_toggle_rich_editor
 
-      composer.type_content("www.example.com")
+      composer.type_content("www.example.com and also mid-paragraph www.example2.com")
 
       expect(rich).to have_css("a", text: "www.example.com")
+      expect(rich).to have_css("a", text: "www.example2.com")
+      expect(rich).to have_css("a", count: 2)
 
       composer.send_keys(%i[backspace backspace])
 
-      expect(rich).to have_no_css("a")
+      expect(rich).to have_css("a", count: 1)
 
       composer.type_content("om")
 
-      expect(rich).to have_css("a", text: "www.example.com")
+      expect(rich).to have_css("a", text: "www.example2.com")
     end
 
     it "auto-links protocol URLs" do
@@ -671,6 +684,19 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("code", text: "code mark https://example.com")
       expect(rich).to have_no_css("a", text: "https://example.com")
+    end
+
+    it "doesn't continue a <https://url> markup='autolink'" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("<https://example.com>.de")
+
+      expect(rich).to have_css("a", text: "https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com.de")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("<https://example.com>.de")
     end
   end
 

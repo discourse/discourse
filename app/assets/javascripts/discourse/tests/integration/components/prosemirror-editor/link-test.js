@@ -20,7 +20,7 @@ module(
       ],
       autolink: [
         "<https://example.com>",
-        '<p><a href="https://example.com">https://example.com</a></p>',
+        '<p><a href="https://example.com" data-markup="autolink">https://example.com</a></p>',
         "<https://example.com>",
       ],
       "attachment link": [

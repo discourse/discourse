@@ -64,7 +64,7 @@ function processInputRule(inputRule, params) {
   }
 
   if (inputRule instanceof Function) {
-    inputRule = inputRule(params);
+    return processInputRule(inputRule(params));
   }
 
   if (inputRule instanceof InputRule) {
