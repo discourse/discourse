@@ -481,12 +481,31 @@ module SiteSettingExtension
     ensure_listen_for_changes
   end
 
+  ##
+  # Removes an override for a setting, reverting it to the default value.
+  # This method is only called manually usually, more often than not
+  # setting overrides are removed in database migrations.
+  #
+  # Here we also handle notifying the UI of the change in the case
+  # of theme site settings and clearing relevant caches, and triggering
+  # server-side events for changed settings.
+  #
+  # TODO (martin)
+  # Themeable site settings cannot be removed this way, they must be
+  # changed via the ThemeSiteSetting model.
+  #
+  # @param name [Symbol] the name of the setting
+  # @param val [Any] the value to set
   def remove_override!(name)
+    # TODO (martin) Do not allow attempts to remove theme site setting overrides.
+
     old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
 
     return if current[name] == old_val
+
+    # TODO (martin) Hmm we don't handle client settings here, should we?
 
     clear_uploads_cache(name)
     clear_cache!
@@ -495,7 +514,26 @@ module SiteSettingExtension
     end
   end
 
+  ##
+  # Adds an override, which is to say a database entry for the setting
+  # instead of using the default.
+  #
+  # The set, set_and_log, and setting_name= methods all call
+  # this method. Its opposite is remove_override!.
+  #
+  # Here we also handle notifying the UI of the change in the case
+  # of theme site settings and clearing relevant caches, and triggering
+  # server-side events for changed settings.
+  #
+  # TODO (martin)
+  # Themeable site settings cannot be changed this way, they must be
+  # changed via the ThemeSiteSetting model.
+  #
+  # @param name [Symbol] the name of the setting
+  # @param val [Any] the value to set
   def add_override!(name, val)
+    # TODO (martin) Do not allow attempts to add theme site setting overrides.
+
     old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
 
@@ -564,9 +602,16 @@ module SiteSettingExtension
     end
   end
 
-  # TODO (martin) Handle throwing an error for themeable settings
   def set(name, value, options = nil)
     if has_setting?(name)
+      # TODO (martin) Need a better error message here when we have an interface
+      # for adding/removing themeable site setting values
+      if themeable[name]
+        raise SiteSettingExtension::InvalidSettingAccess.new(
+                "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
+              )
+      end
+
       value = filter_value(name, value)
       if options
         self.public_send("#{name}=", value, options)
@@ -581,9 +626,16 @@ module SiteSettingExtension
     end
   end
 
-  # TODO (martin) Handle throwing an error for themeable settings
   def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
+      # TODO (martin) Need a better error message here when we have an interface
+      # for adding/removing themeable site setting values
+      if themeable[name]
+        raise SiteSettingExtension::InvalidSettingAccess.new(
+                "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
+              )
+      end
+
       prev_value = public_send(name)
       return if prev_value == value
       set(name, value)
@@ -597,10 +649,19 @@ module SiteSettingExtension
     end
   end
 
-  # TODO (martin) Handle throwing an error for themeable settings, if theme_id is not provided
-  def get(name)
+  def get(name, scoped_to = nil)
     if has_setting?(name)
-      self.public_send(name)
+      if themeable[name]
+        if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
+          raise SiteSettingExtension::InvalidSettingAccess.new(
+                  "#{name} requires a theme_id because it is themeable",
+                )
+        else
+          self.public_send(name, scoped_to)
+        end
+      else
+        self.public_send(name)
+      end
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
@@ -719,6 +780,7 @@ module SiteSettingExtension
                     "#{clean_name} requires a theme_id because it is themeable",
                   )
           end
+          # TODO (martin) Do we need a fallback here if the theme hasn't overridden it?
           theme_settings = theme_site_settings[scoped_to[:theme_id]]
           return theme_settings[clean_name] if theme_settings && theme_settings.key?(clean_name)
         end
@@ -753,10 +815,9 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      # TODO (martin) Add scoped_to for this for themeable settings
       if %w[simple compact].include?(list_type) || list_type.nil?
-        define_singleton_method("#{clean_name}_map") do
-          self.public_send(clean_name).to_s.split("|")
+        define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
+          self.public_send(clean_name, scoped_to).to_s.split("|")
         end
       end
     end
@@ -765,10 +826,10 @@ module SiteSettingExtension
       self.public_send(clean_name, scoped_to)
     end
 
-    define_singleton_method "#{clean_name}=" do |val, scoped_to = nil|
+    define_singleton_method "#{clean_name}=" do |val|
       if themeable[clean_name]
-        # TODO (martin) Add a better error message here when we have a proper interface for creating
-        # theme site settings.
+        # TODO (martin) Need a better error message here when we have an interface
+        # for adding/removing themeable site setting values
         raise SiteSettingExtension::InvalidSettingAccess.new(
                 "#{clean_name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
               )
