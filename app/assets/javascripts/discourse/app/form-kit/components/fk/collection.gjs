@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKObject from "discourse/form-kit/components/fk/object";
 import element from "discourse/helpers/element";
@@ -12,7 +12,12 @@ export default class FKCollection extends Component {
   }
 
   get collectionData() {
-    return this.args.data.get(this.name);
+    return this.args.data.get(this.name).map((item, index) => {
+      return {
+        identifier: `${this.name}-${index}`,
+        item,
+      };
+    });
   }
 
   get name() {
@@ -30,7 +35,7 @@ export default class FKCollection extends Component {
   <template>
     {{#let (element this.tagName) as |Wrapper|}}
       <Wrapper class="form-kit__collection">
-        {{#each this.collectionData key="index" as |data index|}}
+        {{#each this.collectionData key="identifier" as |data index|}}
           {{yield
             (hash
               Field=(component
@@ -72,7 +77,7 @@ export default class FKCollection extends Component {
               remove=this.remove
             )
             index
-            (get this.collectionData index)
+            data.item
           }}
         {{/each}}
       </Wrapper>
