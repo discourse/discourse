@@ -220,6 +220,7 @@ export default RouteTemplate(
                     </span>
                   </PluginOutlet>
                 </div>
+
                 {{#if @controller.showFeaturedTopic}}
                   <div class="featured-topic user-profile__featured-topic">
                     <span title={{i18n "user.featured_topic"}}>
@@ -235,6 +236,7 @@ export default RouteTemplate(
                       }}</LinkTo>
                   </div>
                 {{/if}}
+
                 <div
                   class="location-and-website user-profile__location-and-website"
                 >
@@ -503,7 +505,6 @@ export default RouteTemplate(
                       </dd>
                     </div>
                   {{/if}}
-
                   {{#if @controller.model.displayGroups}}
                     <div><dt class="groups">{{i18n
                           "groups.title"
