@@ -1,7 +1,9 @@
-import { getOwner } from "@ember/owner";
 import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import { configureEyeline } from "discourse/lib/eyeline";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/components/load-more";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
@@ -180,17 +182,11 @@ acceptance("Topic Discovery", function (needs) {
 
 acceptance("Topic Discovery | Footer", function (needs) {
   needs.hooks.beforeEach(function () {
-    const scrollManager = getOwner(this).lookup("service:scroll-manager");
-    scrollManager.bindScrolling.restore();
-
-    configureEyeline({
-      skipUpdate: false,
-      rootElement: "#ember-testing",
-    });
+    enableLoadMoreObserver();
   });
 
   needs.hooks.afterEach(function () {
-    configureEyeline();
+    disableLoadMoreObserver();
   });
 
   needs.pretender((server, helper) => {
