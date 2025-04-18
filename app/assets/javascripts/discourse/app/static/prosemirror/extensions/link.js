@@ -1,7 +1,9 @@
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
-import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+import {
+  getChangedRanges,
+  markInputRule,
+} from "discourse/static/prosemirror/lib/plugin-utils";
 
-const AUTO_LINKS = ["autolink", "linkify"];
 const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
 
 /** @type {RichEditorExtension} */
@@ -110,14 +112,23 @@ const extension = {
       mixable: true,
     },
   },
-  inputRules: ({ schema, utils }) =>
-    utils.markInputRule(
+  inputRules: ({ schema }) => [
+    markInputRule(
       /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
       schema.marks.link,
       (match) => {
         return { href: match[2], title: match[3] };
       }
     ),
+    markInputRule(
+      // AUTOLINK_RE from https://github.com/markdown-it/markdown-it/blob/master/lib/rules_inline/autolink.mjs
+      /<([a-zA-Z][a-zA-Z0-9+.-]{1,31}:[^<>\x00-\x20]*)>$/,
+      schema.marks.link,
+      (match) => {
+        return { href: match[1], markup: "autolink" };
+      }
+    ),
+  ],
   plugins: ({ pmState: { Plugin }, utils }) => [
     new Plugin({
       props: {
@@ -195,7 +206,7 @@ const extension = {
               node.marks.some(
                 (mark) =>
                   (mark.type.name === "link" &&
-                    !AUTO_LINKS.includes(mark.attrs.markup)) ||
+                    mark.attrs.markup !== "linkify") ||
                   mark.type.name === "code"
               )
             ) {
@@ -233,8 +244,7 @@ const extension = {
               nodeBefore.marks.length === 1 &&
               nodeBefore.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  AUTO_LINKS.includes(mark.attrs.markup)
+                  mark.type.name === "link" && mark.attrs.markup === "linkify"
               )
             ) {
               textBefore = nodeBefore.text;
@@ -250,8 +260,7 @@ const extension = {
               nodeAfter.marks.length === 1 &&
               nodeAfter.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  AUTO_LINKS.includes(mark.attrs.markup)
+                  mark.type.name === "link" && mark.attrs.markup === "linkify"
               )
             ) {
               textAfter = nodeAfter.text;
@@ -296,7 +305,10 @@ const extension = {
 
 function addLinkMark(view, href) {
   const { from, to } = view.state.selection;
-  const linkMark = view.state.schema.marks.link.create({ href });
+  const linkMark = view.state.schema.marks.link.create({
+    href,
+    markup: "linkify",
+  });
 
   const tr = view.state.tr;
   tr.addMark(from, to, linkMark);
