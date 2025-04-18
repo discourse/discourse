@@ -129,7 +129,7 @@ const extension = {
       }
     ),
   ],
-  plugins: ({ pmState: { Plugin }, utils }) => [
+  plugins: ({ pmState: { Plugin }, utils }) =>
     new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs over a selection
@@ -140,7 +140,7 @@ const extension = {
 
           return addLinkMark(view, text, utils);
         },
-        // Auto-linkify rich content with a single text node that is a URL over a selection
+        // Auto-linkify pasted rich content with a single text node that is a URL over a selection
         transformPasted(slice, view) {
           if (view.state.selection.empty) {
             return slice;
@@ -173,9 +173,8 @@ const extension = {
           return addLinkMark(view, node.text, utils);
         },
       },
-    }),
-    // plugin for auto-linking while typing
-    new Plugin({
+
+      // Automatically adds and removes link marks when typing
       appendTransaction(transactions, prevState, state) {
         const transaction = prevState.tr;
         transactions
@@ -308,7 +307,6 @@ const extension = {
         return tr;
       },
     }),
-  ],
 };
 
 function addLinkMark(view, text, utils) {
