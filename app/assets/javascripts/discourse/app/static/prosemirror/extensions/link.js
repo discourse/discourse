@@ -199,8 +199,11 @@ const extension = {
             to = Math.min(to + 1, state.doc.nodeSize - 2);
           }
 
+          // stores the nodes visited ahead, skipping a node if already seen in nodeAfter
+          const visited = new Set();
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (
+              visited.has(node) ||
               !node.isText ||
               node.marks.some(
                 (mark) =>
@@ -241,11 +244,10 @@ const extension = {
                 nodeBefore.text[nodeBefore.text.length - 1]
               ) &&
               !utils.isWhiteSpace(text[0]) &&
-              nodeBefore.text[nodeBefore.text.length - 1] !== "`" &&
               nodeBefore.marks.length === 1 &&
-              nodeBefore.marks.some(
+              !nodeBefore.marks.some(
                 (mark) =>
-                  mark.type.name === "link" && mark.attrs.markup === "linkify"
+                  mark.type.name === "link" && mark.attrs.markup !== "linkify"
               )
             ) {
               textBefore = nodeBefore.text;
@@ -265,6 +267,7 @@ const extension = {
               )
             ) {
               textAfter = nodeAfter.text;
+              visited.add(nodeAfter);
             }
 
             const fullText = textBefore + textSlice + textAfter;
