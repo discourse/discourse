@@ -321,6 +321,22 @@ RSpec.describe BadgeGranter do
       expect(UserBadge.where(user_id: user.id).count).to eq(2)
     end
 
+    it "updates is_favorite when granting multiple badges" do
+      badge = Fabricate(:badge, multiple_grant: true)
+      user_badge =
+        UserBadge.create(
+          badge: badge,
+          user: user,
+          granted_by: Discourse.system_user,
+          granted_at: Time.now,
+          is_favorite: true,
+        )
+      user_badge2 = BadgeGranter.grant(badge, user)
+
+      expect(user_badge2).to be_present
+      expect(user_badge2.reload.is_favorite).to eq(true)
+    end
+
     it "sets granted_at" do
       day_ago = freeze_time 1.day.ago
       user_badge = BadgeGranter.grant(badge, user)
