@@ -196,6 +196,19 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     rows.close
+
+    return if ENV["SKIP_MIGRATED_SITE_FLAG_UPDATE"]
+
+    # Bypassing SiteSetting.set_and_log if migrated_site is present and not enabled, enable it
+    # We don't need to have the plugin enabled
+    migrated_site_flag_enabled = DB.exec(<<~SQL) > 0
+      UPDATE site_settings
+         SET value = 't'
+       WHERE name = 'migrated_site'
+         AND value <> 't'
+    SQL
+
+    SiteSetting.refresh! if migrated_site_flag_enabled
   end
 
   def import_categories
