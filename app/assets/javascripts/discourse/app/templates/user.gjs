@@ -302,54 +302,48 @@ export default RouteTemplate(
                   {{/if}}
                 </div>
 
-                <PluginOutlet
-                  @name="user-public-user-fields"
-                  @outletArgs={{hash model=@controller.model}}
-                >
-                  {{#if @controller.publicUserFields}}
-                    <div class="public-user-fields">
-                      {{#each @controller.publicUserFields as |uf|}}
-                        {{#if uf.value}}
-                          <div
-                            class="public-user-field
-                              {{uf.field.dasherized_name}}"
-                          >
-                            <span
-                              class="user-field-name"
-                            >{{uf.field.name}}</span>:
-                            <span class="user-field-value">
-                              {{#each uf.value as |v|}}
-                                {{! some values are arrays }}
-                                <span class="user-field-value-list-item">
-                                  {{#if uf.field.searchable}}
-                                    <LinkTo
-                                      @route="users"
-                                      @query={{hash name=v}}
-                                    >{{v}}</LinkTo>
-                                  {{else}}
-                                    {{v}}
-                                  {{/if}}
-                                </span>
-                              {{else}}
-                                {{uf.value}}
-                              {{/each}}
-                            </span>
-                          </div>
-                        {{/if}}
-                      {{/each}}
-                      <span>
-                        <PluginOutlet
-                          @name="user-profile-public-fields"
-                          @connectorTagName="div"
-                          @outletArgs={{hash
-                            publicUserFields=@controller.publicUserFields
-                            model=@controller.model
-                          }}
-                        />
-                      </span>
-                    </div>
-                  {{/if}}
-                </PluginOutlet>
+                {{#if @controller.publicUserFields}}
+                  <div class="public-user-fields">
+                    {{#each @controller.publicUserFields as |uf|}}
+                      {{#if uf.value}}
+                        <div
+                          class="public-user-field {{uf.field.dasherized_name}}"
+                        >
+                          <span
+                            class="user-field-name"
+                          >{{uf.field.name}}</span>:
+                          <span class="user-field-value">
+                            {{#each uf.value as |v|}}
+                              {{! some values are arrays }}
+                              <span class="user-field-value-list-item">
+                                {{#if uf.field.searchable}}
+                                  <LinkTo
+                                    @route="users"
+                                    @query={{hash name=v}}
+                                  >{{v}}</LinkTo>
+                                {{else}}
+                                  {{v}}
+                                {{/if}}
+                              </span>
+                            {{else}}
+                              {{uf.value}}
+                            {{/each}}
+                          </span>
+                        </div>
+                      {{/if}}
+                    {{/each}}
+                    <span>
+                      <PluginOutlet
+                        @name="user-profile-public-fields"
+                        @connectorTagName="div"
+                        @outletArgs={{hash
+                          publicUserFields=@controller.publicUserFields
+                          model=@controller.model
+                        }}
+                      />
+                    </span>
+                  </div>
+                {{/if}}
 
                 <span>
                   <PluginOutlet
