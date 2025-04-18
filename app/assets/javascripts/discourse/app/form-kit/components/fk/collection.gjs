@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import curryComponent from "ember-curry-component";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKObject from "discourse/form-kit/components/fk/object";
 import element from "discourse/helpers/element";
@@ -9,6 +11,32 @@ export default class FKCollection extends Component {
   @action
   remove(index) {
     this.args.remove(this.name, index);
+  }
+
+  @action
+  componentFor(componentClass, index) {
+    const instance = this;
+    const baseArguments = {
+      collectionIndex: index,
+      addError: instance.args.addError,
+      set: instance.args.set,
+      triggerRevalidationFor: instance.args.triggerRevalidationFor,
+      parentName: `${instance.name}.${index}`,
+      registerField: instance.args.registerField,
+      unregisterField: instance.args.unregisterField,
+      get errors() {
+        return instance.args.errors;
+      },
+      get data() {
+        return instance.args.data;
+      },
+    };
+
+    if (componentClass === FKCollection || componentClass === FKObject) {
+      baseArguments.remove = instance.args.remove;
+    }
+
+    return curryComponent(componentClass, baseArguments, getOwner(this));
   }
 
   get collectionData() {
@@ -38,42 +66,9 @@ export default class FKCollection extends Component {
         {{#each this.collectionData key="identifier" as |data index|}}
           {{yield
             (hash
-              Field=(component
-                FKField
-                errors=@errors
-                collectionIndex=index
-                addError=@addError
-                data=@data
-                set=@set
-                registerField=@registerField
-                unregisterField=@unregisterField
-                triggerRevalidationFor=@triggerRevalidationFor
-                parentName=(concat this.name "." index)
-              )
-              Object=(component
-                FKObject
-                errors=@errors
-                addError=@addError
-                data=@data
-                set=@set
-                registerField=@registerField
-                unregisterField=@unregisterField
-                triggerRevalidationFor=@triggerRevalidationFor
-                parentName=(concat this.name "." index)
-                remove=@remove
-              )
-              Collection=(component
-                FKCollection
-                errors=@errors
-                addError=@addError
-                data=@data
-                set=@set
-                registerField=@registerField
-                unregisterField=@unregisterField
-                triggerRevalidationFor=@triggerRevalidationFor
-                parentName=(concat this.name "." index)
-                remove=@remove
-              )
+              Field=(this.componentFor FKField index)
+              Object=(this.componentFor FKObject index)
+              Collection=(this.componentFor FKCollection index)
               remove=this.remove
             )
             index
