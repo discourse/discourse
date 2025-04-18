@@ -133,20 +133,25 @@ export default RouteTemplate(
                   </div>
                 {{/if}}
                 {{#if @controller.model.warnings_received_count}}
-                  <div>
-                    <LinkTo
-                      @route="userPrivateMessages.user.warnings"
-                      @model={{@controller.model}}
-                    >
-                      {{htmlSafe
-                        (i18n
-                          "user.staff_counters.warnings_received"
-                          className="warnings-received"
-                          count=@controller.model.warnings_received_count
-                        )
-                      }}
-                    </LinkTo>
-                  </div>
+                  <PluginOutlet
+                    @name="user-warnings-received"
+                    @outletArgs={{hash model=@controller.model}}
+                  >
+                    <div>
+                      <LinkTo
+                        @route="userPrivateMessages.user.warnings"
+                        @model={{@controller.model}}
+                      >
+                        {{htmlSafe
+                          (i18n
+                            "user.staff_counters.warnings_received"
+                            className="warnings-received"
+                            count=@controller.model.warnings_received_count
+                          )
+                        }}
+                      </LinkTo>
+                    </div>
+                  </PluginOutlet>
                 {{/if}}
               </div>
             {{/if}}
@@ -164,46 +169,56 @@ export default RouteTemplate(
               <UserProfileAvatar @user={{@controller.model}} @tagName="" />
               <div class="primary-textual">
                 <div class="user-profile-names">
-                  <div
-                    class="{{if @controller.nameFirst 'full-name' 'username'}}
-                      user-profile-names__primary"
+                  <PluginOutlet
+                    @name="user-profile-names"
+                    @outletArgs={{hash
+                      nameFirst=@controller.nameFirst
+                      model=@controller.model
+                    }}
                   >
-                    {{if
-                      @controller.nameFirst
-                      @controller.model.name
-                      (formatUsername @controller.model.username)
-                    }}
-                    {{userStatus
-                      @controller.model
-                      currentUser=@controller.currentUser
-                    }}
-                    {{#if @controller.model.status}}
-                      <UserStatusMessage @status={{@controller.model.status}} />
-                    {{/if}}
-                  </div>
-                  <div
-                    class="{{if @controller.nameFirst 'username' 'full-name'}}
-                      user-profile-names__secondary"
-                  >{{#if
-                      @controller.nameFirst
-                    }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
-                  {{#if @controller.model.staged}}
-                    <div class="staged user-profile-names__secondary">{{i18n
-                        "user.staged"
-                      }}</div>
-                  {{/if}}
-                  {{#if @controller.model.title}}
                     <div
-                      class="user-profile-names__title"
-                    >{{@controller.model.title}}</div>
-                  {{/if}}
-                  <span>
-                    <PluginOutlet
-                      @name="user-post-names"
-                      @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
-                    />
-                  </span>
+                      class="{{if @controller.nameFirst 'full-name' 'username'}}
+                        user-profile-names__primary"
+                    >
+                      {{if
+                        @controller.nameFirst
+                        @controller.model.name
+                        (formatUsername @controller.model.username)
+                      }}
+                      {{userStatus
+                        @controller.model
+                        currentUser=@controller.currentUser
+                      }}
+                      {{#if @controller.model.status}}
+                        <UserStatusMessage
+                          @status={{@controller.model.status}}
+                        />
+                      {{/if}}
+                    </div>
+                    <div
+                      class="{{if @controller.nameFirst 'username' 'full-name'}}
+                        user-profile-names__secondary"
+                    >{{#if
+                        @controller.nameFirst
+                      }}{{@controller.model.username}}{{else}}{{@controller.model.name}}{{/if}}</div>
+                    {{#if @controller.model.staged}}
+                      <div class="staged user-profile-names__secondary">{{i18n
+                          "user.staged"
+                        }}</div>
+                    {{/if}}
+                    {{#if @controller.model.title}}
+                      <div
+                        class="user-profile-names__title"
+                      >{{@controller.model.title}}</div>
+                    {{/if}}
+                    <span>
+                      <PluginOutlet
+                        @name="user-post-names"
+                        @connectorTagName="div"
+                        @outletArgs={{hash model=@controller.model}}
+                      />
+                    </span>
+                  </PluginOutlet>
                 </div>
 
                 {{#if @controller.showFeaturedTopic}}
@@ -317,7 +332,6 @@ export default RouteTemplate(
                         </div>
                       {{/if}}
                     {{/each}}
-
                     <span>
                       <PluginOutlet
                         @name="user-profile-public-fields"
@@ -340,69 +354,82 @@ export default RouteTemplate(
                 </span>
               </div>
 
-              <section class="controls">
-                <ul>
-                  {{#if @controller.model.can_send_private_message_to_user}}
-                    <li>
-                      <DButton
-                        @action={{fn
-                          (routeAction "composePrivateMessage")
-                          @controller.model
-                        }}
-                        @icon="envelope"
-                        @label="user.private_message"
-                        class="btn-primary compose-pm"
-                      />
-                    </li>
-                  {{/if}}
+              <PluginOutlet
+                @name="user-controls"
+                @outletArgs={{hash
+                  model=@controller.model
+                  canMuteOrIgnoreUser=@controller.canMuteOrIgnoreUser
+                  userNotificationLevel=@controller.userNotificationLevel
+                  updateNotificationLevel=@controller.updateNotificationLevel
+                  currentUser=@controller.currentUser
+                  canExpandProfile=@controller.canExpandProfile
+                  collapsedInfo=@controller.collapsedInfo
+                }}
+              >
+                <section class="controls">
+                  <ul>
+                    {{#if @controller.model.can_send_private_message_to_user}}
+                      <li>
+                        <DButton
+                          @action={{fn
+                            (routeAction "composePrivateMessage")
+                            @controller.model
+                          }}
+                          @icon="envelope"
+                          @label="user.private_message"
+                          class="btn-primary compose-pm"
+                        />
+                      </li>
+                    {{/if}}
 
-                  {{#if @controller.canMuteOrIgnoreUser}}
-                    <li>
-                      <UserNotificationsDropdown
-                        @user={{@controller.model}}
-                        @value={{@controller.userNotificationLevel}}
-                        @updateNotificationLevel={{@controller.updateNotificationLevel}}
-                      />
-                    </li>
-                  {{/if}}
+                    {{#if @controller.canMuteOrIgnoreUser}}
+                      <li>
+                        <UserNotificationsDropdown
+                          @user={{@controller.model}}
+                          @value={{@controller.userNotificationLevel}}
+                          @updateNotificationLevel={{@controller.updateNotificationLevel}}
+                        />
+                      </li>
+                    {{/if}}
 
-                  {{#if @controller.displayTopLevelAdminButton}}
-                    <li><a
-                        href={{@controller.model.adminPath}}
-                        class="btn btn-default user-admin"
-                      >{{icon "wrench"}}<span class="d-button-label">{{i18n
-                            "admin.user.show_admin_profile"
-                          }}</span></a></li>
-                  {{/if}}
+                    {{#if @controller.displayTopLevelAdminButton}}
+                      <li><a
+                          href={{@controller.model.adminPath}}
+                          class="btn btn-default user-admin"
+                        >{{icon "wrench"}}<span class="d-button-label">{{i18n
+                              "admin.user.show_admin_profile"
+                            }}</span></a></li>
+                    {{/if}}
 
-                  <PluginOutlet
-                    @name="user-profile-controls"
-                    @connectorTagName="li"
-                    @outletArgs={{hash model=@controller.model}}
-                  />
+                    <PluginOutlet
+                      @name="user-profile-controls"
+                      @connectorTagName="li"
+                      @outletArgs={{hash model=@controller.model}}
+                    />
 
-                  {{#if @controller.canExpandProfile}}
-                    <li>
-                      <DButton
-                        @ariaLabel={{@controller.collapsedInfoState.ariaLabel}}
-                        @label={{concat
-                          "user."
-                          @controller.collapsedInfoState.label
-                        }}
-                        @icon={{@controller.collapsedInfoState.icon}}
-                        @action={{@controller.collapsedInfoState.action}}
-                        aria-controls="collapsed-info-panel"
-                        aria-expanded={{if
-                          @controller.collapsedInfoState.isExpanded
-                          "true"
-                          "false"
-                        }}
-                        class="btn-default"
-                      />
-                    </li>
-                  {{/if}}
-                </ul>
-              </section>
+                    {{#if @controller.canExpandProfile}}
+                      <li>
+                        <DButton
+                          @ariaLabel={{@controller.collapsedInfoState.ariaLabel}}
+                          @label={{concat
+                            "user."
+                            @controller.collapsedInfoState.label
+                          }}
+                          @icon={{@controller.collapsedInfoState.icon}}
+                          @action={{@controller.collapsedInfoState.action}}
+                          aria-controls="collapsed-info-panel"
+                          aria-expanded={{if
+                            @controller.collapsedInfoState.isExpanded
+                            "true"
+                            "false"
+                          }}
+                          class="btn-default"
+                        />
+                      </li>
+                    {{/if}}
+                  </ul>
+                </section>
+              </PluginOutlet>
             </div>
             <PluginOutlet
               @name="user-profile-above-collapsed-info"
