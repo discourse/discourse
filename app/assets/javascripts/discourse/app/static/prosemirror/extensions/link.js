@@ -29,6 +29,7 @@ const extension = {
               title: dom.getAttribute("title"),
               attachment: dom.classList.contains("attachment"),
               "data-orig-href": dom.getAttribute("data-orig-href"),
+              markup: dom.getAttribute("data-markup"),
             };
           },
         },
@@ -41,6 +42,7 @@ const extension = {
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
             "data-orig-href": node.attrs["data-orig-href"],
+            "data-markup": node.attrs.markup,
           },
           0,
         ];
@@ -243,7 +245,6 @@ const extension = {
                 nodeBefore.text[nodeBefore.text.length - 1]
               ) &&
               !utils.isWhiteSpace(text[0]) &&
-              nodeBefore.marks.length === 1 &&
               !nodeBefore.marks.some(
                 (mark) =>
                   mark.type.name === "link" && mark.attrs.markup !== "linkify"
