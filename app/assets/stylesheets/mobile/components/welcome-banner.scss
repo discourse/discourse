@@ -7,19 +7,3 @@
     width: 100%;
   }
 }
-
-.welcome-banner__wrap .search-menu {
-  @include breakpoint("mobile-extra-large") {
-    display: none;
-  }
-}
-
-.welcome-banner .welcome-banner__wrap {
-  display: block;
-  padding: 0.5em;
-  margin-top: 0;
-
-  h1 {
-    font-size: var(--font-up-2);
-  }
-}
