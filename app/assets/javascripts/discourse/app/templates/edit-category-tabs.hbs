@@ -14,7 +14,7 @@
     </div>
     {{#if (and this.site.desktopView this.model.id)}}
       <DButton
-        @action={{action "goBack"}}
+        @action={{this.goBack}}
         @label="category.back"
         @icon="caret-left"
         class="category-back"

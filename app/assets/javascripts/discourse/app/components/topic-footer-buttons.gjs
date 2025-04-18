@@ -151,7 +151,7 @@ export default class TopicFooterButtons extends Component {
               @id={{concat "topic-footer-dropdown-" actionable.id}}
               @value={{actionable.value}}
               @content={{actionable.content}}
-              @onChange={{action actionable.action}}
+              @onChange={{actionable.action}}
               @options={{hash
                 icon=actionable.icon
                 none=actionable.noneItem
