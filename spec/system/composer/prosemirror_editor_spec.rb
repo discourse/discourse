@@ -576,12 +576,12 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
 
       cdp.copy_paste(<<~HTML, html: true)
-          <img src="https://example.com/image.png" alt="alt
-          with new
-          lines" title="title
-          with new
-          lines">
-        HTML
+        <img src="https://example.com/image.png" alt="alt
+        with new
+        lines" title="title
+        with new
+        lines">
+      HTML
 
       expect(page).to have_css("img[alt='alt with new lines'][title='title with new lines']")
 
@@ -636,6 +636,27 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys(%i[backspace backspace])
 
       expect(rich).to have_css("a", text: "https://example.c")
+    end
+
+    it "doesn't auto-link immediately following a `" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("`https://example.com`")
+
+      expect(rich).to have_css("code", text: "https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com")
+    end
+
+    it "doesn't auto-link within code marks" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("`code mark`")
+      composer.send_keys(:left)
+
+      composer.type_content(" https://example.com")
+
+      expect(rich).to have_css("code", text: "code mark https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com")
     end
   end
 
