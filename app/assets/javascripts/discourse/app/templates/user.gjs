@@ -32,15 +32,13 @@ export default RouteTemplate(
         {{@controller.primaryGroup}}"
     >
       <section class="user-main">
-        <PluginOutlet @name="user-skip-user-nav">
-          <a
-            href="#user-content"
-            id="user-nav-skip-link"
-            class="skip-link__user-nav"
-          >
-            {{i18n "skip_user_nav"}}
-          </a>
-        </PluginOutlet>
+        <a
+          href="#user-content"
+          id="user-nav-skip-link"
+          class="skip-link__user-nav"
+        >
+          {{i18n "skip_user_nav"}}
+        </a>
         <section
           class="{{if @controller.collapsedInfo 'collapsed-info'}}
             about
@@ -84,28 +82,26 @@ export default RouteTemplate(
                     </LinkTo>
                   </div>
                 {{/if}}
-                <PluginOutlet @name="user-flagged-posts">
-                  {{#if @controller.model.number_of_rejected_posts}}
-                    <div>
-                      <LinkTo
-                        @route="review"
-                        @query={{hash
-                          username=@controller.model.username
-                          status="rejected"
-                          type="ReviewableQueuedPost"
-                        }}
-                      >
-                        {{htmlSafe
-                          (i18n
-                            "user.staff_counters.rejected_posts"
-                            className="flagged-posts"
-                            count=@controller.model.number_of_rejected_posts
-                          )
-                        }}
-                      </LinkTo>
-                    </div>
-                  {{/if}}
-                </PluginOutlet>
+                {{#if @controller.model.number_of_rejected_posts}}
+                  <div>
+                    <LinkTo
+                      @route="review"
+                      @query={{hash
+                        username=@controller.model.username
+                        status="rejected"
+                        type="ReviewableQueuedPost"
+                      }}
+                    >
+                      {{htmlSafe
+                        (i18n
+                          "user.staff_counters.rejected_posts"
+                          className="flagged-posts"
+                          count=@controller.model.number_of_rejected_posts
+                        )
+                      }}
+                    </LinkTo>
+                  </div>
+                {{/if}}
 
                 {{#if @controller.model.number_of_deleted_posts}}
                   <div>
@@ -224,93 +220,85 @@ export default RouteTemplate(
                     </span>
                   </PluginOutlet>
                 </div>
-                <PluginOutlet @name="user-featured-topic">
-                  {{#if @controller.showFeaturedTopic}}
-                    <div class="featured-topic user-profile__featured-topic">
-                      <span title={{i18n "user.featured_topic"}}>
-                        {{icon "book"~}}
-                      </span><LinkTo
-                        @route="topic"
-                        @models={{array
-                          @controller.model.featured_topic.slug
-                          @controller.model.featured_topic.id
-                        }}
-                      >{{replaceEmoji
-                          (htmlSafe
-                            @controller.model.featured_topic.fancy_title
-                          )
-                        }}</LinkTo>
+                {{#if @controller.showFeaturedTopic}}
+                  <div class="featured-topic user-profile__featured-topic">
+                    <span title={{i18n "user.featured_topic"}}>
+                      {{icon "book"~}}
+                    </span><LinkTo
+                      @route="topic"
+                      @models={{array
+                        @controller.model.featured_topic.slug
+                        @controller.model.featured_topic.id
+                      }}
+                    >{{replaceEmoji
+                        (htmlSafe @controller.model.featured_topic.fancy_title)
+                      }}</LinkTo>
+                  </div>
+                {{/if}}
+                <div
+                  class="location-and-website user-profile__location-and-website"
+                >
+                  {{#if @controller.model.location}}<div
+                      class="user-profile-location"
+                    >{{icon "location-dot"~}}
+                      {{@controller.model.location}}</div>{{/if}}
+                  {{#if @controller.model.website_name}}
+                    <div class="user-profile-website">
+                      {{! template-lint-disable link-rel-noopener }}
+                      {{icon "globe"~}}
+                      {{#if @controller.linkWebsite~}}
+                        <a
+                          href={{@controller.model.website}}
+                          rel="noopener {{unless
+                            @controller.removeNoFollow
+                            'nofollow ugc'
+                          }}"
+                          target="_blank"
+                        >{{@controller.model.website_name}}</a>
+                      {{else}}
+                        <span
+                          title={{@controller.model.website}}
+                        >{{@controller.model.website_name}}</span>
+                      {{/if}}
+                      {{! template-lint-enable link-rel-noopener }}
                     </div>
                   {{/if}}
-                </PluginOutlet>
-                <PluginOutlet @name="user-profile-location-and-website">
-                  <div
-                    class="location-and-website user-profile__location-and-website"
-                  >
-                    {{#if @controller.model.location}}<div
-                        class="user-profile-location"
-                      >{{icon "location-dot"~}}
-                        {{@controller.model.location}}</div>{{/if}}
-                    {{#if @controller.model.website_name}}
-                      <div class="user-profile-website">
-                        {{! template-lint-disable link-rel-noopener }}
-                        {{icon "globe"~}}
-                        {{#if @controller.linkWebsite~}}
-                          <a
-                            href={{@controller.model.website}}
-                            rel="noopener {{unless
-                              @controller.removeNoFollow
-                              'nofollow ugc'
-                            }}"
-                            target="_blank"
-                          >{{@controller.model.website_name}}</a>
-                        {{else}}
-                          <span
-                            title={{@controller.model.website}}
-                          >{{@controller.model.website_name}}</span>
-                        {{/if}}
-                        {{! template-lint-enable link-rel-noopener }}
-                      </div>
-                    {{/if}}
-                    <span>
-                      <PluginOutlet
-                        @name="user-location-and-website"
-                        @connectorTagName="div"
-                        @outletArgs={{hash model=@controller.model}}
-                      />
-                    </span>
-                  </div>
-                </PluginOutlet>
+                  <span>
+                    <PluginOutlet
+                      @name="user-location-and-website"
+                      @connectorTagName="div"
+                      @outletArgs={{hash model=@controller.model}}
+                    />
+                  </span>
+                </div>
 
-                <PluginOutlet @name="user-profile-bio">
-                  <div class="bio">
-                    {{#if @controller.model.suspended}}
-                      <div class="suspended">
-                        {{icon "ban"}}
-                        <b>
-                          {{#if @controller.model.suspendedForever}}
-                            {{i18n "user.suspended_permanently"}}
-                          {{else}}
-                            {{i18n
-                              "user.suspended_notice"
-                              date=@controller.model.suspendedTillDate
-                            }}
-                          {{/if}}
-                        </b>
-                        <br />
-                        {{#if @controller.model.suspend_reason}}
-                          <b>{{i18n "user.suspended_reason"}}</b>
-                          {{@controller.model.suspend_reason}}
+                <div class="bio">
+                  {{#if @controller.model.suspended}}
+                    <div class="suspended">
+                      {{icon "ban"}}
+                      <b>
+                        {{#if @controller.model.suspendedForever}}
+                          {{i18n "user.suspended_permanently"}}
+                        {{else}}
+                          {{i18n
+                            "user.suspended_notice"
+                            date=@controller.model.suspendedTillDate
+                          }}
                         {{/if}}
-                      </div>
-                    {{/if}}
-                    {{#if @controller.isNotSuspendedOrIsStaff}}
-                      <HtmlWithLinks>
-                        {{htmlSafe @controller.model.bio_cooked}}
-                      </HtmlWithLinks>
-                    {{/if}}
-                  </div>
-                </PluginOutlet>
+                      </b>
+                      <br />
+                      {{#if @controller.model.suspend_reason}}
+                        <b>{{i18n "user.suspended_reason"}}</b>
+                        {{@controller.model.suspend_reason}}
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                  {{#if @controller.isNotSuspendedOrIsStaff}}
+                    <HtmlWithLinks>
+                      {{htmlSafe @controller.model.bio_cooked}}
+                    </HtmlWithLinks>
+                  {{/if}}
+                </div>
 
                 <PluginOutlet
                   @name="user-public-user-fields"
@@ -496,52 +484,49 @@ export default RouteTemplate(
                         class="trust-level"
                       >{{@controller.model.trustLevel.name}}</dd></div>
                   {{/if}}
-                  <PluginOutlet @name="user-can-check-emails">
-                    {{#if @controller.canCheckEmails}}
-                      <div><dt class="email">{{i18n "user.email.title"}}</dt>
-                        <dd class="email" title={{@controller.model.email}}>
-                          {{#if @controller.model.email}}
-                            {{@controller.model.email}}
-                          {{else}}
-                            <DButton
-                              @action={{fn
-                                (routeAction "checkEmail")
-                                @controller.model
-                              }}
-                              @icon="envelope"
-                              @label="admin.users.check_email.text"
-                              class="btn-primary"
-                            />
-                          {{/if}}
-                        </dd>
-                      </div>
-                    {{/if}}
-                  </PluginOutlet>
-                  <PluginOutlet @name="user-display-groups">
-                    {{#if @controller.model.displayGroups}}
-                      <div><dt class="groups">{{i18n
-                            "groups.title"
-                            count=@controller.model.displayGroups.length
-                          }}</dt>
-                        <dd class="groups">
-                          {{#each @controller.model.displayGroups as |group|}}
-                            <span><LinkTo
-                                @route="group"
-                                @model={{group.name}}
-                                class="group-link"
-                              >{{group.name}}</LinkTo></span>
-                          {{/each}}
+                  {{#if @controller.canCheckEmails}}
+                    <div><dt class="email">{{i18n "user.email.title"}}</dt>
+                      <dd class="email" title={{@controller.model.email}}>
+                        {{#if @controller.model.email}}
+                          {{@controller.model.email}}
+                        {{else}}
+                          <DButton
+                            @action={{fn
+                              (routeAction "checkEmail")
+                              @controller.model
+                            }}
+                            @icon="envelope"
+                            @label="admin.users.check_email.text"
+                            class="btn-primary"
+                          />
+                        {{/if}}
+                      </dd>
+                    </div>
+                  {{/if}}
 
-                          <LinkTo
-                            @route="groups"
-                            @query={{hash username=@controller.model.username}}
-                          >
-                            ...
-                          </LinkTo>
-                        </dd>
-                      </div>
-                    {{/if}}
-                  </PluginOutlet>
+                  {{#if @controller.model.displayGroups}}
+                    <div><dt class="groups">{{i18n
+                          "groups.title"
+                          count=@controller.model.displayGroups.length
+                        }}</dt>
+                      <dd class="groups">
+                        {{#each @controller.model.displayGroups as |group|}}
+                          <span><LinkTo
+                              @route="group"
+                              @model={{group.name}}
+                              class="group-link"
+                            >{{group.name}}</LinkTo></span>
+                        {{/each}}
+
+                        <LinkTo
+                          @route="groups"
+                          @query={{hash username=@controller.model.username}}
+                        >
+                          ...
+                        </LinkTo>
+                      </dd>
+                    </div>
+                  {{/if}}
 
                   {{#if @controller.canDeleteUser}}
                     <div class="pull-right"><DButton
