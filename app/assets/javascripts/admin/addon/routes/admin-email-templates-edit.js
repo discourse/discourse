@@ -1,5 +1,5 @@
 import Route from "@ember/routing/route";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { scrollTop } from "discourse/lib/scroll-top";
 
 export default class AdminEmailTemplatesEditRoute extends Route {
   model(params) {

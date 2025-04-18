@@ -9,7 +9,7 @@ import { and, eq, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { scrollTop } from "discourse/lib/scroll-top";
 import delayedDestroy from "discourse/modifiers/delayed-destroy";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
