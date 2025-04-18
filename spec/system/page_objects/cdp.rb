@@ -70,14 +70,18 @@ module PageObjects
       end
     end
 
-    def copy_paste(text, html: false)
+    def copy_paste(text, html: false, css_selector: nil)
       allow_clipboard
       write_clipboard(text, html: html)
-      paste
+      paste(css_selector:)
     end
 
-    def paste
-      page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+    def paste(css_selector: nil)
+      if css_selector
+        find(css_selector).send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      else
+        page.send_keys([PLATFORM_KEY_MODIFIER, "v"])
+      end
     end
 
     def with_network_disconnected
