@@ -132,51 +132,49 @@ const extension = {
   plugins: ({ pmState: { Plugin }, utils }) => [
     new Plugin({
       props: {
-        // Auto-linkify plain-text pasted URLs
+        // Auto-linkify plain-text pasted URLs over a selection
         clipboardTextParser(text, $context, plain, view) {
           if (view.state.selection.empty || !utils.getLinkify().test(text)) {
             return;
           }
 
-          return addLinkMark(view, text);
+          return addLinkMark(view, text, utils);
         },
+        // Auto-linkify rich content with a single text node that is a URL over a selection
+        transformPasted(slice, view) {
+          if (view.state.selection.empty) {
+            return slice;
+          }
 
-        // Auto-linkify rich content with a single text node that is a URL
-        transformPasted(paste, view) {
           let node = null;
 
-          if (paste.content.childCount === 1) {
-            if (paste.content.firstChild.isText) {
-              node = paste.content.firstChild;
+          if (slice.content.childCount === 1) {
+            if (slice.content.firstChild.isText) {
+              node = slice.content.firstChild;
             } else if (
-              paste.content.firstChild.type.name === "paragraph" &&
-              paste.content.firstChild.childCount === 1 &&
-              paste.content.firstChild.firstChild.isText
+              slice.content.firstChild.type.name === "paragraph" &&
+              slice.content.firstChild.childCount === 1 &&
+              slice.content.firstChild.firstChild.isText
             ) {
-              node = paste.content.firstChild.firstChild;
+              node = slice.content.firstChild.firstChild;
             }
           }
 
           if (
             !node?.text ||
-            node?.marks.some((mark) => mark.type.name === "link")
+            node?.marks.some(
+              (mark) => mark.type.name === "link" || mark.type.name === "code"
+            ) ||
+            !utils.getLinkify().test(node.text)
           ) {
-            return paste;
+            return slice;
           }
 
-          const matches = utils.getLinkify().match(node.text);
-          const isFullMatch =
-            matches && matches.length === 1 && matches[0].raw === node.text;
-
-          if (!isFullMatch) {
-            return paste;
-          }
-
-          return addLinkMark(view, node.text);
+          return addLinkMark(view, node.text, utils);
         },
       },
     }),
-    // plugin for auto-linking during typing
+    // plugin for auto-linking while typing
     new Plugin({
       appendTransaction(transactions, prevState, state) {
         const transaction = prevState.tr;
@@ -200,6 +198,7 @@ const extension = {
             from = Math.max(from - 1, 0);
             to = Math.min(to + 1, state.doc.nodeSize - 2);
           }
+
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (
               !node.isText ||
@@ -234,6 +233,7 @@ const extension = {
 
             const nodeBefore = state.doc.nodeAt(pos - 1);
             let textBefore = "";
+
             if (
               wordStart === 0 &&
               nodeBefore?.isText &&
@@ -241,6 +241,7 @@ const extension = {
                 nodeBefore.text[nodeBefore.text.length - 1]
               ) &&
               !utils.isWhiteSpace(text[0]) &&
+              nodeBefore.text[nodeBefore.text.length - 1] !== "`" &&
               nodeBefore.marks.length === 1 &&
               nodeBefore.marks.some(
                 (mark) =>
@@ -276,11 +277,15 @@ const extension = {
               state.schema.marks.link
             );
 
+            if (!utils.getLinkify().test(fullText)) {
+              return;
+            }
+
             utils
               .getLinkify()
               .match(fullText)
               ?.forEach((match) => {
-                // small exception when we're typing `www.link.com
+                // ignore if the match is just after a `
                 if (fullText[match.index - 1] === "`") {
                   return;
                 }
@@ -303,15 +308,19 @@ const extension = {
   ],
 };
 
-function addLinkMark(view, href) {
-  const { from, to } = view.state.selection;
-  const linkMark = view.state.schema.marks.link.create({
-    href,
-    markup: "linkify",
-  });
+function addLinkMark(view, text, utils) {
+  const matches = utils.getLinkify().match(text);
+  const isFullMatch = matches?.length === 1 && matches[0].raw === text;
 
+  if (!isFullMatch) {
+    return;
+  }
+
+  const { from, to } = view.state.selection;
   const tr = view.state.tr;
-  tr.addMark(from, to, linkMark);
+
+  // used only when replacing the selection, so no markup: linkify
+  tr.addMark(from, to, view.state.schema.marks.link.create({ href: text }));
 
   return tr.doc.slice(from, to);
 }

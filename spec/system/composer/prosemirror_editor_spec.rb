@@ -549,7 +549,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "respects existing marks when pasting a url to make a link" do
+    it "respects existing marks when pasting a url over a selection" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
       cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
@@ -568,7 +568,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "auto-links pasted URLs from text/html" do
+    it "auto-links pasted URLs from text/html over a selection" do
       cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
 
