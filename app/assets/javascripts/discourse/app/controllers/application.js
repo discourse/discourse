@@ -94,7 +94,7 @@ export default class ApplicationController extends Controller {
       return false;
     }
 
-    // Always show sidebar for admin if user can see the admin sidbar
+    // Always show sidebar for admin if user can see the admin sidebar
     if (this.sidebarState.isForcingSidebar) {
       return true;
     }
