@@ -119,8 +119,8 @@ module PageObjects
         page.visit("/admin/config/customize/components")
       end
 
-      def loading?
-        has_css?(".loading-container.visible")
+      def wait_until_done_loading
+        try_until_success { has_no_css?(".loading-container.visible") }
       end
 
       def component(id)
