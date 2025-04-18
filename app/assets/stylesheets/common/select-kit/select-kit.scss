@@ -42,7 +42,7 @@
       max-width: 600px;
     }
 
-    &:not(.has-selection) {
+    &:not(.mini-tag-chooser) {
       .select-kit-body[data-popper-placement="bottom-start"]
         .select-kit-collection,
       .select-kit-body[data-popper-placement="bottom-end"]
@@ -61,7 +61,7 @@
       }
     }
 
-    .select-kit-filter {
+    &:not(.composer-actions, .toolbar-popup-menu-options) .select-kit-filter {
       border: 1px solid var(--primary-low);
       border-bottom: none;
     }
@@ -219,6 +219,8 @@
     .selected-content {
       max-height: 300px;
       overflow-y: auto;
+      border-right: 1px solid var(--primary-low);
+      border-left: 1px solid var(--primary-low);
     }
 
     &[data-popper-reference-hidden] {
