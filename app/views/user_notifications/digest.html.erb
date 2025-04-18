@@ -70,6 +70,9 @@
                           </tr>
                         </tbody>
                       </table>
+
+                      <%= digest_custom_html("above_popular_topics").html_safe %>
+
                       <center class="header-popular-topics with-accent-colors" style="font-size:22px;font-weight:400;margin-bottom: 8px; mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.popular_topics' %></center>
                     </td>
                   </tr>
@@ -175,7 +178,7 @@
                         <!--   End of Popular Topic   -->
 
                         <% if i < 5 %>
-                        <%= digest_custom_html("below_post_#{i+1}") %>
+                        <%= digest_custom_html("below_post_#{i+1}").html_safe %>
                         <% end %>
 
                       <% end %>
@@ -200,11 +203,11 @@
           </tr>
         </table>
         <% if @popular_posts.present? %>
-     
+
           <center class="header-popular-posts" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Arial,sans-serif;">
             <%=t 'user_notifications.digest.popular_posts' %>
           </center>
-      
+
           <table width="100%" class="body with-dir" style="background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
             <tr>
               <td class="side-spacer" style="padding:0;">&nbsp;</td>
@@ -274,12 +277,12 @@
           </table>
         <% end %>
 
-        <%= digest_custom_html("above_popular_topics") %>
+        <%= digest_custom_html("above_popular_topics").html_safe %>
 
         <% if @other_new_for_you.present? %>
-         
+
           <center class="digest-new-header" style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 8px;font-family:Arial,sans-serif;mso-line-height-rule:exactly;line-height:36px;"><%=t 'user_notifications.digest.more_new' %></center>
-         
+
           <table width="100%" class="digest-new-topics body with-dir" style="background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
             <tr>
               <td class="side-spacer" style="padding:0;">&nbsp;</td>
@@ -328,7 +331,7 @@
 
         <% end %>
 
-        <%= digest_custom_html("below_popular_topics") %>
+        <%= digest_custom_html("below_popular_topics").html_safe %>
 
         <style>
           @media only screen {
@@ -368,7 +371,7 @@
           }
         </style>
 
-        <%= digest_custom_html("above_footer") %>
+        <%= digest_custom_html("above_footer").html_safe %>
 
         <table width="100%" class='summary-footer with-dir'>
           <tr>
@@ -383,7 +386,7 @@
           </tr>
         </table>
 
-        <%= digest_custom_html("below_footer") %>
+      <%= digest_custom_html("below_footer").html_safe %>
       </td>
       <td></td>
     </tr>
