@@ -157,6 +157,28 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
+  @discourseComputed(
+    "model.postStream.loaded",
+    "currentPostId",
+    "model.postStream.posts.firstObject.id"
+  )
+  topicTitleClass(loaded, currentPostId, firstPostId) {
+    if (!loaded) {
+      return "edit-topic";
+    }
+
+    if (currentPostId === firstPostId) {
+      // TODO: We need to remove edit-topic here, which is the same class as the pencil,
+      // once we have updated plugins/themes etc to no longer use this.
+      return "edit-topic can-edit-topic";
+    }
+  }
+
+  @discourseComputed("site.mobileView", "model.details.can_edit")
+  showEditButton(mobileView, canEdit) {
+    return mobileView && canEdit;
+  }
+
   @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -368,16 +390,23 @@ export default class TopicController extends Controller {
   }
 
   @action
-  jumpTop(event) {
-    if (event && wantsNewWindow(event)) {
-      return;
-    }
+  titleClick(event) {
+    let isAtTop =
+      this.currentPostId === this.model.postStream.posts.firstObject.id;
 
     event?.preventDefault();
-    DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
-      skipIfOnScreen: false,
-      keepFilter: true,
-    });
+    if (isAtTop) {
+      if (this.get("model.details.can_edit")) {
+        this.set("editingTopic", true);
+      }
+    } else if (event && wantsNewWindow(event)) {
+      return;
+    } else {
+      DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
+        skipIfOnScreen: false,
+        keepFilter: true,
+      });
+    }
   }
 
   @action

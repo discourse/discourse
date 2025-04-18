@@ -200,8 +200,14 @@
       font-size: var(--font-up-3);
     }
 
-    a {
+    &.can-edit-topic a {
+      cursor: text;
       color: var(--primary);
+    }
+
+    &.can-edit-topic :hover {
+      outline: 2px solid var(--tertiary);
+      border-radius: var(--d-border-radius);
     }
   }
 
