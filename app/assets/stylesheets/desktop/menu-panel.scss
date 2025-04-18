@@ -10,6 +10,10 @@
   }
 }
 
+.user-menu.revamped.menu-panel.drop-down {
+  @include float-down;
+}
+
 // Sidebar-hamburger hybrid
 .hamburger-panel .revamped {
   --d-sidebar-highlight-background: var(--d-hover);
