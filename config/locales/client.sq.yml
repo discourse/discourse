@@ -2296,10 +2296,6 @@ sq:
         name: "Google"
         title: "Identifikohu me Google"
         sr_title: "Identifikohu me Google"
-      twitter:
-        name: "Twitter"
-        title: "Identifikohu me Twitter"
-        sr_title: "Identifikohu me Twitter"
       instagram:
         name: "Instagram"
         title: "Identifikohu me Instagram"
@@ -4010,6 +4006,9 @@ sq:
             form:
               mobile: "Mobile"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -4049,6 +4048,8 @@ sq:
           sub_pages:
             templates:
               title: "Shabllonet"
+        email_logs:
+          sub_pages:
             sent:
               title: "Dërguar"
             skipped:

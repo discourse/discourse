@@ -2039,10 +2039,6 @@ te:
         name: "గూగుల్"
         title: "గూగుల్ తో లాగిన్ చేయండి"
         sr_title: "గూగుల్ ద్వారా లాగిన్"
-      twitter:
-        name: "ట్విట్టర్"
-        title: "X (ట్విట్టర్) తో లాగిన్ చేయండి"
-        sr_title: "X (ట్విట్టర్) ద్వారా లాగిన్"
       instagram:
         name: "ఇన్స్టాగ్రామ్"
         title: "Instagram తో లాగిన్ చేయండి"
@@ -4426,8 +4422,6 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
-        logo:
-          title: "సైట్ లోగో"
         branding:
           title: "బ్రాండింగ్"
           logo:
@@ -4438,6 +4432,12 @@ te:
               email: "మెయిల్"
               manifest_screenshots:
                 description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+          fonts:
+            form:
+              heading_font:
+                title: "శీర్షిక ఫాంట్"
+            backfill_modal:
+              modal_yes: "అవును"
         navigation:
           title: "నావిగేషన్"
         notifications:
@@ -4481,6 +4481,8 @@ te:
           sub_pages:
             templates:
               title: "టెంప్లేట్లు"
+        email_logs:
+          sub_pages:
             sent:
               title: "పంపిన"
             skipped:

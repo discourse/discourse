@@ -1830,10 +1830,6 @@ pt:
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
-        title: "Cadastrar-se com o Twitter"
-        sr_title: "Cadastrar-se com o Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sessão com o Instagram"
@@ -3649,6 +3645,9 @@ pt:
               email: "Email"
               manifest_screenshots:
                 description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
+          fonts:
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
         notifications:
@@ -3694,6 +3693,8 @@ pt:
               header_description: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado"
             skipped:

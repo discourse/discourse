@@ -1934,10 +1934,6 @@ bg:
         name: "Google"
         title: "Влезте с Google"
         sr_title: "Влезте с Google"
-      twitter:
-        name: "Twitter"
-        title: "Влезте с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
         title: "Влезте с Instagram"
@@ -3466,6 +3462,9 @@ bg:
             form:
               mobile: "Мобилен"
               email: "Имейл "
+          fonts:
+            backfill_modal:
+              modal_yes: "Да"
         navigation:
           title: "Навигация"
         notifications:
@@ -3503,6 +3502,8 @@ bg:
               header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
             templates:
               title: "Шаблони"
+        email_logs:
+          sub_pages:
             sent:
               title: "Изпрати"
             skipped:

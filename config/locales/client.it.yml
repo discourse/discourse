@@ -2303,10 +2303,6 @@ it:
         name: "Google"
         title: "Accedi con Google"
         sr_title: "Accedi con Google"
-      twitter:
-        name: "Twitter"
-        title: "Accedi con Twitter"
-        sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
         title: "Accedi con Instagram"
@@ -4825,9 +4821,6 @@ it:
         flags:
           title: "Moderazione"
           header_description: "Il sistema di segnalazioni di Discourse aiuta il team di moderazione a gestire i contenuti e i comportamenti degli utenti per mantenere la comunità un ambiente salubre e improntato al rispetto. Le impostazioni predefinite si adattano alle esigenze della maggior parte delle comunità, per cui non richiedono modifiche. Tuttavia, se il tuo sito web ha requisiti particolari, puoi disabilitare le segnalazioni che non ti servono e aggiungerne di personalizzate."
-        font_style:
-          title: "Stile del carattere"
-          header_description: "Personalizza gli stili dei caratteri utilizzati dai tuoi temi"
         files:
           title: "File"
           header_description: "Impostazioni che controllano i limiti di dimensione e tipo dei file, le dimensioni e le origini degli avatar, l'archiviazione dei file, la qualità e la compressione delle immagini e altro ancora"
@@ -4839,9 +4832,6 @@ it:
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
-        logo:
-          title: "Logo del sito"
-          header_description: "Personalizza le varianti del logo del tuo sito"
         branding:
           title: "Branding"
           logo:
@@ -4854,6 +4844,13 @@ it:
                 description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
               opengraph_image:
                 description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+          fonts:
+            title: "Caratteri"
+            form:
+              heading_font:
+                title: "Carattere dell'intestazione"
+            backfill_modal:
+              modal_yes: "Sì"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -4934,9 +4931,6 @@ it:
         site_texts:
           title: "Testi del sito"
         email:
-          title: "Configurazione del server e log"
-          header_description: "Personalizza i modelli utilizzati per creare e-mail, visualizza in anteprima le e-mail di riepilogo che verranno inviate e visualizza i log delle e-mail"
-          keywords: "email|smtp|mailgun|sendgrid|inviato|saltato|rimbalzato|ricevuto|rifiutato|log email|anteprima riepilogo"
           sub_pages:
             preview_summary:
               title: "Anteprima del riepilogo"
@@ -4945,6 +4939,8 @@ it:
               title: "Test avanzato"
             templates:
               title: "Modelli"
+        email_logs:
+          sub_pages:
             sent:
               title: "Inviato"
             skipped:

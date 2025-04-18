@@ -1823,10 +1823,6 @@ lt:
         name: "Google"
         title: "Prisijunkite naudodami “Google”"
         sr_title: "Prisijunkite naudodami “Google”"
-      twitter:
-        name: "Twitter"
-        title: "Prisijunkite naudodami “Twitter”"
-        sr_title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
         title: "Prisijunkite naudodami “Instagram”"
@@ -3696,6 +3692,12 @@ lt:
             form:
               mobile: "Mobilus"
               email: "El. paštas"
+          fonts:
+            form:
+              heading_font:
+                title: "Antraštės šriftas"
+            backfill_modal:
+              modal_yes: "Taip"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3740,6 +3742,8 @@ lt:
           sub_pages:
             templates:
               title: "Juodraščiai"
+        email_logs:
+          sub_pages:
             sent:
               title: "Išsiųsti"
             skipped:

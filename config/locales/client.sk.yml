@@ -2589,9 +2589,9 @@ sk:
         title: "Prihlásenie pomocou služby Google"
         sr_title: "Prihlásenie pomocou služby Google"
       twitter:
-        name: "Twitter"
-        title: "Prihláste sa pomocou Twitteru"
-        sr_title: "Prihláste sa pomocou Twitteru"
+        name: "X"
+        title: "Prihláste sa pomocou X"
+        sr_title: "Prihláste sa pomocou X"
       instagram:
         name: "Instagram"
         title: "Prihláste sa pomocou Instagramu"
@@ -5415,9 +5415,6 @@ sk:
           title: "Moderovanie"
           header_description: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
           keywords: "príznak|recenzia|spam|nelegálne"
-        font_style:
-          title: "Štýl písma"
-          header_description: "Prispôsobenie štýlov písma používaných v témach"
         files:
           title: "Súbory"
           header_description: "Nastavenia, ktoré kontrolujú veľkosť a typ súborov, veľkosti a zdroje avatarov, ukladanie súborov, kvalitu a kompresiu obrázkov a ďalšie."
@@ -5431,9 +5428,6 @@ sk:
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
-        logo:
-          title: "Logo stránky"
-          header_description: "Prispôsobenie variantov loga vášho webu"
         branding:
           title: "Branding"
           logo:
@@ -5500,6 +5494,12 @@ sk:
                 title: "X súhrnný veľký obrázok"
                 description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
                 help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
+          fonts:
+            form:
+              heading_font:
+                title: "Písmo nadpisu"
+            backfill_modal:
+              modal_yes: "Áno"
         navigation:
           title: "Navigácia"
           header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
@@ -5520,7 +5520,7 @@ sk:
           header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
         search_everything:
           title: "Hľadať"
-          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú."
+          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú. Ak chcete otvoriť toto vyhľadávanie kdekoľvek v rozhraní správcu, stlačte tlačidlo %{shortcutHTML}."
         security:
           title: "Bezpečnosť"
           header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
@@ -5595,9 +5595,6 @@ sk:
           title: "Texty stránok"
           header_description: "Prispôsobenie akéhokoľvek textu používaného v Discourse tak, aby zodpovedal hlasu a tónu vašej komunity"
         email:
-          title: "Nastavenie servera a protokoly"
-          header_description: "Prispôsobte si šablóny používané na vytváranie e-mailov, zobrazte si náhľad súhrnných e-mailov, ktoré budú odoslané, a zobrazte protokoly e-mailov"
-          keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
           sub_pages:
             preview_summary:
               title: "Súhrn ukážky"
@@ -5608,6 +5605,8 @@ sk:
             templates:
               title: "Šablóny"
               header_description: "Prispôsobenie šablón používaných na vytváranie e-mailov"
+        email_logs:
+          sub_pages:
             sent:
               title: "Odoslané"
               header_description: "Zobrazenie denníka odoslaných e-mailov"
@@ -7698,13 +7697,21 @@ sk:
       site_settings:
         title: "Nastavenia stránky"
         description: "Konfigurujte nastavenia svojej stránky Discourse a prispôsobte jej vzhľad, funkcie a používateľské prostredie."
-        discard: "Zahodenie zmien"
-        save: "Uložiť všetky zmeny"
+        discard:
+          one: "Zahodiť zmenu"
+          few: "Zahodenie zmien"
+          many: "Zahodenie zmien"
+          other: "Zahodenie zmien"
+        save:
+          one: "Uložiť zmenu"
+          few: "Uložiť všetky zmeny"
+          many: "Uložiť všetky zmeny"
+          other: "Uložiť všetky zmeny"
         dirty_banner:
-          one: "Máte <em>%{count}</em> neuloženú zmenu"
-          few: "Máte <em>%{count}</em> neuložených zmien"
-          many: "Máte <em>%{count}</em> neuložených zmien"
-          other: "Máte <em>%{count}</em> neuložené zmeny"
+          one: "Máte <b>%{count}</b> neuloženú zmenu"
+          few: "Máte <b>%{count}</b> neuložených zmien"
+          many: "Máte <b>%{count}</b> neuložené zmeny"
+          other: "Máte <b>%{count}</b> neuložené zmeny"
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
           add_emoji_button:

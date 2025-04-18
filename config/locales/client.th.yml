@@ -1280,8 +1280,6 @@ th:
       not_approved: "บัญชีของคุณยังไม่ได้รับการยืนยัน คุณจะได้รับการแจ้งเตือนทางอีเมลเมื่อคุณสามารถเข้าสู่ระบบได้"
       google_oauth2:
         name: "กูเกิล"
-      twitter:
-        name: "ทวิตเตอร์"
       instagram:
         name: "อินสตาแกรม"
       facebook:
@@ -2561,6 +2559,9 @@ th:
             form:
               mobile: "โทรศัพท์"
               email: "อีเมล"
+          fonts:
+            backfill_modal:
+              modal_yes: "ใช่"
         navigation:
           title: "การนำทาง"
         notifications:
@@ -2593,6 +2594,8 @@ th:
           sub_pages:
             templates:
               title: "รูปแบบ"
+        email_logs:
+          sub_pages:
             sent:
               title: "ส่ง"
             skipped:

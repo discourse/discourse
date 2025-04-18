@@ -1157,8 +1157,6 @@ sw:
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2403,6 +2401,9 @@ sw:
             form:
               mobile: "Kifaa cha kiganjani"
               email: "Barua pepe"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ndio"
         navigation:
           title: "Abiri"
         notifications:
@@ -2444,6 +2445,8 @@ sw:
               header_description: "Kihakiki maandishi ya barua pepe za jarida zinatomwa kwa watumiaji wasiotembelea jumuiya"
             templates:
               title: "Violezo"
+        email_logs:
+          sub_pages:
             sent:
               title: "Imetumwa"
             skipped:

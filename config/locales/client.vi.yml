@@ -1761,10 +1761,6 @@ vi:
         name: "Goole"
         title: "Đăng nhập bằng Google"
         sr_title: "Đăng nhập bằng Google"
-      twitter:
-        name: "Twitter"
-        title: "Đăng nhập bằng Twitter"
-        sr_title: "Đăng nhập bằng Twitter"
       instagram:
         name: "Instagram"
         title: "Đăng nhập bằng Instagram"
@@ -3708,6 +3704,9 @@ vi:
             form:
               mobile: "Điện thoại"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -3754,6 +3753,8 @@ vi:
               header_description: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Đã gửi"
             skipped:

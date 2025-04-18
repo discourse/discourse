@@ -2042,10 +2042,6 @@ sv:
         name: "Google"
         title: "Logga in med Google"
         sr_title: "Logga in med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logga in med Twitter"
-        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "Logga in med Instagram"
@@ -4416,8 +4412,6 @@ sv:
           title: "Filer"
         legal:
           title: "Juridik"
-        logo:
-          title: "Webbplatsens logotyp"
         branding:
           title: "Varumärke"
           logo:
@@ -4428,6 +4422,13 @@ sv:
               email: "E-postadress"
               manifest_screenshots:
                 description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+          fonts:
+            title: "Typsnitt"
+            form:
+              heading_font:
+                title: "Typsnitt för rubrik"
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigering"
         notifications:
@@ -4474,6 +4475,8 @@ sv:
               header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
             templates:
               title: "Mallar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Skickade"
             skipped:

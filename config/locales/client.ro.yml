@@ -1882,7 +1882,9 @@ ro:
       google_oauth2:
         name: "Google"
       twitter:
-        name: "Twitter"
+        name: "X"
+        title: "Conectează-te cu X"
+        sr_title: "Conectează-te cu X"
       instagram:
         name: "Instagram"
       facebook:
@@ -3545,9 +3547,6 @@ ro:
           header_description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp"
         flags:
           title: "Moderare"
-        font_style:
-          title: "Stil font"
-          header_description: "Personalizează stilurile de font utilizate de temele tale"
         files:
           title: "Fișiere"
           header_description: "Setări care controlează limitele de dimensiune și tip de fișier, dimensiunile și sursele avatarului, stocarea fișierelor, calitatea și compresia imaginii și multe altele"
@@ -3560,14 +3559,33 @@ ro:
           keywords: "locale|language|timezone|unicode|ltr"
         login_and_authentication:
           header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
-        logo:
-          title: "Logo site"
-          header_description: "Personalizează variațiile logo-ului site-ului tău"
         branding:
+          header_description: "Personalizează variațiile logo-ului și fonturilor site-ului tău"
           logo:
             form:
               mobile: "Mobil"
               email: "E-mail"
+          fonts:
+            title: "Fonturi"
+            form:
+              more_fonts: "Mai multe fonturi"
+              less_fonts: "Mai puține fonturi"
+              saved: "Setările fontului sunt salvate."
+              base_font:
+                title: "Font de bază"
+              heading_font:
+                title: "Font titlu"
+              default_text_size:
+                title: "Dimensiune text implicită"
+                description: "Această dimensiune poate fi ajustată ulterior de fiecare utilizator în funcție de preferințele sale."
+            backfill_modal:
+              title: "Aplici setări noi implicite de text?"
+              description:
+                one: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizator existent?"
+                few: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizatori existenți?"
+                other: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} de utilizatori existenți?"
+              modal_yes: "Da"
+              modal_no: "Nu, aplică doar în continuare"
         navigation:
           title: "Navigare"
           header_description: "Configurează legăturile de navigare și elementele de meniu pentru site-ul tău. Aceasta include locația și comportamentul meniului principal de navigare, legăturile rapide din partea de sus a paginii de pornire, precum și bara laterală de administrare."
@@ -3587,6 +3605,7 @@ ro:
           header_description: "Configurează setările de căutare, inclusiv înregistrarea în jurnal și tokenizarea pentru limbile chineză și japoneză"
         search_everything:
           title: "Căutare"
+          header_description: "Găsește orice în interfața de administrare aici. Poți filtra rezultatele mai jos, iar preferințele tale vor fi memorate. Pentru a deschide această căutare oriunde în interfața de administrare, apasă %{shortcutHTML}."
         security:
           title: "Securitate"
           header_description: "Configurează setările de securitate, inclusiv autentificarea cu doi factori, privilegiile de moderator și politicile de securitate a conținutului"
@@ -3619,8 +3638,18 @@ ro:
         badges:
           title: "Insigne"
           header_description: "Insignele recompensează utilizatorii pentru activitățile, contribuțiile și realizările lor pentru a recunoaște, valida și încuraja comportamentul pozitiv și implicarea în cadrul comunității"
+        analytics:
+          title: "Analitice și SEO"
+          header_description: "Îmbunătățește vizibilitatea site-ului tău pentru motoarele de căutare și configurează modul în care urmărești vizitatorii site-ului"
+          keywords: "search|google|sitemap"
+        interface:
+          title: "Interfață și aranjament"
+          header_description: "Personalizează detaliile aranjamentului general și ale interfeței utilizatorului a site-ului tău"
         permalinks:
           title: "Legături permanente"
+        user_defaults:
+          title: "Implicite utilizator"
+          header_description: "Setează valorile implicite pentru setările care îți afectează utilizatorii, configurându-le experiența de înregistrare"
         user_fields:
           title: "Câmpuri utilizator"
           header_description: "Creează câmpuri de utilizator personalizate pentru a colecta detalii suplimentare despre membrii comunității tale. Poți alege ce informații sunt necesare în timpul înregistrării, ce se afișează pe profiluri și ce pot actualiza utilizatorii."
@@ -3640,11 +3669,12 @@ ro:
           title: "Teme și componente"
           header_description: "Personalizează-ți site-ul Discourse cu teme și componente pentru a se potrivi nevoilor tale"
           keywords: "theme|component|extension|customize"
+        site_admin:
+          title: "Administrator site"
+          header_description: "Configurează diverse setări referitoare la gestionarea site-ului tău"
         site_texts:
           title: "Texte site"
         email:
-          title: "Configurare și jurnale server"
-          header_description: "Personalizează șabloanele folosite pentru a crea emailuri, previzualizează rezumatele emailurilor care vor fi trimise și vizualizează jurnalele de email"
           sub_pages:
             preview_summary:
               header_description: "Previzualizează conținutul emailurilor-rezumat trimise către utilizatori inactivi"
@@ -3652,10 +3682,12 @@ ro:
               title: "Test avansat"
             templates:
               title: "Șabloane"
+        email_logs:
+          sub_pages:
             sent:
-              title: "Trimise"
+              title: "Trimis"
             skipped:
-              title: "Omise"
+              title: "Omis"
             bounced:
               title: "Ricoșate"
             received:
@@ -4860,12 +4892,18 @@ ro:
       site_settings:
         title: "Setări site"
         description: "Configurează setările pentru site-ul tău Discourse pentru a personaliza aspectul, funcționalitatea și experiența utilizatorului."
-        discard: "Renunță la modificări"
-        save: "Salvează toate modificările"
+        discard:
+          one: "Renunță la modificare"
+          few: "Renunță la modificări"
+          other: "Renunță la modificări"
+        save:
+          one: "Salvează modificare"
+          few: "Salvează toate modificările"
+          other: "Salvează toate modificările"
         dirty_banner:
-          one: "Ai <em>o</em> modificare nesalvată"
-          few: "Ai <em>%{count}</em> modificări nesalvate"
-          other: "Ai <em>%{count}</em> de modificări nesalvate"
+          one: "Ai <b>o</b> modificare nesalvată"
+          few: "Ai <b>%{count}</b> modificări nesalvate"
+          other: "Ai <b>%{count}</b> de modificări nesalvate"
         nav_title: "Setări"
         no_results: "Nu s-au găsit rezultate."
         clear_filter: "Șterge"

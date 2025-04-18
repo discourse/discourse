@@ -1764,8 +1764,6 @@ ur:
       not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گو اِی میل کے ذریعے آپ کو مطلع کر دیا جائے گا۔"
       google_oauth2:
         name: "گُوگَل"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "اِنسٹاگرام"
       facebook:
@@ -3695,6 +3693,9 @@ ur:
               email: "اِیمیل"
               manifest_screenshots:
                 description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
+          fonts:
+            backfill_modal:
+              modal_yes: "جی ہاں"
         navigation:
           title: "نیویگیشن"
         notifications:
@@ -3738,6 +3739,8 @@ ur:
           sub_pages:
             templates:
               title: "ٹَیمپلیٹ"
+        email_logs:
+          sub_pages:
             sent:
               title: "بھیجا جا چکا"
             skipped:

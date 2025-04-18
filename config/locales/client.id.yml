@@ -1555,8 +1555,6 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2307,6 +2305,9 @@ id:
           logo:
             form:
               email: "Surel"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
@@ -2327,7 +2328,7 @@ id:
           sub_pages:
             logs:
               title: "Log"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Mengirim"

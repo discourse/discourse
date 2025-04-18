@@ -2303,10 +2303,6 @@ nl:
         name: "Google"
         title: "Aanmelden met Google"
         sr_title: "Aanmelden met Google"
-      twitter:
-        name: "Twitter"
-        title: "Aanmelden met Twitter"
-        sr_title: "Aanmelden met Twitter"
       instagram:
         name: "Instagram"
         title: "Aanmelden met Instagram"
@@ -4825,9 +4821,6 @@ nl:
         flags:
           title: "Moderatie"
           header_description: "Het markeringssysteem in Discourse helpt jou en je moderatorteam bij het beheren van content en gebruikersgedrag, om je community respectvol en gezond te houden. De standaardinstellingen zijn geschikt voor de meeste community's en je hoeft deze niet te wijzigen. Als je site echter bepaalde vereisten heeft, kun je markeringen die je niet nodig hebt uitschakelen en je eigen aangepaste markeringen toevoegen."
-        font_style:
-          title: "Tekenstijl"
-          header_description: "Pas de tekenstijlen aan die door je thema's worden gebruikt"
         files:
           title: "Bestanden"
           header_description: "Instellingen voor maximale bestandsgrootte, bestandstypebeperkingen, avatargroottes en -bronnen, bestandsopslag, beeldkwaliteit en compressie en meer"
@@ -4837,9 +4830,6 @@ nl:
         login_and_authentication:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
-        logo:
-          title: "Sitelogo"
-          header_description: "Pas de variaties van je sitelogo aan"
         branding:
           title: "Branding"
           logo:
@@ -4850,6 +4840,13 @@ nl:
               email: "E-mailadres"
               manifest_screenshots:
                 description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
+          fonts:
+            title: "Lettertypen"
+            form:
+              heading_font:
+                title: "Lettertype kop"
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigatie"
           header_description: "Configureer de navigatielinks en menuopties voor je site. Dit omvat de locatie en het gedrag van het primaire navigatiemenu, de snelle links bovenaan de startpagina en de zijbalk voor beheer"
@@ -4930,9 +4927,6 @@ nl:
         site_texts:
           title: "Siteteksten"
         email:
-          title: "Serverinstellingen en logs"
-          header_description: "Pas de sjablonen aan die worden gebruikt om e-mails op te stellen, bekijk een voorbeeld van samenvattings-e-mails die worden verzonden en bekijk de e-maillogs"
-          keywords: "e-mail|smtp|mailgun|sendgrid|verzonden|overgeslagen|gebounced|ontvangen|geweigerd|e-maillogs|samenvattingsvoorbeeld"
           sub_pages:
             preview_summary:
               title: "Voorbeeld van samenvatting"
@@ -4941,6 +4935,8 @@ nl:
               title: "Geavanceerde test"
             templates:
               title: "Sjablonen"
+        email_logs:
+          sub_pages:
             sent:
               title: "Verzonden"
             skipped:

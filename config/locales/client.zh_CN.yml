@@ -2184,9 +2184,9 @@ zh_CN:
         title: "使用 Google 登录"
         sr_title: "使用 Google 登录"
       twitter:
-        name: "Twitter"
-        title: "使用 Twitter 登录"
-        sr_title: "使用 Twitter 登录"
+        name: "X"
+        title: "使用 X 登录"
+        sr_title: "使用 X 登录"
       instagram:
         name: "Instagram"
         title: "使用 Instagram 登录"
@@ -3619,8 +3619,10 @@ zh_CN:
       logo_description: "建议宽高比为 1:1，最小尺寸为 200px。如果留空，将不会显示图片。"
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
+      style: "样式"
       background_color: "颜色"
       styles:
+        type: "样式"
         icon: "图标"
         emoji: "表情符号"
         options:
@@ -4557,6 +4559,7 @@ zh_CN:
           paste: "粘贴…"
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
+    safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
@@ -4608,9 +4611,6 @@ zh_CN:
           title: "审核"
           header_description: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
           keywords: "标记|评论|垃圾|非法"
-        font_style:
-          title: "字体样式"
-          header_description: "自定义您的主题使用的字体样式"
         files:
           title: "文件"
           header_description: "控制文件大小与类型限制、头像大小与来源、文件存储、图片质量和压缩等的设置"
@@ -4624,11 +4624,9 @@ zh_CN:
         login_and_authentication:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
-        logo:
-          title: "网站徽标"
-          header_description: "自定义您的网站徽标的变体"
         branding:
           title: "品牌化"
+          header_description: "自定义网站徽标和字体的变化"
           logo:
             title: "徽标"
             form:
@@ -4693,6 +4691,25 @@ zh_CN:
                 title: "X 摘要大图"
                 description: "X 卡“摘要大图”。如果留空，则使用 OpenGraph_image 生成常规卡片元数据，只要它不是 .svg。"
                 help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
+          fonts:
+            title: "字体"
+            form:
+              more_fonts: "更多字体"
+              less_fonts: "减少字体"
+              saved: "字体设置已保存。"
+              base_font:
+                title: "基本字体"
+              heading_font:
+                title: "标题字体"
+              default_text_size:
+                title: "默认文本大小"
+                description: "随后，每个用户都可以根据自己的喜好调整这一尺寸。"
+            backfill_modal:
+              title: "应用新的默认文本设置？"
+              description:
+                other: "您已经更新了默认文字大小。您想将此更改应用于 %{count} 现有用户吗？"
+              modal_yes: "是"
+              modal_no: "否，只适用于未来"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -4713,7 +4730,7 @@ zh_CN:
           header_description: "配置中文和日语搜索设置，包括日志记录和词例化"
         search_everything:
           title: "搜索"
-          header_description: "在管理界面中查找任何内容。您可以过滤下面的结果，您的偏好将被记住。"
+          header_description: "在管理界面中查找任何内容。您可以过滤下面的结果，您的首选项将被记住。要在管理界面的任何地方打开此搜索，请按 %{shortcutHTML}。"
         security:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
@@ -4753,11 +4770,15 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传日志"
         reports:
-          title: "举报"
+          title: "报告"
           header_description: "报告是帮助您了解网站上所发生事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
         badges:
           title: "徽章"
           header_description: "徽章奖励用户的活动、贡献和成就，以表彰、认可和鼓励用户在社区中的积极行为和参与。"
+        analytics:
+          title: "分析与SEO"
+          header_description: "提高网站在搜索引擎中的可见度，配置网站访客跟踪方式"
+          keywords: "search|google|sitemap"
         permalinks:
           title: "永久链接"
           header_description: "重定向以请求论坛未知的 URL"
@@ -4788,9 +4809,6 @@ zh_CN:
           title: "网站文本"
           header_description: "自定义 Discourse 中使用的任何文本，以匹配您社区的声音和语气"
         email:
-          title: "服务器设置和日志"
-          header_description: "自定义用于创建电子邮件的模板，预览将发送的摘要电子邮件，以及查看电子邮件日志"
-          keywords: "电子邮件|smtp|mailgun|sendgrid|已发送|已跳过|已退回|已收到|已拒绝|电子邮件日志|预览摘要"
           sub_pages:
             preview_summary:
               title: "预览摘要"
@@ -4801,6 +4819,8 @@ zh_CN:
             templates:
               title: "模板"
               header_description: "自定义用于创建电子邮件的模板"
+        email_logs:
+          sub_pages:
             sent:
               title: "已发送"
               header_description: "查看已发送电子邮件的日志"
@@ -4814,7 +4834,7 @@ zh_CN:
               title: "已收到"
               header_description: "查看已收到的电子邮件日志"
             rejected:
-              title: "遭拒"
+              title: "已拒绝"
               header_description: "查看被拒绝的电子邮件日志"
         email_appearance:
           title: "外观"
@@ -5526,6 +5546,7 @@ zh_CN:
           unsaved_changes: "您有未保存的更改"
           copy_of: "%{name}的副本"
           copy_created: '已创建“%{name}”的新副本'
+          illegal_character_in_color: "颜色只应包含十六进制字符"
       plugins:
         title: "插件"
         name: "名称"
@@ -6785,10 +6806,12 @@ zh_CN:
       site_settings:
         title: "网站设置"
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
-        discard: "放弃更改"
-        save: "保存所有更改"
+        discard:
+          other: "放弃更改"
+        save:
+          other: "保存所有更改"
         dirty_banner:
-          other: "你有 <em>%{count}</em> 个未保存的更改"
+          other: "你有 <b>%{count}</b> 个未保存的更改"
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
           add_emoji_button:

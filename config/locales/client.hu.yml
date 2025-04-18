@@ -2319,10 +2319,6 @@ hu:
         name: "Google"
         title: "Bejelentkezés a Google-lel"
         sr_title: "Bejelentkezés a Google-lel"
-      twitter:
-        name: "Twitter"
-        title: "Bejelentkezés a Twitterrel"
-        sr_title: "Bejelentkezés a Twitterrel"
       instagram:
         name: "Instagram"
         title: "Bejelentkezés az Instagrammal"
@@ -4861,9 +4857,6 @@ hu:
           title: "Moderálás"
           header_description: "A Discourse jelölési rendszere segít Önnek és moderátori csapatának a tartalom és a felhasználói viselkedés kezelésében, hogy a közösség tisztelettudó és egészséges maradjon. Az alapértelmezett beállítások a legtöbb közösség számára megfelelőek, és nem kell megváltoztatnia őket. Ha azonban webhelyének különleges követelményei vannak, letilthatja a nem szükséges megjelöléseket, és saját megjelöléseket adhat hozzá."
           keywords: "megjelölés|vélemény|spam|illegális"
-        font_style:
-          title: "Betűstílus"
-          header_description: "Szabja testre a témák által használt betűstílusokat"
         files:
           title: "Fájlok"
           header_description: "Beállítások, amelyek a fájlméret- és típushatárokat, az avatarok méretét és forrásait, a fájltárolást, a képminőséget és tömörítést stb. szabályozzák."
@@ -4877,9 +4870,6 @@ hu:
         login_and_authentication:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
-        logo:
-          title: "Webhely logó"
-          header_description: "Szabja testre webhelye logójának változatait"
         branding:
           title: "Logó"
           logo:
@@ -4890,6 +4880,12 @@ hu:
               email: "E-mail:"
               manifest_screenshots:
                 description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
+          fonts:
+            form:
+              heading_font:
+                title: "Fejléc betűtípus"
+            backfill_modal:
+              modal_yes: "Igen"
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -4979,9 +4975,6 @@ hu:
           title: "Oldal szövegei"
           header_description: "A Discourse-ban használt szövegek testreszabása a közösség hangjának és hangnemének megfelelően"
         email:
-          title: "Szerverbeállítások és naplók"
-          header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat, megtekintheti a kiküldött összefoglaló e-maileket, és megtekintheti az e-mail naplókat"
-          keywords: "email|smtp|mailgun|sendgrid|elküldve|kihagyva|visszapattant|kapott|elutasítva|e-mail naplók|előzetes összefoglaló"
           sub_pages:
             preview_summary:
               title: "Előnézet összefoglalója"
@@ -4992,6 +4985,8 @@ hu:
             templates:
               title: "Sablonok"
               header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat"
+        email_logs:
+          sub_pages:
             sent:
               title: "Elküldött"
               header_description: "Az elküldött e-mailek naplójának megtekintése"
