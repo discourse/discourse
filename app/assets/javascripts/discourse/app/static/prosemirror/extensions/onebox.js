@@ -15,7 +15,6 @@ const extension = {
       attrs: { url: {}, html: {} },
       selectable: true,
       group: "block",
-      atom: true,
       draggable: true,
       parseDOM: [
         {
@@ -44,7 +43,6 @@ const extension = {
       inline: true,
       group: "inline",
       selectable: true,
-      atom: true,
       draggable: true,
       parseDOM: [
         {
