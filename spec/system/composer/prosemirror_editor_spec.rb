@@ -638,17 +638,19 @@ describe "Composer - ProseMirror editor", type: :system do
     it "auto-links non-protocol URLs and removes the link when no longer a URL" do
       open_composer_and_toggle_rich_editor
 
-      composer.type_content("www.example.com")
+      composer.type_content("www.example.com and also mid-paragraph www.example2.com")
 
       expect(rich).to have_css("a", text: "www.example.com")
+      expect(rich).to have_css("a", text: "www.example2.com")
+      expect(rich).to have_css("a", count: 2)
 
       composer.send_keys(%i[backspace backspace])
 
-      expect(rich).to have_no_css("a")
+      expect(rich).to have_css("a", count: 1)
 
       composer.type_content("om")
 
-      expect(rich).to have_css("a", text: "www.example.com")
+      expect(rich).to have_css("a", text: "www.example2.com")
     end
 
     it "auto-links protocol URLs" do
