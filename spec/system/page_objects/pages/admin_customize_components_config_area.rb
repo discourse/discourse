@@ -148,6 +148,8 @@ module PageObjects
       end
 
       def components_shown
+        expect(page).to have_css(".admin-config-components__component-row")
+
         all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
       end
 

@@ -16,6 +16,7 @@ describe "Composer - ProseMirror editor", type: :system do
     page.visit "/new-topic"
     expect(composer).to be_opened
     composer.toggle_rich_editor
+    expect(composer).to have_rich_editor_active
     composer.focus
   end
 
@@ -59,7 +60,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_emoji_autocomplete
 
       # "more" emoji picker
-      composer.send_keys(:arrow_down, :enter)
+      composer.send_keys(:down, :enter)
 
       find("img[data-emoji='repeat_single_button']").click
 
@@ -82,7 +83,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("1. Item 1\n5. Item 2")
 
       expect(rich).to have_css("ol li", text: "Item 1")
-      expect(find("ol ol", text: "Item 2")["start"]).to eq("5")
+      expect(find("ol ol", text: "Item 2")["start"]).to eq(5)
     end
 
     it "supports *, - or + to create an unordered list" do
@@ -468,7 +469,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("```code block")
       composer.send_keys(:home)
-      composer.send_keys(%i[backspace])
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("p", text: "code block")
     end
@@ -507,21 +508,23 @@ describe "Composer - ProseMirror editor", type: :system do
 
   describe "pasting content" do
     it "does not freeze the editor when pasting markdown code blocks without a language" do
-      cdp.allow_clipboard
-      open_composer_and_toggle_rich_editor
+      with_logs do |logger|
+        open_composer_and_toggle_rich_editor
 
-      # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
-      composer.type_content("This is a test\n\n")
-      cdp.copy_paste <<~MARKDOWN
-        ```
-        puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
-        ```
-      MARKDOWN
-      expect(page.driver.browser.logs.get(:browser)).not_to include(
-        "Maximum call stack size exceeded",
-      )
-      expect(rich).to have_css("pre code", wait: 1)
-      expect(rich).to have_css("select.code-language-select", wait: 1)
+        # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
+        composer.type_content("This is a test\n\n")
+        cdp.copy_paste <<~MARKDOWN
+          ```
+          puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
+          ```
+        MARKDOWN
+
+        expect(logger.logs.map { |log| log[:message] }).not_to include(
+          "Maximum call stack size exceeded",
+        )
+        expect(rich).to have_css("pre code")
+        expect(rich).to have_css("select.code-language-select")
+      end
     end
 
     it "parses images copied from cooked with base62-sha1" do
@@ -617,7 +620,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a", text: "www.example.com")
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_no_css("a")
 
@@ -633,7 +637,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a", text: "https://example.com")
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("a", text: "https://example.c")
     end
@@ -651,7 +656,7 @@ describe "Composer - ProseMirror editor", type: :system do
       end
 
       expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css("img", count: 1)
+      expect(rich).to have_css("img:not(.ProseMirror-separator)", count: 1)
     end
   end
 
@@ -664,7 +669,8 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("code", text: "code!")
 
       # within the code mark
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
       composer.type_content("!")
 
       expect(rich).to have_css("code", text: "code!")

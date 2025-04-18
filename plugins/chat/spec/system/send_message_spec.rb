@@ -24,12 +24,10 @@ RSpec.describe "Send message", type: :system do
       end
 
       it "shows correct state" do
-        using_session(:user_1) do
-          sign_in(user_1)
-          visit("/")
+        sign_in(user_1)
+        visit("/")
 
-          expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           sign_in(user_2)
@@ -38,23 +36,19 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          chat_page.open_new_message
-          chat_page.message_creator.filter(user_2.username)
-          chat_page.message_creator.click_row(user_2)
+        chat_page.open_new_message
+        chat_page.message_creator.filter(user_2.username)
+        chat_page.message_creator.click_row(user_2)
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          channel_page.send_message
+        channel_page.send_message
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)
@@ -66,12 +60,10 @@ RSpec.describe "Send message", type: :system do
       fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
       it "shows correct state" do
-        using_session(:user_1) do
-          sign_in(user_1)
-          visit("/")
+        sign_in(user_1)
+        visit("/")
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           sign_in(user_2)
@@ -80,23 +72,19 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          chat_page.open_new_message
-          chat_page.message_creator.filter(user_2.username)
-          chat_page.message_creator.click_row(user_2)
+        chat_page.open_new_message
+        chat_page.message_creator.filter(user_2.username)
+        chat_page.message_creator.click_row(user_2)
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do
-          channel_page.send_message
+        channel_page.send_message
 
-          expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-        end
+        expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
 
         using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)

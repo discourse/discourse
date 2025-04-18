@@ -6,12 +6,12 @@ describe "User activity posts", type: :system do
 
   fab!(:topic1) do
     Fabricate(:topic, title: "Title with &amp; characters and emoji :wave:").tap do |t|
-      Fabricate.times(2, :post, topic: t, user: user).each { |p| UserActionManager.post_created(p) }
+      Fabricate.times(2, :post, topic: t, user:).each { |p| UserActionManager.post_created(p) }
     end
   end
   fab!(:topic2) do
     Fabricate(:topic).tap do |t|
-      Fabricate.times(2, :post, topic: t, user: user).each { |p| UserActionManager.post_created(p) }
+      Fabricate.times(2, :post, topic: t, user:).each { |p| UserActionManager.post_created(p) }
     end
   end
 

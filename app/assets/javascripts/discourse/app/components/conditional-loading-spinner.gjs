@@ -15,6 +15,7 @@ const ConditionalLoadingSpinner = <template>
         (if @condition "visible")
         (if (eq @size "small") "inline-spinner")
       }}
+      data-loading={{@condition}}
       ...attributes
     >
       {{#if @condition}}

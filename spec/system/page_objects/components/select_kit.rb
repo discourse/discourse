@@ -80,7 +80,7 @@ module PageObjects
       end
 
       def collapse
-        expanded_component.find(".is-expanded .select-kit-header").click
+        expanded_component.find(".select-kit-header").click
         collapsed_component
       end
 
